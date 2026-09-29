@@ -1,0 +1,1906 @@
+# Unrealcraft — Tech Art major, all ranks. IDs TAQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: TAQ1
+    rank: 0
+    difficulty: novice
+    track: tech-art
+    subjects: [viewport, view-modes, debugging]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: See what the renderer sees
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-modes-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open any level with a few meshes, lights and materials (a template level is fine)."
+      - "Pick one camera view. Take a screenshot in Lit, Unlit and Wireframe."
+      - "Switch to Detail Lighting, then Lighting Only. Look at what changes on surfaces with normal maps."
+      - "Switch to Shader Complexity. Find the most expensive color on screen and note which object it is."
+      - "Switch to Light Complexity. Note which surface gets the most lights."
+      - "Go back to Lit when you are done."
+    done_when: "One image with 6 labeled views of the same camera (Lit, Unlit, Wireframe, Detail Lighting, Shader Complexity, Light Complexity) and one line about the most expensive object you found."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Unlit view mode show?"
+        choices: ["Only the polygon edges", "The final lit scene", "Base Color only, with all lighting removed", "Only the shadows"]
+        answer_index: 2
+        explain: "Unlit removes all lighting from the scene and shows Base Color only."
+      - q: "How is Detail Lighting different from Lighting Only?"
+        choices: ["Detail Lighting keeps the normal maps of the original materials; Lighting Only does not", "Detail Lighting shows Base Color; Lighting Only does not", "Detail Lighting turns off all lights", "There is no difference"]
+        answer_index: 0
+        explain: "Both use a neutral material. Detail Lighting still uses the normal maps, Lighting Only does not."
+      - q: "In Shader Complexity, most of the screen is bright red and white. What does that mean?"
+        choices: ["The scene is very cheap to render", "Performance will be poor; many pixels are very expensive", "The lights are too bright", "The materials are missing"]
+        answer_index: 1
+        explain: "Green to red goes from very cheap to expensive. Pink and white mean very expensive. A screen full of red or white means poor performance."
+      - q: "Shader Complexity counts shader instructions per pixel. Why is it not always accurate?"
+        choices: ["It only works on landscapes", "It ignores translucent materials", "It only counts lights", "It counts instructions only, but 16 texture lookups are much slower than 16 math instructions"]
+        answer_index: 3
+        explain: "The mode uses only the instruction count. Different instructions have different costs, so it is a guide, not an exact number."
+      - q: "What does the Light Complexity view mode show?"
+        choices: ["The color of each light", "The lightmap resolution of each object", "The number of non-static lights affecting your geometry", "Which lights cast shadows"]
+        answer_index: 2
+        explain: "Light Complexity shows how many non-static lights affect each surface. More lights means more expensive shading."
+    flavors:
+      _default: {why: "View modes let you see what the engine is doing, not only the final picture."}
+      tech_art: {why: "View modes are your first diagnostic tool. Before you open a profiler, look at the scene through them.", do: "Also try LOD Coloration and note at what distance one mesh changes LOD."}
+      lookdev: {why: "Unlit and Detail Lighting tell you if a problem comes from the texture or from the light."}
+      level_design: {why: "Shader Complexity and Light Complexity show which parts of your level are expensive."}
+
+  - id: TAQ2
+    rank: 0
+    difficulty: novice
+    track: tech-art
+    subjects: [performance, profiling, stat-commands]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: true
+    title: "Read the frame: stat fps and stat unit"
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/introduction-to-performance-profiling-and-configuration-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/common-memory-and-cpu-performance-considerations-in-unreal-engine"
+    checklist:
+      - "Open a level and start Play In Editor (PIE)."
+      - "Press ~ to open the console. Type stat fps, then stat unit."
+      - "Write down the Frame, Game, Draw (rendering thread) and GPU times in milliseconds."
+      - "Stop PIE. Add something heavy, for example 20 movable point lights close together, or many translucent planes."
+      - "Run PIE again with stat unit. Write down the new numbers."
+      - "Compare: which time grew the most? That is where your bottleneck is."
+    done_when: "Two screenshots with stat unit visible (before and after), plus two lines: which time grew the most, and what you think caused it."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "What does stat unit show?"
+        choices: ["Only the frames per second", "Overall frame time plus game thread, rendering thread and GPU times", "Memory used by textures", "The number of Actors in the level"]
+        answer_index: 1
+        explain: "stat unit shows the overall frame time and the game thread, rendering thread and GPU times. The docs call it a great stat to start with."
+      - q: "Which thread handles Actor logic in C++ and Blueprint, and UI logic?"
+        choices: ["RHI thread", "Audio thread", "Loading thread", "Game thread"]
+        answer_index: 3
+        explain: "The game thread handles UObject and Actor logic in C++ and Blueprint, and UI logic. Most of your code runs there."
+      - q: "What does the rendering thread do?"
+        choices: ["Converts the scene structure into draw commands", "Plays sound and music", "Loads and unloads data", "Runs Blueprint logic"]
+        answer_index: 0
+        explain: "The rendering thread turns the scene into draw commands. The RHI thread then sends them to the GPU."
+      - q: "Your GPU time is much bigger than your game thread time. What does that suggest?"
+        choices: ["Too much gameplay logic", "The project is GPU-bound: rendering or post-processing is doing too much work", "The RAM is full", "Vsync is off"]
+        answer_index: 1
+        explain: "If the GPU is the tighter limit, the project is GPU-bound. That points at rendering or post-processing work."
+      - q: "Why can performance look a little worse while a profiler is attached?"
+        choices: ["Profilers turn off Lumen", "Profilers lower the resolution", "The profiler uses the same CPU, RAM and disk as the game", "Profilers only work in shipping builds"]
+        answer_index: 2
+        explain: "Profiling uses the same resources as the game. So if you hit your target while profiling, you have some spare room."
+    flavors:
+      _default: {why: "Frames per second tells you there is a problem. stat unit tells you where it is."}
+      tech_art: {why: "Finding the bottleneck is the first step of every performance task you will get.", do: "Also try stat gpu and note the biggest item in the list."}
+      programming: {why: "A high game thread time often points at your code or your Blueprints."}
+      level_design: {why: "Too many lights or objects in one view show up here first."}
+
+  - id: TAQ3
+    rank: 0
+    difficulty: novice
+    track: tech-art
+    subjects: [naming, content-browser, pipeline]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: true
+    title: Names tools can find
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects"
+    backup_url: null
+    checklist:
+      - "In the Content Browser, make a folder TechArt with sub-folders Meshes, Materials, Textures, FX and Tools."
+      - "Move or create at least 6 assets into these folders (meshes, materials, material instances, textures)."
+      - "Rename each one as Prefix_AssetName_Descriptor, for example SM_Crate, M_Crate, MI_Crate_Red, T_Crate_BaseColor, T_Crate_Normal."
+      - "Right-click the TechArt folder and choose Fix Up Redirectors after moving things."
+      - "Type T_ in the Content Browser search box and check that only textures show up."
+      - "Write a short naming rule (5 lines) for your own project in a text file."
+    done_when: "Screenshot of the TechArt folder tree with the renamed assets visible, plus your 5-line naming rule."
+    xp: 25
+    verify_type: screenshot
+    quiz:
+      - q: "What is the naming pattern Epic recommends?"
+        choices: ["[AssetName]_[AssetTypePrefix]", "[AssetTypePrefix]_[AssetName]_[Descriptor]_[OptionalVariantLetterOrNumber]", "[Descriptor]_[AssetName]", "[FolderName]_[AssetName]_[Date]"]
+        answer_index: 1
+        explain: "The pattern starts with the type prefix, then the name, then a descriptor, then an optional variant."
+      - q: "Which prefix is recommended for a Material Instance?"
+        choices: ["MI_", "M_", "MAT_", "INST_"]
+        answer_index: 0
+        explain: "M_ is for a Material. MI_ is for a Material Instance."
+      - q: "Which prefix does Epic's list use for a Niagara System?"
+        choices: ["NS_", "PS_", "FXE_", "FXS_"]
+        answer_index: 3
+        explain: "Epic's list uses FXS_ for Niagara Systems, FXE_ for Niagara Emitters and FXF_ for Niagara Functions."
+      - q: "What is the Descriptor part of a name for?"
+        choices: ["The date the asset was made", "The name of the artist", "Extra context about how the asset is used, for example normal map or opacity map", "The file size"]
+        answer_index: 2
+        explain: "The Descriptor tells you how the asset is used, for example whether a texture is a normal map or an opacity map."
+      - q: "Your team already uses a different naming rule. What does the page say?"
+        choices: ["You must switch to Epic's rule", "The convention is only a recommendation; your project's requirements come first", "The engine will not load assets with other names", "Only Blueprints need prefixes"]
+        answer_index: 1
+        explain: "The page says the convention is a recommendation. Your own requirements always take precedence."
+    flavors:
+      _default: {why: "Clear names help you and your team find assets fast and avoid confusion."}
+      tech_art: {why: "Your scripts and tools find assets by name and folder. Bad names break tools.", do: "Add one line to your rule that a script could check, for example: every texture starts with T_."}
+      lookdev: {why: "Material and texture sets are much easier to swap when their names match."}
+      programming: {why: "Code that loads assets by path depends on stable names and folders."}
+
+  - id: TAQ4
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [blueprint, construction-script, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    title: A prop that builds itself
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/construction-script-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-static-mesh-component-in-unreal-engine"
+    checklist:
+      - "Create an Actor Blueprint BP_FenceRow. Add an Instanced Static Mesh component and set a simple mesh (a cube or fence post)."
+      - "Add variables Count (Integer) and Spacing (Float). Open the eye icon so both are Instance Editable."
+      - "In the Construction Script: Clear Instances on the component, then a For Loop from 0 to Count - 1."
+      - "In the loop, Add Instance with a relative location of X = Index * Spacing."
+      - "Place BP_FenceRow in the level. Change Count and Spacing in the Details panel and watch it rebuild."
+      - "Place a second copy with different values."
+    done_when: "Screenshot of two BP_FenceRow copies with different Count values, the Details panel visible, plus a screenshot of the Construction Script graph."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "When does the Construction Script run?"
+        choices: ["Only when you press Play", "When an instance of the Blueprint Class is created, after the Components list", "Only when the level is saved", "Once per frame during gameplay"]
+        answer_index: 1
+        explain: "It runs after the Components list when an instance of the Blueprint Class is created, so it can set up that instance."
+      - q: "Which of these has no Construction Script?"
+        choices: ["An Actor Blueprint", "A Pawn Blueprint", "The Level Blueprint", "A Character Blueprint"]
+        answer_index: 2
+        explain: "Only Blueprint Classes have Construction Scripts. Level Blueprints do not."
+      - q: "You want to change Count on each placed copy from the level's Details panel. What must you do?"
+        choices: ["Open the eye icon (Instance Editable) on the variable", "Mark it Private", "Set Expose on Spawn only", "Put it in a Data Table"]
+        answer_index: 0
+        explain: "A public (Instance Editable) variable can be changed from the Details panel of the level editor. The eye is closed by default."
+      - q: "What does Expose on Spawn do?"
+        choices: ["Shows the variable in the World Outliner", "Makes the variable read-only", "Rebuilds the Construction Script every frame", "Lets you set the variable on the Spawn Actor from Class node"]
+        answer_index: 3
+        explain: "With Expose on Spawn, the value appears as a pin on Spawn Actor from Class, so it can be set when the Actor spawns."
+      - q: "Why use an Instanced Static Mesh component for many identical fence posts?"
+        choices: ["It gives each post its own material", "It combines the draw calls of identical meshes and uses less memory", "It turns on Nanite", "It adds collision per post that you can edit one by one"]
+        answer_index: 1
+        explain: "An ISM groups identical meshes into one component. It combines draw calls. All instances share material and collision."
+      - q: "The docs give a fence example for the Construction Script. What does that fence do?"
+        choices: ["Traces out in each direction to find how long the fence must be", "Plays a sound when touched", "Spawns enemies", "Changes color at night"]
+        answer_index: 0
+        explain: "The fence uses traces to measure the space and decide how long it needs to be. The setup depends on where it is placed."
+    flavors:
+      _default: {why: "A Construction Script lets one Blueprint set itself up in the editor, so you do not place every piece by hand."}
+      tech_art: {why: "Props that build themselves are one of the most common tools a tech artist makes for the team.", do: "Add a Random Seed variable and use it to give each post a small random rotation."}
+      level_design: {why: "One fence you can stretch in the Details panel is faster than 40 hand-placed posts."}
+      lookdev: {why: "You can dress a set with repeated props and still change them all from one place."}
+
+  - id: TAQ5
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: false
+    title: Your first Niagara system
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-for-niagara-effects-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-niagara-effects-for-unreal-engine"
+    checklist:
+      - "Right-click in the Content Browser, choose FX > Niagara System, and pick a template that spawns all the time, such as Fountain."
+      - "Name it FXS_TestFountain and open it in the Niagara Editor."
+      - "Find the Spawn Rate module in Emitter Update. Change the rate and watch the preview."
+      - "In Particle Spawn, open Initialize Particle. Set Lifetime Mode to Random with a Minimum and Maximum."
+      - "Change the particle Color in Initialize Particle."
+      - "Drag FXS_TestFountain into your level and check it looks right there."
+    done_when: "Screenshot of the Niagara Editor with the emitter stack open (Spawn Rate and Initialize Particle visible) and one screenshot of the effect in the level."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "What is the difference between a Niagara system and an emitter?"
+        choices: ["They are the same thing", "An emitter holds systems", "A system is the container for the whole effect; emitters are where particles are generated", "A system only holds materials"]
+        answer_index: 2
+        explain: "A system is the container for everything in the effect. Emitters inside it generate the particles."
+      - q: "Which group runs once per particle, when the particle is born?"
+        choices: ["Particle Spawn", "Particle Update", "Emitter Update", "Render"]
+        answer_index: 0
+        explain: "Particle Spawn is called once per particle at birth. Use it for start location, color and size."
+      - q: "Particles should shrink as they age. Which group should that module go in?"
+        choices: ["Emitter Spawn", "Render", "Particle Spawn", "Particle Update"]
+        answer_index: 3
+        explain: "Particle Update runs per particle every frame, so it is the place for changes over time."
+      - q: "You want particles to keep spawning every frame. Which group holds that spawning module?"
+        choices: ["Particle Spawn", "Emitter Update", "Render", "Event Handler"]
+        answer_index: 1
+        explain: "Emitter Update runs every frame. The docs say to use it when you want particles to keep spawning."
+      - q: "In the Quick Start, how does each particle get a slightly different lifetime?"
+        choices: ["Lifetime Mode set to Random in Initialize Particle, with a Minimum and Maximum", "A Drag module", "A second emitter", "The Mesh Renderer's Facing Mode"]
+        answer_index: 0
+        explain: "Setting Lifetime Mode to Random adds Minimum and Maximum fields, so each particle lives a different time."
+      - q: "Your effect uses a 3D model for each particle. Which renderer do you need?"
+        choices: ["Sprite Renderer", "Ribbon Renderer", "Mesh Renderer", "Light Renderer"]
+        answer_index: 2
+        explain: "The Quick Start deletes the Sprite Renderer and adds a Mesh Renderer because it uses a 3D model."
+    flavors:
+      _default: {why: "Niagara is how Unreal makes fire, smoke, sparks and magic. Every project uses it."}
+      tech_art: {why: "Tech artists often own VFX setup and VFX performance. You need to read an emitter stack fast.", do: "Look at the effect in Shader Complexity view mode and note how much overdraw it makes."}
+      lookdev: {why: "Small effects like dust or steam make a scene feel alive."}
+      cinematics: {why: "Shots often need an effect that starts and stops on cue."}
+
+  - id: TAQ6
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [python, editor-scripting, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming]
+    required_spine: false
+    elective: false
+    title: Run Python in the editor
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-and-automating-the-unreal-editor"
+    checklist:
+      - "Edit > Plugins > Scripting: enable Python Editor Script Plugin and Editor Scripting Utilities. Restart the editor."
+      - "In the Output Log, switch the input from Cmd to Python. Type: unreal.log(\"Hello from Python\")"
+      - "Select 3 or more assets in the Content Browser."
+      - "In the Python console, type: print([a.get_name() for a in unreal.EditorUtilityLibrary.get_selected_assets()])"
+      - "Save the same code in a file list_selected.py inside your project's Content/Python folder (add import unreal at the top)."
+      - "Run the file with File > Execute Python Script and check the Output Log."
+    done_when: "Screenshot of the Output Log showing your Hello line and the list of selected asset names, plus the text of list_selected.py."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "Which plugin gives the Unreal Editor its Python support?"
+        choices: ["Python Editor Script Plugin", "Niagara", "Modeling Tools Editor Mode", "Remote Control API"]
+        answer_index: 0
+        explain: "Python support comes from the Python Editor Script Plugin. The docs also recommend Editor Scripting Utilities."
+      - q: "What is the only way to run Python code line by line?"
+        choices: ["File > Execute Python Script", "A startup script in Project Settings", "The Python console in the Output Log", "The command line with -run=pythonscript"]
+        answer_index: 2
+        explain: "The Python console runs each line right away. All the other ways run a script file."
+      - q: "What happens to a file called init_unreal.py in your project's Content/Python folder?"
+        choices: ["Nothing until you run it by hand", "The editor runs it automatically when it starts", "It is packaged into the game", "It is deleted on save"]
+        answer_index: 1
+        explain: "If the editor finds init_unreal.py in one of its Python paths, it runs it automatically at startup."
+      - q: "You need to move an asset to another folder with Python. What should you use?"
+        choices: ["os.rename", "shutil.move", "Delete it and import it again", "unreal.EditorAssetLibrary or unreal.AssetTools"]
+        answer_index: 3
+        explain: "Never move asset files with Python file functions. That can break internal references. Use the Unreal API."
+      - q: "Why use set_editor_property() instead of setting the property directly?"
+        choices: ["It runs the same pre- and post-edit code as changing the value in the Details panel", "It is faster", "It works without the unreal module", "It saves the level automatically"]
+        answer_index: 0
+        explain: "set_editor_property() triggers the editor's pre- and post-edit changes, as if you changed it in the Details panel."
+      - q: "Your script changes 200 Actors. How do you make one Undo revert all of it?"
+        choices: ["Call unreal.log() after each change", "Wrap the changes in unreal.ScopedEditorTransaction", "Use unreal.ScopedSlowTask", "Save after each change"]
+        answer_index: 1
+        explain: "A ScopedEditorTransaction bundles many operations into one entry in the Undo history. ScopedSlowTask only shows progress."
+    flavors:
+      _default: {why: "Python lets you automate boring editor work that you would otherwise do by hand."}
+      tech_art: {why: "Python is the main pipeline language. Most tech art tools start as a small editor script.", do: "Extend the script to print each asset's class with a.get_class().get_name()."}
+      programming: {why: "The unreal module mirrors what is exposed to Blueprints, including your own C++ code."}
+
+  - id: TAQ7
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor-utility, blueprint, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    title: Right-click batch tools
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-and-automating-the-unreal-editor"
+    checklist:
+      - "In your TechArt/Tools folder, right-click and choose Editor Utilities > Editor Utility Blueprint. Pick AssetActionUtility as the parent class. Name it EUB_AssetActions."
+      - "Add a function AddPrefix with a String input called Prefix."
+      - "In the function: Get Selected Assets, For Each Loop, then Rename Asset with the new name Prefix + the old object name."
+      - "Compile and Save. Make a few test assets without prefixes."
+      - "Select them in the Content Browser, right-click, and run your action from the Scripted Asset Actions menu."
+      - "Add a check so the action skips assets that already start with the prefix."
+    done_when: "Screenshot of the right-click menu showing your action, a before/after screenshot of the renamed assets, and a screenshot of the function graph."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "Your Scripted Action should work on assets selected in the Content Browser. Which parent class do you pick?"
+        choices: ["ActorActionUtility", "AssetActionUtility", "Actor", "GameModeBase"]
+        answer_index: 1
+        explain: "AssetActionUtility is for Content Browser assets. ActorActionUtility is for Actors in the level or Outliner."
+      - q: "You made the action with a Custom Event, but it does not appear in the menu. What is the likely cause?"
+        choices: ["Call In Editor is not checked on the Custom Event", "The Blueprint has no components", "The level is not saved", "Python is not enabled"]
+        answer_index: 0
+        explain: "Call In Editor must be checked. New functions get it automatically; Custom Events do not."
+      - q: "Which node returns the Actors currently selected in the level?"
+        choices: ["Get Selected Assets", "Get All Actors of Class", "Get Selection Set", "Get Owner"]
+        answer_index: 2
+        explain: "Get Selection Set returns the selected Actors. Get Selected Assets returns the selected Content Browser assets."
+      - q: "Your Actor action should only appear for Static Mesh Actors. Where do you set that?"
+        choices: ["Project Settings > Input", "The World Outliner filter", "The level's World Settings", "Class Defaults > Supported Classes"]
+        answer_index: 3
+        explain: "Add the class to Supported Classes in Class Defaults so the action only shows for that type."
+      - q: "What happens when your Scripted Action function has inputs?"
+        choices: ["The action cannot be run", "The editor shows a small window so you can enter the values", "The inputs are always empty", "The inputs are read from a config file"]
+        answer_index: 1
+        explain: "Each time you run it, the editor pops up a window to set the input values."
+      - q: "The editor checks that each input is the right type. What else should your script still do?"
+        choices: ["Nothing, the editor checks everything", "Recompile every time", "Handle empty inputs and check that the values make sense", "Restart the editor"]
+        answer_index: 2
+        explain: "The editor checks the type only. It does not check that a value exists or makes sense, so your script must validate it."
+    flavors:
+      _default: {why: "A right-click action turns a 10-minute manual task into one click on many assets."}
+      tech_art: {why: "Batch tools for artists are core tech art work. Scripted Actions are the fastest way to ship one.", do: "Add a second action to the same Blueprint, for example one that prints each selected asset's name to the log."}
+      level_design: {why: "An ActorActionUtility can fix many placed Actors at once."}
+      lookdev: {why: "You can batch-fix names or settings on a whole texture set."}
+
+  - id: TAQ8
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [textures, compression, mips, optimization]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: false
+    title: Texture settings that matter
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/textures-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-format-support-and-settings-in-unreal-engine"
+    checklist:
+      - "Import three textures for one asset: a color map (T_Crate_BaseColor), a normal map (T_Crate_Normal) and a packed mask (T_Crate_ORM)."
+      - "Open each one in the Texture Editor. Keep sRGB on for the color map. Turn sRGB off for the mask."
+      - "Set Compression Settings: Normalmap for the normal map, Masks for the mask texture."
+      - "Set a Texture Group for each one (for example World and WorldNormalMap)."
+      - "Note the Resource Size of each texture. Set LOD Bias to 1 on one texture and note the new size."
+      - "Import one texture with a size that is not a power of two. Check how many mips it has."
+    done_when: "Screenshot of the Details panel for T_Crate_ORM (sRGB off, Masks compression visible) plus a short table of the 3 textures: size, sRGB, compression, Resource Size."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "Why use power-of-two sizes like 512 or 2048?"
+        choices: ["They import faster", "They look sharper in the editor", "They can be mipmapped and streamed; non-power-of-two textures get no mips and are never streamed", "They are required for normal maps only"]
+        answer_index: 2
+        explain: "Power-of-two textures can have mipmaps and can stream. Non-power-of-two textures never stream and get no mipmaps."
+      - q: "You pack three masks into the R, G and B channels. What should the sRGB setting be?"
+        choices: ["Off, because the channels are used as masks", "On, always", "It does not matter", "On, but only for the alpha"]
+        answer_index: 0
+        explain: "sRGB is for color. The docs say to uncheck it when you use channels as masks."
+      - q: "Why pack several masks into one texture?"
+        choices: ["It makes colors brighter", "The engine can only load one texture per material", "It turns on streaming", "It saves draw calls and disk space"]
+        answer_index: 3
+        explain: "The Textures page says packing values into one texture saves draw calls and reduces disk space."
+      - q: "A 1024x1024 texture has a final LOD Bias of 1. Which size is used for rendering?"
+        choices: ["2048x2048", "512x512", "1024x1024", "256x256"]
+        answer_index: 1
+        explain: "LOD Bias 1 means one mip down, so the 512x512 mip is used."
+      - q: "The Texture Group has LOD Bias 1 and the texture's own LOD Bias is 1. What is the final LOD Bias?"
+        choices: ["0", "1", "2", "The texture value replaces the group value"]
+        answer_index: 2
+        explain: "The texture's LOD Bias is added to the Texture Group's LOD Bias, so 1 + 1 = 2."
+      - q: "A far-away floor shows ugly shimmering (aliasing). What helps?"
+        choices: ["Turning off mips", "Using mipmaps, so lower-resolution levels are used at a distance", "Turning on sRGB for the normal map", "Setting Never Stream"]
+        answer_index: 1
+        explain: "Mips give lower-resolution versions for far distances. Textures without mips cause aliasing in the distance."
+    flavors:
+      _default: {why: "Textures are one of the biggest parts of memory. A few settings decide how good they look and how much they cost."}
+      tech_art: {why: "Wrong sRGB or compression settings are some of the most common texture bugs you will fix.", do: "Write a 3-line texture rule for your team: color, normal and mask settings."}
+      lookdev: {why: "A mask with sRGB on gives wrong roughness and metallic values, so your material looks wrong."}
+
+  - id: TAQ9
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [capstone, view-modes, construction-script, niagara, editor-utility]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Lit test bed
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-modes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/construction-script-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-niagara-effects-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
+    checklist:
+      - "Build a small room L_TA_TestBed with a floor, walls, one directional light and at least two point lights."
+      - "Put in a notes board (a text render or a textured plane) that lists the view modes and stat commands you use to check the room."
+      - "Place your construction-script prop (BP_FenceRow or similar) with at least two different settings."
+      - "Place one Niagara system (FXS_) in the room."
+      - "Keep all assets in a TechArt folder with correct prefixes. Use your Scripted Action (EUB_AssetActions) on them at least once."
+      - "Check the room in Lit, Shader Complexity and with stat unit. Write down the numbers."
+      - "Write 5 lines: what the room tests, the most expensive thing in it, and one fix you would try."
+    done_when: "Screenshots of the room in Lit and Shader Complexity, one with stat unit visible, the Content Browser folder, and your 5-line writeup. A mentor reviews it."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A test room brings your tools together in one place you can reuse."}
+      tech_art: {why: "Tech artists keep a test bed to check new assets, effects and tools under the same light and budget.", do: "Save the room as a template level so you can reuse it for later quests."}
+      level_design: {why: "A test room is a safe place to try props and lights before they go into a real level."}
+      lookdev: {why: "Checking assets in the same light every time makes problems easy to spot."}
+
+  - id: TAQ10
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [lod, static-mesh, optimization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: Automatic LODs for a mesh
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-mesh-automatic-lod-generation-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-modes-in-unreal-engine"
+    checklist:
+      - "Duplicate a mesh (for example SM_Rock from Starter Content) and name it SM_Rock_LODTest."
+      - "Open it in the Static Mesh Editor. In LOD Settings, set LOD Group to SmallProp and accept the change."
+      - "Check that Auto Compute LOD Distances is on. Note the triangle count of each LOD."
+      - "Make a second copy and set it up by hand: Number of LODs 4, then Percent Triangles 75, 25 and 12 for LOD1 to LOD3."
+      - "Place both meshes in a level. Turn on the LOD Coloration view mode and move the camera away slowly."
+    done_when: "Screenshot of the LOD Settings with triangle counts per LOD, and one screenshot in LOD Coloration view mode with at least two LOD colors visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How does automatic LOD generation reduce a mesh?"
+        choices: ["It deletes random triangles", "It collapses the edge with the least visual impact, again and again, until it reaches the target triangle count", "It lowers the texture size", "It converts the mesh to Nanite"]
+        answer_index: 1
+        explain: "Quadratic mesh simplification picks the edge whose collapse changes the look the least, and repeats until it hits the target."
+      - q: "Which method does Epic recommend for creating LODs?"
+        choices: ["Setting every LOD by hand", "Importing each LOD from another program", "Using LOD Group presets", "Using Nanite fallback meshes"]
+        answer_index: 2
+        explain: "Epic recommends LOD Groups. You set up good categories once and pick them per mesh."
+      - q: "Where are the LOD Group presets like SmallProp defined?"
+        choices: ["In BaseEngine.ini under [StaticMeshLODSettings]", "In World Settings", "In the Material Editor", "In Project Settings > Input"]
+        answer_index: 0
+        explain: "The presets live in the [StaticMeshLODSettings] section of BaseEngine.ini. Change them there to change the groups."
+      - q: "Why keep Auto Compute LOD Distances turned on?"
+        choices: ["It makes LOD0 higher quality", "It turns on shadows for LODs", "It is required for Nanite", "It picks the screen size for each LOD; turning it off means setting screen sizes by hand, which can cause errors"]
+        answer_index: 3
+        explain: "The tool knows how much visual error each LOD adds, so it can pick when each LOD should switch."
+      - q: "With the SmallProp settings shown on the page, how many LODs does the mesh get?"
+        choices: ["1", "4", "6", "8"]
+        answer_index: 1
+        explain: "SmallProp has NumLODs=4, so you get LOD0 to LOD3."
+      - q: "Which view mode shows the current LOD index of each mesh, so you can see where LODs switch?"
+        choices: ["Lightmap Density", "Shader Complexity", "LOD Coloration", "Wireframe"]
+        answer_index: 2
+        explain: "LOD Coloration colors each primitive by its current LOD index. It helps you see at what distance LODs switch."
+    flavors:
+      _default: {why: "Far-away objects do not need all their triangles. LODs save work for the GPU."}
+      tech_art: {why: "Setting LOD rules for the whole project is a typical tech art job.", do: "Compare stat unit GPU time with 50 copies of the mesh, with and without LODs."}
+      level_design: {why: "Big levels with many props stay fast when props have good LODs."}
+      lookdev: {why: "You need to check that LODs do not pop or change the shape too much."}
+
+  - id: TAQ11
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [materials, material-parameter-collection, blueprint]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: false
+    title: One knob, many materials
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-material-parameter-collections-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-and-using-material-instances-in-unreal-engine"
+    checklist:
+      - "Content Browser → right-click → Material → Material Parameter Collection. Name it MPC_World."
+      - "Open MPC_World. Add a Scalar Parameter named Wetness (default 0) and a Vector Parameter named WorldTint (default white)."
+      - "In two different materials (for example M_Rock and M_Ground), add a Collection Parameter node set to MPC_World. Use Wetness to darken Base Color and lower Roughness, and multiply Base Color by WorldTint."
+      - "Place meshes that use both materials (or instances of them) in a test level. Change Wetness in MPC_World and watch every mesh update at once."
+      - "Make BP_WeatherControl. On Begin Play, use a Timeline (0 to 1 over 5 seconds) to drive Set Scalar Parameter Value (Collection MPC_World, Parameter Wetness)."
+      - "Add a key press that calls Set Vector Parameter Value to change WorldTint to a warm evening color."
+      - "Play in Editor and test both: the world gets wet, then the tint changes."
+    done_when: "Two screenshots from PIE (dry and wet with the new tint) plus one screenshot of the BP_WeatherControl graph showing the Set Scalar Parameter Value node with MPC_World selected."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "What does a Material Parameter Collection store?"
+        choices: ["Textures shared by many materials", "A set of scalar and vector parameters that any material can reference", "A list of Material Instances in the level", "Compiled shader code for one material"]
+        answer_index: 1
+        explain: "An MPC is an asset with scalar and vector parameters. Any material can reference it, so it passes global data into many materials at once."
+      - q: "You change a value inside an MPC. What happens to the materials that reference it?"
+        choices: ["Nothing until you recompile each material", "Only the base materials change, not their instances", "They all update, because the value lives in the MPC, not in the materials", "Only materials in the current level update"]
+        answer_index: 2
+        explain: "The values are stored in a separate asset. Every material that references the MPC uses the new value, including instances of those materials."
+      - q: "A snow amount must change on 60 different materials during gameplay. Why use an MPC instead of setting a parameter on 60 Material Instances?"
+        choices: ["Updating values in an MPC is much more efficient than setting many parameters on many instances", "MPCs support textures and instances do not", "Material Instances cannot be changed at runtime", "MPCs do not need a Blueprint"]
+        answer_index: 0
+        explain: "The page says updating an MPC is much more efficient than setting many different parameters on various Material Instances. It is one change instead of 60."
+      - q: "How many different Material Parameter Collections can one material reference?"
+        choices: ["One", "Four", "Unlimited", "Two"]
+        answer_index: 3
+        explain: "A material can reference at most two MPCs. A common setup is one for game-wide values and one for level values."
+      - q: "You rename the Wetness parameter inside MPC_World. What breaks?"
+        choices: ["Every material that uses Wetness", "Blueprint nodes that reference Wetness; you must pick the parameter name again on them", "Nothing, everything updates by itself", "The MPC asset itself becomes invalid"]
+        answer_index: 1
+        explain: "Materials keep working after a rename. Blueprints that operate on the collection break until you reassign the Parameter Name."
+      - q: "You plan to add many parameters to an MPC over time. What does the page warn about?"
+        choices: ["Changing the number of parameters recompiles every material that references the collection", "Each new parameter doubles GPU memory", "MPCs can only hold 16 parameters", "New parameters are ignored until you restart the editor"]
+        answer_index: 0
+        explain: "Adding or removing parameters recompiles all referencing materials. Adding many parameters up front can be faster."
+      - q: "Which node brings an MPC value into a material graph?"
+        choices: ["Scalar Parameter", "Texture Sample", "Collection Parameter", "Material Function Call"]
+        answer_index: 2
+        explain: "The Collection Parameter node reads from an MPC. In its Details you pick the Collection and the Parameter Name."
+      - q: "In Blueprint, which node changes a scalar value in an MPC?"
+        choices: ["Set Scalar Parameter Value, with the Collection set to your MPC", "Set Material, on each mesh", "Create Dynamic Material Instance", "Set Float Parameter on a Niagara component"]
+        answer_index: 0
+        explain: "The page uses Set Scalar Parameter Value and picks the MPC in the Collection drop-down, then the parameter name."
+    flavors:
+      _default: {why: "One value can change the look of a whole level: weather, time of day, damage."}
+      tech_art: {why: "An MPC is the tech artist's global control. Artists build materials, gameplay moves one number.", do: "Write a short list of every MPC parameter with its name, range and what it does, so the team uses the same names."}
+      lookdev: {why: "Global wetness or tint lets you test many moods in your scene without opening each material."}
+      gameplay_design: {why: "Gameplay can drive the world look (danger level, weather) from one Blueprint call."}
+
+  - id: TAQ12
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [niagara, user-parameters, blueprint]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: Effects that listen to gameplay
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/system-settings-reference-for-niagara-effects-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/key-concepts-in-niagara-effects-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-beam-effect-in-niagara-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-ui-reference-for-niagara-effects-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Niagara/SetNiagaraVariable_Float"
+    checklist:
+      - "Make NS_Fountain from a simple emitter template (for example Fountain or Simple Sprite Burst with a Spawn Rate module)."
+      - "In the Parameters panel, add a User parameter float named SpawnRate and a User parameter Linear Color named TintColor."
+      - "Link the Spawn Rate module to User SpawnRate, and the particle Color to User TintColor. Set sensible default values."
+      - "Place NS_Fountain in a level. Check that both values show in the Details panel under Override Parameters."
+      - "Make BP_FountainController with a Niagara component (or a reference to the placed system). On a key press, call Set Niagara Variable (Float) for SpawnRate and Set Niagara Variable (LinearColor) for TintColor."
+      - "Play in Editor. Press the key and confirm the effect changes rate and color without editing the Niagara asset."
+    done_when: "Two PIE screenshots (before and after the key press) plus one screenshot of the Blueprint graph with the Set Niagara Variable nodes."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "Where can a User parameter get its value from?"
+        choices: ["Only from modules in the Particle Update group", "Only from the Engine namespace", "From outside the Niagara simulation, such as Blueprint or C++", "Only from the Timeline panel"]
+        answer_index: 2
+        explain: "User parameters can only be set from outside the simulation, for example from Blueprint logic or C++ code."
+      - q: "In the system stack, which group shows the User Parameters?"
+        choices: ["System Settings", "Particle Spawn", "Emitter Update", "Render"]
+        answer_index: 0
+        explain: "The System Settings group contains User Parameters and System Properties."
+      - q: "A module in the Particle group wants to change a User parameter. Can it?"
+        choices: ["Yes, any module can write to any namespace", "Yes, but only on the GPU", "Only if the parameter is a float", "No. Particle modules can read User parameters but can only write to the Particle namespace"]
+        answer_index: 3
+        explain: "The namespace table lists User as read-only for all module groups. Particle modules write only to Particle."
+      - q: "Modules in the Emitter group can write to which namespace?"
+        choices: ["System", "Emitter", "User", "Engine"]
+        answer_index: 1
+        explain: "Emitter group modules read from System, Emitter, Engine and User, but write only to Emitter."
+      - q: "In the beam tutorial, how is a module input turned into something you can set from outside?"
+        choices: ["Its dropdown → Make → Read from new User parameter", "Right-click the emitter → Expose to Library", "Set the Sim Target to CPU", "Enable Fixed Bounds"]
+        answer_index: 0
+        explain: "The tutorial uses Make → Read from new User parameter on the module input. That creates a User parameter you can set from outside the system."
+      - q: "You placed a Niagara system in a level. Where in its Details panel do you see its User parameters?"
+        choices: ["Rendering", "Transform", "Override Parameters", "Collision"]
+        answer_index: 2
+        explain: "The beam tutorial finds the Beam_End User parameter in the Override Parameters section of the placed system's Details."
+      - q: "Set Niagara Variable (Float) needs a Target. What is it?"
+        choices: ["The Niagara System asset in the Content Browser", "A Niagara Particle System Component", "The Level Blueprint", "A Material Parameter Collection"]
+        answer_index: 1
+        explain: "The node's target is a Niagara Particle System Component. It sets the float parameter by name on that component, overriding locally if needed."
+      - q: "Why expose a few User parameters instead of making a copy of the system for each color?"
+        choices: ["Copies of Niagara systems cannot be saved", "User parameters make the effect run on the GPU", "User parameters remove the need for renderers", "One asset can then look different per use, and gameplay can change it at runtime"]
+        answer_index: 3
+        explain: "User parameters are set from outside the simulation, per component. One system serves many uses, and Blueprint can change it during play."
+    flavors:
+      _default: {why: "Effects feel alive when they react to what happens in the game."}
+      tech_art: {why: "You decide which knobs an effect exposes. Good User parameters make one system serve many designers.", do: "Name every User parameter clearly and give it a safe default, so the effect looks right even when nobody sets it."}
+      gameplay_design: {why: "You can make fire grow with danger or sparks change color with team, from your own Blueprint."}
+      programming: {why: "User parameters are the clean contract between code and VFX. Code sets values by name, artists own the look."}
+
+  - id: TAQ13
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [editor-utility-widget, umg, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: A panel with buttons
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-utility-widgets-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-blueprints"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
+    checklist:
+      - "Content Browser → right-click → Editor Utilities → Editor Utility Widget. Name it EUW_ActorTools."
+      - "In the Designer, add a Vertical Box with two Buttons: Randomize Rotation and Snap Scale 1."
+      - "Randomize Rotation: get the selected level actors (for example Get Selection Set), loop over them, and set a random Yaw on each."
+      - "Snap Scale 1: loop over the selected actors and set their scale to 1, 1, 1."
+      - "Add a Text block that shows how many actors the last click changed."
+      - "Right-click EUW_ActorTools → Run Editor Utility Widget. Dock the tab next to the Details panel."
+      - "Select 5 or more props in a level and test both buttons."
+    done_when: "Screenshot of the docked EUW_ActorTools panel next to a level where several selected props have random rotation, plus one screenshot of the button's graph."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "Editor Utility Widgets are based on which system?"
+        choices: ["Slate C++ only", "Unreal Motion Graphics (UMG)", "Niagara", "Python only"]
+        answer_index: 1
+        explain: "Editor Utility Widgets are based on UMG, so you build them like any other Widget Blueprint."
+      - q: "How do you open your Editor Utility Widget as an editor tab?"
+        choices: ["Play in Editor", "Drag it into the level", "Right-click the asset → Run Editor Utility Widget", "Add it to the Level Blueprint"]
+        answer_index: 2
+        explain: "Run Editor Utility Widget opens an editor tab with your widget."
+      - q: "After you run it once, where else can you find your widget?"
+        choices: ["In the Level Editor's Tools dropdown, under Editor Utility Widgets", "In Project Settings → Plugins", "In the Modes panel", "In the World Settings"]
+        answer_index: 0
+        explain: "Once run, it appears in the Level Editor's Tools dropdown under the Editor Utility Widgets category."
+      - q: "You need a tool that renames selected assets. It needs no custom panel, just a right-click menu item. What fits best?"
+        choices: ["An Editor Utility Widget with one button", "A Level Blueprint", "A Niagara system", "An Editor Utility Blueprint used as a Scripted Action"]
+        answer_index: 3
+        explain: "Editor Utility Blueprints are for editor logic that needs no custom UI. Scripted Actions run from the right-click menu."
+      - q: "When is an Editor Utility Widget the better choice?"
+        choices: ["When the tool must run in the shipped game", "When you need a rich UI to control your Blueprint logic", "When you want the logic to run on every Actor tick", "When you only need a Details panel button on one actor"]
+        answer_index: 1
+        explain: "The page says Editor Utility Widgets are best when you need a rich UI. They are recommended for most editor scripting work."
+      - q: "Which node returns the Actors currently selected in the level?"
+        choices: ["Get Selected Assets", "Get All Actors of Class", "Get Selection Set", "Get Player Pawn"]
+        answer_index: 2
+        explain: "Get Selection Set returns the selected Actors in the level. Get Selected Assets returns the assets selected in the Content Browser."
+      - q: "You look for editor-only functions inside a normal Actor Blueprint and see only a few. Why?"
+        choices: ["Editor-only functions are only fully available in editor-only Blueprint classes, such as Editor Utility Widgets", "You need to enable Lumen", "The functions only exist in C++", "You must be in Play in Editor"]
+        answer_index: 0
+        explain: "Most editor operations can't work at runtime. The full set shows only in editor-only classes like Editor Utility Widgets or Editor Utility Blueprints."
+      - q: "How can Blueprint or C++ open an Editor Utility Widget panel by code?"
+        choices: ["Call Open Level", "Call SpawnAndRegisterTab on the Editor Utility Subsystem", "Call Create Widget and Add to Viewport", "Call Spawn Actor from Class"]
+        answer_index: 1
+        explain: "The Editor Utility Subsystem handles editor panels. Its SpawnAndRegisterTab method opens a tab that hosts your widget."
+    flavors:
+      _default: {why: "A small button can save the team hundreds of repeated clicks."}
+      tech_art: {why: "Tools are the core of tech art. A panel with clear buttons is how artists use your scripts.", do: "Add a tooltip to each button that says what it changes and that Ctrl+Z may not undo everything."}
+      level_design: {why: "Batch rotate, scale or replace props in one click while you dress a level."}
+      programming: {why: "Editor tooling in Blueprint is fast to build and easy for artists to change later."}
+
+  - id: TAQ14
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [data-validation, pipeline, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming]
+    required_spine: false
+    elective: false
+    title: Catch bad assets before they ship
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-validation-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-blueprints"
+    checklist:
+      - "Edit → Plugins: check that Data Validation is enabled."
+      - "Right-click a content folder → Validate Assets in Folder. Read the results in the Message Log."
+      - "Create a Blueprint Class with parent EditorValidatorBase. Name it EV_TextureNaming."
+      - "Override Can Validate Asset: return true only when the asset is a Texture2D."
+      - "Override Validate Loaded Asset: if the asset name does not start with T_, call Asset Fails with a clear message; otherwise call Asset Passes. Every path must end in one of them."
+      - "Save and restart the editor if the validator is not picked up. Import or rename one texture without T_ and run Validate Assets on it."
+    done_when: "Screenshot of the Message Log showing your EV_TextureNaming failure message on a badly named texture, plus one screenshot of the Validate Loaded Asset graph."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "How do you validate every asset in the project from the editor?"
+        choices: ["File → Save All", "Tools → Validate Data...", "Build → Build All Levels", "Window → Message Log → Clear"]
+        answer_index: 1
+        explain: "Tools → Validate Data... validates all assets in the project's content directory."
+      - q: "Your build server must check assets on every change. What do you run?"
+        choices: ["The DataValidation commandlet: UnrealEditor-Cmd.exe <Project>.uproject -run=DataValidation", "Play in Editor with -nosound", "The Cook command only", "A Level Blueprint on Begin Play"]
+        answer_index: 0
+        explain: "The page gives the -run=DataValidation commandlet for Continuous Integration systems."
+      - q: "You wrote a Blueprint validator, but the command-line run ignores it. What does the page say?"
+        choices: ["Blueprint validators never work", "You must rename it with a V_ prefix", "By default the command line runs only C++ validation rules; you must extend it to support Blueprint and Python rules", "Command-line validation only checks textures"]
+        answer_index: 2
+        explain: "The Data Validation system only runs C++ rules by default from the command line. It can be extended for Blueprint and Python."
+      - q: "Which two functions are key in a UEditorValidatorBase validator?"
+        choices: ["BeginPlay and Tick", "IsEnabled and Destroy", "Construct and PreSave", "CanValidateAsset and ValidateLoadedAsset"]
+        answer_index: 3
+        explain: "CanValidateAsset decides if the validator applies to an asset. ValidateLoadedAsset does the check."
+      - q: "What must ValidateLoadedAsset do on every execution path?"
+        choices: ["Call AssetPasses or AssetFails", "Save the asset", "Print to screen", "Return a texture"]
+        answer_index: 0
+        explain: "Each path must end with AssetPasses or AssetFails, so the result is always clear."
+      - q: "You want to validate your own custom C++ class and need its private data. Which method fits best?"
+        choices: ["A Python validator", "Override IsDataValid in your UObject-derived class", "A Level Blueprint", "An Editor Utility Widget button"]
+        answer_index: 1
+        explain: "Overriding IsDataValid works best for your own classes and can access private and protected data."
+      - q: "How are Python validators registered, compared with C++ and Blueprint ones?"
+        choices: ["All three are registered by hand", "All three are found automatically", "Python validators register with UEditorValidatorSubsystem using AddValidator; C++ and Blueprint are found on editor startup", "Python validators are added in Project Settings → Maps"]
+        answer_index: 2
+        explain: "C++ and Blueprint validators are discovered automatically on editor startup. Python ones must call AddValidator."
+      - q: "When does validation run, besides the menus and CI?"
+        choices: ["Only when you package the game", "Every frame in PIE", "Only when the editor closes", "On asset save, which is enabled by default"]
+        answer_index: 3
+        explain: "Validation runs through CI, menu options and on asset save (enabled by default). Failures show in the Message Log."
+    flavors:
+      _default: {why: "A rule that runs by itself catches mistakes before anyone ships them."}
+      tech_art: {why: "Naming and budget rules only work if a machine checks them. Validators are how a tech artist enforces standards.", do: "Write the fail message as an instruction: what is wrong and how to fix it."}
+      programming: {why: "Validators plug into CI, so broken content fails the build instead of reaching players."}
+
+  - id: TAQ15
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [materials, material-instances, niagara, blueprint]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Master + FX
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-and-using-material-instances-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-material-parameter-collections-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/system-settings-reference-for-niagara-effects-in-unreal-engine"
+    checklist:
+      - "Build M_Master_Prop with clear parameters (color tint, roughness, a texture switch or scale) grouped and named for artists."
+      - "Make at least 3 instances (MI_) from it that look clearly different, and use them on props in one small scene."
+      - "Build one Niagara system NS_ with at least one User parameter (for example SpawnRate or TintColor), or drive it from an MPC value."
+      - "Make one Blueprint BP_ that changes that value during play (key press, trigger or timer)."
+      - "If you use an MPC, let the same value also change M_Master_Prop, so props and FX react together."
+      - "Write a short usage note for artists: each parameter, its safe range, and which Blueprint call drives the FX."
+      - "Record a short clip or take before/after screenshots in PIE."
+    done_when: "Show a mentor: the scene with the 3+ instances, the effect before and after the Blueprint change, the parameter list in M_Master_Prop, and your artist usage note."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "This is a real tech art handoff: reusable materials plus an effect that gameplay can drive."}
+      tech_art: {why: "Master materials and driven FX are two of the most common things a tech artist delivers.", do: "Add one validator or naming check from TAQ14 to your MI_ and NS_ assets and show it passes."}
+      lookdev: {why: "A good master material lets you tune many props fast and keep them consistent."}
+
+  - id: TAQ16
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [niagara, collision, performance]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Particles that hit the world
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/collisions-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/particle-update-group-reference-for-niagara-effects-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gpu-raytracing-collisions-in-niagara-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/emitter-settings-reference-for-niagara-effects-in-unreal-engine"
+    checklist:
+      - "Make NS_BouncingSparks with a fountain emitter. Place it above a floor and a box in a test level."
+      - "Particle Update → + → Collision → Collision. Keep it right before the solver module."
+      - "Set Bounce Restitution to about 0.4 and Friction to about 0.2. Check that sparks bounce off the floor."
+      - "Duplicate the emitter. In Emitter Properties set Sim Target to GPU on the copy; keep the first on CPU."
+      - "On the GPU copy, try the GPU Collision Type options. Turn the camera so the floor leaves the screen and note what changes."
+      - "Write 3 lines: what each version used to find surfaces and which you would ship for this effect."
+    done_when: "Screenshot of both emitters bouncing on the floor, plus your 3-line note comparing CPU and GPU collision."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Where must the Collision module sit in Particle Update?"
+        choices: ["At the very top of the stack", "Immediately before the solver module", "In the Render group", "In System Spawn"]
+        answer_index: 1
+        explain: "The module reference says Collision must be placed immediately before the solver module."
+      - q: "How does the Collision module find surfaces on a CPU emitter?"
+        choices: ["It casts rays", "It reads the scene depth buffer", "It uses Lumen reflections", "It cannot collide on CPU"]
+        answer_index: 0
+        explain: "On CPU emitters the module casts rays to find collisions with the world."
+      - q: "What can a GPU emitter use to find collision surfaces?"
+        choices: ["Only physics bodies", "Only Nav Mesh", "The scene depth or the global distance field", "The Content Browser thumbnails"]
+        answer_index: 2
+        explain: "With GPU emitters, the Collision module uses the scene depth or the global distance field."
+      - q: "GPU particles use depth buffer collision. The camera turns and the floor leaves the screen. What is the known weakness?"
+        choices: ["The particles turn into meshes", "Collision gets more accurate", "The effect switches to CPU", "It is low cost but low accuracy; particles that go off screen disappear"]
+        answer_index: 3
+        explain: "The page calls depth buffer collision low cost and low accuracy. Shapes are not accurate, and a particle that goes off screen disappears."
+      - q: "What is true about GPU Ray Traces collision?"
+        choices: ["It is experimental and one frame behind, because the calculation is asynchronous", "It is the default for all emitters", "It works on any RHI", "It only works on CPU emitters"]
+        answer_index: 0
+        explain: "GPU Ray Traces is experimental. The calculation is asynchronous, so collision is one frame behind."
+      - q: "What does GPU Ray Traces collision need in Project Settings?"
+        choices: ["Forward Shading only", "Default RHI set to DirectX 12 and Support Hardware Ray Tracing on", "Mobile HDR off", "Nanite disabled"]
+        answer_index: 1
+        explain: "The project must use DirectX 12 and have hardware ray tracing support enabled."
+      - q: "Ray tracing is not available on a player's machine. What does the default Async Gpu Trace DI setting do?"
+        choices: ["Turns off the effect", "Crashes with an error", "Falls back from HW Ray Tracing to Global Signed Distance Fields", "Switches the emitter to CPU"]
+        answer_index: 2
+        explain: "The default array tries HW Ray Tracing first, then falls back to Global Signed Distance Fields."
+      - q: "You want a second emitter to spawn smoke where sparks hit. Which module helps?"
+        choices: ["Scale Color", "Spawn Rate", "Sprite Renderer", "Generate Collision Event, read by an Event Handler in another emitter"]
+        answer_index: 3
+        explain: "Generate Collision Event creates an event that an Event Handler in another emitter can use."
+    flavors:
+      _default: {why: "Sparks, rain and debris look fake when they pass through the floor."}
+      tech_art: {why: "Collision type is a cost versus accuracy choice. Tech artists pick it per effect.", do: "Test your GPU emitter with the floor off-screen before you ship it."}
+      lookdev: {why: "Particles that land and bounce sell the scale and weight of a scene."}
+      cinematics: {why: "In a fixed shot you control what is on screen, so cheaper depth collision may be enough."}
+
+  - id: TAQ17
+    rank: 2
+    difficulty: adept
+    track: tech-art
+    subjects: [niagara, ribbon-renderer]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics, gameplay_design]
+    required_spine: false
+    elective: true
+    title: A ribbon trail
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-ribbon-effect-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/render-module-reference-for-niagara-effects-in-unreal-engine"
+    checklist:
+      - "Content Drawer → FX → Niagara System → New system from selected emitters → Simple Sprite Burst. Name it NS_RibbonTrail and drag it into a level."
+      - "In Render, delete the Sprite Renderer and add a Ribbon Renderer. Pick DefaultRibbonMaterial (turn on Show Engine Content and Show Plugin Content)."
+      - "Emitter Update: set Emitter State Life Cycle Mode to System and add Spawn Rate (about 100)."
+      - "Particle Spawn: set Lifetime, Color and Ribbon Width. Add Shape Location (Ring / Disk) and Add Velocity (From Point) so the ribbon spirals."
+      - "Particle Update: remove Scale Color and add Acceleration Force with a negative Z so the ribbon falls."
+      - "Try one Ribbon Renderer setting (UV0 Tiling Distance or Tessellation) and note what changed."
+    done_when: "Screenshot of the spiral ribbon in the level, plus one line on the Ribbon Renderer setting you changed and what it did."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Your system came from the Simple Sprite Burst template. What must change so it draws a ribbon?"
+        choices: ["Set Sim Target to GPU", "Add a second Sprite Renderer", "Delete the Sprite Renderer and add a Ribbon Renderer", "Change the material only"]
+        answer_index: 2
+        explain: "The template uses a Sprite Renderer. The tutorial deletes it and adds a Ribbon Renderer."
+      - q: "DefaultRibbonMaterial does not show in the Material dropdown. What do you do?"
+        choices: ["In View Options, turn on Show Engine Content and Show Plugin Content", "Import it from Starter Content", "Restart the editor", "Enable Nanite"]
+        answer_index: 0
+        explain: "The material is plugin content. Show Engine Content and Show Plugin Content make it visible."
+      - q: "Why set Emitter State Life Cycle Mode to System here?"
+        choices: ["It makes the ribbon wider", "The system then calculates life cycle settings, which usually optimizes performance", "It is required for any ribbon", "It turns on collision"]
+        answer_index: 1
+        explain: "Self mode is for full custom life cycle logic. System mode lets the system handle it, which usually optimizes performance."
+      - q: "The ribbon should be one continuous stream, not a single burst. Which module gives that?"
+        choices: ["Scale Color", "Shape Location", "Acceleration Force", "Spawn Rate"]
+        answer_index: 3
+        explain: "Spawn Rate creates a continuous stream of particles while the emitter is active."
+      - q: "Acceleration Force Z is set to -200. What happens if you make it +200?"
+        choices: ["The ribbon spirals upward instead of falling", "The ribbon disappears", "The ribbon gets wider", "Nothing changes"]
+        answer_index: 0
+        explain: "A negative Z makes the ribbon drop. A positive Z makes it spiral upward."
+      - q: "What does UV0 Tiling Distance do on a Ribbon Renderer?"
+        choices: ["Sets the ribbon width", "Tiles UV channel 0 by the distance the ribbon travels, and turns off UV offset by age", "Changes the draw order of emitters", "Adds tessellation"]
+        answer_index: 1
+        explain: "It tiles UV0 based on distance traveled. This disables offsetting the UVs by age."
+      - q: "When does Draw Direction usually make a visible difference?"
+        choices: ["On every opaque ribbon", "Only on CPU emitters", "When the material is translucent and the ribbon folds on itself", "When the ribbon is straight"]
+        answer_index: 2
+        explain: "The reference says Draw Direction usually matters only for translucent materials where the ribbon folds on itself."
+      - q: "With Tessellation Mode set to Custom, what does a smaller Tessellation Angle do?"
+        choices: ["Removes tessellation", "Makes the ribbon thinner", "Changes the ribbon color", "Increases the amount of tessellation"]
+        answer_index: 3
+        explain: "Smaller Tessellation Angle values increase the amount of tessellation."
+    flavors:
+      _default: {why: "Ribbons make trails, smoke paths and magic streaks that sprites can't draw well."}
+      tech_art: {why: "Ribbons have their own UV and tessellation rules. Knowing them saves time when a trail looks stretched.", do: "Expose Ribbon Width as a User parameter so designers can tune it per use."}
+      cinematics: {why: "A clean ribbon trail on a moving object adds motion and energy to a shot."}
+      gameplay_design: {why: "Trails show players where something moved: a dash, a thrown item, a projectile."}
+
+  - id: TAQ18
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [materials, hlsl, custom-node, shader-cost]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: false
+    title: Write shader code in a node
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/custom-material-expressions-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-material-editor-ui"
+    checklist:
+      - "Make a new material M_TA_CustomBlur. Add a Custom node (right-click search or the Custom category in the Palette)."
+      - "In the Custom node Inputs array add Tex, UV, r and dist. Set Output Type to a 3-channel float. Paste the blur code from the doc page into Code."
+      - "Wire a Texture Object into Tex, a TexCoord into UV, and two Scalar Parameters into r and dist. Set Description to 'Box Blur' so the node title is clear."
+      - "Add one extra output with Additional Outputs (for example a luminance value) and use it somewhere in the graph."
+      - "Build a second, simple effect twice: once in a Custom node and once with built-in nodes (for example Sin, Multiply by a parameter, Add). Compare both instruction counts in the Stats panel."
+      - "Write 3 short lines: when you would keep the Custom node here, and when you would replace it with nodes."
+    done_when: "Screenshot of the blurred result with the Custom node Details panel visible, plus the two Stats panel instruction counts and your 3 lines."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "A teammate rebuilt a simple Sin, Multiply by parameter, Add chain inside a Custom node 'to keep the graph clean'. What is the main problem?"
+        choices: ["The Custom node only runs on the CPU", "Custom nodes cannot read parameters", "The Custom node blocks constant folding, so the shader can use more instructions than the built-in nodes", "Custom nodes are removed in packaged builds"]
+        answer_index: 2
+        explain: "Unreal cannot collapse anything inside a Custom node. The same chain made from built-in nodes can be folded into fewer instructions."
+      - q: "Why can Unreal fold a Sin, Multiply by parameter, Add chain into one instruction when it is built from normal nodes?"
+        choices: ["Its inputs are constant for the whole draw call and do not change per pixel", "Sin is always free on the GPU", "Parameters are baked into the texture", "The Stats panel removes unused math"]
+        answer_index: 0
+        explain: "Constant folding works because the inputs (a parameter) are the same for every pixel in the draw call, so the result can be computed once."
+      - q: "According to the docs, when is the Custom node the right choice?"
+        choices: ["Always, because HLSL is faster than nodes", "When you want fewer nodes on screen", "When the material must work on mobile", "When it gives you something the built-in nodes cannot do, such as the looping blur example"]
+        answer_index: 3
+        explain: "The docs say to use the Custom node only when it gives access to functionality not possible with existing nodes."
+      - q: "You add an input named dist to the Inputs array. How do you use its value in the Code field?"
+        choices: ["Write Inputs[1]", "Write dist, because the input name is also the variable name in the HLSL", "Write Param('dist')", "You cannot; inputs only show as pins"]
+        answer_index: 1
+        explain: "Input Name is shown on the node and is also the name used inside the HLSL code."
+      - q: "Your Code returns a float3 blur. What else must be set so the node compiles and connects correctly?"
+        choices: ["Include File Paths", "Additional Defines", "Output Type, to match what the code returns", "Description"]
+        answer_index: 2
+        explain: "You must specify the output data type in Output Type. Description is only the title text."
+      - q: "Inside the Custom code you write a struct with a member function that samples Tex at UV. It fails to compile. Why?"
+        choices: ["Inputs are parameters of a hidden outer function, so they are function-local and not visible inside the struct", "Structs are not valid HLSL", "Texture2DSample only works in Material Functions", "The node needs Output Type set to a struct"]
+        answer_index: 0
+        explain: "The Custom node is wrapped in another function. Its inputs are local to that function, so you must pass them into the struct by hand."
+      - q: "The node needs a second result pin, for example a mask next to the color. What do you use?"
+        choices: ["A second Custom node with the same code", "Additional Defines", "Include File Paths", "Additional Outputs, with an Output Name and Output Type for each element"]
+        answer_index: 3
+        explain: "Additional Outputs adds more output pins. Each element needs its Output Name and Output Type."
+      - q: "Your team keeps shared HLSL helper functions in a shader source file outside the common engine paths. How do you use them in a Custom node?"
+        choices: ["Paste the whole file into Description", "Add the file under Include File Paths", "Put the path in Additional Outputs", "Custom nodes cannot use outside code"]
+        answer_index: 1
+        explain: "Include File Paths points the node to shader code outside the common shader paths."
+      - q: "On one platform the Custom node reports syntax errors on 'vector' and 'matrix' types. What do the docs suggest?"
+        choices: ["Replace the Custom node with a Material Function", "Turn off constant folding", "Be explicit and use types such as float4 and float4x4", "Move the code into Additional Defines"]
+        answer_index: 2
+        explain: "Some backends use the older HLSLcc compiler. Explicit types like float4 or float4x4 avoid those errors."
+      - q: "You want to prove that your node version is cheaper than the Custom version. Where do you look, and what does it tell you?"
+        choices: ["The Palette panel; it lists node prices", "The HLSL Code panel; you edit the code there to make it faster", "The Details panel of the Custom node; it shows milliseconds", "The Stats panel; it shows the shader instruction count, and fewer instructions means a cheaper material"]
+        answer_index: 3
+        explain: "The Stats panel shows the instruction count. Fewer instructions means less cost. The HLSL Code panel is view-only."
+    flavors:
+      _default: {why: "Sometimes the node graph cannot express what you need. Then a little HLSL solves it, but it has a cost."}
+      tech_art: {why: "You are the person who decides when code in a material is worth it, and you must prove it with numbers.", do: "Add a comment box next to the Custom node that says why nodes could not do this job."}
+      lookdev: {why: "Custom nodes appear in shared materials. Know what they cost before you copy one."}
+      programming: {why: "HLSL in materials has a hidden wrapper function and no constant folding. Know the rules before you write it."}
+
+  - id: TAQ19
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [runtime-virtual-texturing, landscape, materials, blending]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    title: Blend meshes into the landscape
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtime-virtual-texturing-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtimevirtual-texturing-quick-start-in-unreal-engine"
+    checklist:
+      - "Project Settings > Engine > Rendering > Virtual Textures: turn on Enable virtual texture support, then restart."
+      - "Create RVT_Terrain (Runtime Virtual Texture asset) with the Base Color, Normal, Roughness, Specular type."
+      - "In your landscape material turn on Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output, sample it with a Runtime Virtual Texture Sample, and route both through a Virtual Texture Feature Switch."
+      - "Place a Runtime Virtual Texture Volume, assign RVT_Terrain, use Transform from Bounds > Set Bounds on the landscape, and add RVT_Terrain to the landscape's Draw in Virtual Textures list."
+      - "Make M_TA_RockBlend: sample RVT_Terrain in the rock material and blend its Base Color into the bottom of the rock so the rock meets the ground softly."
+      - "Add a plane mesh with a masked decal-like material that writes to the RVT. Set its Draw in Main Pass to Never and turn off its collision."
+      - "Run stat virtualtexturing and note the cost in ms."
+    done_when: "Before/after screenshot of the rock where it meets the ground, one screenshot of the decal plane on the terrain, and the stat virtualtexturing numbers."
+    xp: 185
+    verify_type: screenshot
+    quiz:
+      - q: "Which piece links the RVT Volume, the materials and the scene components together?"
+        choices: ["The Runtime Virtual Texture asset", "The Landscape actor", "The Post Process Volume", "The World Settings"]
+        answer_index: 0
+        explain: "The RVT asset holds the settings and connects the volume, the materials and the components that render into it."
+      - q: "You finished the setup and the landscape renders black. What should you check first?"
+        choices: ["That Lumen is turned off", "That the landscape uses Nanite", "That every part is set up: the volume has the asset, it covers the landscape, and the landscape lists the asset in Draw in Virtual Textures", "That the RVT asset is bigger than 8K"]
+        answer_index: 2
+        explain: "The quick start says the terrain renders black when something is not set up correctly. Every writer and reader must be inside the volume bounds."
+      - q: "An artist wants a moving, animated skeletal mesh to write into the RVT. What do you tell them?"
+        choices: ["Fine, the RVT updates fully every frame", "Only if the mesh uses Nanite", "Set Draw in Main Pass to Always and it will work", "It is a poor fit: the RVT is a shading cache that is not fully updated every frame, so writers should be static"]
+        answer_index: 3
+        explain: "RVT content is a cache. Skinned, animated and movable meshes are listed as non-ideal writers."
+      - q: "A decal-like plane should only appear inside the RVT. On a platform without virtual texture support it should not render at all. Which Draw in Main Pass option?"
+        choices: ["Always", "Never", "From Virtual Texture", "Hide Primitives on the component"]
+        answer_index: 1
+        explain: "Never skips the main pass. Without an RVT the plane does not render, which suits decal-type items that are not required."
+      - q: "A road spline mesh writes into the RVT. If virtual texturing is not available, the road must still be visible. Which option fits?"
+        choices: ["From Virtual Texture", "Never", "Always", "Virtual Texture Skip Mips"]
+        answer_index: 0
+        explain: "From Virtual Texture renders into the RVT when possible, and into the main pass when there is no valid RVT or no support."
+      - q: "In the landscape material, which work belongs before the Runtime Virtual Texture Output?"
+        choices: ["Camera-dependent effects like distance fades", "Nothing; the output node must be first", "Only the Virtual Texture Feature Switch", "The camera-independent layer blending, which can be cached"]
+        answer_index: 3
+        explain: "Camera-independent shading is cached in the RVT. Keep the part after the Sample small, because less work there makes the material cheaper."
+      - q: "A mesh writes to the RVT but you cannot see it, because the landscape spline draws over it. What do you change?"
+        choices: ["Virtual Texture LOD Bias", "Translucency Sort Priority: give the mesh a higher value than the spline", "The RVT tile size", "r.VT.Flush"]
+        answer_index: 1
+        explain: "RVT has no Z-buffer. Smaller Translucency Sort Priority values render first, larger values render on top. Equal values have undefined order."
+      - q: "Base Color gradients in your RVT show banding. You switch to a YCoCg material type. What is the cost?"
+        choices: ["No cost; it is only a different encoding", "It disables normals", "About 25% extra memory and some extra sampling and decoding work", "It forces the RVT to update every frame"]
+        answer_index: 2
+        explain: "YCoCg reduces color shifts and banding, but the docs list 25% extra memory and extra decode cost."
+      - q: "Several meshes and the landscape write normals into the same RVT. Which space do the docs recommend for those normals?"
+        choices: ["World space", "Tangent space of each mesh", "Screen space", "View space"]
+        answer_index: 0
+        explain: "A common world space gives better blending when many primitives write and read the RVT. No hidden transform is applied by the output node."
+      - q: "Your RVT covers a big world. Rendering the low mips is slow and far actors must stay loaded. What is the suggested fix?"
+        choices: ["Raise r.VT.MaxUploadsPerFrame", "Split the landscape into many RVT volumes with one mip each", "Turn off virtual texture support for far areas", "Bake and stream the low mips as a Streaming Virtual Texture (set Streaming Levels and Build), and keep high mips at runtime"]
+        answer_index: 3
+        explain: "Baking the low mips removes the slow runtime rendering and the need to keep far actors resident. High mips still render at runtime."
+    flavors:
+      _default: {why: "Rocks and props that stop sharply at the ground look fake. RVT lets them take the ground's color."}
+      tech_art: {why: "RVT is a system with many parts and a real memory cost. You set it up once so artists can use it every day.", do: "Write the Draw in Main Pass choice for each writer type in a short team note."}
+      lookdev: {why: "Soft ground contact makes props look like they belong in the scene."}
+      level_design: {why: "Roads and decals that follow the terrain come from the same system. Know what it needs from your level."}
+
+  - id: TAQ20
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [niagara, modules, namespaces, versioning]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: false
+    title: Build your own Niagara module
+    time_min: 105
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-custom-modules-in-niagara-effects-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/script-editor-reference-for-niagara-effects-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/versioning-modules-and-emitters-in-niagara-effects-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/key-concepts-in-niagara-effects-for-unreal-engine"
+    checklist:
+      - "Create a Niagara module script NMS_TA_PullToPoint in the Content Browser and open it in the Script Editor."
+      - "Add Module Inputs TargetPosition and Strength. Read Particle.Position, compute the direction in a Module Local, and write a new Particle.Velocity."
+      - "In Script Details set Module Usage Bitmask to particle scripts, a Category, a Description and Keywords. Turn on Expose to Library. Compile."
+      - "Add the module to Particle Update in NS_TA_PullTest and check that particles move toward the target."
+      - "Click Versioning and enable it. Mark version 1.0 as the exposed version."
+      - "Add a new minor version: add a Falloff input, write a Change Description, then set it exposed and visible. Switch NS_TA_PullTest to the new version from the Selection panel."
+    done_when: "Screenshot of the module graph with Script Details visible, the Versioning panel showing both versions, and the effect running in the viewport."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "Your module runs in the Particle group. Which namespace can it write to?"
+        choices: ["System", "Emitter", "Particle only", "User"]
+        answer_index: 2
+        explain: "Each group writes only to its own namespace. Particle group modules can read System, Emitter, Particle, Engine and User, but write only Particle."
+      - q: "A module in the System group tries to read an Emitter parameter. What happens according to the namespace rules?"
+        choices: ["It works, all groups read all namespaces", "It is not allowed: the System group reads only System, Engine and User", "It works only on GPU emitters", "It works after you enable versioning"]
+        answer_index: 1
+        explain: "System group modules read System, Engine and User. Emitter data sits lower in the stack."
+      - q: "Every emitter in the system needs the same expensive value each frame. Where is the best place to compute it?"
+        choices: ["Once in a System group module, stored in the System namespace, then read by each emitter", "In Particle Update, so each particle has its own copy", "In a Module Local in every emitter", "In a Static Switch"]
+        answer_index: 0
+        explain: "Work done once in the System group can be read by the Emitter and Particle groups, so it is not repeated."
+      - q: "You need a temporary value only inside one module's math. It must not persist to the next frame. Which parameter category?"
+        choices: ["Particle Attributes", "Emitter Attributes", "Engine Provided", "Module Locals"]
+        answer_index: 3
+        explain: "Module Locals are transient. They live within a single module and do not persist between frames or stages."
+      - q: "An option in your module changes the graph path and never needs to change while the game runs. Which category fits?"
+        choices: ["Module Inputs", "Static Switch", "Engine Provided", "System Attributes"]
+        answer_index: 1
+        explain: "Static Switch values can only be set at edit time."
+      - q: "Your module only makes sense in particle scripts. How do you stop artists adding it to the wrong kind of script?"
+        choices: ["Set the Module Usage Bitmask in Script Details", "Add a Deprecation Message", "Mark it Experimental", "Put the word particle in Keywords"]
+        answer_index: 0
+        explain: "Module Usage Bitmask selects the kinds of scripts that may reference this module."
+      - q: "Twenty effects use your module without versioning. You change the module and save. What happens?"
+        choices: ["Nothing until each artist clicks Fix Issue", "Only new effects get the change", "The change is pushed directly to every asset that uses the module", "Unreal makes a copy of the old module automatically"]
+        answer_index: 2
+        explain: "Without versioning, changes go straight to all users. With versioning, users upgrade by hand."
+      - q: "What is the technical difference between a major and a minor module version?"
+        choices: ["Major versions recompile all systems", "Minor versions cannot add inputs", "Major versions need source control", "There is none; it is a label that tells users how risky the upgrade is"]
+        answer_index: 3
+        explain: "The docs say there is no internal difference. Major means you may not be able to go back without breaking settings."
+      - q: "You are still testing a new version and nobody should see or use it yet. What do you set?"
+        choices: ["Leave Is Exposed Version and Is Visible in Version Select unchecked", "Mark the module Deprecated", "Delete the old version", "Turn off Expose to Library"]
+        answer_index: 0
+        explain: "Keep the version unexposed and hidden from the selector while you iterate. Turn them on when it is ready."
+      - q: "Version 2 replaces a bool input with an enum that has three values. How do you keep each artist's old setting after they upgrade?"
+        choices: ["Ask artists to write down their settings first", "Write a Python upgrade script that reads the old input with get_old_input and sets the enum with set_enum_input", "Make it a minor version so values copy over", "Keep both inputs forever"]
+        answer_index: 1
+        explain: "When the mapping is not clear, an upgrade script on upgrade_context maps old inputs to new ones. This feature is experimental."
+    flavors:
+      _default: {why: "Stock modules cover a lot, but a team often needs one behavior many times. A module makes it reusable."}
+      tech_art: {why: "Your modules are used by other artists. Namespaces keep them correct and versioning keeps their effects from breaking.", do: "Write one line in the module Description that says which group it belongs in and why."}
+      lookdev: {why: "A good custom module gives you one clean slider instead of ten copied nodes."}
+      programming: {why: "Niagara modules are data-flow code with strict read/write rules per namespace. It is close to writing shaders."}
+
+  - id: TAQ21
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [profiling, unreal-insights, performance]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: Find the slow part with Unreal Insights
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/introduction-to-performance-profiling-and-configuration-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/trace-in-unreal-engine-5"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/timing-insights-in-unreal-engine-5"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-timers-and-counters-tabs-in-unreal-insights-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/measuring-performance-in-niagara"
+    checklist:
+      - "Make a test level L_TA_Profile with a known heavy moment (for example 50 Niagara systems or many actors that spawn at once)."
+      - "In the bottom toolbar open Trace, check the channels, and click Start Trace. Play in PIE for about 20 seconds."
+      - "Right before the heavy moment add a Trace Bookmark (Trace menu or the trace.bookmark command). Stop the trace."
+      - "Open the trace from the Unreal Insights Session Browser. In the Frames panel find the tallest frame and select it."
+      - "In the Timers panel sort by exclusive time. Pick the top timer and use Callers and Callees to see where it sits."
+      - "Change one thing to fix it, capture a second trace, and compare the same timer over a longer time range."
+    done_when: "Screenshot of Timing Insights with the spike frame selected and the Timers panel sorted, plus a 4-line writeup: the timer, its ms before, your change, its ms after."
+    xp: 180
+    verify_type: writeup
+    quiz:
+      - q: "Where do recorded trace sessions live, and what file type are they?"
+        choices: [".uasset files in the Content folder", ".utrace files, with extra data in .ucache files next to them", ".log files in Saved/Logs", ".csv files in the project root"]
+        answer_index: 1
+        explain: "Traces are stored as .utrace files. Companion data goes into .ucache files in the same folder."
+      - q: "You want to see which frames in a 30-second capture are spikes. Which panel do you look at first?"
+        choices: ["Log panel", "Callers panel", "Frames panel", "Session Browser"]
+        answer_index: 2
+        explain: "The Frames panel shows each frame's total time as a bar graph, so spikes stand out."
+      - q: "In the Timing panel, what does the width of an event block tell you?"
+        choices: ["How much time the thread spent on that event", "How many instances were spawned", "How much memory it used", "How many draw calls it made"]
+        answer_index: 0
+        explain: "Each track is a thread. The width of an event shows how long the thread spent processing it."
+      - q: "A timer has a large inclusive time but a small exclusive time. What does that tell you?"
+        choices: ["The trace is broken", "The timer itself is the slow part", "It only ran on the GPU", "Most of the time is spent in its child timers, so look at its Callees"]
+        answer_index: 3
+        explain: "Inclusive time includes child timers. If exclusive time is small, the cost is in what it calls."
+      - q: "You found a slow function. Which panel shows the functions that call it?"
+        choices: ["Callees", "Callers", "Counters", "Log"]
+        answer_index: 1
+        explain: "Callers lists the functions that call the selected event. Callees lists what it calls."
+      - q: "You add -StatNamedEvents to see Niagara asset names in the trace. What is the catch?"
+        choices: ["It adds overhead, so use it to find the problem, then capture again without it for true timings", "It turns off the GPU track", "It only works in shipping builds", "It deletes older traces"]
+        answer_index: 0
+        explain: "Named events cost time to capture. Use them to find the bottleneck, then capture without them for representative numbers."
+      - q: "While profiling, your game runs slightly slower than without the profiler. What is the right way to read that?"
+        choices: ["The trace is invalid and must be thrown away", "The profiler uses the GPU only, so ignore CPU times", "Profiling uses the same CPU, RAM and disk; if you meet your goal while profiling, you likely have some room left", "Turn off Trace Server to fix it"]
+        answer_index: 2
+        explain: "The profiler shares the machine's resources. The docs call this useful: hitting the target under profiling means you are above it without."
+      - q: "The GPU finishes its work early every frame but the CPU is always late. How is the project described?"
+        choices: ["GPU-bound", "Display-bound", "Memory-bound", "CPU-bound"]
+        answer_index: 3
+        explain: "The side with the tighter margin sets the limit. Here the CPU causes the bottleneck, so it is CPU-bound."
+      - q: "You want to find in the trace the exact moment you pressed the button that spawns effects. What helps most?"
+        choices: ["Add a Trace Bookmark or Trace Screenshot at that moment", "Turn on Auto Open Live Trace", "Sort Timers by name", "Restart the Trace Server"]
+        answer_index: 0
+        explain: "Bookmarks and screenshots appear as markers under the time ruler in Timing Insights."
+      - q: "One frame shows an emitter costing 0.06 ms. Is that enough to decide what to optimize?"
+        choices: ["Yes, one frame is always representative", "No; select a longer, representative time range and compare averages before you decide", "No; only memory numbers matter", "Yes, if the frame was the first frame"]
+        answer_index: 1
+        explain: "The Niagara measuring guide looks at a larger window and averages, which were much lower than the single-frame numbers."
+    flavors:
+      _default: {why: "Guessing what is slow wastes days. A trace shows you where the milliseconds go."}
+      tech_art: {why: "Tech artists are asked 'why is this scene slow?'. You answer with a trace, not a feeling.", do: "Keep your before and after .utrace files and name them with the date and change."}
+      programming: {why: "Insights is the same tool you will use for code. Learn to read timers and callers early."}
+      level_design: {why: "A heavy moment in your level shows up as a spike. You can find it yourself before QA does."}
+
+  - id: TAQ22
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [scriptable-tools, blueprint, editor-tools, interactive-tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: false
+    title: An interactive editor tool
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scriptable-tools-system-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-a-scriptable-tool-in-unreal-engine"
+    checklist:
+      - "Enable the Scriptable Tools Editor Mode plugin (and Geometry Script if you need its nodes). Restart."
+      - "Create an Editor Utility Blueprint from EditorScriptableModularBehaviorTool named BP_Tool_PlaceProp. Set Tool Name, Category and Tooltip."
+      - "Create BP_ToolProps_PlaceProp from ScriptableInteractiveToolPropertySet with public variables: Mesh, MinScale, MaxScale. Add it in On Script Setup with Add Property Set of Type."
+      - "Add a Single Click Behavior. In IfHitByClick, line trace from the click ray and return the hit. On click, spawn the chosen mesh at the hit point with a random scale."
+      - "Show a Display User Help Message with short instructions. Save the property set on shutdown and restore it on setup."
+      - "Open the Scriptable Tools mode and place 10 props with the tool."
+    done_when: "Screenshot of the Scriptable Tools mode with your tool active, its settings panel visible, and the props you placed; plus a screenshot of the IfHitByClick function."
+    xp: 185
+    verify_type: screenshot
+    quiz:
+      - q: "Your tool spawns temporary preview actors while it runs. Why is a Scriptable Tool safer than an Editor Utility Widget for this?"
+        choices: ["Scriptable Tools cannot spawn actors", "A Scriptable Tool is modal: it shuts down before save, level change or PIE, so you can remove temporary actors before they are saved", "Editor Utility Widgets delete all actors on close", "Scriptable Tools run only at runtime"]
+        answer_index: 1
+        explain: "Interactive tools are modal and the editor state is strictly managed. Autosave waits until you exit the tool."
+      - q: "Which plugin do you enable to use the Scriptable Tools mode and nodes?"
+        choices: ["Scriptable Tools Framework only", "Modeling Tools Editor Mode", "Editor Scripting Utilities", "Scriptable Tools Editor Mode; it includes the framework"]
+        answer_index: 3
+        explain: "You enable Scriptable Tools Editor Mode. You do not need to enable the framework module separately."
+      - q: "Your tool must react to left click, right click and Ctrl + left click in different ways. Which base class fits best?"
+        choices: ["EditorScriptableModularBehaviorTool", "EditorScriptableClickDragTool", "A plain Actor Blueprint", "EditorUtilityWidget"]
+        answer_index: 0
+        explain: "The modular behavior tool lets you add many behaviors, even several click behaviors, in one tool. ClickDragTool is deprecated."
+      - q: "You made the tool from a normal Blueprint Class, and now you cannot reach editor subsystems. Why?"
+        choices: ["The plugin is off", "Editor subsystems need C++", "Only an Editor Utility Blueprint gives access to editor-only functionality, even for an editor tool class", "You need to compile twice"]
+        answer_index: 2
+        explain: "The tutorial warns that a Blueprint Class cannot access editor subsystems and other editor-only features."
+      - q: "How do you give your tool user-visible settings like Mesh and MaxScale?"
+        choices: ["Add them as variables on a UMG widget", "Create a ScriptableInteractiveToolPropertySet subclass with public variables and add it with Add Property Set of Type", "Put them in Project Settings", "Use a Data Table"]
+        answer_index: 1
+        explain: "Public variables of the property set show in the standard settings panel. Add it, usually in On Script Setup, with a unique Identifier."
+      - q: "You want an event when the user changes MaxScale, a float. Which approach do the docs suggest?"
+        choices: ["The type-matching property watcher for a float, with the exact variable name", "The general Watch Property function, because it is cheapest", "An Event Dispatcher on the property set", "Nothing; tools cannot react to changes"]
+        answer_index: 0
+        explain: "Use the watcher that matches the variable type. The general Watch Property is more expensive and gives no New Value."
+      - q: "You add a Custom startup condition that searches the whole level. Why is that risky?"
+        choices: ["Custom conditions only run once", "Custom conditions cannot read the selection", "It stops the tool from appearing in the palette", "The tool builder graph runs every tick, so heavy checks can slow the editor"]
+        answer_index: 3
+        explain: "OnCanBuildTool runs on tick. Keep custom conditions light."
+      - q: "Artists complain that the tool forgets their settings every time they reopen it. What fixes this?"
+        choices: ["Store settings in a Save Game object", "Call Save Property Set Settings on shutdown and Restore Property Set Settings on setup", "Set Visible in Editor to false", "Use Group Tags"]
+        answer_index: 1
+        explain: "These functions store and restore property set values. An optional Save Key keeps separate values per tool."
+      - q: "You draw guide lines with Event On Script Render. The lines flicker and you must redraw them all yourself. What is the better option?"
+        choices: ["Use Print String", "Spawn a new actor per line every tick", "Use the Drawing API line sets, which the tool keeps and you can update over the tool's lifetime", "Move the drawing into On Script Shutdown"]
+        answer_index: 2
+        explain: "On Script Render is legacy: it redraws every tick with no persistence. Line, point and triangle sets are kept by the tool."
+      - q: "You have a base tool Blueprint that only exists to be subclassed. How do you keep it out of the tool palette?"
+        choices: ["Turn off Visible in Editor", "Delete its Category", "Set Shutdown Type to Complete", "Give it no Tool Name"]
+        answer_index: 0
+        explain: "Visible in Editor hides the class from the mode UI. It is meant for in-development tools and base classes."
+    flavors:
+      _default: {why: "Some jobs need clicks in the viewport, not buttons in a window. Scriptable Tools give artists that kind of tool without C++."}
+      tech_art: {why: "Interactive tools save artists hours of repeated placing and fixing. You can build them in Blueprint.", do: "Add a gizmo or a line preview so the artist sees the result before they click."}
+      level_design: {why: "A click-to-place tool made for your level's rules speeds up dressing a lot."}
+      programming: {why: "This is the Interactive Tools Framework from Modeling Mode, exposed to Blueprint. Know its modal rules."}
+
+  - id: TAQ23
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [editor-tools, tools, documentation, portfolio]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Artist tool
+    time_min: 480
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-utility-widgets-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scriptable-tools-system-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python"
+    checklist:
+      - "Ask one artist (or a member from another major) which slow, repeated task annoys them. Write the task down in one sentence."
+      - "Choose one form and explain the choice in two lines: Editor Utility Widget, Scriptable Tool, or Python script."
+      - "Build the tool. It must check its input and show a clear message when something is wrong, not fail without a message."
+      - "Use at least one skill from this rank where it fits: Data Validation, Material Parameter Collections, custom Niagara modules, or RVT setup."
+      - "Write a one-page usage doc: what it does, how to open it, each setting, and one known limit."
+      - "Record a before/after example: the same task done by hand and with the tool, with the time for each."
+      - "Give the tool and the doc to the artist. They must use it without your help. Write down what confused them and fix one thing."
+    done_when: "Mentor review: a short video or screenshots of the tool in use, the one-page usage doc, the before/after example with times, and the artist's feedback plus the fix you made."
+    xp: 300
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A tool is only finished when someone else can use it without you in the room."}
+      tech_art: {why: "This is the core tech art job: find a pain, build the fix, and make it usable by others.", do: "Put the tool in its own folder with the doc next to it, so it can be copied into another project."}
+      programming: {why: "Writing tools for non-programmers teaches you input checks, clear errors and short docs."}
+
+  - id: TAQ24
+    rank: 3
+    difficulty: expert
+    track: tech-art
+    subjects: [niagara, performance, scalability, effect-types, debugging]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: true
+    title: Budget your effects
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/performance-budgeting-using-effect-types-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/niagara-debugger-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scalability-and-best-practices-for-niagara"
+    checklist:
+      - "Create an Effect Type EFT_TA_Ambient (Content Browser > FX > Niagara Effect Type)."
+      - "Under Budget Scaling set Max Global Budget Usage and one curve, for example Max Distance Scale by Global Budget Use."
+      - "Assign EFT_TA_Ambient to two of your Niagara systems in their System Properties. Place about 30 copies in L_TA_FXBudget."
+      - "Open Tools > Debug > Niagara Debugger. Turn on the Debug HUD, Debug Overview and Show Global Budget Info. Set System Debug Verbosity to Basic."
+      - "Turn off System Show Active Only in World so culled systems show. Walk around in PIE and watch systems get culled."
+      - "In the FX Outliner, turn on Perf and Capture. Sort by average time and note the most costly system."
+    done_when: "Screenshot of the viewport with the Debug HUD overview and budget info visible, one screenshot of the FX Outliner performance view, and 3 lines on which Budget Scaling setting you chose and why."
+    xp: 85
+    verify_type: screenshot
+    quiz:
+      - q: "Why use an Effect Type asset instead of setting culling on each Niagara system?"
+        choices: ["Effect Types make effects look better", "You configure the settings once and apply them to many systems", "Only Effect Types can use the GPU", "Systems without one cannot be placed in a level"]
+        answer_index: 1
+        explain: "Effect Types hold settings once for a whole group of systems. The docs suggest giving every system an Effect Type."
+      - q: "You set Max Global Budget Usage to 0.8. What happens?"
+        choices: ["Any system is culled as soon as budget use reaches 80%; this favors performance over visuals", "Systems slow down to 80% speed", "Only 80% of particles spawn", "Nothing until the budget is above 100%"]
+        answer_index: 0
+        explain: "It is a cull threshold. Values are usually 0 to 1; you can go to 1.5 to be more permissive."
+      - q: "When budget use is high, you want far effects to disappear first but close ones to stay. Which option?"
+        choices: ["Max Instance Count Scale by Global Budget Use", "Max System Instance Count Scale by Global Budget Use", "Max Distance Scale by Global Budget Use", "Show Global Budget Info"]
+        answer_index: 2
+        explain: "This curve lowers the cull distance as budget use goes up, so only close systems render."
+      - q: "What is the difference between the Instance Count and the System Instance Count scaling options?"
+        choices: ["No difference", "Instance Count only affects GPU systems", "System Instance Count only works in the editor", "Instance Count scales all instances of all systems with this Effect Type; System Instance Count scales the count per system"]
+        answer_index: 3
+        explain: "One scales across all matching systems together; the other culls a number of instances inside each system."
+      - q: "A system is not visible in PIE and you think scalability culled it. How do you confirm this with the Debug HUD?"
+        choices: ["Set System Debug Verbosity to Basic or Verbose and turn off System Show Active Only in World", "Turn on Enable GPU Readback", "Set fx.Niagara.Debug.PlaybackMode to 1", "Open the Session Browser tab"]
+        answer_index: 0
+        explain: "Basic and Verbose show if and why a system is culled. With Active Only off, culled systems show as black locators."
+      - q: "You turn on Enable GPU Readback to see GPU particle attributes. What should you expect?"
+        choices: ["No cost", "The GPU emitters switch to CPU", "A few frames of latency and an extra memory cost", "The Debug HUD turns off"]
+        answer_index: 2
+        explain: "Data is copied from the GPU back to the CPU, so there is delay and a memory cost."
+      - q: "In the FX Outliner Performance view, each block has two numbers. What are they?"
+        choices: ["CPU and GPU memory", "Game thread cost on the left, render thread cost on the right", "Spawn and update time", "Particle count and emitter count"]
+        answer_index: 1
+        explain: "Left is game thread, right is render thread. Emitters show only state data, not performance."
+      - q: "You moved all emitters of a system to GPU simulation, but the CPU cost barely changed. Why?"
+        choices: ["GPU emitters also simulate particles on the CPU", "The Effect Type forces CPU", "The debugger doubles the cost", "System and emitter scripts still run on the CPU, so each emitter keeps a fixed overhead"]
+        answer_index: 3
+        explain: "Only particle scripts move to the GPU. To cut the fixed cost, reduce the number of emitters or instances."
+      - q: "An explosion spawns 5,000 particles in one frame and causes a hitch. What do the best practices suggest?"
+        choices: ["Spread the spawn over several frames", "Add warmup time", "Turn on sorting", "Use dynamic bounds"]
+        answer_index: 0
+        explain: "Spawning a large burst in one frame can hitch. Spreading it spreads the work. Warmup also causes hitches."
+      - q: "Four emitters in a system have the same behavior and only use different meshes. What is a cheaper setup?"
+        choices: ["Keep four emitters and lower their spawn rate", "One emitter with a mesh array or several renderers", "Four systems with one emitter each", "Turn on Require Current Frame Data"]
+        answer_index: 1
+        explain: "Every emitter has overhead. When behavior is the same, merge them and vary the look with renderers or a mesh index."
+    flavors:
+      _default: {why: "Effects can take the whole frame if nobody sets limits. Budgets keep the game smooth when many effects play."}
+      tech_art: {why: "Tech artists set the FX rules for the team. Effect Types and the debugger are how you enforce them.", do: "Make a small table: each Effect Type, what it is for, and its cull rules."}
+      lookdev: {why: "Your beautiful effect is only useful if it survives the budget in a busy scene."}
+      programming: {why: "The fx.Budget cvars and the debugger connect effects cost to the frame budget you track."}
+
+  - id: TAQ25
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [scalability, performance, config, device-profiles]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: false
+    title: Quality levels that hold up
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scalability-reference-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scalability-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/customizing-device-profiles-and-scalability-in-unreal-engine-projects-for-android"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-device-profiles-in-unreal-engine"
+    checklist:
+      - "Pick one finished scene. Save a camera bookmark so every capture uses the same view."
+      - "Open Settings > Engine Scalability Settings. Capture the view on Low and on Epic, with stat unit visible in both."
+      - "Create Config/DefaultScalability.ini in your project and override one group, for example [FoliageQuality@0] to [FoliageQuality@2]. Restart and check the change."
+      - "If you use foliage, turn on Enable Density Scaling on the foliage types, then compare sg.FoliageQuality 0 and 3."
+      - "In one expensive master material, add a Quality Switch node that removes one costly branch on Low. Check it with Shader Complexity."
+      - "Type one sg.* name in the console with no value. Note the current value and where it was set."
+    done_when: "Low and Epic screenshots from the same bookmark with stat unit, your DefaultScalability.ini block, and 3–5 lines: what changed most between Low and Epic, and what you would fix before shipping Low."
+    xp: 250
+    verify_type: writeup
+    quiz:
+      - q: "In the Scalability Groups, which sg.* values match Low and Epic?"
+        choices: ["1 and 4", "0 and 3", "0 and 10", "-1 and 100"]
+        answer_index: 1
+        explain: "Each group runs from 0 to 3. The Low setting equals 0 and Epic equals 3, as defined in BaseScalability.ini."
+      - q: "Your team wants less foliage on every quality level for this project only. What is the documented way?"
+        choices: ["Edit Engine/Config/BaseScalability.ini in the engine install", "Lower the Density on each foliage type by hand", "Create Config/DefaultScalability.ini in the project and add [FoliageQuality@N] sections", "Set r.ViewDistanceScale to 0 in the level"]
+        answer_index: 2
+        explain: "The reference page adds a DefaultScalability.ini to the project Config folder with new [FoliageQuality@0..2] values. The engine files stay untouched."
+      - q: "sg.FoliageQuality 0 makes no change to your painted foliage. What is the likely cause?"
+        choices: ["Enable Density Scaling is off on the foliage static meshes", "Foliage only scales on mobile", "The level needs a lighting build", "Foliage Quality only affects Landscape grass on Epic"]
+        answer_index: 0
+        explain: "For Foliage Static Meshes to work with the Scalability settings, you must enable the Enable Density Scaling option."
+      - q: "Going from sg.TextureQuality 3 to 0 changes which settings, per the reference page?"
+        choices: ["Only texture compression format", "Only the anisotropy level", "Nothing on PC, only on consoles", "A higher r.Streaming.MipBias, a smaller r.Streaming.PoolSize and lower r.MaxAnisotropy"]
+        answer_index: 3
+        explain: "The table shows TextureQuality 0 with MipBias 2.5, MaxAnisotropy 0 and PoolSize 200, and TextureQuality 3 with MipBias 0, MaxAnisotropy 8 and PoolSize 1000."
+      - q: "You compare Texture Low and Epic in a small scene and see almost no difference except filtering. Why?"
+        choices: ["Texture quality is broken in the editor", "Your textures fit in the pool at full resolution, so the streamer never has to drop mips", "Texture quality only affects UI", "You need to rebuild lighting first"]
+        answer_index: 1
+        explain: "If full resolution mips do not use all of the texture pool, you will not see a difference between high and low settings, apart from anisotropy."
+      - q: "What does lowering r.MaxAnisotropy save?"
+        choices: ["Texture bandwidth, but not texture memory", "Texture memory, but not bandwidth", "Both memory and bandwidth equally", "Only CPU time"]
+        answer_index: 0
+        explain: "Limiting the anisotropic sample count reduces texture bandwidth, but does not save texture memory."
+      - q: "A designer wants to use Detail Mode to hide some physics props on Low. What is the risk?"
+        choices: ["Detail Mode only works on lights", "There is no risk", "Objects that affect gameplay can cause problems with network play, save games or consistency", "Detail Mode doubles draw calls"]
+        answer_index: 2
+        explain: "The page says to use Detail Mode only on objects that have no effect on gameplay, like decals or small effects."
+      - q: "Why is the Quality Switch node NOT a tool for distance LOD?"
+        choices: ["It only works on translucent materials", "It only runs in the editor", "It needs Nanite", "You cannot have two material quality levels at the same time"]
+        answer_index: 3
+        explain: "Material Quality Level is global. The node picks one pin for the whole run, so it cannot switch per distance. It also adds shader permutations."
+      - q: "On Android, which config file wins if all four set the same scalability value?"
+        choices: ["Project/Config/Android/Android*.ini", "Engine/Config/Base*.ini", "Project/Config/Base*.ini", "Engine/Config/Android/Android*.ini"]
+        answer_index: 0
+        explain: "The order is Engine Base, Project Base, Engine Android, then Project Android. The project Android file overrides all the others."
+      - q: "Why does Epic recommend changing values in *Scalability.ini and setting only sg.* in device profiles?"
+        choices: ["Device profiles cannot hold cvars", "So Preview Rendering Level in the editor shows the same mobile scalability values", "sg.* values are faster to parse", "Device profiles are ignored in Shipping"]
+        answer_index: 1
+        explain: "Keeping small-scale changes in the scalability files and using groups in the device profile keeps Preview Rendering Level accurate."
+      - q: "QA says shadows look wrong on one test PC. You type sg.ShadowQuality with no number. What do you get?"
+        choices: ["It resets shadows to Epic", "An error, a value is required", "The current value and the last place it was set", "A list of all shadow cvars"]
+        answer_index: 2
+        explain: "Typing a scalability name with no value prints its current value and where it was last set. Good for finding which config or code overrode it."
+      - q: "Why is lowering resolution scale often a good trade on weak GPUs?"
+        choices: ["It also lowers texture memory to zero", "It turns off Lumen", "It is applied to the whole frame, including UI", "The 3D scene renders smaller, UI is not scaled, and the upsample pass costs little"]
+        answer_index: 3
+        explain: "Unreal does not apply resolution scale to 2D UI. The up-sampling pass has a minor cost. It also benefits from good anti-aliasing quality."
+    flavors:
+      _default: {why: "A game that only looks right on your PC is not finished. Quality levels must hold up on all target hardware."}
+      tech_art: {why: "You own the scalability ini files and device profiles. Bad defaults here cost the whole team.", do: "Add a memory bucket line like +CVars_Smallest=r.Streaming.PoolSize=... to one device profile and explain your number."}
+      lookdev: {why: "Your look must survive Low. Know what each group removes before the art review."}
+      programming: {why: "Settings menus call Game User Settings. Know what each sg.* group really changes."}
+
+  - id: TAQ26
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [interchange, import, pipeline, python, tools]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [programming, lookdev]
+    required_spine: false
+    elective: false
+    title: Own the import pipeline
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-using-interchange-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/interchange-framework-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/interchange-import-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-directly-into-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
+    checklist:
+      - "Open Project Settings > Engine > Interchange. Screenshot the pipeline stack used for Import Content."
+      - "Create a Blueprint class with parent InterchangePipelineBase, named BP_IP_StudioRules."
+      - "Override Scripted Execute Pipeline or Scripted Execute Post Import Pipeline. Enforce one rule, for example a name prefix like SM_ or a fixed LOD Group."
+      - "Add BP_IP_StudioRules to your project's pipeline stack after the default pipelines."
+      - "Import 3 test meshes. Use Preview to check the assets before you click Import."
+      - "Change one source file and reimport. Check that the same stack and options come back."
+    done_when: "Screenshots of the pipeline stack with your pipeline in it, the override graph, and the Content Browser after import showing the rule applied. Add 2–3 lines on what happened on reimport."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "In Interchange, which part actually generates the asset from the imported data?"
+        choices: ["The Pipeline Stack", "The Translator window", "The Factory", "The Content Browser"]
+        answer_index: 2
+        explain: "A pipeline processes the data and exposes options. A pipeline stack is an ordered list of pipelines. A factory generates the asset."
+      - q: "Where do you add, remove or reorder the pipeline stacks for the whole project?"
+        choices: ["Project Settings > Engine > Interchange", "Editor Preferences > Import", "World Settings > Pipelines", "The Static Mesh Editor"]
+        answer_index: 0
+        explain: "The pipeline stacks live in Project Settings under Engine > Interchange."
+      - q: "What is the correct order of the Interchange import process?"
+        choices: ["Factories, then pipeline stack, then translation", "Pipeline stack, then translation, then factories", "Translation and factories run at the same time, pipelines run on save", "Data becomes an intermediary node structure, then goes through the pipeline stack, then factories make the asset"]
+        answer_index: 3
+        explain: "Interchange converts the file to intermediary nodes, runs them through the pipeline stack, then uses factories to generate the asset."
+      - q: "An artist imports a file format that Interchange does not support. What happens?"
+        choices: ["The import fails", "Unreal uses the legacy import framework", "Interchange converts it to glTF first", "It imports as a Data Asset"]
+        answer_index: 1
+        explain: "If the format is not supported by Interchange, Unreal Engine uses the legacy framework to import the file."
+      - q: "What does Unreal remember when you reimport an asset that was imported with Interchange?"
+        choices: ["The pipeline stack and options that were used", "Nothing, you choose again each time", "Only the file path", "Only the material slots"]
+        answer_index: 0
+        explain: "On reimport, Unreal remembers the pipeline stack and options from the first import and shows them."
+      - q: "On reimport, the Conflicts Preview shows a changed material slot. How do you fix the assignment with Interchange?"
+        choices: ["Click Preserve Original in the conflict window", "Delete the asset and import again", "Fix it in the source file or in the Static Mesh Editor", "Turn off the Default Material Pipeline"]
+        answer_index: 2
+        explain: "You can no longer keep or replace the material from the conflict window. Change the source file or use the Static Mesh Editor."
+      - q: "You want an import option to be hidden and read-only for all artists. What is the documented method?"
+        choices: ["Write a Python startup script that hides the window", "Ask artists not to touch it", "Edit BaseEngine.ini", "Open the default pipeline asset and change its default value, visibility and read-only status"]
+        answer_index: 3
+        explain: "The default pipelines live in Engine > Plugins > Interchange Framework Content > Pipelines. You can edit defaults, visibility and read-only there. Turn on Show Engine Content to see them."
+      - q: "Which override runs after the asset is fully imported and PostEditChange has been called?"
+        choices: ["Scripted Execute Pipeline", "Scripted Execute Post Import Pipeline", "Scripted Execute Post Factory Pipeline", "Scripted Set Reimport Source Index"]
+        answer_index: 1
+        explain: "Post Factory runs after the factory but before PostEditChange. Post Import runs after the asset is completely imported and PostEditChange is called."
+      - q: "Your custom pipeline is slow and blocks imports. Which override tells the Interchange Manager it can run in async mode?"
+        choices: ["Scripted Can Execute on Any Thread", "Scripted Execute Export Pipeline", "Scripted Execute Pipeline", "Call In Editor"]
+        answer_index: 0
+        explain: "Scripted Can Execute on Any Thread tells the Interchange Manager that the pipeline can run async."
+      - q: "A skeletal mesh has one source file for geometry and another for skinning. Which override chooses which source to reimport?"
+        choices: ["Scripted Execute Post Import Pipeline", "Scripted Can Execute on Any Thread", "Scripted Execute Export Pipeline", "Scripted Set Reimport Source Index"]
+        answer_index: 3
+        explain: "Scripted Set Reimport Source Index tells the pipeline which source index to reimport, for assets with more than one source."
+      - q: "You write a pipeline in Python. What else must you do so the editor knows about it?"
+        choices: ["Nothing, Python pipelines are found automatically", "Compile it with Live Coding", "Add the script to the Startup Scripts in Project Settings", "Save it as a .uasset"]
+        answer_index: 2
+        explain: "The page says to create the script and use Project Settings to add it to the Startup Scripts. The class derives from InterchangePythonPipelineBase."
+      - q: "Your shipped app imports files at runtime with Interchange, but it fails in the cooked build. What is missing?"
+        choices: ["The Interchange folder in Additional Asset Directories to Cook", "Nanite on all meshes", "The FBX SDK plugin", "A Python startup script"]
+        answer_index: 0
+        explain: "For runtime use in a cooked application, add the Interchange folder under Project Settings > Packaging > Additional Asset Directories to Cook."
+    flavors:
+      _default: {why: "Every asset enters the project through import. Fix the rules there once, not by hand on each asset."}
+      tech_art: {why: "A custom pipeline turns a style guide into something the engine enforces.", do: "Make a second pipeline that sets collision by name prefix (UCX_ and others) and explain when your team should use it."}
+      programming: {why: "Interchange pipelines are C++, Blueprint or Python classes with clear override points. You can extend them."}
+      lookdev: {why: "Wrong import options mean wrong normals, tangents or materials. Know where they are set."}
+
+  - id: TAQ27
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [virtual-shadow-maps, nanite, shadows, profiling, performance]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: false
+    title: Shadows and geometry at scale
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-shadow-maps-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-technical-details"
+    checklist:
+      - "Build a test level: Nanite rock and building meshes, one non-Nanite mesh, and a foliage mesh with a WPO wind material. Use one Directional Light."
+      - "With a still camera, switch the viewport to View Modes > Virtual Shadow Map > Cached Page. Screenshot the red areas."
+      - "Use the Shadow Casters view to find what invalidates pages. Fix one cause: set World Position Offset Disable Distance, or change Shadow Cache Invalidation Behavior."
+      - "Run r.ShaderPrintEnable 1 and r.Shadow.Virtual.Stats 1. Note Allocated, Cached and Invalidated pages before and after your fix."
+      - "Open the Nanite Visualization menu and check Overdraw and Evaluate WPO on your foliage."
+      - "Capture a short Unreal Insights trace and find the Shadow Depths cost for VSM before and after."
+    done_when: "Before and after Cached Page screenshots, the VSM stats numbers before and after, and 4–6 lines: what caused the invalidations, what you changed, and the change in Shadow Depths time."
+    xp: 250
+    verify_type: writeup
+    quiz:
+      - q: "How do Virtual Shadow Maps keep a 16k x 16k virtual resolution affordable?"
+        choices: ["They render the full 16k map once per level load", "They use lower resolution on consoles only", "They split the map into 128x128 pages, render only pages needed for on-screen pixels, and cache them between frames", "They bake shadows into lightmaps"]
+        answer_index: 2
+        explain: "Pages are allocated and rendered only as needed, based on the depth buffer, and cached unless moving objects or lights invalidate them."
+      - q: "In the Cached Page view, what does a blue page mean?"
+        choices: ["Only the static page is cached, the dynamic part is not", "The page is fully cached", "The page overflowed the pool", "The page belongs to a point light"]
+        answer_index: 0
+        explain: "Green is cached, red is uncached. Blue means only the static page is cached and the dynamic part is uncached."
+      - q: "Your foliage uses WPO wind and the shadow cost is high even with a still camera. Why?"
+        choices: ["WPO disables Nanite", "WPO forces ray-traced shadows", "Foliage never uses VSM", "Geometry with WPO invalidates its cached pages every frame, because the real offset is not known until render"]
+        answer_index: 3
+        explain: "The cache must assume a WPO object needs redrawing. Use World Position Offset Disable Distance or other ways to stop animation far away."
+      - q: "A static WPO mesh never really moves but keeps invalidating shadows. Which Shadow Cache Invalidation Behavior fits?"
+        choices: ["Always", "Rigid", "Auto", "None of them, turn off shadows"]
+        answer_index: 1
+        explain: "Rigid suppresses invalidations caused by, for example, World Position Offset. Static also ignores transform changes, and moving it gives undefined results."
+      - q: "VSM stats show many invalidated static pages. What does Epic recommend?"
+        choices: ["Switch the actors that cause them to Movable", "Raise r.Shadow.Virtual.MaxPhysicalPages", "Turn off caching with r.Shadow.Virtual.Cache 0", "Lower screen percentage"]
+        answer_index: 0
+        explain: "Static page invalidations should be near zero. Find the actors that invalidate the static cache and switch them to Movable."
+      - q: "Why should large shadow casters like buildings use Nanite, even if they are low poly?"
+        choices: ["Nanite meshes have no shadows", "Nanite turns off WPO", "Invalidations fully in the shadow of Nanite objects can be skipped, and Nanite renders into VSM far more cheaply", "Non-Nanite meshes cannot cast VSM shadows"]
+        answer_index: 2
+        explain: "Only Nanite occluders allow skipping those invalidations. Non-Nanite geometry is also much more expensive to render into VSM."
+      - q: "Shadows show a checkerboard pattern or go missing, and a warning appears in the log. What happened?"
+        choices: ["The lighting build is out of date", "Nanite streaming pool is full", "Contact shadows are on", "The physical page pool overflowed"]
+        answer_index: 3
+        explain: "If Pages exceed Max Pages, corruption can occur. Raise r.Shadow.Virtual.MaxPhysicalPages or lower shadow resolution or the number of shadow-casting lights."
+      - q: "A mesh with WPO shows parts of its shadow missing. What should you check first?"
+        choices: ["Its bounds, for example set Max World Position Offset Displacement in the material", "The texture streaming pool", "The Skylight intensity", "The mesh UV density"]
+        answer_index: 0
+        explain: "Page marking uses object bounds. Bounds that are too small cause missing shadows. Too large bounds cause extra invalidations."
+      - q: "A low-poly smooth sphere near the camera shows shadow terminator artifacts. What is the best fix?"
+        choices: ["Raise r.Shadow.Virtual.NormalBias for the whole project", "Add more polygons to that mesh, or a more detailed LOD", "Turn off VSM", "Lower Source Angle to 0"]
+        answer_index: 1
+        explain: "Adding geometry reduces the problem without hurting other shadows. Raising normal bias loses fine shadow detail everywhere."
+      - q: "An artist assigns a Translucent material to a Nanite mesh. What happens?"
+        choices: ["It renders as translucent with a small cost", "The mesh becomes non-Nanite automatically", "The editor crashes on save", "A default material is assigned and a warning appears in the Output Log"]
+        answer_index: 3
+        explain: "Nanite supports Opaque and Masked blend modes. For unsupported material types, a default material is used and a warning is logged."
+      - q: "The Nanite Overdraw view is very hot on a dense masked foliage patch. Why can masked materials look worse there?"
+        choices: ["All evaluated pixels, including masked-out ones, count as overdraw", "Masked materials are not supported by Nanite", "Masked materials disable VSM", "Overdraw only counts translucent pixels"]
+        answer_index: 0
+        explain: "Nanite Overdraw adds all evaluated pixels, including masked-out ones. Small, closely stacked objects create more overdraw."
+      - q: "The shadow projection pass is too expensive. What should you try before lowering SMRT ray and sample counts?"
+        choices: ["Disable async compute in the shipping build", "Increase clipmap levels", "Reduce Source Radius on local lights or Source Angle on the Directional Light", "Turn off page caching"]
+        answer_index: 2
+        explain: "Projection cost depends on samples across the screen, not on pages or caching. Softer shadows use more rays, so reduce the light size first."
+    flavors:
+      _default: {why: "Nanite and VSM make big scenes possible. They also have clear rules. Break them and the frame cost jumps."}
+      tech_art: {why: "You set the rules for WPO, bounds and Nanite use that every artist follows.", do: "Write a 5-line team rule sheet: when to use WPO, required Disable Distance, and which meshes must be Nanite."}
+      lookdev: {why: "Soft shadows come from light size. Know what that costs before you raise Source Radius."}
+      cinematics: {why: "Close-ups with moving foliage can blow the shadow budget. r.Shadow.Virtual.MaxDOFResolutionBias can help for out-of-focus areas."}
+
+  - id: TAQ28
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [substrate, materials, layering, shading, performance]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: false
+    title: Layered materials with Substrate
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/substrate-materials-in-unreal-engine"
+    checklist:
+      - "Use a test project with Substrate on. Check which GBuffer format it uses in Project Settings > Rendering."
+      - "Create M_Sub_CarPaint: a metal base Slab, a clear coat Slab on top with Substrate Vertical Layer, and Top Thickness exposed as a parameter."
+      - "Create M_Sub_WetGround: two Slabs mixed with Substrate Horizontal Blend, driven by a mask texture."
+      - "Open Window > Substrate and read the stats for both. Note bytes per pixel and any simplification."
+      - "Turn on Use Parameter Blending on the last operator before the root. Compare the stats and the look."
+      - "In the level, check View Modes > Substrate > Material Count and Material Classification with both materials on screen."
+    done_when: "Screenshots of both graphs, the Substrate panel with and without parameter blending, and the Material Classification view. Add 3–5 lines on which version you would ship and why."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "A Substrate Slab is made of two parts. Which ones?"
+        choices: ["Base Color and Metallic", "An interface and a medium", "A front face and a back face", "A shading model and a blend mode"]
+        answer_index: 1
+        explain: "The interface is where light meets the surface (Roughness, Normal, F0, F90). The medium is the matter below, defined mainly by Mean Free Path and Diffuse Albedo."
+      - q: "Substrate uses F0 / Diffuse Albedo instead of Base Color / Specular / Metalness. What F0 range fits most dielectrics?"
+        choices: ["About 0.02 to 0.06 linear", "About 0.5 to 1.0 linear", "Exactly 0.18", "Always 1.0"]
+        answer_index: 0
+        explain: "Dielectrics usually sit between 0.02 and 0.06 in linear space. Conductors go from beyond 0.5 up to 1."
+      - q: "You need varnish over wood, with the wood look changed by the coat thickness. Which operator?"
+        choices: ["Substrate Horizontal Blend", "Substrate Add", "Substrate Vertical Layer", "Substrate Select"]
+        answer_index: 2
+        explain: "Vertical Layer puts a Top slab over a Bottom slab and uses Top Thickness for transmittance and scattering. It fits car paint, varnish and wetness."
+      - q: "Why should you avoid the Substrate Add operator in most materials?"
+        choices: ["It only works on translucent materials", "It is removed in UE 5.8", "It forces Adaptive GBuffer", "It can send out more energy than comes in, so it is not physically plausible"]
+        answer_index: 3
+        explain: "Add can produce more outgoing energy than incoming energy. Use it only when art direction matters more than physical plausibility."
+      - q: "Where do you enable Use Parameter Blending in a graph with several operators?"
+        choices: ["Only on the rightmost operator before the root node; the others then blend automatically", "On every operator by hand", "On the root node only", "In Project Settings only"]
+        answer_index: 0
+        explain: "Only the rightmost operator before the Material Root node must have it on. All other nodes in the graph apply parameter blending automatically."
+      - q: "A material uses two BSDFs per pixel without parameter blending. What does that do to lighting cost?"
+        choices: ["No change, the second slab is free", "About 10% more", "About twice as slow as one BSDF", "Lighting cost goes down"]
+        answer_index: 2
+        explain: "Lighting two BSDFs is twice as slow as one. More slabs after that raise the cost almost linearly."
+      - q: "Your project targets 60 Hz on many platforms. Which GBuffer format fits, and why?"
+        choices: ["Adaptive, because it is faster", "Blendable, because it has fixed memory, predictable speed and parity with the legacy path", "Adaptive, because it lowers cook time", "Neither, Substrate cannot run at 60 Hz"]
+        answer_index: 1
+        explain: "Blendable targets 60 Hz projects with fixed memory and speed similar to non-Substrate. Adaptive costs more and adds about 15% cook time."
+      - q: "On Blendable GBuffer, a material with Haziness and Glints looks plain. Why?"
+        choices: ["The textures did not stream in", "The material needs Nanite", "Glints only work on mobile", "Those features are not supported on Blendable GBuffer, so they are visually missing"]
+        answer_index: 3
+        explain: "On Blendable GBuffer, F90, per-pixel MFP diffusion SSS, Haziness and Glints are not supported. The feature is simply missing."
+      - q: "Where do you see why a Substrate material was simplified?"
+        choices: ["In the Substrate panel (Window > Substrate) in the Material Editor", "In the Output Log only", "In the Content Browser tooltip", "In stat unit"]
+        answer_index: 0
+        explain: "When a material goes over the closure or bytes-per-pixel budget it is simplified. The reasons show in the Substrate stats panel."
+      - q: "A lead wants to convert all legacy materials with Convert to Substrate before a release. What is the risk?"
+        choices: ["None, you can switch back any time", "Converted materials lose their textures", "Conversion is permanent, and converted materials render black if Substrate is turned off", "It doubles texture memory"]
+        answer_index: 2
+        explain: "Explicit conversion cannot be reverted, and Substrate materials render black when Substrate is disabled. Legacy materials already compile to Substrate without conversion."
+      - q: "What can Substrate layering do that legacy Material Layers and Material Attributes cannot?"
+        choices: ["Blend two materials across a surface with a mask", "Use material functions", "Use texture parameters", "Put a real slab of matter on top of another, for example a top layer with colored transmittance"]
+        answer_index: 3
+        explain: "Material Layers only blend parameters side by side (horizontal mixing). They cannot layer a slab of matter on top of another."
+      - q: "The Material Classification view shows red tiles over a large part of the screen. What does red mean?"
+        choices: ["Multiple slabs are mixed or layered in the tile, or Anisotropy is on", "The material failed to compile", "The texture pool is over budget", "The tile uses a simple legacy slab"]
+        answer_index: 0
+        explain: "Green is a simple material, yellow is a single slab with features, red is several slabs or Anisotropy. Red over large areas means high lighting cost."
+    flavors:
+      _default: {why: "Substrate replaces the fixed shading models. Layering is now real, and so is its cost."}
+      tech_art: {why: "You set the slab budget and decide when parameter blending is on.", do: "Try r.Substrate.BytesPerPixel at a lower value and note which of your materials get simplified first."}
+      lookdev: {why: "Car paint, wet surfaces and coated metals look more correct with real layers. Know the price."}
+      cinematics: {why: "Cinematic shots can use Adaptive GBuffer features that a 60 Hz game cannot afford."}
+
+  - id: TAQ29
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [capstone, tools, pipeline, validation, material-functions, scalability]
+    required_for_majors: [tech_art]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    capstone: true
+    title: "CAPSTONE: Pipeline piece"
+    time_min: 480
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-validation-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-using-interchange-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-functions-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-python"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scalability-reference-for-unreal-engine"
+    checklist:
+      - "Pick one path. A: an import or naming tool (Interchange pipeline, EUW_ Editor Utility Widget, or an EditorValidatorBase validator). B: a library of at least 6 MF_ material functions."
+      - "Write short docs: what it does, how to install it, its rules or inputs, and one known limit."
+      - "Path A: make it report clear errors in the Message Log, and run it on a full folder. Path B: build 3 materials from the library and document each function's inputs."
+      - text: "Give it to at least one other person. They use it on their own assets and send you feedback."
+        needs_others: true
+      - text: "Fix at least one problem they found, and log the change."
+        needs_others: true
+      - "Scalability check: take one scene that uses your work. Capture Low and Epic from the same bookmark with stat unit, and note the biggest difference."
+    done_when: "Writeup with: a link to the tool or library and its docs, a clip or screenshots of it running, the other person's feedback and your fix, and the Low vs Epic screenshots with 2–3 lines on the result. Approved by a mentor."
+    done_when_solo: "Writeup with: a link to the tool or library and its docs, a test project that proves it on 20 or more assets (screenshots of the results and any errors it caught), and the Low vs Epic screenshots with 2–3 lines on the result. Approved by a mentor."
+    xp: 400
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A tech artist's best work is the tool other people use every day without thinking about it."}
+      tech_art: {why: "This is your portfolio proof: a pipeline piece that others used, with docs, tested at more than one quality level.", do: "Add a command line run with -run=DataValidation, or a one-click install, so a new team member can start in 5 minutes."}
+
+  - id: TAQ30
+    rank: 4
+    difficulty: master
+    track: tech-art
+    subjects: [texture-streaming, memory, textures, profiling]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: true
+    title: Texture memory on a budget
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-overview-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-configuration-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-metrics-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/building-texture-streaming-data-in-unreal-engine"
+    checklist:
+      - "Open a texture-heavy level. Run Build > Build Texture Streaming."
+      - "In PIE, run STAT STREAMING. Write down Streaming Pool, Required Pool and Wanted Mips."
+      - "Lower r.Streaming.PoolSize until Required Pool goes over 100%. Screenshot which surfaces go blurry first."
+      - "Check the Mesh UV Density Accuracy and Material Texture Scale Accuracy view modes. Find one red or green object."
+      - "Fix one cause, for example the Streaming Distance Multiplier on a mesh, or a texture that is far too big for its screen size."
+      - "Set the pool back and compare the STAT STREAMING numbers before and after your fix."
+    done_when: "STAT STREAMING screenshots before and after, one accuracy view mode screenshot with the problem object marked, and 3–4 lines on what you changed and why."
+    xp: 120
+    verify_type: writeup
+    quiz:
+      - q: "When the ideal resolutions do not fit in the pool, what does the streamer do?"
+        choices: ["It lowers all textures by one mip at once", "It drops one mip at a time on selected textures until the plan is under budget", "It stops loading new textures", "It raises the pool size automatically"]
+        answer_index: 1
+        explain: "The streamer reduces the planned quality for selected textures, one mip at a time, until the plan fits the streaming pool."
+      - q: "Which mips does the streamer drop first when it must drop some?"
+        choices: ["Landscape textures", "Character textures", "Visible mips on screen", "Mips that are not visible, least recently seen first"]
+        answer_index: 3
+        explain: "Retention keeps landscape, forced and visible mips, then character and small textures. It drops non-visible mips, least recently seen first."
+      - q: "What does r.Streaming.PoolSize include?"
+        choices: ["UI textures, NeverStream textures, cubemaps and streaming textures", "Only streaming textures", "Only textures in the current level", "Only render targets"]
+        answer_index: 0
+        explain: "The pool contains UI, NeverStream, cubemaps and streaming textures. On some platforms it can also hold non-texture resources. 0 means unlimited."
+      - q: "You set a global r.Streaming.MipBias to fit a small pool. Which textures are NOT affected?"
+        choices: ["Character textures", "Terrain and Landscape textures", "UI textures", "Normal maps"]
+        answer_index: 1
+        explain: "The bias has no effect on terrain and landscape textures. For HLOD textures it does not limit max resolution, and for lightmaps it only limits max resolution."
+      - q: "For a showcase build you want every used texture at full resolution. Why use r.Streaming.FullyLoadUsedTextures instead of turning streaming off?"
+        choices: ["Turning streaming off is not possible", "They do the same thing", "Turning streaming off loads all mips of every texture, even unused ones, so it needs more memory", "FullyLoadUsedTextures also raises the pool"]
+        answer_index: 2
+        explain: "With the streamer disabled, all mips load even for textures never used. FullyLoadUsedTextures only loads textures that are used."
+      - q: "STAT STREAMING shows Required Pool at 130%. What does that mean?"
+        choices: ["Some textures will not load at their required resolution", "Memory is leaking", "The streaming data is not built", "The GPU is out of VRAM"]
+        answer_index: 0
+        explain: "Required Pool can go over 100% of the streaming pool. Then the streamer makes a compromise and some textures stay below the required resolution."
+      - q: "Textures keep streaming in and out in a loop. Non-streaming memory swings more than the Safety Pool. What is the fix?"
+        choices: ["Raise r.Streaming.Boost", "Turn off mips on all textures", "Lower r.Streaming.FramesForFullUpdate", "Reduce those non-streaming allocations or increase the safety pool (MemoryMargin)"]
+        answer_index: 3
+        explain: "If a normal fluctuation is bigger than the safety pool, the streamer keeps changing its budget. This can create endless cycles of streaming in and out."
+      - q: "What must be true about the Temporary Pool (r.Streaming.MaxTempMemoryAllowed)?"
+        choices: ["It must be 0 on consoles", "It must be at least as large as the largest resource to stream, but not so large that it wastes memory", "It must equal the streaming pool", "It only matters in the editor"]
+        answer_index: 1
+        explain: "Too small slows streaming. Too large wastes reserved memory and gives less control over load order."
+      - q: "Streaming is slow and Inflight Requests often shows 0. What does that suggest?"
+        choices: ["The streamer is not using all the IO bandwidth; raise MaxTempMemoryAllowed or lower FramesForFullUpdate", "The disk is full", "All textures are already loaded", "The pool is too big"]
+        answer_index: 0
+        explain: "0 inflight while still streaming means the IO system is idle. Each fix has a cost: more wasted memory, or longer update time."
+      - q: "In the texture streaming accuracy view modes, what does red mean?"
+        choices: ["Good data", "1 extra mip", "2 or more mips missing", "The shader failed to build"]
+        answer_index: 2
+        explain: "Red is 2X+ mips missing, yellow 1 mip missing, white good, cyan 1 extra mip, green 2X+ extra mips. A checkerboard means the shader could not build."
+      - q: "A material samples a texture with world-position UVs. What does the streaming build assume for it?"
+        choices: ["It skips the texture completely", "It always loads the top mip", "It uses the Landscape rules", "UV channel 0 with a scale of 1"]
+        answer_index: 3
+        explain: "The analysis cannot follow world position or vertex color sampling. It then assumes UV channel 0 and a scale of 1."
+      - q: "You want to test if the streamer loads the right mips at the right time, with no caching or prefetch. Which setting helps?"
+        choices: ["r.Streaming.UseAllMips 1", "r.Streaming.DropMips 2", "r.TextureStreaming 0", "r.Streaming.Boost 10"]
+        answer_index: 1
+        explain: "DropMips 2 keeps only visible mips, so caching and prefetching are off. Use it with the Required Texture Resolution view mode."
+    flavors:
+      _default: {why: "Texture memory is the first budget to break on low-end hardware. The streamer decides what gets blurry."}
+      tech_art: {why: "Over-budget warnings are your problem to diagnose. You need to read STAT STREAMING, not guess.", do: "Set r.Streaming.PoolSize per memory bucket in a device profile, for example with +CVars_Smallest, and test the smallest one."}
+      lookdev: {why: "Your hero textures may never reach full resolution if the pool is tight. Know why and how to check."}
+      programming: {why: "Streaming runs partly on an async thread and has clear stats. You can profile it like any other system."}

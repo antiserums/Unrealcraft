@@ -143,7 +143,7 @@ class Catalog:
             want = q.tier["quiz_len"]
             if required_somewhere and q.quiz and len(q.quiz) < want:
                 warns.append(f"{where}: {q.difficulty} quiz has {len(q.quiz)} questions (want {want})")
-            if required_somewhere and not q.quiz and r.get("verify_type") != "action":
+            if required_somewhere and not q.quiz and r.get("verify_type") not in ("action", "mentor") and not q.capstone:
                 warns.append(f"{where}: required quest has no quiz yet")
             if r.get("official_url") == "TODO_URL":
                 warns.append(f"{where}: official_url TODO_URL")
