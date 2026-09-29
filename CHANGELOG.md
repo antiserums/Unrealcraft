@@ -15,6 +15,21 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.3.0 · 2026-09-29 · Easier start
+Starting out is now simpler and easier to read, including for people who don't speak English as a first language.
+
+### #welcome is the one start page
+- #how-this-place-works is merged into #welcome. One page, short sentences: what Unrealcraft is, 3 steps to start, the 5 commands, what opens at each rank, where to get help, and the rules.
+- Buttons on the page: **Start Orientation** and **📝 Rules quiz**, so you don't need to type to begin.
+- You can now use commands like `/start` and `/quiz O1` in #welcome. It stays a commands-only channel; please chat in #general.
+
+### Orientation
+- New Orientation page: a progress bar, a **👉 Next** step, and one short line per step.
+- Buttons for the steps you can do with a click: **Rules quiz** and **Skip voice**.
+- All 8 steps are rewritten in plain English, with simpler names (e.g. **Try 3 commands**, **Practice sending work**, **Visit voice chat**).
+- The rules quiz uses simpler questions.
+- On #quest-board the button is now called **I found it**.
+
 ## v0.2.0 · 2026-09-29 · Pick more than one answer
 Joining now lets you tell us everything you're into, not just one thing.
 

@@ -87,6 +87,7 @@ class Quartermaster(commands.Bot):
         """Post patch notes for any version tag that has been pushed to GitHub since the last check."""
         g = self.get_guild(self.settings.guild_id or 0)
         self.changelog_errors = release.validate(BOT_ROOT.parent / "CHANGELOG.md")
+        self.release = release.latest(BOT_ROOT.parent / "CHANGELOG.md") or self.release
         if not g or self.changelog_errors:
             return
         posted = await self.get_cog("SetupServer").post_patch_notes(g)
