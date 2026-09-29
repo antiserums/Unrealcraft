@@ -52,7 +52,7 @@ Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/chec
 | `fact: cmd.major / cmd.rank / cmd.quest / cmd.path / cmd.profile_version / cmd.skip_voice` | slash command used | O2, O3, O7, O-E1 |
 | `fact: btn.clockin` | pinned button pressed | O4 |
 | `fact: submit.O5` | `/submit O5 READY` | O5 |
-| `fact: thread.help_desk` | post created through the **New help post** form | O6 |
+| `fact: thread.help_desk` | post created through the **Unreal help** or **Server / bot problem** form | (recorded; no step uses it now) |
 | `any: [voice.studio_floor, cmd.skip_voice]` | 60 s in Studio Floor | O7 |
 | `fact: react.showcase` | reaction on someone else's showcase post | O8 |
 | `fact: msg.<channel>` | any message in that channel (author + channel only, no Message Content intent) | O-E3 |

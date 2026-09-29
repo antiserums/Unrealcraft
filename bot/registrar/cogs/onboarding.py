@@ -125,7 +125,7 @@ class Onboarding(commands.Cog):
             desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
             desc += "\n\n🎉 **All done!** Type `/quest` to get your first Unreal quest."
-        return discord.Embed(title="🧭 Orientation: 8 small steps", description=desc,
+        return discord.Embed(title=f"🧭 Orientation: {len(steps)} small steps", description=desc,
                              color=discord.Color.from_str("#7A8C7E"))
 
     def orientation_view(self, done: set[str]) -> discord.ui.View | None:
@@ -393,7 +393,7 @@ class ClockInButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:clo
 
 class HelpPostButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:helppost"):
     """Pinned in #help-desk. Opens a modal that creates a forum post with the template filled in.
-    This handles O6 without the Message Content intent."""
+    No Message Content intent needed: the form builds the post."""
 
     def __init__(self):
         super().__init__(discord.ui.Button(label="Unreal help", emoji="🛠️", style=discord.ButtonStyle.primary,
