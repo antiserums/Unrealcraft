@@ -15,6 +15,16 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.3.1 · 2026-09-29 · Clearer first step
+Small fixes to make the first step easier.
+
+### Orientation
+- Step 1 is now **only the rules quiz**. Pass it and the step is done.
+- One rules quiz question was confusing. It asked which answer is *not* allowed. It now asks for the **good** answer.
+
+### Quests
+- Quest cards now say exactly how to finish a quest: pass the quiz only, the bot ticks it for you, or quiz then `/submit`.
+
 ## v0.3.0 · 2026-09-29 · Easier start
 Starting out is now simpler and easier to read, including for people who don't speak English as a first language.
 
