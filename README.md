@@ -31,7 +31,7 @@ CHANGELOG.md           patch notes (top entry is posted to #patch-notes)
 curriculum/            source of truth for quests (YAML)
   majors.yaml          ranks, XP thresholds, seals, majors, tasters, capstones
   orientation.yaml     O1–O8 + 4 electives (Discord literacy)
-  spine.yaml           S1–S11 Starter Quests + Rank 0 meta electives
+  spine.yaml           Q1–Q11 Starter Quests + Rank 0 meta electives
   level_design_r1.yaml Rank 1 world/lighting + Level Design (full quizzes)
   level_design_r2.yaml Rank 2 shared Blueprint + Level Design (full quizzes)
   level_design_r3.yaml Rank 3 shared characters-anim + bay-design (full quizzes)
