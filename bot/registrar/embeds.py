@@ -33,6 +33,30 @@ def nameplate(cat: Catalog, rank: int, seal: str | None, major: str) -> str:
     return title
 
 
+def reading_links(q: Quest) -> list[tuple[str, str]]:
+    """(label, url) for a quest's learning material: the official page first, then extras, then a backup video."""
+    r, out = q.raw, []
+    if (u := r.get("official_url")) and u.startswith("http"):
+        out.append(("Official Epic guide", u))
+    for i, u in enumerate(r.get("extra_urls") or [], 1):
+        if u.startswith("http"):
+            out.append((f"Extra reading {i}", u))
+    if (u := r.get("backup_url")) and u.startswith("http"):
+        out.append(("Backup video", u))
+    return out
+
+
+def guide_view(q: Quest, view: discord.ui.View | None = None) -> discord.ui.View | None:
+    """Link buttons to the material (Discord opens them in the browser)."""
+    links = reading_links(q)
+    if not links:
+        return view
+    view = view or discord.ui.View(timeout=None)
+    label, url = links[0]
+    view.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Open the guide", emoji="📖", url=url))
+    return view
+
+
 def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
                 facts: set[str] | None = None) -> discord.Embed:
     r = q.raw
@@ -48,17 +72,19 @@ def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
                 inline=False)
     if fl.get("do"):
         e.add_field(name="Your version", value=fl["do"], inline=False)
-    links = []
-    if r.get("official_url") and r["official_url"] != "TODO_URL":
-        links.append(f"📘 [Official]({r['official_url']})" if r["official_url"].startswith("http") else f"📘 {r['official_url']}")
-    if r.get("backup_url") and r["backup_url"] != "TODO_URL":
-        links.append(f"🎞 [Backup video]({r['backup_url']})")
+    links = reading_links(q)
+    has_quiz = bool(q.quiz)
+    step = 1
     if links:
-        e.add_field(name="Sources", value=" · ".join(links), inline=False)
+        e.add_field(name=f"📖 Step {step}: Read this first", inline=False, value=(
+            "\n".join(f"• [{label}]({url})" for label, url in links)
+            + ("\nThe quiz asks about this page." if has_quiz else ""))[:1024])
+        step += 1
     checklist = checks.status_lines(q, facts or set(), cat.community_ready)
     if checklist:
-        e.add_field(name="Checklist  (✅ seen by the bot · ☐ not yet · 📎 checked on submit · ▫ honor)",
-                    value="\n".join(checklist)[:1024], inline=False)
+        title = "🛠️ Step {}: Do this{}".format(step, " in Unreal" if q.rank >= 0 else "")
+        e.add_field(name=title, value="\n".join(checklist)[:1024], inline=False)
+        step += 1
     done_when = r.get("done_when_solo") if (not cat.community_ready and r.get("done_when_solo")) else r.get("done_when")
     e.add_field(name="Done when", value=(done_when or "—")[:1024], inline=False)
     vt = r.get("verify_type")
@@ -68,7 +94,7 @@ def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
         how = "Nothing to send. The bot ticks it when it sees you do it."
     else:
         how = (f"`/quiz {q.id}` then " if q.quiz else "") + f"`/submit {q.id}`"
-    e.add_field(name="How to finish", value=how, inline=False)
+    e.add_field(name=f"✅ Step {step}: How to finish", value=how, inline=False)
     if reason:
         e.set_footer(text=f"Why this one: {reason}")
     return e

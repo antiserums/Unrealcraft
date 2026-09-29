@@ -40,16 +40,38 @@ class Quiz(commands.Cog):
             await itx.response.send_message("That quiz unlocks at a higher rank.", ephemeral=True)
             return
         first_try = await self.bot.db.quiz_attempts(itx.user.id, q.id) == 0
+        from ..embeds import guide_view, reading_links
+        links = reading_links(q)
+        if links:                                   # read first: show the guide before any question
+            intro = discord.ui.View(timeout=900)
+            intro.add_item(StartQuizButton(self, q, itx.user.id, first_try))
+            guide_view(q, intro)
+            lines = "\n".join(f"• [{label}]({url})" for label, url in links)
+            await itx.response.send_message(
+                f"**{q.id} · {q.raw['title']}: quiz**\n"
+                f"📖 The questions are about this material. Read it first:\n{lines}\n\n"
+                f"{len(q.quiz)} questions. You need {int(QUIZ_PASS_RATIO * len(q.quiz))} right. "
+                "Press **Start quiz** when you're ready.", view=intro, ephemeral=True, suppress_embeds=True)
+            return
         view = QuizView(self, q, itx.user.id, first_try)
         await itx.response.send_message(**view.render(), view=view, ephemeral=True)
 
-    async def finish(self, itx: discord.Interaction, q, score: int, first_try: bool) -> str:
+    async def finish(self, itx: discord.Interaction, q, score: int, first_try: bool):
+        """Returns (message, view). The view always has a button to the next thing."""
+        from ..embeds import guide_view
+        from .quests import NextQuestButton, SendWorkButton
+        from .onboarding import NextStepsButton
+        view = discord.ui.View(timeout=None)
         db = self.bot.db
         total = len(q.quiz)
         passed = score / total >= QUIZ_PASS_RATIO
         await db.log_quiz(itx.user.id, q.id, score, total, passed)
         if not passed:
-            return f"**{score}/{total}**. You need {int(QUIZ_PASS_RATIO * total)}. Reread the checklist and try again."
+            view.add_item(QuizButton(q.id, label="Try again"))
+            guide_view(q, view)
+            return (f"**{score}/{total}**. You need {int(QUIZ_PASS_RATIO * total)}. "
+                    + ("Read the guide again, then try again." if q.raw.get("official_url", "").startswith("http")
+                       else "Read #welcome again, then try again.")), view
         await db.set_progress(itx.user.id, q.id, "quiz_passed", quiz_passed=True)
         msg = f"**{score}/{total}**. Passed."
         if first_try:
@@ -60,14 +82,29 @@ class Quiz(commands.Cog):
         prof = json.loads(await db.kv_get(itx.user.id, "profile") or "{}")
         test_out = q.spine and first_try and profile.can_test_out(prof)
         if q.raw.get("verify_type") == "quiz" or test_out:
-            asyncio.create_task(self.bot.get_cog("Quests").complete(itx.guild, itx.user.id, q.id))
+            await self.bot.get_cog("Quests").complete(itx.guild, itx.user.id, q.id)
             msg += " Tested out: quest complete, no turn-in needed." if test_out and q.raw.get("verify_type") != "quiz" \
                 else " Quest complete."
+            view.add_item(NextStepsButton() if q.rank < 0 else NextQuestButton())
         elif q.raw.get("verify_type") == "action":
-            msg += " That box is ticked. `/start` shows what's left."
+            msg += " That step is ticked."
+            view.add_item(NextStepsButton())
         else:
-            msg += f" Now `/submit {q.id}` with your proof."
-        return msg
+            msg += " Now send your work."
+            view.add_item(SendWorkButton(q.id))
+        return msg, view
+
+
+class StartQuizButton(discord.ui.Button):
+    def __init__(self, cog: "Quiz", q, uid: int, first_try: bool):
+        super().__init__(label="Start quiz", emoji="📝", style=discord.ButtonStyle.success)
+        self.cog, self.q, self.uid, self.first_try = cog, q, uid, first_try
+
+    async def callback(self, itx: discord.Interaction):
+        if itx.user.id != self.uid:
+            return
+        view = QuizView(self.cog, self.q, self.uid, self.first_try)
+        await itx.response.edit_message(**view.render(), view=view)
 
 
 class QuizView(discord.ui.View):
@@ -107,12 +144,7 @@ class QuizView(discord.ui.View):
             self.feedback = ("✅ " if right else f"❌ Answer: {self._letter(item['answer_index'])}. ") + item.get("explain", "")
             self.i += 1
             if self.i >= len(self.q.quiz):
-                result = await self.cog.finish(itx, self.q, self.score, self.first_try)
-                view = None
-                if self.q.rank < 0:                       # an Orientation quiz: point to what's next
-                    from .onboarding import NextStepsButton
-                    view = discord.ui.View(timeout=None)
-                    view.add_item(NextStepsButton())
+                result, view = await self.cog.finish(itx, self.q, self.score, self.first_try)
                 await itx.response.edit_message(content=f"{self.feedback}\n\n{result}", view=view)
                 self.stop()
                 return

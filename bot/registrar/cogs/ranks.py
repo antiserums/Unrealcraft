@@ -35,10 +35,13 @@ class Ranks(commands.Cog):
     @app_commands.command(name="rank", description="Your rank card: XP, streak, next unlock, medals.")
     async def rank(self, itx: discord.Interaction, member: discord.Member | None = None):
         member = member or itx.user
-        db = self.bot.db
-        u = await db.user(member.id)
         if member.id == itx.user.id:
             await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.rank")
+        await itx.response.send_message(embed=await self.card(member))
+
+    async def card(self, member) -> discord.Embed:
+        db = self.bot.db
+        u = await db.user(member.id)
         st = await self.state(member.id)
         target = u["rank"] + 1
         ok, missing = self.cat.rank_requirements_met(st, target)
@@ -49,7 +52,7 @@ class Ranks(commands.Cog):
                          + ("all required quests done" if ok else f"{len(missing)} required left"))
         else:
             next_line = "Top of the ladder. The Optimization shelf is open."
-        await itx.response.send_message(embed=rank_card(self.cat, member, u, await db.medals(member.id), next_line))
+        return rank_card(self.cat, member, u, await db.medals(member.id), next_line)
 
     # ------------------------------------------------------------- promotion
     async def check_promotion(self, guild: discord.Guild, uid: int) -> bool:
@@ -141,7 +144,7 @@ class Ranks(commands.Cog):
         lines = {
             0: ["You're Greenlit. You have a desk but no badge yet.",
                 "You owe the Starter Quests: 11 short quests, each one sitting.",
-                f"Next: {nxt}. Run /quest.",
+                f"Next: {nxt}. Your quests live in #quest-board: press Continue your quest there.",
                 "Stuck? #help-desk with the template. Mentors answer formatted posts first.",
                 "New power: #foundations is open. Post WIP and questions there."],
             1: ["Blockout Artist. You can build a space and light it without getting lost.",

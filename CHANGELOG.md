@@ -5,8 +5,7 @@ GitHub every minute and posts each newly released entry to #patch-notes, one mes
 keeps the full history. To fix a mistake in a released entry, edit it and push; the Quartermaster
 updates that version's existing message instead of posting a new one.
 
-Format: `## vMAJOR.MINOR.PATCH · YYYY-MM-DD · Short title`, an optional one-line summary, then `### Section`
-headings with bullet points (each section becomes a block in the Discord post; keep each under ~1000 characters).
+Format: `## vMAJOR.MINOR.PATCH · YYYY-MM-DD`, then a plain list of changes. No titles or summaries.
 
 Versions follow [Semantic Versioning](https://semver.org):
 - **MAJOR** (v1.0.0 → v2.0.0): breaking for members: progress reset, ranks or XP rebalanced, commands removed or renamed.
@@ -15,96 +14,53 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
-## v0.4.0 · 2026-09-29 · Live Orientation page
-The Orientation page now updates by itself, plus an important fix.
+## v0.4.0 · 2026-09-29
+- The Orientation page updates by itself when you finish a step (for 15 minutes after you open it).
+- Renamed **Lookdev / Env Art** to **Environment Art** (major and Rank 3 Specialty). Existing roles were renamed.
+- Fixed: finishing a quest stopped before checking for Orientation completion and promotions. XP was always saved.
 
-### Orientation
-- While the Orientation page is open, it updates the moment you finish a step: the progress bar, the ✅ marks, the 👉 Next step and the buttons. (Discord allows this for 15 minutes; press the green button in #welcome for a fresh page.)
+## v0.3.2 · 2026-09-29
+- #welcome has one green button that opens the rules quiz, your first quest.
+- After passing the quiz, a **See my next steps** button opens the rest of Orientation.
+- `/start` does the same as the button.
 
-### Names
-- **Lookdev / Env Art** is now called **Environment Art**, both as a major and as a Rank 3 Specialty. If you already had the role, it was renamed for you.
+## v0.3.1 · 2026-09-29
+- Orientation step 1 is only the rules quiz.
+- Replaced a confusing rules quiz question with a clearer one.
+- Quest cards say exactly how to finish: quiz only, automatic, or quiz then `/submit`.
 
-### Fixes
-- Fixed a bug where finishing a quest stopped halfway. Your XP was saved, but the bot never checked if you had finished Orientation or earned a promotion. Nobody lost progress.
+## v0.3.0 · 2026-09-29
+- Merged #how-this-place-works into #welcome: one page with what Unrealcraft is, how to start, the 5 commands, what opens at each rank, help and the rules.
+- Commands like `/start` and `/quiz` work in #welcome. It is commands-only; chat goes in #general.
+- New Orientation page: progress bar, a Next step, one short line per step, and buttons for the rules quiz and skipping voice.
+- Orientation steps and the rules quiz rewritten in plain English with simpler names.
+- #quest-board button renamed to **I found it**.
 
-## v0.3.2 · 2026-09-29 · Start your first quest
-One clear button to begin.
+## v0.2.0 · 2026-09-29
+- Join question **What do you want to learn in Unreal?** accepts several answers.
+- With several answers, the Quartermaster DMs buttons to choose your main path (major). The others count as interests.
+- Join question **What are your goals?** accepts several answers.
+- Quests from your interests are suggested first and move up your `/path` shelf.
+- Suggestions take all your goals into account.
 
-### #welcome
-- The page now has one green button: **⚔️ Start your first quest**. It opens the rules quiz, which is your first quest.
-- After you pass, press **🧭 See my next steps** to see the rest of Orientation. The green button shows your steps from then on.
-- `/start` does the same thing as the button.
-
-## v0.3.1 · 2026-09-29 · Clearer first step
-Small fixes to make the first step easier.
-
-### Orientation
-- Step 1 is now **only the rules quiz**. Pass it and the step is done.
-- One rules quiz question was confusing. It asked which answer is *not* allowed. It now asks for the **good** answer.
-
-### Quests
-- Quest cards now say exactly how to finish a quest: pass the quiz only, the bot ticks it for you, or quiz then `/submit`.
-
-## v0.3.0 · 2026-09-29 · Easier start
-Starting out is now simpler and easier to read, including for people who don't speak English as a first language.
-
-### #welcome is the one start page
-- #how-this-place-works is merged into #welcome. One page, short sentences: what Unrealcraft is, 3 steps to start, the 5 commands, what opens at each rank, where to get help, and the rules.
-- Buttons on the page: **Start Orientation** and **📝 Rules quiz**, so you don't need to type to begin.
-- You can now use commands like `/start` and `/quiz O1` in #welcome. It stays a commands-only channel; please chat in #general.
-
-### Orientation
-- New Orientation page: a progress bar, a **👉 Next** step, and one short line per step.
-- Buttons for the steps you can do with a click: **Rules quiz** and **Skip voice**.
-- All 8 steps are rewritten in plain English, with simpler names (e.g. **Try 3 commands**, **Practice sending work**, **Visit voice chat**).
-- The rules quiz uses simpler questions.
-- On #quest-board the button is now called **I found it**.
-
-## v0.2.0 · 2026-09-29 · Pick more than one answer
-Joining now lets you tell us everything you're into, not just one thing.
-
-### Join questions
-- **What do you want to learn in Unreal?** now accepts several answers.
-- If you pick more than one, the Quartermaster DMs you buttons to choose your **main path** (your major). The others stay as interests.
-- **What are your goals?** (on Channels & Roles) now accepts several answers too, e.g. a job in games *and* making your own game.
-- Experience, coding and weekly time stay single-answer, since only one can be true.
-
-### Your path
-- Quests from your other interests are suggested first in `/quest` and move up your `/path` shelf.
-- Suggestions blend all your goals: career picks favour portfolio and critique quests, indie picks favour playable ones.
-
-## v0.1.0 · 2026-09-29 · First release
-Everything built for the first version of Unrealcraft and its bot, the Quartermaster.
-
-### Server
-- Built the full server layout: **GATE** (#welcome, #how-this-place-works, #announcements, #patch-notes, #epic-games-resources, #rank-ups), **Guild Hub** (#general, #introductions, #showcase, #help-desk, #suggestions), **Voice Rooms** (Studio Floor, Pair Program, Critique Room, Lecture Hall stage), **Workshop** (#quest-board plus one forum per track) and **Staff**.
-- Workshop forums open by rank: #foundations (Greenlit), #world-lighting (Blockout Artist), #materials and #blueprint (Gameplay Prototyper), #characters-anim (Specialist).
-- 55 roles: 7 ranks with colors, 4 Specialist titles, 8 majors, staff roles, ping roles and hidden profile roles.
-- Community features on: Rules Screening with the 8 server rules, welcome screen, AutoMod (mention spam, flagged words, spam, with alerts to staff).
-- Every channel has at most one pinned guide from the Quartermaster, edited in place when it changes.
-
-### Joining and Orientation
-- Join questions: what you want to learn (sets your major), your Unreal experience, whether you code, what you're curious about, plus goal, weekly time and pings on the Channels & Roles page.
-- The Quartermaster uses your answers: experienced members can **test out** of Starter Quests, non-coders get a non-C++ taster, curiosities decide which extra quests are suggested, and your weekly time gives an estimate for your next rank.
-- **Orientation** (8 steps) teaches the server before Unreal. Every step is ticked automatically when the bot sees you do it, including accepting the rules.
-
-### Quests and curriculum
-- **Starter Quests**: 11 quests everyone does, from installing UE5 to a first room, light, material, Blueprint and C++ awareness.
-- **Level Design** path fully written through Rank 3 with 5-question quizzes; **Programming** and **Lookdev** paths drafted; cross-major tasters.
-- Every quest links official Epic Games documentation, checked against the live UE 5.8 docs.
-- Quiz answers are shuffled on every attempt.
-- Checklists show ✅ what the bot saw, ☐ what's left and 📎 what's checked on submit; screenshots, clips, message links and writeups are verified when you `/submit`.
-
-### Commands
-- `/start`, `/quest`, `/quiz`, `/submit`, `/rank`, `/path`, `/major`, `/minor`, `/profile`, `/post`, `/where`, `/help-server`, `/tree`, `/skip-voice`, `/skip-elective`.
-- **New post** form in every Workshop forum (title, WIP/Help/Done, quest, details, up to 4 files); turn-ins are posted to the track forum automatically.
-
-### Ranks and reviews
-- Greenlit → Blockout Artist → Gameplay Prototyper → Specialist → Engineer → Systems Architect → Studio Lead. Promotions need XP **and** your major's capstone; chat never earns XP.
-- Promotions swap your rank role, open new channels, send a briefing DM, post a card in #rank-ups and award a medal.
-- At Rank 3 you pick a **Specialty** (Design, Lookdev, Anim or Code) for your title.
-- Rank 2+ turn-ins go to peer or mentor review with Pass / Changes / Fail.
-
-### Help and updates
-- #help-desk: **🛠️ Unreal help** and **🐞 Server / bot problem** forms; bug reports include the bot version and alert staff.
-- Patch notes: every release pushed to GitHub is posted here, versioned with semantic versioning.
+## v0.1.0 · 2026-09-29
+- Server layout: GATE (#welcome, #how-this-place-works, #announcements, #patch-notes, #epic-games-resources, #rank-ups), Guild Hub (#general, #introductions, #showcase, #help-desk, #suggestions), Voice Rooms (Studio Floor, Pair Program, Critique Room, Lecture Hall), Workshop (#quest-board and track forums) and Staff.
+- Workshop forums that open by rank: #foundations, #world-lighting, #materials, #blueprint, #characters-anim.
+- 55 roles: 7 ranks, 4 Specialist titles, 8 majors, staff, ping and hidden profile roles.
+- Rules Screening with 8 rules, welcome screen and AutoMod.
+- One pinned guide per channel, edited in place when it changes.
+- Join questions (what you want to learn, experience, coding, interests, goals, weekly time, pings) that shape your path: test-outs, tasters, suggestions and a time estimate.
+- Orientation (8 steps), ticked automatically when the bot sees you do each one.
+- Starter Quests: 11 quests from installing UE5 to a first room, light, material, Blueprint and C++ awareness.
+- Level Design path through Rank 3 with quizzes; Programming and Lookdev paths drafted; cross-major tasters.
+- Every quest links official Epic Games documentation, checked against the UE 5.8 docs.
+- Quiz answers shuffled on every attempt.
+- Checklists show what the bot saw and what's left; screenshots, clips, links and writeups are checked on `/submit`.
+- Commands: `/start`, `/quest`, `/quiz`, `/submit`, `/rank`, `/path`, `/major`, `/minor`, `/profile`, `/post`, `/where`, `/help-server`, `/tree`, `/skip-voice`, `/skip-elective`.
+- **New post** form in Workshop forums; turn-ins are posted to the track forum automatically.
+- Ranks: Greenlit → Blockout Artist → Gameplay Prototyper → Specialist → Engineer → Systems Architect → Studio Lead. Promotions need XP and a capstone; chat gives no XP.
+- Promotions swap your rank role, open channels, send a DM, post in #rank-ups and award a medal.
+- Rank 3 Specialty (Design, Lookdev, Anim or Code) sets your title.
+- Rank 2+ turn-ins go to peer or mentor review.
+- #help-desk with **Unreal help** and **Server / bot problem** forms; bug reports alert staff.
+- Patch notes posted here for every release pushed to GitHub, using semantic versioning.

@@ -26,15 +26,18 @@ class Majors(commands.Cog):
     @app_commands.command(name="major", description="Declare or change your major.")
     @app_commands.choices(major=[app_commands.Choice(name=n, value=v) for n, v in MAJOR_CHOICES])
     async def major(self, itx: discord.Interaction, major: app_commands.Choice[str]):
+        await itx.response.send_message(await self.set_major(itx, major.value), ephemeral=True)
+
+    async def set_major(self, itx: discord.Interaction, new: str) -> str:
+        """Shared by /major and the Orientation dropdown. Returns the reply text."""
         db, unl = self.bot.db, self.bot.unlocks
+        name = self.cat.majors.get(new, {}).get("title", new)
         u = await db.user(itx.user.id)
-        new, old = major.value, u["major"]
-        if new == old:
-            await itx.response.send_message(f"You're already {major.name}.", ephemeral=True)
-            return
+        old = u["major"]
+        if new == old and await db.kv_get(itx.user.id, "major_set"):
+            return f"You're already {name}."
         if new == "undecided" and u["rank"] >= 2:
-            await itx.response.send_message("Undecided ends at Rank 2. Pick a major.", ephemeral=True)
-            return
+            return "Undecided ends at Rank 2. Pick a major."
 
         first_pick = old == "undecided" and not await db.kv_get(itx.user.id, "major_set")
         note = ""
@@ -42,23 +45,20 @@ class Majors(commands.Cog):
             await db.set_user(itx.user.id, major=new)
         elif u["rank"] < 3:
             if u["respec_used"] and old != "undecided":
-                await itx.response.send_message("Your free respec is used. After Rank 3 a change costs 4 quests. "
-                                                "Ask a Mod if something went wrong.", ephemeral=True)
-                return
+                return "Your free respec is used. After Rank 3 a change costs 4 quests. Ask a Mod if something went wrong."
             injected = self._missing_tasters(new, u["rank"], await db.done_set(itx.user.id))
             await db.set_user(itx.user.id, major=new, respec_used=1 if old != "undecided" else u["respec_used"],
                               tasters_json=json.dumps(injected))
             note = f"Free respec used. {len(injected)} missing taster(s) added to /quest." if old != "undecided" else ""
         else:
             await db.set_user(itx.user.id, respec_target=new)
-            note = (f"Respec started. Finish {RESPEC_QUESTS_AFTER_R3} required {major.name} quests at Rank "
+            note = (f"Respec started. Finish {RESPEC_QUESTS_AFTER_R3} required {name} quests at Rank "
                     f"{u['rank']} to move your Specialty. Your current Specialty becomes a medal when it does.")
 
-        # swap major role
         member = itx.guild.get_member(itx.user.id)
         old_r, new_r = itx.guild.get_role(unl.role("major", old)), itx.guild.get_role(unl.role("major", new))
         try:
-            if old_r and old_r in member.roles:
+            if old_r and old_r in member.roles and old != new:
                 await member.remove_roles(old_r)
             if new_r and u["rank"] < 3:
                 await member.add_roles(new_r)
@@ -67,7 +67,7 @@ class Majors(commands.Cog):
         await db.kv_set(itx.user.id, "major_set", "1")
         await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.major")
         blurb = self.cat.majors.get(new, {}).get("blurb", "")
-        await itx.response.send_message(f"**Major · {major.name}.** {blurb}\n{note}".strip(), ephemeral=True)
+        return f"**Major · {name}.** {blurb}\n{note}".strip()
 
     def _missing_tasters(self, major: str, rank: int, done: set[str]) -> list[str]:
         out = []
@@ -93,13 +93,15 @@ class Majors(commands.Cog):
 
     @app_commands.command(name="path", description="Your personal tree: done / now / locked / optional shelf.")
     async def path(self, itx: discord.Interaction):
-        st = await self.bot.get_cog("Ranks").state(itx.user.id)
-        lines = self.cat.path_lines(st)
-        text = "\n".join(lines)
+        await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.path")
+        await itx.response.send_message(await self.path_text(itx.user.id), ephemeral=True)
+
+    async def path_text(self, uid: int) -> str:
+        st = await self.bot.get_cog("Ranks").state(uid)
+        text = "\n".join(self.cat.path_lines(st))
         if len(text) > 1900:
             text = text[:1900] + "\n…"
-        await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.path")
-        await itx.response.send_message(f"```\n{text}\n```", ephemeral=True)
+        return f"```\n{text}\n```"
 
     @app_commands.command(name="profile", description="Show or set your profile.")
     async def profile(self, itx: discord.Interaction, ue_version: str | None = None):

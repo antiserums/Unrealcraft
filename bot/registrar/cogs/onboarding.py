@@ -86,7 +86,7 @@ class Onboarding(commands.Cog):
         facts = await self.bot.db.facts(uid)
         try:
             await itx.edit_original_response(embed=self.orientation_embed(done, facts),
-                                             view=self.orientation_view(done))
+                                             view=self.orientation_view(done, facts))
         except discord.HTTPException:
             self._pages.pop(uid, None)
 
@@ -124,19 +124,48 @@ class Onboarding(commands.Cog):
         if nxt:
             desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
-            desc += "\n\n🎉 **All done!** Type `/quest` to get your first Unreal quest."
+            desc += "\n\n🎉 **All done!** Your quests are in **#quest-board**. Press the button below."
         return discord.Embed(title=f"🧭 Orientation: {len(steps)} small steps", description=desc,
                              color=discord.Color.from_str("#7A8C7E"))
 
-    def orientation_view(self, done: set[str]) -> discord.ui.View | None:
-        """Buttons for the steps that can be done with a click."""
+    def channel_url(self, key: str) -> str | None:
+        cid = self.bot.unlocks.channel(key)
+        return f"https://discord.com/channels/{self.bot.settings.guild_id}/{cid}" if cid else None
+
+    def board_button(self, label: str = "Go to #quest-board") -> discord.ui.Button | None:
+        url = self.channel_url("quest_board")
+        return discord.ui.Button(style=discord.ButtonStyle.link, label=label, emoji="🗺️", url=url) if url else None
+
+    def orientation_view(self, done: set[str], facts: set[str] | None = None) -> discord.ui.View:
+        """Always a button to the next thing: the current step's action, or #quest-board when all done."""
         from .quiz import QuizButton
+        facts = facts or set()
         v = discord.ui.View(timeout=None)
-        if "O1" not in done:
-            v.add_item(QuizButton("O1", label="Start your first quest"))
-        if "O7" not in done:
+        nxt = next((q for q in self.cat.orientation() if q.id not in done), None)
+        if nxt is None:
+            if (b := self.board_button("Go to #quest-board: your quests")):
+                v.add_item(b)
+            return v
+        step = nxt.id
+        if step == "O1":
+            v.add_item(QuizButton("O1", label="Next: rules quiz"))
+        elif step == "O2":
+            v.add_item(MajorSelect(self.cat))
+        elif step == "O3":
+            for key, label in (("rank", "Show my rank"), ("quest", "Show my next quest"), ("path", "Show my path")):
+                if f"cmd.{key}" not in facts:
+                    v.add_item(CommandStepButton(key, label))
+        elif step == "O4":
+            if (b := self.board_button("Next: open #quest-board")):
+                v.add_item(b)
+        elif step == "O5":
+            v.add_item(PracticeSendButton())
+        elif step == "O7":
+            if (url := self.channel_url("studio_floor_voice")):
+                v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Next: join Studio Floor",
+                                             emoji="🔊", url=url))
             v.add_item(SkipVoiceButton())
-        return v if v.children else None
+        return v
 
     # ------------------------------------------------------------ commands
     @app_commands.command(name="start", description="Begin Orientation.")
@@ -166,9 +195,19 @@ class Onboarding(commands.Cog):
         if "O1" not in done and not show_steps:
             await self.bot.get_cog("Quiz").start(itx, "O1")          # the first quest IS the rules quiz
             return
+        oriented = all(q.id in done for q in self.cat.orientation())
+        if oriented and not show_steps:                              # after Orientation, quests live in #quest-board
+            v = discord.ui.View(timeout=None)
+            if (b := self.board_button()):
+                v.add_item(b)
+            from .quests import NextQuestButton
+            v.add_item(NextQuestButton("Show my next quest"))
+            await itx.response.send_message("🎉 Orientation is done. Your quests are in **#quest-board** now.",
+                                            view=v, ephemeral=True)
+            return
         facts = await self.bot.db.facts(itx.user.id)
-        kw = {"view": v} if (v := self.orientation_view(done)) else {}
-        await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True, **kw)
+        await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True,
+                                        view=self.orientation_view(done, facts))
         self._pages[itx.user.id] = (itx, time.monotonic())
 
     @app_commands.command(name="help-server", description="How this server works in 30 seconds.")
@@ -288,11 +327,12 @@ class Onboarding(commands.Cog):
         """Only author + channel are used (no Message Content intent)."""
         if m.author.bot or not m.guild or m.guild.id != self.bot.settings.guild_id:
             return
-        if m.channel.id == self.bot.unlocks.channel("welcome") and m.type == discord.MessageType.default:
+        if m.channel.id in (self.bot.unlocks.channel("welcome"), self.bot.unlocks.channel("quest_board")) \
+                and m.type == discord.MessageType.default:
             # commands-only channel: slash commands aren't messages, so anything posted here is plain chat
             try:
                 await m.delete()
-                await m.channel.send(f"{m.author.mention} #welcome is for commands like `/start` and `/quiz O1`. "
+                await m.channel.send(f"{m.author.mention} this channel is for buttons and commands like `/quest`. "
                                      "Chat in #general!", delete_after=8,
                                      allowed_mentions=discord.AllowedMentions(users=True))
             except discord.HTTPException:
@@ -548,10 +588,74 @@ class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:s
         await itx.response.send_message("✅ Voice step skipped. You can join Studio Floor any time.", ephemeral=True)
 
 
+class MajorSelect(discord.ui.Select):
+    """Orientation step 2 without typing /major."""
+
+    def __init__(self, cat):
+        opts = [discord.SelectOption(label=cfg.get("title", key)[:100], value=key,
+                                     description=(cfg.get("blurb") or "")[:100] or None)
+                for key, cfg in cat.majors.items()]
+        super().__init__(placeholder="👉 Next: pick what you want to learn", options=opts[:25],
+                         min_values=1, max_values=1)
+
+    async def callback(self, itx: discord.Interaction):
+        msg = await itx.client.get_cog("Majors").set_major(itx, self.values[0])
+        await itx.response.send_message(msg, ephemeral=True)
+
+
+class CommandStepButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:cmd:(?P<k>rank|quest|path)"):
+    """Orientation step 3 by button: does what /rank, /quest or /path do (and counts for the step)."""
+
+    LABELS = {"rank": "Show my rank", "quest": "Show my next quest", "path": "Show my path"}
+
+    def __init__(self, key: str, label: str = ""):
+        super().__init__(discord.ui.Button(label=label or self.LABELS[key], emoji="👉",
+                                           style=discord.ButtonStyle.primary, custom_id=f"uc:cmd:{key}"))
+        self.key = key
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls(match["k"])
+
+    async def callback(self, itx: discord.Interaction):
+        bot = itx.client
+        await bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, f"cmd.{self.key}")
+        tip = f"*Tip: you can also type `/{self.key}` anywhere.*"
+        if self.key == "rank":
+            await itx.response.send_message(tip, embed=await bot.get_cog("Ranks").card(itx.user), ephemeral=True)
+        elif self.key == "path":
+            await itx.response.send_message(tip + "\n" + await bot.get_cog("Majors").path_text(itx.user.id),
+                                            ephemeral=True)
+        else:
+            await bot.get_cog("Quests").send_next(itx)
+
+
+class PracticeSendButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:practice"):
+    """Orientation step 5: practice sending work with a form (same as /submit quest:O5 proof:READY)."""
+
+    def __init__(self):
+        super().__init__(discord.ui.Button(label="Next: practice sending work", emoji="📤",
+                                           style=discord.ButtonStyle.primary, custom_id="uc:practice"))
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls()
+
+    async def callback(self, itx: discord.Interaction):
+        await itx.response.send_modal(PracticeModal())
+
+
+class PracticeModal(discord.ui.Modal, title="Practice: send your work"):
+    proof = discord.ui.TextInput(label="Type READY to send your practice work", default="READY", max_length=20)
+
+    async def on_submit(self, itx: discord.Interaction):
+        await itx.client.get_cog("Quests").do_submit(itx, "O5", str(self.proof.value), None)
+
+
 class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start"):
     """Pinned in #welcome: starts the first quest (the rules quiz); after that it shows the next steps."""
 
-    def __init__(self, label: str = "Start your first quest", emoji: str = "⚔️"):
+    def __init__(self, label: str = "Start / continue your quest", emoji: str = "⚔️"):
         super().__init__(discord.ui.Button(label=label, emoji=emoji, style=discord.ButtonStyle.success,
                                            custom_id="uu:start"))
 
@@ -601,5 +705,6 @@ class HonorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:honor
 
 async def setup(bot):
     bot.add_dynamic_items(ClockInButton, HelpPostButton, BugReportButton, StartButton, HonorButton,
-                          PrimaryMajorButton, SkipVoiceButton, NextStepsButton)
+                          PrimaryMajorButton, SkipVoiceButton, NextStepsButton, CommandStepButton,
+                          PracticeSendButton)
     await bot.add_cog(Onboarding(bot))

@@ -340,7 +340,8 @@ class SetupServer(commands.Cog):
         workshop = await self._category(g, "03 · WORKSHOP", {everyone: P(view_channel=False), me: bot_ow})
         cats["workshop"] = workshop.id
         qb = await self._move_or_text(g, workshop, "quest-board", topic="How quests work and the weekly raid.")
-        board_ow = P(view_channel=True, send_messages=False, create_public_threads=False, add_reactions=True,
+        # send_messages on so slash commands work here; plain chat is removed by the bot (commands-only)
+        board_ow = P(view_channel=True, send_messages=True, create_public_threads=False, add_reactions=True,
                      read_message_history=True, use_application_commands=True)
         await qb.edit(overwrites={**workshop.overwrites, R["Recruit"]: board_ow, R["Oriented"]: board_ow})
         chans.update(quest_board=qb.id)
@@ -625,6 +626,8 @@ class SetupServer(commands.Cog):
     def pin_specs(self, g: discord.Guild) -> list[dict]:
         from .onboarding import BugReportButton, ClockInButton, HelpPostButton, StartButton
         from .quiz import QuizButton
+        from .quests import NextQuestButton
+        QuestBoardButton = lambda: NextQuestButton("Continue your quest")
         from .workshop import NewPostButton
         unl, cat = self.bot.unlocks, self.bot.catalog
         ch = lambda *k: g.get_channel(unl.channel(*k))
@@ -646,9 +649,9 @@ class SetupServer(commands.Cog):
               "Finish quests → get XP → rank up → new channels open.\n"
               "Chatting does **not** give XP. Only finished work does."),
             E("🚀 Start here: 3 steps",
-              "**1.** Press **Start your first quest** below. It is a short quiz about the rules.\n"
-              "**2.** Then do the other small steps. The bot checks them for you.\n"
-              "**3.** When all steps are done, type `/quest` to get your first Unreal quest.", "#3D7DD8"),
+              "**1.** Press the green button below. Your first quest is a short quiz about the rules.\n"
+              "**2.** Then do the other small steps. There is always a button for the next one.\n"
+              "**3.** When you finish, your quests move to **#quest-board**.", "#3D7DD8"),
             E("⌨️ 5 commands",
               "`/quest` : your next task\n"
               "`/quiz` : answer questions about a quest\n"
@@ -670,11 +673,12 @@ class SetupServer(commands.Cog):
         specs = [
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
                  view=view(StartButton())),
-            dict(key="quest-board", channel=ch("quest_board"), view=view(ClockInButton()), content=(
+            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton(), ClockInButton()), content=(
                 "**📋 Quest board**\n"
                 "Type `/quest` to get your next task. Each quest has:\n"
                 "• a link to the official Epic docs\n• a short checklist\n• a quiz\n• then `/submit` to send your work\n\n"
-                "New quests and weekly events are posted here. Press **I found it** below.")),
+                "**This is your home for quests.** Press **Continue your quest** any time to get your next task.\n"
+                "New quests and weekly events are posted here.")),
             dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag="Discord-help",
                  view=view(HelpPostButton(), BugReportButton()), content=(
                      "**Two kinds of help, one desk**\n"
@@ -814,12 +818,12 @@ class SetupServer(commands.Cog):
         parts = re.split(r"\n(?=### )", rel["body"])
         intro = parts[0].strip() if not parts[0].startswith("### ") else ""
         sections = [p for p in parts if p.startswith("### ")]
-        e = discord.Embed(title=f"{rel['version']} · {rel['title']}", color=C("#D4AF37"),
+        e = discord.Embed(title=rel["version"], color=C("#D4AF37"),
                           description=(intro or ("" if sections else rel["body"]))[:4000] or None)
         for sec in sections[:25]:
             head, _, body = sec.partition("\n")
             e.add_field(name=head[4:].strip()[:256], value=body.strip()[:1024] or "—", inline=False)
-        e.set_footer(text=f"{rel['date']} · Something broken since this update? #help-desk → Server / bot problem")
+        e.set_footer(text=rel["date"])
         return e
 
     async def post_patch_notes(self, g: discord.Guild, force_latest: bool = False) -> list[str]:

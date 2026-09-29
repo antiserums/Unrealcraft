@@ -10,7 +10,7 @@ from discord import app_commands
 from discord.ext import commands
 
 from .. import checks, profile
-from ..embeds import quest_embed
+from ..embeds import guide_view, quest_embed
 
 log = logging.getLogger("registrar.quests")
 
@@ -47,23 +47,43 @@ class Quests(commands.Cog):
     @app_commands.command(name="quest", description="Your next quest, or a specific one by id.")
     @app_commands.autocomplete(id=_autocomplete)
     async def quest(self, itx: discord.Interaction, id: str | None = None):
-        db = self.bot.db
-        u = await db.user(itx.user.id)
         await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.quest")
-        facts = await db.facts(itx.user.id)
         if id:
             q = self.cat.quests.get(id.upper())
             if not q:
                 await itx.response.send_message("No quest with that id. Try `/path`.", ephemeral=True)
                 return
-            kw = {}
-            if q.raw.get("action_key") == "honor_button":
-                from .onboarding import HonorButton
-                v = discord.ui.View(timeout=None)
-                v.add_item(HonorButton(q.id))
-                kw["view"] = v
-            await itx.response.send_message(embed=quest_embed(self.cat, q, u["major"], facts=facts), ephemeral=True, **kw)
+            u = await self.bot.db.user(itx.user.id)
+            facts = await self.bot.db.facts(itx.user.id)
+            await itx.response.send_message(embed=quest_embed(self.cat, q, u["major"], facts=facts), ephemeral=True,
+                                            view=await self.card_view(q, itx.user.id))
             return
+        await self.send_next(itx)
+
+    async def card_view(self, q, uid: int) -> discord.ui.View:
+        """Every quest card has a button to the next thing: guide → quiz → send work → next quest."""
+        from .quiz import QuizButton
+        db = self.bot.db
+        v = discord.ui.View(timeout=None)
+        done = q.id in await db.done_set(uid)
+        needs_submit = q.raw.get("verify_type") not in ("quiz", "action")
+        if done:
+            v.add_item(NextQuestButton())
+        elif q.quiz and not await db.quiz_passed(uid, q.id):
+            v.add_item(QuizButton(q.id, label="Start quiz"))
+        elif needs_submit:
+            v.add_item(SendWorkButton(q.id))
+        elif q.rank < 0:
+            from .onboarding import NextStepsButton
+            v.add_item(NextStepsButton())
+        guide_view(q, v)
+        return v
+
+    async def send_next(self, itx: discord.Interaction) -> None:
+        """Show the member's next quest (used by /quest and every 'Next' button)."""
+        db = self.bot.db
+        u = await db.user(itx.user.id)
+        facts = await db.facts(itx.user.id)
         st = await self.bot.get_cog("Ranks").state(itx.user.id)
         pick = self.cat.pick(st)
         embeds = []
@@ -76,7 +96,7 @@ class Quests(commands.Cog):
         content = ("**Also on offer:**\n" + "\n".join(extras)) if extras else None
         notes = []
         if pick.main and pick.main.spine and profile.can_test_out(st.profile):
-            notes.append(f"⚡ You can test out: pass `/quiz {pick.main.id}` on the first try and it's done.")
+            notes.append(f"⚡ You can test out: pass the quiz on the first try and it's done.")
         if st.profile.get("pace"):
             mins = self.cat.remaining_minutes(st)
             hours = profile.PACE_HOURS[st.profile["pace"]]
@@ -91,7 +111,8 @@ class Quests(commands.Cog):
             content = "\n".join(notes) + ("\n\n" + content if content else "")
         if not embeds and not content:
             content = "Nothing open right now. You're at the edge of the catalog. Check `/path` for the optional shelf."
-        await itx.response.send_message(content=content, embeds=embeds, ephemeral=True)
+        kw = {"view": await self.card_view(pick.main, itx.user.id)} if pick.main else {}
+        await itx.response.send_message(content=content, embeds=embeds, ephemeral=True, **kw)
 
     # ------------------------------------------------------------ /tree
     @app_commands.command(name="tree", description="The whole catalog by rank and track (the same for everyone).")
@@ -117,6 +138,11 @@ class Quests(commands.Cog):
     @app_commands.autocomplete(quest=_autocomplete)
     async def submit(self, itx: discord.Interaction, quest: str, proof: str,
                      attachment: discord.Attachment | None = None):
+        await self.do_submit(itx, quest, proof, attachment)
+
+    async def do_submit(self, itx: discord.Interaction, quest: str, proof: str,
+                        attachment: discord.Attachment | None = None) -> None:
+        """Shared by /submit and the Send-my-work form."""
         db = self.bot.db
         q = self.cat.quests.get(quest.upper())
         if not q:
@@ -145,8 +171,7 @@ class Quests(commands.Cog):
                 await itx.response.send_message("For O5, the proof is literally `READY`.", ephemeral=True)
                 return
             await itx.response.send_message(
-                "✅ O5 accepted. A real turn-in looks the same, then goes to honor, peer or mentor review depending on rank.",
-                ephemeral=True)
+                "✅ Practice done! A real turn-in works the same way.", ephemeral=True, view=_next_steps_view())
             await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "submit.O5")
             return
         if q.raw.get("verify_type") == "action":
@@ -169,7 +194,7 @@ class Quests(commands.Cog):
 
         if route in ("auto", "honor"):
             await db.decide(sid, "pass", None, route)
-            await itx.response.send_message(f"✅ {q.id} accepted. +{q.xp} XP.", ephemeral=True)
+            await itx.response.send_message(f"✅ {q.id} accepted. +{q.xp} XP.", ephemeral=True, view=_next_view())
             await self.post_turnin(itx.guild, itx.user, q, payload, route)
             await self.complete(itx.guild, itx.user.id, q.id)
             return
@@ -178,7 +203,7 @@ class Quests(commands.Cog):
                "mentor": "a mentor or two peers",
                "human": "a human mentor"}[route]
         await itx.response.send_message(f"📥 Submitted #{sid}. Waiting on {who}. Target turnaround is under 48h.",
-                                        ephemeral=True)
+                                        ephemeral=True, view=_next_view())
         await self.post_turnin(itx.guild, itx.user, q, payload, route)
 
     # --------------------------------------------------------- completion
@@ -316,6 +341,71 @@ class Quests(commands.Cog):
         await itx.response.send_message(await self.review(itx, submission, verdict.value, notes), ephemeral=True)
 
 
+def _next_view() -> discord.ui.View:
+    v = discord.ui.View(timeout=None)
+    v.add_item(NextQuestButton())
+    return v
+
+
+def _next_steps_view() -> discord.ui.View:
+    from .onboarding import NextStepsButton
+    v = discord.ui.View(timeout=None)
+    v.add_item(NextStepsButton())
+    return v
+
+
+class NextQuestButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:nextquest"):
+    """'Next' everywhere after Orientation: shows the member's next quest card."""
+
+    def __init__(self, label: str = "Next quest"):
+        super().__init__(discord.ui.Button(label=label, emoji="👉", style=discord.ButtonStyle.success,
+                                           custom_id="uc:nextquest"))
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls()
+
+    async def callback(self, itx: discord.Interaction):
+        await itx.client.get_cog("Quests").send_next(itx)
+
+
+class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:send:(?P<q>[A-Za-z0-9-]+)"):
+    """Opens a form instead of typing /submit."""
+
+    def __init__(self, qid: str):
+        super().__init__(discord.ui.Button(label="Send my work", emoji="📤", style=discord.ButtonStyle.success,
+                                           custom_id=f"uc:send:{qid}"))
+        self.qid = qid
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls(match["q"])
+
+    async def callback(self, itx: discord.Interaction):
+        q = itx.client.catalog.quests.get(self.qid)
+        if not q:
+            await itx.response.send_message("That quest doesn't exist anymore.", ephemeral=True)
+            return
+        await itx.response.send_modal(SendWorkModal(q))
+
+
+class SendWorkModal(discord.ui.Modal):
+    def __init__(self, q):
+        super().__init__(title=f"Send your work: {q.id}"[:45])
+        self.q = q
+        self.proof = discord.ui.TextInput(style=discord.TextStyle.paragraph, max_length=1500,
+                                          placeholder=(q.raw.get("done_when") or "Describe what you did.")[:100])
+        self.add_item(discord.ui.Label(text="What did you do?", description="Include your Unreal version",
+                                       component=self.proof))
+        self.file = discord.ui.FileUpload(required=False, max_values=1)
+        self.add_item(discord.ui.Label(text="Screenshot or clip", description="Needed for screenshot quests",
+                                       component=self.file))
+
+    async def on_submit(self, itx: discord.Interaction):
+        att = (self.file.values or [None])[0]
+        await itx.client.get_cog("Quests").do_submit(itx, self.q.id, str(self.proof.value), att)
+
+
 class ReviewView(discord.ui.View):
     """Persistent buttons; custom_id encodes the submission id."""
 
@@ -359,5 +449,5 @@ class NotesModal(discord.ui.Modal, title="Review notes"):
 
 
 async def setup(bot):
-    bot.add_dynamic_items(ReviewButton)
+    bot.add_dynamic_items(ReviewButton, NextQuestButton, SendWorkButton)
     await bot.add_cog(Quests(bot))

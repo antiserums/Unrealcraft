@@ -14,7 +14,8 @@ from pathlib import Path
 
 # vMAJOR.MINOR.PATCH with an optional pre-release suffix (e.g. v1.2.0-beta.1), as in SemVer 2.0.0.
 SEMVER = r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z.-]+))?"
-HEADER = re.compile(rf"^## ({SEMVER})\s*·\s*(\d{{4}}-\d{{2}}-\d{{2}})\s*·\s*(.+)$")
+# "## v1.2.3 · 2026-10-01" (an old-style " · Title" suffix is still accepted and ignored)
+HEADER = re.compile(rf"^## ({SEMVER})\s*·\s*(\d{{4}}-\d{{2}}-\d{{2}})(?:\s*·\s*(.+))?$")
 LOOSE_HEADER = re.compile(r"^## ")
 
 
@@ -32,7 +33,7 @@ def entries(changelog: Path) -> list[dict]:
     for line in changelog.read_text(encoding="utf-8").splitlines():
         m = HEADER.match(line.strip())
         if m:
-            out.append({"version": m.group(1), "date": m.group(6), "title": m.group(7).strip(), "lines": []})
+            out.append({"version": m.group(1), "date": m.group(6), "title": (m.group(7) or "").strip(), "lines": []})
         elif out:
             out[-1]["lines"].append(line)
     for e in out:
@@ -47,7 +48,7 @@ def validate(changelog: Path) -> list[str]:
         return ["CHANGELOG.md is missing"]
     for n, line in enumerate(changelog.read_text(encoding="utf-8").splitlines(), 1):
         if LOOSE_HEADER.match(line) and not HEADER.match(line.strip()):
-            errs.append(f"line {n}: header must look like '## v1.2.3 · 2026-10-01 · Title' (got {line.strip()!r})")
+            errs.append(f"line {n}: header must look like '## v1.2.3 · 2026-10-01' (got {line.strip()!r})")
     es = entries(changelog)
     seen = set()
     for newer, older in zip(es, es[1:]):
