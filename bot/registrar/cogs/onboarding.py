@@ -238,6 +238,16 @@ class Onboarding(commands.Cog):
         """Only author + channel are used (no Message Content intent)."""
         if m.author.bot or not m.guild or m.guild.id != self.bot.settings.guild_id:
             return
+        if m.channel.id == self.bot.unlocks.channel("welcome") and m.type == discord.MessageType.default:
+            # commands-only channel: slash commands aren't messages, so anything posted here is plain chat
+            try:
+                await m.delete()
+                await m.channel.send(f"{m.author.mention} #welcome is for commands like `/start` and `/quiz O1`. "
+                                     "Chat in #general!", delete_after=8,
+                                     allowed_mentions=discord.AllowedMentions(users=True))
+            except discord.HTTPException:
+                pass
+            return
         key = self._channel_key(m.channel.id) or self._channel_key(getattr(m.channel, "parent_id", 0) or 0)
         if key:
             await self.fact(m.guild, m.author.id, f"msg.{key}")

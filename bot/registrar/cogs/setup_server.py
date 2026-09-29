@@ -260,7 +260,15 @@ class SetupServer(commands.Cog):
                                read_message_history=True, use_application_commands=True),
                    me: bot_ow}
         gate = await self._category(g, "00 · GATE", gate_ow)
-        welcome = await self._text(g, gate, "welcome", topic="Start here. Accept the rules, then press Start Orientation.")
+        welcome = await self._text(g, gate, "welcome",
+                                   topic="Start here. Accept the rules, press Start Orientation, and run /quiz O1 here. "
+                                         "Commands only; chat in #general.")
+        # Discord greys out the message box where you can't send, which also blocks slash commands. Allow sending
+        # in #welcome so /start and /quiz work; plain messages are removed by the bot (commands-only channel).
+        await welcome.edit(overwrites={**gate_ow, everyone: P(view_channel=True, send_messages=True,
+                                                              add_reactions=True, create_public_threads=False,
+                                                              read_message_history=True,
+                                                              use_application_commands=True)})
         manual = await self._text(g, gate, "how-this-place-works", topic="How the game works, and what opens when.")
         ann = await self._text(g, gate, "announcements", news=True,       # converted after _community() frees it
                                topic="Raids, events and big news.")
