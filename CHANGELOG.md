@@ -15,6 +15,18 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.4.0 · 2026-09-29 · Live Orientation page
+The Orientation page now updates by itself, plus an important fix.
+
+### Orientation
+- While the Orientation page is open, it updates the moment you finish a step: the progress bar, the ✅ marks, the 👉 Next step and the buttons. (Discord allows this for 15 minutes; press the green button in #welcome for a fresh page.)
+
+### Names
+- **Lookdev / Env Art** is now called **Environment Art**, both as a major and as a Rank 3 Specialty. If you already had the role, it was renamed for you.
+
+### Fixes
+- Fixed a bug where finishing a quest stopped halfway. Your XP was saved, but the bot never checked if you had finished Orientation or earned a promotion. Nobody lost progress.
+
 ## v0.3.2 · 2026-09-29 · Start your first quest
 One clear button to begin.
 
