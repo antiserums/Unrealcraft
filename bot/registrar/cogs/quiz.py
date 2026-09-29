@@ -42,19 +42,6 @@ class Quiz(commands.Cog):
             await itx.response.send_message("That quiz unlocks at a higher rank.", ephemeral=True)
             return
         first_try = await self.bot.db.quiz_attempts(itx.user.id, q.id) == 0
-        from ..embeds import guide_view, reading_links
-        links = reading_links(q)
-        if links:                                   # read first: show the guide before any question
-            intro = discord.ui.View(timeout=900)
-            intro.add_item(StartQuizButton(self, q, itx.user.id, first_try))
-            guide_view(q, intro)
-            lines = "\n".join(f"• [{label}]({url})" for label, url in links)
-            await itx.response.send_message(
-                f"**{q.id} · {q.raw['title']}: quiz**\n"
-                f"📖 The questions are about this material. Read it first:\n{lines}\n\n"
-                f"{len(q.quiz)} questions. You need {int(QUIZ_PASS_RATIO * len(q.quiz))} right. "
-                "Press **Start quiz** when you're ready.", view=intro, ephemeral=True, suppress_embeds=True)
-            return
         view = QuizView(self, q, itx.user.id, first_try)
         await itx.response.send_message(**view.render(), view=view, ephemeral=True)
 
@@ -71,42 +58,30 @@ class Quiz(commands.Cog):
         if not passed:
             view.add_item(QuizButton(q.id, label="Try again"))
             guide_view(q, view)
-            return (f"**{score}/{total}**. You need {int(QUIZ_PASS_RATIO * total)}. "
-                    + ("Read the guide again, then try again." if reading_links(q)
-                       else "Read #welcome again, then try again.")), view
+            return (f"You need {int(QUIZ_PASS_RATIO * total)} right.\n"
+                    + ("Read the guide again, then press **Try again**." if reading_links(q)
+                       else "Read #welcome again, then press **Try again**.")), view
         await db.set_progress(itx.user.id, q.id, "quiz_passed", quiz_passed=True)
-        msg = f"**{score}/{total}**. Passed."
+        msg = ""
         if first_try:
             bonus = round(q.xp * self.bot.catalog.xp_rules.get("quiz_first_try_bonus_pct", 20) / 100)
             await db.add_xp(itx.user.id, bonus, f"quiz_bonus:{q.id}")
-            msg += f" First-try bonus +{bonus} XP."
+            msg += f"⭐ First-try bonus: +{bonus} XP.\n"
         await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, f"quiz.{q.id}")   # action quests (O1) finish via their checklist
         prof = json.loads(await db.kv_get(itx.user.id, "profile") or "{}")
         test_out = q.spine and first_try and profile.can_test_out(prof)
         if q.raw.get("verify_type") == "quiz" or test_out:
             await self.bot.get_cog("Quests").complete(itx.guild, itx.user.id, q.id)
-            msg += " Tested out: quest complete, no turn-in needed." if test_out and q.raw.get("verify_type") != "quiz" \
-                else " Quest complete."
+            msg += "Tested out: quest complete, no turn-in needed." if test_out and q.raw.get("verify_type") != "quiz" \
+                else "✅ Quest complete."
             view.add_item(NextStepsButton() if q.rank < 0 else NextQuestButton())
         elif q.raw.get("verify_type") == "action":
-            msg += " That step is ticked."
+            msg += "✅ That step is ticked."
             view.add_item(NextStepsButton())
         else:
-            msg += " Now send your work."
+            msg += "Next: press **Send my work**."
             view.add_item(SendWorkButton(q.id))
         return msg, view
-
-
-class StartQuizButton(discord.ui.Button):
-    def __init__(self, cog: "Quiz", q, uid: int, first_try: bool):
-        super().__init__(label="Start quiz", emoji="📝", style=discord.ButtonStyle.success)
-        self.cog, self.q, self.uid, self.first_try = cog, q, uid, first_try
-
-    async def callback(self, itx: discord.Interaction):
-        if itx.user.id != self.uid:
-            return
-        view = QuizView(self.cog, self.q, self.uid, self.first_try)
-        await itx.response.edit_message(**view.render(), view=view)
 
 
 class QuizView(discord.ui.View):
@@ -116,7 +91,7 @@ class QuizView(discord.ui.View):
         self.guild = cog.bot.get_guild(cog.bot.settings.guild_id or 0)
         self.i = 0
         self.score = 0
-        self.feedback = ""
+        self.feedback: tuple[bool, str] | None = None
         # Shuffle choice order per attempt so letter positions can't be memorized.
         self.orders = [random.sample(range(len(it["choices"])), len(it["choices"])) for it in q.quiz]
         self._build()
@@ -127,17 +102,35 @@ class QuizView(discord.ui.View):
             b = discord.ui.Button(label=f"{'ABCD'[pos]}", style=discord.ButtonStyle.secondary)
             b.callback = self._answer(idx)
             self.add_item(b)
+        from ..embeds import guide_view
+        guide_view(self.q, self)                      # 📖 Open the guide, on every question
 
     def _letter(self, idx: int) -> str:
         return "ABCD"[self.orders[self.i].index(idx)]
 
-    def render(self) -> dict:
+    def _card(self, title: str, text: str, color: str) -> discord.Embed:
         from ..embeds import linkify
+        return discord.Embed(title=title, description=linkify(text, self.guild), color=discord.Color.from_str(color))
+
+    def _feedback_card(self) -> list[discord.Embed]:
+        if not self.feedback:
+            return []
+        right, text = self.feedback
+        return [self._card("✅ Correct" if right else "❌ Not quite", text, "#3BA55C" if right else "#D9534F")]
+
+    def render(self) -> dict:
         item = self.q.quiz[self.i]
+        n = len(self.q.quiz)
+        cards = self._feedback_card()
+        if self.i == 0:
+            from ..embeds import reading_links
+            text = f"{n} questions. You need {int(QUIZ_PASS_RATIO * n)} right."
+            if reading_links(self.q):
+                text += "\n📖 Not sure? Press **Open the guide**. It stays here on every question."
+            cards.append(self._card(f"📝 {self.q.id} · {self.q.raw['title']}", text, "#3D7DD8"))
         body = "\n".join(f"**{'ABCD'[pos]}.** {item['choices'][idx]}" for pos, idx in enumerate(self.orders[self.i]))
-        head = f"{self.feedback}\n\n" if self.feedback else ""
-        text = f"{head}**{self.q.id} · Q{self.i + 1}/{len(self.q.quiz)}**\n{item['q']}\n\n{body}"
-        return {"content": linkify(text, self.guild)}
+        cards.append(self._card(f"❓ Question {self.i + 1} of {n}", f"{item['q']}\n\n{body}", "#8E6CCF"))
+        return {"content": None, "embeds": cards}
 
     def _answer(self, idx: int):
         async def cb(itx: discord.Interaction):
@@ -146,12 +139,16 @@ class QuizView(discord.ui.View):
             item = self.q.quiz[self.i]
             right = idx == item["answer_index"]
             self.score += right
-            self.feedback = ("✅ " if right else f"❌ Answer: {self._letter(item['answer_index'])}. ") + item.get("explain", "")
+            self.feedback = (right, ("" if right else f"The answer was **{self._letter(item['answer_index'])}**. ")
+                             + item.get("explain", ""))
             self.i += 1
             if self.i >= len(self.q.quiz):
                 result, view = await self.cog.finish(itx, self.q, self.score, self.first_try)
-                from ..embeds import linkify
-                await itx.response.edit_message(content=linkify(f"{self.feedback}\n\n{result}", self.guild), view=view)
+                n = len(self.q.quiz)
+                passed = self.score / n >= QUIZ_PASS_RATIO
+                card = self._card(f"🏆 Quiz passed · {self.score}/{n}" if passed else f"📝 Not yet · {self.score}/{n}",
+                                  result.strip(), "#D4AF37" if passed else "#D9824A")
+                await itx.response.edit_message(content=None, embeds=[*self._feedback_card(), card], view=view)
                 self.stop()
                 return
             self._build()
