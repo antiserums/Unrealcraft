@@ -14,6 +14,16 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.10.0 · 2026-09-29
+- New voice rooms: join **➕ Join to create** and the Quartermaster makes a room just for you and moves you in.
+- Rename your room or set a user limit with the buttons in its chat, or type `/room rename` / `/room limit`.
+- If you leave your room, it passes to someone still inside. A room is deleted after 5 minutes with nobody in it.
+- Studio Floor, Pair Program and Critique Room are gone. Rank 2 now opens peer reviews; Rank 3 opens your Specialty title and `/critique`.
+- The Orientation voice step counts 1 minute in any voice room.
+- VOICE ROOMS is now **TOWN HALL**, and it sits below the quests.
+- WORKSHOP is now **QUEST BOARD**. #quest-board is now **#quest-log**.
+- The Workshop forums are now called your major forums.
+
 ## v0.9.1 · 2026-09-29
 - The rules are rewritten in plain, friendly English. **Be kind** is now rule 1. Nothing new is required of you.
 
