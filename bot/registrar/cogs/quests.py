@@ -258,10 +258,13 @@ class Quests(commands.Cog):
     async def post_turnin(self, guild: discord.Guild, member: discord.abc.User, q, payload: dict, route: str) -> None:
         """Mirror a /submit into its Workshop forum so people can see and cheer it."""
         unl = self.bot.unlocks
-        # Rank 3 specialty tracks (bay-*) post into the closest Workshop forum.
-        track = {"bay-design": "world-lighting", "bay-lookdev": "materials", "bay-anim": "characters-anim",
-                 "bay-code": "blueprint"}.get(q.track, q.track)
-        ch = guild.get_channel(unl.channel("tracks", track))
+        # Starter Quests → #starter-quests; everything else → the member's major forum.
+        from .workshop import STARTER, major_slug
+        if q.rank < 0:
+            return
+        u = await self.bot.db.user(member.id)
+        slug = STARTER if (q.spine or q.rank == 0 or u["major"] == "undecided") else major_slug(self.cat, u["major"])
+        ch = guild.get_channel(unl.channel("tracks", slug))
         if not ch:
             return                                   # orientation/tasters: no public post
         status = {"auto": "✅ accepted", "honor": "✅ accepted", "peer": "📥 waiting on a peer or mentor",

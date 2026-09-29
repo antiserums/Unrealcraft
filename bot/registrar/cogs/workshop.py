@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+import re
 
 import discord
 from discord import app_commands
@@ -9,7 +10,20 @@ from discord.ext import commands
 
 log = logging.getLogger("quartermaster.workshop")
 
-TRACKS = ["foundations", "world-lighting", "materials", "blueprint", "characters-anim"]
+STARTER = "starter-quests"
+
+
+def major_slug(cat, key: str) -> str:
+    """'environment art' -> 'environment-art': the Workshop forum for a major."""
+    return re.sub(r"[^a-z0-9]+", "-", cat.majors.get(key, {}).get("title", key).lower()).strip("-")
+
+
+def forum_slugs(cat) -> list[str]:
+    return [STARTER] + [major_slug(cat, k) for k in cat.majors if k != "undecided"]
+
+
+def slug_to_major(cat, slug: str) -> str | None:
+    return next((k for k in cat.majors if k != "undecided" and major_slug(cat, k) == slug), None)
 TYPES = [("WIP", "Work in progress: show where you are", "🛠️"),
          ("Help", "Stuck: ask a specific question", "🆘"),
          ("Done", "Finished something: show it off", "✅")]
@@ -24,19 +38,24 @@ class Workshop(commands.Cog):
         return ch if isinstance(ch, discord.ForumChannel) else None
 
     def open_tracks(self, member: discord.Member) -> list[str]:
-        """Workshop forums this member can actually see (rank-gated by Discord permissions)."""
-        return [s for s in TRACKS if (f := self.forum(member.guild, s)) and f.permissions_for(member).view_channel]
+        """Workshop forums this member can post in (#starter-quests + their major's forums)."""
+        return [s for s in forum_slugs(self.bot.catalog)
+                if (f := self.forum(member.guild, s)) and f.permissions_for(member).send_messages]
 
     async def open_dialog(self, itx: discord.Interaction, slug: str) -> None:
         member = itx.guild.get_member(itx.user.id)
         forum = self.forum(itx.guild, slug)
-        if not forum or not member or not forum.permissions_for(member).view_channel:
-            await itx.response.send_message(f"#{slug} isn't open for you yet. `/path` shows when it opens.",
-                                            ephemeral=True)
+        if not forum or not member or not forum.permissions_for(member).send_messages:
+            await itx.response.send_message(
+                f"You can read #{slug}, but you can only post in your own major's forum and #starter-quests.",
+                ephemeral=True)
             return
         u = await self.bot.db.user(itx.user.id)
-        quests = [q for q in self.bot.catalog.sorted(self.bot.catalog.quests.values())
-                  if q.track == slug and 0 <= q.rank <= max(u["rank"], 0)]
+        cat = self.bot.catalog
+        major = slug_to_major(cat, slug)
+        quests = [q for q in cat.sorted(cat.quests.values())
+                  if 0 <= q.rank <= max(u["rank"], 0)
+                  and (q.spine if slug == STARTER else (major in q.required_for and not q.spine))]
         await itx.response.send_modal(PostModal(self, slug, quests[:24], u["ue_version"]))
 
     async def publish(self, itx: discord.Interaction, slug: str, title: str, kind: str, qid: str | None,
@@ -75,11 +94,14 @@ class Workshop(commands.Cog):
         slug = forum
         if not slug:                                   # inside a workshop forum/thread → use that one
             parent = getattr(itx.channel, "parent_id", None) or getattr(itx.channel, "id", None)
-            slug = next((s for s in TRACKS if self.bot.unlocks.channel("tracks", s) == parent), None)
+            slug = next((s for s in forum_slugs(self.bot.catalog)
+                         if self.bot.unlocks.channel("tracks", s) == parent), None)
         if not slug:
             member = itx.guild.get_member(itx.user.id)
+            u = await self.bot.db.user(itx.user.id)
+            own = major_slug(self.bot.catalog, u["major"]) if u["major"] != "undecided" else STARTER
             opened = self.open_tracks(member)
-            slug = opened[-1] if opened else None      # default: the newest forum they've unlocked
+            slug = own if own in opened else (opened[0] if opened else None)
         if not slug:
             await itx.response.send_message("No Workshop forum is open for you yet. Finish Orientation first.",
                                             ephemeral=True)

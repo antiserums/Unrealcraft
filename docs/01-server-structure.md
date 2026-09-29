@@ -17,7 +17,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 | 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start your first quest + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
 | 02 · VOICE ROOMS | Studio Floor [V], Pair Program [V] (connect R2+), Critique Room [V] (connect R3+), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
-| 03 · WORKSHOP | #quest-board (ro, from Orientation), then one forum per track: #foundations (R0), #world-lighting (R1), #materials (R2), #blueprint (R2), #characters-anim (R3) | quest board from Orientation; each forum at its rank |
+| 03 · WORKSHOP | #quest-board (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
 | 04 · STAFF | #mod-log (also gets 🐞 bug-report alerts), #curriculum-wip, #mentor-queue | staff (+ Architect read queue, Lead) |
 
 **Workshop forums:** one thread per thing you're building (tags WIP / Help / Done). Every `/submit` is also posted there with the

@@ -242,6 +242,7 @@ class SetupServer(commands.Cog):
                                            (4, "Engineer"), (5, "Systems Architect"), (6, "Studio Lead"))}
         spec = [R[name] for name, *_rest, key in ROLES if key and key[0] == "specialist"]   # by key, not by name
         staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
+        cat = self.bot.catalog
         everyone = g.default_role
         bot_ow = P(view_channel=True, send_messages=True, manage_messages=True, manage_threads=True,
                    embed_links=True, attach_files=True, read_message_history=True, connect=True)
@@ -335,8 +336,8 @@ class SetupServer(commands.Cog):
                           {**no_connect, **{r: P(connect=True, speak=True) for r in allowed_from(3)}})
         chans.update(studio_floor_voice=floor.id)
 
-        # 03 WORKSHOP: the quest board + one forum per track, each unlocking at its rank ----------
-        # Quests start on the board; lessons arrive through /quest; /submit posts turn-ins into the track forums.
+        # 03 WORKSHOP: the quest board + #starter-quests + one forum per major ----------------------
+        # Quests live on the board; /submit posts turn-ins into #starter-quests or the member's major forum.
         workshop = await self._category(g, "03 · WORKSHOP", {everyone: P(view_channel=False), me: bot_ow})
         cats["workshop"] = workshop.id
         qb = await self._move_or_text(g, workshop, "quest-board", topic="How quests work and the weekly raid.")
@@ -345,15 +346,48 @@ class SetupServer(commands.Cog):
                      read_message_history=True, use_application_commands=True)
         await qb.edit(overwrites={**workshop.overwrites, R["Recruit"]: board_ow, R["Oriented"]: board_ow})
         chans.update(quest_board=qb.id)
-        for old_cat, key, rank, slug in TRACKS:
-            forum = await self._forum_or_text(
-                g, workshop, slug, ["Turn-in", "WIP", "Help", "Done"], overwrites=gated(rank), report=report,
-                topic=f"Rank {rank}+ · Work out loud, ask for help, and see everyone's turn-ins for this track. "
-                      "Start a post per thing you're building. Say your engine version.")
-            await forum.edit(overwrites={**workshop.overwrites, **gated(rank)})
-            cats[key] = forum.id                         # rank-gated area = this forum
-            chans.setdefault("tracks", {})[slug] = forum.id
+        # One forum per major + #starter-quests. After Orientation everyone can READ all of them; you can POST in
+        # #starter-quests and in the forums of the majors you picked (your Major roles). Mentors/staff post anywhere.
+        from .workshop import STARTER, major_slug
+        read_only = P(view_channel=True, send_messages=False, send_messages_in_threads=False,
+                      create_public_threads=False, add_reactions=True, read_message_history=True)
+        can_post = P(view_channel=True, send_messages=True, send_messages_in_threads=True, create_public_threads=True,
+                     attach_files=True, embed_links=True, add_reactions=True, read_message_history=True)
+        staff_post = {r: can_post for r in staff}
+        old_foundations = discord.utils.get(workshop.channels, name="foundations")
+        if old_foundations and not discord.utils.get(workshop.channels, name=STARTER):
+            await old_foundations.edit(name=STARTER, reason="Unrealcraft: renamed")
+            report.append("#foundations → #starter-quests")
+        forums = [(STARTER, None, "The 11 Starter Quests (Q1–Q11) everyone does. Share WIP, ask for help, see turn-ins.")]
+        forums += [(major_slug(cat, k), k, f"{cfg['title']}: quests, WIP, help and turn-ins. Everyone can read; "
+                                         f"members who picked {cfg['title']} can post.")
+                   for k, cfg in cat.majors.items() if k != "undecided"]
+        chans["tracks"] = {}
+        for slug, major, topic in forums:
+            forum = await self._forum_or_text(g, workshop, slug, ["Turn-in", "WIP", "Help", "Done"],
+                                              report=report, topic=topic)
+            if major is None:
+                ow = {R["Oriented"]: can_post}
+            else:
+                ow = {R["Oriented"]: read_only, R[f"Major · {cat.majors[major]['title']}"]: can_post}
+            await forum.edit(topic=topic, overwrites={**workshop.overwrites, **ow, **staff_post})
+            chans["tracks"][slug] = forum.id
+        # retire the old rank-based track forums (kept as *-archive if members ever posted in them)
+        for old in ("world-lighting", "materials", "blueprint", "characters-anim"):
+            ch = discord.utils.get(workshop.channels, name=old)
+            if not ch:
+                continue
+            threads = list(ch.threads) + [t async for t in ch.archived_threads(limit=50)]
+            if any(t.owner_id != g.me.id or not t.flags.pinned for t in threads):
+                await ch.edit(name=f"{old}-archive", reason="Unrealcraft: replaced by major forums")
+                report.append(f"#{old}: had posts, renamed to #{old}-archive")
+            else:
+                await ch.delete(reason="Unrealcraft: replaced by major forums")
+                report.append(f"removed #{old}")
+        for old_cat, key, _rank, _slug in TRACKS:
+            cats.pop(key, None)
             report += await self._retire(g, discord.utils.get(g.categories, name=old_cat), None, drop_category=True)
+        data["unlock_at_rank"] = {0: ["hub", "training"], 1: [], 2: [], 3: [], 4: ["systems"], 5: ["net_shipping"], 6: []}
 
         # Specialist Halls were removed: retire the category, its channels and the Specialty permission roles.
         for old_cat in ("03 · SPECIALIST HALLS", "03 · BAYS"):
@@ -566,7 +600,8 @@ class SetupServer(commands.Cog):
         "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
                       "rank-ups"],
         "01 · GUILD HUB": ["general", "introductions", "showcase", "help-desk", "suggestions"],
-        "03 · WORKSHOP": ["quest-board", "foundations", "world-lighting", "materials", "blueprint", "characters-anim"],
+        "03 · WORKSHOP": ["quest-board", "starter-quests", "level-design", "environment-art", "tech-art",
+                          "gameplay-design", "animation", "programming", "cinematics"],
     }
 
     async def order(self, g: discord.Guild) -> list[str]:
@@ -662,7 +697,8 @@ class SetupServer(commands.Cog):
             E("🗺️ What opens when",
               "You only see channels you have unlocked.\n"
               "**Everyone:** GATE and Guild Hub channels.\n"
-              "**After your first quest:** #quest-board and Voice Rooms.\n" + rank_lines, "#8E6CCF"),
+              "**After Orientation:** #quest-board, #starter-quests and the Workshop forums (read all, post in "
+              "your major's), plus Voice Rooms.\n" + rank_lines, "#8E6CCF"),
             E("🆘 Need help?",
               "Go to #help-desk.\n"
               "🛠️ **Unreal help**: a problem in Unreal or with a quest.\n"
@@ -703,16 +739,19 @@ class SetupServer(commands.Cog):
                 "• Materials: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials\n"
                 "• Blueprints: https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprints-visual-scripting-in-unreal-engine")),
         ]
-        for slug, (rank, what) in self.TRACK_ABOUT.items():
-            title = cat.ranks.get(rank, {}).get("title", f"Rank {rank}")
+        from .workshop import STARTER, major_slug
+        abouts = [(STARTER, "**#starter-quests** is for the 11 Starter Quests (Q1–Q11) everyone does after Orientation.\n"
+                            "Everyone can post here.")]
+        abouts += [(major_slug(cat, k), f"**#{major_slug(cat, k)}** is the {cfg['title']} Workshop.\n"
+                                       f"Everyone can read it. Members who picked **{cfg['title']}** can post.")
+                   for k, cfg in cat.majors.items() if k != "undecided"]
+        for slug, head in abouts:
             specs.append(dict(key=f"about-{slug}", channel=ch("tracks", slug), title=f"About #{slug}", tag="Help",
                               view=view(NewPostButton(slug)), content=(
-                f"**#{slug}** opens at **{title}** (rank {rank}).\n"
-                f"**What it covers:** {what}\n"
-                "**Post here:** press **New post** below (or type `/post`): one thread per thing you're building "
-                "(tag WIP), questions about these quests (tag Help).\n"
-                "**Turn-ins:** when you `/submit` a quest from this track, the Quartermaster posts it here (tag "
-                "Turn-in) so people can see it and cheer it on.")))
+                head + "\n**Post here:** press **New post** below (or type `/post`): one thread per thing you're "
+                "building (tag WIP), or a question (tag Help).\n"
+                "**Turn-ins:** when you send your work, the Quartermaster posts it here (tag Turn-in) so people "
+                "can see it and cheer it on.")))
         return [s for s in specs if s["channel"]]
 
     @staticmethod
@@ -774,9 +813,13 @@ class SetupServer(commands.Cog):
         """Delete every message/thread the bot posted except the tracked pins and real member activity
         (turn-ins, /post threads, help posts, #rank-ups cards, staff channels)."""
         cur = await self.bot.db.conn.execute("SELECT k, v FROM kv WHERE user_id=0 AND k LIKE 'pin:%'")
+        current = {f"pin:{spec['key']}" for spec in self.pin_specs(g)}
         keep = set()
         for row in await cur.fetchall():
             parts = (row["v"] or "").split(":")
+            if row["k"] not in current:              # a pin we no longer use (renamed/removed channel): forget it
+                await self.bot.db.conn.execute("DELETE FROM kv WHERE user_id=0 AND k=?", (row["k"],))
+                continue
             if len(parts) == 3:
                 keep.add(int(parts[1]))
             else:                                   # old-style flag from before pins were tracked

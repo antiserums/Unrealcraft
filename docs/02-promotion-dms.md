@@ -18,7 +18,7 @@ You're Greenlit. You have a desk but no badge yet.
 You owe the Starter Quests: 11 short quests, each one sitting.
 Next: {next_quest_id} · {next_quest_title} (~{time_min} min). Run /quest.
 Stuck? #help-desk with the template. Mentors answer formatted posts first.
-New power: #foundations is open. Post WIP and questions there.
+New power: #starter-quests and the Workshop forums are open (post in your major's).
 — Quartermaster · Unrealcraft
 ```
 
@@ -27,7 +27,7 @@ New power: #foundations is open. Post WIP and questions there.
 Blockout Artist. You can build a space and light it without getting lost.
 You owe the {major_title} Rank 1 path, ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}. /path shows the whole rank.
-Ask in #world-lighting when a blockout feels wrong and you can't say why.
+Ask in your major's Workshop forum when a blockout feels wrong and you can't say why.
 New power: World & Lighting track, the Blockout showcase tag, and a voice seat on Studio Floor.
 — Quartermaster · Unrealcraft
 ```
@@ -37,7 +37,7 @@ New power: World & Lighting track, the Blockout showcase tag, and a voice seat o
 Gameplay Prototyper. You make things play.
 You owe your side of Rank 2 ({major_side}) + {taster_count} taster(s), ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}.
-Find a partner in Pair Program voice. Post graphs in #blueprint for reviews.
+Find a partner in Pair Program voice. Post graphs in your major's Workshop forum for reviews.
 New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each.
 — Quartermaster · Unrealcraft
 ```
@@ -48,7 +48,7 @@ New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each.
 Specialist · {seal_title}. People can @ you for {seal_title} work now.
 You owe your {seal_title} Specialty quests + the shared character basics, ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}.
-#characters-anim is open. For feedback, post in #showcase with the Critique-wanted tag.
+Critique Room voice is open. For feedback, post in #showcase with the Critique-wanted tag.
 New power: 1.25× XP on {seal_title} quests, /critique, and you can apply for Mentor-in-Training.
 — Quartermaster · Unrealcraft
 ```
