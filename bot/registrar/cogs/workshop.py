@@ -1,4 +1,4 @@
-"""Workshop forums: a 'New post' dialog (button on each forum's pinned intro, or /post)."""
+"""Major forums: a 'New post' dialog (button on each forum's pinned intro, or /post)."""
 from __future__ import annotations
 
 import logging
@@ -14,7 +14,7 @@ STARTER = "starter-quests"
 
 
 def major_slug(cat, key: str) -> str:
-    """'environment art' -> 'environment-art': the Workshop forum for a major."""
+    """'environment art' -> 'environment-art': the major forum for a major."""
     return re.sub(r"[^a-z0-9]+", "-", cat.majors.get(key, {}).get("title", key).lower()).strip("-")
 
 
@@ -38,7 +38,7 @@ class Workshop(commands.Cog):
         return ch if isinstance(ch, discord.ForumChannel) else None
 
     def open_tracks(self, member: discord.Member) -> list[str]:
-        """Workshop forums this member can post in (#starter-quests + their major's forums)."""
+        """Major forums this member can post in (#starter-quests + their major's forums)."""
         return [s for s in forum_slugs(self.bot.catalog)
                 if (f := self.forum(member.guild, s)) and f.permissions_for(member).send_messages]
 
@@ -88,7 +88,7 @@ class Workshop(commands.Cog):
         return [app_commands.Choice(name=f"#{s}", value=s) for s in self.open_tracks(member)
                 if current.lower() in s][:25]
 
-    @app_commands.command(name="post", description="Start a post in a Workshop forum (WIP, help, or done).")
+    @app_commands.command(name="post", description="Start a post in a major forum (WIP, help, or done).")
     @app_commands.autocomplete(forum=_track_ac)
     async def post(self, itx: discord.Interaction, forum: str | None = None):
         slug = forum
@@ -103,7 +103,7 @@ class Workshop(commands.Cog):
             opened = self.open_tracks(member)
             slug = own if own in opened else (opened[0] if opened else None)
         if not slug:
-            await itx.response.send_message("No Workshop forum is open for you yet. Finish Orientation first.",
+            await itx.response.send_message("No forum is open for you yet. Finish Orientation first.",
                                             ephemeral=True)
             return
         await self.open_dialog(itx, slug)
@@ -142,7 +142,7 @@ class PostModal(discord.ui.Modal):
 
 
 class NewPostButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:newpost:(?P<slug>[\w-]+)"):
-    """On each Workshop forum's pinned intro."""
+    """On each major forum's pinned intro."""
 
     def __init__(self, slug: str):
         super().__init__(discord.ui.Button(label="New post", emoji="📝", style=discord.ButtonStyle.primary,

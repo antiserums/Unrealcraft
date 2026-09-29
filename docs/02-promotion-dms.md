@@ -18,7 +18,7 @@ You're Greenlit. You have a desk but no badge yet.
 You owe the Starter Quests: 11 short quests, each one sitting.
 Next: {next_quest_id} · {next_quest_title} (~{time_min} min). Run /quest.
 Stuck? #help-desk with the template. Mentors answer formatted posts first.
-New power: #starter-quests and the Workshop forums are open (post in your major's).
+New power: #starter-quests and the major forums are open (post in your major's).
 — Quartermaster · Unrealcraft
 ```
 
@@ -27,7 +27,7 @@ New power: #starter-quests and the Workshop forums are open (post in your major'
 Blockout Artist. You can build a space and light it without getting lost.
 You owe the {major_title} Rank 1 path, ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}. /path shows the whole rank.
-Ask in your major's Workshop forum when a blockout feels wrong and you can't say why.
+Ask in your major's forum when a blockout feels wrong and you can't say why.
 New power: World & Lighting track and the Blockout showcase tag.
 — Quartermaster · Unrealcraft
 ```
@@ -37,7 +37,7 @@ New power: World & Lighting track and the Blockout showcase tag.
 Gameplay Prototyper. You make things play.
 You owe your side of Rank 2 ({major_side}) + {taster_count} taster(s), ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}.
-Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's Workshop forum for reviews.
+Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's forum for reviews.
 New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each.
 — Quartermaster · Unrealcraft
 ```

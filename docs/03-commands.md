@@ -18,7 +18,7 @@ Slash commands only. No prefix commands and no message-content intent except for
 | /tree | any | The full catalog as ranks × tracks. Same for everyone, no personalization. |
 | /leaderboard `[scope]` | any | Weekly XP (quests only), by major or server-wide. |
 | /profile `[ue_version]` | any | Show or set profile fields. |
-| /post `[forum]` | R0+ | Opens the New post dialog (title, WIP/Help/Done, quest, details with engine version, up to 4 files) for a Workshop forum you have unlocked. Also a **New post** button on each forum's pinned intro. |
+| /post `[forum]` | R0+ | Opens the New post dialog (title, WIP/Help/Done, quest, details with engine version, up to 4 files) for a major forum you have unlocked. Also a **New post** button on each forum's pinned intro. |
 | /skip-voice | Orientation | Completes O7 without voice. |
 | /room rename `name` · /room limit `n` | owner of a voice room | Rename your join-to-create voice room or cap how many can join (0 = no limit). Same as the buttons in the room's chat. |
 | /skip-elective `id` | any | Hides an elective from /quest suggestions. |

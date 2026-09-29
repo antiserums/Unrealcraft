@@ -64,8 +64,8 @@ class Quests(commands.Cog):
         await self.send_next(itx)
 
     async def quest_board_only(self, itx: discord.Interaction, q=None) -> bool:
-        """After Orientation, quests live in #quest-board. Returns True if this interaction may continue;
-        otherwise replies with a Go-to-#quest-board button. Orientation quests (rank < 0) work anywhere."""
+        """After Orientation, quests live in #quests. Returns True if this interaction may continue;
+        otherwise replies with a Go-to-#quests button. Orientation quests (rank < 0) work anywhere."""
         board = self.bot.unlocks.channel("quest_board")
         if board and itx.channel_id == board:            # Orientation step 4: found and used the quest board
             await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "btn.clockin")
@@ -74,9 +74,9 @@ class Quests(commands.Cog):
         if not board or itx.channel_id == board:
             return True
         v = discord.ui.View(timeout=None)
-        v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Go to #quest-board", emoji="🗺️",
+        v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Go to #quests", emoji="🗺️",
                                      url=f"https://discord.com/channels/{self.bot.settings.guild_id}/{board}"))
-        await itx.response.send_message("Quests only work in **#quest-board**. Go there and press **Continue your quest**.", view=v, ephemeral=True)
+        await itx.response.send_message("Quests only work in **#quests**. Go there and press **Continue your quest**.", view=v, ephemeral=True)
         return False
 
     async def card_view(self, q, uid: int) -> discord.ui.View:
@@ -263,7 +263,7 @@ class Quests(commands.Cog):
     # ------------------------------------------------------ public turn-in post
     async def post_turnin(self, guild: discord.Guild, member: discord.abc.User, q, payload: dict, route: str,
                           sid: int | None = None) -> None:
-        """Mirror a /submit into its Workshop forum so people can see and cheer it."""
+        """Mirror a /submit into its major forum so people can see and cheer it."""
         unl = self.bot.unlocks
         # Starter Quests → #starter-quests; everything else → the member's major forum.
         from .workshop import STARTER, major_slug
@@ -476,7 +476,7 @@ class NextQuestButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:n
         return cls()
 
     async def callback(self, itx: discord.Interaction):
-        await itx.client.get_cog("Quests").send_next(itx)          # send_next records step 4 in #quest-board
+        await itx.client.get_cog("Quests").send_next(itx)          # send_next records step 4 in #quests
 
 
 class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:send:(?P<q>[A-Za-z0-9-]+)"):

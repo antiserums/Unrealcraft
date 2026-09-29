@@ -16,11 +16,11 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 |---|---|---|
 | 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Questing + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
-| 02 · TOWN HALL | ➕ Join to create [V]: joining it makes your own room (rename / user limit; deleted after 5 min empty), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
-| 03 · WORKSHOP | #quest-board (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
+| 02 · QUEST BOARD | #quests (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
+| 03 · TOWN HALL | ➕ Join to create [V]: joining it makes your own room (rename / user limit; deleted after 5 min empty), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 04 · STAFF | #mod-log (also gets 🐞 bug-report alerts), #curriculum-wip, #mentor-queue | staff (+ Architect read queue, Lead) |
 
-**Workshop forums:** one thread per thing you're building (tags WIP / Help / Done). Every `/submit` is also posted there with the
+**Major forums:** one thread per thing you're building (tags WIP / Help / Done). Every `/submit` is also posted there with the
 Turn-in tag so others can see and cheer it. Lessons come through `/quest` cards, not channels.
 
 **Specialty:** at Rank 3 each member picks a Specialty (Design, Environment Art, Anim or Code) matching their major. It sets their title (Specialist · Design). There are no separate Specialty channels; critique happens in #showcase with the Critique-wanted tag.
@@ -28,7 +28,7 @@ Turn-in tag so others can see and cheer it. Lessons come through `/quest` cards,
 **Pinned messages:** each channel has at most one pinned bot message. The bot edits it in place when wording changes (`/setup sync-pins`) and deletes any other stray bot posts.
 is a private room for `/critique` and specialty work; the `Specialty · X` role keeps it open after Rank 3.
 
-Phase 5 adds systems (R4) and net/GAS + shipping (R5) forums to WORKSHOP; nothing is created early.
+Phase 5 adds systems (R4) and net/GAS + shipping (R5) forums to QUEST BOARD; nothing is created early.
 
 ### Discord Community features in use
 Rules Screening (8 rules), Onboarding with 4 pre-join questions + 3 on Channels & Roles (see `bot/registrar/profile.py`),

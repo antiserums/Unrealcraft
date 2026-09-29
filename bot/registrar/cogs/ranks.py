@@ -144,18 +144,18 @@ class Ranks(commands.Cog):
         lines = {
             0: ["You're Greenlit. You have a desk but no badge yet.",
                 "You owe the Starter Quests: 11 short quests, each one sitting.",
-                f"Next: {nxt}. From now on, quests only work in #quest-board: press Continue your quest there.",
+                f"Next: {nxt}. From now on, quests only work in #quests: press Continue your quest there.",
                 "Stuck? #help-desk with the template. Mentors answer formatted posts first.",
-                "New power: #starter-quests and the Workshop forums are open (post in your major's)."],
+                "New power: #starter-quests and the major forums are open (post in your major's)."],
             1: ["Blockout Artist. You can build a space and light it without getting lost.",
                 f"You owe the Rank 1 path, ending in: {cap.get('title', '—')}.",
                 f"Next: {nxt}. /path shows the whole rank.",
-                "Ask in your major's Workshop forum when a blockout feels wrong and you can't say why.",
+                "Ask in your major's forum when a blockout feels wrong and you can't say why.",
                 "New power: World & Lighting track and the Blockout showcase tag."],
             2: ["Gameplay Prototyper. You make things play.",
                 f"You owe your side of Rank 2 + tasters, ending in: {cap.get('title', '—')}.",
                 f"Next: {nxt}.",
-                "Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's Workshop forum for reviews.",
+                "Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's forum for reviews.",
                 "New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each."],
             3: [f"Specialist · {seal_t}. People can @ you for {seal_t} work now.",
                 f"You owe your {seal_t} Specialty quests + shared character basics, ending in: {cap.get('title', '—')}.",
@@ -225,7 +225,7 @@ class Ranks(commands.Cog):
                     ow[r] = discord.PermissionOverwrite(view_channel=True)
                 await cat.edit(overwrites=ow, reason="Quartermaster sync-perms")
                 changed += 1
-        await itx.followup.send(f"Synced {changed} categories. Workshop forums get their rank locks from bootstrap.",
+        await itx.followup.send(f"Synced {changed} categories. Major forums get their rank locks from bootstrap.",
                                 ephemeral=True)
 
     @admin.command(name="reload-curriculum", description="Reload YAML from disk.")

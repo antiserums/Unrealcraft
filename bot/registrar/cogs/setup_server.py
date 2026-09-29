@@ -322,10 +322,10 @@ class SetupServer(commands.Cog):
         chans.update(general=general.id, introductions=intros.id, showcase=showcase.id, help_desk=helpdesk.id,
                      suggestions=suggestions.id)
 
-        # 02 TOWN HALL ---------------------------------------------------------------
-        await self._rename_category(g, "02 · TRAINING GROUNDS", "02 · TOWN HALL")
-        await self._rename_category(g, "02 · VOICE ROOMS", "02 · TOWN HALL")
-        training = await self._category(g, "02 · TOWN HALL", {everyone: P(view_channel=False),
+        # 03 TOWN HALL ---------------------------------------------------------------
+        for old in ("02 · TRAINING GROUNDS", "02 · VOICE ROOMS", "02 · TOWN HALL"):
+            await self._rename_category(g, old, "03 · TOWN HALL")
+        training = await self._category(g, "03 · TOWN HALL", {everyone: P(view_channel=False),
                                                                 R["Recruit"]: recruit_ow,
                                                                 R["Oriented"]: member_ow, me: bot_ow})
         cats["training"] = training.id
@@ -342,11 +342,12 @@ class SetupServer(commands.Cog):
         floor = await self._voice(g, training, hub_name)
         chans.update(studio_floor_voice=floor.id)
 
-        # 03 WORKSHOP: the quest board + #starter-quests + one forum per major ----------------------
+        # 02 QUEST BOARD (was WORKSHOP): #quests + #starter-quests + one forum per major --------------
         # Quests live on the board; /submit posts turn-ins into #starter-quests or the member's major forum.
-        workshop = await self._category(g, "03 · WORKSHOP", {everyone: P(view_channel=False), me: bot_ow})
+        await self._rename_category(g, "03 · WORKSHOP", "02 · QUEST BOARD")
+        workshop = await self._category(g, "02 · QUEST BOARD", {everyone: P(view_channel=False), me: bot_ow})
         cats["workshop"] = workshop.id
-        qb = await self._move_or_text(g, workshop, "quest-board", topic="How quests work and the weekly raid.")
+        qb = await self._move_or_text(g, workshop, "quests", old_names=("quest-board",), topic="How quests work and the weekly raid.")
         # send_messages on so slash commands work here; plain chat is removed by the bot (commands-only)
         board_ow = P(view_channel=True, send_messages=True, create_public_threads=False, add_reactions=True,
                      read_message_history=True, use_application_commands=True)
@@ -549,7 +550,7 @@ class SetupServer(commands.Cog):
                 discord.OnboardingPromptOption(title="Patch notes", description="New quests and bot changes",
                                                emoji=E(name="📦"), roles=[unl.role("ping", "patch_notes")]),
             ])
-        # Default channels must be readable by @everyone: GATE + the open hub. Workshop forums stay rank-locked.
+        # Default channels must be readable by @everyone: GATE + the open hub. Major forums stay rank-locked.
         gate = discord.utils.get(g.categories, name="00 · GATE")
         defaults = [c for c in (gate.channels if gate else []) if isinstance(c, discord.TextChannel)]
         defaults += [c for c in (ch("general"), ch("introductions"), ch("showcase"), ch("help_desk"),
@@ -581,7 +582,7 @@ class SetupServer(commands.Cog):
                 act("welcome", "Start Questing", "Press the green button. It is a short rules quiz.", "🚪"),
 
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
-                act("quest_board", "Find the quest board", "Press Clocked in on the pinned post.", "🗺️"),
+                act("quest_board", "Find #quests", "Press Continue your quest on the pinned post.", "🗺️"),
                 act("help_desk", "Ask for help the right way", "Use the New help post button.", "🛠️"),
             ) if a],
             "resource_channels": [r for r in (
@@ -600,13 +601,13 @@ class SetupServer(commands.Cog):
             out.append(f"⚠ server guide: {e}")
         return out
 
-    CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · TOWN HALL", "03 · WORKSHOP",
+    CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · QUEST BOARD", "03 · TOWN HALL",
                       "04 · STAFF"]
     CHANNEL_ORDER = {
         "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
                       "rank-ups"],
         "01 · GUILD HUB": ["general", "introductions", "showcase", "help-desk", "suggestions"],
-        "03 · WORKSHOP": ["quest-board", "starter-quests", "level-design", "environment-art", "tech-art",
+        "02 · QUEST BOARD": ["quests", "starter-quests", "level-design", "environment-art", "tech-art",
                           "gameplay-design", "animation", "programming", "cinematics"],
     }
 
@@ -692,7 +693,7 @@ class SetupServer(commands.Cog):
             E("🚀 Start here: 3 steps",
               "**1.** Press the green button below. Your first quest is a short quiz about the rules.\n"
               "**2.** Then do the other small steps. There is always a button for the next one.\n"
-              "**3.** When you finish, go to **#quest-board**. After Orientation, quests only work there.", "#3D7DD8"),
+              "**3.** When you finish, go to **#quests**. After Orientation, quests only work there.", "#3D7DD8"),
             E("⌨️ 5 commands",
               "`/quest` : your next task\n"
               "`/quiz` : answer questions about a quest\n"
@@ -703,7 +704,7 @@ class SetupServer(commands.Cog):
             E("🗺️ What opens when",
               "You only see channels you have unlocked.\n"
               "**Everyone:** GATE and Guild Hub channels.\n"
-              "**After Orientation:** #quest-board, #starter-quests and the Workshop forums (read all, post in "
+              "**After Orientation:** #quests, #starter-quests and the major forums (read all, post in "
               "your major's), plus Town Hall (voice).\n" + rank_lines, "#8E6CCF"),
             E("🆘 Need help?",
               "Go to #help-desk.\n"
@@ -716,7 +717,7 @@ class SetupServer(commands.Cog):
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
                  view=view(StartButton())),
             dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), embeds=[
-                E("📋 Quest board", "**This is your home for quests.**\n"
+                E("📋 Quests", "**This is your home for quests.**\n"
                   "After Orientation, quests only work in this channel."),
                 E("▶️ How to quest", "1. Press **Continue your quest** (or type `/quest`).\n"
                   "2. Read the guides the quest links to.\n"
@@ -779,7 +780,7 @@ class SetupServer(commands.Cog):
         from .workshop import STARTER, major_slug
         abouts = [(STARTER, "For the 11 Starter Quests (Q1–Q11) everyone does after Orientation.\n"
                             "Everyone can post here.")]
-        abouts += [(major_slug(cat, k), f"The {cfg['title']} Workshop.\n"
+        abouts += [(major_slug(cat, k), f"The {cfg['title']} forum.\n"
                                        f"Everyone can read it. Members who picked **{cfg['title']}** can post.")
                    for k, cfg in cat.majors.items() if k != "undecided"]
         for slug, head in abouts:
