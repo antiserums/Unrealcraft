@@ -14,6 +14,11 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.10.1 · 2026-09-29
+- **Start quiz** now goes straight to question 1. No second Start quiz button.
+- **Open the guide** is on every quiz question, so the reading is always one tap away.
+- Quizzes are shown as colored cards: the question, ✅ Correct / ❌ Not quite, and your result.
+
 ## v0.10.0 · 2026-09-29
 - New voice rooms: join **➕ Join to create** and the Quartermaster makes a room just for you and moves you in.
 - Rename your room or set a user limit with the buttons in its chat, or type `/room rename` / `/room limit`.
