@@ -8,7 +8,7 @@
 4. **Mentors review artifacts, not vibes.** Submit the thing: a screenshot, a clip, a graph.
 5. **State your engine version on every turn-in.** We teach the current UE5.x.
 6. **Chat doesn't earn rank.** Quests do. Talk as much as you like.
-7. **Official sources first.** We link Epic docs and free Epic courses. No pirated or re-hosted paid courses, ever.
+7. **Good sources only.** Quests link Epic's docs and hand-picked free guides from the community. No pirated or re-hosted paid courses, ever.
 8. Be decent. Critique the work, not the person.
 
 Run `/start` to begin.

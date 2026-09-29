@@ -136,6 +136,10 @@ class Catalog:
             url = r.get("official_url") or ""
             if url and not (url.startswith("https://") or url.startswith("discord://") or url == "TODO_URL"):
                 errs.append(f"{where}: official_url must be https://, discord:// or TODO_URL")
+            for c in r.get("community_urls") or []:
+                u = c.get("url", "") if isinstance(c, dict) else c
+                if not str(u).startswith("https://"):
+                    errs.append(f"{where}: community_urls entries must be https:// (got {u!r})")
         for major, cfg in self.majors.items():
             for rank, groups in (cfg.get("required_tasters") or {}).items():
                 for g in groups or []:

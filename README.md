@@ -2,7 +2,7 @@
 
 **Server:** https://discord.gg/Y2yDDNQQw
 
-A Discord learning RPG for Unreal Engine 5. Members earn ranks by finishing quests: read the official docs, do the work in-engine,
+A Discord learning RPG for Unreal Engine 5. Members earn ranks by finishing quests: read the guides (Epic docs plus hand-picked community ones), do the work in-engine,
 pass a quiz and submit proof. Chat does not earn XP. After a short shared Starter Quests, the path is personalized by **major**.
 The bot is the **Quartermaster**.
 
@@ -73,4 +73,5 @@ Then follow `docs/04-discord-setup-checklist.md` sections E–G.
 
 ## Adding quests
 Edit YAML, run `python tools/validate_curriculum.py --warnings`, then use `/admin reload-curriculum`. Only use slugs from
-`curriculum/VERIFIED_URLS.md` as `official_url`; otherwise write `TODO_URL`.
+`curriculum/VERIFIED_URLS.md` as `official_url`; otherwise write `TODO_URL`. Non-Epic material (community tutorials,
+videos, articles) goes in `community_urls`, a list of `{title, url}` (or plain `https://` URLs); keep it free and legit.

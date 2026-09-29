@@ -60,7 +60,7 @@ class Quiz(commands.Cog):
 
     async def finish(self, itx: discord.Interaction, q, score: int, first_try: bool):
         """Returns (message, view). The view always has a button to the next thing."""
-        from ..embeds import guide_view
+        from ..embeds import guide_view, reading_links
         from .quests import NextQuestButton, SendWorkButton
         from .onboarding import NextStepsButton
         view = discord.ui.View(timeout=None)
@@ -72,7 +72,7 @@ class Quiz(commands.Cog):
             view.add_item(QuizButton(q.id, label="Try again"))
             guide_view(q, view)
             return (f"**{score}/{total}**. You need {int(QUIZ_PASS_RATIO * total)}. "
-                    + ("Read the guide again, then try again." if q.raw.get("official_url", "").startswith("http")
+                    + ("Read the guide again, then try again." if reading_links(q)
                        else "Read #welcome again, then try again.")), view
         await db.set_progress(itx.user.id, q.id, "quiz_passed", quiz_passed=True)
         msg = f"**{score}/{total}**. Passed."

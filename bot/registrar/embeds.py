@@ -50,13 +50,18 @@ def linkify(text: str | None, guild: discord.Guild | None) -> str | None:
 
 
 def reading_links(q: Quest) -> list[tuple[str, str]]:
-    """(label, url) for a quest's learning material: the official page first, then extras, then a backup video."""
+    """(label, url) for a quest's learning material: the Epic page first, then extras, community guides,
+    then a backup video. `community_urls` items are a URL or {title, url}."""
     r, out = q.raw, []
     if (u := r.get("official_url")) and u.startswith("http"):
         out.append(("Official Epic guide", u))
     for i, u in enumerate(r.get("extra_urls") or [], 1):
         if u.startswith("http"):
             out.append((f"Extra reading {i}", u))
+    for i, c in enumerate(r.get("community_urls") or [], 1):
+        u, t = (c.get("url", ""), c.get("title")) if isinstance(c, dict) else (c, None)
+        if u.startswith("http"):
+            out.append((t or f"Community guide {i}", u))
     if (u := r.get("backup_url")) and u.startswith("http"):
         out.append(("Backup video", u))
     return out

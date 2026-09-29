@@ -281,7 +281,7 @@ class SetupServer(commands.Cog):
         notes = await self._text(g, gate, "patch-notes", news=True,
                                  topic="What changed on the server, the bot and the curriculum. Posted on every update.")
         resources = await self._move_or_text(g, gate, "epic-games-resources", old_names=("resources",),
-                                             topic="Official Epic Games docs and free courses. Every quest's reading comes from here.")
+                                             topic="Epic Games docs and free courses. Quests also link hand-picked community guides.")
         rankups = await self._move_or_text(g, gate, "rank-ups", topic="Promotions. Posted by the Quartermaster.")
         for c in (resources, rankups):
             await c.edit(overwrites=gate_ow)
@@ -713,7 +713,7 @@ class SetupServer(commands.Cog):
                 E("📋 Quest board", "**This is your home for quests.**\n"
                   "After Orientation, quests only work in this channel."),
                 E("▶️ How to quest", "1. Press **Continue your quest** (or type `/quest`).\n"
-                  "2. Read the Epic docs the quest links to.\n"
+                  "2. Read the guides the quest links to.\n"
                   "3. Do the work in Unreal.\n"
                   "4. Take the quiz.\n"
                   "5. Press **Send my work** (or type `/submit`).", "#3D7DD8"),
@@ -759,7 +759,8 @@ class SetupServer(commands.Cog):
                   "#D4AF37"),
             ]),
             dict(key="resources", channel=ch("resources"), embeds=[
-                E("📚 Epic Games resources", "The official docs and free courses every quest links to.\n\n"
+                E("📚 Epic Games resources", "Epic's own docs and free courses. "
+                  "Quests link these, plus hand-picked guides from the community.\n\n"
                   "• [Get Started](https://dev.epicgames.com/documentation/en-us/unreal-engine/get-started)\n"
                   "• [Your First Hour](https://dev.epicgames.com/documentation/en-us/unreal-engine/first-hour-in-unreal-engine)\n"
                   "• [Level Designer Quick Start](https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine)\n"
