@@ -9,12 +9,14 @@ ranks:
   # Level Design cumulative XP from required quests only: end R0 ≈ 705, end R1 ≈ 1675, end R2 ≈ 2635,
   # end R3 ≈ 3825 raw (≈ 4050 with the 1.25× in-Specialty bonus). Each threshold sits a little below that, so the
   # capstone is the real gate. Phase 4 TODO: rebalance Programming and Environment Art quest XP to land near the same totals.
-  # Guild ranks. Each rank opens the next quest difficulty tier (`tier`, see TIERS in bot/registrar/curriculum.py).
+  # Each rank opens a quest difficulty tier (`tier`, see TIERS in bot/registrar/curriculum.py).
+  # `quests_to_leave`: how many quests of that tier (your major's own + shared ones required for it) you must
+  # finish, on top of the core path, before the next promotion. Capped at what exists while content grows.
   - {n: 0, key: novice,       title: "Novice",       tier: novice,     xp: 0,     color: "#7A8C7E", hoist: false, opens: "🟢 Novice quests: #quest-log, #starter-quests and the major forums (read all, post in your major's)"}
-  - {n: 1, key: apprentice,     title: "Apprentice",     tier: apprentice, xp: 650,   color: "#B5714B", hoist: false, opens: "🔵 Apprentice quests and the Blockout tag in #showcase"}
-  - {n: 2, key: adept,      title: "Adept",      tier: adept,      xp: 1500,  color: "#3D7DD8", hoist: false, opens: "🟣 Adept quests and peer reviews: you can approve Rank 0–1 turn-ins"}
-  - {n: 3, key: expert,        title: "Expert",        tier: expert,     xp: 2500,  color: null,      hoist: false, opens: "🟠 Expert quests, your Specialty title (e.g. Expert · Design) and /critique"}   # role color comes from the Specialty
-  - {n: 4, key: master, title: "Master", tier: master,     xp: 3700,  color: "#8A9BA8", hoist: true, opens: "🔴 Master quests and reviewing Rank 2 work"}
+  - {n: 1, key: apprentice,     title: "Apprentice",     tier: apprentice, quests_to_leave: 30, xp: 650,   color: "#B5714B", hoist: false, opens: "🔵 Apprentice quests and the Blockout tag in #showcase"}
+  - {n: 2, key: adept,      title: "Adept",      tier: adept, quests_to_leave: 60,      xp: 1500,  color: "#3D7DD8", hoist: false, opens: "🟣 Adept quests and peer reviews: you can approve Rank 0–1 turn-ins"}
+  - {n: 3, key: expert,        title: "Expert",        tier: expert, quests_to_leave: 120,     xp: 2500,  color: null,      hoist: false, opens: "🟠 Expert quests, your Specialty title (e.g. Expert · Design) and /critique"}   # role color comes from the Specialty
+  - {n: 4, key: master, title: "Master", tier: master, quests_to_leave: 220,     xp: 3700,  color: "#8A9BA8", hoist: true, opens: "🔴 Master quests and reviewing Rank 2 work"}
   - {n: 5, key: senior,    title: "Senior",    tier: master,     xp: 6500,  color: "#8E6CCF", hoist: true, human_review: true, opens: "the Lecture Hall stage and writing quests"}
   - {n: 6, key: lead,    title: "Lead",    tier: master,     xp: 9500,  color: "#D4AF37", hoist: true, human_review: true, vouchers: 2, opens: "#curriculum-wip and full mentor tools"}
 
@@ -42,6 +44,7 @@ xp_rules:
 majors:
   level_design:
     title: "Level Design"
+    prefix: LDQ
     blurb: "Spaces, flow, encounters. You make the player go where you need them to."
     seals: [design]
     adjacent: [lighting, bp-interact, foliage]
@@ -60,6 +63,7 @@ majors:
 
   programming:
     title: "Programming"
+    prefix: PQ
     blurb: "Systems, C++, the code everyone else's work runs on."
     seals: [code]
     adjacent: [cpp, bp-interop, logging]
@@ -78,6 +82,7 @@ majors:
 
   lookdev:
     title: "Environment Art"
+    prefix: EAQ
     blurb: "Materials, light and mood. You set how the world looks."
     seals: [lookdev]
     adjacent: [lighting, landscape-material, decals]
@@ -97,6 +102,7 @@ majors:
   # ---------- stubbed majors (titles + capstones only in Phase 1) ----------
   tech_art:
     title: "Tech Art"
+    prefix: TAQ
     blurb: "Tools, shaders and VFX that make artists faster."
     seals: [code, lookdev]
     adjacent: [materials, niagara, cpp-utility]
@@ -112,6 +118,7 @@ majors:
 
   gameplay_design:
     title: "Gameplay Design"
+    prefix: GDQ
     blurb: "Rules, loops and feel. You make a thing fun."
     seals: [design]
     adjacent: [blueprint, umg, ld-graybox]
@@ -127,6 +134,7 @@ majors:
 
   animation:
     title: "Animation"
+    prefix: AQ
     blurb: "Characters that move and react believably."
     seals: [anim]
     adjacent: [animbp, mannequin-in-space]
@@ -142,6 +150,7 @@ majors:
 
   cinematics:
     title: "Cinematics"
+    prefix: CQ
     blurb: "Cameras, Sequencer and shots."
     seals: [lookdev, anim]
     adjacent: [sequencer, cameras, lookdev-still]

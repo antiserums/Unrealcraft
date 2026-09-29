@@ -239,6 +239,10 @@ class Catalog:
         if main is None and cap and cap["id"] in self.quests and cap["id"] not in u.done:
             main = self.quests[cap["id"]]      # e.g. Undecided borrows the LD capstone
         reason = ("Capstone" if main and main.capstone else "Major required") if main else "Rank complete. Electives only."
+        if main is None and u.rank >= 1:
+            done_n, need_n, _, tier = self.tier_progress(u, u.rank)
+            if done_n < need_n:
+                reason = f"Core path done. {done_n}/{need_n} {TIERS[tier]['emoji']} {TIERS[tier]['name']} quests toward the next rank. Pick any."
         # 5. Offer 2 major electives + 1 adjacent
         pool = [q for q in self.sorted(self.quests.values())
                 if q.elective and 0 <= q.rank <= u.rank and todo(q) and self.available(q)]
@@ -289,7 +293,26 @@ class Catalog:
             cap = self.capstone(u.major, cur)
             if cap and cap["id"] not in u.done and cap["id"] not in missing:
                 missing.append(cap["id"])
+            done, need, _, tier = self.tier_progress(u, cur)
+            if done < need:                      # tier count: any quests of this tier in the major, member's choice
+                missing.append(f"tier:{tier}:{need - done}")
         return (not missing, missing)
+
+    # ---------------- tier counts ----------------
+    def counts_for(self, q: Quest, major: str) -> bool:
+        """A quest counts toward a major's tier total if it is the major's own (ID prefix) or required for it."""
+        prefix = self.majors.get(major, {}).get("prefix")
+        return (prefix and q.id.startswith(prefix)) or major in q.required_for or ALL in q.required_for
+
+    def tier_progress(self, u: UserState, rank: int) -> tuple[int, int, int, str]:
+        """(done, needed, available, tier) for leaving `rank`. `needed` is capped at what exists so far."""
+        cfg = self.ranks.get(rank, {})
+        tier = cfg.get("tier", TIER_BY_RANK.get(rank, "master"))
+        pool = [q for q in self.quests.values() if q.difficulty == tier and q.rank >= 0 and self.counts_for(q, u.major)
+                and self.available(q)]
+        done = sum(q.id in u.done for q in pool)
+        need = min(int(cfg.get("quests_to_leave") or 0), len(pool))
+        return done, need, len(pool), tier
 
     def xp_needed(self, target_rank: int) -> int:
         return int(self.ranks.get(target_rank, {}).get("xp", 0)) if target_rank >= 0 else 0
@@ -317,6 +340,10 @@ class Catalog:
             title = self.ranks.get(r, {}).get("title", f"Rank {r}")
             lines.append(f"RANK {r} · {title.upper()} · {mt}")
             lines += [row(q) for q in self.required(u.major, r)]
+            done_n, need_n, avail, tier = self.tier_progress(u, r)
+            if need_n:
+                lines.append(f"  {TIERS[tier]['emoji']} {TIERS[tier]['name']} quests: {done_n}/{need_n} done"
+                             f" (any {TIERS[tier]['name']} quest in {mt} counts; {avail} exist so far)")
             for g in self.taster_groups(u.major, r):
                 qs = [self.quests[x] for x in g if x in self.quests]
                 if qs:
@@ -327,6 +354,10 @@ class Catalog:
         if nxt in self.ranks:
             title = self.ranks[nxt]["title"]
             gate = "Starter Quests" if nxt == 1 else f"Rank {nxt - 1} path"
+            if nxt >= 2:
+                _, need_n, _, tier = self.tier_progress(u, nxt - 1)
+                if need_n:
+                    gate += f" + {need_n} {TIERS[tier]['name']} quests"
             lines.append(f"🔒 RANK {nxt} · {title.upper()} · {mt}: needs {self.ranks[nxt]['xp']} XP + {gate}")
             if self.ranks[nxt].get("opens"):
                 lines.append(f"  🔓 opens: {self.ranks[nxt]['opens']}")

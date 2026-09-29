@@ -47,9 +47,14 @@ class Ranks(commands.Cog):
         ok, missing = self.cat.rank_requirements_met(st, target)
         if target in self.cat.ranks or target == 0:
             need = self.cat.xp_needed(target)
-            next_line = (f"{self.cat.ranks.get(target, {}).get('title', 'Novice')}: "
-                         f"{max(0, need - u['xp'])} XP to go · "
-                         + ("all required quests done" if ok else f"{len(missing)} required left"))
+            ids = [m for m in missing if not m.startswith("tier:")]
+            tier_left = [m for m in missing if m.startswith("tier:")]
+            parts = [f"{max(0, need - u['xp'])} XP to go"]
+            parts.append("core path done" if not ids else f"{len(ids)} required left")
+            if tier_left:
+                _, tname, n = tier_left[0].split(":")
+                parts.append(f"{n} more {tname} quests (your choice)")
+            next_line = f"{self.cat.ranks.get(target, {}).get('title', 'Novice')}: " + " · ".join(parts)
         else:
             next_line = "Top of the ladder. The Optimization shelf is open."
         return rank_card(self.cat, member, u, await db.medals(member.id), next_line)
