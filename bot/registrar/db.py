@@ -22,6 +22,13 @@ class DB:
         self.conn = await aiosqlite.connect(self.path)
         self.conn.row_factory = aiosqlite.Row
         await self.conn.executescript(SCHEMA.read_text(encoding="utf-8"))
+        # small migrations for databases created before a column existed
+        for table, col, kind in (("submissions", "public_channel_id", "INTEGER"),
+                                 ("submissions", "public_message_id", "INTEGER")):
+            try:
+                await self.conn.execute(f"ALTER TABLE {table} ADD COLUMN {col} {kind}")
+            except aiosqlite.OperationalError:
+                pass                                  # already there
         await self.conn.commit()
 
     async def close(self) -> None:
@@ -144,6 +151,11 @@ class DB:
         cur = await self.conn.execute(
             "SELECT COUNT(*) c FROM review_actions WHERE submission_id=? AND is_peer=1 AND verdict='approve'", (sid,))
         return (await cur.fetchone())["c"]
+
+    async def set_public_post(self, sid: int, channel_id: int, message_id: int) -> None:
+        await self.conn.execute("UPDATE submissions SET public_channel_id=?, public_message_id=? WHERE id=?",
+                                (channel_id, message_id, sid))
+        await self.conn.commit()
 
     async def set_queue_message(self, sid: int, message_id: int) -> None:
         await self.conn.execute("UPDATE submissions SET queue_message_id=? WHERE id=?", (message_id, sid))

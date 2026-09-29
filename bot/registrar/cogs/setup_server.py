@@ -730,6 +730,18 @@ class SetupServer(commands.Cog):
                 "**How to give WIP feedback**\nOne thing that works · one specific issue · one next step.\n"
                 "Want critique? Tag your post **Critique-wanted**.\n"
                 "React 🔥 👀 or 🧱 on anything you looked at. Five 🔥 on your post earns +25 XP (once a week).")),
+            dict(key="mentor-queue-guide", channel=ch("mentor_queue"), content=(
+                "**📋 Mentor queue: what this is**\n"
+                "Members' turn-ins that need a person to review them show up here as cards, newest at the bottom.\n\n"
+                "**Review cards** (Rank 2 and up) have three buttons:\n"
+                "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
+                "• **Changes**: close, but something is missing. Write exactly what to fix. They can send it again right away.\n"
+                "• **Fail**: not an honest attempt, or the wrong quest. They can send it again in 2 hours.\n\n"
+                "**🔎 Spot checks** (grey cards) are Rank 0–1 turn-ins that were already accepted on trust. "
+                "Press **Looks good**, or **Flag** to send the member a kind note. Flagging does not take their XP away.\n\n"
+                "**How to judge:** compare the work with the *Done when* line on the card. Review the work, not the person. "
+                "Every result, with your note, is posted in the member's turn-in thread and sent to them by DM.\n"
+                "**Aim to review within 48 hours.** Who can review: Mentors, Studio Leads and server admins.")),
             dict(key="resources", channel=ch("resources"), content=(
                 "**Epic Games resources**: the official docs and free courses every quest links to.\n"
                 "• Get Started: https://dev.epicgames.com/documentation/en-us/unreal-engine/get-started\n"

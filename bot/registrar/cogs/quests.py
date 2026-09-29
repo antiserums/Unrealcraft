@@ -220,8 +220,10 @@ class Quests(commands.Cog):
         if route in ("auto", "honor"):
             await db.decide(sid, "pass", None, route)
             await itx.response.send_message(f"✅ {q.id} accepted. +{q.xp} XP.", ephemeral=True, view=_next_view())
-            await self.post_turnin(itx.guild, itx.user, q, payload, route)
+            await self.post_turnin(itx.guild, itx.user, q, payload, route, sid)
             await self.complete(itx.guild, itx.user.id, q.id)
+            if route == "honor" and await self.spot_check_due():
+                await self.post_to_queue(itx.guild, sid, spot=True)
             return
         await self.post_to_queue(itx.guild, sid)
         who = {"peer": "a peer (Rank 2+) or a mentor",
@@ -229,7 +231,7 @@ class Quests(commands.Cog):
                "human": "a human mentor"}[route]
         await itx.response.send_message(f"📥 Submitted #{sid}. Waiting on {who}. Target turnaround is under 48h.",
                                         ephemeral=True, view=_next_view())
-        await self.post_turnin(itx.guild, itx.user, q, payload, route)
+        await self.post_turnin(itx.guild, itx.user, q, payload, route, sid)
 
     # --------------------------------------------------------- completion
     async def complete(self, guild: discord.Guild, uid: int, qid: str) -> None:
@@ -259,7 +261,8 @@ class Quests(commands.Cog):
             await self.bot.get_cog("Ranks").check_promotion(guild, uid)
 
     # ------------------------------------------------------ public turn-in post
-    async def post_turnin(self, guild: discord.Guild, member: discord.abc.User, q, payload: dict, route: str) -> None:
+    async def post_turnin(self, guild: discord.Guild, member: discord.abc.User, q, payload: dict, route: str,
+                          sid: int | None = None) -> None:
         """Mirror a /submit into its Workshop forum so people can see and cheer it."""
         unl = self.bot.unlocks
         # Starter Quests → #starter-quests; everything else → the member's major forum.
@@ -282,16 +285,83 @@ class Quests(commands.Cog):
         try:
             if isinstance(ch, discord.ForumChannel):
                 tag = discord.utils.get(ch.available_tags, name="Turn-in")
-                await ch.create_thread(name=f"{q.id} · {member.display_name}"[:100], content=body, embed=embed,
-                                       applied_tags=[tag] if tag else [],
-                                       allowed_mentions=discord.AllowedMentions.none())
+                made = await ch.create_thread(name=f"{q.id} · {member.display_name}"[:100], content=body, embed=embed,
+                                              applied_tags=[tag] if tag else [],
+                                              allowed_mentions=discord.AllowedMentions.none())
+                where, msg_id = made.thread.id, made.message.id
             else:
-                await ch.send(body, embed=embed, allowed_mentions=discord.AllowedMentions.none())
+                m = await ch.send(body, embed=embed, allowed_mentions=discord.AllowedMentions.none())
+                where, msg_id = ch.id, m.id
+            if sid:
+                await self.bot.db.set_public_post(sid, where, msg_id)
         except discord.HTTPException as e:
             log.warning("turn-in post failed for %s: %s", q.id, e)
 
+    async def spot_check_due(self) -> bool:
+        every = int(self.cat.xp_rules.get("spot_check_every", 5) or 0)
+        if every <= 0:
+            return False
+        n = int(await self.bot.db.kv_get(0, "spot_counter") or 0) + 1
+        await self.bot.db.kv_set(0, "spot_counter", str(n))
+        return n % every == 0
+
+    async def update_turnin(self, guild: discord.Guild, sid: int, verdict: str, reviewer: discord.abc.User,
+                            notes: str | None) -> None:
+        """After a review: change the public post's status and reply in its thread with the result."""
+        import re
+        s = await self.bot.db.submission(sid)
+        if not s or not s["public_channel_id"]:
+            return
+        status = {"pass": "✅ passed", "changes": "🔁 changes requested", "fail": "❌ not passed",
+                  "spot_flag": "✅ accepted (a mentor left a note)"}[verdict]
+        ch = guild.get_channel_or_thread(s["public_channel_id"])
+        if ch is None:
+            try:
+                ch = await guild.fetch_channel(s["public_channel_id"])
+            except discord.HTTPException:
+                return
+        try:
+            msg = await ch.fetch_message(s["public_message_id"])
+            first, _, rest = msg.content.partition("\n")
+            first = re.sub(r" · (📥|✅|🔁|❌)[^\n]*$", f" · {status}", first)
+            await msg.edit(content=first + "\n" + rest, allowed_mentions=discord.AllowedMentions.none())
+        except discord.HTTPException:
+            msg = None
+        q = self.cat.quests.get(s["quest_id"])
+        text = {"pass": f"✅ **Passed** by {reviewer.mention}.",
+                "changes": f"🔁 **Changes requested** by {reviewer.mention}. Fix it and press **Send my work again**.",
+                "fail": f"❌ **Not passed** by {reviewer.mention}. You can send it again in 2 hours.",
+                "spot_flag": f"📝 {reviewer.mention} looked at this and left a note. Your quest still counts."}[verdict]
+        if notes:
+            text += f"\n> {notes}"
+        view = None
+        if verdict in ("changes", "fail") and q:
+            view = discord.ui.View(timeout=None)
+            view.add_item(SendWorkButton(q.id, label="Send my work again"))
+        target = ch if isinstance(ch, discord.Thread) else (msg.channel if msg else ch)
+        try:
+            kw = {"reference": msg} if (msg and not isinstance(ch, discord.Thread)) else {}
+            await target.send(f"<@{s['user_id']}> {text}", view=view,
+                              allowed_mentions=discord.AllowedMentions(users=True), **kw)
+        except discord.HTTPException as e:
+            log.warning("turn-in reply failed for #%s: %s", sid, e)
+
+    async def close_queue_card(self, guild: discord.Guild, sid: int, label: str) -> None:
+        """Mark a #mentor-queue card as done and remove its buttons."""
+        s = await self.bot.db.submission(sid)
+        ch = guild.get_channel(self.bot.unlocks.channel("mentor_queue"))
+        if not s or not ch or not s["queue_message_id"]:
+            return
+        try:
+            m = await ch.fetch_message(s["queue_message_id"])
+            e = m.embeds[0] if m.embeds else discord.Embed()
+            e.set_footer(text=label)
+            await m.edit(embed=e, view=None)
+        except discord.HTTPException:
+            pass
+
     # ------------------------------------------------------ mentor queue
-    async def post_to_queue(self, guild: discord.Guild, sid: int) -> None:
+    async def post_to_queue(self, guild: discord.Guild, sid: int, spot: bool = False) -> None:
         ch = guild.get_channel(self.bot.unlocks.channel("mentor_queue"))
         s = await self.bot.db.submission(sid)
         if not ch or not s:
@@ -299,15 +369,25 @@ class Quests(commands.Cog):
             return
         q = self.cat.quests[s["quest_id"]]
         p = json.loads(s["payload"])
-        e = discord.Embed(title=f"#{sid} · {q.id} · {q.raw['title']}", description=p["text"][:2000],
-                          color=discord.Color.from_str("#3D7DD8"))
+        title = f"🔎 Spot check #{sid} · {q.id} · {q.raw['title']}" if spot else f"#{sid} · {q.id} · {q.raw['title']}"
+        e = discord.Embed(title=title, description=p["text"][:2000],
+                          color=discord.Color.from_str("#8A9BA8" if spot else "#3D7DD8"))
+        if spot:
+            e.add_field(name="Already accepted", inline=False,
+                        value="Rank 0–1 work is accepted on trust. Look it over: **Looks good**, or **Flag** to send a note.")
         e.add_field(name="From", value=f"<@{s['user_id']}>")
         e.add_field(name="Route", value=s["route"])
         e.add_field(name="Engine", value=p.get("ue_version") or "not stated ⚠")
         e.add_field(name="Done when", value=q.raw.get("done_when", "")[:1024], inline=False)
         if p["attachments"]:
             e.set_image(url=p["attachments"][0])
-        msg = await ch.send(embed=e, view=ReviewView(sid))
+        if spot:
+            view = discord.ui.View(timeout=None)
+            view.add_item(SpotButton(sid, "ok"))
+            view.add_item(SpotButton(sid, "flag"))
+        else:
+            view = ReviewView(sid)
+        msg = await ch.send(embed=e, view=view)
         await self.bot.db.set_queue_message(sid, msg.id)
 
     async def review(self, itx: discord.Interaction, sid: int, verdict: str, notes: str | None) -> str:
@@ -357,6 +437,8 @@ class Quests(commands.Cog):
                                 + (f"\n> {notes}" if notes else ""))
             except discord.HTTPException:
                 pass
+            await self.update_turnin(itx.guild, sid, final, itx.user, notes)
+            await self.close_queue_card(itx.guild, sid, f"{final.upper()} by {itx.user.display_name}")
             if final == "pass":
                 await self.complete(itx.guild, s["user_id"], q.id)
             return f"Recorded: {final}."
@@ -400,8 +482,8 @@ class NextQuestButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:n
 class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:send:(?P<q>[A-Za-z0-9-]+)"):
     """Opens a form instead of typing /submit."""
 
-    def __init__(self, qid: str):
-        super().__init__(discord.ui.Button(label="Send my work", emoji="📤", style=discord.ButtonStyle.success,
+    def __init__(self, qid: str, label: str = "Send my work"):
+        super().__init__(discord.ui.Button(label=label, emoji="📤", style=discord.ButtonStyle.success,
                                            custom_id=f"uc:send:{qid}"))
         self.qid = qid
 
@@ -470,6 +552,58 @@ class SendWorkModal(discord.ui.Modal):
         await itx.client.get_cog("Quests").do_submit(itx, self.q.id, str(self.proof.value), list(self.file.values or []))
 
 
+class SpotButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:spot:(?P<sid>\d+):(?P<v>ok|flag)"):
+    """Spot check of an accepted Rank 0-1 turn-in: Looks good, or Flag with a note to the member."""
+
+    def __init__(self, sid: int, verdict: str):
+        label, style = ("Looks good", discord.ButtonStyle.success) if verdict == "ok" else \
+            ("Flag", discord.ButtonStyle.secondary)
+        super().__init__(discord.ui.Button(label=label, style=style, custom_id=f"uc:spot:{sid}:{verdict}"))
+        self.sid, self.verdict = sid, verdict
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls(int(match["sid"]), match["v"])
+
+    async def callback(self, itx: discord.Interaction):
+        member = itx.guild.get_member(itx.user.id)
+        unl = itx.client.unlocks
+        if not (member.guild_permissions.administrator or
+                any(r.id in (unl.role("staff", "mentor"), unl.role("rank", 6)) for r in member.roles)):
+            await itx.response.send_message("Only mentors can do spot checks.", ephemeral=True)
+            return
+        cog = itx.client.get_cog("Quests")
+        if self.verdict == "ok":
+            await itx.client.db.add_review_action(self.sid, itx.user.id, "spot_ok", False, None)
+            await cog.close_queue_card(itx.guild, self.sid, f"Spot check: looks good ({itx.user.display_name})")
+            await itx.response.send_message("Marked as looks good.", ephemeral=True)
+        else:
+            await itx.response.send_modal(SpotFlagModal(self.sid))
+
+
+class SpotFlagModal(discord.ui.Modal, title="Spot check note"):
+    notes = discord.ui.TextInput(label="Note to the member (be kind and specific)", style=discord.TextStyle.paragraph,
+                                 max_length=800)
+
+    async def on_submit(self, itx: discord.Interaction):
+        cog = itx.client.get_cog("Quests")
+        s = await itx.client.db.submission(self.sid)
+        await itx.client.db.add_review_action(self.sid, itx.user.id, "spot_flag", False, str(self.notes))
+        await cog.update_turnin(itx.guild, self.sid, "spot_flag", itx.user, str(self.notes))
+        await cog.close_queue_card(itx.guild, self.sid, f"Spot check: flagged ({itx.user.display_name})")
+        try:
+            user = await itx.client.fetch_user(s["user_id"])
+            await user.send(f"📝 A mentor looked at your {s['quest_id']} turn-in and left a note (it still counts):\n"
+                            f"> {self.notes}")
+        except discord.HTTPException:
+            pass
+        await itx.response.send_message("Note sent.", ephemeral=True)
+
+    def __init__(self, sid: int):
+        super().__init__()
+        self.sid = sid
+
+
 class ReviewView(discord.ui.View):
     """Persistent buttons; custom_id encodes the submission id."""
 
@@ -513,5 +647,5 @@ class NotesModal(discord.ui.Modal, title="Review notes"):
 
 
 async def setup(bot):
-    bot.add_dynamic_items(ReviewButton, NextQuestButton, SendWorkButton)
+    bot.add_dynamic_items(ReviewButton, NextQuestButton, SendWorkButton, SpotButton)
     await bot.add_cog(Quests(bot))

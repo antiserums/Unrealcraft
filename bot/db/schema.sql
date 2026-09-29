@@ -80,6 +80,8 @@ CREATE TABLE IF NOT EXISTS submissions (
     reviewer_id INTEGER,
     notes       TEXT,
     queue_message_id INTEGER,
+    public_channel_id INTEGER,              -- where the public Turn-in post lives (forum thread or text channel)
+    public_message_id INTEGER,
     created_at  TEXT    NOT NULL DEFAULT (datetime('now')),
     decided_at  TEXT
 );
