@@ -509,7 +509,7 @@ quests:
         explain: "Generate Lightmap UVs creates a unique, non-overlapping UV set that baked (static) lighting can use."
     flavors:
       _default: {why: "A prop with a wrong pivot, wrong scale or missing collision will be fought by every person who places it later."}
-      environment_art: {why: "Clean imports are the base of a prop kit. Fix scale and pivot once at import, not on every placed actor.", do: "Add a UCX_ collision mesh in your 3D app and check that Unreal picks it up in the Static Mesh Editor."}
+      lookdev: {why: "Clean imports are the base of a prop kit. Fix scale and pivot once at import, not on every placed actor.", do: "Add a UCX_ collision mesh in your 3D app and check that Unreal picks it up in the Static Mesh Editor."}
       level_design: {why: "Props that snap to the grid and have correct scale make blockout-to-art handoff fast.", do: "Place ten copies of the prop with grid snapping on and check that they line up without gaps."}
 
   - id: EAQ45
@@ -565,7 +565,7 @@ quests:
         explain: "Results are best when the hulls do not intersect. The lollipop example leaves a gap between the candy hull and the stick hull."
     flavors:
       _default: {why: "Players do not see collision, they feel it. Bad collision blocks the player for no reason or lets them fall through."}
-      environment_art: {why: "Every prop you ship needs collision that matches its shape at the places players touch.", do: "Turn on the Player Collision view mode in the level and take one screenshot of your prop with it."}
+      lookdev: {why: "Every prop you ship needs collision that matches its shape at the places players touch.", do: "Turn on the Player Collision view mode in the level and take one screenshot of your prop with it."}
       level_design: {why: "Props with tight collision let you plan jumps, cover and paths with confidence.", do: "Walk your character along the prop in PIE and note any invisible wall."}
 
   - id: EAQ46
@@ -622,7 +622,7 @@ quests:
         explain: "While the tool is open you can undo single changes. After Accept, undo history only tracks the mesh before and after the tool."
     flavors:
       _default: {why: "A quick prop made in the editor fills gaps in a kit without a round trip to another program."}
-      environment_art: {why: "Boolean and Bevel let you make trims, cutouts and holders in minutes while you see them in the scene.", do: "Use Xform > Bake Transform after scaling so the asset has scale 1 before you share it."}
+      lookdev: {why: "Boolean and Bevel let you make trims, cutouts and holders in minutes while you see them in the scene.", do: "Use Xform > Bake Transform after scaling so the asset has scale 1 before you share it."}
       tech_art: {why: "Knowing how Modeling Mode handles triangles, PolyGroups and Accept helps you write tools that use the same data.", do: "Open the result in the UV Editor and check what the Boolean did to the UVs."}
 
   - id: EAQ47
@@ -678,7 +678,7 @@ quests:
         explain: "Apply writes your UV changes to the original mesh. Until then the edit lives only in the UV Editor."
     flavors:
       _default: {why: "Stretched or overlapping UVs make every texture look wrong. Good UVs are the base of good materials."}
-      environment_art: {why: "Meshes made in the editor get default UVs that often stretch. The UV Editor fixes this without leaving Unreal.", do: "Add a second UV channel with the Channels tool and note what you would use it for."}
+      lookdev: {why: "Meshes made in the editor get default UVs that often stretch. The UV Editor fixes this without leaving Unreal.", do: "Add a second UV channel with the Channels tool and note what you would use it for."}
       tech_art: {why: "UV channels are data your materials read. Knowing how they are made helps you debug texture bugs.", do: "Compare the results of the three AutoUV methods on the same mesh."}
 
   - id: EAQ48
@@ -734,7 +734,7 @@ quests:
         explain: "Precomputed lighting from static lights is removed when Lumen is enabled. You can also turn off Allow Static Lighting in Project Settings."
     flavors:
       _default: {why: "Knowing if your project bakes light or uses Lumen decides how much UV work each prop needs."}
-      environment_art: {why: "Lightmap UVs cost time. Spend it only when the project actually bakes lighting.", do: "Set Lightmap Resolution to a value higher than Min Lightmap Resolution and explain why."}
+      lookdev: {why: "Lightmap UVs cost time. Spend it only when the project actually bakes lighting.", do: "Set Lightmap Resolution to a value higher than Min Lightmap Resolution and explain why."}
       cinematics: {why: "Cinematic scenes often use Lumen for moving lights. Check this before you ask for lightmaps.", do: "Move a light in a Lumen scene and note how many seconds the global lighting takes to update."}
 
   - id: EAQ49
@@ -789,7 +789,7 @@ quests:
         explain: "Painting texture weights needs a Texture Blended Material with several textures so each layer can be painted and erased."
     flavors:
       _default: {why: "Painting wear and dirt on props per instance makes a kit look hand-placed instead of copied."}
-      environment_art: {why: "Mesh Paint lets you break up repetition on placed props with no new textures.", do: "Try Texture Color painting and compare its resource size in the Resource Usage section with vertex colors."}
+      lookdev: {why: "Mesh Paint lets you break up repetition on placed props with no new textures.", do: "Try Texture Color painting and compare its resource size in the Resource Usage section with vertex colors."}
       tech_art: {why: "The blend material and the paint tool must agree on how many layers there are.", do: "Build the 3-way lerp version of the material and paint with the RGB (Three Textures) type."}
 
   - id: EAQ50
@@ -845,7 +845,7 @@ quests:
         explain: "The new pivot is baked into the asset, so every placed instance changes. Use Duplicate first if you want to keep the original asset."
     flavors:
       _default: {why: "Snapping tools turn slow, careful placement into fast, exact placement."}
-      environment_art: {why: "Surface snapping with a bottom pivot is the fastest way to set dress a scene with many props.", do: "Place twenty props on a rocky surface in under five minutes using only surface snapping and End."}
+      lookdev: {why: "Surface snapping with a bottom pivot is the fastest way to set dress a scene with many props.", do: "Place twenty props on a rocky surface in under five minutes using only surface snapping and End."}
       level_design: {why: "Vertex snapping joins modular pieces with no gaps.", do: "Snap three wall pieces together with V and check for gaps in a top view."}
 
   - id: EAQ51
@@ -900,7 +900,7 @@ quests:
         explain: "A new Level Instance Actor replaces the selection. The actors are still in the Outliner as children but are not selectable."
     flavors:
       _default: {why: "Prop groups that repeat across a world should be one asset, not many loose actors."}
-      environment_art: {why: "A Packed Level Actor is how you ship a reusable set-dressing kit that is cheap to render and easy to update.", do: "Update the kit once and take a before and after screenshot of all copies."}
+      lookdev: {why: "A Packed Level Actor is how you ship a reusable set-dressing kit that is cheap to render and easy to update.", do: "Update the kit once and take a before and after screenshot of all copies."}
       level_design: {why: "Level Instances let you place gameplay setups many times and edit them in context.", do: "Put a trigger or light in your group and see why it needs a Level Instance rather than a Packed Level Actor."}
 
   - id: EAQ52
@@ -1422,7 +1422,7 @@ quests:
         explain: "Mip mapping downscales the texture step by step. Far away surfaces use smaller mips, which reduces aliasing and saves rendering time."
     flavors:
       _default: {why: "Every material starts with a texture. Importing it wrong costs memory and makes far surfaces shimmer."}
-      environment_art: {why: "A clean import habit means your whole texture library streams and mips correctly.", do: "Set the Texture Group for each of the three textures to match its use (World, WorldNormalMap)."}
+      lookdev: {why: "A clean import habit means your whole texture library streams and mips correctly.", do: "Set the Texture Group for each of the three textures to match its use (World, WorldNormalMap)."}
       tech_art: {why: "Import rules are the first place a pipeline breaks.", do: "Note which Details fields you would check in an automated import validator."}
 
   - id: EAQ61
@@ -1478,7 +1478,7 @@ quests:
         explain: "The page says the Fast and Final settings for the project are found in Project Settings under Engine > Texture Encoding. The Oodle panel Try Encodings are not saved."
     flavors:
       _default: {why: "Textures are the biggest part of most projects. The right format saves memory and disk with no visible loss."}
-      environment_art: {why: "You will make hundreds of textures. A wrong default multiplies across all of them.", do: "Write a three-line rule for your project: color, normal and mask textures each get which Compression Setting."}
+      lookdev: {why: "You will make hundreds of textures. A wrong default multiplies across all of them.", do: "Write a three-line rule for your project: color, normal and mask textures each get which Compression Setting."}
       tech_art: {why: "RDO and format choices are pipeline policy, not per-artist taste.", do: "Read the Platforms panel for one texture and note how Size and Mips differ between two platforms."}
 
   - id: EAQ62
@@ -1533,7 +1533,7 @@ quests:
         explain: "The Normal input takes a normal map that modifies the facing direction of each pixel. This gives the illusion of many more polygons than are rendered."
     flavors:
       _default: {why: "A normal map that points the wrong way makes every prop look wrong in every light."}
-      environment_art: {why: "Different tools export normal maps with different green channels. You need to know how to fix that in seconds.", do: "Write one line saying which green channel convention your main texturing tool uses."}
+      lookdev: {why: "Different tools export normal maps with different green channels. You need to know how to fix that in seconds.", do: "Write one line saying which green channel convention your main texturing tool uses."}
       tech_art: {why: "Mip behavior of normal maps is a common cause of flat distant surfaces.", do: "Compare a far view of the cube with Normalize after making Mips on and off and report the difference."}
 
   - id: EAQ63
@@ -1590,7 +1590,7 @@ quests:
         explain: "The Decal Actors page says mesh complexity does not matter. Cost depends on shader complexity and the size of the box on screen, which you can check with the ShaderComplexity view mode."
     flavors:
       _default: {why: "Decals break up repeated textures and add damage and dirt without new geometry."}
-      environment_art: {why: "Most of the grime and wear you see in a level is decals, not unique textures.", do: "Make a Material Instance of M_Decal_Crack and use the Decal Color property on the actor to tint one copy."}
+      lookdev: {why: "Most of the grime and wear you see in a level is decals, not unique textures.", do: "Make a Material Instance of M_Decal_Crack and use the Decal Color property on the actor to tint one copy."}
       level_design: {why: "Decals are the fastest way to mark a path or a point of interest on a blockout.", do: "Place three decals that guide the player along one route."}
 
   - id: EAQ64
@@ -1648,7 +1648,7 @@ quests:
         explain: "The configuration page says the pool size is in MB and when set to 0 the pool size is unlimited."
     flavors:
       _default: {why: "Blurry textures in a shipped game are almost always a streaming budget problem. Learn to see it early."}
-      environment_art: {why: "Your texture choices decide how much of the streaming pool a scene needs.", do: "Find the one prop in your level that needs the most texture memory and write down its texture sizes."}
+      lookdev: {why: "Your texture choices decide how much of the streaming pool a scene needs.", do: "Find the one prop in your level that needs the most texture memory and write down its texture sizes."}
       tech_art: {why: "Streaming data and pool size are tuned by tech art on most teams.", do: "Try r.Streaming.DropMips 2 and describe what changed in the Required Texture Resolution view mode."}
 
   - id: EAQ65
@@ -1704,7 +1704,7 @@ quests:
         explain: "The distance is controlled by the first Constant plugged into Divide. Reducing it from 512 to something smaller makes the transition occur sooner."
     flavors:
       _default: {why: "Players walk right up to walls. Detail textures keep surfaces sharp without giant base textures."}
-      environment_art: {why: "This is the cheapest way to make a 1K texture look like 4K up close.", do: "Also test the material on a floor and note whether the detail normal is too strong at grazing angles."}
+      lookdev: {why: "This is the cheapest way to make a 1K texture look like 4K up close.", do: "Also test the material on a floor and note whether the detail normal is too strong at grazing angles."}
       tech_art: {why: "Detail texturing is a common master material feature you will maintain.", do: "Build the manual version from the page (without the function) and compare instruction counts."}
 
   - id: EAQ66
@@ -1760,7 +1760,7 @@ quests:
         explain: "UE scans the folder for images with the same BaseName and a different four-digit coordinate and imports them as one Virtual Texture asset."
     flavors:
       _default: {why: "Virtual textures are how modern projects use huge textures without huge memory. Know when they help and what they cost."}
-      environment_art: {why: "Hero assets with 8K textures and UDIMs need SVT to fit in memory.", do: "Write down one asset in your project that would benefit from SVT and one that would not."}
+      lookdev: {why: "Hero assets with 8K textures and UDIMs need SVT to fit in memory.", do: "Write down one asset in your project that would benefit from SVT and one that would not."}
       tech_art: {why: "RVT is the base of most landscape material pipelines.", do: "Read the RVT Material Types table and note which type stores a normal in a BC5 texture."}
 
   - id: EAQ67
@@ -1816,7 +1816,7 @@ quests:
         explain: "The Fab window needs the Fab plugin, which is on by default. If it is missing, enable it in Edit > Plugins."
     flavors:
       _default: {why: "Scanned surfaces are the fastest way to get believable materials. Fab is how they enter Unreal now."}
-      environment_art: {why: "Knowing the quality tiers and the license before you download saves disk space and legal trouble.", do: "Compare the texture sizes of the same surface at the Medium and High tiers."}
+      lookdev: {why: "Knowing the quality tiers and the license before you download saves disk space and legal trouble.", do: "Compare the texture sizes of the same surface at the Medium and High tiers."}
       level_design: {why: "Quick surfaces let you dress a blockout for a playtest in minutes.", do: "Apply the surface to your blockout floor and check it reads well from the play camera."}
 
   - id: EAQ68
@@ -1881,7 +1881,7 @@ quests:
         explain: "The docs list two benefits: reusable networks packaged as one node, and edits that propagate to every material using the function. Speed is not claimed."
     flavors:
       _default: {why: "A shared function library is how a small team keeps hundreds of materials consistent."}
-      environment_art: {why: "Your masks and blends get reused in every kit material.", do: "Add a second output (for example a Height) so the same function serves two uses."}
+      lookdev: {why: "Your masks and blends get reused in every kit material.", do: "Add a second output (for example a Height) so the same function serves two uses."}
 
   - id: EAQ69
     rank: 2
@@ -1946,7 +1946,7 @@ quests:
         explain: "Parameters in the parent become editable in MI_SnowyChrome, so the amount of snow and the chrome tint can be tuned per instance."
     flavors:
       _default: {why: "Layered materials let one asset switch surface types by rule, not by painting."}
-      environment_art: {why: "Snow, dust and moss on top faces is a set-dressing staple.", do: "Swap the snow layer for a moss layer and reuse the same blend."}
+      lookdev: {why: "Snow, dust and moss on top faces is a set-dressing staple.", do: "Swap the snow layer for a moss layer and reuse the same blend."}
 
   - id: EAQ70
     rank: 2
@@ -2010,7 +2010,7 @@ quests:
         explain: "Material Layers and Blends can be instanced from the Content Browser with Create Layer Instance or Create Blend Instance."
     flavors:
       _default: {why: "The Layer Parameters tab lets non-technical people build variants without opening a graph."}
-      environment_art: {why: "Rust, dust and paint layers on kit pieces become a menu, not a graph.", do: "Make a Layer Instance of ML_Rust with a darker default and add it as a third layer."}
+      lookdev: {why: "Rust, dust and paint layers on kit pieces become a menu, not a graph.", do: "Make a Layer Instance of ML_Rust with a darker default and add it as a third layer."}
 
   - id: EAQ71
     rank: 2
@@ -2071,7 +2071,7 @@ quests:
         explain: "The example scene feeds the player position into foliage so grass and flowers move away, along with wind, sun angle and time-of-day color."
     flavors:
       _default: {why: "Global scene state (wet, dusty, night) belongs in one asset, not in a hundred instances."}
-      environment_art: {why: "Weather and time-of-day looks become one slider.", do: "Add a SnowAmount scalar and use it in a WorldAlignedBlend on top faces."}
+      lookdev: {why: "Weather and time-of-day looks become one slider.", do: "Add a SnowAmount scalar and use it in a WorldAlignedBlend on top faces."}
 
   - id: EAQ72
     rank: 2
@@ -2134,7 +2134,7 @@ quests:
         explain: "Each example uses Lerp nodes where the painted channel drives the Alpha input between two texture layers."
     flavors:
       _default: {why: "Hand-painted blends break up tiling where a mask texture cannot."}
-      environment_art: {why: "Moss in corners and mud on paths is the fastest way to ground a kit.", do: "Add a HeightLerp so the mud fills cracks first."}
+      lookdev: {why: "Moss in corners and mud on paths is the fastest way to ground a kit.", do: "Add a HeightLerp so the mud fills cracks first."}
 
   - id: EAQ73
     rank: 2
@@ -2195,7 +2195,7 @@ quests:
         explain: "The functions take a Texture Object input and do the sampling internally in world space."
     flavors:
       _default: {why: "World-aligned texturing removes the UV step for blockout-to-final walls and rocks."}
-      environment_art: {why: "Cliffs and modular walls at many scales stay consistent.", do: "Add a WorldPosition offset parameter so two adjacent walls do not show the same pattern."}
+      lookdev: {why: "Cliffs and modular walls at many scales stay consistent.", do: "Add a WorldPosition offset parameter so two adjacent walls do not show the same pattern."}
 
   - id: EAQ74
     rank: 2
@@ -2256,7 +2256,7 @@ quests:
         explain: "Hold B and left-click anywhere in the graph to spawn BumpOffset. You can also search the Palette or the right-click menu."
     flavors:
       _default: {why: "Cheap depth for bricks, tiles and grates without adding one triangle."}
-      environment_art: {why: "Walls seen at a walking distance gain depth for almost nothing.", do: "Expose Height Ratio as a parameter and set it per instance."}
+      lookdev: {why: "Walls seen at a walking distance gain depth for almost nothing.", do: "Expose Height Ratio as a parameter and set it per instance."}
 
   - id: EAQ75
     rank: 2
@@ -2320,7 +2320,7 @@ quests:
         explain: "Trim Relative Error targets an error level when tessellating; 0.04 is a good default and going too small inflates triangle count and build times."
     flavors:
       _default: {why: "Real silhouettes from a height map, with detail only where pixels need it."}
-      environment_art: {why: "Stone, brick and bark get true depth at grazing angles.", do: "Try the same height map with Bump Offset on a second wall and compare cost and look."}
+      lookdev: {why: "Stone, brick and bark get true depth at grazing angles.", do: "Try the same height map with Bump Offset on a second wall and compare cost and look."}
 
   - id: EAQ76
     rank: 2
@@ -3951,7 +3951,7 @@ quests:
         explain: "The overview lists media sources, viewport and PIE, Composure, Displays and Views, nDisplay and Movie Render Queue. Sculpt brushes have nothing to do with color management."
     flavors:
       _default: {why: "A consistent color pipeline means your scene looks the same in Unreal, in your compositing tool and on the final display."}
-      environment_art: {why: "If your reference images and your viewport use different color spaces, you grade against a lie.", do: "Compare a reference photo and your scene with OCIO Display on and note which one matches the reference better."}
+      lookdev: {why: "If your reference images and your viewport use different color spaces, you grade against a lie.", do: "Compare a reference photo and your scene with OCIO Display on and note which one matches the reference better."}
       cinematics: {why: "Shots that leave Unreal for editing need a known color space.", do: "Write down the source and destination you picked and why a colorist would need them."}
 
   - id: EAQ101
@@ -4015,7 +4015,7 @@ quests:
         explain: "A non-power-of-two image avoids mip creation and streaming. With a power-of-two size you must set those options yourself in the Texture Editor."
     flavors:
       _default: {why: "Bloom is the first thing a viewer reads as bright. Choosing the method and the threshold with intent keeps the image clean."}
-      environment_art: {why: "Uncontrolled bloom hides material detail and flattens lighting.", do: "Set the threshold so only your intended hero light blooms, and show a before and after of a nearby surface."}
+      lookdev: {why: "Uncontrolled bloom hides material detail and flattens lighting.", do: "Set the threshold so only your intended hero light blooms, and show a before and after of a nearby surface."}
       cinematics: {why: "Convolution bloom gives shots the streaks and glows of a real lens.", do: "Try a custom kernel image and explain in one line what changed in the glow shape."}
 
   - id: EAQ102
@@ -4079,7 +4079,7 @@ quests:
         explain: "Dirt Mask is a texture-driven effect that brightens up the bloom in defined areas of the screen, like dust on a lens."
     flavors:
       _default: {why: "Lens effects sell the idea of a camera. Small amounts add realism; large amounts look like a filter."}
-      environment_art: {why: "A vignette and a little grain can pull the eye to the center of your composition.", do: "Show one reviewer both screenshots without saying which is which and write down what they noticed."}
+      lookdev: {why: "A vignette and a little grain can pull the eye to the center of your composition.", do: "Show one reviewer both screenshots without saying which is which and write down what they noticed."}
       gameplay_design: {why: "Chromatic aberration and vignette are common feedback effects for damage or low health.", do: "Note which values you would animate for a damage hit and which you would leave alone."}
 
   - id: EAQ103
@@ -4144,7 +4144,7 @@ quests:
         explain: "In that view green is the foreground, black is the focused area and blue is the background."
     flavors:
       _default: {why: "Depth of field tells the viewer what to look at. It is the strongest focus tool after light."}
-      environment_art: {why: "Portfolio stills with correct DOF look like photos, not renders.", do: "Pick one focal length and aperture for your hero still and write down why you chose them."}
+      lookdev: {why: "Portfolio stills with correct DOF look like photos, not renders.", do: "Pick one focal length and aperture for your hero still and write down why you chose them."}
       cinematics: {why: "Focus pulls and bokeh shape are a big part of a shot's language.", do: "Set Focus Method to Tracking on the hero prop and confirm the debug plane follows it when the camera moves."}
 
   - id: EAQ104
@@ -4208,7 +4208,7 @@ quests:
         explain: "The TSR page lists r.MotionBlur.HalfResGather 1 as the setting that enables half resolution for large directional blur."
     flavors:
       _default: {why: "Motion blur can smooth movement or smear your whole scene. Knowing the four dials keeps it under control."}
-      environment_art: {why: "Fly-through captures of your environment need blur that reads as camera motion, not mud.", do: "Record a short viewport fly-through with your chosen values and check that small props still read."}
+      lookdev: {why: "Fly-through captures of your environment need blur that reads as camera motion, not mud.", do: "Record a short viewport fly-through with your chosen values and check that small props still read."}
       tech_art: {why: "Motion blur costs GPU time after upscaling.", do: "Compare stat gpu with Amount 0 and Amount 0.5 and write the difference."}
 
   - id: EAQ105
@@ -4272,7 +4272,7 @@ quests:
         explain: "The screen percentage page gives this example: at 83 percent, the render targets are resized to about 1600x900 before being upscaled to 1920x1080."
     flavors:
       _default: {why: "Screen percentage is the biggest single performance dial, and TSR is what makes a low value still look good."}
-      environment_art: {why: "Thin details like wires, fences and grass are the first to break under upscaling.", do: "Find the lowest screen percentage where your thinnest detail still reads and write it down."}
+      lookdev: {why: "Thin details like wires, fences and grass are the first to break under upscaling.", do: "Find the lowest screen percentage where your thinnest detail still reads and write it down."}
       tech_art: {why: "Scalability groups are how a project ships TSR settings per platform.", do: "Copy one AntiAliasingQuality section into your project's DefaultScalability.ini and change one value on purpose."}
 
   - id: EAQ106
@@ -4336,7 +4336,7 @@ quests:
         explain: "LUTs happen in LDR on the sRGB output, so the correction does not transfer to other displays. Color Grading properties happen before tone mapping and stay consistent."
     flavors:
       _default: {why: "HDR output is where the ACES pipeline pays off. Knowing the switches helps even if your monitor is SDR today."}
-      environment_art: {why: "A scene graded only with LUTs can fall apart on an HDR screen.", do: "Check whether your scene uses a LUT and note which Color Grading properties would replace it."}
+      lookdev: {why: "A scene graded only with LUTs can fall apart on an HDR screen.", do: "Check whether your scene uses a LUT and note which Color Grading properties would replace it."}
       programming: {why: "Shipping HDR means exposing these settings through Game User Settings.", do: "Find the GameUserSettings Blueprint nodes for HDR and describe what they clamp to."}
 
   - id: EAQ107
@@ -4401,7 +4401,7 @@ quests:
         explain: "Allow Cinematic Control can only be enabled or disabled on Perspective viewports. You usually keep it on for one viewport and off for the others."
     flavors:
       _default: {why: "Overlays make composition rules visible while you work, instead of guessing after the render."}
-      environment_art: {why: "Portfolio stills need safe margins and a deliberate aspect ratio.", do: "Reframe one existing bookmark using the 3x3 grid and letterbox, and show the old and new framing side by side."}
+      lookdev: {why: "Portfolio stills need safe margins and a deliberate aspect ratio.", do: "Reframe one existing bookmark using the 3x3 grid and letterbox, and show the old and new framing side by side."}
       cinematics: {why: "Multiple viewports with one cinematic view is the normal layout for shot work.", do: "Set up a two-viewport layout and note which one you use for blocking and which for the shot."}
 
   - id: EAQ108
@@ -4466,7 +4466,7 @@ quests:
         explain: "The node reference says sampling inside the spline requires the spline to be closed."
     flavors:
       _default: {why: "PCG Mode lets you place procedural props by drawing and painting, so set dressing stays fast to change."}
-      environment_art: {why: "Fences, rubble and roadside props are the bulk of set dressing. A tool graph makes them one drag instead of hundreds of placements.", do: "Add a fourth Mesh Entry with Weight 0.2 so a rare hero prop appears only sometimes."}
+      lookdev: {why: "Fences, rubble and roadside props are the bulk of set dressing. A tool graph makes them one drag instead of hundreds of placements.", do: "Add a fourth Mesh Entry with Weight 0.2 so a rare hero prop appears only sometimes."}
       level_design: {why: "You can block out fences and clutter along routes and move the spline when the route changes.", do: "Draw the spline along your main route and note how the props follow when you move a spline point."}
 
   - id: EAQ109
@@ -4530,7 +4530,7 @@ quests:
         explain: "The page notes that you need to click Build to rebuild lighting every time you use Resimulate, and that it can take a long time."
     flavors:
       _default: {why: "A believable forest needs species that compete, not a random spray of trees."}
-      environment_art: {why: "Priority, shade and blocking volumes are how you art-direct a procedural forest instead of fighting it.", do: "Add a third species as ground cover with Overlap Priority 0 and a small Shade Radius."}
+      lookdev: {why: "Priority, shade and blocking volumes are how you art-direct a procedural forest instead of fighting it.", do: "Add a third species as ground cover with Overlap Priority 0 and a small Shade Radius."}
       level_design: {why: "Blocking volumes keep routes and combat spaces clear without hand-deleting trees.", do: "Cover every walkable route with blocking volumes before you Resimulate."}
 
   - id: EAQ110
@@ -4594,7 +4594,7 @@ quests:
         explain: "The page says the Generated Dynamic Mesh Actor function is currently editor-only. Geometry Scripting functions run on the Game Thread."
     flavors:
       _default: {why: "Geometry Script gives you a scatter tool you can edit in Blueprint without waiting for a programmer."}
-      environment_art: {why: "Small procedural clutter (rubble, pebbles, debris piles) can be one editable actor instead of hand placement.", do: "Replace the Append Box with a Copy Mesh From Static Mesh of a real rock and append it at each transform."}
+      lookdev: {why: "Small procedural clutter (rubble, pebbles, debris piles) can be one editable actor instead of hand placement.", do: "Replace the Append Box with a Copy Mesh From Static Mesh of a real rock and append it at each transform."}
       tech_art: {why: "This is the base pattern for every custom mesh tool: rebuild event, target mesh chain, exposed parameters.", do: "Add a Bool that switches between Box and Sphere and expose it with Instance Editable."}
 
   - id: EAQ111
@@ -4659,7 +4659,7 @@ quests:
         explain: "If Modeling does not appear, enable Modeling Tools Editor Mode in Edit > Plugins."
     flavors:
       _default: {why: "Pattern builds fences, floors and rings in seconds and can output instances instead of loose actors."}
-      environment_art: {why: "Most modular kits are rows, grids and rings. Pattern with jitter makes them fast and less stamped.", do: "Add scale jitter to the grid floor and check the seams still line up."}
+      lookdev: {why: "Most modular kits are rows, grids and rings. Pattern with jitter makes them fast and less stamped.", do: "Add scale jitter to the grid floor and check the seams still line up."}
       tech_art: {why: "Pattern, Harvest Instances and ISMEd are the manual side of instancing; knowing them helps you debug what PCG or Blueprints produce.", do: "Open the harvested actor and read its ISM component's instance count in Details."}
 
   - id: EAQ112
@@ -4723,7 +4723,7 @@ quests:
         explain: "Gutter Size is space in pixels between UV islands so colors do not overlap as the texture is downsampled. Merge Distance is the door and window closing setting."
     flavors:
       _default: {why: "Distant art only looks good if it is still there when its cell unloads. HLOD Layers are how you decide what it becomes."}
-      environment_art: {why: "Choosing Instancing versus Merged Mesh per asset type is an art call as much as a performance call.", do: "Compare the far silhouette of the trees with Instancing versus Merged Mesh and keep the one that reads better."}
+      lookdev: {why: "Choosing Instancing versus Merged Mesh per asset type is an art call as much as a performance call.", do: "Compare the far silhouette of the trees with Instancing versus Merged Mesh and keep the one that reads better."}
       level_design: {why: "Landmarks must stay visible from far away for wayfinding, and HLODs make that possible.", do: "Make sure your main landmark is in a layer with a large enough Loading Range."}
 
   - id: EAQ113
@@ -4787,7 +4787,7 @@ quests:
         explain: "Custom Primitive Data and Per Instance Custom Data pass float data to the material without a new material instance, which keeps draw calls low."
     flavors:
       _default: {why: "Set dressing is mostly repeated meshes. Instancing decides whether 500 props cost 500 draw calls or a few."}
-      environment_art: {why: "Knowing when the editor already instances for you (Foliage, Packed Level Actors, PCG) tells you where hand placement is fine and where it is not.", do: "Check one of your existing Packed Level Actors and confirm it contains HISM components."}
+      lookdev: {why: "Knowing when the editor already instances for you (Foliage, Packed Level Actors, PCG) tells you where hand placement is fine and where it is not.", do: "Check one of your existing Packed Level Actors and confirm it contains HISM components."}
       tech_art: {why: "ISM versus HISM is a common question from artists; the page gives clear rules you can quote.", do: "Profile both shelves with stat rhi and note the difference, if any, at your view distance."}
 
   - id: EAQ114
@@ -4851,7 +4851,7 @@ quests:
         explain: "Loading many assets at once can hurt performance, and assets on too many Runtime Data Layer Instances can degrade streaming performance."
     flavors:
       _default: {why: "Data Layers let one level hold several dressing variants without duplicating the map."}
-      environment_art: {why: "Seasonal, damaged or time-of-day dressing variants live side by side and can be reviewed with one checkbox.", do: "Make a third Runtime layer for a damaged variant and switch to it in PIE."}
+      lookdev: {why: "Seasonal, damaged or time-of-day dressing variants live side by side and can be reviewed with one checkbox.", do: "Make a third Runtime layer for a damaged variant and switch to it in PIE."}
       cinematics: {why: "A shot can switch dressing variants without loading another level.", do: "Note which layer state you would set before recording a winter shot."}
 
   - id: EAQ115
@@ -4915,5 +4915,5 @@ quests:
         explain: "bCaptureHDR toggles the use of the .EXR file format to capture an HDR image. bDateTimeAsFilename only changes the file name."
     flavors:
       _default: {why: "Reviews only work when the before and after captures match, at a size where details can be judged."}
-      environment_art: {why: "Buffer captures let a reviewer judge your albedo and roughness without lighting hiding mistakes.", do: "Post the BaseColor buffer next to the lit capture and mark one texture you would fix."}
+      lookdev: {why: "Buffer captures let a reviewer judge your albedo and roughness without lighting hiding mistakes.", do: "Post the BaseColor buffer next to the lit capture and mark one texture you would fix."}
       cinematics: {why: "High resolution stills from bookmarks are the fast path to a frame reference before a full render.", do: "Capture at 4K with the XxY parameter using the aspect of your shot."}
