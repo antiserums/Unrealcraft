@@ -184,7 +184,7 @@ quests:
       - "Place BP_FenceRow in the level. Change Count and Spacing in the Details panel and watch it rebuild."
       - "Place a second copy with different values."
     done_when: "Screenshot of two BP_FenceRow copies with different Count values, the Details panel visible, plus a screenshot of the Construction Script graph."
-    xp: 110
+    xp: 115
     verify_type: screenshot
     quiz:
       - q: "When does the Construction Script run?"
@@ -241,7 +241,7 @@ quests:
       - "Change the particle Color in Initialize Particle."
       - "Drag FXS_TestFountain into your level and check it looks right there."
     done_when: "Screenshot of the Niagara Editor with the emitter stack open (Spawn Rate and Initialize Particle visible) and one screenshot of the effect in the level."
-    xp: 110
+    xp: 115
     verify_type: screenshot
     quiz:
       - q: "What is the difference between a Niagara system and an emitter?"
@@ -298,7 +298,7 @@ quests:
       - "Save the same code in a file list_selected.py inside your project's Content/Python folder (add import unreal at the top)."
       - "Run the file with File > Execute Python Script and check the Output Log."
     done_when: "Screenshot of the Output Log showing your Hello line and the list of selected asset names, plus the text of list_selected.py."
-    xp: 110
+    xp: 115
     verify_type: screenshot
     quiz:
       - q: "Which plugin gives the Unreal Editor its Python support?"
@@ -354,7 +354,7 @@ quests:
       - "Select them in the Content Browser, right-click, and run your action from the Scripted Asset Actions menu."
       - "Add a check so the action skips assets that already start with the prefix."
     done_when: "Screenshot of the right-click menu showing your action, a before/after screenshot of the renamed assets, and a screenshot of the function graph."
-    xp: 115
+    xp: 120
     verify_type: screenshot
     quiz:
       - q: "Your Scripted Action should work on assets selected in the Content Browser. Which parent class do you pick?"
@@ -412,7 +412,7 @@ quests:
       - "Note the Resource Size of each texture. Set LOD Bias to 1 on one texture and note the new size."
       - "Import one texture with a size that is not a power of two. Check how many mips it has."
     done_when: "Screenshot of the Details panel for T_Crate_ORM (sRGB off, Masks compression visible) plus a short table of the 3 textures: size, sRGB, compression, Resource Size."
-    xp: 110
+    xp: 115
     verify_type: screenshot
     quiz:
       - q: "Why use power-of-two sizes like 512 or 2048?"
@@ -1904,3 +1904,1807 @@ quests:
       tech_art: {why: "Over-budget warnings are your problem to diagnose. You need to read STAT STREAMING, not guess.", do: "Set r.Streaming.PoolSize per memory bucket in a device profile, for example with +CVars_Smallest, and test the smallest one."}
       lookdev: {why: "Your hero textures may never reach full resolution if the pool is tight. Know why and how to check."}
       programming: {why: "Streaming runs partly on an async thread and has clear stats. You can profile it like any other system."}
+
+  - id: TAQ31
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, content-browser, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design, programming]
+    required_spine: false
+    elective: true
+    title: Filter and collect
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/filters-and-collections-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/advanced-search-syntax-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/content-browser-interface-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/content-browser-settings-in-unreal-engine"
+    checklist:
+      - "Open the Content Browser. Click the Filters drop-down and add the Static Mesh filter. Then add the Material filter. Note that you now see both types."
+      - "In the search bar, type Triangles>1500 and see which meshes remain. Then try Type==Blueprint."
+      - "Create a custom filter: Filters > Custom Filter > Create New Filter. Name it HeavyMeshes, pick a color, and use the Filter String Triangles>5000."
+      - "In the Collections panel, click Add (+), choose Local Collection, and name it Col_Hero_Props."
+      - "Add at least 3 assets to the collection by right-click > Manage Collections (or by drag and drop)."
+      - "Right-click a filter in the Filters area and try Enable Only This. Then use Disable All Filters."
+    done_when: "One screenshot of the Content Browser showing your HeavyMeshes custom filter active and the Col_Hero_Props collection selected with at least 3 assets in it."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You enable the Static Mesh filter, then also enable the Blueprint filter. What do you see in the Asset View?"
+        choices: ["Only assets that are both a Static Mesh and a Blueprint", "Static Meshes and Blueprints", "Nothing, because the two filters conflict", "Only Blueprints, because the newest filter wins"]
+        answer_index: 1
+        explain: "Filters are additive. Each new filter increases the set of assets that can display, so you see Static Meshes and Blueprints."
+      - q: "What is the key difference between a Collection and a folder?"
+        choices: ["A Collection holds only references, so one asset can be in many Collections", "A Collection moves the asset files on disk", "A Collection can only hold one asset type", "A Collection is deleted when the project closes"]
+        answer_index: 0
+        explain: "Collections do not contain the assets. They contain references to them, so the same asset can belong to more than one Collection."
+      - q: "Which search string finds all assets with more than 1500 triangles?"
+        choices: ["Triangles:1500", "Triangles>1500", "Triangles=1500", "\"1500 Triangles\""]
+        answer_index: 1
+        explain: "The Advanced Search Syntax page gives Triangles>1500 as the example. The Greater operator works on numeric metadata."
+      - q: "You want to see only the 20 assets you opened most recently. Where is that filter?"
+        choices: ["Settings > View > Recent", "Filters > Other Filters > Recently Opened", "Collections > Recent", "It is always on by default"]
+        answer_index: 1
+        explain: "The Recently Opened filter lives in the Filters drop-down under Other Filters. It shows up to 20 recently opened assets for the selected folder."
+      - q: "Which Collection type is only available on your own machine?"
+        choices: ["Shared Collection", "Private Collection", "Team Collection", "Local Collection"]
+        answer_index: 3
+        explain: "Local Collections are only available on your local machine. Shared and Private Collections are for multi-user projects."
+      - q: "You select an asset inside a Collection and press Delete. What happens?"
+        choices: ["The asset is removed from the Collection only", "The Collection is deleted", "You are asked to delete the asset from the whole project", "Nothing, Delete is disabled in Collections"]
+        answer_index: 2
+        explain: "Delete removes the asset from the project, not just from the Collection. To remove it from a Collection, use Manage Collections instead."
+    flavors:
+      _default: {why: "A project with thousands of assets is only usable if you can find the right one in seconds."}
+      tech_art: {why: "Filters and search syntax are the fastest way to find heavy or badly set up assets across the whole project.", do: "Make a second custom filter that finds all Materials using BlendMode==Translucent and save it."}
+
+  - id: TAQ32
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, references, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design, programming]
+    required_spine: false
+    elective: true
+    title: Who uses this asset?
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/reference-viewer-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Right-click a Material Instance in the Content Browser and choose Reference Viewer."
+      - "Read the graph: assets on the left reference your asset; assets on the right are referenced by it."
+      - "Press D once to increase the dependency search depth. Press R once to increase the referencer search depth."
+      - "Press H to hide hard references, then press H again to show them. Press S to do the same with soft references."
+      - "Right-click your asset node and use Copy Referencing Objects List. Paste the text into a notepad."
+      - "Right-click the node and choose Make Collection With to create a collection of its referencers."
+    done_when: "One screenshot of the Reference Viewer for your asset with depth set to 2, plus the pasted text list of referencing objects."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "A Material uses a Texture. Which way does the reference go?"
+        choices: ["The Texture references the Material", "The Material references the Texture, and the Texture has no reference back", "Both reference each other", "Neither, only Actors can reference assets"]
+        answer_index: 1
+        explain: "References are one-way. The Material depends on the Texture. The referenced asset has no reference back to its referrer."
+      - q: "You select three assets and open the Reference Viewer. What does the graph show?"
+        choices: ["Three separate graphs side by side", "Only the references the three assets have in common", "The references of the first asset only", "An error, the tool takes one asset"]
+        answer_index: 1
+        explain: "With multiple assets selected, the Reference Viewer shows only the references your selected assets have in common."
+      - q: "In the graph, an arrow points from asset A to asset B. What does it mean?"
+        choices: ["A references B", "B references A", "A and B are in the same folder", "B is a newer version of A"]
+        answer_index: 0
+        explain: "The arrow points toward the referenced asset. So A references B."
+      - q: "You set Search Breadth Limit to 10 but an asset references 20 assets. What happens?"
+        choices: ["All 20 are shown anyway", "The tool refuses to open", "The 20 are merged into one node", "Only 10 display in that column"]
+        answer_index: 3
+        explain: "Search Breadth Limit caps the number of references listed in a column. For large values you may see an Overflow node you can double-click."
+      - q: "Which keyboard shortcut shows or hides hard references?"
+        choices: ["R", "D", "H", "V"]
+        answer_index: 2
+        explain: "H toggles hard references. R and D change search depth for referencers and dependencies, and V toggles compact view."
+      - q: "Some nodes are semi-transparent and always compact. Why?"
+        choices: ["They are unsaved assets", "They are excluded by your filters but sit between two assets that are not excluded", "They are engine content", "They are missing on disk"]
+        answer_index: 1
+        explain: "Inactive nodes are filtered out but still shown so the chain of references stays clear."
+    flavors:
+      _default: {why: "Before you delete, rename, or change an asset, you must know what depends on it."}
+      tech_art: {why: "Tracing references is how you find why a small material pulls a huge texture set into memory.", do: "Find one asset in your project that is referenced by nothing. Write down what you would do with it."}
+
+  - id: TAQ33
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, memory, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design, programming]
+    required_spine: false
+    elective: true
+    title: What is eating disk space?
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cooking-content-and-creating-chunks-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/reference-viewer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-mesh-editor-ui-in-unreal-engine"
+    checklist:
+      - "In the Content Browser, right-click a Level asset (or a Blueprint with meshes and materials) and choose Size Map."
+      - "Read the boxes. Bigger box = bigger asset. Boxes inside boxes show a parent-child reference."
+      - "Use the mouse wheel to zoom. Double-click the biggest box so it fills the window."
+      - "Switch the size type between disk size and memory size and note that the numbers differ."
+      - "Find the single largest asset in the map. Right-click its box to browse to it or open it."
+      - "Open a Static Mesh in the Static Mesh Editor and use Asset > Size Map (Alt + Shift + M) to see its size map too."
+    done_when: "One screenshot of the Size Map for your level or Blueprint, plus a short note naming the largest asset and its size."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "In a Size Map, a texture box appears inside a material box. What does that mean?"
+        choices: ["The texture is stored inside the material file", "The material references the texture, so loading the material loads the texture", "The texture is larger than the material", "The texture is a duplicate"]
+        answer_index: 1
+        explain: "Nested boxes show a parent-child reference. Loading the material implicitly loads the texture."
+      - q: "How is the size of each box chosen?"
+        choices: ["By the asset's name length", "By the number of references", "By the size of the asset", "All boxes are the same size"]
+        answer_index: 2
+        explain: "Assets display as colored boxes scaled to represent the size of the asset."
+      - q: "The Size Map can show two kinds of size. Which two?"
+        choices: ["Disk size and in-editor memory size", "Triangle count and vertex count", "Width and height", "Cook time and load time"]
+        answer_index: 0
+        explain: "The size map shows shipped disk size and also the in-editor memory usage. The page notes these can be substantially different."
+      - q: "How do you open the Size Map from the Content Browser?"
+        choices: ["Double-click the asset", "Right-click the asset and select Size Map", "Drag the asset into the viewport", "Window > Size Map"]
+        answer_index: 1
+        explain: "Right-click an asset in the Content Browser and choose Size Map. It is also in the Reference Viewer's right-click menu."
+      - q: "What does double-clicking a box in the Size Map do?"
+        choices: ["Deletes the asset", "Opens the asset editor", "Adds it to a collection", "Expands that asset so it fills the window"]
+        answer_index: 3
+        explain: "Double-click an asset box to expand it to fill the window. Right-click the box to examine or edit the asset."
+      - q: "Which shortcut opens the Size Map from inside the Static Mesh Editor?"
+        choices: ["Alt + Shift + R", "Alt + Shift + M", "Alt + Shift + A", "Ctrl + B"]
+        answer_index: 1
+        explain: "In the Static Mesh Editor, Asset > Size Map is Alt + Shift + M. Alt + Shift + R is Reference Viewer and Alt + Shift + A is Audit Assets."
+    flavors:
+      _default: {why: "Package size and memory are budgets. The Size Map shows where the budget goes."}
+      tech_art: {why: "One oversized texture can be most of a level's memory. The Size Map finds it in a minute.", do: "Compare disk size and memory size for the same asset and write one sentence on why they differ."}
+
+  - id: TAQ34
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, audit, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, programming]
+    required_spine: false
+    elective: true
+    title: Audit before you ship
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cooking-content-and-creating-chunks-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/reference-viewer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-mesh-editor-ui-in-unreal-engine"
+    checklist:
+      - "Open the Asset Audit window: Window > Developer Tools > Asset Audit. It opens empty."
+      - "Click Add Chunks to fill the window with a summary of the chunks in your project."
+      - "Select a Texture in the Content Browser, right-click it, and open Reference Viewer. Right-click the node and choose Audit Assets to add it to the audit."
+      - "Add 5 or more textures or meshes to the audit and compare their rows."
+      - "Use the Settings menu (gear icon, top right) to export the list to a .csv file."
+      - "Right-click a chunk row and open its Size Map."
+    done_when: "One screenshot of the Asset Audit window with at least 5 assets or chunks listed, plus the exported .csv file opened in any text or spreadsheet program."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you open the Asset Audit window according to the Cooking and Chunking page?"
+        choices: ["Edit > Project Settings > Asset Audit", "Window > Developer Tools > Asset Audit", "File > Audit", "Help > Asset Audit"]
+        answer_index: 1
+        explain: "The page says to open the Window menu, expand Developer Tools, and choose Asset Audit."
+      - q: "The Asset Audit window opens blank. How do you fill it with your project's chunks?"
+        choices: ["Click Add Chunks", "Drag the Content folder in", "Press F5", "Enable Show Engine Content"]
+        answer_index: 0
+        explain: "Clicking the Add Chunks button fills the window with a summary of all chunks in the current project."
+      - q: "How do you export the audit data to a .csv file?"
+        choices: ["File > Export", "From the Settings menu (gear icon) in the upper right of the Asset Audit window", "Right-click a row and choose Copy", "Ctrl + S"]
+        answer_index: 1
+        explain: "The Reference Viewer page says you can export Asset Audit information to a .csv from the Settings menu (gear icon)."
+      - q: "You right-click a chunk in the Asset Audit window. Which two tools can you open?"
+        choices: ["Material Editor or Blueprint Editor", "Output Log or Message Log", "Migrate or Fixup", "Size Map or Reference Viewer"]
+        answer_index: 3
+        explain: "To inspect a chunk, right-click it and choose either the Size Map or the Reference Viewer."
+      - q: "Which chunk holds any asset that was not given a chunk ID?"
+        choices: ["Chunk -1", "Chunk 0, the default chunk", "Chunk 1", "It is not packaged"]
+        answer_index: 1
+        explain: "Assets with no chunk ID (or a negative one) go into chunk 0, the default chunk shipped with the base game data."
+      - q: "By default, which asset type is a Primary Asset?"
+        choices: ["Textures", "Materials", "Levels (UWorld assets)", "Static Meshes"]
+        answer_index: 2
+        explain: "By default only UWorld assets (levels) are Primary. All other assets are Secondary and load because a Primary Asset references them."
+    flavors:
+      _default: {why: "A ship review needs numbers, not guesses. Asset Audit gives one table for the whole project."}
+      tech_art: {why: "Exporting an audit to .csv lets you sort thousands of textures by size outside the editor.", do: "Sort your exported .csv by size and list the top 3 assets with their formats."}
+
+  - id: TAQ35
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, migrate, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Move assets between projects
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/migrating-assets-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Create a second empty project. This is your target project. Close it after it is made."
+      - "In your main project, select a Material Instance and a Blueprint that uses a mesh. Hold Ctrl to select both."
+      - "Right-click a selected asset and choose Asset Actions > Migrate."
+      - "Read the Asset Report window. Count how many extra assets (textures, meshes, parent materials) it will copy."
+      - "Click OK, then select the Content folder of the target project and click Select Folder."
+      - "Open the target project and confirm the material and Blueprint look correct."
+    done_when: "One screenshot of the Asset Report window before you click OK, plus one screenshot of the migrated assets open in the target project."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "You migrate one Material. What else gets copied?"
+        choices: ["Nothing else, only the Material", "Its referenced assets, such as its Textures", "The whole Content folder", "Only assets in the same folder"]
+        answer_index: 1
+        explain: "Migrate copies the asset along with its references and dependencies, so the Textures that define the Material come too."
+      - q: "Where is the Migrate command?"
+        choices: ["File > Migrate", "Right-click the asset > Asset Actions > Migrate", "Edit > Export", "Window > Migrate"]
+        answer_index: 1
+        explain: "Right-click the selected assets and choose Asset Actions > Migrate. This opens the Asset Report window."
+      - q: "Which folder must you choose as the destination?"
+        choices: ["The target project's root folder", "The target project's Saved folder", "Any folder on disk", "The target project's Content folder"]
+        answer_index: 3
+        explain: "Migrated content only works properly when placed in the target project's Content folder. The tool warns you if you pick something else."
+      - q: "You uncheck a Texture in the Asset Report to skip it. What is the risk?"
+        choices: ["The migration is cancelled", "The Material that uses it may not show correctly in the target project", "The Texture is deleted from the source project", "There is no risk"]
+        answer_index: 1
+        explain: "Skipping a dependency can break the assets you are migrating. A Material will not show correctly if one of its Textures is missing."
+      - q: "The target project already has an asset with the same name. What does the tool do?"
+        choices: ["It silently overwrites it", "It silently skips it", "It shows a warning and asks Yes or No, with Yes All and No All options", "It renames the new asset"]
+        answer_index: 2
+        explain: "You get a warning and can choose to overwrite (Yes) or skip (No), or apply the choice to all assets."
+      - q: "An asset looks wrong after migration. What is the first thing to check?"
+        choices: ["That all of its dependencies were migrated", "That the target project uses the same engine version", "That the asset was renamed", "That the source project is still open"]
+        answer_index: 0
+        explain: "The page says to check that you migrated all dependencies, then reattempt with every dependency selected in the Asset Report."
+    flavors:
+      _default: {why: "Copying files by hand breaks references. Migrate copies the whole dependency chain the right way."}
+      tech_art: {why: "Tech artists move shared tool assets and material libraries between projects all the time.", do: "Migrate an Editor Utility Widget and check that every asset it references arrived."}
+
+  - id: TAQ36
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, redirectors, asset-hygiene]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design, programming]
+    required_spine: false
+    elective: true
+    title: Fix up redirectors
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/asset-redirectors-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects"
+    checklist:
+      - "Create a folder Content/Test_Redirect. Make a Material M_RedirectTest and a Material Instance MI_RedirectTest based on it."
+      - "Move M_RedirectTest to a new folder Content/Test_Redirect/Moved."
+      - "In the Content Browser, enable Filter > Other Filters > Show Redirectors. Find the redirector left in the old location."
+      - "Switch to Filter > Miscellaneous > Redirectors and note that now only redirectors are shown."
+      - "Right-click the redirector and choose Fixup. Check that it disappears and MI_RedirectTest still works."
+      - "Write one sentence about what happened to the packages that pointed to the redirector."
+    done_when: "Two screenshots: the redirector visible after the move, and the same folder after Fixup with the redirector gone. Add your one-sentence note."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "When is a redirector created?"
+        choices: ["When you import an asset", "When you move or rename an asset", "When you delete an asset", "When you save a level"]
+        answer_index: 1
+        explain: "Moving or renaming an asset leaves a Redirector in its old location so unloaded packages can still find it."
+      - q: "Why does the engine leave a redirector instead of just moving the asset?"
+        choices: ["To keep a backup copy", "So packages that are not loaded but reference the asset can still find it", "To speed up cooking", "To track version history"]
+        answer_index: 1
+        explain: "Packages not currently loaded still point to the old path. The redirector sends them to the new location."
+      - q: "Which filter shows only redirectors and hides other assets?"
+        choices: ["Filter > Other Filters > Show Redirectors", "Filter > Miscellaneous > Redirectors", "Settings > Show Engine Content", "Filter > Recently Opened"]
+        answer_index: 1
+        explain: "Miscellaneous > Redirectors works like a normal type filter and shows only redirectors. Show Redirectors makes them visible without hiding others."
+      - q: "What does Fixup do to a redirector?"
+        choices: ["Renames it", "Moves the asset back", "Converts it to a collection", "Resaves all packages that point to it, then deletes it if every referencer was resaved"]
+        answer_index: 3
+        explain: "Fixup resaves every package that points to the redirector and deletes the redirector if all of them could be resaved."
+      - q: "You rename A to B, then try to delete B. It says B is in use. Why?"
+        choices: ["B is open in an editor", "The redirector made during the rename still points to B", "B is engine content", "Deleting is disabled after a rename"]
+        answer_index: 1
+        explain: "This is the dangling redirector case. Fix up redirectors before deleting to solve it."
+      - q: "Which commandlet option cleans up all redirectors in a project from the command line?"
+        choices: ["-run=ResavePackages -fixupredirects", "-run=Cook -clean", "-run=FixAll", "-run=DeleteRedirectors"]
+        answer_index: 0
+        explain: "The page shows UnrealEditor.exe with -run=ResavePackages -fixupredirects to fix up every redirector in the project."
+    flavors:
+      _default: {why: "Redirectors pile up quietly and cause strange errors months later. Fix them as you go."}
+      tech_art: {why: "Clean redirectors keep source control and cooks predictable for the whole team.", do: "Write the full ResavePackages command line you would run for your project, with -projectonly."}
+
+  - id: TAQ37
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, static-mesh, collision, lods]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: Inside the Static Mesh Editor
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-mesh-editor-ui-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-collisions-with-static-meshes-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-and-using-lods-in-unreal-engine"
+    checklist:
+      - "Open SM_Chair (Starter Content) or any prop mesh in the Static Mesh Editor."
+      - "Read the viewport stats overlay: LOD count, Triangles, Vertices, UV channels, Num Collision Primitives. Write them down."
+      - "Toolbar > UV: show UV Channel 0 and UV Channel 1 in the viewport."
+      - "Collision > Remove Collision. Then add a 18DOP Simplified Collision. Toggle Show > Simple Collision to see it."
+      - "In the Details panel, find LOD Settings and the Number of LODs value. Set the LOD picker to LOD 0."
+      - "Open Window > Socket Manager and note it is not shown by default. Save the mesh."
+    done_when: "One screenshot of the Static Mesh Editor with the stats overlay, the 18DOP collision visible, and UV channel 0 displayed."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which panel is NOT shown by default in the Static Mesh Editor?"
+        choices: ["Viewport", "Details", "Socket Manager", "Toolbar"]
+        answer_index: 2
+        explain: "The Window menu lists Socket Manager and Convex Decomposition as panels that are not displayed by default."
+      - q: "What does the 26DOP Simplified Collision option generate?"
+        choices: ["A sphere around the mesh", "A capsule", "Per-triangle collision", "A box with all edges and corners beveled, 26 sides"]
+        answer_index: 3
+        explain: "26DOP makes an axis-aligned box with all edges and corners beveled, 26 total sides. 18DOP bevels only edges, 10DOP bevels four edges."
+      - q: "You add a Box Simplified Collision to a mesh that already has a Sphere collision. What happens?"
+        choices: ["The box replaces the sphere", "The box is added, so the mesh now has both", "The editor asks which one to keep", "Nothing, one collision per mesh"]
+        answer_index: 1
+        explain: "A new simplified collision does not replace the old one. It adds to it. Use Remove Collision to clear all."
+      - q: "Which viewport overlay stat tells you about the mesh's UVs?"
+        choices: ["Approx Size", "UV channels", "Distance Field", "Current Screen Size"]
+        answer_index: 1
+        explain: "UV channels shows the number of UV channels. The page notes unique, non-overlapping UVs are required for shadow mapping."
+      - q: "With Auto Compute LOD Distances and 2 LODs, when does LOD1 show?"
+        choices: ["When the mesh is more than 100 units away", "When the mesh takes less than 50 percent of the screen", "Only when forced with LOD 1", "When the frame rate drops"]
+        answer_index: 1
+        explain: "Auto Compute divides screen size equally between LODs. With 2 LODs, LOD0 shows at 50 percent or more and LOD1 below that."
+      - q: "What does Auto Convex Collision do?"
+        choices: ["Adds a single box", "Generates convex collision based on the mesh shape, with a Convex Decomposition panel", "Removes all collision", "Converts complex collision to simple"]
+        answer_index: 1
+        explain: "Auto Convex Collision builds convex hulls from the mesh shape. Hull Count, Max Hull Verts and Hull Precision control the result."
+    flavors:
+      _default: {why: "Every prop passes through this editor. Knowing its panels saves hours of guessing."}
+      tech_art: {why: "Tech artists check triangle counts, UV channels and collision here before a mesh goes into the level.", do: "Use Auto Convex Collision on the chair with Hull Count 8 and compare the primitive count to the 18DOP version."}
+
+  - id: TAQ38
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [static-mesh, sockets, attachment]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, gameplay_design, programming]
+    required_spine: false
+    elective: true
+    title: "Sockets: attach things to meshes"
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-sockets-with-static-meshes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-mesh-editor-ui-in-unreal-engine"
+    checklist:
+      - "Open SM_DoorFrame (Starter Content) in the Static Mesh Editor. Open Window > Socket Manager."
+      - "Click Create Socket and name it Fire. Set its Relative Location Z to 115 so it sits in the doorway."
+      - "Create a second socket named Door with Relative Location Y = 42. Save the mesh."
+      - "Place SM_DoorFrame in a level. Place P_Fire (or any Niagara or particle asset) in the level."
+      - "Right-click the fire actor > Attach To > SM_DoorFrame > socket Fire. Reset its Location in Details so it snaps to the socket."
+      - "Place SM_Door and attach it to the Door socket. Move the door frame and check that both children move with it."
+    done_when: "One screenshot of the Socket Manager showing both sockets, and one screenshot of the level with the fire and door attached to the frame."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where is a new socket placed when you first create it?"
+        choices: ["At the center of the mesh bounds", "At the origin of the Static Mesh", "At the camera position", "At the last clicked vertex"]
+        answer_index: 1
+        explain: "A new socket starts at the origin of the Static Mesh. For the door frame that is the bottom center."
+      - q: "How do you open the Socket Manager?"
+        choices: ["It is open by default", "Window > Socket Manager in the Static Mesh Editor", "Right-click the mesh in the level", "Edit > Sockets"]
+        answer_index: 1
+        explain: "In the Static Mesh Editor, click the Window menu and choose Socket Manager. It appears next to the Details panel."
+      - q: "You attach P_Fire to the Fire socket but it does not move to the socket. What fixes it?"
+        choices: ["Recreate the socket", "Reset the actor's Location in the Transform section of Details", "Set Simulate Physics", "Rename the socket"]
+        answer_index: 1
+        explain: "After attaching, the child's location is relative to the parent. Resetting Location to 0,0,0 snaps it to the socket."
+      - q: "After attaching, you move the door frame. What happens to the attached fire?"
+        choices: ["It stays where it was", "It is detached", "It is deleted", "It moves with the frame"]
+        answer_index: 3
+        explain: "Transformations on the Static Mesh also affect attached objects. You can still move the child on its own too."
+      - q: "Why does the guide make a second socket for the door instead of reusing Fire?"
+        choices: ["A socket can hold only one object", "The door's origin is at its bottom corner, so it would float and clip on the Fire socket", "Sockets cannot be reused", "The Fire socket is hidden"]
+        answer_index: 1
+        explain: "SM_Door has its origin at the bottom corner. A socket placed for that origin keeps the door in the frame correctly."
+      - q: "Which viewport shortcut shows sockets in the Static Mesh Editor?"
+        choices: ["Alt + S", "Alt + V", "Alt + N", "Alt + P"]
+        answer_index: 0
+        explain: "Show > Sockets is Alt + S. Alt + V shows vertices, Alt + N normals, and Alt + P the pivot."
+    flavors:
+      _default: {why: "Sockets let designers attach lights, effects, and props without placing them by hand each time."}
+      tech_art: {why: "A tech artist defines sockets so every attached effect or weapon lands in the same place on every instance.", do: "In a Blueprint, add a Static Mesh Component and a child component with Parent Socket set to Fire."}
+
+  - id: TAQ39
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [import, fbx, static-mesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: Import a static mesh right
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
+    checklist:
+      - "Get an FBX of a simple prop. If you have no modeling program, right-click SM_Chair in Starter Content, choose Asset Actions > Export, and save it as FBX."
+      - "In the Content Browser, click Add/Import > Import and pick the FBX. Do not press Import yet. Take a screenshot of the FBX Import Options dialog."
+      - "In the dialog, find Combine Meshes, Generate Lightmap UVs, Auto Generate Collision, Normal Import Method and Convert Scene Unit. Write down what each one does in one line."
+      - "Set Normal Import Method to Import Normals. Turn Generate Lightmap UVs on. Import the mesh as SM_ImportTest."
+      - "Open SM_ImportTest in the Static Mesh Editor. Check the triangle count, the number of UV channels and the material slots. Turn on collision display."
+      - "Import the same FBX a second time as SM_ImportTest_Combine, this time with Combine Meshes on and Normal Import Method set to Compute Normals. Compare the two results."
+    done_when: "Screenshot of the FBX Import Options dialog and a screenshot of SM_ImportTest in the Static Mesh Editor with collision shown. In one or two lines, say what changed between your two imports."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You export three separate meshes into one FBX file and import it with default settings. What do you get?"
+        choices: ["One static mesh asset with three sections", "Three separate static mesh assets", "One skeletal mesh", "An error, because one FBX can hold only one mesh"]
+        answer_index: 1
+        explain: "The importer separates multiple meshes into multiple assets. It only combines them if you enable Combine Meshes at import time."
+      - q: "What does the Normal Import Method 'Compute Normals' do with the smoothing groups in the FBX file?"
+        choices: ["It converts them to vertex colors", "It keeps them and imports the tangents too", "It discards them; the engine computes normals and tangents itself", "It uses them only for LOD1 and above"]
+        answer_index: 2
+        explain: "With Compute Normals the engine computes normals and tangents, and the smoothing group and normal info from the FBX is thrown away. Use Import Normals to keep the DCC normals."
+      - q: "What does 'Convert Scene Unit' do?"
+        choices: ["It changes the FBX units to Unreal's unit, which is centimeters", "It doubles the mesh size", "It rotates the mesh so Z is up", "It converts inches to meters"]
+        answer_index: 0
+        explain: "The page says Convert Scene Unit converts the scene from the FBX units of measure to UE's unit of measure, centimeters."
+      - q: "Where should the pivot of a mesh be when you export it from a modeling program?"
+        choices: ["At the center of the mesh, always", "Anywhere, Unreal recenters it on import", "At the top of the mesh", "At the world origin (0,0,0), usually at one corner of the mesh, so it snaps to the grid well"]
+        answer_index: 3
+        explain: "The pivot is always at the origin on export. Epic says to build the mesh at the origin, usually with the origin at one corner, for good grid snapping in the editor."
+      - q: "Your FBX contains a collision mesh named UCX_Crate_01 next to a render mesh named Crate_01. What happens on import?"
+        choices: ["Both are imported as visible meshes", "The importer removes UCX_Crate_01 from the render mesh and turns it into the collision of Crate_01", "The importer ignores it because collision must be made in the editor", "The importer renames it to SM_Crate_01"]
+        answer_index: 1
+        explain: "Collision meshes are found by name. UCX_ plus the exact render mesh name marks a convex collision shape, and the importer converts it into the collision model."
+      - q: "After importing a mesh with its textures, which texture inputs are connected automatically in the new material?"
+        choices: ["All of them, including Ambient Occlusion", "Only Specular", "Only Color and Normal", "None; you always connect them by hand"]
+        answer_index: 2
+        explain: "Only Color and Normal get connected. Specular maps are imported but not connected, and some other maps are not imported at all, so check the material after import."
+    flavors:
+      _default: {why: "A bad import makes every later step harder: wrong scale, wrong normals, missing collision."}
+      tech_art: {why: "Tech artists set the import rules for the whole team. You must know every option in that dialog.", do: "Write a short 'how we import props' note with the settings your project should use, and why."}
+      lookdev: {why: "Normals and smoothing decide how your materials look. Get them in cleanly."}
+      level_design: {why: "Props with correct scale and pivots are much faster to place."}
+
+  - id: TAQ40
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [collision, physics, static-mesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, animation]
+    required_spine: false
+    elective: true
+    title: Simple vs complex collision
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-collisions-with-static-meshes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/simple-versus-complex-collision-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/collision-response-reference-in-unreal-engine"
+    community_urls:
+      - {title: "The RIGHT Way to Make Custom Collision in Unreal Engine 5 (Matt Aspland)", url: "https://www.youtube.com/watch?v=7NEXKiLTOWg"}
+    checklist:
+      - "Duplicate SM_Chair from Starter Content as SM_Chair_Col and open it in the Static Mesh Editor. Use Collision > Remove Collision."
+      - "Try Collision > Add Box Simplified Collision, then Add 26DOP Simplified Collision. Look at how each one covers the seat. Remove them again."
+      - "Use Collision > Auto Convex Collision. Raise Hull Count and Hull Precision, click Apply, and compare the result with the default values."
+      - "Make a second copy SM_Chair_Complex. In Details > Collision, set Collision Complexity to Use Complex Collision As Simple."
+      - "Place both chairs in a level. Drop a physics cube (Simulate Physics on) onto the seat of each chair and play. Note where the cube lands."
+      - "Select one chair actor in the level and open Collision Presets in the Details panel. Switch it to Custom and set Pawn to Overlap. Play and walk into it."
+    done_when: "Two screenshots: the Static Mesh Editor showing your Auto Convex collision on SM_Chair_Col, and the level with both chairs and where the cube landed on each. One line on the difference."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You add a Box Simplified Collision to a mesh that already has a Sphere Simplified Collision. What happens?"
+        choices: ["The box replaces the sphere", "The box is added; the mesh now has both shapes", "The editor shows an error", "The sphere becomes a box"]
+        answer_index: 1
+        explain: "Adding a simplified collision does not replace the existing one, it adds to it. Use Remove Collision to clear all shapes first."
+      - q: "What does the K in 10-DOP, 18-DOP and 26-DOP mean?"
+        choices: ["The number of triangles in the hull", "The number of axis-aligned planes pushed against the mesh to build the hull", "The number of hulls", "The size of the box in centimeters"]
+        answer_index: 1
+        explain: "K-DOP is K discrete oriented polytope. It takes K axis-aligned planes and pushes them as close to the mesh as possible; 10, 18 and 26 are the options in the Static Mesh Editor."
+      - q: "In the Convex Decomposition panel, what happens when you raise Hull Count, Max Hull Verts and Hull Precision?"
+        choices: ["Collision gets more precise but also more complex", "Collision gets simpler and cheaper", "The render mesh gets more triangles", "The mesh is converted to Nanite"]
+        answer_index: 0
+        explain: "The page says: the higher these values, the more precise the collision mesh, but also the more complex."
+      - q: "A mesh is set to Use Complex Collision As Simple. What is the trade-off?"
+        choices: ["It can simulate physics, but only on Nanite meshes", "It uses less memory than simple shapes", "The mesh cannot simulate physics itself, but other simulated objects can collide with its exact triangles", "Traces will ignore it"]
+        answer_index: 2
+        explain: "With UseComplexAsSimple the trimesh is used for physics collision. You cannot simulate that object, but it can collide with other simulated (simple) objects."
+      - q: "In the Details panel, Collision Presets shows 'Default'. What does that mean?"
+        choices: ["The actor has no collision", "The actor blocks everything", "The actor uses the settings from the Static Mesh Editor; nothing has been overridden on this instance", "The actor is a Pawn"]
+        answer_index: 2
+        explain: "Default means the preset was not changed from what the Static Mesh asset has. Any other name, like BlockAll, means this actor or component overrides it."
+      - q: "Which Collision Enabled setting gives raycasts, sweeps and overlaps but no physics simulation, and is useful for character movement?"
+        choices: ["No Collision", "Physics Only", "Collision Enabled", "Query Only"]
+        answer_index: 3
+        explain: "Query Only is used only for spatial queries. It cannot be used for simulation, and the page names character movement as a good use."
+    flavors:
+      _default: {why: "Wrong collision means players walk through walls or get stuck on invisible boxes."}
+      tech_art: {why: "Tech artists set the collision rules for props and fix the ones that break gameplay.", do: "Add the Collision view mode (Player Collision) screenshot of a small scene and mark one mesh whose collision is too loose."}
+      level_design: {why: "You will test collision every day. Knowing the shapes helps you ask for the right fix."}
+      animation: {why: "Characters interact with props. A chair you cannot sit on is a collision problem, not an animation problem."}
+
+  - id: TAQ41
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [lightmap, uv, static-mesh, lighting]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: Lightmap UVs that don't bleed
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/generating-lightmap-uvs-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-lightmapping-in-unreal-engine"
+    community_urls:
+      - {title: "Auto-generating Lightmap UVs quick tip (Jona Marklund)", url: "https://www.youtube.com/watch?v=BHhDnuhSFnY"}
+    checklist:
+      - "Duplicate a Starter Content prop (for example SM_Shelf) as SM_Shelf_LM and open it in the Static Mesh Editor. Turn on the UV display and look at UV channel 0 and UV channel 1."
+      - "In Details > LOD0 > Build Settings, enable Generate Lightmap UVs. Set Min Lightmap Resolution to 32, Source Lightmap Index 0, Destination Lightmap Index 1. Click Apply Changes."
+      - "Look at UV channel 1 again. Take a screenshot of the packed lightmap UV."
+      - "In General Settings, set Lightmap Resolution to 64 and Lightmap Coordinate Index to 1."
+      - "Change Min Lightmap Resolution to 128 and Apply Changes again. Compare the padding between the UV charts with your first screenshot."
+      - "Write two lines: why the padding changed, and why a texture UV may overlap but a lightmap UV may not."
+    done_when: "Two screenshots of UV channel 1 (Min Lightmap Resolution 32 and 128) and the Build Settings panel, plus your two lines."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "When does a static mesh need a lightmap UV at all?"
+        choices: ["Always, for every mesh", "Only when the mesh uses Nanite", "Only when it will be lit by baked (precomputed) lighting", "Only when it has more than one material"]
+        answer_index: 2
+        explain: "Lightmaps store baked light and shadow. If a project uses only dynamic lighting, there is no need to set up lightmaps."
+      - q: "Which UV channel does the auto-generated lightmap UV use as its source by default?"
+        choices: ["UV channel 0, the texture UV", "UV channel 1", "The last UV channel", "It builds a new UV from scratch, with no source"]
+        answer_index: 0
+        explain: "The generator repacks the existing UV charts from UV channel 0. It needs a source UV to work from."
+      - q: "What does the generator NOT do while repacking?"
+        choices: ["Normalize the chart scale", "Add padding between charts", "Split or cut UV charts into new islands", "Store the result in the destination index"]
+        answer_index: 2
+        explain: "During repacking, UE will not split UV chart edges. It only repacks the existing charts. Split them in your modeling tool before import if needed."
+      - q: "What does Min Lightmap Resolution control?"
+        choices: ["The size of the lightmap texture in the level", "The minimum padding between UV charts, so the pack is texel accurate down to that resolution", "The number of UV channels", "The Lightmass quality"]
+        answer_index: 1
+        explain: "It sets the minimum padding for the charts. This limits light and shadow bleed when the mesh is used at that lowest resolution."
+      - q: "Why is at least four texels of padding usually needed between charts?"
+        choices: ["Because Lightmass ignores the first four texels", "Because UVs are stored as 4-byte values", "Because the editor rounds padding to 4", "Because DXT texture compression works on 4x4 texel blocks"]
+        answer_index: 3
+        explain: "DXT compression operates on 4x4 blocks, so charts closer than four texels can share a block and bleed into each other."
+      - q: "You set Lightmap Coordinate Index in General Settings. What should it match?"
+        choices: ["The Source Lightmap Index", "The Destination Lightmap Index used when generating", "The number of material slots", "The Min Lightmap Resolution"]
+        answer_index: 1
+        explain: "The Lightmap Coordinate Index tells the light build which UV channel to use. It should be the channel where the generated lightmap UV was stored, the Destination Lightmap Index."
+    flavors:
+      _default: {why: "Bad lightmap UVs give dark lines, splotches and light leaks after a light build."}
+      tech_art: {why: "You will be the one who finds why a prop bakes badly. Padding and resolution are the usual causes.", do: "Enable the Lightmap Density view mode on a small scene and find one mesh whose density is far from its neighbors."}
+      lookdev: {why: "Baked light artifacts look like material bugs. Knowing lightmap UVs saves you hours."}
+      level_design: {why: "Lightmap Resolution per actor is your knob for baked light quality vs memory."}
+
+  - id: TAQ42
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [transform, pivot, units, static-mesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, animation, cinematics]
+    required_spine: false
+    elective: true
+    title: Pivots, units and scale
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/transforming-actors-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/edit-pivot-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-tools-in-unreal-engine"
+    checklist:
+      - "Place SM_Chair in a level. Press W, E and R to switch gizmos and Space to cycle them. In Details > Transform, type Location 0, 0, 100 and note that Z is up."
+      - "Set Scale to 1, 1, 2 and rotate the chair 45 degrees on Z. Switch between World and Local transform mode and drag the Z arrow in each. Note the difference."
+      - "Click the Lock Scale button and drag one scale handle. Then Alt+middle-click a translation handle to move the pivot temporarily and rotate around it."
+      - "Duplicate the chair asset as SM_Chair_Pivot. Open Modeling Mode (Shift+5), pick XForm > Edit Pivot, click the Bottom preset and Accept. Place it and see that it now sits on the floor at Z = 0."
+      - "Scale an actor to 2, 2, 2 in the level, then use XForm > Bake Transform on it. Check the Transform values after baking."
+      - "Write two lines: why a mesh built with Scale not equal to 1 causes problems (think of collision shapes and units in cm)."
+    done_when: "Screenshot of SM_Chair_Pivot with the pivot at the bottom (gizmo visible on the floor) and a screenshot of the Transform panel after Bake Transform, plus your two lines."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which axis is 'up' in Unreal Engine, and what color is its gizmo handle?"
+        choices: ["Y, green", "Z, blue", "Z, green", "X, red"]
+        answer_index: 1
+        explain: "In Unreal the vertical axis is Z. The gizmo uses red for X, green for Y and blue for Z."
+      - q: "What is Unreal Engine's unit of measure?"
+        choices: ["Meters", "Inches", "Centimeters", "Unreal units with no real size"]
+        answer_index: 2
+        explain: "The FBX import option Convert Scene Unit converts to UE's unit of measure, centimeters. A 180 cm character is 180 units tall."
+      - q: "What does the Lock Scale button in the Transform section do?"
+        choices: ["It stops the actor from being scaled at all", "It resets scale to 1", "It bakes the scale into the mesh", "It makes X, Y and Z change together, so scaling stays uniform"]
+        answer_index: 3
+        explain: "When locked, all three scale values change in unison. This keeps the scale uniform and prevents distortion."
+      - q: "How do you move an actor's pivot temporarily in the level viewport?"
+        choices: ["Alt + middle-click on a translation handle", "Ctrl + drag the actor", "Double-click the gizmo center", "Press P"]
+        answer_index: 0
+        explain: "Alt+middle-clicking a translation handle moves the pivot for that session. You can then rotate or scale around the new point."
+      - q: "You accept a new pivot with Modeling Mode's Edit Pivot tool on a static mesh. What changes?"
+        choices: ["Only the selected actor in the level", "The static mesh asset and every instance of it in the scene", "Only the Content Browser thumbnail", "Nothing until you re-import"]
+        answer_index: 1
+        explain: "Edit Pivot bakes the new pivot into the mesh asset, so all instances change. Duplicate the mesh first if you do not want that."
+      - q: "Why is a non-uniform scale on a static mesh actor a problem for collision?"
+        choices: ["It has no effect on collision", "It turns collision off", "Sphere and box collision shapes do not work when the static mesh is non-uniformly scaled", "It doubles the collision cost"]
+        answer_index: 2
+        explain: "The FBX pipeline page states that spheres and boxes do not work if the Static Mesh is non-uniformly scaled. Convex (UCX) shapes are the safer choice, or fix the scale."
+    flavors:
+      _default: {why: "Scale, units and pivots decide if a prop snaps to the grid, rotates around the right point and collides correctly."}
+      tech_art: {why: "Wrong units and pivots come from the pipeline, and fixing them in bulk is a tech art task.", do: "Write a one-line rule for pivot placement for props in your project and give three examples (door, rock, lamp)."}
+      level_design: {why: "A prop with its pivot at the bottom corner snaps to the floor and grid without fiddling."}
+      animation: {why: "Props you attach to sockets rotate around their pivot. A bad pivot means a bad attach."}
+      cinematics: {why: "Sequencer keys transform values. Clean scale and pivots keep your keyframes readable."}
+
+  - id: TAQ43
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [modeling-mode, static-mesh, tools]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, lookdev]
+    required_spine: false
+    elective: true
+    title: "Modeling Mode: fix a mesh in-engine"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-tools-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/polygroup-edit-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
+    community_urls:
+      - {title: "50 Tips and Tricks in Modeling Mode, Unreal Fest 2024 (Unreal Engine channel)", url: "https://www.youtube.com/watch?v=xIMudHNX9JM"}
+    checklist:
+      - "Switch to Modeling Mode (Shift+5). If it is missing, enable the Modeling Tools Editor Mode plugin. Find the four panels: Tool Category, Tool Palette, Tool Properties and Quick Settings."
+      - "Create > Box. Set Output Type to Static Mesh and click in the level. Name the asset SM_ModelTest."
+      - "Model > PolyGroup Edit: select one face, Extrude it, then Bevel one edge. Click Accept. Try Ctrl+Z once and see what is undone."
+      - "Place a second copy of any Starter Content prop and use XForm > Duplicate on it. Then run Mesh > Simplify on the copy to about half the triangles and Accept."
+      - "Turn on Show > Advanced > Mesh Edges in the viewport. Use Attribs > Inspect on the simplified copy and look at the result. Then use Attribs > Inspect Collision."
+      - "Open Quick Settings and turn off Combined Gizmo. Note how the gizmo changes."
+    done_when: "Screenshot of SM_ModelTest after PolyGroup Edit (extrude + bevel visible) and a screenshot of the simplified prop with Mesh Edges on and the triangle count visible."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is the hotkey to switch to Modeling Mode?"
+        choices: ["Shift+3", "Shift+5", "Ctrl+M", "F5"]
+        answer_index: 1
+        explain: "Shift+5 switches to Modeling Mode directly. Shift+3 is Foliage Mode."
+      - q: "You are inside a Modeling Mode tool and switch to another editor mode without clicking Accept. What happens to your edits?"
+        choices: ["They are saved automatically", "They are kept as a preview until you return", "They are discarded and the mesh goes back to how it was", "The editor asks you to save"]
+        answer_index: 2
+        explain: "Most tools only preview changes. If you exit Modeling Mode or press Cancel, the changes are discarded. Accept applies them."
+      - q: "After you press Accept in the Vertex Sculpt tool, what does Undo do?"
+        choices: ["It undoes one brush stroke", "It undoes the combined result of all strokes made in that tool session", "Nothing; accepted changes cannot be undone", "It reopens the tool"]
+        answer_index: 1
+        explain: "Inside the tool you can undo each stroke. After Accept, the undo history only tracks the mesh before and after the tool."
+      - q: "Which Output Type saves the mesh as an asset in the Content Browser?"
+        choices: ["Dynamic Mesh", "Volume", "Static Mesh", "Instance"]
+        answer_index: 2
+        explain: "Static Mesh is saved in the Content Browser and an instance is placed in the level. Dynamic Mesh and Volume are saved in the level only."
+      - q: "PolyGroup Edit is grayed out for a mesh you imported. What is the most likely reason?"
+        choices: ["The mesh has no PolyGroup information", "The mesh is too big", "The mesh has more than one material", "PolyGroup Edit only works on boxes"]
+        answer_index: 0
+        explain: "PolyGroup Edit is not available for meshes with no PolyGroup information. Generate PolyGroups, Paint PolyGroups or Tri Select can create them."
+      - q: "Which Mesh category tool removes hidden triangles from a mesh?"
+        choices: ["Weld", "Fill Holes", "Remesh", "Jacket"]
+        answer_index: 3
+        explain: "Jacket removes hidden triangles. Weld joins disconnected edges, Fill Holes closes holes, Remesh retriangulates."
+    flavors:
+      _default: {why: "Small mesh fixes in-engine save a round trip to a modeling program."}
+      tech_art: {why: "Fixing a pivot, a hole or a heavy mesh in-engine is a daily tech art task.", do: "Use Attribs > Mesh To Collision to turn a simple box mesh into the collision of another mesh."}
+      level_design: {why: "Modeling Mode is your blockout tool. Create and PolyGroup Edit cover most greybox needs."}
+      lookdev: {why: "UVs, normals and material slots can be fixed here without leaving the editor."}
+
+  - id: TAQ44
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [nanite, static-mesh, rendering]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: Turn on Nanite for a mesh
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-technical-details"
+    community_urls:
+      - {title: "How To Enable And Use Nanite In Unreal Engine 5 (Matt Aspland)", url: "https://www.youtube.com/watch?v=I_rHKEjajSc"}
+    checklist:
+      - "Duplicate SM_Rock from Starter Content as SM_Rock_Nanite. Open it and in Details > Nanite Settings check Enable Nanite Support. Apply."
+      - "Place 30 copies of SM_Rock_Nanite and 30 copies of the original SM_Rock in a level."
+      - "In the viewport, open View Modes > Nanite Visualization > Mask. Note which rocks are green and which are red."
+      - "Try the Triangles and Clusters visualizations. Take a screenshot of one of them."
+      - "Select three other meshes in the Content Browser, right-click and use Nanite > Enable to batch-enable them."
+      - "Open the Output Log and search for 'Nanite'. Write one line on any warning you see, or note that there is none."
+    done_when: "Screenshot of the Nanite Visualization > Mask view with both green and red rocks visible, and a screenshot of the Nanite Settings section with Enable Nanite Support checked."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Which of these is NOT a way to enable Nanite on a mesh?"
+        choices: ["Check Build Nanite when importing", "Check Enable Nanite Support in the Static Mesh Editor", "Right-click meshes in the Content Browser and choose Nanite > Enable", "Set the mesh LOD Group to Nanite"]
+        answer_index: 3
+        explain: "The page lists three ways: on import, per mesh in its editor, and batched in the Content Browser. There is no Nanite LOD Group."
+      - q: "Which material blend modes does Nanite support?"
+        choices: ["Opaque and Masked", "Translucent and Additive", "All blend modes", "Only Opaque"]
+        answer_index: 0
+        explain: "Nanite supports Opaque and Masked. An unsupported material is replaced by a default material and a warning appears in the Output Log."
+      - q: "In the Nanite Visualization 'Mask' view mode, what do green and red mean?"
+        choices: ["Green is cheap, red is expensive", "Green is Nanite geometry, red is non-Nanite geometry", "Green is opaque, red is masked", "Green is visible, red is culled"]
+        answer_index: 1
+        explain: "Mask marks Nanite geometry green and non-Nanite geometry red. It is the fastest way to check that Nanite is on."
+      - q: "Which of these meshes is the weakest candidate for Nanite, according to the page?"
+        choices: ["A rock with many tiny triangles", "A wall with hundreds of instances", "A sky sphere", "A large building that hides other geometry"]
+        answer_index: 2
+        explain: "A sky sphere has big triangles on screen, does not occlude anything and there is only one. The page names it as the example exception."
+      - q: "Which of these is NOT supported with Nanite meshes?"
+        choices: ["Multiple UV channels", "Vertex colors", "Morph target deformation", "Non-uniform scaling of the mesh"]
+        answer_index: 2
+        explain: "Nanite supports multiple UVs, vertex colors and dynamic translation, rotation and non-uniform scale. Deformation with Morph Targets is not supported."
+      - q: "What does the console variable r.Nanite 0 do?"
+        choices: ["It deletes Nanite data from all meshes", "It turns Nanite rendering off globally at runtime, which is useful to emulate platforms without Nanite", "It sets Nanite quality to the lowest", "It turns off Nanite visualization only"]
+        answer_index: 1
+        explain: "r.Nanite 0 disables Nanite rendering globally. The page recommends it as a way to see how the scene behaves on platforms that do not support Nanite."
+    flavors:
+      _default: {why: "Nanite removes LOD work and lets you use dense meshes, but only for the right mesh and material types."}
+      tech_art: {why: "Deciding which meshes get Nanite is a project rule you will help write. Start with the simple on/off check.", do: "Use the Overdraw visualization on your rock scene and note if the Nanite or non-Nanite rocks show more overdraw."}
+      lookdev: {why: "Nanite only takes Opaque and Masked materials. Plan your material blend modes early."}
+      level_design: {why: "Many instances of detailed props are cheap with Nanite. It changes how you dress a level."}
+
+  - id: TAQ45
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [merge-actors, optimization, static-mesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, lookdev]
+    required_spine: false
+    elective: true
+    title: Merge actors into one mesh
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/merging-actors-in-unreal-engine"
+    backup_url: null
+    community_urls:
+      - {title: "Combine Meshes and Merge Actors in UE5 (Francesco Milanese)", url: "https://www.youtube.com/watch?v=UjyNjBBE5Gc"}
+    checklist:
+      - "Build a small cluster: 4 SM_Chair, 2 SM_Table and 3 SM_Lamp_Ceiling from Starter Content, close together."
+      - "Select all of them. Go to Actor > Merge Actors > Merge Actor Settings. Turn off Replace Source Actors and turn on Pivot Point at Zero. Run Merge and save as SM_Cluster_Merge."
+      - "Open SM_Cluster_Merge. Count the material slots and the triangles. Compare with the source actors."
+      - "Select the same actors again. Run Simplify (Proxy) and save as SM_Cluster_Simplify. Open it and count materials and triangles."
+      - "Select only the 4 chairs and run Batch. Look in the Outliner at what was created and which component type it uses."
+      - "Write three lines: one for Merge, Simplify and Batch, saying how many draw calls each gives and whether UVs are kept."
+    done_when: "Screenshot of SM_Cluster_Merge and SM_Cluster_Simplify side by side in the Static Mesh Editor (material count and triangle count visible), plus your three lines."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you start a merge of selected static mesh actors?"
+        choices: ["Content Browser > Add > Merge", "Actor > Merge Actors in the top menu bar", "Right-click the mesh asset > Merge", "Window > Merge Tool"]
+        answer_index: 1
+        explain: "With the actors selected, go to Actor > Merge Actors and pick Merge, Simplify, Batch or Approximate. Merge Actor Settings is in the same menu."
+      - q: "With the Merge method and Merge Materials turned OFF, how many draw calls does the result have?"
+        choices: ["One", "One per source actor", "One per material", "One per triangle"]
+        answer_index: 2
+        explain: "Merge creates one mesh section per material, so the number of draw calls equals the number of materials. UVs are preserved."
+      - q: "What does the Simplify method do that Merge does not?"
+        choices: ["It keeps every material", "It builds a proxy mesh from the lowest-detail LODs, reduces vertices and bakes one material, giving one draw call", "It keeps the actors separate", "It preserves UVs"]
+        answer_index: 1
+        explain: "Simplify makes a Proxy Mesh from the lowest-detail LOD of each mesh, simplifies geometry, bakes one material and does not preserve UVs."
+      - q: "What does the Batch method create?"
+        choices: ["A single baked static mesh", "Instanced Static Mesh components from identical static mesh components", "A Blueprint with all actors as children", "A Nanite mesh"]
+        answer_index: 1
+        explain: "Batch turns identical static mesh components into instanced components. It preserves UVs and does not change occlusion culling."
+      - q: "When would you pick Approximate instead of Simplify?"
+        choices: ["When the source meshes are very complex, for example Nanite meshes, and Simplify would fail", "When you want to keep all materials", "When you want instancing", "When the meshes have no LODs"]
+        answer_index: 0
+        explain: "Approximate is similar to Simplify but can handle much more complex sources like Nanite meshes, where Simplify fails in simplification or texture baking."
+      - q: "Pivot Point at Zero is turned off. Where is the pivot of the merged actor?"
+        choices: ["At the world origin", "At the center of all the meshes", "At the pivot of the first static mesh actor you selected", "At the bottom of the bounds"]
+        answer_index: 2
+        explain: "If Pivot Point at Zero is disabled, the merged actor uses the pivot of the first Static Mesh Actor selected for the merge."
+    flavors:
+      _default: {why: "Fewer actors and draw calls make a level cheaper to render."}
+      tech_art: {why: "Merging is a common optimization pass. Knowing the three methods lets you pick the right one.", do: "Compare stat unit Draw time with the source actors and with the merged version, and note the difference."}
+      level_design: {why: "You can merge finished set dressing to reduce actor counts, but you lose the ability to edit the pieces."}
+      lookdev: {why: "Merge Materials bakes textures. Check texture size and gutter so the baked look stays close to the source."}
+
+  - id: TAQ46
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [foliage, instancing, static-mesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, lookdev]
+    required_spine: false
+    elective: true
+    title: Instanced foliage from any mesh
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-mode-in-unreal-engine"
+    backup_url: null
+    community_urls:
+      - {title: "Unreal 5 Foliage Mode Explained in 2 minutes (Royal Skies)", url: "https://www.youtube.com/watch?v=lFXOnCea728"}
+    checklist:
+      - "Open a level with a Landscape or a large floor mesh. Switch to Foliage Mode (Shift+3)."
+      - "Drag SM_Rock from Starter Content into the Mesh List. Select it and set Painting > Density to 100 and Radius to 50."
+      - "Under Placement, set Scale X Min 0.3 and Max 1.2 and turn on Align to Normal. Set Brush Size to 512 and paint a patch of rocks."
+      - "Hold Shift and paint to erase part of the patch. Try the Single tool and the Fill tool once each."
+      - "Set End Cull Distance to 3000 and move the camera away until the rocks disappear. Then set Start Cull Distance to 2000 and note what would be needed in the material to fade them."
+      - "Open the Outliner and find the actor that holds your foliage instances. Note the component type. Run stat unit and compare Draw time with 200 rocks placed as separate actors if you like."
+    done_when: "Screenshot of the painted rocks with the Foliage panel open showing your Density, Radius and Scale settings, and a line naming the actor/component that holds the instances."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why is Static Mesh Foliage cheaper to render than Actor Foliage?"
+        choices: ["It uses smaller textures", "Its instances are grouped into batches drawn with hardware instancing, many in a single draw call; Actor Foliage costs the same as normal actors", "It has no collision", "It is always Nanite"]
+        answer_index: 1
+        explain: "Static meshes placed with Foliage Mode are batched and rendered with hardware instancing, so many instances share a draw call. Actor Foliage is as costly as placing normal actors."
+      - q: "How do you erase foliage while using the Paint tool?"
+        choices: ["Right-click", "Hold Ctrl and paint", "Hold Shift and paint", "Press Delete"]
+        answer_index: 2
+        explain: "The Paint tool erases instances of the selected type when you hold Shift while painting. Erase Density controls how much is left behind."
+      - q: "The Paint Density value in Brush Options is a multiplier of what?"
+        choices: ["The Brush Size", "The landscape resolution", "The number of foliage types", "The Density property in the selected foliage type's details"]
+        answer_index: 3
+        explain: "Paint Density multiplies the Density set in the foliage type's details. Both together decide how many instances you get."
+      - q: "You set an End Cull Distance. What happens at that distance?"
+        choices: ["Instances fade out one by one", "The whole cluster of instances is culled, so groups of meshes disappear at once", "Only shadows are removed", "The foliage switches to LOD1"]
+        answer_index: 1
+        explain: "Foliage renders as clusters, and each cluster is culled beyond End Cull Distance. That makes groups pop out. Start Cull Distance plus a PerInstanceFadeAmount node in the material can fade them."
+      - q: "Which filter checkbox lets you paint foliage onto Static Mesh surfaces?"
+        choices: ["Static Mesh", "Landscape", "BSP", "Translucent"]
+        answer_index: 0
+        explain: "The Filters section has Landscape, Static Mesh, BSP, Foliage and Translucent. Static Mesh must be on to paint on mesh surfaces."
+      - q: "Which statement about LODs on foliage is true?"
+        choices: ["Foliage does not support LODs", "Each instance switches LOD by its own distance", "The entire cluster of instances changes LOD at the same time", "LODs only work with Nanite foliage"]
+        answer_index: 2
+        explain: "Static Mesh LOD is supported, but currently the whole cluster of instances changes LODs together."
+    flavors:
+      _default: {why: "Foliage Mode places thousands of meshes fast and renders them as cheap instances."}
+      tech_art: {why: "Instancing is the core of cheap large scenes. Foliage Mode is the easiest way to see it work.", do: "Turn on Enable Density Scaling for your rock type and run foliage.DensityScale 0.5 to watch half of the instances disappear."}
+      level_design: {why: "Rocks, debris and clutter are faster to paint than to place by hand."}
+      lookdev: {why: "Culling and fading of foliage need material support. Know the PerInstanceFadeAmount node."}
+
+  - id: TAQ47
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [textures, masks, channel-packing, materials, optimization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: Pack four masks into one texture
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-texture-masks-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/textures-in-unreal-engine"
+    checklist:
+      - "Open M_Chair from the Starter Content. Find the mask texture T_Chair_M and see how each channel (R, G, B, A) drives a different part of the chair."
+      - "In an image tool, paint four black-and-white masks for one of your own meshes. Put one mask in each channel and export one file as T_MyProp_Masks."
+      - "Import T_MyProp_Masks. In the Texture Editor, uncheck sRGB and set Compression Settings to Masks."
+      - "Create M_MyProp. Add a Texture Sample for the mask. Set its Sampler Type to Linear Color."
+      - "Use the R channel as a metal mask, the G channel as an emissive mask, and the B channel to Lerp between two Vector Parameters for color."
+      - "Make a Material Instance MI_MyProp_Red and change only the color parameters. Apply it to the mesh."
+    done_when: "Screenshot of the M_MyProp graph showing the one mask Texture Sample feeding Metallic, Emissive and a color Lerp, plus a viewport shot of MI_MyProp_Red on the mesh."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why does channel packing (putting masks in R, G, B and A of one texture) help performance?"
+        choices: ["It makes the masks sharper", "It reduces the number of texture samples the Material needs", "It removes the need for mipmaps", "It lets you use more than four masks per texture"]
+        answer_index: 1
+        explain: "The page says channel packing improves Material performance by reducing the number of texture samples the Material requires."
+      - q: "How many masks can one image file hold at most?"
+        choices: ["Two", "Three", "Four, one per RGBA channel", "As many as you want"]
+        answer_index: 2
+        explain: "You only have four channels (R, G, B, A) in an image file, so use each one wisely."
+      - q: "A mask has bad compression artifacts. Which channel does the page suggest trying first?"
+        choices: ["Red", "Blue", "Alpha", "Green"]
+        answer_index: 3
+        explain: "Because of a DirectX quirk, the green channel often gets the best compression. If that does not help, try the Alpha channel."
+      - q: "You turn off sRGB on a mask texture that a Material already samples. What happens?"
+        choices: ["Nothing; the Material updates by itself", "The Material fails to compile until you change the Sampler Type to Linear Color", "The mask turns black", "The texture loses its alpha channel"]
+        answer_index: 1
+        explain: "Existing Texture Sample nodes keep their old Sampler Type. The Material fails to compile and shows a message in the Stats log until you change the type from Color to Linear Color."
+      - q: "Why should masks not have sRGB enabled?"
+        choices: ["Masks should not be gamma corrected", "sRGB makes the texture larger on disk", "sRGB is only for normal maps", "sRGB disables the alpha channel"]
+        answer_index: 0
+        explain: "Masks are data, not color. The page says to uncheck sRGB because masks should not be gamma corrected, and this also helps sharpness."
+      - q: "What does the page say is a great way to get many variations from one mask setup?"
+        choices: ["Making a new Material for each color", "Importing a new mask for each color", "Combining texture masks with Material Instances", "Using a higher texture resolution"]
+        answer_index: 2
+        explain: "A mask defines which areas get a property, and Material Instances let artists change the color or value of that area without editing the graph."
+    flavors:
+      _default: {why: "One packed mask texture can replace three or four separate textures. That saves samples, memory and draw cost."}
+      tech_art: {why: "Packing rules are a pipeline decision. Your whole team must agree which channel holds which mask.", do: "Write a one-line packing standard for your project, for example R=Metallic, G=Roughness, B=AO, A=Emissive."}
+      lookdev: {why: "Masks and instances give you many looks from one graph."}
+
+  - id: TAQ48
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, uvs, animation, panner, vfx]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Make UVs move
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animating-uv-coordinates-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coordinates-material-expressions-in-unreal-engine"
+    checklist:
+      - "Create M_Flow. Drag the Starter Content texture T_Fire_Tiled_D into the graph."
+      - "Hold P and left-click to add a Panner. Connect its output to the UVs of the Texture Sample. Set Speed X to 0.1 and watch the preview move."
+      - "Add Scalar Parameters named Tiling, SpeedX and SpeedY. Use a TextureCoordinate multiplied by Tiling as the Panner Coordinate input, and the speed parameters for the pan speed."
+      - "Select all nodes, press Ctrl+D to duplicate them. Give the copy a different speed and scale, and plug it into Emissive Color."
+      - "Add a Rotator to a second Texture Sample. Set CenterX and CenterY to 0.5 and give it a small Speed."
+      - "Make MI_Flow_Fast from M_Flow and change only the speed parameters. Apply it to a plane in the level."
+    done_when: "Screenshot of the M_Flow graph with Panner, Rotator and the three parameters visible, plus a short note of which speed values you used in MI_Flow_Fast."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What are the two inputs of the Panner node?"
+        choices: ["Coordinates and Time", "Speed and Direction", "UV and Texture", "Offset and Scale"]
+        answer_index: 0
+        explain: "The Panner takes Coordinates (base UVs to modify) and Time (a value that sets the current pan position)."
+      - q: "What is usually connected to the Time input, and what else can you use there?"
+        choices: ["A Texture Sample; nothing else works", "A Time expression for constant motion; a Constant or Scalar Parameter to set an offset or drive it from Blueprint", "A Panner; a Rotator", "A Constant only"]
+        answer_index: 1
+        explain: "The page says Time is usually a Time expression for constant panning, but a Constant or Scalar Parameter can also set a specific offset or control the panning through Blueprints."
+      - q: "Which hotkey drops a Panner node when you hold it and left-click in the graph?"
+        choices: ["U", "T", "P", "M"]
+        answer_index: 2
+        explain: "Hold P and left-click to insert a Panner at the mouse pointer."
+      - q: "What does the Fractional Part option on the Panner do?"
+        choices: ["Halves the pan speed", "Outputs only the fractional part of the pan, a value from 0 up to (but not including) 1, for greater precision", "Pans only in the U direction", "Rounds the UVs to whole numbers"]
+        answer_index: 1
+        explain: "Fractional Part outputs only the fractional part of the pan calculation for more precision. The output is greater than or equal to 0 and less than 1."
+      - q: "On what kind of mesh does UV animation work best?"
+        choices: ["Meshes with many UV seams", "Meshes with no UVs", "Meshes with contiguous (unbroken) UVs", "Meshes with two UV channels"]
+        answer_index: 2
+        explain: "Any gaps or seams in the UVs show when the UVs move, so panning works best on contiguous UV layouts."
+      - q: "What do CenterX and CenterY set on a Rotator node?"
+        choices: ["The rotation speed", "The pan direction", "The texture tiling", "The U and V coordinate used as the center of rotation"]
+        answer_index: 3
+        explain: "CenterX is the U coordinate and CenterY is the V coordinate that the Rotator turns around. Speed sets how fast it rotates clockwise."
+    flavors:
+      _default: {why: "Moving UVs are the cheapest way to add motion. Water, fire, smoke and holograms all start here."}
+      tech_art: {why: "Panner and Rotator cost almost nothing, so they are your first tool for motion before you reach for Niagara or flipbooks.", do: "Expose the speed as a parameter and drive it from a Blueprint with a Dynamic Material Instance."}
+      cinematics: {why: "A panning material can sell a moving river or screen without any animation work."}
+
+  - id: TAQ49
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, blend-modes, shading-models, two-sided, optimization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Blend modes and two-sided
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-blend-modes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-material-properties"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/shading-models-in-unreal-engine"
+    checklist:
+      - "Place a wall and a sphere in front of it. Create M_BlendTest with a texture in Base Color and a black-and-white stripe texture ready."
+      - "Set Blend Mode to Masked. Plug the stripes into Opacity Mask. Change Opacity Mask Clip Value and watch which stripes disappear."
+      - "Turn on Two Sided. Look inside the sphere and note the change."
+      - "Duplicate the material as M_BlendTest_Trans. Set Blend Mode to Translucent, plug a gradient into Opacity, and note that reflections are gone."
+      - "Make two more copies with Additive and Modulate. Put all four spheres in a row in front of the wall."
+      - "Write down for each blend mode: does it support lighting, and what happens where two spheres overlap."
+    done_when: "One screenshot of the four spheres in front of the wall, labeled with their blend mode, plus your lighting notes."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "In Masked mode, what decides if a pixel is drawn?"
+        choices: ["The pixel is drawn if Opacity Mask is greater than the Opacity Mask Clip Value", "The pixel is drawn if Base Color is not black", "The pixel is drawn if Opacity is above 0.5", "All pixels are drawn, then blended"]
+        answer_index: 0
+        explain: "Masked: Final color = Source color if OpacityMask > OpacityMaskClipValue; otherwise the pixel is discarded."
+      - q: "Why can Masked be cheaper than Translucent for a chain-link fence?"
+        choices: ["Masked materials use fewer textures", "Masked pixels that are culled are not calculated at all, so the GPU does less work", "Translucent materials cannot use textures", "Masked materials skip the vertex shader"]
+        answer_index: 1
+        explain: "Culled pixels in Masked mode simply do not draw and are not calculated, which gives performance savings on the GPU."
+      - q: "Which statement about Translucent materials is correct per the docs?"
+        choices: ["They support dynamic lighting fully", "They are always cheaper than Opaque", "They ignore the Opacity input", "They do not currently support specularity, so you see no reflections on the surface"]
+        answer_index: 3
+        explain: "Translucent Blend Mode does not support specularity. Reflections can only be faked, for example with a cubemap added to Base Color."
+      - q: "An Additive effect is hard to see on a bright sky. What does the page suggest?"
+        choices: ["Switch to Modulate", "Turn on Two Sided", "Use the AlphaComposite blend mode instead", "Raise the Opacity Mask Clip Value"]
+        answer_index: 2
+        explain: "Additive materials are often hard to see against light backgrounds. AlphaComposite can improve saturation and visibility in bright scenes."
+      - q: "What does Two Sided do, and what is its known limit?"
+        choices: ["It doubles the polygons; it costs twice as much", "It flips the normal on back faces so both sides are lit; it does not work correctly with static lighting", "It makes the material translucent; it needs Opacity", "It mirrors the UVs; it breaks normal maps"]
+        answer_index: 1
+        explain: "Two Sided flips the normal on back faces so lighting is calculated for both sides. With static lighting both sides are shaded the same, because the mesh has only one lightmap UV set."
+      - q: "Which advanced property saves several instructions and one sampler?"
+        choices: ["Fully Rough", "Disable Depth Test", "Dithered LOD Transition", "Cast Ray Traced Shadows"]
+        answer_index: 0
+        explain: "Fully Rough forces the material to be completely rough, which saves a number of material instructions and one sampler. Disable Depth Test makes rendering significantly slower."
+    flavors:
+      _default: {why: "Blend mode and shading model decide what a material can do and what it costs before you add a single node."}
+      tech_art: {why: "Translucency and two-sided are the most common hidden costs in a scene. Knowing when Masked is enough saves frames.", do: "List every Translucent material in your test level and mark which could be Masked instead."}
+      lookdev: {why: "Glass, foliage and fences each need a different blend mode to look right."}
+
+  - id: TAQ50
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, profiling, shader-complexity, optimization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Read the Stats panel
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-material-editor-ui"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/essential-unreal-engine-material-concepts"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-modes-in-unreal-engine"
+    checklist:
+      - "Open a material with several texture samples, for example M_Chair from the Starter Content. Open the Stats panel from the Window menu if it is hidden."
+      - "Write down the instruction count and the number of texture samplers."
+      - "Add three unconnected Texture Sample nodes. Check the Stats panel again. Then use the toolbar Clean Up button to remove unconnected nodes."
+      - "Open Window > Platform Stats and compare the cost for two different renderers."
+      - "Open Window > Shader Code > HLSL Code and find where one of your texture samples appears in the generated code."
+      - "In the level viewport, press Alt+8 (Shader Complexity). Find the most red object, open its material, remove or simplify one expensive part, and compare the color again."
+    done_when: "Two screenshots of the Stats panel (before and after your change) with the instruction counts visible, plus a Shader Complexity screenshot of the object you improved."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Stats panel show?"
+        choices: ["The number of shader instructions and any compiler errors", "Frame rate and memory use of the level", "The list of Material Instances", "The texture memory per texture"]
+        answer_index: 0
+        explain: "The Stats panel shows the number of shader instructions in the Material and any compiler errors. Fewer instructions means a less costly Material."
+      - q: "You add ten nodes that are not connected to the Main Material Node. What happens to the instruction count?"
+        choices: ["It goes up by ten", "It doubles", "It does not change, because unconnected nodes do not contribute to the cost", "It goes down"]
+        answer_index: 2
+        explain: "Material expression nodes that are not connected to the base Material node do not contribute to the instruction count."
+      - q: "Where can you see the cost of a material for different platforms?"
+        choices: ["The Palette panel", "The Platform Stats window", "The Details panel", "The Preview Scene Settings"]
+        answer_index: 1
+        explain: "Platform Stats shows the Material cost per platform. You pick the renderer in its Settings option. Android stats need the Mali Offline Compiler installed."
+      - q: "Can you edit the HLSL code shown in the HLSL Code panel?"
+        choices: ["Yes, and it recompiles automatically", "Yes, but only for SM6", "No, it is a read-only viewer of the generated code", "Only in a packaged build"]
+        answer_index: 2
+        explain: "The HLSL Code panel is a viewer, not an editor. You can look at the generated code but cannot change it."
+      - q: "Which is the hotkey and console command for the Shader Complexity view mode?"
+        choices: ["Alt+5 and viewmode lit", "Alt+8 and viewmode shadercomplexity", "Alt+0 and viewmode lightmapdensity", "F1 and stat gpu"]
+        answer_index: 1
+        explain: "Shader Complexity uses Alt+8 or the console command viewmode shadercomplexity. Alt+0 is Lightmap Density."
+      - q: "Why can Shader Complexity be misleading?"
+        choices: ["It only counts instructions, and 16 texture lookups are much slower than 16 math instructions", "It only works on mobile", "It ignores translucent objects", "It shows draw calls, not shader cost"]
+        answer_index: 0
+        explain: "Only instruction count is used. A shader with 16 texture lookups is much slower than one with 16 math instructions, and loops that are not unrolled are also not shown correctly."
+    flavors:
+      _default: {why: "You cannot make a material cheaper if you cannot measure it. The Stats panel is the first number to read."}
+      tech_art: {why: "Instruction count and sampler count are what you will quote in a material budget.", do: "Note the default MaxPixelShaderAdditiveComplexityCount (2000) and explain in one line what changing it in DefaultEngine.ini would do to the view."}
+      gameplay_design: {why: "A quick look at Shader Complexity tells you if a level is heavy before anyone profiles it."}
+
+  - id: TAQ51
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, material-editor, organization, workflow]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: "Clean graphs: comments, reroutes, named reroutes"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/organizing-a-material-graph-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/placing-material-expressions-and-functions-in-unreal-engine"
+    checklist:
+      - "Open a messy material of your own, or duplicate M_Chair as M_Chair_Clean."
+      - "Select each group of related nodes and press C to make a comment box. Name each box and give it a color in the Details panel."
+      - "Add a comment bubble to one node and pin it so it stays readable when you zoom out."
+      - "Double-click a long wire to add a Reroute node. Drag it to route the wire around other nodes."
+      - "Right-click a reroute and choose Convert to Named Reroute. Give the Declaration a clear name, for example GlobalUVs. Add a second Usage node from the right-click menu."
+      - "Use Align Left and Distribute Vertically on one column of nodes. Collapse one repetitive node group and rename the collapsed node."
+    done_when: "Before and after screenshots of the whole graph. The after image must show at least two comment boxes, one Named Reroute and one collapsed node."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "How do you make a comment box around selected nodes?"
+        choices: ["Press C", "Press Ctrl+G", "Right-click and choose Collapse Nodes", "Press Q"]
+        answer_index: 0
+        explain: "Select the nodes and press the C key to create a comment box around them, then type a name in the header."
+      - q: "Where does text typed into a node's Comment Bubble also appear?"
+        choices: ["In the Stats panel", "In the Desc field of the node's Details panel", "In the Palette", "In the HLSL code"]
+        answer_index: 1
+        explain: "Anything you type in the Comment Bubble also appears in the Desc field in the Details panel and stays visible even when the bubble is hidden."
+      - q: "How do you add a Reroute node to a wire?"
+        choices: ["Hold R and click the wire", "Drag the wire into the Palette", "Double-click anywhere along the wire", "Alt+click the wire"]
+        answer_index: 2
+        explain: "Double-click along a wire to add a Reroute node. Alt+click on a wire deletes the connection instead."
+      - q: "What is the most important thing to do with a Named Reroute Declaration node?"
+        choices: ["Connect it to Base Color", "Give it a unique, descriptive name in the Details panel", "Collapse it", "Set its color to red"]
+        answer_index: 1
+        explain: "The page says it is extremely important to give the Declaration node a unique, descriptive name, because Usage nodes are found by that name."
+      - q: "Which shortcut straightens the wire between two nodes?"
+        choices: ["Shift+A", "Shift+W", "Q", "Ctrl+D"]
+        answer_index: 2
+        explain: "Q straightens the connection so it is horizontal. Shift+A is Align Left and Shift+W is Align Top."
+      - q: "You double-click a collapsed node. What happens?"
+        choices: ["The nodes are expanded back into the main graph", "The node is deleted", "A sub-graph opens in the same Material Editor tab, and the breadcrumb takes you back", "A new Material Function asset is created"]
+        answer_index: 2
+        explain: "Double-click opens the contents as a sub-graph in the same tab. Click Material Graph in the breadcrumb to return. Expand Node in the right-click menu restores the nodes."
+    flavors:
+      _default: {why: "A material is read many more times than it is written. A clean graph saves everyone time later."}
+      tech_art: {why: "You hand materials to other artists. Comments and named reroutes are how a master material stays maintainable.", do: "Agree a comment color code for your team, for example blue = inputs, green = math, orange = outputs."}
+      lookdev: {why: "You will edit master materials others made. Learn to read and keep their structure."}
+
+  - id: TAQ52
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, main-material-node, pbr, material-inputs]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: The Main Material Node
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-main-material-node-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-inputs-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/essential-unreal-engine-material-concepts"
+    checklist:
+      - "Create M_Pins. Click the graph background so the Main Material Node properties show in Details."
+      - "Plug a Constant3Vector (1,0,0) into Base Color. Then plug Constants 0, 0.5 and 0.5 into Metallic, Specular and Roughness and confirm the preview does not change."
+      - "Change Roughness to 0.07 and note the difference. Change Metallic to 1 and note the difference."
+      - "Switch Blend Mode to Translucent, then to Masked, then back to Opaque. Write down which pins turn white or gray each time."
+      - "Switch Shading Model to Clear Coat and then to Unlit. Note which extra pins appear or disappear."
+      - "Leave a Constant connected to Opacity while in Opaque mode. Compile and confirm it has no effect."
+    done_when: "A short table with the pins that are enabled for Opaque/Default Lit, Translucent, Masked and Clear Coat, plus a screenshot of your M_Pins graph."
+    xp: 55
+    verify_type: writeup
+    quiz:
+      - q: "Nothing is plugged into Metallic, Specular or Roughness. What values does the material use?"
+        choices: ["Metallic 0, Specular 0.5, Roughness 0.5", "All three are 0", "All three are 1", "Metallic 1, Specular 0, Roughness 0.5"]
+        answer_index: 0
+        explain: "Unconnected inputs use their defaults: Metallic 0 (non-metal), Specular 0.5 and Roughness 0.5."
+      - q: "Which three properties decide which pins on the Main Material Node are enabled?"
+        choices: ["Two Sided, Fully Rough, Wire Frame", "Material Domain, Blend Mode, Shading Model", "Opacity, Normal, Base Color", "Physical Material, Usage, Mobile"]
+        answer_index: 1
+        explain: "Material Domain, Blend Mode and Shading Model control which inputs are enabled (white) or disabled (gray)."
+      - q: "A node is still connected to a pin that became disabled after you changed the Blend Mode. What happens?"
+        choices: ["The material fails to compile", "The node is deleted automatically", "The pin is forced back on", "The node is ignored; it does not affect the compiled material"]
+        answer_index: 3
+        explain: "Nodes stay connected to disabled inputs but are ignored when the Material compiles. The wire and pin are grayed out."
+      - q: "What does the default Specular value of 0.5 mean?"
+        choices: ["50% reflectivity", "No reflection at all", "About 4% reflectivity", "A mirror surface"]
+        answer_index: 2
+        explain: "The Material Inputs page says the default of 0.5 represents approximately 4% reflectivity."
+      - q: "You use World Position Offset to push vertices far outside the mesh. What problem does the page warn about?"
+        choices: ["The material becomes translucent", "The renderer still uses the original bounds, so you may get culling and shadow errors", "The normal map stops working", "The instruction count drops"]
+        answer_index: 1
+        explain: "The renderer keeps the original bounds. You may see culling and shadowing errors, and can raise the mesh's Scale Bounds at some performance cost."
+      - q: "When is the Ambient Occlusion input silently ignored?"
+        choices: ["When the material is Two Sided", "When the material uses a normal map", "When the material is used with Movable light sources", "When Roughness is 1"]
+        answer_index: 2
+        explain: "The Ambient Occlusion input needs built lighting from Static or Stationary lights. With Movable lights it is ignored."
+    flavors:
+      _default: {why: "Every material ends at this node. If you know each pin, you know what a surface can and cannot do."}
+      tech_art: {why: "Wrong default values and ignored pins are the source of many 'why does it look flat' bugs.", do: "Try the Shading Model input with From Material Expression and switch between Default Lit and Clear Coat using a mask."}
+      lookdev: {why: "Roughness, Metallic and Specular defaults decide the look of every material you have not finished yet."}
+
+  - id: TAQ53
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [materials, material-editor, preview, workflow]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Preview and apply
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/previewing-and-applying-your-materials-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-material-editor-ui"
+    checklist:
+      - "Open a material with a Fresnel node, or add one to M_Preview. Right-click the Fresnel and choose Start Previewing Node. Then stop previewing it."
+      - "Cycle the preview shape between cylinder, sphere, plane and cube. Then select one of your Static Meshes in the Content Browser and click the teapot icon to preview on it."
+      - "Open Window > Preview Scene Settings. Change the light direction, intensity and the background. Hold L and drag in the viewport to rotate the light."
+      - "Click Apply, then Save. Drag the material from the Content Browser onto an actor in the level."
+      - "Select a second actor. In its Details panel, Materials section, use the Use Selected Asset from Content Browser button to apply the same material to one material slot."
+      - "Add a Vector Parameter to the material. With the material applied in the level, change the parameter value inside the Material Editor and watch the level viewport update without a recompile."
+    done_when: "Screenshot of the Material Editor previewing on your custom mesh with changed Preview Scene Settings, plus a level screenshot with the material on two actors."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Is the Realtime preview on by default, and where do you toggle it?"
+        choices: ["Off by default; toggle in Details", "On by default; toggle in the Viewport Options menu", "Off by default; toggle with Enter", "On by default; toggle in Project Settings"]
+        answer_index: 1
+        explain: "Realtime is enabled by default. You can turn it on and off from the Viewport Options menu of the viewport."
+      - q: "How do you preview one node on its own in the viewport?"
+        choices: ["Double-click the node", "Drag the node into the viewport", "Press Spacebar", "Right-click the node and choose Start Previewing Node"]
+        answer_index: 3
+        explain: "Right-click a node and choose Start Previewing Node. The node turns blue. Use Stop Previewing Node to stop."
+      - q: "How do you preview the material on your own Static Mesh?"
+        choices: ["Select the Static Mesh in the Content Browser, then click the teapot icon in the viewport", "Import the mesh into the material", "Set Material Domain to Custom", "Drag the mesh into the graph"]
+        answer_index: 0
+        explain: "Select any Static Mesh in the Content Browser and click the teapot icon in the bottom right of the viewport. The preview mesh is saved with the material."
+      - q: "Before a material can be applied and seen in the level, what must happen?"
+        choices: ["It must be compiled with Apply or Save", "It must have a Material Instance", "It must be in the Engine folder", "Its preview mesh must be a cube"]
+        answer_index: 0
+        explain: "Changes are not visible in the level until the material is compiled. Click Apply or Save in the toolbar."
+      - q: "Which two ways to apply a material to an object does the page describe?"
+        choices: ["Copy and paste; Ctrl+S", "Drag-and-drop from the Content Browser; the Use Selected Asset from Content Browser button in the Details panel", "Add to the level Blueprint; use a Material Function", "Merge Actors; Reference Viewer"]
+        answer_index: 1
+        explain: "You can drag a material onto an object in the level, or select the material, select the actor, and click Use Selected Asset from Content Browser in the Materials section of Details."
+      - q: "You change a value in the Material Editor and want to see it in the level right away with no recompile. What must the value be?"
+        choices: ["A Constant node", "A Texture Sample", "A Scalar or Vector Parameter", "A Static Switch"]
+        answer_index: 2
+        explain: "Only Scalar and Vector Parameters can be previewed in the level without recompiling. Constant nodes do not work this way."
+    flavors:
+      _default: {why: "Fast previewing is how you iterate. Knowing the viewport tools saves many compile waits."}
+      tech_art: {why: "Previewing single nodes and parameters is how you debug a graph without recompiling the whole thing.", do: "Time one full compile of a big master material and one parameter change. Note the difference for your team."}
+      cinematics: {why: "Preview Scene Settings let you check a material under the lighting of your shot before you set it up."}
+
+  - id: TAQ54
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [textures, texture-groups, lod-bias, mips, streaming, memory]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: Texture groups and mip bias
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-format-support-and-settings-in-unreal-engine"
+    checklist:
+      - "Open a 2048 texture, for example T_Test_2k, in the Texture Asset Editor. Write down Imported, Max In-Game, Combined LOD Bias, Number of Mips and Method (streamed or not)."
+      - "Enable the Mip Level selector in the toolbar and step through the mips. Note how Displayed size changes."
+      - "Set Maximum Texture Size to 1024. Note the new Max In-Game value. Set it back to 0."
+      - "Set LOD Bias to -1 and then to 2. Note Combined LOD Bias and Max In-Game each time."
+      - "Change the Texture Group to UI and then to World. Check the Filter and Number of Mips."
+      - "Enable Never Stream and check the Method field. Then set Mip Gen Settings to NoMipMaps and see what happens to Number of Mips."
+    done_when: "A short table with Max In-Game, Combined LOD Bias, Number of Mips and Method for each setting you tried, plus one screenshot of the Texture Editor Details panel."
+    xp: 55
+    verify_type: writeup
+    quiz:
+      - q: "What does Max In-Game show?"
+        choices: ["The size of the imported source file", "The largest size the texture can be in-game; never larger than the import, but maybe smaller due to settings", "The size of the smallest mip", "The size on disk"]
+        answer_index: 1
+        explain: "Max In-Game is the maximum size the texture can have in-game. It is never bigger than the imported size but can be smaller because of settings like LOD Bias."
+      - q: "Maximum Texture Size is set to 0. What does that mean?"
+        choices: ["The texture is not rendered", "The texture is 1x1", "The maximum size for the format on each platform is used", "The texture is limited to 1024"]
+        answer_index: 2
+        explain: "A Maximum Texture Size of 0 means the maximum size allowed for the format on each platform."
+      - q: "The Texture Group has LODBias 1 and the texture's own LOD Bias is -1. What is the final LOD Bias?"
+        choices: ["2", "1", "-1", "0"]
+        answer_index: 3
+        explain: "The texture LOD Bias is added to the group value and can be negative: 1 + (-1) = 0."
+      - q: "In what order are LOD Bias and the group's Min/Max LOD Size applied?"
+        choices: ["Min/Max first, then bias", "Bias first, then the result is clamped to the group's MinLODSize and MaxLODSize", "Only the bias is used", "Only Min/Max are used"]
+        answer_index: 1
+        explain: "The final LOD Bias is calculated first. Then the chosen mip is checked against the TextureGroup's Min/Max LODSize range and adjusted if needed."
+      - q: "A group has MaxLODSize 1024 and you ship 2048 textures in it. What does the page say?"
+        choices: ["They render at 2048 anyway", "Package size grows with no rendering quality benefit", "The editor blocks the import", "They lose their mips"]
+        answer_index: 1
+        explain: "Textures above the group's MaxLODSize never render larger than that size, so shipping them only increases package size with no quality gain."
+      - q: "NumStreamedMips for a group is set to 0. What happens?"
+        choices: ["No mips stream; textures in that group are always fully loaded", "All mips stream", "The textures have no mips", "Only the top mip loads"]
+        answer_index: 0
+        explain: "NumStreamedMips 0 means no mips are streamed and the textures are always fully loaded. The default -1 lets all mips stream."
+    flavors:
+      _default: {why: "Groups and bias let you shrink hundreds of textures with one setting instead of reimporting."}
+      tech_art: {why: "Texture groups in DefaultDeviceProfiles.ini are the lever you pull for a whole platform.", do: "Find TextureLODGroups in your project's DefaultDeviceProfiles.ini and note the MaxLODSize for the World group."}
+      lookdev: {why: "If your texture looks blurry in-game, LOD Bias or the group's MaxLODSize is usually why."}
+
+  - id: TAQ55
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, sprites]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Sparks
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-smoke-effect-using-sprite-particles-in-niagara-for-unreal-engine"
+    checklist:
+      - "Duplicate the FX_Smoke emitter from the sprite smoke quest, move it to a new folder and rename it FX_Sparks_Smoke. Right-click it and choose Create Niagara System. Name the system SparksSystem and drag it into your level."
+      - "In FX_Sparks_Smoke, set Emitter State > Life Cycle Mode to System and Spawn Rate to 20. In Initialize Particle make the lifetime random (2 to 3) and the color dark gray (0.3). Make Add Velocity mostly upward (Z 25 to 35) and set the Shape Location sphere radius to 5."
+      - "In Particle Update of the smoke emitter, turn off Scale RGB in Scale Color and give Scale Alpha the Smooth Ramp Down shape. Set Acceleration Force to Z 20."
+      - "Add a second emitter from the Simple Sprite Burst template and name it FX_SparkBurst. In Render, set the material to M_Spark. Delete Sprite Burst Instantaneous, set Life Cycle Mode to System, add Spawn Rate 50, set Lifetime to 0.2 and set Scale Color RGB to 2, 6, 25."
+      - "Add a third Simple Sprite Burst emitter named FX_Sparks_Radial. Set the material to M_Radial_Gradient and Alignment to Velocity Aligned. Use Spawn Rate 500, a random lifetime (0.2 to 0.7) and Add Velocity with a random range where Z goes from 300 to 500."
+      - "In Particle Update of FX_Sparks_Radial add Gravity Force (Z -4500), Drag (1.7) and Collision (Restitution 0.4, Friction 0.2). Remove Scale Color and add Scale Sprite Size by Speed with a Velocity Threshold of 2000."
+      - "Look at the effect in the level and adjust one value you do not like (for example the gravity or the radial spawn rate)."
+    done_when: "One screenshot of the Niagara System Overview showing all three emitters (FX_Sparks_Smoke, FX_SparkBurst, FX_Sparks_Radial) and one screenshot of the sparks in your level with sparks bouncing on the floor."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Why does the tutorial start the smoke part of the sparks effect from a copy of FX_Smoke instead of a template?"
+        choices: ["Templates cannot be used twice in one project", "Systems and emitters are independent, so you can build a system from an emitter you already made", "A copy runs on the GPU and a template does not", "Only copied emitters can use the M_smoke_subUV material"]
+        answer_index: 1
+        explain: "Emitters and systems are separate assets. Epic recommends building systems from existing emitters or templates, so a copy of FX_Smoke is a quick start."
+      - q: "The radial sparks should look like thin lines that follow their direction of movement. Which renderer setting does the tutorial change for this?"
+        choices: ["Sub Image Size to 8 by 8", "Sort Mode to View Depth", "Alignment to Velocity Aligned", "Material to M_Spark"]
+        answer_index: 2
+        explain: "In the Sprite Renderer of FX_Sparks_Radial the Alignment is set to Velocity Aligned, so the sprites line up with the particle velocity."
+      - q: "Which two modules make the radial sparks fall fast and slow down in the air?"
+        choices: ["Acceleration Force and Curl Noise Force", "Gravity Force (Z -4500) and Drag (1.7)", "Point Attraction Force and Vortex Force", "Scale Velocity and Kill Particles"]
+        answer_index: 1
+        explain: "The tutorial adds Gravity Force with Z set to -4500 and a Drag module set to 1.7 in Particle Update of the radial emitter."
+      - q: "Sparks that hit the floor should bounce back. Which module and setting control how strong the bounce is?"
+        choices: ["Collision module, Restitution value", "Solve Forces and Velocity, Bounce value", "Shape Location, Sphere Radius", "Emitter State, Loop Behavior"]
+        answer_index: 0
+        explain: "The Collision module handles hits with the world. Under Bounce, Restitution (0.4 in the tutorial) sets how much energy the bounce keeps."
+      - q: "The Simple Sprite Burst template has Life Cycle Mode set to Self. Why does the tutorial change it to System?"
+        choices: ["Self mode only works for mesh particles", "The system then calculates the life cycle, which usually optimizes performance", "Self mode disables the Spawn Rate module", "System mode is required for Velocity Aligned sprites"]
+        answer_index: 1
+        explain: "System mode lets the system calculate life cycle settings, which usually optimizes performance. By default the system loops forever every 5 seconds."
+      - q: "The fast radial sparks should stretch when they move fast. Which module does the tutorial add for this after removing Scale Color?"
+        choices: ["Scale Sprite Size by Speed", "Sprite Rotation Rate", "SubUV Animation", "Scale Color by Speed"]
+        answer_index: 0
+        explain: "Scale Sprite Size by Speed scales the sprite by particle speed. The tutorial sets a Y range of 3 to 6 and a Velocity Threshold of 2000."
+    flavors:
+      _default: {why: "A real spark effect is three emitters working together, not one."}
+      tech_art: {why: "This is the standard way to layer emitters into one system, which you will do in every production effect.", do: "Turn the spark color into a User Parameter so a designer can change it from the level."}
+
+  - id: TAQ56
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, sprites]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Sprite smoke
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-smoke-effect-using-sprite-particles-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/tutorials-for-niagara-effects-in-unreal-engine"
+    checklist:
+      - "Make sure your project has the Starter Content (it holds M_smoke_subUV). Make a folder for the effect, for example NiagaraFX/SpriteEffect."
+      - "Right-click in the Content Browser, choose FX > Niagara System, pick New system from selected emitters and add the Simple Sprite Burst template. Name the system SmokeSystem and rename the emitter to FX_Smoke."
+      - "In the Sprite Renderer set the material to M_smoke_subUV, Sub Image Size to 8 by 8 and turn on Sub UV Blending. Drag SmokeSystem into your level."
+      - "In Emitter Update delete Spawn Burst Instantaneous, add Spawn Rate and set it to 50. In Emitter State set Life Cycle Mode to Self and Loop Behavior to Infinite."
+      - "In Initialize Particle set a random lifetime (2 to 3), a random uniform sprite size (75 to 200) and a random sprite rotation (Direct Normalized Angle, 0.25 to 0.5). Add Add Velocity with a random range (Z 50 to 200) and Shape Location with a sphere of radius 64."
+      - "Add a SubUV Animation module, set the mode to Linear, Start Frame 0 and End Frame 63. In Particle Update add Acceleration Force with Z 500."
+      - "Click the Gear icon on the emitter and choose Create Asset From This so FX_Smoke becomes its own emitter asset. Save everything."
+    done_when: "Screenshot of the Niagara Editor with the FX_Smoke stack open (Spawn Rate, SubUV Animation and Acceleration Force visible) and a screenshot of the smoke column in your level. Also show the FX_Smoke emitter asset in the Content Browser."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is a sprite in Niagara?"
+        choices: ["A 2D plane that always faces the camera and shows a texture or material", "A small static mesh", "A light that follows a particle", "A sound attached to a particle"]
+        answer_index: 0
+        explain: "Sprites are 2D camera-facing planes. The renderer draws a texture or material on them."
+      - q: "Why does the tutorial set Sub Image Size to X 8, Y 8 in the Sprite Renderer?"
+        choices: ["It sets the size of each sprite in centimeters", "M_smoke_subUV is a sprite sheet, so the renderer must know how many images are in the grid", "It sets how many particles spawn per second", "It limits the effect to 8 emitters"]
+        answer_index: 1
+        explain: "The material uses a SubUV sprite sheet with an 8 by 8 grid of images. The renderer needs that grid size to pick the right image."
+      - q: "The tutorial deletes Spawn Burst Instantaneous and adds Spawn Rate. What is the reason?"
+        choices: ["Spawn Burst only works on the GPU", "Spawn Rate is needed for SubUV materials", "The goal is a constant column of smoke, not one burst", "Spawn Burst cannot be used with Shape Location"]
+        answer_index: 2
+        explain: "A burst spawns everything at once. Spawn Rate (50 per second here) gives a steady column of smoke."
+      - q: "Without the SubUV Animation module, what happens to the smoke sprite sheet?"
+        choices: ["The particles are invisible", "All 64 images show at the same time", "The material turns black", "The renderer only shows the first image of the sheet"]
+        answer_index: 3
+        explain: "If nothing plays the sheet, the renderer uses only the first sprite. SubUV Animation with Linear mode from frame 0 to 63 plays all 64 images."
+      - q: "Which module makes the smoke rise over time, and in which group is it?"
+        choices: ["Add Velocity in Particle Spawn", "Acceleration Force in Particle Update", "Spawn Rate in Emitter Update", "Shape Location in Particle Spawn"]
+        answer_index: 1
+        explain: "Add Velocity only gives a start push. Acceleration Force (Z 500) in Particle Update keeps pushing the smoke up every frame."
+      - q: "How do you save the FX_Smoke emitter so other systems can reuse it?"
+        choices: ["Right-click the system and choose Export", "Drag the emitter into the level", "Click the Gear icon on the emitter and choose Create Asset From This", "Save the level"]
+        answer_index: 2
+        explain: "The Emitter Settings menu (Gear icon) has Create Asset From This, which makes an independent Niagara Emitter asset."
+    flavors:
+      _default: {why: "Sprites with a sprite sheet are the most common particle type you will see."}
+      tech_art: {why: "Sub UV setup and the spawn group vs update group split are the base of almost every Niagara effect.", do: "Make your own 4 by 4 sprite sheet material and swap it in, updating Sub Image Size and End Frame to match."}
+
+  - id: TAQ57
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, sprites]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Steam
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-steam-effect-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-smoke-effect-using-sprite-particles-in-niagara-for-unreal-engine"
+    checklist:
+      - "Right-click the FX_Smoke emitter asset from the sprite smoke quest and choose Duplicate Emitter. Move the copy to a new folder and rename it FX_Steam."
+      - "Right-click FX_Steam and choose Create Niagara System. Name the system Steam and drag it into your level."
+      - "In Emitter Update set Emitter State > Life Cycle Mode to System and Spawn Rate to 30."
+      - "In Initialize Particle set the lifetime range to 3 to 7, the color to white (1, 1, 1) and the sprite size to 100 to 200. Set Add Velocity so it pushes sideways and up (X 16 to 32, Y -5 to 5, Z 35 to 50). Set the sphere radius to 20."
+      - "In Particle Update give Acceleration Force a random range (minimum X 25, Y -10, Z 15 and maximum X 55, Y 10, Z 25). In Scale Color pick the Pulse Out curve shape."
+      - "Add a Drag module. When the 'unmet dependencies' error appears, click Fix Issue. Set Drag to 0.8."
+    done_when: "Screenshot of the Steam system in your level next to a prop (for example a pipe or a cup) and a screenshot of the Particle Update group showing Acceleration Force, Scale Color and Drag in the correct order."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "What is the fastest way to get a system that contains an emitter asset you already have?"
+        choices: ["Right-click the emitter and choose Create Niagara System", "Drag the emitter into the level", "Open Project Settings > Niagara", "Rename the emitter with the System prefix"]
+        answer_index: 0
+        explain: "Right-click on the emitter asset and pick Create Niagara System. The new system already contains that emitter."
+      - q: "Why does the steam drift sideways instead of going straight up?"
+        choices: ["The sphere radius is 20", "Add Velocity and Acceleration Force both have positive X values", "Life Cycle Mode is set to System", "Scale Color uses Pulse Out"]
+        answer_index: 1
+        explain: "Add Velocity uses X 16 to 32 and Acceleration Force uses X 25 to 55, so the particles move along X as well as up."
+      - q: "You add Drag and see 'The module has unmet dependencies'. What happened and what do you click?"
+        choices: ["Drag needs a GPU emitter; click Convert", "Drag needs a material; click Assign", "Drag is not allowed in Particle Update; click Remove", "Drag was added below Solve Forces and Velocity; click Fix Issue to move it"]
+        answer_index: 3
+        explain: "New modules go to the bottom of the group, after Solve Forces and Velocity. Fix Issue moves Drag above it so the force is solved."
+      - q: "Which curve shape does the tutorial use in Scale Color for steam?"
+        choices: ["Smooth Ramp Down", "Ramp Up Down", "Pulse Out", "Linear Up"]
+        answer_index: 2
+        explain: "Scale Color gets the Pulse Out template, so the steam fades in and out over its life."
+      - q: "Compared with the smoke emitter it was copied from, how does steam get a longer life?"
+        choices: ["Spawn Rate is raised to 30", "Lifetime minimum and maximum are set to 3 and 7 in Initialize Particle", "Drag is set to 0.8", "Life Cycle Mode is set to System"]
+        answer_index: 1
+        explain: "The lifetime range is changed in Initialize Particle to 3 to 7 seconds, longer than the smoke range."
+      - q: "What does the Drag module do to the steam particles?"
+        choices: ["It slows them down", "It makes them bigger", "It changes their color", "It spawns more of them"]
+        answer_index: 0
+        explain: "Drag applies a slowing force. With 0.8 the steam loses speed as it rises."
+    flavors:
+      _default: {why: "Small changes to a copied emitter give a whole new effect."}
+      tech_art: {why: "Duplicating and re-tuning emitters is how you build a library fast.", do: "Make a second copy called FX_Mist with a very low Acceleration Force and compare the two side by side."}
+
+  - id: TAQ58
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, beams]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: A beam
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-beam-effect-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "Create a Niagara System from the Static Beam template. Name it BeamSystem, rename the emitter FX_Beam and drag the system into your level."
+      - "In Render, keep the Ribbon Renderer with DefaultRibbonMaterial and set Tessellation > Curve Tension to 0.5."
+      - "In Emitter Update give Loop Duration a Random Ranged Float from 0.1 to 0.2. In Beam Emitter Setup enable Absolute Start and Absolute End and turn on Use Beam Tangents (both tangents point up in Z). Set Spawn Burst Instantaneous to 35."
+      - "In Particle Spawn set Lifetime to 0.2. Keep the Spawn Beam module. In Beam Width choose the Ramp Up Down curve and set Scale Curve to 5."
+      - "In Particle Update add Jitter Position, then add Update Beam and drag it above Jitter Position. Set Jitter Delay to -0.01 and Jitter Amount to 15."
+      - "Optional: on Beam End make a New Dynamic Scratch Input with an Actor Component Interface, turn it into a user parameter named Beam_End, and pick a sphere named Sphere_BeamEnd as the Source Actor in the level."
+    done_when: "Screenshot of the lightning beam in your level and a screenshot of the Particle Update group showing Update Beam above Jitter Position. If you did the optional step, show the Override Parameters section with Sphere_BeamEnd."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which renderer draws a beam in Niagara?"
+        choices: ["Sprite Renderer", "Mesh Renderer", "Ribbon Renderer with beam modules", "Light Renderer"]
+        answer_index: 2
+        explain: "A beam is a ribbon. The Ribbon Renderer is used together with beam-specific modules such as Beam Emitter Setup."
+      - q: "What do you set in the Spawn Beam module?"
+        choices: ["The beam color", "Nothing, it only needs to be present", "The number of beams", "The material"]
+        answer_index: 1
+        explain: "Spawn Beam is the second beam-specific module. The tutorial says you do not need to change anything, it just has to be in the stack."
+      - q: "Why is the particle Lifetime set to a short 0.2?"
+        choices: ["To save memory", "Because ribbons cannot live longer", "To make the beam wider", "So the beam flickers like lightning"]
+        answer_index: 3
+        explain: "A short lifetime makes the beam appear and disappear quickly, which looks like flickering lightning."
+      - q: "You added Jitter Position but the beam does not crackle. What is missing?"
+        choices: ["A Light Renderer", "An Update Beam module placed above Jitter Position", "A higher Spawn Rate", "A Collision module"]
+        answer_index: 1
+        explain: "Jitter Position needs an Update Beam module, and Update Beam must sit above Jitter Position in the Particle Update stack."
+      - q: "Which renderer setting changes how spiky the lightning looks?"
+        choices: ["Curve Tension under Tessellation", "Sub Image Size", "Sort Mode", "Facing Mode"]
+        answer_index: 0
+        explain: "Curve Tension (0.5 in the tutorial) is in the Tessellation section of the Ribbon Renderer and controls how spiky the beam is."
+      - q: "How do you make the beam end follow an actor in the level without Blueprints?"
+        choices: ["Type the actor name in Beam End", "Use a Scratch Pad dynamic input with an Actor Component Interface, expose it as a user parameter and set the Source Actor in Override Parameters", "Set Life Cycle Mode to System", "Attach the actor to the Niagara component"]
+        answer_index: 1
+        explain: "The tutorial builds a scratch input that reads an actor transform, turns it into a user parameter (Beam_End), and picks the Source Actor in the Details panel."
+    flavors:
+      _default: {why: "Lasers, lightning and tesla coils all start with this beam setup."}
+      tech_art: {why: "Beams show you the ribbon renderer and the scratch pad, two tools you will use a lot.", do: "Bind Beam_End to a moving actor and record a short clip of the beam following it."}
+
+  - id: TAQ59
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, gpu]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: GPU sprites, thousands of them
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-gpu-sprite-effect-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "Create a Niagara System from the Simple Sprite Burst template. Name it GPUSprite, rename the emitter FX_GPUSprite and drag the system into your level."
+      - "In Emitter Settings > Emitter Properties set Sim Target to GPUComputeSim. Tick Fixed Bounds to clear the warning."
+      - "In Emitter Update set Life Cycle Mode to System, set the Spawn Burst Instantaneous count to 2500, and add Spawn Rate 500."
+      - "In Initialize Particle set Lifetime to 5 and Sprite Size to 5 by 5. Add a Sphere Location module."
+      - "In Particle Update add Scale Sprite Size (Non-Uniform, Scale Factor from Vector2D from Float, then Float from Curve with the Ramp Up Down shape)."
+      - "Add Curl Noise Force (Noise Strength 72, Noise Frequency 0.02) and Point Attraction Force (Attraction Strength 5.5, Attraction Radius 300, Falloff Exponent 0.6, Kill Radius 4 enabled)."
+      - "Add a Color module with Color from Curve and build a gradient with at least four color stops and an alpha that fades to 0 at the end."
+    done_when: "Screenshot of Emitter Properties showing Sim Target GPUComputeSim and Fixed Bounds ticked, plus a screenshot of the swirling particle ball in your level."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you switch an emitter from CPU to GPU simulation?"
+        choices: ["Render group > Sprite Renderer", "Emitter Settings > Emitter Properties > Sim Target", "Project Settings > Niagara", "Particle Update > Solve Forces and Velocity"]
+        answer_index: 1
+        explain: "Sim Target in Emitter Properties is set to GPUComputeSim to run the simulation on the GPU."
+      - q: "Why must you set Fixed Bounds for a GPU emitter?"
+        choices: ["The GPU has no memory for bounds", "Fixed Bounds enables the Spawn Rate module", "Fixed Bounds sets the particle color", "The system cannot read how big the effect is when the simulation runs on the GPU"]
+        answer_index: 3
+        explain: "With GPU simulation the system cannot read back the size of the effect, so you give it fixed bounds on the emitter or the system."
+      - q: "What is the difference between Spawn Burst Instantaneous and Spawn Rate in this effect?"
+        choices: ["Burst is GPU only, Rate is CPU only", "Burst makes 2500 particles at once at time 0, Rate makes a continuous 500 per second after that", "They do the same thing", "Rate is used only for ribbons"]
+        answer_index: 1
+        explain: "The burst gives a big group of particles at start. Spawn Rate then keeps a stream of 500 per second while the emitter is active."
+      - q: "In Curl Noise Force, what happens when you lower Noise Frequency?"
+        choices: ["The sphere of particles gets more warped", "The particles turn red", "Fewer particles spawn", "The particles stop moving"]
+        answer_index: 0
+        explain: "The tutorial says the smaller the Noise Frequency, the more the sphere of particle locations becomes warped."
+      - q: "What does Kill Radius do in Point Attraction Force?"
+        choices: ["It sets where particles are removed at the end of their life", "It sets the spawn sphere size", "It sets the color curve length", "It sets how many particles the GPU can hold"]
+        answer_index: 0
+        explain: "Kill Radius is the area where particles dissolve at the end of their life cycle. The tutorial sets it to 4."
+      - q: "When is a GPU sprite emitter the right choice?"
+        choices: ["Always, it is faster in every case", "Only for ribbon effects", "When you need tens of thousands of particles and the CPU would struggle", "Only when the effect uses collision"]
+        answer_index: 2
+        explain: "The guide is for effects that need tens of thousands of particles, where CPU simulation can cause performance problems."
+    flavors:
+      _default: {why: "Big particle counts need the GPU, and GPU emitters have rules."}
+      tech_art: {why: "Knowing when to move an emitter to GPUComputeSim and why bounds matter is a core optimization skill.", do: "Set Spawn Count to 25000 and compare stat fps between the GPU emitter and a CPU copy."}
+
+  - id: TAQ60
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [niagara, vfx, lighting]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Particles that cast light
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-particle-effects-that-emit-light-in-niagara-for-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "Create a Niagara System from the Fountain template. Name it ParticleLights, rename the emitter FX_ParticleLight and drag the system into a dark part of your level."
+      - "In Emitter Update set Life Cycle Mode to System and Spawn Rate to 500."
+      - "In Initialize Particle set a random lifetime (1.75 to 2.5), the color to R 0.1, G 0.3, B 50, and a random uniform sprite size (2.5 to 8). Set the Sphere Location radius to 15."
+      - "In Add Velocity in Cone set Velocity Strength to a random range of 300 to 600."
+      - "Keep Gravity Force and Drag at their defaults. Add a Collision module and click Fix Issue when the error appears."
+      - "In Render add a Light Renderer. Set Radius Scale to 5 and Color Add to X 0, Y 0, Z 15."
+    done_when: "Screenshot of the fountain in a dark area with blue light visible on the floor and walls, and a screenshot of the Render group showing both the Sprite Renderer and the Light Renderer."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "The tutorial sets the particle Blue value to 50. What does a color value above 1 do?"
+        choices: ["It makes the color emissive, so the particles glow", "It is clamped back to 1", "It turns the particle into a mesh", "It makes the particle transparent"]
+        answer_index: 0
+        explain: "The color picker normally works from 0 to 1. A value above 1 becomes emissive color, so the particles glow."
+      - q: "How do you make the particles cast light on the scene?"
+        choices: ["Turn on Cast Shadows in the Sprite Renderer", "Add a Light Renderer in the Render group", "Set Life Cycle Mode to System", "Add a Point Light actor to the level"]
+        answer_index: 1
+        explain: "Click the Plus sign in the Render group and pick Light Renderer. It spawns a light with each particle."
+      - q: "What does Radius Scale on the Light Renderer control?"
+        choices: ["How many lights spawn", "The sprite size", "How far from the particle the light spreads", "The color of the light"]
+        answer_index: 2
+        explain: "Radius Scale (5 in the tutorial) sets how far the light reaches from the particle position."
+      - q: "The Light Renderer Color Add fields are labeled X, Y and Z. What do they mean?"
+        choices: ["Position of the light", "Red, Green and Blue", "Radius, falloff and intensity", "Start, middle and end time"]
+        answer_index: 1
+        explain: "X, Y and Z map to R, G and B. Setting Z to 15 gives a strong blue light that matches the particle color."
+      - q: "Why does the tutorial add a Collision module to the fountain?"
+        choices: ["Without it the particles fall through the floor", "Without it the light does not render", "Collision is required for the Fountain template", "Collision makes particles spawn faster"]
+        answer_index: 0
+        explain: "Without collision the particles fall through the floor and other solid objects. The module is moved with Fix Issue after adding."
+      - q: "In Add Velocity in Cone, where is the point of the cone?"
+        choices: ["At the camera", "At the level origin", "At the end of the particle life", "At the particle spawn point"]
+        answer_index: 3
+        explain: "The point of the cone is the spawn point. The X, Y and Z values choose the direction the cone opens."
+    flavors:
+      _default: {why: "Light from particles sells fire, magic and sparks."}
+      tech_art: {why: "Particle lights are expensive. Learn the setup so you can budget them.", do: "Raise Spawn Rate until stat unit shows a clear cost, then note the number in your writeup."}
+
+  - id: TAQ61
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, console, profiling]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Console variables you will use every day
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/console-variables-editor"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/screen-percentage-with-temporal-upscale-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-show-flags-in-unreal-engine"
+    checklist:
+      - "Enable the Console Variables Editor plugin and restart the editor. Open it from Window > Console Variables."
+      - "Click Add Console Variable and add r.ScreenPercentage. Set it to 50 and watch the viewport get blurry, then set it back to 100."
+      - "Hover over the value field and read the Custom, Preset and Startup values. Untick the row and see the value go back to the startup value. Tick it again."
+      - "Add the command stat unit through the same input box. Then use Search All with the text lumen|screen percentage and add one Lumen variable from the global list with Add CVAR."
+      - "Open the Presets panel and save the list as a preset named CVP_DailyCheck."
+      - "In the viewport Show menu, turn Particles Sprite off and on, and use Alt + C to toggle Collision."
+    done_when: "Screenshot of the Console Variables Editor showing at least three rows (including r.ScreenPercentage and stat unit) and the Presets panel with CVP_DailyCheck saved."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How do you open the Console Variables Editor after enabling its plugin?"
+        choices: ["Edit > Project Settings > Console", "Window > Console Variables", "Tools > Debug > CVars", "Help > Console"]
+        answer_index: 1
+        explain: "The panel opens from Window > Console Variables and can be docked anywhere in the editor."
+      - q: "What happens when you untick the checkbox of a row in the list?"
+        choices: ["The variable is deleted from the engine", "The row is hidden", "The variable is saved to the preset", "The variable is set back to the value it had when the plugin loaded at startup"]
+        answer_index: 3
+        explain: "Unticking temporarily reverts the variable to its startup value. Ticking again restores the last cached value."
+      - q: "You type lumen|screen percentage in the search box. What does the search return?"
+        choices: ["Only variables with the full text", "Variables that contain lumen, or contain both screen and percentage", "Only Lumen variables", "Nothing, the pipe is not allowed"]
+        answer_index: 1
+        explain: "A pipe splits OR tokens and a space joins AND tokens, so the search matches lumen, or screen and percentage together."
+      - q: "What does stat unit show?"
+        choices: ["Only the frames per second", "Memory used by textures", "Frame time plus game thread, render thread and GPU times", "A list of streaming levels"]
+        answer_index: 2
+        explain: "stat unit shows the overall frame time and the game thread, rendering thread and GPU times. Epic calls it a great place to start."
+      - q: "You set r.ScreenPercentage to 50. What does the renderer do?"
+        choices: ["It renders the frame at a lower resolution and upscales it before the UI is drawn", "It draws the UI at half size", "It halves the frame rate", "It disables anti-aliasing"]
+        answer_index: 0
+        explain: "Primary screen percentage renders at a fraction of the screen resolution and scales the image up before the user interface is drawn."
+      - q: "When you load a preset in the Presets panel, what happens to the variables already in the list?"
+        choices: ["They are removed from the list but their values are not changed", "They are reset to default", "They are merged into the new preset", "They are deleted from the project"]
+        answer_index: 0
+        explain: "Loading a preset clears the list without touching those values. The variables in the new preset are then set to their saved values."
+    flavors:
+      _default: {why: "Console variables are how you test quality and performance without changing any asset."}
+      tech_art: {why: "A saved preset of cvars is a repeatable test setup you can share with the team.", do: "Add r.Upscale.Quality to the preset and write down the difference between value 0 and value 3 on a thin fence or wire."}
+
+  - id: TAQ62
+    rank: 1
+    difficulty: apprentice
+    track: tech-art
+    subjects: [editor, workflow, shortcuts]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Editor settings that save time
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-editor-preferences"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/customizing-keyboard-shortcuts-in-unreal-engine"
+    checklist:
+      - "Open Edit > Editor Preferences. In the Auto Save section check that Enable AutoSave is on and set Frequency in Minutes and Warning in Seconds to values you like."
+      - "In Level Editor > Viewports > Controls, pick the Flight Camera Control type you prefer (for example Use WASD Only When Right Mouse Button is Held) and try it in the viewport."
+      - "Turn on Highlight Objects Under Mouse Cursor and hover over a few actors."
+      - "In the Content Browser section turn on Auto Reimport Textures. Edit a texture source file outside Unreal and confirm it re-imports."
+      - "Open the Keyboard Shortcuts section. Bind a new shortcut to a command you use often. If a warning says the keys are taken, decide between Override and cancel."
+      - "Click Export at the top of the Keyboard Shortcuts editor and save your keybinds as an .ini file."
+    done_when: "Screenshot of the Keyboard Shortcuts section showing your new binding, and a screenshot of the Auto Save section with your values. Name the exported .ini file in your message."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you change keyboard shortcuts in Unreal Editor?"
+        choices: ["Edit > Editor Preferences > Keyboard Shortcuts", "Edit > Project Settings > Input", "Window > Shortcuts", "Tools > Keybinds"]
+        answer_index: 0
+        explain: "Keyboard shortcuts live in the Editor Preferences window, in the Keyboard Shortcuts section."
+      - q: "How many keyboard shortcuts can one command have?"
+        choices: ["One", "Up to two", "Up to four", "No limit"]
+        answer_index: 1
+        explain: "Each command can have up to two keyboard shortcuts."
+      - q: "You press a key combination that is already used by another command. What does the Override button do?"
+        choices: ["It cancels your new shortcut", "It binds both commands to the same keys", "It removes the old binding and gives the shortcut to the new command", "It resets all shortcuts"]
+        answer_index: 2
+        explain: "A warning appears for a conflict. Override removes the existing binding and assigns the shortcut to the new command. Clicking outside cancels."
+      - q: "How do you move your custom keybinds to another computer or a fresh install?"
+        choices: ["Copy the project folder", "Export them as an .ini file and Import it in the other installation", "They sync through your Epic account", "Take a screenshot of the list"]
+        answer_index: 1
+        explain: "The Export and Import buttons at the top of the Keyboard Shortcuts editor save and load an .ini file."
+      - q: "What does Auto Reimport Textures do?"
+        choices: ["It compresses all textures on save", "It imports every texture in the Content folder", "It resizes textures to a power of two", "It watches texture source files and re-imports a texture when its source file changes"]
+        answer_index: 3
+        explain: "With this option on, source files are monitored and textures are automatically re-imported when the file is modified."
+      - q: "Which Flight Camera Control setting makes WASD move the camera only while the right mouse button is held?"
+        choices: ["Use WASD for Camera Controls", "Never Use WASD for Camera Controls", "Use WASD Only When Right Mouse Button is Held", "Grab and Drag to Move Orthographic Cameras"]
+        answer_index: 2
+        explain: "That option keeps WASD free for other hotkeys until you hold the right mouse button. The always-on option overrides hotkeys that use those keys."
+    flavors:
+      _default: {why: "Ten minutes in Editor Preferences saves hours over a project."}
+      tech_art: {why: "Auto reimport and good shortcuts remove the small waits that add up when you iterate on textures and effects.", do: "Export your keybind .ini and share it in your team channel so everyone can import it."}
