@@ -14,6 +14,9 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.9.1 · 2026-09-29
+- The rules are rewritten in plain, friendly English. **Be kind** is now rule 1. Nothing new is required of you.
+
 ## v0.9.0 · 2026-09-29
 - Quests can now link hand-picked free guides from the community, not only Epic's docs. They show after the Epic links.
 - Rule 7 is now **Good sources only**: Epic docs plus hand-picked free community guides. Still no pirated or re-hosted paid courses.
