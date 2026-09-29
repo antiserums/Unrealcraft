@@ -57,7 +57,8 @@ class Quests(commands.Cog):
                 return
             u = await self.bot.db.user(itx.user.id)
             facts = await self.bot.db.facts(itx.user.id)
-            await itx.response.send_message(embed=quest_embed(self.cat, q, u["major"], facts=facts), ephemeral=True,
+            await itx.response.send_message(embed=quest_embed(self.cat, q, u["major"], facts=facts, guild=itx.guild),
+                                            ephemeral=True,
                                             view=await self.card_view(q, itx.user.id))
             return
         await self.send_next(itx)
@@ -107,7 +108,7 @@ class Quests(commands.Cog):
         embeds = []
         if pick.main:
             await db.set_user(itx.user.id, current_quest_id=pick.main.id)
-            embeds.append(quest_embed(self.cat, pick.main, u["major"], pick.reason, facts=facts))
+            embeds.append(quest_embed(self.cat, pick.main, u["major"], pick.reason, facts=facts, guild=itx.guild))
         extras = [f"• `{q.id}` {q.raw['title']} ({q.xp} XP)" for q in pick.electives]
         if pick.adjacent:
             extras.append(f"• `{pick.adjacent.id}` {pick.adjacent.raw['title']} (adjacent, {pick.adjacent.xp} XP)")

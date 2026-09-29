@@ -1,6 +1,8 @@
 """Embed builders. Dark UI with the rank or Specialty color as the accent."""
 from __future__ import annotations
 
+import re
+
 import discord
 
 from . import checks
@@ -33,6 +35,20 @@ def nameplate(cat: Catalog, rank: int, seal: str | None, major: str) -> str:
     return title
 
 
+_CHANNEL_REF = re.compile(r"(?<![<\w])#([a-z0-9][a-z0-9-]*)")
+
+
+def linkify(text: str | None, guild: discord.Guild | None) -> str | None:
+    """'#welcome' -> '<#id>' (a clickable channel link) for channels that exist on the server."""
+    if not text or guild is None:
+        return text
+
+    def repl(m: re.Match) -> str:
+        ch = discord.utils.get(guild.channels, name=m.group(1))
+        return ch.mention if ch else m.group(0)
+    return _CHANNEL_REF.sub(repl, text)
+
+
 def reading_links(q: Quest) -> list[tuple[str, str]]:
     """(label, url) for a quest's learning material: the official page first, then extras, then a backup video."""
     r, out = q.raw, []
@@ -58,7 +74,17 @@ def guide_view(q: Quest, view: discord.ui.View | None = None) -> discord.ui.View
 
 
 def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
-                facts: set[str] | None = None) -> discord.Embed:
+                facts: set[str] | None = None, guild: discord.Guild | None = None) -> discord.Embed:
+    e = _quest_embed(cat, q, major, reason, facts)
+    for i, f in enumerate(e.fields):
+        e.set_field_at(i, name=f.name, value=linkify(f.value, guild), inline=f.inline)
+    if e.description:
+        e.description = linkify(e.description, guild)
+    return e
+
+
+def _quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
+                 facts: set[str] | None = None) -> discord.Embed:
     r = q.raw
     fl = q.flavor(major)
     kind = "capstone" if q.capstone else ("elective" if q.elective else "required")

@@ -113,6 +113,7 @@ class QuizView(discord.ui.View):
     def __init__(self, cog: Quiz, q, uid: int, first_try: bool):
         super().__init__(timeout=900)
         self.cog, self.q, self.uid, self.first_try = cog, q, uid, first_try
+        self.guild = cog.bot.get_guild(cog.bot.settings.guild_id or 0)
         self.i = 0
         self.score = 0
         self.feedback = ""
@@ -131,10 +132,12 @@ class QuizView(discord.ui.View):
         return "ABCD"[self.orders[self.i].index(idx)]
 
     def render(self) -> dict:
+        from ..embeds import linkify
         item = self.q.quiz[self.i]
         body = "\n".join(f"**{'ABCD'[pos]}.** {item['choices'][idx]}" for pos, idx in enumerate(self.orders[self.i]))
         head = f"{self.feedback}\n\n" if self.feedback else ""
-        return {"content": f"{head}**{self.q.id} · Q{self.i + 1}/{len(self.q.quiz)}**\n{item['q']}\n\n{body}"}
+        text = f"{head}**{self.q.id} · Q{self.i + 1}/{len(self.q.quiz)}**\n{item['q']}\n\n{body}"
+        return {"content": linkify(text, self.guild)}
 
     def _answer(self, idx: int):
         async def cb(itx: discord.Interaction):
@@ -147,7 +150,8 @@ class QuizView(discord.ui.View):
             self.i += 1
             if self.i >= len(self.q.quiz):
                 result, view = await self.cog.finish(itx, self.q, self.score, self.first_try)
-                await itx.response.edit_message(content=f"{self.feedback}\n\n{result}", view=view)
+                from ..embeds import linkify
+                await itx.response.edit_message(content=linkify(f"{self.feedback}\n\n{result}", self.guild), view=view)
                 self.stop()
                 return
             self._build()
