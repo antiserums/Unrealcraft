@@ -14,6 +14,12 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.6.0 · 2026-09-29
+- After Orientation, quests only work in #quest-board: `/quest`, `/quiz`, `/submit` and the quest buttons.
+- Using them anywhere else shows a **Go to #quest-board** button.
+- Orientation still happens in #welcome. `/rank`, `/path`, the help desk and Workshop posts work anywhere.
+- The Orientation done page, the #welcome button, the Greenlit message, #welcome and #quest-board all explain this.
+
 ## v0.5.0 · 2026-09-29
 - Orientation is 6 steps. Removed **Ask a question** and **Cheer someone's work**.
 - Every step and screen has a button to the next thing, so you never need to type a command (typing still works).
