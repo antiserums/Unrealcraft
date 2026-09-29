@@ -1,0 +1,159 @@
+# Unrealcraft — ranks, majors, seals, tasters, capstones.
+# The quest picker reads this file. Quest files hold the quests themselves.
+
+ranks:
+  # xp is CUMULATIVE. A rank-up needs BOTH xp >= threshold AND this major's capstone for the rank at Pass.
+  # The brief's example thresholds (0/200/500/1000/1800/3000/5000) are lower than the XP the Starter Quests
+  # alone pays out (~620 + ~95 Orientation), so XP would never be the gate. The values below are rescaled so
+  # XP roughly equals "the required quests for that rank are done". Tune after the first 30 days.
+  # Level Design cumulative XP from required quests only: end R0 ≈ 705, end R1 ≈ 1675, end R2 ≈ 2635,
+  # end R3 ≈ 3825 raw (≈ 4050 with the 1.25× in-Specialty bonus). Each threshold sits a little below that, so the
+  # capstone is the real gate. Phase 4 TODO: rebalance Programming and Lookdev quest XP to land near the same totals.
+  - {n: 0, key: greenlit,  title: "Greenlit",            xp: 0,     color: "#7A8C7E", hoist: false, opens: "#foundations (your first Unreal quests)"}
+  - {n: 1, key: blockout,  title: "Blockout Artist",     xp: 650,   color: "#B5714B", hoist: false, opens: "#world-lighting (spaces, landscape, light)"}
+  - {n: 2, key: prototyper,title: "Gameplay Prototyper", xp: 1500,  color: "#3D7DD8", hoist: false, opens: "#materials, #blueprint, Pair Program voice"}
+  - {n: 3, key: specialist,title: "Specialist",          xp: 2500,  color: null,      hoist: false, opens: "#characters-anim, Critique Room voice, your Specialty title (e.g. Specialist · Design)"}   # role color comes from the Specialty
+  - {n: 4, key: engineer,  title: "Engineer",            xp: 3700,  color: "#8A9BA8", hoist: true, opens: "the systems track for your major (coming soon), reviewing Rank 2 work"}
+  - {n: 5, key: architect, title: "Systems Architect",   xp: 6500,  color: "#8E6CCF", hoist: true, human_review: true, opens: "net/GAS and shipping tracks (coming soon), Lecture Hall stage, writing quests"}
+  - {n: 6, key: lead,      title: "Studio Lead",         xp: 9500,  color: "#D4AF37", hoist: true, human_review: true, vouchers: 2, opens: "#curriculum-wip and full mentor tools"}
+
+seals:
+  lookdev: {title: "Lookdev", color: "#D9824A"}
+  design:  {title: "Design",  color: "#4FA36C"}
+  anim:    {title: "Anim",    color: "#C85C8E"}
+  code:    {title: "Code",    color: "#4AA3B5"}
+
+xp_rules:
+  quiz_first_try_bonus_pct: 20
+  peer_review: {xp: 15, daily_cap: 3}
+  showcase_fire: {reactions: 5, xp: 25, weekly_cap: 1}
+  chat_xp: 0                       # OFF. Never counts toward ranks.
+  submit_cooldown_after_fail_min: 120
+  in_seal_multiplier_rank3plus: 1.25
+  post_spine_mix: {major: 70, adjacent: 15, opposite: 10, social: 5}
+
+majors:
+  level_design:
+    title: "Level Design"
+    blurb: "Spaces, flow, encounters. You make the player go where you need them to."
+    seals: [design]
+    adjacent: [lighting, bp-interact, foliage]
+    opposite: [cpp-hello, gas-video]      # one of
+    required_tasters:                     # rank -> list of any_of groups; each group needs one quest
+      1: [[R1-WL-09]]                      # foliage pass (adjacent)
+      2: [[T-CPP-HELLO, T-GAS-VIDEO]]      # opposite: C++ hello OR GAS video
+      3: []                                # shared characters-anim required quests cover it
+    capstones:
+      1: {id: R1-LD-09, title: "Three-route courtyard", brief: "3-route courtyard, readable nav, lighting for readability."}
+      2: {id: R2-LD-06, title: "Beats & playtest",      brief: "3 beats + 2 BP interacts + metrics sheet + one peer playtest."}
+      3: {id: R3-DZ-08, title: "Encounter space",       brief: "Encounter space + 1-page GDD + one critique iteration."}
+      4: {id: R4-LD-CAP, title: "Modular kit + naming law", brief: "Modular kit + naming law + handoff doc so a Greenlit can place it. PCG optional. NOT a C++ shooter."}
+      5: {id: R5-LD-CAP, title: "Streamed slice",       brief: "World Partition or data layers slice + encounter spawn notes."}
+      6: {id: R6-LD-CAP, title: "Shipped level",        brief: "Packaged level + notes from 3 playtesters."}
+
+  programming:
+    title: "Programming"
+    blurb: "Systems, C++, the code everyone else's work runs on."
+    seals: [code]
+    adjacent: [cpp, bp-interop, logging]
+    opposite: [lighting-pass]
+    required_tasters:
+      1: [[R1-LD-T1]]                      # walk-and-note a courtyard (shared LD taster)
+      2: [[T-LIGHT-PASS]]
+      3: []
+    capstones:
+      1: {id: R1-PR-CAP, title: "Debug room", brief: "Small debug space + notes (or shared courtyard taster)."}
+      2: {id: R2-PR-CAP, title: "Pickup/win loop", brief: "Pickup/win loop in Blueprint."}
+      3: {id: R3-CD-CAP, title: "C++ base, BP children", brief: "C++ actor that Blueprint children use."}
+      4: {id: R4-PR-CAP, title: "Port or kit", brief: "C++ rewrite of the loop OR component kit + writeup on what belongs in C++ vs BP."}
+      5: {id: R5-PR-CAP, title: "Net or GAS", brief: "Listen-server toy OR one GAS ability + AttributeSet + how a designer adds a second ability."}
+      6: {id: R6-PR-CAP, title: "Ship + postmortem", brief: "Packaged build + postmortem."}
+
+  lookdev:
+    title: "Lookdev / Environment Art"
+    blurb: "Materials, light and mood. You set how the world looks."
+    seals: [lookdev]
+    adjacent: [lighting, landscape-material, decals]
+    opposite: [pickup-game]
+    required_tasters:
+      1: []
+      2: [[T-PICKUP-LOOP]]
+      3: []
+    capstones:
+      1: {id: R1-LK-CAP, title: "Lit diorama", brief: "Lit diorama."}
+      2: {id: R2-LK-CAP, title: "Walkable diorama", brief: "Walkable diorama + master material + instances."}
+      3: {id: R3-LK-CAP, title: "Reference scene", brief: "A reference scene the server can use."}
+      4: {id: R4-LK-CAP, title: "Material function library", brief: "Material function library + usage doc."}
+      5: {id: R5-LK-CAP, title: "Lighting scenarios", brief: "Time-of-day / weather / lighting scenario system."}
+      6: {id: R6-LK-CAP, title: "Shipped shot", brief: "Packaged shot or level + breakdown."}
+
+  # ---------- stubbed majors (titles + capstones only in Phase 1) ----------
+  tech_art:
+    title: "Tech Art"
+    blurb: "Tools, shaders and VFX that make artists faster."
+    seals: [code, lookdev]
+    adjacent: [materials, niagara, cpp-utility]
+    opposite: [full-net]
+    required_tasters: {1: [], 2: [], 3: []}
+    capstones:
+      1: {id: R1-TA-CAP, title: "Lit test bed", brief: "Lit test room with a material/FX debug panel (Editor Utility Widget optional)."}
+      2: {id: R2-TA-CAP, title: "Master + FX", brief: "Master material + one Niagara system driven by a BP parameter."}
+      3: {id: R3-TA-CAP, title: "Artist tool", brief: "One Editor Utility (BP or Python) an artist uses without help."}
+      4: {id: R4-TA-CAP, title: "Pipeline piece", brief: "Validated import/naming tool OR material function library with docs."}
+      5: {id: R5-TA-CAP, title: "Perf budget", brief: "Scene perf budget + Insights capture + fixes."}
+      6: {id: R6-TA-CAP, title: "Shipped toolkit", brief: "Toolkit used by 3 others + changelog."}
+
+  gameplay_design:
+    title: "Gameplay Design"
+    blurb: "Rules, loops and feel. You make a thing fun."
+    seals: [design]
+    adjacent: [blueprint, umg, ld-graybox]
+    opposite: [master-material-from-scratch]
+    required_tasters: {1: [[R1-WL-09]], 2: [[T-MASTER-MAT]], 3: []}
+    capstones:
+      1: {id: R1-GD-CAP, title: "Toy space", brief: "Graybox toy room built around one verb."}
+      2: {id: R2-GD-CAP, title: "Core loop", brief: "Playable loop with win/lose + HUD + tuning variables exposed."}
+      3: {id: R3-GD-CAP, title: "Mechanic + GDD", brief: "One mechanic with 3 tuned variants + 1-page design doc + playtest."}
+      4: {id: R4-GD-CAP, title: "Data-driven system", brief: "Data Assets/Tables drive a system a designer tunes without touching graphs."}
+      5: {id: R5-GD-CAP, title: "Balance pass", brief: "Economy/difficulty curve + telemetry-ish log + one GAS ability (BP)."}
+      6: {id: R6-GD-CAP, title: "Shipped slice", brief: "Packaged slice + notes from 3 playtesters."}
+
+  animation:
+    title: "Animation"
+    blurb: "Characters that move and react believably."
+    seals: [anim]
+    adjacent: [animbp, mannequin-in-space]
+    opposite: [world-partition]
+    required_tasters: {1: [], 2: [[T-PICKUP-LOOP]], 3: []}
+    capstones:
+      1: {id: R1-AN-CAP, title: "Stage for motion", brief: "Lit stage with metrics marks for recording motion."}
+      2: {id: R2-AN-CAP, title: "Triggered montage", brief: "BP interaction plays a montage with a notify."}
+      3: {id: R3-AN-CAP, title: "Locomotion set", brief: "AnimBP with idle/walk/run blendspace + jump states."}
+      4: {id: R4-AN-CAP, title: "Control Rig kit", brief: "Control Rig + retargeted set another user can apply."}
+      5: {id: R5-AN-CAP, title: "Motion system", brief: "Motion Matching or layered locomotion + docs."}
+      6: {id: R6-AN-CAP, title: "Shipped reel", brief: "Packaged playable with character + breakdown."}
+
+  cinematics:
+    title: "Cinematics"
+    blurb: "Cameras, Sequencer and shots."
+    seals: [lookdev, anim]
+    adjacent: [sequencer, cameras, lookdev-still]
+    opposite: [gas]
+    required_tasters: {1: [], 2: [[T-PICKUP-LOOP]], 3: []}
+    capstones:
+      1: {id: R1-CN-CAP, title: "Three-shot board", brief: "3 camera bookmarks + lit set, storyboard stills."}
+      2: {id: R2-CN-CAP, title: "First sequence", brief: "15s Sequencer shot triggered in-game via BP."}
+      3: {id: R3-CN-CAP, title: "Scene", brief: "30–45s scene with character anim + MRQ render."}
+      4: {id: R4-CN-CAP, title: "Shot kit", brief: "Reusable camera rigs/templates + doc."}
+      5: {id: R5-CN-CAP, title: "Pipeline shot", brief: "Multi-shot sequence with takes/subsequences, reviewed."}
+      6: {id: R6-CN-CAP, title: "Shipped short", brief: "Finished short + breakdown."}
+
+  undecided:
+    title: "Undecided"
+    blurb: "Try things. Must pick by Rank 2."
+    seals: []
+    adjacent: []
+    opposite: []
+    required_tasters: {1: [], 2: [], 3: []}
+    capstones:
+      1: {id: R1-LD-09, title: "Three-route courtyard (default)", brief: "Undecided follows the Level Design R1 capstone as the neutral default."}

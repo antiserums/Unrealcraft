@@ -1,0 +1,654 @@
+# Unrealcraft — Starter Quests (Rank 0, every major)
+# Short on purpose. Finish all 11 before the major grind starts.
+# URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
+# Verified slugs only (see VERIFIED_URLS.md). Backup videos are TODO_URL until a human picks a dated UE5+ video.
+
+quests:
+  - id: S1
+    rank: 0
+    track: foundations
+    subjects: [install]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Install the engine
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/install-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "install unreal engine 5 epic games launcher beginner"
+    checklist:
+      - "Install the Epic Games Launcher and sign in."
+      - "Unreal Engine tab → Library → + → install the current UE5.x version."
+      - "In install Options, skip platforms you don't target (saves a lot of disk space)."
+      - "Launch the engine once and confirm the Project Browser opens."
+    done_when: "Screenshot of the Project Browser with the version number visible."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you install Unreal Engine 5 from?"
+        choices: ["Steam", "Epic Games Launcher → Unreal Engine → Library", "The Microsoft Store", "A zip file in #epic-games-resources"]
+        answer_index: 1
+        explain: "The Library tab of the Launcher manages engine versions."
+      - q: "Why skip unused target platforms in the install Options?"
+        choices: ["They're paid", "They use a lot of disk space and you don't need them yet", "They break Lumen", "They're Linux only"]
+        answer_index: 1
+        explain: "Platform support adds many GB. Add it later when you need it."
+      - q: "Can you have more than one engine version installed?"
+        choices: ["No", "Yes, side by side in the Library", "Only with a source build", "Only on Mac"]
+        answer_index: 1
+        explain: "The Library can hold several versions. Your turn-ins still state which one you used."
+      - q: "What screen appears the first time you launch the engine?"
+        choices: ["The Level Editor", "The Project Browser", "The Material Editor", "Fortnite"]
+        answer_index: 1
+        explain: "You open or create a project from the Project Browser."
+      - q: "Which server rule applies to your install?"
+        choices: ["Use UE4", "State your engine version on turn-ins", "Install every platform", "Nothing"]
+        answer_index: 1
+        explain: "We teach the current UE5.x. Put your version on every turn-in."
+    flavors:
+      _default: {why: "Everything else needs this."}
+      level_design: {why: "Your future levels start here."}
+      programming: {why: "Launcher build first. A source build and IDE can wait. S11 explains why."}
+
+  - id: S2
+    rank: 0
+    track: foundations
+    subjects: [project, templates]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Blank vs Third Person
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-a-new-project-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 blank vs third person template"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-templates-reference"
+    checklist:
+      - "Create project UC_Sandbox from the Third Person template (Blueprint, Starter Content on)."
+      - "Press Play and run around once."
+      - "Open a second project from the Blank template and compare: no pawn, no level art."
+      - "Close Blank. You'll use UC_Sandbox from here on."
+    done_when: "Screenshot of UC_Sandbox in the editor, plus one sentence on what Third Person gives you that Blank doesn't."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Third Person template give you that Blank doesn't?"
+        choices: ["Nothing", "A playable character, camera, input and a sample level", "C++ only", "Multiplayer"]
+        answer_index: 1
+        explain: "Third Person ships a ready-made character and level to test in."
+      - q: "When is Blank the right choice?"
+        choices: ["Never", "When you want to build every system yourself with nothing pre-made", "When you need a character", "Blank is only for mobile"]
+        answer_index: 1
+        explain: "Blank is empty on purpose."
+      - q: "In the new-project dialog, what is the Blueprint vs C++ choice?"
+        choices: ["Which renderer", "Whether the project starts with C++ source files", "Which Unreal version", "Which platform"]
+        answer_index: 1
+        explain: "A Blueprint project can still add C++ later. The choice just sets what it starts with."
+      - q: "What does Starter Content add?"
+        choices: ["A multiplayer server", "Sample meshes, materials and props", "A second template", "Marketplace credit"]
+        answer_index: 1
+        explain: "It gives you placeholder assets so graybox rooms aren't all white."
+      - q: "Why use one sandbox project for the whole spine?"
+        choices: ["Epic requires it", "Your work builds up and turn-ins can reference earlier quests", "It's faster to install", "No reason"]
+        answer_index: 1
+        explain: "Later spine quests build on the same project."
+    flavors:
+      _default: {why: "Knowing what a template includes tells you what you'd have to build yourself."}
+      level_design: {why: "Third Person is your test character. Its capsule and jump set your metrics."}
+      programming: {why: "Later you'll rebuild parts of this template in C++. First see what it does."}
+
+  - id: S3
+    rank: 0
+    track: foundations
+    subjects: [viewport, pie]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Fly the viewport
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-controls-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 viewport navigation controls bookmarks"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/possessing-pawns-in-unreal-engine"
+    checklist:
+      - "Hold right mouse and use WASD/QE to fly. Mouse wheel changes fly speed."
+      - "Select something and press F to focus on it."
+      - "Save a camera bookmark with Ctrl+1 and recall it with 1."
+      - "Play in Editor (PIE), then press F8 to eject and fly around while the game runs."
+      - "Press Esc to stop PIE."
+    done_when: "Short writeup: which key ejects from PIE, and why you'd want to."
+    xp: 50
+    verify_type: writeup
+    quiz:
+      - q: "How do you fly the viewport like a game camera?"
+        choices: ["Hold right mouse + WASD", "Arrow keys only", "Hold Ctrl + scroll", "Double-click"]
+        answer_index: 0
+        explain: "Right mouse + WASD/QE flies. The wheel changes speed while you fly."
+      - q: "What does pressing F with an actor selected do?"
+        choices: ["Deletes it", "Focuses the camera on it", "Freezes it", "Opens its Blueprint"]
+        answer_index: 1
+        explain: "F frames the selection."
+      - q: "What do Ctrl+1 and 1 do in the viewport?"
+        choices: ["Switch levels", "Save and recall a camera bookmark", "Change the grid", "Toggle Lumen"]
+        answer_index: 1
+        explain: "Bookmarks let you jump back to the same view."
+      - q: "In PIE, what does F8 do?"
+        choices: ["Quits", "Ejects you from the pawn so you can inspect the running game", "Takes a screenshot", "Compiles"]
+        answer_index: 1
+        explain: "You leave the pawn but the game keeps running. F8 again possesses the pawn."
+      - q: "Simulate vs Play: what's the difference?"
+        choices: ["No difference", "Simulate runs the world without spawning/possessing a player", "Simulate is slower", "Play doesn't run Blueprints"]
+        answer_index: 1
+        explain: "Simulate runs physics and logic, but no player is spawned."
+    flavors:
+      _default: {why: "You'll use the viewport all day. Get comfortable in it."}
+      level_design: {why: "Bookmarks are your review cameras. Eject from PIE to check sightlines while the game runs."}
+      programming: {why: "Eject from PIE to watch actors while your logic runs."}
+      animation: {why: "Focus and orbit your character. Eject from PIE to watch the pose from any angle."}
+
+  - id: S4
+    rank: 0
+    track: foundations
+    subjects: [content-browser, naming]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: A tidy Content Drawer
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/content-browser-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 content browser folders naming conventions"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/recommended-asset-naming-conventions-in-unreal-engine-projects"
+    checklist:
+      - "Open the Content Drawer (Ctrl+Space)."
+      - "Create /Content/UC/ with subfolders Maps, Meshes, Materials, Textures, Blueprints."
+      - "Rename or duplicate one asset of each kind with the correct prefix: SM_, M_, MI_, T_, BP_, L_."
+      - "Save a level as L_Sandbox in UC/Maps."
+    done_when: "Screenshot of the UC folder tree with prefixed assets."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Prefix for a Static Mesh?"
+        choices: ["M_", "SM_", "S_", "ST_"]
+        answer_index: 1
+        explain: "SM_ = Static Mesh. SK_ is Skeletal Mesh."
+      - q: "Prefix for a Material Instance?"
+        choices: ["M_", "MI_", "MAT_", "I_"]
+        answer_index: 1
+        explain: "M_ is the parent material. MI_ is an instance of it."
+      - q: "Which prefix goes on a level (map)?"
+        choices: ["L_", "MAP_", "LV_", "W_"]
+        answer_index: 0
+        explain: "L_ is the convention used here."
+      - q: "Why move assets inside the editor and never in File Explorer?"
+        choices: ["File Explorer is slower", "The editor updates references; File Explorer breaks them", "Only Epic can move files", "No reason"]
+        answer_index: 1
+        explain: "Assets reference each other. The Content Browser fixes those references when you move something."
+      - q: "What's the shortcut for the Content Drawer?"
+        choices: ["Ctrl+Space", "Ctrl+D", "Tab", "F11"]
+        answer_index: 0
+        explain: "Ctrl+Space opens and closes the drawer."
+    flavors:
+      _default: {why: "Clear names mean anyone can find your assets later, including you."}
+      level_design: {why: "At Rank 4 you ship a kit someone else can use. It starts with naming."}
+      programming: {why: "Your code will load assets by path. Messy folders break things."}
+
+  - id: S5
+    rank: 0
+    track: foundations
+    subjects: [outliner, details, transforms]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Move things on purpose
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/transforming-actors-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 outliner details panel transform snapping"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/outliner-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-editor-details-panel-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-settings-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-snapping-in-unreal-engine"
+    checklist:
+      - "Use W/E/R to move, rotate and scale. Space cycles between them."
+      - "Turn on grid snapping and set it to 10 or 50. Set rotation snap to 15°."
+      - "Group 3 actors into an Outliner folder called Blockout."
+      - "Type an exact Location into the Details panel."
+      - "Open World Settings and find the GameMode Override."
+      - "Press End to drop a floating actor to the floor."
+    done_when: "Screenshot showing the Outliner folder and a Details panel with typed-in values."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "W, E and R switch between…?"
+        choices: ["Views", "Move, rotate, scale", "Lighting modes", "Levels"]
+        answer_index: 1
+        explain: "These are the transform gizmos. Space cycles them too."
+      - q: "Where do you type an exact position?"
+        choices: ["Outliner", "Details panel → Transform", "World Settings", "Content Drawer"]
+        answer_index: 1
+        explain: "Details shows everything about the selected actor."
+      - q: "What is World Settings for?"
+        choices: ["Settings of the selected actor", "Per-level settings like GameMode Override", "Editor theme", "Engine install"]
+        answer_index: 1
+        explain: "Each level has its own World Settings."
+      - q: "Why use grid snapping for blockout?"
+        choices: ["Looks nicer", "Pieces line up with no gaps and measurements stay clean", "It's required to save", "Faster rendering"]
+        answer_index: 1
+        explain: "Clean numbers make metrics and edits easy."
+      - q: "What does End do to a selected actor?"
+        choices: ["Deletes it", "Drops it to the surface below", "Ends PIE", "Hides it"]
+        answer_index: 1
+        explain: "It snaps the actor down to the floor under it."
+    flavors:
+      _default: {why: "Placing things precisely matters for every discipline."}
+      level_design: {why: "Snapping is how blockouts stay clean enough to iterate on."}
+      programming: {why: "The Details panel shows every exposed property. Later your own UPROPERTYs will show up here."}
+
+  - id: S6
+    rank: 0
+    track: foundations
+    subjects: [graybox, scale]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Graybox a room
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-01-project-setup-and-level-blockout-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 blockout room player scale modeling mode"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/player-start-actor-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
+    checklist:
+      - "New level L_Room_01. Build floor, 4 walls, 1 doorway and 1 window from cubes or Modeling Mode."
+      - "Size the doorway to the mannequin, not to a guess. Roughly 120–150 cm wide and 220+ cm tall works for the default character."
+      - "Place a Player Start. The blue arrow faces into the room."
+      - "PIE, walk through the door, check the ceiling isn't crushing you."
+      - "Take a screenshot at eye level."
+    done_when: "Eye-level screenshot of L_Room_01 with the Player Start visible in the Outliner or viewport."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "What are Unreal's default units?"
+        choices: ["1 unit = 1 inch", "1 unit = 1 cm", "1 unit = 1 m", "1 unit = 1 foot"]
+        answer_index: 1
+        explain: "Centimeters. 100 units = 1 m."
+      - q: "Why build to player scale first?"
+        choices: ["Epic requires it", "A room that looks right from far away can feel wrong from inside", "It saves memory", "Lighting needs it"]
+        answer_index: 1
+        explain: "Always check scale from the player's eye height."
+      - q: "What does a Player Start do?"
+        choices: ["Lights the scene", "Marks where the player spawns", "Starts the music", "Loads the next level"]
+        answer_index: 1
+        explain: "The GameMode spawns the default pawn at a Player Start."
+      - q: "The default capsule clips the door frame. What's the fix?"
+        choices: ["Shrink the character", "Widen the door using your measured metrics", "Turn off collision", "Add a light"]
+        answer_index: 1
+        explain: "Metrics come from the character. Build the space to fit."
+      - q: "Graybox means…"
+        choices: ["Final art", "Plain placeholder shapes to test space and flow", "A gray material only", "Broken lighting"]
+        answer_index: 1
+        explain: "Graybox tests the space before any art time goes in."
+    flavors:
+      _default: {why: "Everyone should know what a correctly sized space feels like."}
+      level_design: {why: "This is your core skill. Rank 1 turns this room into a courtyard."}
+      programming: {why: "A test room you can debug in. You'll want one for every system."}
+      lookdev: {why: "Scale mistakes show up in every render. Get scale right before you light."}
+      animation: {why: "Animations look wrong in a badly scaled room."}
+
+  - id: S7
+    rank: 0
+    track: foundations
+    subjects: [lighting]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: One readable lighting pass
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 lumen basic lighting directional sky light beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-light-mixer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+    checklist:
+      - "In L_Room_01 use Window → Env. Light Mixer to add Directional Light, Sky Light, Sky Atmosphere and Height Fog."
+      - "Rotate the sun until light comes through the window."
+      - "Add one Point or Rect Light so the doorway stands out."
+      - "Goal: the player can see where to go. It doesn't need to look pretty."
+    done_when: "Before/after screenshots of the same camera bookmark."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which tool adds the standard outdoor lighting set in one place?"
+        choices: ["Env. Light Mixer", "Content Drawer", "World Partition", "Sequencer"]
+        answer_index: 0
+        explain: "Env. Light Mixer adds and adjusts the directional, sky light, atmosphere, fog and clouds together."
+      - q: "What is Lumen?"
+        choices: ["A plugin", "UE5's dynamic global illumination and reflections", "A light type", "A post-process filter"]
+        answer_index: 1
+        explain: "It gives bounce light without baking."
+      - q: "What is this pass for?"
+        choices: ["A portfolio shot", "The player can read the space and find the exit", "Maximum realism", "Showing off fog"]
+        answer_index: 1
+        explain: "Readable first, pretty later."
+      - q: "Which actor represents the sun?"
+        choices: ["Point Light", "Directional Light", "Spot Light", "Sky Light"]
+        answer_index: 1
+        explain: "A Directional Light casts parallel rays, like the sun."
+      - q: "What does a Sky Light do?"
+        choices: ["Draws a sun disc", "Captures the sky and lights the scene from all around", "Adds fog", "Makes clouds"]
+        answer_index: 1
+        explain: "It supplies the ambient and sky-colored fill light."
+    flavors:
+      _default: {why: "Poorly lit work is hard to review. Anyone should be able to do a basic lighting pass."}
+      level_design: {why: "Light is how you tell players where to go."}
+      programming: {why: "Readable is enough. You owe one more pass at Rank 2, on your own loop, and that's it."}
+      lookdev: {why: "Warm-up. The good lighting work starts at Rank 1."}
+
+  - id: S8
+    rank: 0
+    track: foundations
+    subjects: [materials]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: One material instance
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 material instance beginner change color parameter"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-03-create-materials-and-material-instances"
+    checklist:
+      - "Find a Starter Content material that has parameters, or a template material."
+      - "Right-click it → Create Material Instance → name it MI_Wall_Accent."
+      - "Change one parameter (color or roughness) in the instance."
+      - "Apply it to one wall in L_Room_01."
+    done_when: "Screenshot: the instance editor showing the changed parameter, next to the wall."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Why edit an instance instead of the parent material?"
+        choices: ["Instances are prettier", "Instances change parameters with no shader recompile and don't affect other users of the parent", "Parents can't be applied", "No reason"]
+        answer_index: 1
+        explain: "Instances are cheap to edit and change only what uses them."
+      - q: "What can you change in a Material Instance?"
+        choices: ["Any node", "Only parameters the parent exposes", "The shading model always", "Nothing"]
+        answer_index: 1
+        explain: "The parent decides which parameters the instance can change."
+      - q: "Which prefix goes on the instance?"
+        choices: ["M_", "MI_", "T_", "SM_"]
+        answer_index: 1
+        explain: "MI_ = Material Instance."
+      - q: "What does this quest NOT ask for?"
+        choices: ["Applying an instance", "Changing a parameter", "Building a master material from scratch", "Naming it correctly"]
+        answer_index: 2
+        explain: "Master materials come later and are major-weighted."
+      - q: "How do you apply a material to a mesh in the level?"
+        choices: ["Drag it onto the mesh, or set it in Details → Materials", "Rename the mesh", "Recompile", "Restart the editor"]
+        answer_index: 0
+        explain: "Either works."
+    flavors:
+      _default: {why: "Material instances are how everyone recolors things in Unreal."}
+      level_design: {why: "Color-code interactables so players know what they can use."}
+      lookdev: {why: "The small version of what you'll do later with your own master materials."}
+      programming: {why: "Later your code will set these parameters at runtime."}
+
+  - id: S9
+    rank: 0
+    track: foundations
+    subjects: [blueprint, interaction]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: One Blueprint interact
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-3-create-a-coin-pickup-with-modeling-tools-and-blueprints"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 blueprint door open overlap beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/opening-doors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-class-assets-in-unreal-engine"
+    checklist:
+      - "Choose ONE: a pickup that disappears and prints a message, or a door that opens on overlap."
+      - "Create BP_Pickup or BP_Door (Actor). Add a mesh plus a Box or Sphere collision."
+      - "Use On Component Begin Overlap → Print String, then Destroy Actor or move the door."
+      - "Place it in L_Room_01 and trigger it in PIE."
+    done_when: "Short PIE clip or 2 screenshots (before/after) plus a graph screenshot."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "Which event fires when the player walks into a collision box?"
+        choices: ["Event Tick", "On Component Begin Overlap", "Event BeginPlay", "On Clicked"]
+        answer_index: 1
+        explain: "Overlap events fire when collisions set to overlap start touching."
+      - q: "Where do you place a BP_ actor so it's in the level?"
+        choices: ["Drag it from the Content Drawer into the viewport", "It spawns automatically", "World Settings", "Project Settings"]
+        answer_index: 0
+        explain: "A Blueprint Class is a template. The placed copy is an instance."
+      - q: "Print String is for…"
+        choices: ["Shipping UI", "Quick debug messages on screen and in the log", "Saving files", "Chat"]
+        answer_index: 1
+        explain: "It's the fastest way to check that an event fired."
+      - q: "Your overlap never fires. The first thing to check?"
+        choices: ["Reinstall the engine", "The collision component's Generate Overlap Events and collision preset", "The material", "Lighting"]
+        answer_index: 1
+        explain: "Most overlap bugs are collision settings."
+      - q: "Event BeginPlay runs…"
+        choices: ["Every frame", "Once, when the actor starts playing", "On overlap", "Never in PIE"]
+        answer_index: 1
+        explain: "Setup code goes here. Tick runs every frame."
+    flavors:
+      _default: {why: "At least once, make the world react to the player."}
+      level_design: {why: "Doors and pickups are how you gate a level. You'll build many."}
+      programming: {why: "Learn the Blueprint version first. Later you'll decide what moves to C++."}
+      lookdev: {why: "Enough Blueprint to make a light turn on when you walk in."}
+      animation: {why: "Later, this overlap will trigger a montage."}
+
+  - id: S10
+    rank: 0
+    track: foundations
+    subjects: [pawn, character]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: Walk your space
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-game-mode-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 game mode default pawn class mannequin"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-settings-in-unreal-engine"
+    checklist:
+      - "In World Settings for L_Room_01 set GameMode Override to the Third Person GameMode."
+      - "PIE: walk, jump and bump into every wall."
+      - "Drag a mannequin mesh into the room as a static scale reference."
+      - "Note one thing that feels off (tight corner, high ledge) and fix it."
+    done_when: "Writeup: what you fixed, plus a screenshot of the mannequin in the space."
+    xp: 50
+    verify_type: writeup
+    quiz:
+      - q: "Where do you set which pawn spawns in a level?"
+        choices: ["Material editor", "GameMode's Default Pawn Class (or World Settings → GameMode Override)", "Content Drawer", "Outliner folder"]
+        answer_index: 1
+        explain: "GameMode picks the pawn. World Settings can override the GameMode per level."
+      - q: "Why keep a static mannequin in the scene?"
+        choices: ["For fun", "A constant scale reference while you build", "It's required to save", "It lights the scene"]
+        answer_index: 1
+        explain: "You can check scale without pressing Play."
+      - q: "Pawn vs Character?"
+        choices: ["Same thing", "Character is a Pawn with a capsule, mesh and CharacterMovement built in", "Pawn is newer", "Character can't be possessed"]
+        answer_index: 1
+        explain: "Character gives you walking, jumping and falling for free."
+      - q: "You PIE and spawn as a floating camera. The likely cause?"
+        choices: ["Lumen off", "GameMode's default pawn isn't your character", "Wrong material", "Too many lights"]
+        answer_index: 1
+        explain: "Check the GameMode Override and its Default Pawn Class."
+      - q: "What makes this spine quest done?"
+        choices: ["A pretty render", "You walked the space and fixed one thing that felt off", "A C++ class", "A packaged build"]
+        answer_index: 1
+        explain: "Test, notice, fix: the basic iteration loop."
+    flavors:
+      _default: {why: "Walk your space in-game. The editor view isn't enough."}
+      level_design: {why: "You'll repeat this walk test on everything you build."}
+      animation: {why: "The mannequin is your character's baseline. Know how it moves."}
+      programming: {why: "GameMode → Pawn → Controller is the chain you'll be coding against later."}
+
+  - id: S11
+    rank: 0
+    track: foundations
+    subjects: [cpp, awareness]
+    required_for_majors: [all]
+    required_spine: true
+    elective: false
+    title: What C++ is for
+    time_min: 15
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/coding-in-unreal-engine-blueprint-vs-cplusplus"
+    backup_url: TODO_URL
+    backup_search: "unreal engine blueprint vs c++ when to use which"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-with-cplusplus-in-unreal-engine"
+    checklist:
+      - "Read the Blueprint vs C++ page. No IDE needed."
+      - "Write 3 lines: one thing better in Blueprint, one better in C++, one you're unsure about."
+    done_when: "3-line writeup submitted."
+    xp: 40
+    verify_type: writeup
+    quiz:
+      - q: "Does this quest require installing Visual Studio?"
+        choices: ["Yes", "No, it's awareness only", "Only on Windows", "Only for programmers"]
+        answer_index: 1
+        explain: "S11 is reading only. Programmers install the IDE in their major path."
+      - q: "Which is a typical reason to move logic to C++?"
+        choices: ["It's always better", "Performance-heavy or core systems many Blueprints build on", "Colors", "Lighting"]
+        answer_index: 1
+        explain: "Core systems go in C++. Content and tuning stay in Blueprint."
+      - q: "Can Blueprints extend a C++ class?"
+        choices: ["No", "Yes. A common pattern is a C++ base with Blueprint children", "Only in UE4", "Only with plugins"]
+        answer_index: 1
+        explain: "That's the Programming Rank 3 capstone, in fact."
+      - q: "Why do designers like Blueprint?"
+        choices: ["It's the only option", "Fast iteration and visual logic without compiling C++", "It's faster at runtime", "It's required for lighting"]
+        answer_index: 1
+        explain: "Iteration speed is why Blueprint exists."
+      - q: "What does a Level Design major owe for C++ after this?"
+        choices: ["A C++ rewrite at Rank 4", "One opposite taster (C++ hello OR a GAS video); nothing gated", "Nothing ever", "A networking capstone"]
+        answer_index: 1
+        explain: "Level designers never have to do a C++ rewrite."
+    flavors:
+      _default: {why: "Know what C++ does even if you never write it."}
+      level_design: {why: "So you can talk to programmers. That's all this is."}
+      programming: {why: "Your first look at the split you'll spend Ranks 3–4 learning to make well."}
+
+  # ------------ Rank 0 meta-lesson electives (available at Greenlit) ------------
+  - id: R0-META-01
+    rank: 0
+    track: foundations
+    subjects: [meta, screenshots]
+    elective: true
+    title: Screenshot the editor properly
+    time_min: 15
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    backup_url: TODO_URL
+    checklist:
+      - "Use High Resolution Screenshot once."
+      - text: "Attach one editor screenshot where the graph or Details panel is readable at phone size."
+        check: {attachment: image}
+    done_when: "One readable graph screenshot posted."
+    xp: 20
+    verify_type: screenshot
+    quiz: []
+
+  - id: R0-META-02
+    rank: 0
+    track: foundations
+    subjects: [meta, video]
+    elective: true
+    title: Export a short PIE clip
+    time_min: 20
+    official_url: TODO_URL
+    backup_search: "record unreal editor clip obs or windows game bar short"
+    backup_url: TODO_URL
+    checklist:
+      - "Record 10–20s of PIE (OBS, Game Bar, or similar) and trim it."
+      - text: "Attach the clip as a video file."
+        check: {attachment: video}
+    done_when: "Clip under 20s posted to your turn-in."
+    xp: 20
+    verify_type: screenshot
+    quiz: []
+
+  - id: R0-META-03
+    rank: 0
+    track: foundations
+    subjects: [meta, help]
+    elective: true
+    title: Write a help post that gets answered
+    time_min: 15
+    official_url: "discord://#help-desk"
+    checklist:
+      - text: "Rewrite the pinned bad example in #help-desk into the template. Paste your rewrite as the proof."
+        check: {min_length: 150}
+    done_when: "Rewritten post submitted as a writeup."
+    xp: 20
+    verify_type: writeup
+    quiz: []
+
+  - id: R0-META-04
+    rank: 0
+    track: foundations
+    subjects: [meta, review]
+    elective: true
+    title: Review a peer like a mentor
+    time_min: 20
+    official_url: "discord://#showcase"
+    checklist:
+      - text: "On someone else's #showcase post: 1 thing that works, 1 specific issue, 1 next step. Paste the link to your comment."
+        check: {link: showcase, on: others}
+    done_when: "Link to your review comment."
+    xp: 25
+    verify_type: writeup
+    quiz: []
+
+  - id: R0-META-05
+    rank: 0
+    track: foundations
+    subjects: [meta, critique]
+    elective: true
+    title: Take critique without flinching
+    time_min: 20
+    official_url: "discord://#showcase"
+    checklist:
+      - "Post a WIP in #showcase asking one specific question."
+      - text: "Reply to the feedback with what you'll change (or why not). Paste the link to that reply."
+        check: {link: showcase, on: own}
+    done_when: "Link to the thread."
+    xp: 25
+    verify_type: writeup
+    quiz: []
+
+  - id: R0-E-06
+    rank: 0
+    track: foundations
+    subjects: [editor, shortcuts]
+    elective: true
+    title: Five shortcuts that save an hour a week
+    time_min: 15
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/customizing-keyboard-shortcuts-in-unreal-engine"
+    checklist:
+      - "Learn G (game view), Ctrl+B (find in browser), Alt+drag (duplicate), H/Ctrl+H (hide), F11 (fullscreen viewport)."
+      - text: "Write which one you'll use most and when."
+        check: {min_length: 60}
+    done_when: "A short writeup."
+    xp: 15
+    verify_type: writeup
+    quiz: []

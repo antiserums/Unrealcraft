@@ -1,0 +1,247 @@
+# Unrealcraft — Cross-major taster quests
+# Tasters are short (60 min max) looks into another major's work. majors.yaml → required_tasters
+# says which ones each major owes at each rank.
+# URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
+# Verified slugs only (see VERIFIED_URLS.md). Backup videos are TODO_URL until a human picks a dated UE5+ video.
+
+quests:
+  - id: T-CPP-HELLO
+    rank: 2
+    track: tasters
+    subjects: [cpp, reflection, awareness]
+    required_for_majors: []
+    taster_for_majors: [level_design, lookdev, animation, cinematics]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: "Hello, C++"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-cpp-quick-start"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 c++ actor uclass uproperty ufunction explained beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-with-cplusplus-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coder-01-set-up-and-compile-a-cplusplus-project-in-unreal-engine"
+    checklist:
+      - "Read the Programming Quick Start. You don't need an IDE to follow along."
+      - "Open the quick start's example Actor .h file (in the doc, or any C++ template project's Source folder) and find UCLASS(), GENERATED_BODY(), one UPROPERTY and one UFUNCTION."
+      - "Match each UPROPERTY specifier (EditAnywhere, VisibleAnywhere, BlueprintReadWrite, Category) to what it does."
+      - "Find where that UPROPERTY would appear in the Details panel of a placed actor (look for its Category heading)."
+      - "Bonus, optional: install the IDE, compile the quick start actor, and place it in a level."
+    done_when: "Writeup: 3 lines naming what UCLASS, UPROPERTY and UFUNCTION each do, plus a screenshot of a C++ property in the Details panel. Compiling is optional; say if you did."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "What does UPROPERTY(EditAnywhere) on a variable do?"
+        choices: ["Makes it save to a text file", "Shows it in the Details panel so it can be edited on the class defaults and on placed instances", "Makes it replicate", "Hides it from Blueprint"]
+        answer_index: 1
+        explain: "That's how a programmer gives designers a tuning knob."
+      - q: "What is the .h file for, compared with the .cpp?"
+        choices: [".h declares the class and its members; .cpp holds the function bodies", "They're identical copies", ".h is for Mac, .cpp for Windows", ".cpp is only for comments"]
+        answer_index: 0
+        explain: "Header declares, source implements. You'll mostly read headers to see what's exposed."
+      - q: "Which macro lets a C++ function be called from Blueprint?"
+        choices: ["UCLASS(Blueprintable)", "GENERATED_BODY()", "UFUNCTION(BlueprintCallable)", "UPROPERTY(VisibleAnywhere)"]
+        answer_index: 2
+        explain: "BlueprintCallable makes the function show up as a node."
+      - q: "A property is marked VisibleAnywhere. What do you see in Details?"
+        choices: ["Nothing", "An editable field", "A Blueprint node", "The value, but you can't change it there"]
+        answer_index: 3
+        explain: "Visible means read-only in Details. EditAnywhere means editable."
+      - q: "Do you have to compile C++ to finish this taster?"
+        choices: ["Yes, or the quest fails", "No. Compiling is an optional bonus; reading and finding the property is the task", "Only on Linux", "Only if you're Rank 4"]
+        answer_index: 1
+        explain: "This taster is about reading C++, not setting up a toolchain."
+    flavors:
+      _default: {why: "Being able to read a header means you can see what a programmer exposed to you."}
+      level_design: {why: "The C++ opposite taster. You'll know what to ask a programmer for when you want a number in Details.", do: "Find one UPROPERTY and say which Details category it lands in."}
+      lookdev: {why: "Material and light parameters exposed from C++ show up the same way in Details."}
+      animation: {why: "Character and anim classes are often C++ bases. This is how to read what they expose."}
+      cinematics: {why: "Sequencer can keyframe properties exposed from C++. Now you'll know where they come from."}
+
+  - id: T-GAS-VIDEO
+    rank: 2
+    track: tasters
+    subjects: [gas, abilities, awareness]
+    required_for_majors: []
+    taster_for_majors: [level_design, cinematics]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: "What GAS is"
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-ability-system-for-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 gameplay ability system overview explained abilities attributes effects tags"
+    checklist:
+      - "Read the Gameplay Ability System overview page. Skip the code samples if you like."
+      - "Write a one-line definition each for: Ability System Component, Gameplay Ability, Attribute, Gameplay Effect, Gameplay Tag."
+      - "Pick a mechanic from a game you know (a dash, a heal, a stun) and describe it using those five words."
+      - "Name one thing in your own levels that could apply a Gameplay Effect (a hazard, pickup or zone)."
+    done_when: "Pass the quiz. Post the five one-line definitions and your mechanic breakdown in your turn-in thread."
+    xp: 60
+    verify_type: quiz
+    quiz:
+      - q: "In GAS, what is an Attribute?"
+        choices: ["A number on an actor, like Health or Stamina, stored in an AttributeSet", "An animation", "A level", "A material parameter"]
+        answer_index: 0
+        explain: "Attributes are the numbers that abilities and effects read and change."
+      - q: "What does a Gameplay Effect do?"
+        choices: ["Plays a sound only", "Spawns a particle", "Changes attributes and/or applies tags, instantly, for a duration, or indefinitely", "Loads a level"]
+        answer_index: 2
+        explain: "Damage, heals, buffs and debuffs are all Gameplay Effects."
+      - q: "What is a Gameplay Ability?"
+        choices: ["A Blueprint Interface", "An action an actor can perform, like a dash or a fireball, with its own logic, cost and cooldown", "A navmesh setting", "A camera"]
+        answer_index: 1
+        explain: "Abilities are what the actor does. Effects are what that does to attributes."
+      - q: "What are Gameplay Tags used for?"
+        choices: ["Naming files", "Replacing materials", "Rendering order", "Hierarchical labels, like State.Stunned, that abilities and effects check to block or allow things"]
+        answer_index: 3
+        explain: "Tags let systems ask questions like \"is this actor stunned?\" without hard references."
+      - q: "Which component does an actor need to use GAS?"
+        choices: ["Character Movement Component", "Ability System Component", "Audio Component", "Spring Arm Component"]
+        answer_index: 1
+        explain: "The Ability System Component holds the actor's abilities, attributes and active effects."
+    flavors:
+      _default: {why: "A lot of Unreal games use GAS. The vocabulary lets you follow the conversation."}
+      level_design: {why: "The GAS opposite taster. Hazards, pickups and buff zones in your levels may end up applying Gameplay Effects.", do: "Describe one of your R2 traps or pickups as a Gameplay Effect."}
+      cinematics: {why: "Your opposite taster. In-game cinematics often trigger on ability events or tags."}
+
+  - id: T-LIGHT-PASS
+    rank: 2
+    track: tasters
+    subjects: [lighting, readability]
+    required_for_majors: []
+    taster_for_majors: [programming]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: "One lighting pass on your loop"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 lighting for gameplay readability guide the player"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-light-mixer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/light-types-and-their-mobility-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+    checklist:
+      - "Open the level with your Rank 2 pickup/win loop. Save a camera bookmark at the player's start view."
+      - "Set up the base with Env. Light Mixer: Directional Light, Sky Light, Sky Atmosphere, Height Fog."
+      - "Make each pickup stand out: a small Point Light on it, or put it in the brightest area."
+      - "Darken or de-emphasise dead ends so the route to the pickups reads first."
+      - "Add a Post Process Volume (Infinite Extent) and narrow the auto exposure min/max so brightness doesn't jump between rooms."
+    done_when: "Before/after screenshots from the same bookmark, with one line on how a player finds the first pickup now."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What's the goal of this lighting pass?"
+        choices: ["Photorealism", "The player can spot the pickups and the route without being told", "Maximum brightness everywhere", "Testing Nanite"]
+        answer_index: 1
+        explain: "Readable first. Contrast shows where to look."
+      - q: "Every surface is lit evenly and nothing stands out. What's the fix?"
+        choices: ["Add contrast: brighter on pickups and the route, darker on dead ends", "Add more fog", "Turn off shadows", "Raise every light's intensity"]
+        answer_index: 0
+        explain: "Players look at the brightest, highest-contrast area first."
+      - q: "With Lumen on (the UE5 default), do you need to build lighting to see changes?"
+        choices: ["Yes, always", "Only for point lights", "No. Movable lights with Lumen update live", "Only after packaging"]
+        answer_index: 2
+        explain: "Baking is an option, not a requirement, in a default UE5 project."
+      - q: "Brightness keeps shifting as you walk between rooms. Where do you control that?"
+        choices: ["World Settings → Kill Z", "Material Editor", "The GameMode", "A Post Process Volume's Exposure settings (min/max EV)"]
+        answer_index: 3
+        explain: "Auto exposure adapts to the scene. Narrow its range so it stays steady."
+      - q: "Which light is the quickest way to highlight one pickup?"
+        choices: ["A second Directional Light", "A small Point Light near the pickup", "A Sky Light", "Height Fog"]
+        answer_index: 1
+        explain: "A local light draws the eye. Keep only one Directional Light as the sun."
+    flavors:
+      _default: {why: "Lighting decides where players look first."}
+      programming: {why: "Your opposite taster. When lighting makes the loop readable, playtesters test your code instead of looking for pickups.", do: "Light the pickups first. Everything else can stay flat."}
+      level_design: {why: "This pass is how LD would light a gameplay space: readable first."}
+
+  - id: T-PICKUP-LOOP
+    rank: 2
+    track: tasters
+    subjects: [blueprint, pickups, game-loop]
+    required_for_majors: []
+    taster_for_majors: [lookdev, animation, cinematics]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: "A pickup game"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-5-building-the-coin-pickup-and-speed-boost-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 collect coins win condition blueprint beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-3-create-a-coin-pickup-with-modeling-tools-and-blueprints"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-mode-and-game-state-in-unreal-engine"
+    checklist:
+      - "Create BP_UUGameMode (child of your template's GameMode) with an Integer Collected and an Instance Editable Integer Target set to 3. Set it as the level's GameMode Override."
+      - "Make BP_Coin: mesh plus sphere trigger, filtered to the player (like S9). On overlap: Get Game Mode → Cast to BP_UUGameMode → call AddCoin, then Destroy Actor."
+      - "In AddCoin: increment Collected, then Branch on Collected >= Target."
+      - "On true, show a win message (Print String is enough, a widget is a bonus)."
+      - "Place 3 coins where the player has to move around to reach them. PIE until you win."
+    done_when: "PIE clip (under 30 s) collecting all 3 coins and triggering the win, plus a screenshot of AddCoin."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Where should the coin count live?"
+        choices: ["On each coin", "In the GameMode (or another single place every coin reports to)", "In the material", "In World Settings"]
+        answer_index: 1
+        explain: "Coins get destroyed. The count needs to live somewhere that stays."
+      - q: "Why Destroy Actor (or disable collision) right after pickup?"
+        choices: ["To save disk space", "It's required for lighting", "So the same coin can't be counted twice", "It resets the level"]
+        answer_index: 2
+        explain: "Overlaps can fire again. Removing the coin makes each pickup count once."
+      - q: "How does a coin reach your GameMode's AddCoin function?"
+        choices: ["Get Game Mode, then Cast to BP_UUGameMode, then call AddCoin", "Print String", "Construction Script", "The Content Drawer"]
+        answer_index: 0
+        explain: "Get Game Mode returns the base class. The cast gives you your own functions."
+      - q: "Why make Target a variable instead of typing 3 into the Branch?"
+        choices: ["Variables are faster", "Branch can't take numbers", "It's required to compile", "So you can change the goal per level without editing the graph"]
+        answer_index: 3
+        explain: "Tuning values belong in variables."
+      - q: "Where do you check for the win?"
+        choices: ["On Event Tick", "Right after incrementing the count", "In the Construction Script", "Only when the level loads"]
+        answer_index: 1
+        explain: "Check when the count changes. Nothing else can change it."
+    flavors:
+      _default: {why: "A win condition is the smallest complete game you can make."}
+      lookdev: {why: "Your opposite taster. Your environments will host loops like this, so see how one is wired.", do: "Give the coins an emissive MI_ so they read in your lighting."}
+      animation: {why: "The same overlap-to-GameMode wiring will later trigger montages and reactions."}
+      cinematics: {why: "Your R2 capstone triggers a sequence from BP. This loop is where it gets triggered from."}
+      level_design: {why: "Placing the 3 coins is level design: they decide the route."}
+
+  - id: T-MASTER-MAT
+    rank: 2
+    track: tasters
+    subjects: [materials, master-material, parameters]
+    required_for_majors: []
+    taster_for_majors: [gameplay_design]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: "Master material from scratch (small)"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-03-create-materials-and-material-instances"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 master material parameters beginner base color roughness"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+    checklist:
+      - "Create M_UC_Master in /Content/UC/Materials."
+      - "Add parameters: a Vector BaseColor, Scalars Roughness and Metallic, and a Scalar EmissiveStrength multiplied by the color into Emissive."
+      - "Give every parameter a Group so the instance panel stays tidy."
+      - "Make 3 instances: MI_Gameplay_Interact (bright, a little emissive), MI_Gameplay_Hazard (red), MI_Gameplay_Neutral (matte gray)."
+      - "Apply them to your R2 interactables so players can read their roles by color."
+    done_when: "Screenshot of the master graph plus the 3 instances applied in your level."
+    xp: 60
+    verify_type: screenshot
+    quiz: []   # stub: quiz to be written
+    flavors:
+      _default: {why: "One master material with parameters can color-code a whole game."}
+      gameplay_design: {why: "Your opposite taster. Color-coded interactables are how players learn your rules at a glance.", do: "Make the hazard instance instantly distinct from the interact one."}
+      level_design: {why: "The same color language marks interactables in your levels."}

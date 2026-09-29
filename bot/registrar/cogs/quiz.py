@@ -1,0 +1,116 @@
+"""/quiz: ephemeral, one question per step, buttons. Pass = 80%."""
+from __future__ import annotations
+
+import asyncio
+import json
+import random
+
+import discord
+from discord import app_commands
+from discord.ext import commands
+
+from .. import profile
+from ..curriculum import QUIZ_PASS_RATIO
+
+
+class Quiz(commands.Cog):
+    def __init__(self, bot):
+        self.bot = bot
+
+    async def quest_autocomplete(self, itx: discord.Interaction, current: str):
+        u = await self.bot.db.user(itx.user.id)
+        qs = [q for q in self.bot.catalog.quests.values() if q.quiz and q.rank <= max(u["rank"], 0)]
+        cur = current.lower()
+        return [app_commands.Choice(name=f"{q.id} · {q.raw['title']}"[:100], value=q.id)
+                for q in qs if cur in q.id.lower() or cur in q.raw["title"].lower()][:25]
+
+    @app_commands.command(name="quiz", description="Take a quest's quiz.")
+    @app_commands.autocomplete(quest=quest_autocomplete)
+    async def quiz(self, itx: discord.Interaction, quest: str):
+        q = self.bot.catalog.quests.get(quest.upper())
+        if not q or not q.quiz:
+            await itx.response.send_message("That quest has no quiz. `/submit` it directly.", ephemeral=True)
+            return
+        u = await self.bot.db.user(itx.user.id)
+        if q.rank > max(u["rank"], 0) and q.rank >= 0:
+            await itx.response.send_message("That quiz unlocks at a higher rank.", ephemeral=True)
+            return
+        first_try = await self.bot.db.quiz_attempts(itx.user.id, q.id) == 0
+        view = QuizView(self, q, itx.user.id, first_try)
+        await itx.response.send_message(**view.render(), view=view, ephemeral=True)
+
+    async def finish(self, itx: discord.Interaction, q, score: int, first_try: bool) -> str:
+        db = self.bot.db
+        total = len(q.quiz)
+        passed = score / total >= QUIZ_PASS_RATIO
+        await db.log_quiz(itx.user.id, q.id, score, total, passed)
+        if not passed:
+            return f"**{score}/{total}**. You need {int(QUIZ_PASS_RATIO * total)}. Reread the checklist and try again."
+        await db.set_progress(itx.user.id, q.id, "quiz_passed", quiz_passed=True)
+        msg = f"**{score}/{total}**. Passed."
+        if first_try:
+            bonus = round(q.xp * self.bot.catalog.xp_rules.get("quiz_first_try_bonus_pct", 20) / 100)
+            await db.add_xp(itx.user.id, bonus, f"quiz_bonus:{q.id}")
+            msg += f" First-try bonus +{bonus} XP."
+        await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, f"quiz.{q.id}")   # action quests (O1) finish via their checklist
+        prof = json.loads(await db.kv_get(itx.user.id, "profile") or "{}")
+        test_out = q.spine and first_try and profile.can_test_out(prof)
+        if q.raw.get("verify_type") == "quiz" or test_out:
+            asyncio.create_task(self.bot.get_cog("Quests").complete(itx.guild, itx.user.id, q.id))
+            msg += " Tested out: quest complete, no turn-in needed." if test_out and q.raw.get("verify_type") != "quiz" \
+                else " Quest complete."
+        elif q.raw.get("verify_type") == "action":
+            msg += " That box is ticked. `/start` shows what's left."
+        else:
+            msg += f" Now `/submit {q.id}` with your proof."
+        return msg
+
+
+class QuizView(discord.ui.View):
+    def __init__(self, cog: Quiz, q, uid: int, first_try: bool):
+        super().__init__(timeout=900)
+        self.cog, self.q, self.uid, self.first_try = cog, q, uid, first_try
+        self.i = 0
+        self.score = 0
+        self.feedback = ""
+        # Shuffle choice order per attempt so letter positions can't be memorized.
+        self.orders = [random.sample(range(len(it["choices"])), len(it["choices"])) for it in q.quiz]
+        self._build()
+
+    def _build(self):
+        self.clear_items()
+        for pos, idx in enumerate(self.orders[self.i]):
+            b = discord.ui.Button(label=f"{'ABCD'[pos]}", style=discord.ButtonStyle.secondary)
+            b.callback = self._answer(idx)
+            self.add_item(b)
+
+    def _letter(self, idx: int) -> str:
+        return "ABCD"[self.orders[self.i].index(idx)]
+
+    def render(self) -> dict:
+        item = self.q.quiz[self.i]
+        body = "\n".join(f"**{'ABCD'[pos]}.** {item['choices'][idx]}" for pos, idx in enumerate(self.orders[self.i]))
+        head = f"{self.feedback}\n\n" if self.feedback else ""
+        return {"content": f"{head}**{self.q.id} · Q{self.i + 1}/{len(self.q.quiz)}**\n{item['q']}\n\n{body}"}
+
+    def _answer(self, idx: int):
+        async def cb(itx: discord.Interaction):
+            if itx.user.id != self.uid:
+                return
+            item = self.q.quiz[self.i]
+            right = idx == item["answer_index"]
+            self.score += right
+            self.feedback = ("✅ " if right else f"❌ Answer: {self._letter(item['answer_index'])}. ") + item.get("explain", "")
+            self.i += 1
+            if self.i >= len(self.q.quiz):
+                result = await self.cog.finish(itx, self.q, self.score, self.first_try)
+                await itx.response.edit_message(content=f"{self.feedback}\n\n{result}", view=None)
+                self.stop()
+                return
+            self._build()
+            await itx.response.edit_message(**self.render(), view=self)
+        return cb
+
+
+async def setup(bot):
+    await bot.add_cog(Quiz(bot))

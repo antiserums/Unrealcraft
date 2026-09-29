@@ -1,0 +1,190 @@
+# Verified Epic URLs (checked 2026-09-29 against the live docs index, UE 5.8)
+
+Prefix every slug with:
+`https://dev.epicgames.com/documentation/en-us/unreal-engine/`
+
+Only slugs in this list may be used as `official_url` in the curriculum files. Anything else → `TODO_URL`.
+Known dead slugs (redirect to home): `installing-unreal-engine`, `details-panel-in-unreal-engine`,
+`viewport-bookmarks-in-unreal-engine`, `sky-light-in-unreal-engine`, `character-movement-component-in-unreal-engine`,
+`data-layers-in-unreal-engine`, `packaging-unreal-engine-projects`, `niagara-overview`, `decal-actor-in-unreal-engine`.
+
+Backup videos: none verified. Always `backup_url: TODO_URL` plus a `backup_search:` hint string.
+
+## Getting started
+| Slug | Page |
+|---|---|
+| get-started | Get Started |
+| unreal-engine-for-new-users | Unreal Engine for New Users |
+| install-unreal-engine | Install Unreal Engine |
+| first-hour-in-unreal-engine | Your First Hour in Unreal Engine |
+| module-1-install-ue-and-create-your-first-project | First Hour, Module 1 |
+| module-2-create-a-flashlight-with-enhanced-input | First Hour, Module 2 |
+| module-3-create-a-coin-pickup-with-modeling-tools-and-blueprints | First Hour, Module 3 |
+| your-first-game-in-unreal-engine | Your First Game in Unreal Engine |
+| module-5-building-the-coin-pickup-and-speed-boost-in-unreal-engine | First Game, Module 5 |
+| module-6-creating-level-checkpoints-and-kill-volumes-in-unreal-engine | First Game, Module 6 checkpoints |
+| module-6-package-your-project | Module 6: Package Your Project |
+| understanding-the-basics-of-unreal-engine | Understanding the Basics |
+| creating-a-new-project-in-unreal-engine | Creating a New Project |
+| create-your-first-project-in-unreal-engine | Create your First Project |
+| working-with-projects-and-templates-in-unreal-engine | Projects and Templates |
+| unreal-engine-templates-reference | Templates Reference |
+| third-person-template-in-unreal-engine | Third Person Template |
+| unreal-engine-interface-and-navigation | UE Interface and Navigation |
+| coding-in-unreal-engine-blueprint-vs-cplusplus | Coding in UE: Blueprint vs C++ |
+
+## Editor
+| Slug | Page |
+|---|---|
+| unreal-editor-interface | Unreal Editor Interface |
+| level-editor-in-unreal-engine | Level Editor |
+| level-editor-details-panel-in-unreal-engine | Level Editor Details Panel |
+| viewport-controls-in-unreal-engine | Viewport Controls |
+| world-bookmarks | World Bookmarks |
+| playing-and-simulating-in-unreal-engine | Playing and Simulating |
+| possessing-pawns-in-unreal-engine | Possessing Pawns |
+| content-browser-in-unreal-engine | Content Browser |
+| recommended-asset-naming-conventions-in-unreal-engine-projects | Recommended Asset Naming Conventions |
+| outliner-in-unreal-engine | Outliner |
+| world-settings-in-unreal-engine | World Settings |
+| transforming-actors-in-unreal-engine | Transforming Actors |
+| actor-snapping-in-unreal-engine | Actor Snapping |
+| unreal-editor-preferences | Editor Preferences |
+| customizing-keyboard-shortcuts-in-unreal-engine | Customizing Keyboard Shortcuts |
+| taking-screenshots-in-unreal-engine | Taking Screenshots |
+| stat-commands-in-unreal-engine | Stat Commands |
+
+## World, layout, lighting
+| Slug | Page |
+|---|---|
+| level-designer-quick-start-in-unreal-engine | Level Designer Quick Start |
+| artist-quick-start-in-unreal-engine | Artist Quick Start |
+| actors-and-geometry-in-unreal-engine | Actors and Geometry |
+| geometry-brush-actors-in-unreal-engine | Geometry Brush Actors |
+| modeling-mode-in-unreal-engine | Modeling Mode Overview |
+| modeling-mode-quick-start-in-unreal-engine | Modeling Mode Quick Start |
+| cubegrid-tool-in-unreal-engine | CubeGrid |
+| player-start-actor-in-unreal-engine | Player Start Actor |
+| volume-actors-in-unreal-engine | Volume Actors |
+| trigger-volume-actors-in-unreal-engine | Trigger Volume Actors |
+| pain-causing-volume-actor-in-unreal-engine | Pain-Causing Volume |
+| decal-actors-in-unreal-engine | Decal Actors |
+| level-instancing-in-unreal-engine | Level Instancing |
+| landscape-quick-start-guide-in-unreal-engine | Landscape Quick Start |
+| landscape-outdoor-terrain-in-unreal-engine | Landscape Outdoor Terrain |
+| landscape-sculpt-mode-in-unreal-engine | Landscape Sculpt Mode |
+| landscape-paint-mode-in-unreal-engine | Landscape Paint Mode |
+| landscape-splines-in-unreal-engine | Landscape Splines |
+| landscape-materials-in-unreal-engine | Landscape Materials |
+| foliage-mode-in-unreal-engine | Foliage Mode |
+| grass-quick-start-in-unreal-engine | Grass Quick Start |
+| procedural-foliage-tool-in-unreal-engine | Procedural Foliage Tool |
+| water-system-in-unreal-engine | Water System |
+| procedural-content-generation-overview | PCG Overview |
+| procedural-content-generation-framework-in-unreal-engine | PCG Framework |
+| lighting-the-environment-in-unreal-engine | Lighting the Environment |
+| light-types-and-their-mobility-in-unreal-engine | Light Types and Their Mobility |
+| features-and-properties-of-lights-in-unreal-engine | Direct Lighting |
+| directional-lights-in-unreal-engine | Directional Lights |
+| sky-lights-in-unreal-engine | Sky Lights |
+| sky-atmosphere-component-in-unreal-engine | Sky Atmosphere |
+| environmental-light-with-fog-clouds-sky-and-atmosphere-in-unreal-engine | Environmental Light with Fog, Clouds, Sky and Atmosphere |
+| environment-light-mixer-in-unreal-engine | Env. Light Mixer |
+| exponential-height-fog-in-unreal-engine | Exponential Height Fog |
+| volumetric-fog-in-unreal-engine | Volumetric Fog |
+| local-fog-volumes-in-unreal-engine | Local Fog Volumes |
+| lumen-global-illumination-and-reflections-in-unreal-engine | Lumen GI and Reflections |
+| using-physical-lighting-units-in-unreal-engine | Physical Lighting Units |
+| using-ies-light-profiles-in-unreal-engine | IES Light Profiles |
+| post-process-effects-in-unreal-engine | Post Process Effects |
+| add-post-process-volumes | Add Post Process Volumes |
+| auto-exposure-in-unreal-engine | Auto Exposure |
+| how-to-add-lighting-and-effects-to-a-scene | How to Add Lighting and Actors to a Scene |
+| artist-02-light-a-scene | Light a Scene (artist track) |
+| world-partition-in-unreal-engine | World Partition |
+| world-partition---data-layers-in-unreal-engine | World Partition – Data Layers |
+| level-streaming-in-unreal-engine | Level Streaming |
+| nanite-virtualized-geometry-in-unreal-engine | Nanite Overview |
+| rendering-high-quality-frames-with-movie-render-queue-in-unreal-engine | Movie Render Queue |
+| how-to-render-out-final-images-and-video | Movie Render Pipeline howto |
+
+## Materials
+| Slug | Page |
+|---|---|
+| unreal-engine-materials | Materials |
+| instanced-materials-in-unreal-engine | Material Instances |
+| material-functions-in-unreal-engine | Material Functions |
+| artist-03-create-materials-and-material-instances | Create Materials and Material Instances |
+| artist-04-expanded-material-instances | Expanded Material Instances |
+
+## Blueprint / gameplay
+| Slug | Page |
+|---|---|
+| blueprints-visual-scripting-in-unreal-engine | Blueprints Visual Scripting |
+| blueprint-class-assets-in-unreal-engine | Blueprint Class |
+| blueprint-variables-in-unreal-engine | Blueprint Variables |
+| flow-control-in-unreal-engine | Flow Control |
+| events-in-unreal-engine | Events |
+| timelines-in-unreal-engine | Timelines |
+| blueprint-interface-in-unreal-engine | Blueprint Interface |
+| blueprint-communication-usage-in-unreal-engine | Blueprint Communication Usage |
+| opening-doors-in-unreal-engine | Opening Doors |
+| collision-in-unreal-engine | Collision |
+| enhanced-input-in-unreal-engine | Enhanced Input |
+| setting-up-a-game-mode-in-unreal-engine | Setting Up a Game Mode |
+| game-mode-and-game-state-in-unreal-engine | Game Mode and Game State |
+| data-assets-in-unreal-engine | Data Assets |
+| designer-01-project-setup-and-level-blockout-in-unreal-engine | Designer 01 Blockout |
+| designer-02-create-a-key-in-unreal-engine | Designer 02 Key |
+| designer-03-open-doors-with-keys-in-unreal-engine | Designer 03 Doors with Keys |
+| designer-04-player-hud-in-unreal-engine | Designer 04 HUD |
+| designer-05-puzzles-switches-and-cubes-in-unreal-engine | Designer 05 Switches and Cubes |
+| designer-06-puzzles-moving-platforms-in-unreal-engine | Designer 06 Moving Platforms |
+| designer-07-traps-and-damage-in-unreal-engine | Designer 07 Traps and Damage |
+| designer-08-create-an-enemy-in-unreal-engine | Designer 08 Enemy |
+| designer-09-sprint-input-action-in-unreal-engine | Designer 09 Sprint |
+| umg-ui-designer-quick-start-guide-in-unreal-engine | UMG Quick Start |
+| widget-blueprints-in-umg-for-unreal-engine | Widget Blueprints |
+| editor-utility-widgets-in-unreal-engine | Editor Utility Widgets |
+
+## AI / navigation
+| Slug | Page |
+|---|---|
+| basic-navigation-in-unreal-engine | Basic Navigation |
+| navigation-system-in-unreal-engine | Navigation System |
+| behavior-trees-in-unreal-engine | Behavior Trees |
+| smart-objects-in-unreal-engine---quick-start | Smart Objects Quick Start |
+
+## Characters / animation
+| Slug | Page |
+|---|---|
+| setting-up-a-character-in-unreal-engine | Setting Up a Character |
+| animation-blueprints-in-unreal-engine | Animation Blueprints |
+| animation-montage-in-unreal-engine | Animation Montage |
+| animation-retargeting-in-unreal-engine | Animation Retargeting |
+| auto-retargeting-in-unreal-engine | Auto Retargeting |
+| ik-rig-animation-retargeting-in-unreal-engine | IK Rig Retargeting |
+| how-to-create-control-rigs-in-unreal-engine | Control Rig Quick Start |
+| sequencer-cinematic-editor-unreal-engine | Sequencer Editor |
+
+## C++ / systems
+| Slug | Page |
+|---|---|
+| programming-with-cplusplus-in-unreal-engine | Programming with C++ |
+| unreal-engine-cpp-quick-start | Programming Quick Start |
+| coder-01-set-up-and-compile-a-cplusplus-project-in-unreal-engine | Coder 01 Setup and Compile |
+| coder-02-create-a-player-character-with-input-actions-in-cplusplus | Coder 02 Player Character |
+| coder-03-configure-character-movement-with-cplusplus-in-unreal-engine | Coder 03 Character Movement |
+| coder-05-manage-item-and-data-in-an-unreal-engine-game | Coder 05 Items and Data |
+| coder-06-create-a-respawning-pickup-item-in-unreal-engine | Coder 06 Respawning Pickup |
+| gameplay-ability-system-for-unreal-engine | Gameplay Ability System |
+| networking-and-multiplayer-in-unreal-engine | Networking and Multiplayer |
+| multiplayer-programming-quick-start-for-unreal-engine | Multiplayer Programming Quick Start |
+| packaging-your-project | Packaging Unreal Engine Projects |
+| unreal-insights-in-unreal-engine | Unreal Insights |
+
+## Niagara / FX
+| Slug | Page |
+|---|---|
+| overview-of-niagara-effects-for-unreal-engine | Niagara Overview |
+| quick-start-for-niagara-effects-in-unreal-engine | Niagara Quick Start |

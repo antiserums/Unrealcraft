@@ -1,0 +1,1 @@
+"""Quartermaster: the Unrealcraft bot."""

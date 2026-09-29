@@ -1,0 +1,630 @@
+# Unrealcraft — Level Design, Rank 2 ("Gameplay Prototyper": can make a thing play)
+# Rank 2 has two tracks: materials and blueprint. Level Design fully requires only the blueprint side
+# (Blueprint-in-levels). The shared BP quests (R2-BP-*) also count for gameplay_design and programming.
+# URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
+# Verified slugs only (see VERIFIED_URLS.md). Backup videos are TODO_URL until a human picks a dated UE5+ video.
+# Work in UC_Sandbox. Suggested level for this rank: L_Beats_01 in /Content/UC/Maps.
+
+quests:
+  # ------------ Shared blueprint track (level_design, gameplay_design, programming) ------------
+  - id: R2-BP-01
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, components, construction-script, variables]
+    required_for_majors: [level_design, gameplay_design, programming]
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation, cinematics]
+    required_spine: false
+    elective: false
+    title: "Actor Blueprint anatomy"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-class-assets-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 actor blueprint components construction script instance editable variables"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/events-in-unreal-engine"
+    checklist:
+      - "Create BP_Lamp (Actor) in /Content/UC/Blueprints. Add a Static Mesh and a Point Light component under the root."
+      - "Add a Linear Color variable LightColor and a Float variable Height. Tick Instance Editable (the eye icon) on both."
+      - "In the Construction Script, set the light color from LightColor and the mesh's relative Z from Height."
+      - "Place 3 copies in the level and give each a different color and height in Details. Watch them update without pressing Play."
+      - "In the Event Graph, on BeginPlay, Print String the lamp's name so you can see the runtime side fire."
+    done_when: "Screenshot of 3 placed lamps with different values, plus a screenshot of the Construction Script graph."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "When does the Construction Script run?"
+        choices: ["Only every frame during play", "In the editor when the actor is placed, moved or edited, and again when it spawns", "Only when you compile C++", "Only on BeginPlay"]
+        answer_index: 1
+        explain: "That's why it's good for previewing setup in the editor. Gameplay logic goes in the Event Graph."
+      - q: "What does ticking Instance Editable on a variable do?"
+        choices: ["Makes it replicate", "Lets you set a different value on each placed copy in the Details panel", "Makes it read-only", "Saves it to disk"]
+        answer_index: 1
+        explain: "Each instance in the level can then override the Blueprint's default."
+      - q: "You want a door's open width to show in the editor before you press Play. Where does that logic go?"
+        choices: ["Event Tick", "A Level Blueprint", "The Construction Script", "Project Settings"]
+        answer_index: 2
+        explain: "The Construction Script reruns on edit, so the preview updates as you change values."
+      - q: "What is the root component?"
+        choices: ["The component at the top of the hierarchy; the other components are positioned relative to it", "Whatever component was added last", "The Event Graph", "A hidden debug mesh"]
+        answer_index: 0
+        explain: "Moving the root moves everything attached to it."
+      - q: "You change a variable's default in the Blueprint. Which placed copies update?"
+        choices: ["None until you restart", "Only the first one", "All of them, including ones you already overrode", "The ones that haven't overridden that value in Details"]
+        answer_index: 3
+        explain: "An overridden instance value wins over the class default. The reset arrow in Details clears the override."
+    flavors:
+      _default: {why: "Most things you build later start as an Actor Blueprint like this one."}
+      level_design: {why: "Instance Editable variables let you drop 10 copies and tune each one without editing the graph.", do: "Expose the numbers you'd want to tweak per placement, like height, color and delay."}
+      gameplay_design: {why: "Exposed variables are your tuning knobs. Designers tweak them without touching the graph."}
+      programming: {why: "Later a C++ UPROPERTY will show up in Details the same way these variables do."}
+
+  - id: R2-BP-02
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, collision, overlap, triggers]
+    required_for_majors: [level_design, gameplay_design, programming]
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation, cinematics]
+    required_spine: false
+    elective: false
+    title: "Trigger volumes and overlap events"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/trigger-volume-actors-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 trigger box overlap event cast to character only player"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/collision-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/events-in-unreal-engine"
+    checklist:
+      - "Create BP_TriggerZone (Actor) with a Box Collision as root. Make the box size Instance Editable through the Construction Script."
+      - "On Component Begin Overlap: compare Other Actor with Get Player Pawn and Branch. Only the player continues."
+      - "On Component End Overlap: same filter, then Print String \"left zone\"."
+      - "Push a physics cube (Simulate Physics on) into the zone and confirm nothing fires."
+      - "Place a level Trigger Box too and handle its overlap once in the Level Blueprint, so you've seen both ways."
+    done_when: "Screenshot of the filtered overlap graph plus a PIE screenshot showing the print only fired for the player."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "Your trigger fires when a physics cube rolls in. How do you make it player-only?"
+        choices: ["Delete the cube", "Check that Other Actor equals Get Player Pawn (or Cast To your character) before continuing", "Turn off collision on the trigger", "Use Event Tick instead"]
+        answer_index: 1
+        explain: "Filter on Other Actor. Anything can overlap a box."
+      - q: "What has to be true for Begin Overlap to fire between the trigger and the player's capsule?"
+        choices: ["Both have Generate Overlap Events on, and the trigger is set to Overlap the player's object type (neither ignores the other)", "Both must Block each other", "The trigger must be visible in game", "The player must be jumping"]
+        answer_index: 0
+        explain: "If either side ignores the other's channel, or has overlap events off, no event fires. Both blocking gives a hit, not an overlap."
+      - q: "Which event would you use to close a door after the player walks away?"
+        choices: ["Event BeginPlay", "On Component Hit", "On Component End Overlap", "Construction Script"]
+        answer_index: 2
+        explain: "End Overlap fires when the overlapping actor leaves the collision."
+      - q: "Why build the trigger into a Blueprint instead of using a Trigger Box plus the Level Blueprint?"
+        choices: ["Trigger Boxes don't work in UE5", "The Level Blueprint is C++ only", "It renders faster", "The logic travels with the actor, so every copy you place already works"]
+        answer_index: 3
+        explain: "Level Blueprint logic is stuck in one level. A Blueprint actor is reusable."
+      - q: "Where can you quickly handle a placed Trigger Box's overlap without making a new Blueprint?"
+        choices: ["The Level Blueprint, with the Trigger Box selected", "World Settings", "The Material Editor", "The Content Drawer"]
+        answer_index: 0
+        explain: "Select it in the level, open the Level Blueprint, right-click and add its overlap event. Fine for one-offs."
+    flavors:
+      _default: {why: "Overlaps are how the world notices the player."}
+      level_design: {why: "Almost every scripted moment in a level starts with a trigger.", do: "Size the trigger to where the player actually walks, not to the whole room."}
+      gameplay_design: {why: "Zones, pickups and hazards are all overlaps with a filter."}
+      programming: {why: "The same collision rules apply in C++. Learn the settings here where they're easy to see."}
+
+  - id: R2-BP-03
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, timelines, animation-curves]
+    required_for_majors: [level_design, gameplay_design, programming]
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation, cinematics]
+    required_spine: false
+    elective: false
+    title: "Timelines: a door that moves smoothly"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/timelines-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 timeline door open lerp rotator play reverse"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/opening-doors-in-unreal-engine"
+    checklist:
+      - "In BP_Door (from S9 or new), add a Timeline TL_Open with one float track from 0 to 1 over 1.0 s. Ease the curve (right-click keys → Auto)."
+      - "Drive Lerp (Rotator) or Lerp (Vector) with the track's output. Feed that into Set Relative Rotation or Set Relative Location on the door mesh."
+      - "Wire BP-02's filtered Begin Overlap to Play and End Overlap to Reverse."
+      - "Make OpenAngle (or OpenOffset) Instance Editable so each door can open differently."
+      - "PIE: step in and out halfway through the motion. The door should reverse from where it is, not snap."
+    done_when: "PIE clip (10–20 s) of the door opening and reversing mid-way, plus a screenshot of the Timeline curve and graph."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "Why use a Timeline for a door instead of Event Tick?"
+        choices: ["Tick can't move actors", "A Timeline plays a curve over a set time, can reverse, and only runs while it's playing", "Timelines run on the GPU", "Tick is removed in UE5"]
+        answer_index: 1
+        explain: "You get easing, Play/Reverse and no per-frame cost when the door is idle."
+      - q: "The player steps out while the door is half open. Which input gives a smooth close?"
+        choices: ["Play from Start", "Stop", "Set New Time to 0", "Reverse"]
+        answer_index: 3
+        explain: "Reverse runs back from the current position. Play from Start or Set New Time would snap."
+      - q: "Your float track goes 0 to 1. How do you turn that into door movement?"
+        choices: ["Use it as the Alpha of a Lerp between closed and open, then set the relative rotation or location", "Plug it straight into Destroy Actor", "Multiply it by Delta Seconds", "Connect it to Print String"]
+        answer_index: 0
+        explain: "A 0–1 track as a Lerp alpha is the reusable pattern. Change the end values, keep the curve."
+      - q: "You try to add a Timeline inside a Blueprint function and can't. Why?"
+        choices: ["A plugin is missing", "Functions are C++ only", "Timelines run over time, so they only live in the Event Graph", "You need a Level Blueprint"]
+        answer_index: 2
+        explain: "Functions must finish in one call. Put the Timeline in the Event Graph and call it with a custom event."
+      - q: "Designers say the door is too slow. What's the cleanest fix?"
+        choices: ["Add a Delay", "Shorten the Timeline length, or use Set Play Rate from an exposed variable", "Scale the mesh", "Run it on Tick"]
+        answer_index: 1
+        explain: "Play Rate from an Instance Editable variable lets each door have its own speed."
+    flavors:
+      _default: {why: "Timelines are the quickest way to make things move smoothly in Blueprint."}
+      level_design: {why: "Doors, lifts and bridges that ease in and out feel intentional. Snapping looks broken.", do: "Expose speed and distance so you can tune each door during a playtest."}
+      gameplay_design: {why: "The curve controls the feel. Ease-in and ease-out matter as much as timing."}
+      animation: {why: "Same idea as a curve in Sequencer, driven by gameplay instead."}
+
+  - id: R2-BP-04
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, communication, interfaces, references]
+    required_for_majors: [level_design, gameplay_design, programming]
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation, cinematics]
+    required_spine: false
+    elective: false
+    title: "Actors talking: direct references vs Blueprint Interfaces"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-communication-usage-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 blueprint interface lever opens gate direct reference vs interface"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-interface-in-unreal-engine"
+    checklist:
+      - "Version A: in BP_Lever add an Instance Editable variable Target of type BP_Gate (Object Reference). On interact, call the gate's Open event."
+      - "Place a lever and a gate. Pick the gate with the eyedropper on the lever's Target in Details. Test in PIE."
+      - "Version B: create a Blueprint Interface BPI_Activatable with a function Activate. Implement it on BP_Gate and on a second actor (a lamp or a platform)."
+      - "Change the lever's Target to type Actor and call Activate (Message) on it. Point one lever at the gate and another at the lamp."
+      - "Leave one lever's Target empty and press Play. Read the Accessed None error in the Message Log, then add an Is Valid check."
+    done_when: "Screenshot of both lever graphs, plus a PIE screenshot or short clip of one lever opening the gate and another switching the lamp."
+    xp: 100
+    verify_type: screenshot
+    quiz:
+      - q: "How does a lever with a direct reference know which gate to open?"
+        choices: ["It searches the whole level every frame", "An Instance Editable variable on the placed lever is set to that gate in Details", "Gates register themselves automatically", "Through Project Settings"]
+        answer_index: 1
+        explain: "The eyedropper on an Instance Editable object reference links the two placed actors."
+      - q: "What's the main benefit of a Blueprint Interface here?"
+        choices: ["It's faster to render", "It removes collision", "The lever can activate any actor that implements it without knowing its class", "It works only in C++"]
+        answer_index: 2
+        explain: "Gates, lamps and platforms can each respond to Activate in their own way."
+      - q: "You send an interface message to an actor that doesn't implement the interface. What happens?"
+        choices: ["The editor crashes", "Nothing. The call is ignored without an error", "It fails to compile", "The actor is destroyed"]
+        answer_index: 1
+        explain: "That's what makes messages safe for mixed targets. If nothing happens, check the target implements the interface."
+      - q: "Your log says Accessed None trying to read Target. What's wrong?"
+        choices: ["The reference variable is empty on that placed lever", "The gate's material is missing", "Lumen is off", "The Timeline is too long"]
+        answer_index: 0
+        explain: "Set it in Details, and guard the call with Is Valid so a missing link fails quietly."
+      - q: "A lever needs to announce \"pulled\" to any number of listeners that bind to it. Which tool fits?"
+        choices: ["A Cast", "A Construction Script", "A Level Streaming volume", "An Event Dispatcher"]
+        answer_index: 3
+        explain: "Dispatchers are one-to-many: listeners bind, the lever calls the dispatcher once."
+    flavors:
+      _default: {why: "Sooner or later one actor has to tell another to do something."}
+      level_design: {why: "Levers, buttons and pressure plates wired to doors are the core of puzzle and gating work.", do: "Build one interface like BPI_Activatable and reuse it for every switch in your levels."}
+      gameplay_design: {why: "Interfaces let you add new interactables without changing the ones you already have."}
+      programming: {why: "Coupling and dependencies: the same tradeoffs you'll weigh in C++."}
+
+  # ------------ Level Design side ------------
+  - id: R2-LD-01
+    rank: 2
+    track: blueprint
+    subjects: [planning, pacing, beat-chart]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: false
+    title: "Beat chart: three beats on one page"
+    time_min: 40
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "level design beat chart pacing intro tension payoff"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
+    checklist:
+      - "Before opening the editor, make a one-page table with 3 rows: Intro, Tension, Payoff."
+      - "Columns: location, player goal, what the player does (mechanic), what they see first, intended feeling, and intensity (1–5)."
+      - "Mark where each Blueprint interact from BP-02–BP-04 will live."
+      - "Sketch a top-down doodle of the route (paper photo or any drawing tool is fine)."
+      - "Post it in your turn-in thread before you build. You'll compare it with the finished level in R2-LD-06."
+    done_when: "Writeup: the beat chart (table or image) plus the top-down sketch."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "In a beat chart, what is a beat?"
+        choices: ["A music track", "One section where the player's goal or feeling shifts", "A single mesh", "A frame of animation"]
+        answer_index: 1
+        explain: "Each beat has a job: teach, pressure, or reward."
+      - q: "Why plan the beats on one page before building?"
+        choices: ["Epic requires it", "Changing a line of text is cheaper than rebuilding a blockout", "It improves frame rate", "It generates the level"]
+        answer_index: 1
+        explain: "One page forces you to decide what each space is for."
+      - q: "Which is a good payoff beat?"
+        choices: ["Another identical corridor", "A loading screen", "Opening the gate you've seen since the intro, onto a view or reward", "An unexplained dead end"]
+        answer_index: 2
+        explain: "Payoff pays back the tension: something earned, seen or reached."
+      - q: "Your intensity column reads 5, 5, 5. What's the problem?"
+        choices: ["No contrast. Tension only works if there's a lower beat before it", "Nothing, higher is better", "The level is too short", "The numbers must add up to 10"]
+        answer_index: 0
+        explain: "Pacing needs rises and rests. Flat intensity feels like noise."
+      - q: "What does NOT belong in a beat chart row?"
+        choices: ["The player's goal", "The mechanic used", "The intended feeling", "Texture resolutions and material names"]
+        answer_index: 3
+        explain: "Beat charts cover player experience. Asset details go elsewhere."
+    flavors:
+      _default: {why: "Planning on one page first saves hours of rebuilding."}
+      level_design: {why: "Beats are the difference between a level and a set of rooms.", do: "Write each beat's goal as one sentence the player would understand."}
+      gameplay_design: {why: "Same tool, used for pacing a loop instead of a space."}
+      cinematics: {why: "A beat chart works like a shot list for an interactive scene."}
+
+  - id: R2-LD-02
+    rank: 2
+    track: blueprint
+    subjects: [metrics, documentation, character-movement]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, animation]
+    required_spine: false
+    elective: false
+    title: "Metrics sheet you can share"
+    time_min: 50
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 level design metrics gym jump height character movement"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-character-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-01-project-setup-and-level-blockout-in-unreal-engine"
+    checklist:
+      - "Open your character Blueprint. From the Capsule and Character Movement components, write down capsule radius and half-height, Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle."
+      - "Build a small metrics gym in L_Metrics: ledges every 25 cm up to 250 cm, gaps every 50 cm, ramps at 30°, 45° and 50°."
+      - "PIE and record the real numbers: highest ledge you can jump onto, widest gap you can clear, steepest ramp you can walk."
+      - "Add space rules: door width and height, corridor width (1 and 2 players), cover height, stair step size."
+      - "Put it in a shareable sheet (spreadsheet or doc) with the engine version at the top and share the link."
+    done_when: "Link to the metrics sheet plus a screenshot of your metrics gym."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "Where do you read Max Walk Speed and Jump Z Velocity?"
+        choices: ["World Settings", "The Character Movement component on your character Blueprint", "Project Settings → Input", "The GameState"]
+        answer_index: 1
+        explain: "Character Movement holds walking, jumping and falling settings."
+      - q: "The default Third Person capsule has a half-height of 96. How tall is the capsule?"
+        choices: ["96 cm", "48 cm", "192 cm", "960 cm"]
+        answer_index: 2
+        explain: "Half-height is measured from the center, so double it. Check your own template's values."
+      - q: "What does Max Step Height control?"
+        choices: ["The tallest ledge the character walks up without jumping", "Maximum jump height", "Camera height", "Stair mesh size"]
+        answer_index: 0
+        explain: "Anything taller needs a jump. Size stairs and curbs with this in mind."
+      - q: "Why measure jump distance in a metrics gym instead of calculating it?"
+        choices: ["Math is banned", "Air control, gravity and friction all affect it, so testing gives the number players actually get", "The gym is required to package", "It's faster to render"]
+        answer_index: 1
+        explain: "Test in PIE and record what works, then leave some margin."
+      - q: "Why make the sheet shareable?"
+        choices: ["For XP only", "It must be in C++", "So you don't need to test", "So everyone building for the character uses the same numbers and kit pieces fit"]
+        answer_index: 3
+        explain: "A metrics sheet is a team document. It becomes part of your Rank 4 kit handoff."
+    flavors:
+      _default: {why: "If you know the character's numbers, you build spaces that fit the first time."}
+      level_design: {why: "Metrics are your contract with the character. Every gap and ledge depends on them.", do: "Put margins in the sheet (for example, gaps 50 cm under max jump), not just the limits."}
+      gameplay_design: {why: "If you change jump or speed, every level's metrics change too. This sheet shows the cost."}
+      animation: {why: "Step height and ledge heights set which traversal animations you'll need."}
+
+  - id: R2-LD-03
+    rank: 2
+    track: blueprint
+    subjects: [gating, pickups, doors, blueprint]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: false
+    title: "Lock and key"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-02-create-a-key-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 key pickup locked door blueprint level design gating"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-03-open-doors-with-keys-in-unreal-engine"
+    checklist:
+      - "Make BP_Key: a mesh plus sphere trigger (BP-02 filter). On pickup, set a HasKey boolean on the player (Cast to your character or use an interface), then Destroy Actor."
+      - "Make BP_LockedDoor: on player overlap, check HasKey. If true, play the BP-03 Timeline. If false, show feedback (Print String, a red light, or a sound)."
+      - "Place the door so the player sees it locked BEFORE they find the key."
+      - "Put the key where getting it is a small detour, not a hidden-object hunt."
+      - "Test for soft locks: can the key fall out of reach, or can the player get stuck behind the door?"
+    done_when: "PIE clip (under 30 s) showing locked feedback, key pickup and door opening, plus the door's graph screenshot."
+    xp: 100
+    verify_type: screenshot
+    quiz:
+      - q: "Why should the player see the locked door before finding the key?"
+        choices: ["It loads faster", "The key then has a known purpose and the player knows where to go back to", "Keys can't spawn before doors", "It's required for NavMesh"]
+        answer_index: 1
+        explain: "Show the lock first, then the key. Picking up the key then means something."
+      - q: "The player walks into the locked door and nothing happens. What's missing?"
+        choices: ["Locked feedback, so the player knows it's a lock and not a bug", "A second key", "More lights everywhere", "A Level Streaming volume"]
+        answer_index: 0
+        explain: "A message, a sound or a red light tells them it's locked."
+      - q: "What is a soft lock?"
+        choices: ["A door with no collision", "A save file", "A state where the player can't progress without restarting", "A key with a timer"]
+        answer_index: 2
+        explain: "A key stuck behind a closed door or knocked off a ledge are classic soft locks."
+      - q: "Where should the door check for the key?"
+        choices: ["On Event Tick, every frame", "In the Construction Script", "In World Settings", "When the player overlaps the door, by reading the player's HasKey"]
+        answer_index: 3
+        explain: "Check on interaction. Nothing needs to run until the player arrives."
+      - q: "Which R2 quests does this build on?"
+        choices: ["Only S1", "BP-02 for filtered pickups and BP-03 or BP-04 for opening the door", "None", "The Programming capstone"]
+        answer_index: 1
+        explain: "Lock and key combines filtered triggers, a Timeline door and actor communication."
+    flavors:
+      _default: {why: "Lock and key is the simplest way to make the player take a route in a set order."}
+      level_design: {why: "Gating is how you control the order players see your spaces in.", do: "Mark the lock and the key on your beat chart so tension builds between them."}
+      gameplay_design: {why: "A key is the smallest possible progression system."}
+
+  - id: R2-LD-04
+    rank: 2
+    track: blueprint
+    subjects: [navigation, navmesh, ai]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: "NavMesh walk test"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 nav mesh bounds volume ai move to beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-system-in-unreal-engine"
+    checklist:
+      - "Place a Nav Mesh Bounds Volume and scale it to cover your whole route."
+      - "Press P in the viewport to show navigation. Walkable areas turn green. Note gaps at doors, stairs and ledges."
+      - "Create BP_Walker (Character) and place it. On BeginPlay, AI MoveTo a Target Point at the end of your route, with Print String on both On Success and On Fail."
+      - "PIE and watch it walk. Fix one spot where the green breaks: widen a door, lower a step, or add a ramp."
+      - "If your doors move, set Project Settings → Navigation Mesh → Runtime Generation to Dynamic and test the walker again with a door closed."
+    done_when: "Screenshot with navigation shown (P) over the route, plus a note on which gap you fixed."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "Which key toggles the navigation display in the viewport?"
+        choices: ["N", "F8", "P", "G"]
+        answer_index: 2
+        explain: "P shows the NavMesh. Green means AI can walk there."
+      - q: "Why is there a gap in the green along every wall?"
+        choices: ["The navmesh is pulled in by the agent radius so AI doesn't clip into walls", "A bug", "Lumen blocks it", "Walls are too dark"]
+        answer_index: 0
+        explain: "Tight doorways can close up completely. That's a metrics issue."
+      - q: "AI MoveTo goes straight to On Fail. What do you check first?"
+        choices: ["The material", "Whether the pawn and the destination are both on the green navmesh", "Post process settings", "The HUD"]
+        answer_index: 1
+        explain: "No path, no move. Also check the pawn is possessed by an AI Controller (placed Characters are by default)."
+      - q: "A closed door should block AI, and opening it should let them through. What's needed?"
+        choices: ["Nothing, the navmesh never changes", "Delete the navmesh", "A Level Blueprint", "Runtime Generation set to Dynamic so the navmesh rebuilds around moving obstacles"]
+        answer_index: 3
+        explain: "By default the navmesh is static and built in the editor."
+      - q: "Why does a level designer do this at Rank 2?"
+        choices: ["To learn C++", "To build a boss", "To check the route works for AI before Rank 3 encounters", "It's needed for lighting"]
+        answer_index: 2
+        explain: "Encounter spaces at Rank 3 need AI that can actually get to the player."
+    flavors:
+      _default: {why: "If AI can't walk your level, you find out now instead of during an encounter."}
+      level_design: {why: "The navmesh shows you whether AI can actually use your layout.", do: "Keep P on while you adjust doorways and stairs."}
+      gameplay_design: {why: "Enemy behaviour depends on AI being able to reach the player."}
+      programming: {why: "The navmesh is the data your AI code will query."}
+
+  - id: R2-LD-05
+    rank: 2
+    track: blueprint
+    subjects: [playtesting, observation, feedback]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: false
+    title: "Run one peer playtest"
+    time_min: 45
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "how to run a playtest silent observation level design notes"
+    checklist:
+      - "Find one peer (a #playtest post or voice channel). Get them your level: screenshare PIE or send a zip."
+      - "Brief them only with what a real player would know: controls and the goal. Nothing about the route."
+      - "Watch silently. Use a notes template: time, where, what they did, what they said, hesitations or backtracks."
+      - "If they ask for help, answer \"What would you try?\" and note the question."
+      - "After they finish, ask 3 open questions: What were you trying to do? Where did you get stuck? What stood out?"
+      - "Write your top 3 issues, ranked by how often they happened and how much they blocked progress."
+    done_when: "Writeup: filled notes template plus your ranked top 3 issues."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "Your tester stops and asks \"Where do I go?\" What do you say?"
+        choices: ["Point at the exit", "\"What would you try?\" Then write down where they got lost.", "Take their mouse", "End the test"]
+        answer_index: 1
+        explain: "Every explanation you give is a problem you won't see. Record the question."
+      - q: "What goes in playtest notes?"
+        choices: ["What the player did, where, and when, plus their exact words", "Your fixes only", "Your opinion of the tester", "Nothing, just remember it"]
+        answer_index: 0
+        explain: "Record what you observed first. Decide fixes afterward."
+      - q: "What do you tell the tester before they start?"
+        choices: ["The full route", "Where the key is", "Controls and the goal, like a real player would get", "Which parts are unfinished and why"]
+        answer_index: 2
+        explain: "Pre-explaining hides the problems you're testing for."
+      - q: "Which follow-up question is best?"
+        choices: ["\"Did you like it?\"", "\"Wasn't the gate cool?\"", "\"Would you buy this?\"", "\"What were you trying to do when you turned back?\""]
+        answer_index: 3
+        explain: "Open, specific questions get you useful answers. Leading questions get polite ones."
+      - q: "The tester misses the lever and you think it's obvious. Next step?"
+        choices: ["Assume they're wrong", "Treat it as a readability issue and try light, framing or a landmark", "Remove the lever", "Add a tutorial popup first"]
+        answer_index: 1
+        explain: "Fix the space first. Text prompts are a last resort."
+    flavors:
+      _default: {why: "You can't playtest your own level. You already know where everything is."}
+      level_design: {why: "Watching one stranger play teaches more than an hour of reviewing it yourself.", do: "Mark every hesitation on your top-down sketch. Clusters show you what to fix."}
+      gameplay_design: {why: "Same protocol for testing a loop. Watch what players do, not what they say."}
+
+  - id: R2-LD-06
+    rank: 2
+    track: blueprint
+    subjects: [capstone, beats, blueprint, playtesting, metrics]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: "CAPSTONE: Beats & playtest"
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 level design blockout pacing playtest iteration"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+    checklist:
+      - "Build L_Beats_01 from your R2-LD-01 beat chart: intro, tension and payoff, each in its own space."
+      - "Include at least 2 different Blueprint interacts, for example lock and key (LD-03) plus a lever and gate over an interface (BP-04)."
+      - "Build to your R2-LD-02 metrics sheet. Every gap, ledge and door should match a number on it."
+      - "Run one peer playtest using the R2-LD-05 protocol."
+      - "Change at least one thing based on the playtest, then update the beat chart to match what you built."
+    done_when: "Writeup with: a PIE clip (60 s or less) through all 3 beats; the final beat chart; a link to the metrics sheet; playtest notes; and 2–3 lines on what you changed and why. Approved by a peer or mentor."
+    xp: 200
+    verify_type: writeup
+    quiz:
+      - q: "What counts as 2 Blueprint interacts for this capstone?"
+        choices: ["Two copies of the same door", "Two different interactions, like a key-locked door and a lever-driven gate", "Two Print Strings", "One door opened twice"]
+        answer_index: 1
+        explain: "They must be different mechanics, each doing a job in a beat."
+      - q: "Your playtester got lost in the tension beat. What does the turn-in need?"
+        choices: ["Nothing, playtests are optional", "A new level", "The notes, what you changed in response, and an updated beat chart", "A longer clip"]
+        answer_index: 2
+        explain: "The capstone is about iterating. Show the change and why you made it."
+      - q: "How long can the PIE clip be?"
+        choices: ["60 s or less", "5 minutes", "Any length", "10 s exactly"]
+        answer_index: 0
+        explain: "Short clips get reviewed. If your level takes longer, cut between beats."
+      - q: "A reviewer spots a gap the character can't clear. Which document should have prevented it?"
+        choices: ["The beat chart", "The playtest notes", "The engine release notes", "The metrics sheet"]
+        answer_index: 3
+        explain: "Gaps and ledges come from your measured metrics, with margin."
+      - q: "Who approves this capstone?"
+        choices: ["The Quartermaster automatically", "A peer or mentor, after the quiz", "Nobody", "Epic Games"]
+        answer_index: 1
+        explain: "Rank 2 verification is quiz plus artifact, approved by a person."
+    flavors:
+      _default: {why: "Plan it, build it, test it with someone else, change it. That's how level design works."}
+      level_design: {why: "The first time you plan, build, test and revise a whole level yourself.", do: "Keep the before/after of your playtest change. It's the best part of the turn-in."}
+      gameplay_design: {why: "The same loop you'll run on your Rank 2 core loop capstone."}
+
+  # ------------ Level Design electives (Rank 2) ------------
+  - id: R2-E-LD-01
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, platforms, timelines]
+    elective: true
+    title: "Moving platforms"
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-06-puzzles-moving-platforms-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 moving platform blueprint timeline loop"
+    checklist: ["Build BP_Platform that moves between two Instance Editable points on a looping Timeline.", "Ride it in PIE and check you don't slide off."]
+    done_when: "Short PIE clip of you riding the platform."
+    xp: 25
+    verify_type: screenshot
+    quiz: []
+
+  - id: R2-E-LD-02
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, hazards, damage]
+    elective: true
+    title: "Traps and damage volumes"
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-07-traps-and-damage-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 trap damage volume blueprint apply damage"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pain-causing-volume-actor-in-unreal-engine"
+    checklist: ["Add one trap (spikes or fire) using Apply Damage, or a Pain Causing Volume.", "Warn the player: make the trap visible before it hurts them."]
+    done_when: "Screenshot of the trap plus one line on how the player is warned."
+    xp: 25
+    verify_type: screenshot
+    quiz: []
+
+  - id: R2-E-LD-03
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, checkpoints, respawn]
+    elective: true
+    title: "Checkpoint and respawn"
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-6-creating-level-checkpoints-and-kill-volumes-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 checkpoint respawn kill z blueprint"
+    checklist: ["Add a checkpoint trigger that stores a respawn transform.", "Add a kill volume or Kill Z so falling sends the player back to the last checkpoint."]
+    done_when: "PIE clip: reach checkpoint, fall, respawn there."
+    xp: 30
+    verify_type: screenshot
+    quiz: []
+
+  - id: R2-E-LD-04
+    rank: 2
+    track: blueprint
+    subjects: [umg, hud, prompts]
+    elective: true
+    title: "Simple HUD prompt"
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-04-player-hud-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 umg press e to interact prompt widget"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/umg-ui-designer-quick-start-guide-in-unreal-engine"
+    checklist: ["Make WBP_Prompt with a single text line.", "Show it on Begin Overlap near an interactable and hide it on End Overlap."]
+    done_when: "Screenshot of the prompt showing in PIE."
+    xp: 25
+    verify_type: screenshot
+    quiz: []
+
+  - id: R2-E-LD-05
+    rank: 2
+    track: blueprint
+    subjects: [blueprint, puzzles, physics]
+    elective: true
+    title: "Switch puzzle with cubes"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-05-puzzles-switches-and-cubes-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 pressure plate cube puzzle blueprint"
+    checklist: ["Build a pressure plate that opens a gate only while a physics cube sits on it.", "Filter the plate so only the cube (or the player) counts. Decide which one and say why."]
+    done_when: "PIE clip of the puzzle solved."
+    xp: 30
+    verify_type: screenshot
+    quiz: []
+
+  - id: R2-E-LD-06
+    rank: 2
+    track: blueprint
+    subjects: [audio, feedback, blueprint]
+    elective: true
+    title: "Sound on interact"
+    time_min: 20
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 play sound at location blueprint door sound"
+    checklist: ["Add Play Sound at Location (or an Audio Component) to one door or lever.", "Use a different sound for locked vs opened."]
+    done_when: "Short PIE clip with audio."
+    xp: 15
+    verify_type: screenshot
+    quiz: []

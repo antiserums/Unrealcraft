@@ -1,0 +1,931 @@
+# Unrealcraft — Rank 1 "Blockout Artist" (Level Design + shared world-lighting)
+# Goal: you can make space and light it without getting lost.
+# URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
+# Verified slugs only (see VERIFIED_URLS.md). Backup videos are TODO_URL until a human picks a dated UE5+ video.
+# Rank 0–1 verification is quiz + honor-system artifact. No mentor sign-off at this rank.
+
+quests:
+  # ------------ Shared world-lighting (Level Design + Lookdev) ------------
+  - id: R1-WL-01
+    rank: 1
+    track: world-lighting
+    subjects: [landscape, sculpt]
+    required_for_majors: [level_design, lookdev]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: false
+    title: Sculpt a walkable patch
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-quick-start-guide-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 landscape quick start sculpt beginner"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-sculpt-mode-in-unreal-engine"
+    checklist:
+      - "New level L_Terrain_01. Landscape Mode → Manage → New. Keep it small (the default size or less is plenty)."
+      - "Sculpt tool: raise one hill and hold Shift to dig one hollow."
+      - "Smooth tool over the edges until nothing looks like a spike."
+      - "Ramp tool: make one path from the low ground to the top of the hill."
+      - "Drop in a Player Start and the Third Person GameMode, then walk the path in PIE."
+      - "Anywhere the character slides back or gets stuck, smooth or flatten it."
+    done_when: "Eye-level screenshot on the path plus one overview screenshot of the patch."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you create a new Landscape?"
+        choices: ["Content Drawer → right-click → Landscape", "Landscape Mode → Manage → New", "World Settings → Terrain", "Place Actors → Basic → Cube"]
+        answer_index: 1
+        explain: "Landscape Mode has its own Manage, Sculpt and Paint tabs. New lives under Manage."
+      - q: "With the Sculpt tool active, what does holding Shift while painting do?"
+        choices: ["Lowers the terrain instead of raising it", "Doubles brush size", "Paints a material layer", "Undoes the last stroke"]
+        answer_index: 0
+        explain: "Shift inverts the tool, so Sculpt digs down."
+      - q: "You need an even slope between two points. Which tool?"
+        choices: ["Erosion", "Noise", "Ramp", "Retopologize"]
+        answer_index: 2
+        explain: "Ramp builds a straight, even slope between two points you place. Good for paths."
+      - q: "The character slides back down a slope in PIE. What's the likely cause?"
+        choices: ["Lumen is off", "The slope is steeper than the CharacterMovement Walkable Floor Angle", "The landscape has no material", "Collision is on"]
+        answer_index: 1
+        explain: "CharacterMovement treats anything steeper than Walkable Floor Angle (about 45° by default) as a wall."
+      - q: "Why keep the first landscape small?"
+        choices: ["Big landscapes aren't allowed", "Lumen only works on small ones", "Small landscapes don't need collision", "Faster to sculpt, test and fix; most of a huge terrain would sit empty"]
+        answer_index: 3
+        explain: "You're learning the tools. Only build the area the player will actually walk."
+    flavors:
+      _default: {why: "Not every level is flat. Know how to make ground the player can walk."}
+      level_design: {why: "Terrain is blockout too. Slope decides where players can and can't go.", do: "Mark the path you ramped. That is your first route on uneven ground."}
+      lookdev: {why: "Your diorama needs ground that reads well under light, not a flat plane."}
+
+  - id: R1-WL-02
+    rank: 1
+    track: world-lighting
+    subjects: [lighting, mobility, lumen]
+    required_for_majors: [level_design, lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: false
+    title: Light types and Lumen
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/light-types-and-their-mobility-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 light types mobility movable stationary static lumen"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
+    checklist:
+      - "Open Project Settings → Rendering and confirm Dynamic Global Illumination Method is Lumen."
+      - "In L_Room_01 place one each: Point, Spot and Rect Light. Set all three to Movable."
+      - "Change each light's Intensity, Attenuation Radius and color. For the Spot, change the cone angles."
+      - "Aim the Rect Light at a wall and watch Lumen bounce color onto the floor."
+      - "Toggle one light's mobility to Static and note what the tooltip or warning says."
+    done_when: "One screenshot with all three lights visible, plus one line per light on what you'd use it for."
+    xp: 70
+    verify_type: screenshot
+    quiz:
+      - q: "What are the three light mobility settings?"
+        choices: ["Low, Medium, High", "Baked, Mixed, Realtime", "Static, Stationary, Movable", "Local, Global, Sky"]
+        answer_index: 2
+        explain: "Mobility sets how much of the light can change at runtime and how it's lit."
+      - q: "Which mobility lets a light move and change freely at runtime?"
+        choices: ["Static", "Stationary", "Movable", "None, lights can't move"]
+        answer_index: 2
+        explain: "Movable lights are fully dynamic. That's the safe default with Lumen."
+      - q: "Do you need to build lighting for Lumen bounce light to appear?"
+        choices: ["No, Lumen calculates GI and reflections at runtime", "Yes, every time you move a light", "Only for Rect Lights", "Only in packaged builds"]
+        answer_index: 0
+        explain: "Lumen is dynamic. There is no lightmap bake for its bounce light."
+      - q: "You want soft light from a window-shaped area. Which light?"
+        choices: ["Point Light", "Rect Light", "Directional Light", "Sky Light"]
+        answer_index: 1
+        explain: "A Rect Light emits from a rectangle, like a window or softbox."
+      - q: "Where do you check that a project uses Lumen?"
+        choices: ["World Settings → Lighting", "Editor Preferences → Viewport", "The Sky Light's Details", "Project Settings → Rendering → Dynamic Global Illumination Method"]
+        answer_index: 3
+        explain: "New UE5 projects default to Lumen. The setting lives in Project Settings → Rendering."
+    flavors:
+      _default: {why: "Pick the right light and you do half the lighting work."}
+      level_design: {why: "You'll place lights to guide players. Know which one does what.", do: "Put the Spot on the doorway and see how it pulls your eye."}
+      lookdev: {why: "Mobility and light shape are the vocabulary for everything you light after this."}
+
+  - id: R1-WL-03
+    rank: 1
+    track: world-lighting
+    subjects: [post-process, exposure]
+    required_for_majors: [level_design, lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: false
+    title: Lock exposure for honest review
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 post process volume manual exposure lock ev100"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    checklist:
+      - "In L_Room_01 add a Post Process Volume and tick Infinite Extent (Unbound)."
+      - "Walk from the bright doorway into a dark corner in PIE. Watch auto exposure adapt."
+      - "Exposure → set Metering Mode to Manual, then adjust Exposure Compensation until the room reads clearly."
+      - "Walk the same path again. Brightness should now stay put."
+      - "Save a camera bookmark and screenshot it before and after the lock."
+    done_when: "Before/after screenshots from the same bookmark, plus the Exposure settings visible in Details."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "How do you make one Post Process Volume affect the whole level?"
+        choices: ["Tick Infinite Extent (Unbound)", "Scale it to 10000", "Set Priority to 0", "Put it in World Settings"]
+        answer_index: 0
+        explain: "Unbound makes the volume apply everywhere, no matter where the camera is."
+      - q: "Why lock exposure before reviewing a level?"
+        choices: ["It improves performance", "Auto exposure brightens dark areas as you look at them, so you can't judge real brightness", "Lumen requires it", "It's needed to package"]
+        answer_index: 1
+        explain: "With auto exposure on, a dark corner looks fine once your 'eyes' adapt. Locked exposure shows the real result."
+      - q: "Which is a valid way to lock exposure?"
+        choices: ["Delete the Sky Light", "Turn off Lumen", "Set Min EV100 and Max EV100 to the same value", "Set Blend Radius to 0"]
+        answer_index: 2
+        explain: "Equal min and max leaves auto exposure no range. Manual metering mode also works."
+      - q: "Two bounded Post Process Volumes overlap. Which wins?"
+        choices: ["The bigger one", "The one placed first", "The one with higher Priority", "They cancel out"]
+        answer_index: 2
+        explain: "Priority decides the order. Higher Priority is applied on top."
+      - q: "What does Blend Radius do on a bounded volume?"
+        choices: ["Blurs the image", "Fades the volume's settings in over that distance as the camera approaches", "Sets the fog radius", "Limits light range"]
+        answer_index: 1
+        explain: "Blend Radius avoids a hard pop when the camera enters the volume."
+    flavors:
+      _default: {why: "If exposure drifts, every screenshot you post will look different."}
+      level_design: {why: "A dark route stays dark with locked exposure. That's what you want to catch.", do: "Lock it once and leave it locked for the rest of Rank 1."}
+      lookdev: {why: "You can't compare two lighting passes if the camera keeps changing exposure."}
+
+  - id: R1-WL-09
+    rank: 1
+    track: world-lighting
+    subjects: [foliage, routes]
+    required_for_majors: [lookdev]
+    taster_for_majors: [level_design, gameplay_design]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Foliage that doesn't block routes
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-mode-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 foliage mode paint erase density beginner"
+    checklist:
+      - "In L_Terrain_01 open Foliage Mode and add two foliage types: one bush and one small grass or rock mesh."
+      - "Paint both along the edges of your ramped path. Hold Shift to erase anything that lands on it."
+      - "Open the bush foliage type and lower Density until the path edges still read."
+      - "Set the grass type's Collision Preset to NoCollision so the player walks through it."
+      - "Walk the path in PIE. Nothing on it should stop or snag you."
+    done_when: "Eye-level screenshot of the path with foliage on both sides and the path itself clear."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "In Foliage Mode's Paint tool, how do you erase instances?"
+        choices: ["Hold Shift while painting", "Press Delete", "Right-click the mesh in the Content Drawer", "Set Density to 100"]
+        answer_index: 0
+        explain: "Shift inverts the paint brush and removes instances under it."
+      - q: "Where do you set how thickly a foliage type is painted?"
+        choices: ["World Settings", "The mesh's LOD settings", "The Post Process Volume", "The foliage type's Density setting"]
+        answer_index: 3
+        explain: "Each foliage type has its own density and scale ranges."
+      - q: "Grass on the path stops the player like a wall. The fix?"
+        choices: ["Delete the landscape", "Set the grass foliage type's Collision Preset to NoCollision", "Raise Max Step Height to 500", "Turn off Lumen"]
+        answer_index: 1
+        explain: "Small ground cover rarely needs collision. Save collision for things that should block."
+      - q: "Why is painted foliage cheaper than placing each bush as its own actor?"
+        choices: ["It has no materials", "It's drawn as instanced static meshes, so many copies render efficiently", "It's never shadowed", "It isn't saved"]
+        answer_index: 1
+        explain: "Foliage instances are batched instead of costing one actor each."
+      - q: "What's the level design risk of dense foliage?"
+        choices: ["None", "It breaks PIE", "It can hide route edges, landmarks and the ground the player needs to read", "It changes the capsule size"]
+        answer_index: 2
+        explain: "Foliage should frame routes, not hide them."
+    flavors:
+      _default: {why: "Foliage makes a space feel real. Keep it off the path."}
+      level_design: {why: "Your Rank 1 adjacent taster. Foliage frames a route or hides it.", do: "Use a bush line to point toward your path, not across it."}
+      lookdev: {why: "Density and variety are what sell an outdoor diorama."}
+      gameplay_design: {why: "Cover and clutter change how a space plays. See it once."}
+
+  # ------------ Level Design ------------
+  - id: R1-LD-01
+    rank: 1
+    track: world-lighting
+    subjects: [metrics, character]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, animation]
+    required_spine: false
+    elective: false
+    title: Build a metrics gym
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-01-project-setup-and-level-blockout-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 level design metrics gym character jump height step height"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-character-in-unreal-engine"
+    checklist:
+      - "Open BP_ThirdPersonCharacter. Write down Capsule Radius and Capsule Half Height from the Capsule Component."
+      - "From Character Movement write down Max Step Height, Walkable Floor Angle, Jump Z Velocity and Gravity Scale."
+      - "New level L_MetricsGym. Build a row of steps (15, 30, 45, 60 cm), a row of ledges (100–250 cm, 25 cm apart) and a row of gaps (100–500 cm, 50 cm apart)."
+      - "Build three doorways: capsule diameter, diameter + 40 cm, and your comfortable width."
+      - "PIE and test every piece. Note the highest step you walk up, the highest ledge you jump onto and the widest gap you clear."
+      - "Label each piece with a Text Render actor so the numbers are visible in screenshots."
+    done_when: "Screenshot of the labelled gym plus a metrics list (capsule, step, jump height, jump distance, door width)."
+    xp: 70
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you read the character's collision size?"
+        choices: ["Capsule Component → Capsule Radius and Capsule Half Height", "The mesh's bounds", "World Settings", "The Animation Blueprint"]
+        answer_index: 0
+        explain: "The capsule is what actually collides. The visible mesh doesn't decide what fits."
+      - q: "Which setting decides the tallest step the character walks up without jumping?"
+        choices: ["Jump Z Velocity", "Max Step Height on Character Movement", "Capsule Radius", "Walkable Floor Angle"]
+        answer_index: 1
+        explain: "Max Step Height (45 cm by default) is the limit. Taller than that needs a jump."
+      - q: "Which two Character Movement values mostly decide jump height?"
+        choices: ["Max Walk Speed and Braking", "Mass and Friction", "Jump Z Velocity and Gravity Scale", "Air Control and Step Height"]
+        answer_index: 2
+        explain: "Launch speed up against gravity. Measure it in the gym anyway. Don't guess from the formula."
+      - q: "Capsule Radius is 42. What's the narrowest gap the capsule can physically pass?"
+        choices: ["42 cm", "Just over 84 cm, though you'd build wider for comfort", "200 cm", "Any width"]
+        answer_index: 1
+        explain: "Width is the diameter, twice the radius. A door that just fits feels awful to walk through."
+      - q: "What is the metrics gym for?"
+        choices: ["A portfolio piece", "Testing lighting", "Performance profiling", "Measuring the character once so every level uses tested numbers"]
+        answer_index: 3
+        explain: "Measure once, build to the numbers. Keep the gym and update it if movement changes."
+    flavors:
+      _default: {why: "Every space is built around what the character can do. Measure it first."}
+      level_design: {why: "Your metrics sheet is the rulebook for every blockout from here on.", do: "Keep L_MetricsGym in the project and re-check it whenever movement settings change."}
+      programming: {why: "Feel what the movement numbers do before you write movement code."}
+      animation: {why: "Step and ledge heights decide which climb and vault animations you'll need."}
+
+  - id: R1-LD-02
+    rank: 1
+    track: world-lighting
+    subjects: [blockout, modeling, cubegrid, brushes]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: false
+    title: Blockout toolkit
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 blockout cubegrid modeling mode vs bsp brushes"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cubegrid-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-brush-actors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
+    checklist:
+      - "New level L_Toolkit. Build the same small room (floor, walls, one doorway) three times."
+      - "Version A: scaled cubes from Place Actors."
+      - "Version B: geometry brushes, one additive box plus a subtractive box for the doorway."
+      - "Version C: Modeling Mode CubeGrid, grid set to a size that matches your metrics."
+      - "Change the doorway width in all three. Time how long each change takes."
+      - "Write down which tool you'd use for a quick room, a big irregular shape, and a reusable piece."
+    done_when: "Writeup (3–5 lines) naming which tool you'd pick for what and why, plus one screenshot of the three rooms."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "What does a subtractive geometry brush do?"
+        choices: ["Deletes actors", "Lowers the landscape", "Removes materials", "Carves space out of additive brush geometry"]
+        answer_index: 3
+        explain: "Brushes are additive or subtractive. A subtractive box is a fast way to cut a doorway."
+      - q: "CubeGrid is best at…"
+        choices: ["Organic sculpting", "Fast grid-aligned blocky shapes by pushing and pulling cells", "Painting foliage", "Lighting"]
+        answer_index: 1
+        explain: "It builds on a grid, so blockout pieces stay on your metrics."
+      - q: "What does Modeling Mode typically produce when you accept a new shape?"
+        choices: ["A Static Mesh asset you can reuse and place again", "A texture", "A Blueprint graph", "A landscape layer"]
+        answer_index: 0
+        explain: "Modeling Mode output is a real mesh. Reusable pieces are a good reason to use it."
+      - q: "What's the weak point of scaled cubes for blockout?"
+        choices: ["They don't collide", "Scaling stretches materials and the numbers stop matching real sizes", "They can't be lit", "They crash Lumen"]
+        answer_index: 1
+        explain: "A cube scaled to 3.7 is hard to measure. Snap to clean sizes if you use them."
+      - q: "What matters most in a blockout tool?"
+        choices: ["Final-quality visuals", "Polygon count", "How fast you can change the space after a playtest", "Material quality"]
+        answer_index: 2
+        explain: "Blockouts exist to be changed. Pick whatever you can change fastest."
+    flavors:
+      _default: {why: "Three ways to make a room. Know which one to reach for."}
+      level_design: {why: "The tool you pick decides how quickly you can change the level after a playtest.", do: "Pick one tool as your default for the capstone and note why."}
+      lookdev: {why: "Modeling Mode is also how you'll make quick set-dressing shapes."}
+
+  - id: R1-LD-03
+    rank: 1
+    track: world-lighting
+    subjects: [layout, routes, flow]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: false
+    title: Three routes
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "level design multiple routes critical path loops blockout"
+    checklist:
+      - "New level L_Routes_01. Place a start and a goal (a lit box is fine) about 40–60 m apart."
+      - "Build three routes to the goal, each different in one clear way: short and exposed, long and covered, or high and requiring a jump."
+      - "Build every route to your LD-01 metrics. No guessed step heights."
+      - "Connect at least two routes somewhere in the middle so the player can switch."
+      - "PIE and walk each route start to goal. Fix anything that stops you."
+    done_when: "Top-down screenshot with the three routes drawn on it in different colors, plus one eye-level shot from the start."
+    xp: 80
+    verify_type: screenshot
+    quiz:
+      - q: "Why give the player three routes?"
+        choices: ["Choice, and if one route is unclear or blocked they still have somewhere to go", "More content to fill", "Epic requires it", "It improves performance"]
+        answer_index: 0
+        explain: "Options mean the player doesn't feel stuck, and the routes can offer different play."
+      - q: "Two routes are the same length with the same cover. What's wrong?"
+        choices: ["Nothing", "It's not a real choice. Routes should differ in risk, length, height or cover", "They need different materials", "They need more lights"]
+        answer_index: 1
+        explain: "If the routes don't differ, the player has no reason to choose one over another."
+      - q: "What's a loop in layout?"
+        choices: ["A Blueprint Timeline", "Routes that reconnect, so the player returns to known ground instead of a dead end", "A repeating sound", "A camera orbit"]
+        answer_index: 1
+        explain: "Loops keep players oriented and let them change their mind."
+      - q: "How do you confirm a route actually works?"
+        choices: ["Fly it in the editor camera", "Look at it from above", "Check the Outliner", "Walk it in PIE as the character, start to goal"]
+        answer_index: 3
+        explain: "The editor camera ignores collision and metrics. Only the character tells you the truth."
+      - q: "A dead end with nothing in it tends to…"
+        choices: ["Reward exploration", "Improve pacing", "Frustrate players and waste their time", "Hide performance issues"]
+        answer_index: 2
+        explain: "If a dead end is there, give the player something for going in: a view, a pickup, a shortcut."
+    flavors:
+      _default: {why: "Test your blockout by giving the player a choice of routes."}
+      level_design: {why: "Three routes so the player never feels stuck.", do: "Draw the routes on paper before you build. Fix the drawing first, then build."}
+      programming: {why: "Feel scale before you write movement."}
+
+  - id: R1-LD-04
+    rank: 1
+    track: world-lighting
+    subjects: [sightlines, landmarks, orientation]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: Sightlines and landmarks
+    time_min: 45
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "level design sightlines landmarks weenie player orientation"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
+    checklist:
+      - "In L_Routes_01 add one landmark near the goal: tall, with a unique silhouette (a tower, a big arch, a dead tree)."
+      - "Check it's visible from the start and from at least one point on every route. Check in PIE at eye height, not the flying camera."
+      - "Block one sightline on purpose with a wall, then open it at a corner to make a reveal."
+      - "Save a bookmark at each point where the landmark first comes into view."
+    done_when: "Eye-level screenshots from the start and from each route showing the landmark, plus one before/after of the reveal."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is a landmark for?"
+        choices: ["Decoration only", "Hiding the skybox", "Improving frame rate", "Letting the player orient themselves and find the goal from a distance"]
+        answer_index: 3
+        explain: "A good landmark answers 'where am I, where do I go?' without a map."
+      - q: "What makes a landmark readable?"
+        choices: ["Lots of small detail", "A unique silhouette that's visible from several places", "A bright material only", "Being close to the player"]
+        answer_index: 1
+        explain: "Silhouette carries at distance. Fine detail disappears."
+      - q: "Where should you check a sightline?"
+        choices: ["At the player's eye height in PIE", "Top-down view", "From the Sky Light", "In the Content Drawer"]
+        answer_index: 0
+        explain: "The flying editor camera sees over walls the player never can."
+      - q: "Why block a sightline on purpose?"
+        choices: ["To hide mistakes", "To set up a reveal or a choice when the view opens", "To save memory", "To make it harder to find the goal forever"]
+        answer_index: 1
+        explain: "Hiding the goal for a moment, then showing it, makes a reveal feel earned."
+      - q: "The landmark is visible from the start but not from any route. What's the result?"
+        choices: ["Fine, once is enough", "Lumen stops working", "Players lose their bearings mid-route", "The landmark gets culled"]
+        answer_index: 2
+        explain: "Players need to see it again along the way to stay oriented."
+    flavors:
+      _default: {why: "People find their way by what they can see."}
+      level_design: {why: "Players who can see the goal don't need a waypoint marker.", do: "Every route should get at least one view of the landmark before the halfway point."}
+      lookdev: {why: "A landmark is where your composition work pays off in gameplay."}
+
+  - id: R1-LD-05
+    rank: 1
+    track: world-lighting
+    subjects: [guidance, color, shape-language, affordance]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, lookdev]
+    required_spine: false
+    elective: false
+    title: Guiding the player
+    time_min: 45
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "level design guiding the player light color shape language affordances"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
+    checklist:
+      - "Pick one guidance color (for example yellow = climbable or usable). Make an MI_ for it and use it only for that."
+      - "Apply it to every jumpable ledge and usable object in L_Routes_01. Nothing else gets that color."
+      - "Light the entrance of each route slightly brighter than the walls around it."
+      - "Give one route a shape cue: an arch, a gap in a wall or a line of pillars pointing toward it."
+      - "Ask yourself at each junction, in PIE, what tells you to go this way. Fix any junction with no answer."
+    done_when: "Two eye-level screenshots at a junction showing the color, light and shape cues, plus one line naming your color rule."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You used yellow for climbable ledges. What breaks the rule?"
+        choices: ["Using yellow on a non-climbable crate too", "Using yellow on every climbable ledge", "Lighting the ledges", "Using a Material Instance"]
+        answer_index: 0
+        explain: "A color only guides if it always means the same thing."
+      - q: "At a dim junction, which route do players tend to take?"
+        choices: ["The darkest one", "Always the left", "The longest", "The brighter or higher-contrast one"]
+        answer_index: 3
+        explain: "Light and contrast pull attention. Use that to point at where they should go."
+      - q: "What is an affordance?"
+        choices: ["A performance budget", "A shape or cue that suggests what the player can do with it", "A kind of light", "A material parameter"]
+        answer_index: 1
+        explain: "A waist-high ledge with a clean edge suggests 'climb me' before any tutorial does."
+      - q: "Common shape-language convention for danger?"
+        choices: ["Round, soft shapes", "Flat planes", "Sharp, angular shapes", "Shape doesn't matter"]
+        answer_index: 2
+        explain: "Round reads as safe, sharp reads as danger. It's a convention, so be consistent in your level."
+      - q: "Which is a breadcrumb?"
+        choices: ["A save file", "A trail of small cues (pickups, lights, marks) leading along a route", "A debug message", "A camera bookmark"]
+        answer_index: 1
+        explain: "Breadcrumbs pull the player along a route one step at a time."
+    flavors:
+      _default: {why: "Players follow light, color and shape more than signs."}
+      level_design: {why: "Guidance is how you steer players without text or waypoints.", do: "Write your color rule at the top of your metrics sheet so the capstone uses it too."}
+      lookdev: {why: "Your palette decides what players notice. Hold back the accent color so it keeps meaning something."}
+      gameplay_design: {why: "Affordances teach the verbs before any tutorial."}
+
+  - id: R1-LD-06
+    rank: 1
+    track: world-lighting
+    subjects: [verticality, metrics, traversal]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, animation]
+    required_spine: false
+    elective: false
+    title: Verticality within metrics
+    time_min: 50
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "level design verticality ramps stairs ledges jump metrics unreal"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cubegrid-tool-in-unreal-engine"
+    checklist:
+      - "In L_Routes_01, raise the high route by 3–4 m using a ramp, a staircase and one jump-up ledge."
+      - "Build stair risers below your measured step height and the ramp below your walkable angle."
+      - "Size the ledge and any gap with margin: noticeably below your max jump, not right at it."
+      - "Add a way back down from the high point (a drop or stairs) so it's not a trap."
+      - "PIE and climb every piece three times. Any miss means the piece is too close to the limit."
+    done_when: "Side-view screenshot of the vertical route with the heights labelled, plus one PIE screenshot from the top."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Your stair risers are 50 cm and Max Step Height is 45. What happens?"
+        choices: ["The character can't walk up without jumping", "Walks up fine", "The stairs disappear", "Lumen breaks"]
+        answer_index: 0
+        explain: "Each riser must be under Max Step Height. Invisible ramp collision is the other common fix."
+      - q: "A ramp is steeper than Walkable Floor Angle. What happens?"
+        choices: ["Faster movement", "The character can't walk up it and slides off", "Nothing", "The ramp gets navmesh automatically"]
+        answer_index: 1
+        explain: "Anything steeper than the walkable angle is treated as a wall."
+      - q: "Your max jump clears 350 cm. How wide should a required gap be?"
+        choices: ["350 cm exactly", "400 cm for challenge", "Doesn't matter", "Clearly less, with margin, so an average jump makes it"]
+        answer_index: 3
+        explain: "Required jumps sit well inside the limit. Max-distance jumps are for optional challenge."
+      - q: "A ledge is just too high to jump onto but looks reachable. The problem?"
+        choices: ["None", "It reads as a route and then fails, which feels like a bug", "It saves performance", "It's good guidance"]
+        answer_index: 1
+        explain: "Make heights clearly reachable or clearly not. Ambiguous heights frustrate players."
+      - q: "Why add a way back down from a high area?"
+        choices: ["Required by Epic", "To double the XP", "So the player can't get stranded with no way out", "For lighting"]
+        answer_index: 2
+        explain: "One-way traps without a return path are a common blockout bug."
+    flavors:
+      _default: {why: "Height adds routes and views, but only if the character can climb it."}
+      level_design: {why: "Height gives routes their own character: overlooks, drop-downs, shortcuts.", do: "Use the high point as a view down onto the other two routes."}
+      programming: {why: "The movement values you'll code against are the limits here."}
+      animation: {why: "Every ledge height is a question about which traversal animation plays."}
+
+  - id: R1-LD-07
+    rank: 1
+    track: world-lighting
+    subjects: [review, bookmarks, playtest]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [cinematics, gameplay_design]
+    required_spine: false
+    elective: false
+    title: Fresh-eyes review
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 camera bookmarks level review self playtest"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    checklist:
+      - "Take a break of at least an hour away from L_Routes_01 before this quest."
+      - "Save review bookmarks with Ctrl+1 to Ctrl+5: start, each route entrance and the goal."
+      - "Press G for Game View at each bookmark and screenshot it."
+      - "PIE the whole level once as if you'd never seen it. Write a note every time you hesitate, look around or get lost."
+      - "Pick the two worst notes and fix them. Re-screenshot the same bookmarks."
+    done_when: "Writeup with your hesitation notes and the two fixes, plus before/after screenshots from the same bookmarks."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "How do you save and recall a camera bookmark?"
+        choices: ["Ctrl+number to save, number to recall", "F5 and F9", "Alt+B", "Right-click the viewport"]
+        answer_index: 0
+        explain: "Same keys as in S3. Bookmarks are saved with the level."
+      - q: "Why review from the same bookmarks every time?"
+        choices: ["It's faster to render", "Before/after comparisons are only fair from the same camera", "Bookmarks improve lighting", "Required for packaging"]
+        answer_index: 1
+        explain: "Same view, same framing, so what you compare is the change."
+      - q: "What does G do in the level viewport?"
+        choices: ["Toggles Game View, hiding editor icons and gizmos", "Opens the grid settings", "Groups actors", "Starts PIE"]
+        answer_index: 0
+        explain: "Game View shows roughly what the player would see, without editor clutter."
+      - q: "During a self-playtest, what should you write down?"
+        choices: ["Only bugs", "Your frame rate", "Every place you hesitate, backtrack or look around unsure", "Nothing, just fix things as you go"]
+        answer_index: 2
+        explain: "Hesitation is the signal. Note it first, fix it after. Fixing as you go hides patterns."
+      - q: "Why take a break before reviewing?"
+        choices: ["Shader compile", "Epic rule", "Lumen needs to settle", "You stop seeing problems in a space you just built. Time away brings back some fresh eyes"]
+        answer_index: 3
+        explain: "It's the closest you get to a new player without asking one."
+    flavors:
+      _default: {why: "You'll miss problems in something you just built. Review it the same way every time."}
+      level_design: {why: "Bookmarks plus notes turn 'it feels off' into a list you can fix.", do: "Reuse these bookmark slots in every level so reviews look the same."}
+      programming: {why: "Same idea as a repro case: same start point every time you test."}
+
+  - id: R1-LD-08
+    rank: 1
+    track: world-lighting
+    subjects: [lighting, readability, navigation]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: false
+    title: Lighting for readability
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "level design lighting readability navigation contrast unreal engine 5"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+    checklist:
+      - "In L_Routes_01, confirm the unbound Post Process Volume with locked exposure from WL-03 is in place."
+      - "Switch the viewport to Lighting Only. Check each route entrance is brighter than the walls around it."
+      - "Light the goal area as the brightest point in the level."
+      - "Place a mannequin where an enemy might stand. Adjust lights until its silhouette reads against the background."
+      - "Remove or dim any light that pulls attention toward a dead end."
+      - "Check in Lit mode again from your LD-07 bookmarks."
+    done_when: "Lit and Lighting Only screenshots from the same 2 bookmarks, plus one of the mannequin silhouette."
+    xp: 70
+    verify_type: screenshot
+    quiz:
+      - q: "Why check readability in the Lighting Only view mode?"
+        choices: ["It removes material color so you see only light and value contrast", "It's faster", "It's what players see", "It bakes lighting"]
+        answer_index: 0
+        explain: "If the route reads without textures, it will read with them."
+      - q: "Which area should usually be the brightest?"
+        choices: ["A dead end", "The goal or the next place you want the player to go", "The ceiling", "Behind the player"]
+        answer_index: 1
+        explain: "Players move toward light. Put the brightest spot where you want them to go."
+      - q: "An enemy blends into a dark wall. Which fix helps most?"
+        choices: ["More fog", "Lower all lights", "Turn off shadows", "Light the wall behind it or add rim light so its silhouette separates"]
+        answer_index: 3
+        explain: "Combat readability comes from silhouette against background, not overall brightness."
+      - q: "Why keep exposure locked while doing this pass?"
+        choices: ["Lumen requires it", "Auto exposure would brighten dark routes and hide the problem", "It raises frame rate", "It enables shadows"]
+        answer_index: 1
+        explain: "WL-03 again. Locked exposure shows the real brightness difference between routes."
+      - q: "Six colored lights in one room, none meaning anything. The issue?"
+        choices: ["Performance only", "They cancel out", "Visual noise that competes with your guidance cues", "No issue"]
+        answer_index: 2
+        explain: "Light color should support your LD-05 color rule, not compete with it."
+    flavors:
+      _default: {why: "Good lighting shows the player the route and the threats. Looking pretty comes second."}
+      level_design: {why: "This is lighting for play. Beauty comes later, from lookdev or from you.", do: "If a route needs a sign to be found, it needs a light first."}
+      lookdev: {why: "Readability is a constraint to design mood around, not an enemy of it."}
+
+  - id: R1-LD-09
+    rank: 1
+    track: world-lighting
+    subjects: [capstone, layout, routes, lighting]
+    required_for_majors: [level_design]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Three-route courtyard
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "level design courtyard blockout multiple routes readable lighting"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    checklist:
+      - "New level L_Courtyard. Enclosed courtyard, one entrance and one goal, all built to your LD-01 metrics."
+      - "Three routes to the goal that differ in a clear way. At least one uses height (LD-06). At least two connect."
+      - "One landmark visible from the entrance and from each route (LD-04). Follow your color rule (LD-05)."
+      - "Readability lighting pass with locked exposure: goal brightest, dead ends dim (WL-03, LD-08)."
+      - "Save 3 review bookmarks (entrance, one mid-route point, goal) and screenshot each in Game View."
+      - "Take a top-down orthographic screenshot and draw the three routes on it in different colors."
+      - "Self-playtest once with fresh eyes (LD-07) and fix the worst problem."
+    done_when: "Posted together: 3 bookmark screenshots, a top-down map with the route overlay, and a 5–8 line writeup (how the routes differ, what guides the player, what you fixed after the playtest)."
+    xp: 200
+    verify_type: screenshot
+    quiz:
+      - q: "Which of these is NOT part of the capstone turn-in?"
+        choices: ["Top-down map with route overlay", "3 bookmark screenshots", "A packaged build", "Short writeup"]
+        answer_index: 2
+        explain: "Packaging comes much later. Rank 1 is screenshots, map and writeup."
+      - q: "How do you get a clean top-down map of the courtyard?"
+        choices: ["Fly high in Perspective", "Use the Content Drawer thumbnail", "World Settings → Map", "Switch the viewport to Top (orthographic) and screenshot it"]
+        answer_index: 3
+        explain: "Orthographic Top has no perspective distortion, so routes and sizes read true."
+      - q: "What makes the three routes count as three?"
+        choices: ["Three different floor materials", "They differ in a clear way, like length, risk, height or cover", "Three separate levels", "Three lights"]
+        answer_index: 1
+        explain: "Same as LD-03. A route only counts if choosing it changes something."
+      - q: "The goal is hard to find in Lighting Only view. Which quest's pass do you redo?"
+        choices: ["WL-01 landscape", "LD-08 lighting for readability", "LD-02 toolkit", "S8 material instance"]
+        answer_index: 1
+        explain: "The goal should be the brightest point. Fix the lighting before adding detail."
+      - q: "Which bookmarks does the capstone ask for?"
+        choices: ["Entrance, a mid-route point, and the goal", "Any 10 angles", "Only the goal", "None, video only"]
+        answer_index: 0
+        explain: "Three fixed views let a reviewer judge the space the way you did."
+    flavors:
+      _default: {why: "Everything from Rank 1 in one small space."}
+      level_design: {why: "Your first complete level: routes, a landmark, guidance and lighting that works together.", do: "Keep it small. A tight courtyard done well beats a big one half-lit."}
+      lookdev: {why: "Readable first. Your lit diorama can take the mood further."}
+      programming: {why: "If you're here as a taster, the walk-and-note (LD-T1) is all you owe."}
+
+  - id: R1-LD-T1
+    rank: 1
+    track: world-lighting
+    subjects: [taster, playtest, notes]
+    required_for_majors: []
+    taster_for_majors: [programming, animation]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Walk-and-note a courtyard
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "level design playtest notes walkthrough beginner"
+    checklist:
+      - "Open the Third Person template map, or block a quick courtyard next to L_Room_01 (floor, walls, 2 exits)."
+      - "PIE and walk it. Write 3 notes: where you hesitated, what drew your eye, one place the space felt too tight or too big."
+      - "Press F8 to eject and screenshot the spot for each note."
+    done_when: "3 notes with a screenshot each."
+    xp: 40
+    verify_type: writeup
+    quiz:
+      - q: "What's the most useful thing to note while walking a level?"
+        choices: ["Frame rate", "Material names", "Actor count", "Where you hesitated or got lost"]
+        answer_index: 3
+        explain: "Hesitation shows where the space failed to guide you."
+      - q: "What does F8 do in PIE?"
+        choices: ["Quits PIE", "Ejects from the pawn so you can fly around the running game", "Saves the level", "Takes a screenshot"]
+        answer_index: 1
+        explain: "Same as S3. Eject to frame the problem spot for your screenshot."
+      - q: "A doorway feels too tight. What's it usually measured against?"
+        choices: ["The camera's field of view only", "The character capsule plus comfort margin", "The skybox", "The light radius"]
+        answer_index: 1
+        explain: "Level designers size spaces from character metrics. That's what LD-01 builds."
+    flavors:
+      _default: {why: "See a space the way a level designer checks it."}
+      level_design: {why: "Level designers teach this walk to every new playtester."}
+      programming: {why: "Feel scale before you write movement. This is your Rank 1 taster.", do: "Note one movement value you'd want to tune after walking it."}
+      animation: {why: "Watch how the mannequin moves through tight and open spaces. It's your stage later."}
+
+  # ------------ Rank 1 electives (Level Design weighted) ------------
+  - id: R1-E-01
+    rank: 1
+    track: world-lighting
+    subjects: [water]
+    required_for_majors: []
+    elective: true
+    title: A water body as a route edge
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-system-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 water system lake river beginner"
+    checklist:
+      - "Enable the Water plugin and restart the editor."
+      - "Add a Water Body Lake or River to L_Terrain_01."
+      - "Use it as a boundary the path runs beside, not a blocker the player can't read."
+    done_when: "Eye-level screenshot of the path beside the water."
+    xp: 30
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-02
+    rank: 1
+    track: world-lighting
+    subjects: [fog, mood, guidance]
+    required_for_majors: []
+    elective: true
+    title: Fog for mood and guidance
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/local-fog-volumes-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 local fog volume volumetric fog level design"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/volumetric-fog-in-unreal-engine"
+    checklist:
+      - "Enable Volumetric Fog on the Exponential Height Fog in L_Routes_01."
+      - "Add a Local Fog Volume over one dead end to make it feel less inviting."
+      - "Check the goal and landmark still read through the fog."
+    done_when: "Before/after screenshots from the same bookmark."
+    xp: 30
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-03
+    rank: 1
+    track: world-lighting
+    subjects: [decals, guidance]
+    required_for_majors: []
+    elective: true
+    title: Decals as guidance
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 decal actor beginner"
+    checklist:
+      - "Place a Decal Actor using a Starter Content or simple decal material."
+      - "Use 3–4 decals (scuffs, arrows, stains) to lead toward one route entrance."
+    done_when: "Eye-level screenshot showing the decal trail."
+    xp: 25
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-04
+    rank: 1
+    track: world-lighting
+    subjects: [level-instancing, reuse]
+    required_for_majors: []
+    elective: true
+    title: Reuse a room with Level Instances
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 level instance create from selection beginner"
+    checklist:
+      - "Select a small blockout room and create a Level Instance from the selection."
+      - "Place the instance twice more in the level."
+      - "Edit one copy and confirm the change shows up in all of them."
+    done_when: "Screenshot showing three instances after the shared edit."
+    xp: 35
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-05
+    rank: 1
+    track: world-lighting
+    subjects: [landscape, splines, paths]
+    required_for_majors: []
+    elective: true
+    title: Landscape spline path
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-splines-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 landscape splines road path beginner"
+    checklist:
+      - "In L_Terrain_01 open Landscape Mode → Manage → Splines."
+      - "Ctrl+click to lay control points along your ramped path."
+      - "Deform the landscape to the spline so the path sits flat and walkable."
+    done_when: "Screenshot of the spline path plus one PIE screenshot walking it."
+    xp: 35
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-06
+    rank: 1
+    track: world-lighting
+    subjects: [pcg, scatter]
+    required_for_majors: []
+    elective: true
+    title: PCG scatter, first look
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 pcg quick start scatter meshes on landscape"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-framework-in-unreal-engine"
+    checklist:
+      - "Enable the PCG plugin. Create a PCG Graph and a PCG Volume."
+      - "Scatter one rock mesh on the landscape inside the volume."
+      - "Move the volume away from your path so the scatter doesn't block it."
+    done_when: "Screenshot of the graph and the scattered result."
+    xp: 40
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-07
+    rank: 1
+    track: world-lighting
+    subjects: [lighting, night, readability]
+    required_for_majors: []
+    elective: true
+    title: Night readability variant
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/directional-lights-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 night lighting readable level design moonlight"
+    checklist:
+      - "Duplicate L_Routes_01 as L_Routes_01_Night."
+      - "Lower the sun to a dim, cool moonlight and keep exposure locked."
+      - "Use local lights so every route entrance and the goal still read."
+    done_when: "Day and night screenshots from the same 3 bookmarks."
+    xp: 40
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-08
+    rank: 1
+    track: world-lighting
+    subjects: [audio, ambience]
+    required_for_majors: []
+    elective: true
+    title: Ambient sound that pulls
+    time_min: 25
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 ambient sound actor attenuation audio volume beginner"
+    checklist:
+      - "Place an Ambient Sound near the goal (Starter Content has usable loops)."
+      - "Set attenuation so it's audible from the route entrances and louder near the goal."
+      - "Add an Audio Volume to one room and change its reverb."
+    done_when: "Writeup: where the sound is and how it pulls the player."
+    xp: 25
+    verify_type: writeup
+    quiz: []
+
+  - id: R1-E-09
+    rank: 1
+    track: world-lighting
+    subjects: [grass, landscape]
+    required_for_majors: []
+    elective: true
+    title: Landscape grass quick start
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/grass-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 landscape grass type quick start"
+    checklist:
+      - "Follow the Grass Quick Start on L_Terrain_01 with one Landscape Grass Type."
+      - "Paint a path layer with no grass so the route stays clear."
+    done_when: "Eye-level screenshot of grass framing a clear path."
+    xp: 35
+    verify_type: screenshot
+    quiz: []
+
+  - id: R1-E-10
+    rank: 1
+    track: world-lighting
+    subjects: [landmarks, silhouette]
+    required_for_majors: []
+    elective: true
+    title: Landmark silhouette study
+    time_min: 30
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "level design landmark silhouette readability study"
+    checklist:
+      - "Block out 3 landmark options in Modeling Mode."
+      - "View each at distance against the sky in Unlit or Lighting Only view mode."
+      - "Keep the one you recognize fastest and note why."
+    done_when: "One screenshot with all 3 silhouettes plus a line on the winner."
+    xp: 25
+    verify_type: screenshot
+    quiz: []

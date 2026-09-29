@@ -1,0 +1,872 @@
+# Unrealcraft — Lookdev / Environment Art major, Ranks 1–3 (STUB, Phase 2)
+# URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
+# Verified slugs only (see VERIFIED_URLS.md). Anything unverified is TODO_URL. Backup videos are TODO_URL.
+# No quizzes yet (Phase 4).
+#
+# Lookdev is never gated on C++. Your only gameplay obligation is the Rank 2 opposite taster.
+#
+# FULL REQUIRED PATH (Lookdev), including shared quests defined in other files:
+#
+# Rank 1 (Blockout Artist) — track: world-lighting
+#   R1-WL-01  Landscape                        (shared, level_design_r1.yaml)
+#   R1-WL-02  Light types and Lumen            (shared, level_design_r1.yaml)
+#   R1-WL-03  Post process and exposure        (shared, level_design_r1.yaml)
+#   R1-WL-09  Foliage                          (shared, level_design_r1.yaml)
+#   R1-LK-01  Reference board and mood target
+#   R1-LK-02  Sky, HDRI and atmosphere mood
+#   R1-LK-03  IES profiles and physical light units indoors
+#   R1-LK-04  Composition: bookmarks and a Cine Camera still
+#   R1-LK-CAP Lit diorama (capstone)
+#   Electives: R1-LK-05, R1-LK-06, R1-LK-07
+#   (required_tasters rank 1: none)
+#
+# Rank 2 (Gameplay Prototyper) — track: materials
+#   R2-MAT-01 Material Editor basics           (shared materials track, defined here)
+#   R2-MAT-02 PBR inputs                       (shared materials track, defined here)
+#   R2-MAT-03 Texture sampling and UVs         (shared materials track, defined here)
+#   R2-MAT-04 Parameters for instances         (shared materials track, defined here)
+#   R2-MAT-05 Landscape material basics        (shared materials track, defined here)
+#   R2-MAT-06 Decals                           (shared materials track, defined here; Level Design adjacent)
+#   T-PICKUP-LOOP  Opposite taster: tiny pickup loop (tasters.yaml) — required_tasters rank 2
+#   R2-LK-CAP Walkable diorama + master material + instances (capstone)
+#   Electives: R2-MAT-07, R2-MAT-08, R2-MAT-09
+#
+# Rank 3 (Specialist, Lookdev seal) — track: bay-lookdev
+#   R3-LK-01  Master material architecture
+#   R3-LK-02  Material functions
+#   R3-LK-03  Vertex paint blending
+#   R3-LK-04  Nanite and displacement awareness
+#   R3-LK-05  Light a hero area
+#   R3-LK-06  Post process grading and LUT
+#   R3-LK-07  Movie Render Queue still
+#   R3-CA-01  Character anatomy                (shared, required for all majors)
+#   R3-CA-02  Read an AnimBP                   (shared, required for all majors)
+#   R3-CA-03  Montage on interact              (shared, required for all majors)
+#   R3-LK-CAP Reference scene for the server (capstone, mentor-verified)
+#   Electives: R3-LK-08, R3-LK-09, R3-LK-10
+#
+# Not required for Lookdev: any C++ quest (R3-CD-*, T-CPP-HELLO), R2-BP-01..04, R2-PR-*.
+# R2-MAT-* is required for lookdev and tech_art only. Programming has no materials requirement beyond Starter Quest S8.
+
+quests:
+  # =====================================================================
+  # RANK 1 — world-lighting
+  # Shared prerequisites (defined in level_design_r1.yaml, do not redefine here):
+  #   R1-WL-01 landscape, R1-WL-02 light types + Lumen, R1-WL-03 post process/exposure, R1-WL-09 foliage.
+  # =====================================================================
+  - id: R1-LK-01
+    rank: 1
+    track: world-lighting
+    subjects: [reference, mood, art-direction]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: Reference board and mood target
+    time_min: 45
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "environment art reference board mood board lighting reference how to"
+    checklist:
+      - "Collect 8–12 reference images for one small space (photos, film stills, paintings)."
+      - "Mark each image with what you're taking from it: light direction, color, material, or composition."
+      - "Pick one image as your mood target."
+      - "Write 3 lines: time of day, key light color, and the feeling you want."
+    done_when: "Board image plus the 3-line mood target posted as a writeup."
+    xp: 60
+    verify_type: writeup
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "A target makes lighting decisions easier to judge.", do: "Pick one image and say why."}
+      lookdev: {why: "Every lighting pass from here gets judged against a target.", do: "Label what each reference is for."}
+
+  - id: R1-LK-02
+    rank: 1
+    track: world-lighting
+    subjects: [sky, hdri, atmosphere, fog]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics, level_design]
+    required_spine: false
+    elective: false
+    title: Sky, HDRI and atmosphere mood
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/environmental-light-with-fog-clouds-sky-and-atmosphere-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 hdri backdrop sky atmosphere height fog mood lighting"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-lights-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/exponential-height-fog-in-unreal-engine"
+    checklist:
+      - "Light one scene with Sky Atmosphere, Directional Light, Sky Light, and Height Fog."
+      - "Duplicate the level and light it again with an HDRI (HDRI Backdrop or a Sky Light cubemap)."
+      - "Push each version toward your R1-LK-01 mood target using sun angle, fog color, and density."
+      - "Compare from the same camera bookmark."
+    done_when: "Side-by-side screenshots (atmosphere vs HDRI) from the same bookmark, plus 2 lines on which fits the target."
+    xp: 90
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "The sky sets the base color of everything below it.", do: "Try two sky setups from one camera."}
+      lookdev: {why: "Mood mostly comes from the sky and fog.", do: "Match your target before adding any other lights."}
+
+  - id: R1-LK-03
+    rank: 1
+    track: world-lighting
+    subjects: [ies, physical-units, interior-lighting]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: IES profiles and physical light units indoors
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-ies-light-profiles-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 ies profile physical light units lumens candela interior"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-physical-lighting-units-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+    checklist:
+      - "In L_Room_01, set exposure to a fixed value so brightness changes are visible."
+      - "Place 2 lights with real-world intensities (candela or lumens) and a realistic color temperature."
+      - "Apply an IES profile to one and compare with and without."
+      - "Write down the intensity and temperature you used and where you got the value."
+    done_when: "Before/after screenshots of the IES light plus your intensity notes."
+    xp: 80
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Real-world units make lighting predictable.", do: "Light a room with real numbers."}
+      lookdev: {why: "Physical units make your scenes consistent with each other.", do: "Lock exposure before judging brightness."}
+
+  - id: R1-LK-04
+    rank: 1
+    track: world-lighting
+    subjects: [composition, cameras, bookmarks, cine-camera]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: "Composition: bookmarks and a Cine Camera still"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 cine camera actor focal length composition still screenshot"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    checklist:
+      - "Save 3 bookmarks: wide, medium, and detail."
+      - "Place a Cine Camera Actor, set focal length and focus distance, and pilot it to frame the best view."
+      - "Turn on a composition overlay (thirds or similar) and adjust the frame."
+      - "Take a High Resolution Screenshot through the Cine Camera."
+    done_when: "The still plus a screenshot of the Cine Camera settings."
+    xp: 70
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Where the camera sits decides what people see.", do: "Frame one shot on purpose."}
+      lookdev: {why: "Your reviews happen through fixed cameras.", do: "Save bookmarks before you light, not after."}
+
+  - id: R1-LK-CAP
+    rank: 1
+    track: world-lighting
+    subjects: [lighting, diorama, capstone]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Lit diorama
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-02-light-a-scene"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 lit diorama small environment lighting lumen"
+    checklist:
+      - "Build a small diorama (roughly 10 x 10 m) on a sculpted landscape patch (R1-WL-01) with foliage (R1-WL-09)."
+      - "Light it toward your R1-LK-01 mood target using sky and atmosphere (R1-LK-02) and at least one physical-unit local light (R1-LK-03)."
+      - "Set exposure and post process deliberately (R1-WL-03)."
+      - "Render 3 stills from your bookmarks, one through a Cine Camera (R1-LK-04)."
+      - "Write 3 lines: what matches the target and what doesn't yet."
+    done_when: "3 stills, the mood target image, and the 3-line writeup."
+    xp: 200
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "A small finished scene teaches more than a big unfinished one.", do: "Keep it small and finish the lighting."}
+      lookdev: {why: "This diorama becomes walkable at Rank 2.", do: "Judge it against your target, not against nothing."}
+
+  # ---------- Rank 1 electives ----------
+  - id: R1-LK-05
+    rank: 1
+    track: world-lighting
+    subjects: [volumetric-fog, atmosphere]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: true
+    title: Volumetric fog shafts
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/volumetric-fog-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 volumetric fog light shafts god rays"
+    checklist:
+      - "Turn on Volumetric Fog and get visible light shafts through a window."
+      - "Tune the light's volumetric scattering intensity so the shafts support the image instead of washing it out."
+    done_when: "Screenshot of the shafts."
+    xp: 40
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Fog makes light visible in the air.", do: "Get one clean shaft."}
+      lookdev: {why: "A common mood tool, easy to overdo.", do: "Stop before it looks milky."}
+
+  - id: R1-LK-06
+    rank: 1
+    track: world-lighting
+    subjects: [local-fog, atmosphere]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: true
+    title: Local fog volumes for depth
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/local-fog-volumes-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 local fog volume"
+    checklist:
+      - "Add 2 Local Fog Volumes to separate foreground from background."
+      - "Screenshot with and without them."
+    done_when: "Before/after screenshots."
+    xp: 30
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Fog layers add depth.", do: "Separate two planes with fog."}
+      lookdev: {why: "Local control without changing the whole sky.", do: "Use it where the eye should stop."}
+
+  - id: R1-LK-07
+    rank: 1
+    track: world-lighting
+    subjects: [directional-light, shadows]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: true
+    title: Sun angle and shadow shape
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/directional-lights-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 directional light source angle soft shadows"
+    checklist:
+      - "Render the same view at 3 sun angles and 2 Source Angle values."
+      - "Pick the one that reads best and write one line why."
+    done_when: "Contact sheet of the 6 renders plus your pick."
+    xp: 40
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Shadow shape changes how forms read.", do: "Compare six versions."}
+      lookdev: {why: "Soft vs hard shadow is a mood decision.", do: "Choose based on your target."}
+
+  # =====================================================================
+  # RANK 2 — materials (shared materials track R2-MAT-*)
+  # Required for lookdev and tech_art. Level Design: adjacent for decals only (R2-MAT-06).
+  # Programming: none. Opposite taster for Lookdev: T-PICKUP-LOOP (tasters.yaml).
+  # =====================================================================
+  - id: R2-MAT-01
+    rank: 2
+    track: materials
+    subjects: [materials, material-editor]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: [cinematics]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Material Editor basics
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 material editor basics beginner nodes"
+    checklist:
+      - "Create M_Basic in UC/Materials and open the Material Editor."
+      - "Connect a Constant3Vector to Base Color and Constants to Roughness and Metallic."
+      - "Use the preview viewport and the Stats panel to see instruction counts."
+      - "Apply the material to a mesh in your diorama."
+    done_when: "Screenshot of the graph with the Stats panel visible."
+    xp: 60
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Every surface in Unreal is a material.", do: "Build one from scratch."}
+      lookdev: {why: "You'll live in this editor from here on.", do: "Keep the Stats panel open."}
+      tech_art: {why: "Instruction counts start mattering soon.", do: "Note the count for each version you build."}
+
+  - id: R2-MAT-02
+    rank: 2
+    track: materials
+    subjects: [materials, pbr]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: PBR inputs
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-03-create-materials-and-material-instances"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 pbr base color roughness metallic normal explained"
+    checklist:
+      - "Make 4 swatches: rough dielectric, glossy dielectric, rough metal, polished metal."
+      - "Keep Base Color values in a plausible range for each (no pure black or pure white)."
+      - "Add a normal map to one swatch and compare with and without."
+      - "Check each swatch under your R1 lighting."
+    done_when: "Screenshot of the 4 swatches under the same light, labeled."
+    xp: 70
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Plausible values react correctly to any light.", do: "Build four swatches."}
+      lookdev: {why: "Wrong albedo breaks every lighting setup.", do: "Check values, not just looks."}
+      tech_art: {why: "You'll validate these values for others.", do: "Note the ranges you used."}
+
+  - id: R2-MAT-03
+    rank: 2
+    track: materials
+    subjects: [materials, textures, uvs]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Texture sampling and UVs
+    time_min: 60
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 texture coordinate tiling texture sample srgb compression settings"
+    checklist:
+      - "Import a color, normal, and packed roughness texture and check each texture's sRGB and compression settings."
+      - "Sample them in a material and use a TexCoord with a tiling parameter."
+      - "Split the packed texture into its channels."
+      - "Fix one visible tiling repeat by changing scale or rotating UVs."
+    done_when: "Screenshot of the graph plus the textured mesh."
+    xp: 70
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Wrong texture settings are a common silent bug.", do: "Check every texture's settings once."}
+      lookdev: {why: "Channel packing saves memory in every scene.", do: "Use one packed texture."}
+      tech_art: {why: "You'll set import rules for these later.", do: "Note the compression each needs."}
+
+  - id: R2-MAT-04
+    rank: 2
+    track: materials
+    subjects: [materials, parameters, instances]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: [cinematics]
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Parameters for instances
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 material parameters groups instances"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-04-expanded-material-instances"
+    checklist:
+      - "Turn your R2-MAT-03 material into M_Surface with scalar, vector, and texture parameters."
+      - "Put parameters in named groups with sensible defaults and sort priority."
+      - "Create 3 instances that look like different materials."
+    done_when: "Screenshot of the 3 instances applied, plus one instance's Details panel."
+    xp: 70
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Parameters let one material serve many surfaces.", do: "Make three looks from one parent."}
+      lookdev: {why: "The start of your Rank 2 master material.", do: "Group parameters so someone else can find them."}
+
+  - id: R2-MAT-05
+    rank: 2
+    track: materials
+    subjects: [materials, landscape]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Landscape material basics
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-materials-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 landscape material layer blend paint layers"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-paint-mode-in-unreal-engine"
+    checklist:
+      - "Build a landscape material with 3 layers using a Landscape Layer Blend node."
+      - "Create layer info objects and paint all 3 on your R1 landscape."
+      - "Keep tiling scale sensible from player height."
+    done_when: "Screenshot of the painted landscape plus the layer blend graph."
+    xp: 90
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Ground is most of what you see outdoors.", do: "Paint three layers."}
+      lookdev: {why: "Your diorama floor needs this for Rank 2.", do: "Check tiling from eye height."}
+
+  - id: R2-MAT-06
+    rank: 2
+    track: materials
+    subjects: [materials, decals]
+    required_for_majors: [lookdev, tech_art]
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: false
+    title: Decals
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 deferred decal material grime puddle"
+    checklist:
+      - "Create a decal material (Material Domain set to Deferred Decal)."
+      - "Place 3 decals: grime, a stain, and a directional marker."
+      - "Check each from a low angle for stretching and fix the decal box size."
+    done_when: "Screenshot of the 3 decals in place."
+    xp: 60
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Decals add detail without new meshes.", do: "Place three with a purpose each."}
+      lookdev: {why: "Grime and wear make surfaces believable.", do: "Place wear where people would touch."}
+      level_design: {why: "Decals can guide players without new geometry.", do: "Use the marker decal to point at a route."}
+
+  - id: R2-LK-CAP
+    rank: 2
+    track: materials
+    subjects: [materials, master-material, diorama, capstone]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Walkable diorama + master material + instances
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-04-expanded-material-instances"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 master material instances environment walkable scene"
+    checklist:
+      - "Make your R1-LK-CAP diorama walkable: Player Start, collision, and no dead ends."
+      - "Build one master material (M_Master_Surface) with grouped parameters (R2-MAT-04)."
+      - "Drive at least 5 surfaces in the scene from instances of it."
+      - "Paint a 3-layer landscape material (R2-MAT-05) and place purposeful decals (R2-MAT-06)."
+      - "Walk it in PIE and fix anything that looks wrong at eye level."
+      - "Write a short note listing the master's parameters and what each is for."
+    done_when: "3 eye-level PIE screenshots, the master graph, the instance list, and the parameter note."
+    xp: 200
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "A scene seen at eye level shows problems a render hides.", do: "Walk it and fix what you find."}
+      lookdev: {why: "One master material for many surfaces is how real scenes stay manageable.", do: "Make instances do the variety."}
+
+  # ---------- Rank 2 electives ----------
+  - id: R2-MAT-07
+    rank: 2
+    track: materials
+    subjects: [materials, world-aligned]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art]
+    required_spine: false
+    elective: true
+    title: World-aligned texturing
+    time_min: 45
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 world aligned texture material function triplanar"
+    checklist:
+      - "Apply a world-aligned texture to scaled blockout meshes."
+      - "Compare with UV-based texturing on the same meshes."
+    done_when: "Before/after screenshot."
+    xp: 50
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Useful when UVs aren't good enough yet.", do: "Try it on scaled cubes."}
+      lookdev: {why: "Fast texturing for blockouts and rocks.", do: "Note where it breaks."}
+
+  - id: R2-MAT-08
+    rank: 2
+    track: materials
+    subjects: [materials, landscape, grass]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: true
+    title: Grass from the landscape material
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/grass-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 landscape grass type output"
+    checklist:
+      - "Add a Landscape Grass Output driven by one paint layer."
+      - "Paint the layer and confirm grass appears only there."
+    done_when: "Screenshot of grass following a painted layer."
+    xp: 50
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Grass that follows paint saves hand placement.", do: "Drive it from one layer."}
+      lookdev: {why: "Keeps ground and grass consistent.", do: "Match density to your reference."}
+
+  - id: R2-MAT-09
+    rank: 2
+    track: materials
+    subjects: [materials, emissive]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: true
+    title: Emissive materials and Lumen
+    time_min: 40
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 emissive material lumen light contribution"
+    checklist:
+      - "Make an emissive screen or sign with an intensity parameter."
+      - "Check how much it lights nearby surfaces with Lumen, and when you still need a real light."
+    done_when: "Screenshot plus one line on when you'd add a real light."
+    xp: 40
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Glowing things are everywhere in scenes.", do: "Build one and test its light."}
+      lookdev: {why: "Emissive alone can be noisy with Lumen.", do: "Back it with a real light when needed."}
+
+  # =====================================================================
+  # RANK 3 — bay-lookdev (Lookdev seal)
+  # Shared required for all majors (defined elsewhere): R3-CA-01, R3-CA-02, R3-CA-03.
+  # =====================================================================
+  - id: R3-LK-01
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [materials, master-material, static-switch, performance]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [tech_art]
+    required_spine: false
+    elective: false
+    title: Master material architecture
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 master material static switch parameter shader permutations cost"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
+    checklist:
+      - "Extend M_Master_Surface with Static Switch Parameters for detail normal and emissive."
+      - "Create instances with different switch combinations."
+      - "Write down how many shader permutations your switches can create."
+      - "Remove one switch that isn't worth its cost and explain why."
+    done_when: "Writeup with the permutation count, graph screenshot, and the switch you removed."
+    xp: 110
+    verify_type: writeup
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Switches are cheap per instance but add shader permutations.", do: "Count before you add more."}
+      lookdev: {why: "Your master material will be shared with the server.", do: "Keep only switches people will use."}
+
+  - id: R3-LK-02
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [materials, material-functions]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [tech_art]
+    required_spine: false
+    elective: false
+    title: Material functions
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-functions-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 material function create inputs outputs reuse"
+    checklist:
+      - "Move one repeated chunk of your master (for example detail normal blending) into MF_DetailNormal."
+      - "Give it named inputs with defaults and a description."
+      - "Use it in 2 different materials."
+    done_when: "Screenshot of the function graph and both materials using it."
+    xp: 90
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Functions stop you rebuilding the same nodes.", do: "Pull one repeated chunk out."}
+      lookdev: {why: "Groundwork for the Rank 4 function library.", do: "Write a description for every input."}
+
+  - id: R3-LK-03
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [materials, vertex-paint, blending]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: false
+    title: Vertex paint blending
+    time_min: 75
+    official_url: TODO_URL
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 vertex paint mesh paint mode material blend height lerp"
+    checklist:
+      - "Add a Vertex Color blend to a material so red paints moss or grime over the base."
+      - "Use Mesh Paint mode to paint it on a placed mesh with enough vertices."
+      - "Add a height-based blend so the transition isn't a soft smear."
+    done_when: "Before/after screenshots of the painted mesh plus the blend graph."
+    xp: 90
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Vertex paint breaks up repetition cheaply.", do: "Paint one blend on one mesh."}
+      lookdev: {why: "Hand-placed variation reads as care.", do: "Use a height mask for a crisp edge."}
+
+  - id: R3-LK-04
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [nanite, displacement, tessellation, performance]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [tech_art]
+    required_spine: false
+    elective: false
+    title: Nanite and displacement awareness
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 nanite visualization modes displacement tessellation"
+    checklist:
+      - "Enable Nanite on a high-poly mesh and inspect it with the Nanite visualization modes (Triangles, Clusters, Overdraw)."
+      - "Read the Nanite page's list of what Nanite doesn't support and note which of your materials would be affected."
+      - "Try Nanite displacement on one mesh if your version and project support it; otherwise write what you'd need to enable."
+      - "Write 3 lines: when you'd use Nanite, when you wouldn't, and one cost to watch."
+    done_when: "Visualization screenshot plus the 3-line writeup."
+    xp: 80
+    verify_type: writeup
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Nanite changes what 'too many polygons' means.", do: "Look at the visualization modes."}
+      lookdev: {why: "Your material choices affect Nanite.", do: "Note which features your masters use."}
+
+  - id: R3-LK-05
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [lighting, lumen, hero-area]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics, level_design]
+    required_spine: false
+    elective: false
+    title: Light a hero area
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 hero lighting key fill rim environment lumen"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+    checklist:
+      - "Pick one hero area in your scene (entrance, landmark, or focal prop)."
+      - "Set key, fill, and rim direction on purpose, all in physical units."
+      - "Check Lumen reflections and GI in the area with the Lumen visualization modes."
+      - "Check stat unit before and after and note the cost of your extra lights."
+      - "Get one peer to say where their eye goes first."
+    done_when: "Before/after stills from the same Cine Camera, the stat numbers, and the peer comment."
+    xp: 120
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "The eye goes to the brightest, highest-contrast spot.", do: "Light one area on purpose."}
+      lookdev: {why: "This area will anchor your reference scene.", do: "Check where a peer looks first."}
+
+  - id: R3-LK-06
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [post-process, color-grading, lut]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: Post process grading and LUT
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 color grading post process volume lut"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
+    checklist:
+      - "Grade the scene in a Post Process Volume: white balance, then global, then shadows/midtones/highlights."
+      - "Export a neutral LUT screenshot, grade it in an image editor, reimport it, and apply it as a LUT."
+      - "Compare the manual grade with the LUT grade."
+      - "Keep one ungraded screenshot for reference."
+    done_when: "Three stills from the same camera: ungraded, manual grade, LUT grade."
+    xp: 90
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Grading finishes an image but can't fix bad lighting.", do: "Grade last, after lighting."}
+      lookdev: {why: "A consistent grade holds a set of shots together.", do: "Keep an ungraded reference."}
+
+  - id: R3-LK-07
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [movie-render-queue, rendering, stills]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: [cinematics]
+    required_spine: false
+    elective: false
+    title: Movie Render Queue still
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/rendering-high-quality-frames-with-movie-render-queue-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 movie render queue still image anti aliasing high quality"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-render-out-final-images-and-video"
+    checklist:
+      - "Create a one-frame Level Sequence with your Cine Camera."
+      - "Render it with Movie Render Queue using anti-aliasing samples and a high resolution."
+      - "Save the render settings as a preset."
+      - "Compare with a High Resolution Screenshot of the same frame."
+    done_when: "The MRQ still, the viewport screenshot, and a screenshot of your preset."
+    xp: 80
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "MRQ gives cleaner final images than screenshots.", do: "Render one frame properly."}
+      lookdev: {why: "Your capstone stills go through this.", do: "Save a preset you can reuse."}
+
+  - id: R3-LK-CAP
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [reference-scene, lighting, materials, capstone]
+    required_for_majors: [lookdev]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Reference scene for the server
+    time_min: 360
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-quick-start-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 lookdev reference scene material calibration lighting"
+    checklist:
+      - "Build a scene other members can drop assets into to check them: neutral props, a gray/chrome ball pair, and a Macbeth-style swatch board."
+      - "Light it with physical units and a hero area (R3-LK-05), with fixed exposure."
+      - "Use your master material, one material function, and one vertex-painted blend (R3-LK-01..03)."
+      - "Provide 3 bookmarked Cine Cameras and an MRQ preset (R3-LK-07)."
+      - "Write a one-page README: how to use it, what the exposure is, and what not to change."
+      - "Walk a mentor through it live or in a recorded clip."
+    done_when: "Mentor signs off after opening the scene and checking one asset in it using only your README."
+    xp: 200
+    verify_type: mentor
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "A shared reference scene gives everyone the same lighting to judge assets in.", do: "Build it for other people."}
+      lookdev: {why: "Your work becomes a tool the whole server uses.", do: "Write the README before you polish."}
+
+  # ---------- Rank 3 electives ----------
+  - id: R3-LK-08
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [pcg, set-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: PCG scatter for set dressing
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 pcg scatter rocks debris beginner"
+    checklist:
+      - "Scatter debris or rocks with a PCG graph on a surface."
+      - "Add one density or exclusion rule that keeps paths clear."
+    done_when: "Screenshot of the scatter plus the graph."
+    xp: 80
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Procedural scatter speeds up dressing.", do: "Scatter one thing with one rule."}
+      lookdev: {why: "Frees time for hero areas.", do: "Keep the rule simple."}
+
+  - id: R3-LK-09
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [water, materials]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: true
+    title: A water body that fits the mood
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-system-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 water system lake material tuning"
+    checklist:
+      - "Add a small lake or river with the Water system."
+      - "Tune color and scattering to match your mood target."
+    done_when: "Still of the water in your scene."
+    xp: 70
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Water reflects everything around it.", do: "Add one body and tune it."}
+      lookdev: {why: "Water shows off lighting mistakes fast.", do: "Match it to your sky."}
+
+  - id: R3-LK-10
+    rank: 3
+    track: bay-lookdev
+    seal: lookdev
+    subjects: [foliage, procedural-foliage]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: true
+    title: Procedural foliage for a forest edge
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-foliage-tool-in-unreal-engine"
+    backup_url: TODO_URL
+    backup_search: "unreal engine 5 procedural foliage spawner volume"
+    checklist:
+      - "Set up a Procedural Foliage Volume with 2 species."
+      - "Tune spacing so the edge reads as natural, not uniform."
+    done_when: "Screenshot of the forest edge."
+    xp: 60
+    verify_type: screenshot
+    quiz: []  # TODO Phase 4
+    flavors:
+      _default: {why: "Uniform spacing looks artificial.", do: "Tune two species together."}
+      lookdev: {why: "Builds on R1-WL-09 foliage.", do: "Check it from your Cine Camera."}

@@ -1,0 +1,255 @@
+# Unrealcraft — Orientation (Rank -1)
+# Teaches the Discord game before Unreal. Each quest takes 5–10 minutes.
+# Every Orientation checklist line has a `check:` the Quartermaster verifies itself (see bot/registrar/checks.py).
+# Nobody can tick these by pressing a button: they complete when the bot sees the action.
+# O1 also needs the Rules Screening accept + a 5-question rules quiz.
+
+quests:
+  - id: O1
+    rank: -1
+    track: orientation
+    subjects: [discord, rules]
+    required_for_majors: [all]
+    taster_for_majors: []
+    adjacent_for: []
+    required_spine: false
+    elective: false
+    title: Read the brief
+    time_min: 8
+    official_url: "discord://#how-this-place-works"
+    backup_url: null
+    checklist:
+      - text: "Accept the server rules (the Discord rules screen when you joined)."
+        check: {fact: rules.accepted}
+      - text: "Read #how-this-place-works (5 short posts), then pass /quiz O1 (4/5)."
+        check: {fact: quiz.O1}
+    done_when: "Rules accepted and O1 quiz passed. The Quartermaster ticks both."
+    xp: 10
+    verify_type: action
+    quiz:
+      - q: "You're stuck on a Blueprint. Where does the question go?"
+        choices: ["#general", "A #help-desk forum post using the template", "DM a mentor", "#rank-ups"]
+        answer_index: 1
+        explain: "#help-desk is a forum. The template gets you answered faster. Mentors don't take cold DMs."
+      - q: "What makes you rank up?"
+        choices: ["Chatting a lot", "Finishing quests and passing capstones", "Time on the server", "Boosting"]
+        answer_index: 1
+        explain: "Chat XP is off. Only quests, quizzes and approved submissions count."
+      - q: "Someone asks how lighting works. Which answer breaks a server rule?"
+        choices: ["A link to the Epic Lumen page plus the one setting to check", "A screenshot of your own Details panel", "'Just watch this 8-hour course'", "Asking which engine version they're on"]
+        answer_index: 2
+        explain: "No 8-hour video answers. Point to the specific fix."
+      - q: "What can you post in #showcase?"
+        choices: ["Any cool Unreal art you found", "Your own map or scene, WIP included", "Only finished games", "Marketplace store pages"]
+        answer_index: 1
+        explain: "Showcase must be your own map. WIP is welcome."
+      - q: "What must every turn-in state?"
+        choices: ["Your age", "Your engine version", "Your GPU", "Your hours played"]
+        answer_index: 1
+        explain: "Always state the engine version. Answers differ between 5.x versions."
+    flavors:
+      _default:
+        why: "You're a new hire. This is the studio handbook. It's short."
+
+  - id: O2
+    rank: -1
+    track: orientation
+    subjects: [discord, majors]
+    required_for_majors: [all]
+    elective: false
+    title: Declare a major
+    time_min: 5
+    official_url: "discord://#how-this-place-works"
+    backup_url: null
+    checklist:
+      - text: "Pick a major: the first question when you joined, or /major. Undecided is fine until Rank 2."
+        check: {fact: cmd.major}
+    done_when: "A major (or Undecided) is set."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "Your major decides which quests you get after the Starter Quests. A level designer won't be sent through a C++ pipeline."
+
+  - id: O3
+    rank: -1
+    track: orientation
+    subjects: [discord, commands]
+    required_for_majors: [all]
+    elective: false
+    title: Check your desk
+    time_min: 5
+    official_url: "discord://#how-this-place-works"
+    backup_url: null
+    checklist:
+      - text: "Run /rank to see your card."
+        check: {fact: cmd.rank}
+      - text: "Run /quest to see what's next."
+        check: {fact: cmd.quest}
+      - text: "Run /path and find the ◇ optional shelf."
+        check: {fact: cmd.path}
+    done_when: "/rank and /quest have both been used."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "/quest always gives you one next step. You never need to guess what to do."
+
+  - id: O4
+    rank: -1
+    track: orientation
+    subjects: [discord, navigation]
+    required_for_majors: [all]
+    elective: false
+    title: Find the quest board
+    time_min: 5
+    official_url: "discord://#quest-board"
+    backup_url: null
+    checklist:
+      - text: "Open #quest-board, read the pinned post, press Clocked in."
+        check: {fact: btn.clockin}
+    done_when: "'Clocked in' button pressed."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "The weekly raid and new quests are posted on the quest board."
+
+  - id: O5
+    rank: -1
+    track: orientation
+    subjects: [discord, submit]
+    required_for_majors: [all]
+    elective: false
+    title: Dry-run a turn-in
+    time_min: 5
+    official_url: "discord://#how-this-place-works"
+    backup_url: null
+    checklist:
+      - text: "Run /submit quest:O5 proof:READY"
+        check: {fact: submit.O5}
+    done_when: "/submit O5 with payload READY accepted."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "Every real quest ends with /submit, so practice it once while nothing is at stake."
+
+  - id: O6
+    rank: -1
+    track: orientation
+    subjects: [discord, help]
+    required_for_majors: [all]
+    elective: false
+    title: Ask a good question
+    time_min: 10
+    official_url: "discord://#help-desk"
+    backup_url: null
+    checklist:
+      - text: "In #help-desk press New help post and fill in the form (a practice question is fine)."
+        check: {fact: thread.help_desk}
+    done_when: "A #help-desk post with all 5 template fields filled in."
+    xp: 15
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "Well-formatted questions get answered first. Mentors skip unformatted ones."
+
+  - id: O7
+    rank: -1
+    track: orientation
+    subjects: [discord, voice]
+    required_for_majors: [all]
+    elective: false
+    title: Walk the studio floor
+    time_min: 5
+    official_url: "discord://#Studio Floor"
+    backup_url: null
+    checklist:
+      - text: "Sit in Studio Floor voice for 60 seconds (muted is fine), or run /skip-voice."
+        check: {any: [voice.studio_floor, cmd.skip_voice]}
+    done_when: "60s in Studio Floor, or /skip-voice."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "People co-work in voice. Now you know where it is."
+
+  - id: O8
+    rank: -1
+    track: orientation
+    subjects: [discord, showcase, critique]
+    required_for_majors: [all]
+    elective: false
+    title: Cheer a WIP
+    time_min: 5
+    official_url: "discord://#showcase"
+    backup_url: null
+    checklist:
+      - text: "Read the WIP guide in #showcase, then react to someone else's post."
+        check: {fact: react.showcase}
+    done_when: "One reaction on a showcase post that isn't yours."
+    xp: 10
+    verify_type: action
+    quiz: []
+    flavors:
+      _default:
+        why: "People who post WIP get better faster, and a reaction helps them keep posting."
+
+  # ---------------- Orientation electives ----------------
+  - id: O-E1
+    rank: -1
+    track: orientation
+    subjects: [discord, profile]
+    required_for_majors: []
+    elective: true
+    title: Pin your engine version
+    time_min: 3
+    official_url: "discord://#how-this-place-works"
+    checklist:
+      - text: "Run /profile ue_version:5.x"
+        check: {fact: cmd.profile_version}
+    done_when: "ue_version set."
+    xp: 5
+    verify_type: action
+    quiz: []
+
+  - id: O-E2
+    rank: -1
+    track: orientation
+    subjects: [discord, profile]
+    required_for_majors: []
+    elective: true
+    title: Wear your major
+    time_min: 2
+    official_url: "discord://#how-this-place-works"
+    checklist:
+      - text: "Set your server nickname to Name | Major (e.g. Sam | Level Design)."
+        check: {fact: nick.major}
+    done_when: "Nickname contains a |."
+    xp: 5
+    verify_type: action
+    quiz: []
+
+  - id: O-E3
+    rank: -1
+    track: orientation
+    subjects: [discord, social]
+    required_for_majors: []
+    elective: true
+    title: Say hi with a goal
+    time_min: 5
+    official_url: "discord://#introductions"
+    checklist:
+      - text: "Say hi in #introductions: your major and one thing you want to build in 3 months."
+        check: {fact: msg.introductions}
+    done_when: "One message in #introductions."
+    xp: 5
+    verify_type: action
+    quiz: []
