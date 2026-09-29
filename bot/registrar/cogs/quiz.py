@@ -36,6 +36,8 @@ class Quiz(commands.Cog):
             await itx.response.send_message("That quest has no quiz. `/submit` it directly.", ephemeral=True)
             return
         u = await self.bot.db.user(itx.user.id)
+        if not await self.bot.get_cog("Quests").quest_board_only(itx, q):
+            return
         if q.rank > max(u["rank"], 0) and q.rank >= 0:
             await itx.response.send_message("That quiz unlocks at a higher rank.", ephemeral=True)
             return

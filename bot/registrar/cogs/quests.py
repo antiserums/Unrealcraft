@@ -53,12 +53,28 @@ class Quests(commands.Cog):
             if not q:
                 await itx.response.send_message("No quest with that id. Try `/path`.", ephemeral=True)
                 return
+            if not await self.quest_board_only(itx, q):
+                return
             u = await self.bot.db.user(itx.user.id)
             facts = await self.bot.db.facts(itx.user.id)
             await itx.response.send_message(embed=quest_embed(self.cat, q, u["major"], facts=facts), ephemeral=True,
                                             view=await self.card_view(q, itx.user.id))
             return
         await self.send_next(itx)
+
+    async def quest_board_only(self, itx: discord.Interaction, q=None) -> bool:
+        """After Orientation, quests live in #quest-board. Returns True if this interaction may continue;
+        otherwise replies with a Go-to-#quest-board button. Orientation quests (rank < 0) work anywhere."""
+        if q is not None and q.rank < 0:
+            return True
+        board = self.bot.unlocks.channel("quest_board")
+        if not board or itx.channel_id == board:
+            return True
+        v = discord.ui.View(timeout=None)
+        v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Go to #quest-board", emoji="🗺️",
+                                     url=f"https://discord.com/channels/{self.bot.settings.guild_id}/{board}"))
+        await itx.response.send_message("Quests only work in **#quest-board**. Go there and press **Continue your quest**.", view=v, ephemeral=True)
+        return False
 
     async def card_view(self, q, uid: int) -> discord.ui.View:
         """Every quest card has a button to the next thing: guide → quiz → send work → next quest."""
@@ -86,6 +102,8 @@ class Quests(commands.Cog):
         facts = await db.facts(itx.user.id)
         st = await self.bot.get_cog("Ranks").state(itx.user.id)
         pick = self.cat.pick(st)
+        if not await self.quest_board_only(itx, pick.main):
+            return
         embeds = []
         if pick.main:
             await db.set_user(itx.user.id, current_quest_id=pick.main.id)
@@ -147,6 +165,8 @@ class Quests(commands.Cog):
         q = self.cat.quests.get(quest.upper())
         if not q:
             await itx.response.send_message("Unknown quest id.", ephemeral=True)
+            return
+        if not await self.quest_board_only(itx, q):
             return
         u = await db.user(itx.user.id)
         if q.rank > max(u["rank"], 0):
@@ -385,6 +405,8 @@ class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:se
         q = itx.client.catalog.quests.get(self.qid)
         if not q:
             await itx.response.send_message("That quest doesn't exist anymore.", ephemeral=True)
+            return
+        if not await itx.client.get_cog("Quests").quest_board_only(itx, q):
             return
         await itx.response.send_modal(SendWorkModal(q))
 

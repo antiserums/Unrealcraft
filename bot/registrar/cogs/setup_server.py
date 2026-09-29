@@ -651,7 +651,7 @@ class SetupServer(commands.Cog):
             E("🚀 Start here: 3 steps",
               "**1.** Press the green button below. Your first quest is a short quiz about the rules.\n"
               "**2.** Then do the other small steps. There is always a button for the next one.\n"
-              "**3.** When you finish, your quests move to **#quest-board**.", "#3D7DD8"),
+              "**3.** When you finish, go to **#quest-board**. After Orientation, quests only work there.", "#3D7DD8"),
             E("⌨️ 5 commands",
               "`/quest` : your next task\n"
               "`/quiz` : answer questions about a quest\n"
@@ -677,7 +677,8 @@ class SetupServer(commands.Cog):
                 "**📋 Quest board**\n"
                 "Type `/quest` to get your next task. Each quest has:\n"
                 "• a link to the official Epic docs\n• a short checklist\n• a quiz\n• then `/submit` to send your work\n\n"
-                "**This is your home for quests.** Press **Continue your quest** any time to get your next task.\n"
+                "**This is your home for quests.** After Orientation, quests only work in this channel.\n"
+                "Press **Continue your quest** any time to get your next task.\n"
                 "New quests and weekly events are posted here.")),
             dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag="Discord-help",
                  view=view(HelpPostButton(), BugReportButton()), content=(

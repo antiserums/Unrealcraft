@@ -124,7 +124,8 @@ class Onboarding(commands.Cog):
         if nxt:
             desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
-            desc += "\n\n🎉 **All done!** Your quests are in **#quest-board**. Press the button below."
+            desc += ("\n\n🎉 **All done!** From now on, **quests only work in #quest-board**. "
+                     "Go there and press **Continue your quest**.")
         return discord.Embed(title=f"🧭 Orientation: {len(steps)} small steps", description=desc,
                              color=discord.Color.from_str("#7A8C7E"))
 
@@ -200,10 +201,9 @@ class Onboarding(commands.Cog):
             v = discord.ui.View(timeout=None)
             if (b := self.board_button()):
                 v.add_item(b)
-            from .quests import NextQuestButton
-            v.add_item(NextQuestButton("Show my next quest"))
-            await itx.response.send_message("🎉 Orientation is done. Your quests are in **#quest-board** now.",
-                                            view=v, ephemeral=True)
+            await itx.response.send_message(
+                "🎉 Orientation is done.\n**From now on, quests only work in #quest-board.** "
+                "Go there and press **Continue your quest**.", view=v, ephemeral=True)
             return
         facts = await self.bot.db.facts(itx.user.id)
         await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True,
