@@ -180,7 +180,7 @@ class Onboarding(commands.Cog):
         if not await self.rules_ok(member):
             await itx.response.send_message(
                 "First, accept the rules. Look at the bottom of the chat and press **Complete** / "
-                "**I've read and agree**. Then press **Start your first quest** again.", ephemeral=True)
+                "**I've read and agree**. Then press **Start Questing** again.", ephemeral=True)
             return
         await self.bot.db.add_fact(itx.user.id, "rules.accepted")
         if member:
@@ -240,7 +240,7 @@ class Onboarding(commands.Cog):
         if before.pending and not after.pending:                # Rules Screening accepted
             await self.fact(after.guild, after.id, "rules.accepted")
             try:
-                await after.send("Rules accepted. Welcome to Unrealcraft. Press **Start your first quest** in #welcome.\n"
+                await after.send("Rules accepted. Welcome to Unrealcraft. Press **Start Questing** in #welcome.\n"
                                  + SIGNOFF)
             except discord.HTTPException:
                 pass
@@ -316,7 +316,7 @@ class Onboarding(commands.Cog):
         if prof.get("pace"):
             lines.append(f"• Pace: ~{profile.PACE_HOURS[prof['pace']]:g} h/week. /quest will estimate "
                          "how far your next rank is at that pace.")
-        lines.append("Next: press **Start your first quest** in #welcome.")
+        lines.append("Next: press **Start Questing** in #welcome.")
         try:
             await member.send("\n".join(lines) + "\n" + SIGNOFF)
         except discord.HTTPException:
@@ -569,7 +569,7 @@ class PrimaryMajorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"u
         await bot.get_cog("Onboarding").fact(guild, itx.user.id, "cmd.major")
         title = bot.catalog.majors.get(self.major, {}).get("title", self.major)
         await itx.response.edit_message(content=f"Main path set: **{title}**. The other picks stay as interests. "
-                                                "Next: press **Start your first quest** in #welcome.", view=None)
+                                                "Next: press **Start Questing** in #welcome.", view=None)
 
 
 class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:skipvoice"):
@@ -655,7 +655,7 @@ class PracticeModal(discord.ui.Modal, title="Practice: send your work"):
 class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start"):
     """Pinned in #welcome: starts the first quest (the rules quiz); after that it shows the next steps."""
 
-    def __init__(self, label: str = "Start / continue your quest", emoji: str = "⚔️"):
+    def __init__(self, label: str = "Start Questing", emoji: str = "⚔️"):
         super().__init__(discord.ui.Button(label=label, emoji=emoji, style=discord.ButtonStyle.success,
                                            custom_id="uu:start"))
 

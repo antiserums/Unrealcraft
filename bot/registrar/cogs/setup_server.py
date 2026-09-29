@@ -268,7 +268,7 @@ class SetupServer(commands.Cog):
                    me: bot_ow}
         gate = await self._category(g, "00 · GATE", gate_ow)
         welcome = await self._text(g, gate, "welcome",
-                                   topic="Start here. Accept the rules, press Start your first quest (a short rules quiz). "
+                                   topic="Start here. Accept the rules, press Start Questing (a short rules quiz). "
                                          "Commands only; chat in #general.")
         # Discord greys out the message box where you can't send, which also blocks slash commands. Allow sending
         # in #welcome so /start and /quiz work; plain messages are removed by the bot (commands-only channel).
@@ -458,7 +458,7 @@ class SetupServer(commands.Cog):
                 enabled=True,
                 description="A Discord RPG for learning Unreal Engine 5. Quests, ranks, real work.",
                 welcome_channels=[   # must be readable by @everyone, so GATE channels only
-                    discord.WelcomeChannel(channel=welcome, description="Start here: press Start your first quest",
+                    discord.WelcomeChannel(channel=welcome, description="Start here: press Start Questing",
                                            emoji=discord.PartialEmoji(name="🚪")),
                     discord.WelcomeChannel(channel=g.get_channel(self.bot.unlocks.channel("announcements")),
                                            description="Raids, events, new quests",
@@ -482,7 +482,7 @@ class SetupServer(commands.Cog):
                     discord.http.Route("PATCH", "/guilds/{guild_id}/member-verification", guild_id=g.id),
                     json={"enabled": True,
                           "description": "Unrealcraft is a Discord RPG for learning Unreal Engine 5. Read the rules, "
-                                         "then press Start your first quest in #welcome.",
+                                         "then press Start Questing in #welcome.",
                           "form_fields": [{"field_type": "TERMS", "label": "Read and agree to the server rules",
                                            "values": rules, "required": True}]},
                     reason="Unrealcraft rules screening")
@@ -572,7 +572,7 @@ class SetupServer(commands.Cog):
                            "Start with Orientation and the Quartermaster will walk you through it.",
             },
             "new_member_actions": [a for a in (
-                act("welcome", "Start your first quest", "Press the green button. It is a short rules quiz.", "🚪"),
+                act("welcome", "Start Questing", "Press the green button. It is a short rules quiz.", "🚪"),
 
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
                 act("quest_board", "Find the quest board", "Press Clocked in on the pinned post.", "🗺️"),
@@ -758,7 +758,9 @@ class SetupServer(commands.Cog):
     def _fingerprint(spec: dict) -> str:
         import hashlib
         raw = (spec.get("content") or "") + "".join(str(e.to_dict()) for e in spec.get("embeds") or [])
-        raw += "".join(i.custom_id or "" for i in (spec["view"].children if spec.get("view") else []))
+        items = [getattr(i, "item", i) for i in (spec["view"].children if spec.get("view") else [])]   # unwrap DynamicItems
+        raw += "".join((getattr(i, "custom_id", None) or "") + (getattr(i, "label", None) or "")
+                       + str(getattr(i, "url", "") or "") for i in items)
         return hashlib.sha1(raw.encode()).hexdigest()[:12]
 
     async def _fetch_pin(self, g: discord.Guild, rec: str | None) -> discord.Message | None:
