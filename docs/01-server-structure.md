@@ -14,7 +14,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 
 | Category | Channels | Who sees it |
 |---|---|---|
-| 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Orientation + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
+| 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start your first quest + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
 | 02 · VOICE ROOMS | Studio Floor [V], Pair Program [V] (connect R2+), Critique Room [V] (connect R3+), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 03 · WORKSHOP | #quest-board (ro, from Orientation), then one forum per track: #foundations (R0), #world-lighting (R1), #materials (R2), #blueprint (R2), #characters-anim (R3) | quest board from Orientation; each forum at its rank |

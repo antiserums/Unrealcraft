@@ -100,7 +100,7 @@ class Onboarding(commands.Cog):
             lines.append(f"{mark} {i}. {text}")
         desc = f"{bar}  **{n_done} of {len(steps)} done**\n\n" + "\n".join(lines)
         if nxt:
-            desc += "\n\nThe bot checks each step for you. Come back and press **Start Orientation** to see this again."
+            desc += "\n\nThe bot checks each step for you. Press the green button in #welcome to see this again."
         else:
             desc += "\n\n🎉 **All done!** Type `/quest` to get your first Unreal quest."
         return discord.Embed(title="🧭 Orientation: 8 small steps", description=desc,
@@ -111,7 +111,7 @@ class Onboarding(commands.Cog):
         from .quiz import QuizButton
         v = discord.ui.View(timeout=None)
         if "O1" not in done:
-            v.add_item(QuizButton("O1"))
+            v.add_item(QuizButton("O1", label="Start your first quest"))
         if "O7" not in done:
             v.add_item(SkipVoiceButton())
         return v if v.children else None
@@ -121,14 +121,14 @@ class Onboarding(commands.Cog):
     async def start(self, itx: discord.Interaction):
         await self.begin(itx)
 
-    async def begin(self, itx: discord.Interaction) -> None:
+    async def begin(self, itx: discord.Interaction, show_steps: bool = False) -> None:
         """Shared by /start and the #welcome Start button. Recruit role = can see Hub + Training during Orientation."""
         u = await self.bot.db.user(itx.user.id)
         member = itx.guild.get_member(itx.user.id) if itx.guild else None
         if not await self.rules_ok(member):
             await itx.response.send_message(
                 "First, accept the rules. Look at the bottom of the chat and press **Complete** / "
-                "**I've read and agree**. Then press **Start Orientation** again.", ephemeral=True)
+                "**I've read and agree**. Then press **Start your first quest** again.", ephemeral=True)
             return
         await self.bot.db.add_fact(itx.user.id, "rules.accepted")
         if member:
@@ -141,6 +141,9 @@ class Onboarding(commands.Cog):
                 except discord.Forbidden:
                     log.error("Can't add Recruit role; bot role too low?")
         done = await self.bot.db.done_set(itx.user.id)
+        if "O1" not in done and not show_steps:
+            await self.bot.get_cog("Quiz").start(itx, "O1")          # the first quest IS the rules quiz
+            return
         facts = await self.bot.db.facts(itx.user.id)
         kw = {"view": v} if (v := self.orientation_view(done)) else {}
         await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True, **kw)
@@ -175,7 +178,7 @@ class Onboarding(commands.Cog):
         if before.pending and not after.pending:                # Rules Screening accepted
             await self.fact(after.guild, after.id, "rules.accepted")
             try:
-                await after.send("Rules accepted. Welcome to Unrealcraft. Press **Start Orientation** in #welcome.\n"
+                await after.send("Rules accepted. Welcome to Unrealcraft. Press **Start your first quest** in #welcome.\n"
                                  + SIGNOFF)
             except discord.HTTPException:
                 pass
@@ -251,7 +254,7 @@ class Onboarding(commands.Cog):
         if prof.get("pace"):
             lines.append(f"• Pace: ~{profile.PACE_HOURS[prof['pace']]:g} h/week. /quest will estimate "
                          "how far your next rank is at that pace.")
-        lines.append("Next: press **Start Orientation** in #welcome.")
+        lines.append("Next: press **Start your first quest** in #welcome.")
         try:
             await member.send("\n".join(lines) + "\n" + SIGNOFF)
         except discord.HTTPException:
@@ -503,7 +506,7 @@ class PrimaryMajorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"u
         await bot.get_cog("Onboarding").fact(guild, itx.user.id, "cmd.major")
         title = bot.catalog.majors.get(self.major, {}).get("title", self.major)
         await itx.response.edit_message(content=f"Main path set: **{title}**. The other picks stay as interests. "
-                                                "Next: press **Start Orientation** in #welcome.", view=None)
+                                                "Next: press **Start your first quest** in #welcome.", view=None)
 
 
 class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:skipvoice"):
@@ -523,10 +526,10 @@ class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:s
 
 
 class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start"):
-    """Pinned in #welcome."""
+    """Pinned in #welcome: starts the first quest (the rules quiz); after that it shows the next steps."""
 
-    def __init__(self):
-        super().__init__(discord.ui.Button(label="Start Orientation", style=discord.ButtonStyle.success,
+    def __init__(self, label: str = "Start your first quest", emoji: str = "⚔️"):
+        super().__init__(discord.ui.Button(label=label, emoji=emoji, style=discord.ButtonStyle.success,
                                            custom_id="uu:start"))
 
     @classmethod
@@ -535,6 +538,21 @@ class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start
 
     async def callback(self, itx: discord.Interaction):
         await itx.client.get_cog("Onboarding").begin(itx)
+
+
+class NextStepsButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:nextsteps"):
+    """Shown after the first quest: opens the Orientation step list."""
+
+    def __init__(self):
+        super().__init__(discord.ui.Button(label="See my next steps", emoji="🧭", style=discord.ButtonStyle.success,
+                                           custom_id="uc:nextsteps"))
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls()
+
+    async def callback(self, itx: discord.Interaction):
+        await itx.client.get_cog("Onboarding").begin(itx, show_steps=True)
 
 
 class HonorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:honor:(?P<qid>[\w-]+)"):
@@ -560,5 +578,5 @@ class HonorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:honor
 
 async def setup(bot):
     bot.add_dynamic_items(ClockInButton, HelpPostButton, BugReportButton, StartButton, HonorButton,
-                          PrimaryMajorButton, SkipVoiceButton)
+                          PrimaryMajorButton, SkipVoiceButton, NextStepsButton)
     await bot.add_cog(Onboarding(bot))

@@ -108,7 +108,12 @@ class QuizView(discord.ui.View):
             self.i += 1
             if self.i >= len(self.q.quiz):
                 result = await self.cog.finish(itx, self.q, self.score, self.first_try)
-                await itx.response.edit_message(content=f"{self.feedback}\n\n{result}", view=None)
+                view = None
+                if self.q.rank < 0:                       # an Orientation quiz: point to what's next
+                    from .onboarding import NextStepsButton
+                    view = discord.ui.View(timeout=None)
+                    view.add_item(NextStepsButton())
+                await itx.response.edit_message(content=f"{self.feedback}\n\n{result}", view=view)
                 self.stop()
                 return
             self._build()

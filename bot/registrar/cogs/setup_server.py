@@ -261,7 +261,7 @@ class SetupServer(commands.Cog):
                    me: bot_ow}
         gate = await self._category(g, "00 · GATE", gate_ow)
         welcome = await self._text(g, gate, "welcome",
-                                   topic="Start here. Accept the rules, press Start Orientation, and run /quiz O1 here. "
+                                   topic="Start here. Accept the rules, press Start your first quest (a short rules quiz). "
                                          "Commands only; chat in #general.")
         # Discord greys out the message box where you can't send, which also blocks slash commands. Allow sending
         # in #welcome so /start and /quiz work; plain messages are removed by the bot (commands-only channel).
@@ -417,7 +417,7 @@ class SetupServer(commands.Cog):
                 enabled=True,
                 description="A Discord RPG for learning Unreal Engine 5. Quests, ranks, real work.",
                 welcome_channels=[   # must be readable by @everyone, so GATE channels only
-                    discord.WelcomeChannel(channel=welcome, description="Start here: press Start Orientation",
+                    discord.WelcomeChannel(channel=welcome, description="Start here: press Start your first quest",
                                            emoji=discord.PartialEmoji(name="🚪")),
                     discord.WelcomeChannel(channel=g.get_channel(self.bot.unlocks.channel("announcements")),
                                            description="Raids, events, new quests",
@@ -441,7 +441,7 @@ class SetupServer(commands.Cog):
                     discord.http.Route("PATCH", "/guilds/{guild_id}/member-verification", guild_id=g.id),
                     json={"enabled": True,
                           "description": "Unrealcraft is a Discord RPG for learning Unreal Engine 5. Read the rules, "
-                                         "then press Start Orientation in #welcome.",
+                                         "then press Start your first quest in #welcome.",
                           "form_fields": [{"field_type": "TERMS", "label": "Read and agree to the server rules",
                                            "values": rules, "required": True}]},
                     reason="Unrealcraft rules screening")
@@ -531,7 +531,7 @@ class SetupServer(commands.Cog):
                            "Start with Orientation and the Quartermaster will walk you through it.",
             },
             "new_member_actions": [a for a in (
-                act("welcome", "Start Orientation", "Press the button. 8 short steps.", "🚪"),
+                act("welcome", "Start your first quest", "Press the green button. It is a short rules quiz.", "🚪"),
 
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
                 act("quest_board", "Find the quest board", "Press Clocked in on the pinned post.", "🗺️"),
@@ -640,9 +640,9 @@ class SetupServer(commands.Cog):
               "Finish quests → get XP → rank up → new channels open.\n"
               "Chatting does **not** give XP. Only finished work does."),
             E("🚀 Start here: 3 steps",
-              "**1.** Press **Start Orientation** below.\n"
-              "**2.** Do the 8 small steps. The bot checks them for you.\n"
-              "**3.** Type `/quest` to get your first Unreal quest.", "#3D7DD8"),
+              "**1.** Press **Start your first quest** below. It is a short quiz about the rules.\n"
+              "**2.** Then do the other small steps. The bot checks them for you.\n"
+              "**3.** When all steps are done, type `/quest` to get your first Unreal quest.", "#3D7DD8"),
             E("⌨️ 5 commands",
               "`/quest` : your next task\n"
               "`/quiz` : answer questions about a quest\n"
@@ -653,7 +653,7 @@ class SetupServer(commands.Cog):
             E("🗺️ What opens when",
               "You only see channels you have unlocked.\n"
               "**Everyone:** GATE and Guild Hub channels.\n"
-              "**After Start Orientation:** #quest-board and Voice Rooms.\n" + rank_lines, "#8E6CCF"),
+              "**After your first quest:** #quest-board and Voice Rooms.\n" + rank_lines, "#8E6CCF"),
             E("🆘 Need help?",
               "Go to #help-desk.\n"
               "🛠️ **Unreal help**: a problem in Unreal or with a quest.\n"
@@ -663,7 +663,7 @@ class SetupServer(commands.Cog):
 
         specs = [
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
-                 view=view(StartButton(), QuizButton("O1"))),
+                 view=view(StartButton())),
             dict(key="quest-board", channel=ch("quest_board"), view=view(ClockInButton()), content=(
                 "**📋 Quest board**\n"
                 "Type `/quest` to get your next task. Each quest has:\n"
