@@ -14,6 +14,10 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.6.1 · 2026-09-29
+- Channel names in quests and quizzes (like #welcome) are now clickable links.
+- S1 question 5 points to the server rules in #welcome.
+
 ## v0.6.0 · 2026-09-29
 - After Orientation, quests only work in #quest-board: `/quest`, `/quiz`, `/submit` and the quest buttons.
 - Using them anywhere else shows a **Go to #quest-board** button.
