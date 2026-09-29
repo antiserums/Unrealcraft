@@ -66,9 +66,11 @@ class Quests(commands.Cog):
     async def quest_board_only(self, itx: discord.Interaction, q=None) -> bool:
         """After Orientation, quests live in #quest-board. Returns True if this interaction may continue;
         otherwise replies with a Go-to-#quest-board button. Orientation quests (rank < 0) work anywhere."""
+        board = self.bot.unlocks.channel("quest_board")
+        if board and itx.channel_id == board:            # Orientation step 4: found and used the quest board
+            await self.bot.get_cog("Onboarding").fact(itx.guild, itx.user.id, "btn.clockin")
         if q is not None and q.rank < 0:
             return True
-        board = self.bot.unlocks.channel("quest_board")
         if not board or itx.channel_id == board:
             return True
         v = discord.ui.View(timeout=None)
@@ -392,7 +394,7 @@ class NextQuestButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:n
         return cls()
 
     async def callback(self, itx: discord.Interaction):
-        await itx.client.get_cog("Quests").send_next(itx)
+        await itx.client.get_cog("Quests").send_next(itx)          # send_next records step 4 in #quest-board
 
 
 class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:send:(?P<q>[A-Za-z0-9-]+)"):

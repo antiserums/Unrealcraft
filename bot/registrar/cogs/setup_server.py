@@ -659,7 +659,7 @@ class SetupServer(commands.Cog):
     }
 
     def pin_specs(self, g: discord.Guild) -> list[dict]:
-        from .onboarding import BugReportButton, ClockInButton, HelpPostButton, StartButton
+        from .onboarding import BugReportButton, HelpPostButton, StartButton
         from .quiz import QuizButton
         from .quests import NextQuestButton
         QuestBoardButton = lambda: NextQuestButton("Continue your quest")
@@ -709,7 +709,7 @@ class SetupServer(commands.Cog):
         specs = [
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
                  view=view(StartButton())),
-            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton(), ClockInButton()), content=(
+            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), content=(
                 "**📋 Quest board**\n"
                 "Type `/quest` to get your next task. Each quest has:\n"
                 "• a link to the official Epic docs\n• a short checklist\n• a quiz\n• then `/submit` to send your work\n\n"
