@@ -4,6 +4,7 @@ from __future__ import annotations
 import asyncio
 import datetime as dt
 import json
+import time
 import logging
 
 import discord
@@ -34,6 +35,9 @@ class Onboarding(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self._voice_tasks: dict[int, asyncio.Task] = {}
+        # Open Orientation pages: user id -> (interaction, opened at). Discord lets us edit an ephemeral reply
+        # for 15 minutes, so the page ticks itself while the member works through the steps.
+        self._pages: dict[int, tuple[discord.Interaction, float]] = {}
         self.first_week.start()
 
     def cog_unload(self):
@@ -67,6 +71,24 @@ class Onboarding(commands.Cog):
                 continue
             if checks.fully_auto(q) and not checks.facts_missing(q, facts):
                 await self.mark(guild, uid, q.id)
+        await self.refresh_page(uid)
+
+    async def refresh_page(self, uid: int) -> None:
+        """Re-render a member's open Orientation page after a step changes."""
+        entry = self._pages.get(uid)
+        if not entry:
+            return
+        itx, opened = entry
+        if time.monotonic() - opened > 14 * 60:          # interaction token is about to expire
+            self._pages.pop(uid, None)
+            return
+        done = await self.bot.db.done_set(uid)
+        facts = await self.bot.db.facts(uid)
+        try:
+            await itx.edit_original_response(embed=self.orientation_embed(done, facts),
+                                             view=self.orientation_view(done))
+        except discord.HTTPException:
+            self._pages.pop(uid, None)
 
     async def rules_ok(self, member: discord.Member | None) -> bool:
         """Rules Screening: a pending member hasn't clicked 'I've read and agree' yet."""
@@ -100,7 +122,7 @@ class Onboarding(commands.Cog):
             lines.append(f"{mark} {i}. {text}")
         desc = f"{bar}  **{n_done} of {len(steps)} done**\n\n" + "\n".join(lines)
         if nxt:
-            desc += "\n\nThe bot checks each step for you. Press the green button in #welcome to see this again."
+            desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
             desc += "\n\n🎉 **All done!** Type `/quest` to get your first Unreal quest."
         return discord.Embed(title="🧭 Orientation: 8 small steps", description=desc,
@@ -147,6 +169,7 @@ class Onboarding(commands.Cog):
         facts = await self.bot.db.facts(itx.user.id)
         kw = {"view": v} if (v := self.orientation_view(done)) else {}
         await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True, **kw)
+        self._pages[itx.user.id] = (itx, time.monotonic())
 
     @app_commands.command(name="help-server", description="How this server works in 30 seconds.")
     async def help_server(self, itx: discord.Interaction):

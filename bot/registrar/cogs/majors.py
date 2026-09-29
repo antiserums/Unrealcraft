@@ -8,7 +8,7 @@ from discord import app_commands
 from discord.ext import commands
 
 MAJOR_CHOICES = [
-    ("Level Design", "level_design"), ("Lookdev / Env Art", "lookdev"), ("Tech Art", "tech_art"),
+    ("Level Design", "level_design"), ("Environment Art", "lookdev"), ("Tech Art", "tech_art"),
     ("Gameplay Design", "gameplay_design"), ("Animation", "animation"), ("Programming", "programming"),
     ("Cinematics", "cinematics"), ("Undecided", "undecided"),
 ]

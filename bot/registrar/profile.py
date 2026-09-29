@@ -29,7 +29,7 @@ class Question:
 
 
 MAJOR_ROLE_NAMES = {
-    "level_design": "Major · Level Design", "lookdev": "Major · Lookdev", "tech_art": "Major · Tech Art",
+    "level_design": "Major · Level Design", "lookdev": "Major · Environment Art", "tech_art": "Major · Tech Art",
     "gameplay_design": "Major · Gameplay Design", "animation": "Major · Animation",
     "programming": "Major · Programming", "cinematics": "Major · Cinematics", "undecided": "Major · Undecided",
 }
@@ -39,7 +39,7 @@ QUESTIONS: list[Question] = [
              single=False, role_names=MAJOR_ROLE_NAMES,
              answers=[
                  Answer("level_design", "Building levels & spaces", "Layouts, flow, encounters (Level Design)", "🧱"),
-                 Answer("lookdev", "Making worlds look great", "Materials, lighting, mood (Lookdev / Env Art)", "🎨"),
+                 Answer("lookdev", "Making worlds look great", "Materials, lighting, mood (Environment Art)", "🎨"),
                  Answer("tech_art", "Shaders, VFX & tools", "The tech behind the art (Tech Art)", "🧪"),
                  Answer("gameplay_design", "Making games fun", "Rules, loops, game feel (Gameplay Design)", "🎮"),
                  Answer("animation", "Bringing characters to life", "AnimBPs, rigs, motion (Animation)", "🏃"),

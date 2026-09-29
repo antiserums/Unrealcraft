@@ -27,7 +27,7 @@ STARTER QUESTS (everyone)
   ★ capstone: Three-route courtyard
 ◇ OPTIONAL SHELF: other majors' work. Nothing here gates you. It opens by rank.
   ◇ Tasters                    R1–2   4 quests
-  ◇ Lookdev / Environment Art  R1–3   20 quests
+  ◇ Environment Art            R1–3   20 quests
   ◇ Programming                R1–3   19 quests
   ◇ Animation                  R3     5 quests
 ```
@@ -57,7 +57,7 @@ STARTER QUESTS (everyone)
   ★ capstone: Debug room
 ◇ OPTIONAL SHELF: other majors' work. Nothing here gates you. It opens by rank.
   ◇ Level Design               R1–3   26 quests
-  ◇ Lookdev / Environment Art  R1–3   21 quests
+  ◇ Environment Art            R1–3   21 quests
   ◇ Tasters                    R2     4 quests
   ◇ Animation                  R3     5 quests
 ```

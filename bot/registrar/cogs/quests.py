@@ -204,6 +204,7 @@ class Quests(commands.Cog):
         onboarding = self.bot.get_cog("Onboarding")
         if q.rank < 0 and onboarding:
             await onboarding.maybe_finish_orientation(guild, uid)
+            await onboarding.refresh_page(uid)
         if guild:
             await self.bot.get_cog("Ranks").check_promotion(guild, uid)
 

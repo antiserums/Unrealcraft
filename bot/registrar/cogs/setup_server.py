@@ -29,7 +29,7 @@ ROLES = [
     ("Studio Lead", "#D4AF37", True, True, ("rank", 6)),
     ("Systems Architect", "#8E6CCF", True, True, ("rank", 5)),
     ("Engineer", "#8A9BA8", True, True, ("rank", 4)),
-    ("Specialist · Lookdev", "#D9824A", False, True, ("specialist", "lookdev")),
+    ("Specialist · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
     ("Specialist · Design", "#4FA36C", False, True, ("specialist", "design")),
     ("Specialist · Anim", "#C85C8E", False, True, ("specialist", "anim")),
     ("Specialist · Code", "#4AA3B5", False, True, ("specialist", "code")),
@@ -39,7 +39,7 @@ ROLES = [
     ("Oriented", None, False, False, ("oriented",)),
     ("Recruit", None, False, False, ("recruit",)),
     ("Major · Level Design", None, False, False, ("major", "level_design")),
-    ("Major · Lookdev", None, False, False, ("major", "lookdev")),
+    ("Major · Environment Art", None, False, False, ("major", "lookdev")),
     ("Major · Tech Art", None, False, False, ("major", "tech_art")),
     ("Major · Gameplay Design", None, False, False, ("major", "gameplay_design")),
     ("Major · Animation", None, False, False, ("major", "animation")),
@@ -87,10 +87,16 @@ class SetupServer(commands.Cog):
 
     # ------------------------------------------------------------------ helpers
     RENAMED_ROLES: dict[str, str] = {}                   # new prefix -> old prefix (for future renames)
+    RENAMED_EXACT = {"Specialist · Environment Art": "Specialist · Lookdev",   # new name -> old name
+                     "Major · Environment Art": "Major · Lookdev"}
 
     async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None) -> discord.Role:
         r = discord.utils.get(g.roles, name=name)
         if r:
+            return r
+        old_exact = self.RENAMED_EXACT.get(name)
+        if old_exact and (r := discord.utils.get(g.roles, name=old_exact)):
+            await r.edit(name=name, reason="Unrealcraft: renamed")
             return r
         for new, old in self.RENAMED_ROLES.items():
             if name.startswith(new) and (r := discord.utils.get(g.roles, name=old + name[len(new):])):
@@ -234,7 +240,7 @@ class SetupServer(commands.Cog):
         R = roles
         rank_roles = {n: R[x] for n, x in ((0, "Greenlit"), (1, "Blockout Artist"), (2, "Gameplay Prototyper"),
                                            (4, "Engineer"), (5, "Systems Architect"), (6, "Studio Lead"))}
-        spec = [R[f"Specialist · {s.title()}"] for s in SEALS]
+        spec = [R[name] for name, *_rest, key in ROLES if key and key[0] == "specialist"]   # by key, not by name
         staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
         everyone = g.default_role
         bot_ow = P(view_channel=True, send_messages=True, manage_messages=True, manage_threads=True,
@@ -774,7 +780,7 @@ class SetupServer(commands.Cog):
         unl = self.bot.unlocks
         skip = {unl.channel(k) for k in ("rank_ups", "mentor_queue", "mod_log", "curriculum_wip", "patch_notes",
                                           "announcements")}
-        member_markers = ("turned in **", "** by <@", "— posted by <@")
+        member_markers = ("<@",)            # any bot thread that mentions a member is that member's post
         removed = 0
         for chan in g.channels:
             if chan.id in skip:

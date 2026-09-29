@@ -23,7 +23,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 **Workshop forums:** one thread per thing you're building (tags WIP / Help / Done). Every `/submit` is also posted there with the
 Turn-in tag so others can see and cheer it. Lessons come through `/quest` cards, not channels.
 
-**Specialty:** at Rank 3 each member picks a Specialty (Design, Lookdev, Anim or Code) matching their major. It sets their title (Specialist · Design). There are no separate Specialty channels; critique happens in #showcase with the Critique-wanted tag.
+**Specialty:** at Rank 3 each member picks a Specialty (Design, Environment Art, Anim or Code) matching their major. It sets their title (Specialist · Design). There are no separate Specialty channels; critique happens in #showcase with the Critique-wanted tag.
 
 **Pinned messages:** each channel has at most one pinned bot message. The bot edits it in place when wording changes (`/setup sync-pins`) and deletes any other stray bot posts.
 is a private room for `/critique` and specialty work; the `Specialty · X` role keeps it open after Rank 3.
@@ -49,7 +49,7 @@ Welcome Screen, AutoMod (mention spam, flagged words, spam → #mod-log), Server
 | 7 | Studio Lead | `#D4AF37` gold | ✔ | ✔ | R6 |
 | 8 | Systems Architect | `#8E6CCF` violet | ✔ | ✔ | R5 |
 | 9 | Engineer | `#8A9BA8` steel | ✔ | ✔ | R4 |
-| 10 | Specialist · Lookdev | `#D9824A` | ✖ | ✔ | R3 Specialty |
+| 10 | Specialist · Environment Art | `#D9824A` | ✖ | ✔ | R3 Specialty |
 | 11 | Specialist · Design | `#4FA36C` | ✖ | ✔ | R3 Specialty |
 | 12 | Specialist · Anim | `#C85C8E` | ✖ | ✔ | R3 Specialty |
 | 13 | Specialist · Code | `#4AA3B5` | ✖ | ✔ | R3 Specialty |
