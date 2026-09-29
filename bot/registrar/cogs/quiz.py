@@ -27,6 +27,10 @@ class Quiz(commands.Cog):
     @app_commands.command(name="quiz", description="Take a quest's quiz.")
     @app_commands.autocomplete(quest=quest_autocomplete)
     async def quiz(self, itx: discord.Interaction, quest: str):
+        await self.start(itx, quest)
+
+    async def start(self, itx: discord.Interaction, quest: str) -> None:
+        """Shared by /quiz and the Rules quiz button."""
         q = self.bot.catalog.quests.get(quest.upper())
         if not q or not q.quiz:
             await itx.response.send_message("That quest has no quiz. `/submit` it directly.", ephemeral=True)
@@ -112,5 +116,22 @@ class QuizView(discord.ui.View):
         return cb
 
 
+class QuizButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:quiz:(?P<q>[A-Za-z0-9-]+)"):
+    """Opens a quest's quiz without typing (used for the O1 rules quiz)."""
+
+    def __init__(self, qid: str, label: str = "Rules quiz"):
+        super().__init__(discord.ui.Button(label=label, emoji="📝", style=discord.ButtonStyle.primary,
+                                           custom_id=f"uc:quiz:{qid}"))
+        self.qid = qid
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls(match["q"])
+
+    async def callback(self, itx: discord.Interaction):
+        await itx.client.get_cog("Quiz").start(itx, self.qid)
+
+
 async def setup(bot):
+    bot.add_dynamic_items(QuizButton)
     await bot.add_cog(Quiz(bot))

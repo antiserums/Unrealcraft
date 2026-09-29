@@ -6,7 +6,7 @@ Visual: dark UI. Embeds use `#1E1F22` backgrounds with the rank or Specialty col
 Principle: **a channel exists only when someone at that rank has work to do in it.** The layout is built and repaired by the
 bot (`/setup bootstrap`); this page describes it. 21 text/forum channels, 3 voice, 1 stage.
 
-Everything a member can't see yet is listed in **#how-this-place-works → "Map: what opens when"**, and `/path` shows what opens next.
+Everything a member can't see yet is listed in **#welcome → "Map: what opens when"**, and `/path` shows what opens next.
 
 ## Categories and channels
 
@@ -14,7 +14,7 @@ Everything a member can't see yet is listed in **#how-this-place-works → "Map:
 
 | Category | Channels | Who sees it |
 |---|---|---|
-| 00 · GATE | #welcome (rules + Start Orientation), #how-this-place-works (one pinned manual + map), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
+| 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Orientation + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
 | 02 · VOICE ROOMS | Studio Floor [V], Pair Program [V] (connect R2+), Critique Room [V] (connect R3+), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 03 · WORKSHOP | #quest-board (ro, from Orientation), then one forum per track: #foundations (R0), #world-lighting (R1), #materials (R2), #blueprint (R2), #characters-anim (R3) | quest board from Orientation; each forum at its rank |

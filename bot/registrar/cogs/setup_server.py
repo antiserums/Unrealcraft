@@ -269,7 +269,6 @@ class SetupServer(commands.Cog):
                                                               add_reactions=True, create_public_threads=False,
                                                               read_message_history=True,
                                                               use_application_commands=True)})
-        manual = await self._text(g, gate, "how-this-place-works", topic="How the game works, and what opens when.")
         ann = await self._text(g, gate, "announcements", news=True,       # converted after _community() frees it
                                topic="Raids, events and big news.")
         notes = await self._text(g, gate, "patch-notes", news=True,
@@ -279,9 +278,10 @@ class SetupServer(commands.Cog):
         rankups = await self._move_or_text(g, gate, "rank-ups", topic="Promotions. Posted by the Quartermaster.")
         for c in (resources, rankups):
             await c.edit(overwrites=gate_ow)
-        report += await self._retire(g, gate, ["roles"])
+        report += await self._retire(g, gate, ["roles", "how-this-place-works"])   # merged into #welcome
         chans.pop("roles_info", None)
-        chans.update(welcome=welcome.id, how_this_place_works=manual.id, announcements=ann.id, patch_notes=notes.id,
+        chans.pop("how_this_place_works", None)
+        chans.update(welcome=welcome.id, announcements=ann.id, patch_notes=notes.id,
                      resources=resources.id, rank_ups=rankups.id)
 
         # 01 GUILD HUB: open to everyone who accepted the rules (Rules Screening gates talking).
@@ -379,7 +379,7 @@ class SetupServer(commands.Cog):
                                                          R["Recruit"]: P(view_channel=False),
                                                          **{r: P(request_to_speak=True, speak=True) for r in speakers}})
                 report.append("Lecture Hall stage created (Architect+ speak)")
-            report += await self._community(g, welcome, manual, qb, helpdesk, showcase, modlog)
+            report += await self._community(g, welcome, welcome, qb, helpdesk, showcase, modlog)
             report += await self.onboarding(g)
             # Discord's community-updates channel can't be an announcement channel; _community moved it to #mod-log.
             if isinstance(ann, discord.TextChannel) and not ann.is_news():
@@ -419,8 +419,6 @@ class SetupServer(commands.Cog):
                 welcome_channels=[   # must be readable by @everyone, so GATE channels only
                     discord.WelcomeChannel(channel=welcome, description="Start here: press Start Orientation",
                                            emoji=discord.PartialEmoji(name="🚪")),
-                    discord.WelcomeChannel(channel=manual, description="How the game works in 5 posts",
-                                           emoji=discord.PartialEmoji(name="📜")),
                     discord.WelcomeChannel(channel=g.get_channel(self.bot.unlocks.channel("announcements")),
                                            description="Raids, events, new quests",
                                            emoji=discord.PartialEmoji(name="📣")),
@@ -534,13 +532,13 @@ class SetupServer(commands.Cog):
             },
             "new_member_actions": [a for a in (
                 act("welcome", "Start Orientation", "Press the button. 8 short steps.", "🚪"),
-                act("how_this_place_works", "Read how the game works", "5 short posts. There's a quiz.", "📜"),
+
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
                 act("quest_board", "Find the quest board", "Press Clocked in on the pinned post.", "🗺️"),
                 act("help_desk", "Ask for help the right way", "Use the New help post button.", "🛠️"),
             ) if a],
             "resource_channels": [r for r in (
-                res("how_this_place_works", "Ranks, seals & majors", "What each rank unlocks", "🎖️"),
+                res("welcome", "How Unrealcraft works", "Start here, commands, ranks and help", "🎖️"),
                 res("resources", "Epic Games resources", "Where every quest's reading comes from", "📘"),
                 res("announcements", "Announcements", "Raids, events, changes", "📣"),
             ) if r],
@@ -558,7 +556,7 @@ class SetupServer(commands.Cog):
     CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · VOICE ROOMS", "03 · WORKSHOP",
                       "04 · STAFF"]
     CHANNEL_ORDER = {
-        "00 · GATE": ["welcome", "how-this-place-works", "announcements", "patch-notes", "epic-games-resources",
+        "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
                       "rank-ups"],
         "01 · GUILD HUB": ["general", "introductions", "showcase", "help-desk", "suggestions"],
         "03 · WORKSHOP": ["quest-board", "foundations", "world-lighting", "materials", "blueprint", "characters-anim"],
@@ -620,6 +618,7 @@ class SetupServer(commands.Cog):
 
     def pin_specs(self, g: discord.Guild) -> list[dict]:
         from .onboarding import BugReportButton, ClockInButton, HelpPostButton, StartButton
+        from .quiz import QuizButton
         from .workshop import NewPostButton
         unl, cat = self.bot.unlocks, self.bot.catalog
         ch = lambda *k: g.get_channel(unl.channel(*k))
@@ -631,39 +630,45 @@ class SetupServer(commands.Cog):
             return v
 
         rules = (Path_root() / "docs" / "06-community-rules.md").read_text(encoding="utf-8").split("\n", 2)[2].strip()
-        howto = discord.Embed(title="How Unrealcraft works", color=C("#7A8C7E"))
-        howto.add_field(name="The loop", inline=False, value=(
-            "`/quest` → do it in Unreal → `/quiz` → `/submit` → XP → rank-up → new channels open.\n"
-            "Chat never earns XP. Finished work does."))
-        howto.add_field(name="Ranks", inline=False, value=(
-            "Greenlit → Blockout Artist → Gameplay Prototyper → Specialist → Engineer → Systems Architect → Studio Lead. "
-            "Each promotion needs the XP **and** your major's capstone."))
-        howto.add_field(name="Majors", inline=False, value=(
-            "You pick one when you join (or with `/major`; Undecided is fine until Rank 2). After the 11 **Starter "
-            "Quests** everyone does, ~70% of your quests are for your major, plus small **tasters** from the others. "
-            "At Rank 3 you pick a **Specialty** (Design, Lookdev, Anim or Code); it becomes your title, e.g. "
-            "*Specialist · Design*."))
-        howto.add_field(name="Five commands", inline=False, value=(
-            "`/quest` what next · `/quiz` check yourself · `/submit` turn in proof · `/rank` your card · "
-            "`/path` your whole tree. Lost? `/where`."))
-        howto.add_field(name="Asking for help", inline=False, value=(
-            "#help-desk → **New help post**. The form asks for engine version, major, what you tried, a screenshot, "
-            "and expected vs actual. Formatted posts get answered first."))
-        map_ = discord.Embed(title="Map: what opens when", color=C("#B5714B"), description=(
-            "You only see channels you've unlocked. `/path` always shows what opens next.\n\n"
-            "**After accepting the rules:** #welcome · #how-this-place-works · #announcements · "
-            "#patch-notes · #epic-games-resources · #rank-ups · #general · #introductions · #showcase · "
-            "#help-desk · #suggestions\n"
-            "**After pressing Start Orientation:** #quest-board (in Workshop) · Studio Floor voice\n"
-            + "\n".join(f"**{r['title']}** ({r['xp']} XP + capstone): {r.get('opens', '—')}" for r in cat.meta["ranks"])))
+        E = lambda title, text, color="#7A8C7E": discord.Embed(title=title, description=text, color=C(color))
+        rank_lines = "\n".join(f"**{r['title']}** → {r.get('opens', '—')}" for r in cat.meta["ranks"])
+        rule_lines = "\n".join(f"{i}. {r}" for i, r in enumerate(
+            [ln.split(". ", 1)[1].replace("**", "") for ln in rules.splitlines() if ln[:2].rstrip(".").isdigit()], 1))
+        welcome_page = [
+            E("👋 Welcome to Unrealcraft",
+              "Learn **Unreal Engine 5** by doing quests.\n"
+              "Finish quests → get XP → rank up → new channels open.\n"
+              "Chatting does **not** give XP. Only finished work does."),
+            E("🚀 Start here: 3 steps",
+              "**1.** Press **Start Orientation** below.\n"
+              "**2.** Do the 8 small steps. The bot checks them for you.\n"
+              "**3.** Type `/quest` to get your first Unreal quest.", "#3D7DD8"),
+            E("⌨️ 5 commands",
+              "`/quest` : your next task\n"
+              "`/quiz` : answer questions about a quest\n"
+              "`/submit` : send your finished work\n"
+              "`/rank` : see your level and XP\n"
+              "`/path` : see all your quests\n"
+              "Lost? Type `/where`.", "#B5714B"),
+            E("🗺️ What opens when",
+              "You only see channels you have unlocked.\n"
+              "**Everyone:** GATE and Guild Hub channels.\n"
+              "**After Start Orientation:** #quest-board and Voice Rooms.\n" + rank_lines, "#8E6CCF"),
+            E("🆘 Need help?",
+              "Go to #help-desk.\n"
+              "🛠️ **Unreal help**: a problem in Unreal or with a quest.\n"
+              "🐞 **Server / bot problem**: something here is broken.", "#D9824A"),
+            E("📜 Rules", rule_lines, "#D4AF37"),
+        ]
 
         specs = [
-            dict(key="welcome", channel=ch("welcome"), content=rules, view=view(StartButton())),
-            dict(key="manual", channel=ch("how_this_place_works"), embeds=[howto, map_]),
+            dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
+                 view=view(StartButton(), QuizButton("O1"))),
             dict(key="quest-board", channel=ch("quest_board"), view=view(ClockInButton()), content=(
-                "**How quests work**\nEach quest takes one sitting and has an official Epic link, a 3–7 item "
-                "checklist, a *done when* line, a quiz, then `/submit`.\nThe weekly raid is posted here. "
-                "Press **Clocked in** so we know you found it.")),
+                "**📋 Quest board**\n"
+                "Type `/quest` to get your next task. Each quest has:\n"
+                "• a link to the official Epic docs\n• a short checklist\n• a quiz\n• then `/submit` to send your work\n\n"
+                "New quests and weekly events are posted here. Press **I found it** below.")),
             dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag="Discord-help",
                  view=view(HelpPostButton(), BugReportButton()), content=(
                      "**Two kinds of help, one desk**\n"

@@ -83,15 +83,38 @@ class Onboarding(commands.Cog):
                 await self.bot.get_cog("Ranks").promote(guild, uid, 0)   # Oriented + Greenlit + S1 in DM
 
     def orientation_embed(self, done: set[str], facts: set[str]) -> discord.Embed:
-        e = discord.Embed(title="Orientation · Unrealcraft",
-                          description="Learn how this place works before you open Unreal. 8 short steps.\n"
-                                      "✅ = the Quartermaster saw you do it. You can't tick these yourself.",
-                          color=discord.Color.from_str("#7A8C7E"))
-        for q in self.cat.orientation():
-            head = "✅" if q.id in done else "⬜"
-            body = "\n".join(checks.status_lines(q, facts))[:1024] or "—"
-            e.add_field(name=f"{head} {q.id} · {q.raw['title']}", value=body, inline=False)
-        return e
+        """Simple-English checklist: progress bar, one 'Next' line, one short line per step."""
+        steps = self.cat.orientation()
+        n_done = sum(q.id in done for q in steps)
+        bar = "🟩" * n_done + "⬜" * (len(steps) - n_done)
+        nxt = next((q for q in steps if q.id not in done), None)
+        lines = []
+        for i, q in enumerate(steps, 1):
+            its = checks.items(q)
+            part = ""
+            if q.id not in done and len(its) > 1:            # e.g. O3: 1/3 commands used
+                ok = sum(it.kind == "fact" and it.fact_ok(facts) for it in its)
+                part = f" ({ok}/{len(its)})"
+            mark = "✅" if q.id in done else ("👉" if q is nxt else "⬜")
+            text = q.raw["title"] if q.id in done else f"**{q.raw['title']}**{part}: {q.raw.get('step', '')}"
+            lines.append(f"{mark} {i}. {text}")
+        desc = f"{bar}  **{n_done} of {len(steps)} done**\n\n" + "\n".join(lines)
+        if nxt:
+            desc += "\n\nThe bot checks each step for you. Come back and press **Start Orientation** to see this again."
+        else:
+            desc += "\n\n🎉 **All done!** Type `/quest` to get your first Unreal quest."
+        return discord.Embed(title="🧭 Orientation: 8 small steps", description=desc,
+                             color=discord.Color.from_str("#7A8C7E"))
+
+    def orientation_view(self, done: set[str]) -> discord.ui.View | None:
+        """Buttons for the steps that can be done with a click."""
+        from .quiz import QuizButton
+        v = discord.ui.View(timeout=None)
+        if "O1" not in done:
+            v.add_item(QuizButton("O1"))
+        if "O7" not in done:
+            v.add_item(SkipVoiceButton())
+        return v if v.children else None
 
     # ------------------------------------------------------------ commands
     @app_commands.command(name="start", description="Begin Orientation.")
@@ -104,8 +127,8 @@ class Onboarding(commands.Cog):
         member = itx.guild.get_member(itx.user.id) if itx.guild else None
         if not await self.rules_ok(member):
             await itx.response.send_message(
-                "Accept the server rules first: use the **Complete** / **I've read and agree** banner at the bottom of "
-                "the chat. Then press Start again.", ephemeral=True)
+                "First, accept the rules. Look at the bottom of the chat and press **Complete** / "
+                "**I've read and agree**. Then press **Start Orientation** again.", ephemeral=True)
             return
         await self.bot.db.add_fact(itx.user.id, "rules.accepted")
         if member:
@@ -119,7 +142,8 @@ class Onboarding(commands.Cog):
                     log.error("Can't add Recruit role; bot role too low?")
         done = await self.bot.db.done_set(itx.user.id)
         facts = await self.bot.db.facts(itx.user.id)
-        await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True)
+        kw = {"view": v} if (v := self.orientation_view(done)) else {}
+        await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True, **kw)
 
     @app_commands.command(name="help-server", description="How this server works in 30 seconds.")
     async def help_server(self, itx: discord.Interaction):
@@ -141,7 +165,7 @@ class Onboarding(commands.Cog):
     @app_commands.command(name="skip-voice", description="Skip the voice step of Orientation (O7).")
     async def skip_voice(self, itx: discord.Interaction):
         await self.fact(itx.guild, itx.user.id, "cmd.skip_voice")
-        await itx.response.send_message("Voice step skipped. Studio Floor is there whenever you want it.", ephemeral=True)
+        await itx.response.send_message("Voice step skipped. You can join Studio Floor any time.", ephemeral=True)
 
     # ------------------------------------------------------------ listeners
     @commands.Cog.listener()
@@ -329,7 +353,8 @@ class ClockInButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:clo
     """Posted once on the #quest-board pin by the owner (Phase 2 /admin post-pins)."""
 
     def __init__(self):
-        super().__init__(discord.ui.Button(label="Clocked in", style=discord.ButtonStyle.success, custom_id="uu:clockin"))
+        super().__init__(discord.ui.Button(label="I found it", emoji="✅", style=discord.ButtonStyle.success,
+                                           custom_id="uu:clockin"))
 
     @classmethod
     async def from_custom_id(cls, itx, item, match):
@@ -337,7 +362,7 @@ class ClockInButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:clo
 
     async def callback(self, itx: discord.Interaction):
         await itx.client.get_cog("Onboarding").fact(itx.guild, itx.user.id, "btn.clockin")
-        await itx.response.send_message("O4 done. Check back here for new quests and raids.", ephemeral=True)
+        await itx.response.send_message("✅ Step done! New quests and weekly events are posted here.", ephemeral=True)
 
 
 class HelpPostButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:helppost"):
@@ -481,6 +506,22 @@ class PrimaryMajorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"u
                                                 "Next: press **Start Orientation** in #welcome.", view=None)
 
 
+class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:skipvoice"):
+    """Orientation step 7 without typing /skip-voice."""
+
+    def __init__(self):
+        super().__init__(discord.ui.Button(label="Skip voice", emoji="🔇", style=discord.ButtonStyle.secondary,
+                                           custom_id="uc:skipvoice"))
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls()
+
+    async def callback(self, itx: discord.Interaction):
+        await itx.client.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.skip_voice")
+        await itx.response.send_message("✅ Voice step skipped. You can join Studio Floor any time.", ephemeral=True)
+
+
 class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start"):
     """Pinned in #welcome."""
 
@@ -519,5 +560,5 @@ class HonorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:honor
 
 async def setup(bot):
     bot.add_dynamic_items(ClockInButton, HelpPostButton, BugReportButton, StartButton, HonorButton,
-                          PrimaryMajorButton)
+                          PrimaryMajorButton, SkipVoiceButton)
     await bot.add_cog(Onboarding(bot))
