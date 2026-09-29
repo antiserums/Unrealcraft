@@ -14,6 +14,11 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.9.0 · 2026-09-29
+- Quests can now link hand-picked free guides from the community, not only Epic's docs. They show after the Epic links.
+- Rule 7 is now **Good sources only**: Epic docs plus hand-picked free community guides. Still no pirated or re-hosted paid courses.
+- #quest-board and #epic-games-resources no longer say the reading is official Epic docs only.
+
 ## v0.8.0 · 2026-09-29
 - Your public Turn-in post now shows the result: passed, changes requested or not passed.
 - Review results and mentor notes are posted in your turn-in thread (with a **Send my work again** button) as well as by DM.
