@@ -14,6 +14,19 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.5.0 · 2026-09-29
+- Orientation is 6 steps. Removed **Ask a question** and **Cheer someone's work**.
+- Every step and screen has a button to the next thing, so you never need to type a command (typing still works).
+- The #welcome button is now **Start / continue your quest** and always takes you to your next step.
+- Orientation buttons: rules quiz, a dropdown to pick what to learn, Show my rank / next quest / path, open #quest-board, a practice-send form, join voice or skip.
+- After Orientation your quests are in #quest-board. Its pinned message has a **Continue your quest** button, and commands work there.
+- Quest cards start with the reading (Step 1), then what to do in Unreal (Step 2), then how to finish (Step 3).
+- Quest cards have **Open the guide**, **Start quiz**, **Send my work** (a form with file upload) and **Next quest** buttons.
+- Quizzes show the guide and a **Start quiz** button before the first question. A failed quiz shows **Try again** and the guide.
+- While the server has fewer than 20 members, quests that need other people (peer review, critique, playtests) are hidden or optional.
+- Server admins can review turn-ins.
+- Patch notes are just the version, date and list of changes.
+
 ## v0.4.0 · 2026-09-29
 - The Orientation page updates by itself when you finish a step (for 15 minutes after you open it).
 - Renamed **Lookdev / Env Art** to **Environment Art** (major and Rank 3 Specialty). Existing roles were renamed.
