@@ -9,13 +9,14 @@ ranks:
   # Level Design cumulative XP from required quests only: end R0 ≈ 705, end R1 ≈ 1675, end R2 ≈ 2635,
   # end R3 ≈ 3825 raw (≈ 4050 with the 1.25× in-Specialty bonus). Each threshold sits a little below that, so the
   # capstone is the real gate. Phase 4 TODO: rebalance Programming and Environment Art quest XP to land near the same totals.
-  - {n: 0, key: greenlit,  title: "Greenlit",            xp: 0,     color: "#7A8C7E", hoist: false, opens: "#quest-log, #starter-quests and the major forums (read all, post in your major's)"}
-  - {n: 1, key: blockout,  title: "Blockout Artist",     xp: 650,   color: "#B5714B", hoist: false, opens: "the Blockout tag in #showcase"}
-  - {n: 2, key: prototyper,title: "Gameplay Prototyper", xp: 1500,  color: "#3D7DD8", hoist: false, opens: "Peer reviews: you can approve Rank 0–1 turn-ins"}
-  - {n: 3, key: specialist,title: "Specialist",          xp: 2500,  color: null,      hoist: false, opens: "Your Specialty title (e.g. Specialist · Design) and /critique"}   # role color comes from the Specialty
-  - {n: 4, key: engineer,  title: "Engineer",            xp: 3700,  color: "#8A9BA8", hoist: true, opens: "the systems track for your major (coming soon), reviewing Rank 2 work"}
-  - {n: 5, key: architect, title: "Systems Architect",   xp: 6500,  color: "#8E6CCF", hoist: true, human_review: true, opens: "net/GAS and shipping tracks (coming soon), Lecture Hall stage, writing quests"}
-  - {n: 6, key: lead,      title: "Studio Lead",         xp: 9500,  color: "#D4AF37", hoist: true, human_review: true, vouchers: 2, opens: "#curriculum-wip and full mentor tools"}
+  # Guild ranks. Each rank opens the next quest difficulty tier (`tier`, see TIERS in bot/registrar/curriculum.py).
+  - {n: 0, key: initiate,       title: "Initiate",       tier: novice,     xp: 0,     color: "#7A8C7E", hoist: false, opens: "🟢 Novice quests: #quest-log, #starter-quests and the major forums (read all, post in your major's)"}
+  - {n: 1, key: journeyman,     title: "Journeyman",     tier: apprentice, xp: 650,   color: "#B5714B", hoist: false, opens: "🔵 Apprentice quests and the Blockout tag in #showcase"}
+  - {n: 2, key: craftsman,      title: "Craftsman",      tier: adept,      xp: 1500,  color: "#3D7DD8", hoist: false, opens: "🟣 Adept quests and peer reviews: you can approve Rank 0–1 turn-ins"}
+  - {n: 3, key: artisan,        title: "Artisan",        tier: expert,     xp: 2500,  color: null,      hoist: false, opens: "🟠 Expert quests, your Specialty title (e.g. Artisan · Design) and /critique"}   # role color comes from the Specialty
+  - {n: 4, key: master_artisan, title: "Master Artisan", tier: master,     xp: 3700,  color: "#8A9BA8", hoist: true, opens: "🔴 Master quests and reviewing Rank 2 work"}
+  - {n: 5, key: grandmaster,    title: "Grandmaster",    tier: master,     xp: 6500,  color: "#8E6CCF", hoist: true, human_review: true, opens: "the Lecture Hall stage and writing quests"}
+  - {n: 6, key: guildmaster,    title: "Guildmaster",    tier: master,     xp: 9500,  color: "#D4AF37", hoist: true, human_review: true, vouchers: 2, opens: "#curriculum-wip and full mentor tools"}
 
 seals:
   lookdev: {title: "Environment Art", color: "#D9824A"}
@@ -46,14 +47,14 @@ majors:
     adjacent: [lighting, bp-interact, foliage]
     opposite: [cpp-hello, gas-video]      # one of
     required_tasters:                     # rank -> list of any_of groups; each group needs one quest
-      1: [[R1-WL-09]]                      # foliage pass (adjacent)
-      2: [[T-CPP-HELLO, T-GAS-VIDEO]]      # opposite: C++ hello OR GAS video
+      1: [[EAQ11]]                      # foliage pass (adjacent)
+      2: [[PQ17, PQ18]]      # opposite: C++ hello OR GAS video
       3: []                                # shared characters-anim required quests cover it
     capstones:
-      1: {id: R1-LD-09, title: "Three-route courtyard", brief: "3-route courtyard, readable nav, lighting for readability."}
-      2: {id: R2-LD-06, title: "Beats & playtest",      brief: "3 beats + 2 BP interacts + metrics sheet + one peer playtest."}
-      3: {id: R3-DZ-08, title: "Encounter space",       brief: "Encounter space + 1-page GDD + one critique iteration."}
-      4: {id: R4-LD-CAP, title: "Modular kit + naming law", brief: "Modular kit + naming law + handoff doc so a Greenlit can place it. PCG optional. NOT a C++ shooter."}
+      1: {id: LDQ20, title: "Three-route courtyard", brief: "3-route courtyard, readable nav, lighting for readability."}
+      2: {id: LDQ32, title: "Beats & playtest",      brief: "3 beats + 2 BP interacts + metrics sheet + one peer playtest."}
+      3: {id: LDQ40, title: "Encounter space",       brief: "Encounter space + 1-page GDD + one critique iteration."}
+      4: {id: R4-LD-CAP, title: "Modular kit + naming law", brief: "Modular kit + naming law + handoff doc so a Initiate can place it. PCG optional. NOT a C++ shooter."}
       5: {id: R5-LD-CAP, title: "Streamed slice",       brief: "World Partition or data layers slice + encounter spawn notes."}
       6: {id: R6-LD-CAP, title: "Shipped level",        brief: "Packaged level + notes from 3 playtesters."}
 
@@ -64,13 +65,13 @@ majors:
     adjacent: [cpp, bp-interop, logging]
     opposite: [lighting-pass]
     required_tasters:
-      1: [[R1-LD-T1]]                      # walk-and-note a courtyard (shared LD taster)
-      2: [[T-LIGHT-PASS]]
+      1: [[LDQ19]]                      # walk-and-note a courtyard (shared LD taster)
+      2: [[EAQ22]]
       3: []
     capstones:
-      1: {id: R1-PR-CAP, title: "Debug room", brief: "Small debug space + notes (or shared courtyard taster)."}
-      2: {id: R2-PR-CAP, title: "Pickup/win loop", brief: "Pickup/win loop in Blueprint."}
-      3: {id: R3-CD-CAP, title: "C++ base, BP children", brief: "C++ actor that Blueprint children use."}
+      1: {id: PQ8, title: "Debug room", brief: "Small debug space + notes (or shared courtyard taster)."}
+      2: {id: PQ19, title: "Pickup/win loop", brief: "Pickup/win loop in Blueprint."}
+      3: {id: PQ30, title: "C++ base, BP children", brief: "C++ actor that Blueprint children use."}
       4: {id: R4-PR-CAP, title: "Port or kit", brief: "C++ rewrite of the loop OR component kit + writeup on what belongs in C++ vs BP."}
       5: {id: R5-PR-CAP, title: "Net or GAS", brief: "Listen-server toy OR one GAS ability + AttributeSet + how a designer adds a second ability."}
       6: {id: R6-PR-CAP, title: "Ship + postmortem", brief: "Packaged build + postmortem."}
@@ -83,12 +84,12 @@ majors:
     opposite: [pickup-game]
     required_tasters:
       1: []
-      2: [[T-PICKUP-LOOP]]
+      2: [[GDQ5]]
       3: []
     capstones:
-      1: {id: R1-LK-CAP, title: "Lit diorama", brief: "Lit diorama."}
-      2: {id: R2-LK-CAP, title: "Walkable diorama", brief: "Walkable diorama + master material + instances."}
-      3: {id: R3-LK-CAP, title: "Reference scene", brief: "A reference scene the server can use."}
+      1: {id: EAQ12, title: "Lit diorama", brief: "Lit diorama."}
+      2: {id: EAQ24, title: "Walkable diorama", brief: "Walkable diorama + master material + instances."}
+      3: {id: EAQ35, title: "Reference scene", brief: "A reference scene the server can use."}
       4: {id: R4-LK-CAP, title: "Material function library", brief: "Material function library + usage doc."}
       5: {id: R5-LK-CAP, title: "Lighting scenarios", brief: "Time-of-day / weather / lighting scenario system."}
       6: {id: R6-LK-CAP, title: "Shipped shot", brief: "Packaged shot or level + breakdown."}
@@ -115,7 +116,7 @@ majors:
     seals: [design]
     adjacent: [blueprint, umg, ld-graybox]
     opposite: [master-material-from-scratch]
-    required_tasters: {1: [[R1-WL-09]], 2: [[T-MASTER-MAT]], 3: []}
+    required_tasters: {1: [[EAQ11]], 2: [[EAQ23]], 3: []}
     capstones:
       1: {id: R1-GD-CAP, title: "Toy space", brief: "Graybox toy room built around one verb."}
       2: {id: R2-GD-CAP, title: "Core loop", brief: "Playable loop with win/lose + HUD + tuning variables exposed."}
@@ -130,7 +131,7 @@ majors:
     seals: [anim]
     adjacent: [animbp, mannequin-in-space]
     opposite: [world-partition]
-    required_tasters: {1: [], 2: [[T-PICKUP-LOOP]], 3: []}
+    required_tasters: {1: [], 2: [[GDQ5]], 3: []}
     capstones:
       1: {id: R1-AN-CAP, title: "Stage for motion", brief: "Lit stage with metrics marks for recording motion."}
       2: {id: R2-AN-CAP, title: "Triggered montage", brief: "BP interaction plays a montage with a notify."}
@@ -145,7 +146,7 @@ majors:
     seals: [lookdev, anim]
     adjacent: [sequencer, cameras, lookdev-still]
     opposite: [gas]
-    required_tasters: {1: [], 2: [[T-PICKUP-LOOP]], 3: []}
+    required_tasters: {1: [], 2: [[GDQ5]], 3: []}
     capstones:
       1: {id: R1-CN-CAP, title: "Three-shot board", brief: "3 camera bookmarks + lit set, storyboard stills."}
       2: {id: R2-CN-CAP, title: "First sequence", brief: "15s Sequencer shot triggered in-game via BP."}
@@ -162,4 +163,4 @@ majors:
     opposite: []
     required_tasters: {1: [], 2: [], 3: []}
     capstones:
-      1: {id: R1-LD-09, title: "Three-route courtyard (default)", brief: "Undecided follows the Level Design R1 capstone as the neutral default."}
+      1: {id: LDQ20, title: "Three-route courtyard (default)", brief: "Undecided follows the Level Design R1 capstone as the neutral default."}

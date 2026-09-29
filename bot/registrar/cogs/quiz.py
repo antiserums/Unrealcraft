@@ -124,7 +124,7 @@ class QuizView(discord.ui.View):
         cards = self._feedback_card()
         if self.i == 0:
             from ..embeds import reading_links
-            text = f"{n} questions. You need {int(QUIZ_PASS_RATIO * n)} right."
+            text = f"**{self.q.tier_label}** · {n} questions. You need {int(QUIZ_PASS_RATIO * n)} right."
             if reading_links(self.q):
                 text += "\n📖 Not sure? Press **Open the guide**. It stays here on every question."
             cards.append(self._card(f"📝 {self.q.id} · {self.q.raw['title']}", text, "#3D7DD8"))

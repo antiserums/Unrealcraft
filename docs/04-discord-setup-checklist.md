@@ -31,16 +31,16 @@ Pinned guides are created and updated in place by the bot (`/setup sync-pins`). 
 - [x] Pins are posted by bootstrap. Only the Server Guide is manual.
 - [ ] #welcome: 5 posts. (1) The loop. (2) Ranks and what they unlock. (3) Majors and tasters. (4) The five commands. (5) Help-desk format.
 - [ ] #quest-log: "How quests work" pin. Its **Clocked in** button is posted by `/admin post-pins` (Phase 2).
-- [ ] #help-desk: pin the **New help post** button (also `/admin post-pins`) and one "bad vs good" example (used by R0-META-03).
+- [ ] #help-desk: pin the **New help post** button (also `/admin post-pins`) and one "bad vs good" example (used by SQ15).
 - [ ] #showcase: pin "How to give WIP feedback: one thing that works, one specific issue, one next step."
 - [ ] #epic-games-resources: Epic Get Started, Your First Hour, Level Designer Quick Start, Programming Quick Start, Materials, Blueprints.
-- [ ] Add a link to the sample Behavior Tree that R3-DZ-02 refers to in the #epic-games-resources pin (Phase 4).
+- [ ] Add a link to the sample Behavior Tree that LDQ34 refers to in the #epic-games-resources pin (Phase 4).
 
 ## G. Smoke test (Phase 2 exit criteria)
 - [ ] Fresh alt account: /start → O1 quiz → /major → /rank + /quest → Clocked in → /submit O5 READY → help post → voice 60s → react.
-- [ ] It receives Oriented + Greenlit, and the DM names Q1.
+- [ ] It receives Oriented + Initiate, and the DM names SQ1.
 - [ ] /path matches docs/05 for that major.
-- [ ] Completing Q1–Q11 plus reaching 650 XP promotes to Blockout Artist. The card appears in #rank-ups, the world-lighting channels appear, and the rank role is swapped, not stacked.
+- [ ] Completing SQ1–SQ11 plus reaching 650 XP promotes to Journeyman. The card appears in #rank-ups, the world-lighting channels appear, and the rank role is swapped, not stacked.
 
 ## H. Invite link
 - [ ] Server invite: https://discord.gg/Y2yDDNQQw. Make sure it is set to **never expire** with **no max uses** (Server Settings → Invites), because it goes on pins and in the README.

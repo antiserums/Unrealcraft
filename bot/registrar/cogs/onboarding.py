@@ -23,7 +23,7 @@ WHERE = {
     "submit": ("/submit", "Pick the quest id, paste your proof, attach a screenshot. Pass the quiz first if it has one."),
     "ask for help": ("#help-desk", "Press **Unreal help** on the pin. The form fills in the template for you."),
     "see my rank": ("/rank", "Your card: XP bar, streak, next unlock, medals. /path shows the whole tree."),
-    "find C++": ("/path", "C++ is a Rank 4 track for code-leaning majors. Everyone gets Q11 and a taster. It's on the ◇ optional shelf."),
+    "find C++": ("/path", "C++ is a Rank 4 track for code-leaning majors. Everyone gets SQ11 and a taster. It's on the ◇ optional shelf."),
     "showcase": ("#showcase", "Your own map, WIP welcome. Use a tag. 5×🔥 gets +25 XP once a week."),
     "change major": ("/major", "One free change before Rank 3. After that it costs 4 quests at your rank."),
     "report a bug": ("#help-desk", "Press **Server / bot problem** on the pin. Staff get notified."),
@@ -102,7 +102,7 @@ class Onboarding(commands.Cog):
         if all(q.id in done for q in self.cat.orientation()):
             guild = guild or self.bot.get_guild(self.bot.settings.guild_id or 0)
             if guild:
-                await self.bot.get_cog("Ranks").promote(guild, uid, 0)   # Oriented + Greenlit + Q1 in DM
+                await self.bot.get_cog("Ranks").promote(guild, uid, 0)   # Oriented + Initiate + SQ1 in DM
 
     def orientation_embed(self, done: set[str], facts: set[str]) -> discord.Embed:
         """Simple-English checklist: progress bar, one 'Next' line, one short line per step."""
@@ -381,12 +381,12 @@ class Onboarding(commands.Cog):
     # ------------------------------------------------------------ first week DMs
     @tasks.loop(hours=6)
     async def first_week(self):
-        """Day 0 map (sent by promote to Greenlit), day 1 nudge, day 3 sample submit. Stops after Q1."""
+        """Day 0 map (sent by promote to Initiate), day 1 nudge, day 3 sample submit. Stops after SQ1."""
         db = self.bot.db
         cur = await db.conn.execute(
             "SELECT discord_id, onboarding_day, created_at, on_leave FROM users WHERE rank <= 0 AND onboarding_day < 3")
         for row in await cur.fetchall():
-            if row["on_leave"] or "Q1" in await db.done_set(row["discord_id"]):
+            if row["on_leave"] or "SQ1" in await db.done_set(row["discord_id"]):
                 continue
             age = (dt.datetime.utcnow() - dt.datetime.fromisoformat(row["created_at"])).days
             step = 3 if age >= 3 else (1 if age >= 1 else 0)
@@ -399,7 +399,7 @@ class Onboarding(commands.Cog):
                 continue
             msg = {
                 1: "Day 1 check-in: run `/quest` and it gives you one 5–10 minute step. That's all for today.",
-                3: "Day 3: here's what a turn-in looks like.\n`/submit quest:Q6 proof:\"Doorway 140 wide, ceiling 300\"` "
+                3: "Day 3: here's what a turn-in looks like.\n`/submit quest:SQ6 proof:\"Doorway 140 wide, ceiling 300\"` "
                    "+ one screenshot. Honor system at this rank.",
             }[step]
             try:
@@ -512,7 +512,7 @@ class BugReportButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:b
 
 class BugModal(discord.ui.Modal, title="Server / bot problem"):
     what = discord.ui.TextInput(label="What were you doing?", max_length=300,
-                                placeholder="e.g. Ran /submit Q6 with a screenshot")
+                                placeholder="e.g. Ran /submit SQ6 with a screenshot")
     happened = discord.ui.TextInput(label="What happened instead?", style=discord.TextStyle.paragraph,
                                     max_length=800, placeholder="Exact error text or what looked wrong")
     expected = discord.ui.TextInput(label="What did you expect?", style=discord.TextStyle.paragraph,

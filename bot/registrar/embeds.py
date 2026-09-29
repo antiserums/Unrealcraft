@@ -23,8 +23,6 @@ def nameplate(cat: Catalog, rank: int, seal: str | None, major: str) -> str:
     if rank < 0:
         return "Orientation"
     title = cat.ranks[rank]["title"]
-    if rank == 5:
-        title = "Architect"
     if rank >= 3 and seal and rank < 6:
         return f"{title} · {cat.seals[seal]['title']}"
     if rank == 0 and major != "undecided":
@@ -97,9 +95,10 @@ def _quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
     e = discord.Embed(
         title=f"{q.id} · {r['title']}",
         description=(f"*{fl['why']}*" if fl.get("why") else None),
-        color=rank_color(cat, max(q.rank, 0), r.get("seal")),
+        color=discord.Color.from_str(q.tier["color"]),
     )
-    e.add_field(name="Info", value=f"{rank_label} · {q.track} · {kind} · ~{r.get('time_min', '?')} min · **{q.xp} XP**",
+    e.add_field(name="Info", value=f"**{q.tier_label}** · {rank_label} · {kind} · ~{r.get('time_min', '?')} min · "
+                                   f"**{q.xp} XP**",
                 inline=False)
     if fl.get("do"):
         e.add_field(name="Your version", value=fl["do"], inline=False)

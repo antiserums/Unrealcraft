@@ -7,55 +7,56 @@
 #
 # FULL REQUIRED PATH (Environment Art), including shared quests defined in other files:
 #
-# Rank 1 (Blockout Artist) — track: world-lighting
-#   R1-WL-01  Landscape                        (shared, level_design_r1.yaml)
-#   R1-WL-02  Light types and Lumen            (shared, level_design_r1.yaml)
-#   R1-WL-03  Post process and exposure        (shared, level_design_r1.yaml)
-#   R1-WL-09  Foliage                          (shared, level_design_r1.yaml)
-#   R1-LK-01  Reference board and mood target
-#   R1-LK-02  Sky, HDRI and atmosphere mood
-#   R1-LK-03  IES profiles and physical light units indoors
-#   R1-LK-04  Composition: bookmarks and a Cine Camera still
-#   R1-LK-CAP Lit diorama (capstone)
-#   Electives: R1-LK-05, R1-LK-06, R1-LK-07
+# Rank 1 (Journeyman) — track: world-lighting
+#   EAQ8  Landscape                        (shared, level_design_r1.yaml)
+#   EAQ9  Light types and Lumen            (shared, level_design_r1.yaml)
+#   EAQ10  Post process and exposure        (shared, level_design_r1.yaml)
+#   EAQ11  Foliage                          (shared, level_design_r1.yaml)
+#   EAQ1  Reference board and mood target
+#   EAQ2  Sky, HDRI and atmosphere mood
+#   EAQ3  IES profiles and physical light units indoors
+#   EAQ4  Composition: bookmarks and a Cine Camera still
+#   EAQ12 Lit diorama (capstone)
+#   Electives: EAQ5, EAQ6, EAQ7
 #   (required_tasters rank 1: none)
 #
-# Rank 2 (Gameplay Prototyper) — track: materials
-#   R2-MAT-01 Material Editor basics           (shared materials track, defined here)
-#   R2-MAT-02 PBR inputs                       (shared materials track, defined here)
-#   R2-MAT-03 Texture sampling and UVs         (shared materials track, defined here)
-#   R2-MAT-04 Parameters for instances         (shared materials track, defined here)
-#   R2-MAT-05 Landscape material basics        (shared materials track, defined here)
-#   R2-MAT-06 Decals                           (shared materials track, defined here; Level Design adjacent)
-#   T-PICKUP-LOOP  Opposite taster: tiny pickup loop (tasters.yaml) — required_tasters rank 2
-#   R2-LK-CAP Walkable diorama + master material + instances (capstone)
-#   Electives: R2-MAT-07, R2-MAT-08, R2-MAT-09
+# Rank 2 (Craftsman) — track: materials
+#   EAQ13 Material Editor basics           (shared materials track, defined here)
+#   EAQ14 PBR inputs                       (shared materials track, defined here)
+#   EAQ15 Texture sampling and UVs         (shared materials track, defined here)
+#   EAQ16 Parameters for instances         (shared materials track, defined here)
+#   EAQ17 Landscape material basics        (shared materials track, defined here)
+#   EAQ18 Decals                           (shared materials track, defined here; Level Design adjacent)
+#   GDQ5  Opposite taster: tiny pickup loop (tasters.yaml) — required_tasters rank 2
+#   EAQ24 Walkable diorama + master material + instances (capstone)
+#   Electives: EAQ19, EAQ20, EAQ21
 #
-# Rank 3 (Specialist, Environment Art Specialty) — track: bay-lookdev
-#   R3-LK-01  Master material architecture
-#   R3-LK-02  Material functions
-#   R3-LK-03  Vertex paint blending
-#   R3-LK-04  Nanite and displacement awareness
-#   R3-LK-05  Light a hero area
-#   R3-LK-06  Post process grading and LUT
-#   R3-LK-07  Movie Render Queue still
-#   R3-CA-01  Character anatomy                (shared, required for all majors)
-#   R3-CA-02  Read an AnimBP                   (shared, required for all majors)
-#   R3-CA-03  Montage on interact              (shared, required for all majors)
-#   R3-LK-CAP Reference scene for the server (capstone, mentor-verified)
-#   Electives: R3-LK-08, R3-LK-09, R3-LK-10
+# Rank 3 (Artisan, Environment Art Specialty) — track: bay-lookdev
+#   EAQ25  Master material architecture
+#   EAQ26  Material functions
+#   EAQ27  Vertex paint blending
+#   EAQ28  Nanite and displacement awareness
+#   EAQ29  Light a hero area
+#   EAQ30  Post process grading and LUT
+#   EAQ31  Movie Render Queue still
+#   AQ1  Character anatomy                (shared, required for all majors)
+#   AQ2  Read an AnimBP                   (shared, required for all majors)
+#   AQ3  Montage on interact              (shared, required for all majors)
+#   EAQ35 Reference scene for the server (capstone, mentor-verified)
+#   Electives: EAQ32, EAQ33, EAQ34
 #
-# Not required for Environment Art: any C++ quest (R3-CD-*, T-CPP-HELLO), R2-BP-01..04, R2-PR-*.
-# R2-MAT-* is required for lookdev and tech_art only. Programming has no materials requirement beyond Starter Quest Q8.
+# Not required for Environment Art: any C++ quest (R3-CD-*, PQ17), GDQ1..04, R2-PR-*.
+# R2-MAT-* is required for lookdev and tech_art only. Programming has no materials requirement beyond Starter Quest SQ8.
 
 quests:
   # =====================================================================
   # RANK 1 — world-lighting
   # Shared prerequisites (defined in level_design_r1.yaml, do not redefine here):
-  #   R1-WL-01 landscape, R1-WL-02 light types + Lumen, R1-WL-03 post process/exposure, R1-WL-09 foliage.
+  #   EAQ8 landscape, EAQ9 light types + Lumen, EAQ10 post process/exposure, EAQ11 foliage.
   # =====================================================================
-  - id: R1-LK-01
+  - id: EAQ1
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [reference, mood, art-direction]
     required_for_majors: [lookdev]
@@ -81,8 +82,9 @@ quests:
       _default: {why: "A target makes lighting decisions easier to judge.", do: "Pick one image and say why."}
       lookdev: {why: "Every lighting pass from here gets judged against a target.", do: "Label what each reference is for."}
 
-  - id: R1-LK-02
+  - id: EAQ2
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [sky, hdri, atmosphere, fog]
     required_for_majors: [lookdev]
@@ -102,7 +104,7 @@ quests:
     checklist:
       - "Light one scene with Sky Atmosphere, Directional Light, Sky Light, and Height Fog."
       - "Duplicate the level and light it again with an HDRI (HDRI Backdrop or a Sky Light cubemap)."
-      - "Push each version toward your R1-LK-01 mood target using sun angle, fog color, and density."
+      - "Push each version toward your EAQ1 mood target using sun angle, fog color, and density."
       - "Compare from the same camera bookmark."
     done_when: "Side-by-side screenshots (atmosphere vs HDRI) from the same bookmark, plus 2 lines on which fits the target."
     xp: 90
@@ -112,8 +114,9 @@ quests:
       _default: {why: "The sky sets the base color of everything below it.", do: "Try two sky setups from one camera."}
       lookdev: {why: "Mood mostly comes from the sky and fog.", do: "Match your target before adding any other lights."}
 
-  - id: R1-LK-03
+  - id: EAQ3
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [ies, physical-units, interior-lighting]
     required_for_majors: [lookdev]
@@ -142,8 +145,9 @@ quests:
       _default: {why: "Real-world units make lighting predictable.", do: "Light a room with real numbers."}
       lookdev: {why: "Physical units make your scenes consistent with each other.", do: "Lock exposure before judging brightness."}
 
-  - id: R1-LK-04
+  - id: EAQ4
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [composition, cameras, bookmarks, cine-camera]
     required_for_majors: [lookdev]
@@ -171,8 +175,9 @@ quests:
       _default: {why: "Where the camera sits decides what people see.", do: "Frame one shot on purpose."}
       lookdev: {why: "Your reviews happen through fixed cameras.", do: "Save bookmarks before you light, not after."}
 
-  - id: R1-LK-CAP
+  - id: EAQ12
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [lighting, diorama, capstone]
     required_for_majors: [lookdev]
@@ -187,10 +192,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 lit diorama small environment lighting lumen"
     checklist:
-      - "Build a small diorama (roughly 10 x 10 m) on a sculpted landscape patch (R1-WL-01) with foliage (R1-WL-09)."
-      - "Light it toward your R1-LK-01 mood target using sky and atmosphere (R1-LK-02) and at least one physical-unit local light (R1-LK-03)."
-      - "Set exposure and post process deliberately (R1-WL-03)."
-      - "Render 3 stills from your bookmarks, one through a Cine Camera (R1-LK-04)."
+      - "Build a small diorama (roughly 10 x 10 m) on a sculpted landscape patch (EAQ8) with foliage (EAQ11)."
+      - "Light it toward your EAQ1 mood target using sky and atmosphere (EAQ2) and at least one physical-unit local light (EAQ3)."
+      - "Set exposure and post process deliberately (EAQ10)."
+      - "Render 3 stills from your bookmarks, one through a Cine Camera (EAQ4)."
       - "Write 3 lines: what matches the target and what doesn't yet."
     done_when: "3 stills, the mood target image, and the 3-line writeup."
     xp: 200
@@ -201,8 +206,9 @@ quests:
       lookdev: {why: "This diorama becomes walkable at Rank 2.", do: "Judge it against your target, not against nothing."}
 
   # ---------- Rank 1 electives ----------
-  - id: R1-LK-05
+  - id: EAQ5
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [volumetric-fog, atmosphere]
     required_for_majors: []
@@ -226,8 +232,9 @@ quests:
       _default: {why: "Fog makes light visible in the air.", do: "Get one clean shaft."}
       lookdev: {why: "A common mood tool, easy to overdo.", do: "Stop before it looks milky."}
 
-  - id: R1-LK-06
+  - id: EAQ6
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [local-fog, atmosphere]
     required_for_majors: []
@@ -251,8 +258,9 @@ quests:
       _default: {why: "Fog layers add depth.", do: "Separate two planes with fog."}
       lookdev: {why: "Local control without changing the whole sky.", do: "Use it where the eye should stop."}
 
-  - id: R1-LK-07
+  - id: EAQ7
     rank: 1
+    difficulty: apprentice
     track: world-lighting
     subjects: [directional-light, shadows]
     required_for_majors: []
@@ -278,11 +286,12 @@ quests:
 
   # =====================================================================
   # RANK 2 — materials (shared materials track R2-MAT-*)
-  # Required for lookdev and tech_art. Level Design: adjacent for decals only (R2-MAT-06).
-  # Programming: none. Opposite taster for Environment Art: T-PICKUP-LOOP (tasters.yaml).
+  # Required for lookdev and tech_art. Level Design: adjacent for decals only (EAQ18).
+  # Programming: none. Opposite taster for Environment Art: GDQ5 (tasters.yaml).
   # =====================================================================
-  - id: R2-MAT-01
+  - id: EAQ13
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, material-editor]
     required_for_majors: [lookdev, tech_art]
@@ -309,8 +318,9 @@ quests:
       lookdev: {why: "You'll live in this editor from here on.", do: "Keep the Stats panel open."}
       tech_art: {why: "Instruction counts start mattering soon.", do: "Note the count for each version you build."}
 
-  - id: R2-MAT-02
+  - id: EAQ14
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, pbr]
     required_for_majors: [lookdev, tech_art]
@@ -337,8 +347,9 @@ quests:
       lookdev: {why: "Wrong albedo breaks every lighting setup.", do: "Check values, not just looks."}
       tech_art: {why: "You'll validate these values for others.", do: "Note the ranges you used."}
 
-  - id: R2-MAT-03
+  - id: EAQ15
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, textures, uvs]
     required_for_majors: [lookdev, tech_art]
@@ -365,8 +376,9 @@ quests:
       lookdev: {why: "Channel packing saves memory in every scene.", do: "Use one packed texture."}
       tech_art: {why: "You'll set import rules for these later.", do: "Note the compression each needs."}
 
-  - id: R2-MAT-04
+  - id: EAQ16
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, parameters, instances]
     required_for_majors: [lookdev, tech_art]
@@ -382,7 +394,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-04-expanded-material-instances"
     checklist:
-      - "Turn your R2-MAT-03 material into M_Surface with scalar, vector, and texture parameters."
+      - "Turn your EAQ15 material into M_Surface with scalar, vector, and texture parameters."
       - "Put parameters in named groups with sensible defaults and sort priority."
       - "Create 3 instances that look like different materials."
     done_when: "Screenshot of the 3 instances applied, plus one instance's Details panel."
@@ -393,8 +405,9 @@ quests:
       _default: {why: "Parameters let one material serve many surfaces.", do: "Make three looks from one parent."}
       lookdev: {why: "The start of your Rank 2 master material.", do: "Group parameters so someone else can find them."}
 
-  - id: R2-MAT-05
+  - id: EAQ17
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, landscape]
     required_for_majors: [lookdev, tech_art]
@@ -421,8 +434,9 @@ quests:
       _default: {why: "Ground is most of what you see outdoors.", do: "Paint three layers."}
       lookdev: {why: "Your diorama floor needs this for Rank 2.", do: "Check tiling from eye height."}
 
-  - id: R2-MAT-06
+  - id: EAQ18
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, decals]
     required_for_majors: [lookdev, tech_art]
@@ -448,8 +462,9 @@ quests:
       lookdev: {why: "Grime and wear make surfaces believable.", do: "Place wear where people would touch."}
       level_design: {why: "Decals can guide players without new geometry.", do: "Use the marker decal to point at a route."}
 
-  - id: R2-LK-CAP
+  - id: EAQ24
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, master-material, diorama, capstone]
     required_for_majors: [lookdev]
@@ -464,10 +479,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 master material instances environment walkable scene"
     checklist:
-      - "Make your R1-LK-CAP diorama walkable: Player Start, collision, and no dead ends."
-      - "Build one master material (M_Master_Surface) with grouped parameters (R2-MAT-04)."
+      - "Make your EAQ12 diorama walkable: Player Start, collision, and no dead ends."
+      - "Build one master material (M_Master_Surface) with grouped parameters (EAQ16)."
       - "Drive at least 5 surfaces in the scene from instances of it."
-      - "Paint a 3-layer landscape material (R2-MAT-05) and place purposeful decals (R2-MAT-06)."
+      - "Paint a 3-layer landscape material (EAQ17) and place purposeful decals (EAQ18)."
       - "Walk it in PIE and fix anything that looks wrong at eye level."
       - "Write a short note listing the master's parameters and what each is for."
     done_when: "3 eye-level PIE screenshots, the master graph, the instance list, and the parameter note."
@@ -479,8 +494,9 @@ quests:
       lookdev: {why: "One master material for many surfaces is how real scenes stay manageable.", do: "Make instances do the variety."}
 
   # ---------- Rank 2 electives ----------
-  - id: R2-MAT-07
+  - id: EAQ19
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, world-aligned]
     required_for_majors: []
@@ -504,8 +520,9 @@ quests:
       _default: {why: "Useful when UVs aren't good enough yet.", do: "Try it on scaled cubes."}
       lookdev: {why: "Fast texturing for blockouts and rocks.", do: "Note where it breaks."}
 
-  - id: R2-MAT-08
+  - id: EAQ20
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, landscape, grass]
     required_for_majors: []
@@ -529,8 +546,9 @@ quests:
       _default: {why: "Grass that follows paint saves hand placement.", do: "Drive it from one layer."}
       lookdev: {why: "Keeps ground and grass consistent.", do: "Match density to your reference."}
 
-  - id: R2-MAT-09
+  - id: EAQ21
     rank: 2
+    difficulty: adept
     track: materials
     subjects: [materials, emissive]
     required_for_majors: []
@@ -556,10 +574,11 @@ quests:
 
   # =====================================================================
   # RANK 3 — bay-lookdev (Environment Art Specialty)
-  # Shared required for all majors (defined elsewhere): R3-CA-01, R3-CA-02, R3-CA-03.
+  # Shared required for all majors (defined elsewhere): AQ1, AQ2, AQ3.
   # =====================================================================
-  - id: R3-LK-01
+  - id: EAQ25
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [materials, master-material, static-switch, performance]
@@ -588,8 +607,9 @@ quests:
       _default: {why: "Switches are cheap per instance but add shader permutations.", do: "Count before you add more."}
       lookdev: {why: "Your master material will be shared with the server.", do: "Keep only switches people will use."}
 
-  - id: R3-LK-02
+  - id: EAQ26
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [materials, material-functions]
@@ -615,8 +635,9 @@ quests:
       _default: {why: "Functions stop you rebuilding the same nodes.", do: "Pull one repeated chunk out."}
       lookdev: {why: "Groundwork for the Rank 4 function library.", do: "Write a description for every input."}
 
-  - id: R3-LK-03
+  - id: EAQ27
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [materials, vertex-paint, blending]
@@ -642,8 +663,9 @@ quests:
       _default: {why: "Vertex paint breaks up repetition cheaply.", do: "Paint one blend on one mesh."}
       lookdev: {why: "Hand-placed variation reads as care.", do: "Use a height mask for a crisp edge."}
 
-  - id: R3-LK-04
+  - id: EAQ28
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [nanite, displacement, tessellation, performance]
@@ -670,8 +692,9 @@ quests:
       _default: {why: "Nanite changes what 'too many polygons' means.", do: "Look at the visualization modes."}
       lookdev: {why: "Your material choices affect Nanite.", do: "Note which features your masters use."}
 
-  - id: R3-LK-05
+  - id: EAQ29
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [lighting, lumen, hero-area]
@@ -701,8 +724,9 @@ quests:
       _default: {why: "The eye goes to the brightest, highest-contrast spot.", do: "Light one area on purpose."}
       lookdev: {why: "This area will anchor your reference scene.", do: "Check where a peer looks first."}
 
-  - id: R3-LK-06
+  - id: EAQ30
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [post-process, color-grading, lut]
@@ -731,8 +755,9 @@ quests:
       _default: {why: "Grading finishes an image but can't fix bad lighting.", do: "Grade last, after lighting."}
       lookdev: {why: "A consistent grade holds a set of shots together.", do: "Keep an ungraded reference."}
 
-  - id: R3-LK-07
+  - id: EAQ31
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [movie-render-queue, rendering, stills]
@@ -761,8 +786,9 @@ quests:
       _default: {why: "MRQ gives cleaner final images than screenshots.", do: "Render one frame properly."}
       lookdev: {why: "Your capstone stills go through this.", do: "Save a preset you can reuse."}
 
-  - id: R3-LK-CAP
+  - id: EAQ35
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [reference-scene, lighting, materials, capstone]
@@ -779,9 +805,9 @@ quests:
     backup_search: "unreal engine 5 lookdev reference scene material calibration lighting"
     checklist:
       - "Build a scene other members can drop assets into to check them: neutral props, a gray/chrome ball pair, and a Macbeth-style swatch board."
-      - "Light it with physical units and a hero area (R3-LK-05), with fixed exposure."
-      - "Use your master material, one material function, and one vertex-painted blend (R3-LK-01..03)."
-      - "Provide 3 bookmarked Cine Cameras and an MRQ preset (R3-LK-07)."
+      - "Light it with physical units and a hero area (EAQ29), with fixed exposure."
+      - "Use your master material, one material function, and one vertex-painted blend (EAQ25..03)."
+      - "Provide 3 bookmarked Cine Cameras and an MRQ preset (EAQ31)."
       - "Write a one-page README: how to use it, what the exposure is, and what not to change."
       - "Walk a mentor through it live or in a recorded clip."
     done_when: "Mentor signs off after opening the scene and checking one asset in it using only your README."
@@ -793,8 +819,9 @@ quests:
       lookdev: {why: "Your work becomes a tool the whole server uses.", do: "Write the README before you polish."}
 
   # ---------- Rank 3 electives ----------
-  - id: R3-LK-08
+  - id: EAQ32
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [pcg, set-dressing]
@@ -819,8 +846,9 @@ quests:
       _default: {why: "Procedural scatter speeds up dressing.", do: "Scatter one thing with one rule."}
       lookdev: {why: "Frees time for hero areas.", do: "Keep the rule simple."}
 
-  - id: R3-LK-09
+  - id: EAQ33
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [water, materials]
@@ -845,8 +873,9 @@ quests:
       _default: {why: "Water reflects everything around it.", do: "Add one body and tune it."}
       lookdev: {why: "Water shows off lighting mistakes fast.", do: "Match it to your sky."}
 
-  - id: R3-LK-10
+  - id: EAQ34
     rank: 3
+    difficulty: expert
     track: bay-lookdev
     seal: lookdev
     subjects: [foliage, procedural-foliage]
@@ -869,4 +898,4 @@ quests:
     quiz: []  # TODO Phase 4
     flavors:
       _default: {why: "Uniform spacing looks artificial.", do: "Tune two species together."}
-      lookdev: {why: "Builds on R1-WL-09 foliage.", do: "Check it from your Cine Camera."}
+      lookdev: {why: "Builds on EAQ11 foliage.", do: "Check it from your Cine Camera."}

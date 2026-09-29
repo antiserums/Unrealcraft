@@ -1,4 +1,4 @@
-# Unrealcraft — Level Design, Rank 2 ("Gameplay Prototyper": can make a thing play)
+# Unrealcraft — Level Design, Rank 2 ("Craftsman": can make a thing play)
 # Rank 2 has two tracks: materials and blueprint. Level Design fully requires only the blueprint side
 # (Blueprint-in-levels). The shared BP quests (R2-BP-*) also count for gameplay_design and programming.
 # URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
@@ -7,8 +7,9 @@
 
 quests:
   # ------------ Shared blueprint track (level_design, gameplay_design, programming) ------------
-  - id: R2-BP-01
+  - id: GDQ1
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, components, construction-script, variables]
     required_for_majors: [level_design, gameplay_design, programming]
@@ -60,8 +61,9 @@ quests:
       gameplay_design: {why: "Exposed variables are your tuning knobs. Designers tweak them without touching the graph."}
       programming: {why: "Later a C++ UPROPERTY will show up in Details the same way these variables do."}
 
-  - id: R2-BP-02
+  - id: GDQ2
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, collision, overlap, triggers]
     required_for_majors: [level_design, gameplay_design, programming]
@@ -113,8 +115,9 @@ quests:
       gameplay_design: {why: "Zones, pickups and hazards are all overlaps with a filter."}
       programming: {why: "The same collision rules apply in C++. Learn the settings here where they're easy to see."}
 
-  - id: R2-BP-03
+  - id: GDQ3
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, timelines, animation-curves]
     required_for_majors: [level_design, gameplay_design, programming]
@@ -130,7 +133,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/opening-doors-in-unreal-engine"
     checklist:
-      - "In BP_Door (from Q9 or new), add a Timeline TL_Open with one float track from 0 to 1 over 1.0 s. Ease the curve (right-click keys → Auto)."
+      - "In BP_Door (from SQ9 or new), add a Timeline TL_Open with one float track from 0 to 1 over 1.0 s. Ease the curve (right-click keys → Auto)."
       - "Drive Lerp (Rotator) or Lerp (Vector) with the track's output. Feed that into Set Relative Rotation or Set Relative Location on the door mesh."
       - "Wire BP-02's filtered Begin Overlap to Play and End Overlap to Reverse."
       - "Make OpenAngle (or OpenOffset) Instance Editable so each door can open differently."
@@ -165,8 +168,9 @@ quests:
       gameplay_design: {why: "The curve controls the feel. Ease-in and ease-out matter as much as timing."}
       animation: {why: "Same idea as a curve in Sequencer, driven by gameplay instead."}
 
-  - id: R2-BP-04
+  - id: GDQ4
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, communication, interfaces, references]
     required_for_majors: [level_design, gameplay_design, programming]
@@ -218,8 +222,9 @@ quests:
       programming: {why: "Coupling and dependencies: the same tradeoffs you'll weigh in C++."}
 
   # ------------ Level Design side ------------
-  - id: R2-LD-01
+  - id: LDQ27
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [planning, pacing, beat-chart]
     required_for_majors: [level_design]
@@ -239,7 +244,7 @@ quests:
       - "Columns: location, player goal, what the player does (mechanic), what they see first, intended feeling, and intensity (1–5)."
       - "Mark where each Blueprint interact from BP-02–BP-04 will live."
       - "Sketch a top-down doodle of the route (paper photo or any drawing tool is fine)."
-      - "Post it in your turn-in thread before you build. You'll compare it with the finished level in R2-LD-06."
+      - "Post it in your turn-in thread before you build. You'll compare it with the finished level in LDQ32."
     done_when: "Writeup: the beat chart (table or image) plus the top-down sketch."
     xp: 60
     verify_type: writeup
@@ -270,8 +275,9 @@ quests:
       gameplay_design: {why: "Same tool, used for pacing a loop instead of a space."}
       cinematics: {why: "A beat chart works like a shot list for an interactive scene."}
 
-  - id: R2-LD-02
+  - id: LDQ28
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [metrics, documentation, character-movement]
     required_for_majors: [level_design]
@@ -323,8 +329,9 @@ quests:
       gameplay_design: {why: "If you change jump or speed, every level's metrics change too. This sheet shows the cost."}
       animation: {why: "Step height and ledge heights set which traversal animations you'll need."}
 
-  - id: R2-LD-03
+  - id: LDQ29
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [gating, pickups, doors, blueprint]
     required_for_majors: [level_design]
@@ -366,7 +373,7 @@ quests:
         answer_index: 3
         explain: "Check on interaction. Nothing needs to run until the player arrives."
       - q: "Which R2 quests does this build on?"
-        choices: ["Only Q1", "BP-02 for filtered pickups and BP-03 or BP-04 for opening the door", "None", "The Programming capstone"]
+        choices: ["Only SQ1", "BP-02 for filtered pickups and BP-03 or BP-04 for opening the door", "None", "The Programming capstone"]
         answer_index: 1
         explain: "Lock and key combines filtered triggers, a Timeline door and actor communication."
     flavors:
@@ -374,8 +381,9 @@ quests:
       level_design: {why: "Gating is how you control the order players see your spaces in.", do: "Mark the lock and the key on your beat chart so tension builds between them."}
       gameplay_design: {why: "A key is the smallest possible progression system."}
 
-  - id: R2-LD-04
+  - id: LDQ30
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [navigation, navmesh, ai]
     required_for_majors: [level_design]
@@ -426,9 +434,10 @@ quests:
       gameplay_design: {why: "Enemy behaviour depends on AI being able to reach the player."}
       programming: {why: "The navmesh is the data your AI code will query."}
 
-  - id: R2-LD-05
+  - id: LDQ31
     needs_others: true          # hidden and not required until the server has enough members
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [playtesting, observation, feedback]
     required_for_majors: [level_design]
@@ -477,8 +486,9 @@ quests:
       level_design: {why: "Watching one stranger play teaches more than an hour of reviewing it yourself.", do: "Mark every hesitation on your top-down sketch. Clusters show you what to fix."}
       gameplay_design: {why: "Same protocol for testing a loop. Watch what players do, not what they say."}
 
-  - id: R2-LD-06
+  - id: LDQ32
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [capstone, beats, blueprint, playtesting, metrics]
     required_for_majors: [level_design]
@@ -495,10 +505,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
     checklist:
-      - "Build L_Beats_01 from your R2-LD-01 beat chart: intro, tension and payoff, each in its own space."
+      - "Build L_Beats_01 from your LDQ27 beat chart: intro, tension and payoff, each in its own space."
       - "Include at least 2 different Blueprint interacts, for example lock and key (LD-03) plus a lever and gate over an interface (BP-04)."
-      - "Build to your R2-LD-02 metrics sheet. Every gap, ledge and door should match a number on it."
-      - text: "Run one peer playtest using the R2-LD-05 protocol."
+      - "Build to your LDQ28 metrics sheet. Every gap, ledge and door should match a number on it."
+      - text: "Run one peer playtest using the LDQ31 protocol."
         needs_others: true
       - text: "Change at least one thing based on the playtest, then update the beat chart to match what you built."
         needs_others: true
@@ -533,8 +543,9 @@ quests:
       gameplay_design: {why: "The same loop you'll run on your Rank 2 core loop capstone."}
 
   # ------------ Level Design electives (Rank 2) ------------
-  - id: R2-E-LD-01
+  - id: LDQ21
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, platforms, timelines]
     elective: true
@@ -549,8 +560,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R2-E-LD-02
+  - id: LDQ22
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, hazards, damage]
     elective: true
@@ -567,8 +579,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R2-E-LD-03
+  - id: LDQ23
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, checkpoints, respawn]
     elective: true
@@ -583,8 +596,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R2-E-LD-04
+  - id: LDQ24
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [umg, hud, prompts]
     elective: true
@@ -601,8 +615,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R2-E-LD-05
+  - id: LDQ25
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [blueprint, puzzles, physics]
     elective: true
@@ -617,8 +632,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R2-E-LD-06
+  - id: LDQ26
     rank: 2
+    difficulty: adept
     track: blueprint
     subjects: [audio, feedback, blueprint]
     elective: true

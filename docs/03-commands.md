@@ -34,13 +34,13 @@ Slash commands only. No prefix commands and no message-content intent except for
 |---|---|---|
 | /grant-xp `member` `amount` `reason` | Mod | Logged to #mod-log and xp_log. Never auto. |
 | /curriculum-add `yaml_attachment` | Curriculum | Validate and upsert quests. Dry-run by default. |
-| /curriculum-propose-publish `proposal_id` | Curriculum | Promote an Architect's proposal. |
+| /curriculum-propose-publish `proposal_id` | Curriculum | Promote an Grandmaster's proposal. |
 | /commend `member` `note` | Lead+ | +medal Teacher progress / a public note. No XP. |
-| /raid `start/end` `quest_id` | Architect+, Staff | Weekly raid. |
+| /raid `start/end` `quest_id` | Grandmaster+, Staff | Weekly raid. |
 | /admin bootstrap · sync-perms · reload-curriculum | Owner | Phase 2 setup helpers. |
 
-## Architect+
-| /curriculum-propose `yaml_attachment` | Architect+ | Drafts to #curriculum-wip. |
+## Grandmaster+
+| /curriculum-propose `yaml_attachment` | Grandmaster+ | Drafts to #curriculum-wip. |
 
 ## How checklists are verified
 Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/checks.py`). `/quest` and `/start` show:
@@ -58,9 +58,9 @@ Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/chec
 | `fact: react.showcase` | reaction on someone else's showcase post | O8 |
 | `fact: msg.<channel>` | any message in that channel (author + channel only, no Message Content intent) | O-E3 |
 | `fact: nick.major` | nickname contains `|` | O-E2 |
-| `attachment: image / video` | file attached on /submit (content type checked) | screenshot quests (default), R0-META-01/02 |
-| `min_length: N` | proof text length | writeup quests (default 80), META-03, R0-E-06 |
-| `link: showcase, on: others / own` | pasted message link is fetched: right server, right channel, your message, someone else's (or your own) post | R0-META-04/05 |
+| `attachment: image / video` | file attached on /submit (content type checked) | screenshot quests (default), SQ13/02 |
+| `min_length: N` | proof text length | writeup quests (default 80), META-03, SQ12 |
+| `link: showcase, on: others / own` | pasted message link is fetched: right server, right channel, your message, someone else's (or your own) post | SQ16/05 |
 
 Quests whose every line is a `fact` check complete themselves; there is nothing to press. `/submit` is refused while any ✅-type line is still ☐.
 Reading can't be observed by Discord, so reading is proven by the quiz.
@@ -73,7 +73,7 @@ Reading can't be observed by Discord, so reading is proven by the quiz.
 | 0–1 | screenshot/writeup | honor system: auto-Pass, logged, spot-checkable |
 | 2 | any | peer (R2+, cap 3/day) **or** mentor in #mentor-queue |
 | 3–4 | any | mentor **or** two peer Approves (peers of rank ≥ quest rank) |
-| 5–6 | any | human mentor only. Architect/Lead promotions also need staff sign-off, plus 2 vouchers for Lead. |
+| 5–6 | any | human mentor only. Grandmaster/Guildmaster promotions also need staff sign-off, plus 2 vouchers for Lead. |
 
 A capstone Pass triggers `check_promotion()`, which promotes only if XP ≥ threshold **and** every required quest and taster for the rank is done.
 

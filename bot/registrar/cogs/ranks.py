@@ -47,7 +47,7 @@ class Ranks(commands.Cog):
         ok, missing = self.cat.rank_requirements_met(st, target)
         if target in self.cat.ranks or target == 0:
             need = self.cat.xp_needed(target)
-            next_line = (f"{self.cat.ranks.get(target, {}).get('title', 'Greenlit')}: "
+            next_line = (f"{self.cat.ranks.get(target, {}).get('title', 'Initiate')}: "
                          f"{max(0, need - u['xp'])} XP to go · "
                          + ("all required quests done" if ok else f"{len(missing)} required left"))
         else:
@@ -142,31 +142,41 @@ class Ranks(commands.Cog):
         cap = self.cat.capstone(u["major"], rank) or {}
         seal_t = self.cat.seals.get(u["seal"] or "", {}).get("title", "")
         lines = {
-            0: ["You're Greenlit. You have a desk but no badge yet.",
-                "You owe the Starter Quests: 11 short quests, each one sitting.",
+            0: ["You're an Initiate of the guild. Welcome in.",
+                "You owe the Starter Quests (SQ1–SQ11): short 🟢 Novice quests, each one sitting.",
                 f"Next: {nxt}. From now on, quests only work in #quest-log: press Continue your quest there.",
                 "Stuck? #help-desk with the template. Mentors answer formatted posts first.",
                 "New power: #starter-quests and the major forums are open (post in your major's)."],
-            1: ["Blockout Artist. You can build a space and light it without getting lost.",
-                f"You owe the Rank 1 path, ending in: {cap.get('title', '—')}.",
+            1: ["Journeyman. You can build a space and find your way around Unreal.",
+                f"🔵 Apprentice quests are open. Your Rank 1 path ends in: {cap.get('title', '—')}.",
                 f"Next: {nxt}. /path shows the whole rank.",
-                "Ask in your major's forum when a blockout feels wrong and you can't say why.",
-                "New power: World & Lighting track and the Blockout showcase tag."],
-            2: ["Gameplay Prototyper. You make things play.",
-                f"You owe your side of Rank 2 + tasters, ending in: {cap.get('title', '—')}.",
+                "Ask in your major's forum when something feels wrong and you can't say why.",
+                "New power: 🔵 Apprentice quests and the Blockout showcase tag."],
+            2: ["Craftsman. You make things work and play.",
+                f"🟣 Adept quests are open. Your Rank 2 path + tasters end in: {cap.get('title', '—')}.",
                 f"Next: {nxt}.",
                 "Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's forum for reviews.",
-                "New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each."],
-            3: [f"Specialist · {seal_t}. People can @ you for {seal_t} work now.",
-                f"You owe your {seal_t} Specialty quests + shared character basics, ending in: {cap.get('title', '—')}.",
+                "New power: 🟣 Adept quests, and you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each."],
+            3: [f"Artisan · {seal_t}. People can @ you for {seal_t} work now.",
+                f"🟠 Expert quests are open. Your {seal_t} Specialty path ends in: {cap.get('title', '—')}.",
                 f"Next: {nxt}.",
                 "For feedback, post in #showcase with the Critique-wanted tag.",
-                f"New power: 1.25× XP on {seal_t} quests, /critique, and you can apply for Mentor-in-Training."],
-            4: [f"Engineer · {seal_t}. You own a system now, not just a scene.",
+                f"New power: 🟠 Expert quests, 1.25× XP on {seal_t} quests, /critique, and you can apply for Mentor-in-Training."],
+            4: [f"Master Artisan · {seal_t}. You own a system now, not just a scene.",
+                f"🔴 Master quests are open. You owe one capstone: {cap.get('title', '—')}. {cap.get('brief', '')}",
+                f"Next: {nxt}.",
+                "Your mentor from here on is whoever reviewed your Rank 3 capstone. Ping them in your major's forum.",
+                "New power: 🔴 Master quests, you can review Rank 2 turn-ins, and your name is shown higher in the member list."],
+            5: [f"Grandmaster · {seal_t}. Your work holds up when other people touch it.",
                 f"You owe one capstone: {cap.get('title', '—')}. {cap.get('brief', '')}",
-                f"Next: {nxt}. Your 30-day workshop thread opens in your bay.",
-                "Your mentor from here on is whoever reviewed your R3 capstone. Ping them there.",
-                "New power: your systems track opens, you can review Rank 2 turn-ins, and your name is hoisted."],
+                f"Next: {nxt}.",
+                "Staff signed off on this rank. Other members will look to you.",
+                "New power: speak on the Lecture Hall stage and propose new quests."],
+            6: ["Guildmaster. You shipped, and two members vouched for you.",
+                "There is no rank above this one. Keep building and keep teaching.",
+                f"Next: {nxt}.",
+                "Your notes and reviews shape what new members learn.",
+                "New power: #curriculum-wip and full mentor tools."],
         }.get(rank, [f"Rank {rank}.", "", f"Next: {nxt}.", "", ""])
         return "\n".join(lines + [SIGNOFF])
 

@@ -1,15 +1,16 @@
-# Unrealcraft — Rank 3 "Specialist", Level Design path (Design Specialty)
-# Shared characters-anim track (R3-CA-01..03 required for every major; R3-CA-04..08 animation major, stubbed)
+# Unrealcraft — Rank 3 "Artisan", Level Design path (Design Specialty)
+# Shared characters-anim track (AQ1..03 required for every major; AQ4..08 animation major, stubbed)
 # plus the bay-design track (required for level_design and gameplay_design) and Design electives.
 # URL prefix: https://dev.epicgames.com/documentation/en-us/unreal-engine/
 # Verified slugs only (see VERIFIED_URLS.md). Backup videos are TODO_URL until a human picks a dated UE5+ video.
-# The Specialist 1.25x in-Specialty XP multiplier is applied by the Quartermaster, not here.
+# The Artisan 1.25x in-Specialty XP multiplier is applied by the Quartermaster, not here.
 # Rank 3+ capstone verification: one mentor approve OR two peer approves (verify_type: mentor).
 
 quests:
   # ------------ Shared characters-anim track (required for all majors) ------------
-  - id: R3-CA-01
+  - id: AQ1
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [character, movement, metrics]
     required_for_majors: [all]
@@ -64,8 +65,9 @@ quests:
       lookdev: {why: "Capsule and walk speed tell you how close the player gets to your surfaces and how fast they pass.", do: "Walk past your detail at Max Walk Speed and see what the player actually notices."}
       animation: {why: "Walk speed and jump height must match the animations or feet slide and jumps look wrong.", do: "Write down the speeds your walk and run cycles need to match."}
 
-  - id: R3-CA-02
+  - id: AQ2
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [animbp, state-machine, blendspace]
     required_for_majors: [all]
@@ -114,10 +116,11 @@ quests:
       gameplay_design: {why: "Speed and state variables are where feel lives between input and animation.", do: "Note which AnimBP variable you'd hook a new mechanic into."}
       programming: {why: "Your movement code feeds this graph. The Event Graph is where the two meet.", do: "Trace one variable from the pawn to the AnimGraph and note where it's set."}
       lookdev: {why: "You'll frame and light characters. Knowing the states tells you which poses you'll actually see.", do: "List the states a player sees most often in a normal walk."}
-      animation: {why: "This is your home graph. Read Epic's before you build your own.", do: "Sketch the state machine on paper before you move on to R3-CA-07."}
+      animation: {why: "This is your home graph. Read Epic's before you build your own.", do: "Sketch the state machine on paper before you move on to AQ7."}
 
-  - id: R3-CA-03
+  - id: AQ3
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [montage, interaction, blueprint]
     required_for_majors: [all]
@@ -173,8 +176,9 @@ quests:
       animation: {why: "Your animations reach gameplay through montages. This is the plumbing.", do: "Check the pull's blend in and blend out times. Rank 3 notifies build on this."}
 
   # ------------ Animation-major quests (required for animation, optional for everyone else) — STUBS ------------
-  - id: R3-CA-04
+  - id: AQ4
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [retargeting, ik-rig]
     required_for_majors: [animation]
@@ -199,8 +203,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-CA-05
+  - id: AQ5
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [control-rig]
     required_for_majors: [animation]
@@ -222,8 +227,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-CA-06
+  - id: AQ6
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [anim-notify, montage]
     required_for_majors: [animation]
@@ -247,8 +253,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-CA-07
+  - id: AQ7
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [blendspace, locomotion]
     required_for_majors: [animation]
@@ -272,8 +279,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-CA-08
+  - id: AQ8
     rank: 3
+    difficulty: expert
     track: characters-anim
     subjects: [aim-offset]
     required_for_majors: [animation]
@@ -296,8 +304,9 @@ quests:
     quiz: []
 
   # ------------ Bay-design track (Design Specialty) ------------
-  - id: R3-DZ-01
+  - id: LDQ33
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [encounter, combat-space, layout]
@@ -348,8 +357,9 @@ quests:
       level_design: {why: "Cover, flanks and high ground are the parts you'll arrange in every encounter from now on.", do: "Mark every part on the top-down. If you can't label a piece, ask why it's there."}
       gameplay_design: {why: "The space decides which of your verbs are worth using.", do: "Write next to the map which player verb each area rewards."}
 
-  - id: R3-DZ-02
+  - id: LDQ34
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [ai, navmesh, spawning]
@@ -404,8 +414,9 @@ quests:
       gameplay_design: {why: "Threat placement is the first tuning knob of any encounter.", do: "Try the same 3 enemies at two different spawn layouts and write down which fight felt better."}
       programming: {why: "Designers will place your AI. Knowing what they need saves you rework.", do: "Note one thing about the provided tree you'd expose to designers."}
 
-  - id: R3-DZ-03
+  - id: LDQ35
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [metrics, cover, sightlines]
@@ -423,7 +434,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-controls-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/possessing-pawns-in-unreal-engine"
     checklist:
-      - "Using your capsule numbers from R3-CA-01, set a low cover height (player can see over it standing) and a full cover height (hides the whole capsule)."
+      - "Using your capsule numbers from AQ1, set a low cover height (player can see over it standing) and a full cover height (hides the whole capsule)."
       - "Resize every cover piece in L_Arena_01 to one of those two heights."
       - "In a Top orthographic view, middle-mouse drag to measure the distances between enemy positions and player cover. Write down short, mid and long."
       - "Place a Camera Actor at enemy eye height at each enemy position. Right-click → Pilot it and check what it can see."
@@ -458,8 +469,9 @@ quests:
       level_design: {why: "Cover and sightlines are measurable. Measured spaces are easier to fix.", do: "Keep a bookmark per enemy view and walk them all after every layout change."}
       gameplay_design: {why: "Engagement distances decide which weapons and verbs matter.", do: "Note the range each of your verbs is designed for and check the arena supports it."}
 
-  - id: R3-DZ-04
+  - id: GDQ6
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [gdd, documentation, encounter]
@@ -478,7 +490,7 @@ quests:
       - "Goal: one sentence on what the player should feel or learn."
       - "Beats: 3–5 lines in order (enter, first contact, pressure, turn, exit)."
       - "Tuning knobs: list every number you might change (enemy count, spawn delay, cover count, health) with its current value."
-      - "Add your top-down screenshot from R3-DZ-01. Share the doc as a link anyone can view."
+      - "Add your top-down screenshot from LDQ33. Share the doc as a link anyone can view."
     done_when: "Link to the one-page GDD with all five headings filled in."
     xp: 90
     verify_type: writeup
@@ -508,9 +520,10 @@ quests:
       level_design: {why: "The GDD is how you explain an encounter to someone who hasn't played it.", do: "Write the GDD before you polish the arena, then check the build against it."}
       gameplay_design: {why: "This is your main document. A knob list is your balance plan.", do: "Mark which knob you'd change first if the fight is too hard."}
 
-  - id: R3-DZ-05
+  - id: GDQ7
     needs_others: true          # hidden and not required until the server has enough members
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [critique, iteration]
@@ -549,7 +562,7 @@ quests:
       - q: "What makes a good critique you give?"
         choices: ["One thing that works, one specific issue, one next step", "A long list of everything wrong", "Only emojis", "A rewrite of their level"]
         answer_index: 0
-        explain: "Same format as R0-META-04, applied to encounters."
+        explain: "Same format as SQ16, applied to encounters."
       - q: "Why include the GDD link with a critique post?"
         choices: ["The bot requires links", "Reviewers can judge the space against what you meant it to do", "To fill space", "So it gets more reactions"]
         answer_index: 1
@@ -559,8 +572,9 @@ quests:
       level_design: {why: "Your capstone needs one critique iteration. This is the practice run.", do: "Ask about the one part of your arena you're least sure of."}
       gameplay_design: {why: "Mechanics feel different to someone who didn't design them.", do: "Ask one question about a tuning knob, not about the layout."}
 
-  - id: R3-DZ-06
+  - id: LDQ36
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [readability, color-language, lighting]
@@ -612,8 +626,9 @@ quests:
       level_design: {why: "R1 lit for navigation. Now you light and color for combat decisions.", do: "Mark every threat, cover and objective with your key, and nothing else."}
       gameplay_design: {why: "Players can't use a verb on something they can't see.", do: "Check that every interactable in your mechanic uses the objective color."}
 
-  - id: R3-DZ-07
+  - id: GDQ8
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [blueprint, tuning, tooling]
@@ -661,12 +676,13 @@ quests:
         explain: "Spawners can set the value at spawn time. You'll use it in the spawn waves elective."
     flavors:
       _default: {why: "If others can tune your actor without opening the graph, more people can use it."}
-      level_design: {why: "At Rank 4 you ship a kit a Greenlit can place. Tunable actors are the start.", do: "Hand your BP to someone else and ask them to change a value without help."}
-      gameplay_design: {why: "Tuning knobs from your GDD should be real fields, not numbers buried in a graph.", do: "Make every knob from R3-DZ-04 an Instance Editable variable with a tooltip."}
+      level_design: {why: "At Rank 4 you ship a kit a Initiate can place. Tunable actors are the start.", do: "Hand your BP to someone else and ask them to change a value without help."}
+      gameplay_design: {why: "Tuning knobs from your GDD should be real fields, not numbers buried in a graph.", do: "Make every knob from GDQ6 an Instance Editable variable with a tooltip."}
       programming: {why: "The same idea as EditAnywhere on a UPROPERTY. Designers expect it.", do: "Note which of these you'd move to a C++ base later."}
 
-  - id: R3-DZ-08
+  - id: LDQ40
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [capstone, encounter, gdd, critique]
@@ -686,7 +702,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     checklist:
       - "Finish one encounter space: entry, exit, cover to your metrics, flanks, high ground with a cost, NavMesh and 3+ enemies."
-      - "Apply your color key and lighting from R3-DZ-06."
+      - "Apply your color key and lighting from LDQ36."
       - "Update the one-page GDD so it matches the build: goal, verbs, beats, fail state, tuning knobs."
       - text: "Post to #showcase tagged Critique-wanted, with one specific question."
         needs_others: true
@@ -720,12 +736,13 @@ quests:
         explain: "The annotated map is how a reviewer understands the space before they watch the clip."
     flavors:
       _default: {why: "Brings together everything from the bay: layout, threats, metrics, doc, critique, readability."}
-      level_design: {why: "This is the Specialist capstone for Level Design. It's what you'll point to in a portfolio.", do: "Keep scope to one arena. A small, polished space passes more often than a big, rough one."}
+      level_design: {why: "This is the Artisan capstone for Level Design. It's what you'll point to in a portfolio.", do: "Keep scope to one arena. A small, polished space passes more often than a big, rough one."}
       gameplay_design: {why: "A mechanic needs a space to be tested in. This proves your GDD works in a real layout.", do: "Make sure at least one GDD tuning knob visibly changes the fight, and show it in the clip."}
 
   # ------------ Rank 3 Design electives (optional, no quiz) ------------
-  - id: R3-E-DZ-01
+  - id: GDQ9
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [smart-objects, ai]
@@ -741,8 +758,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-E-DZ-02
+  - id: LDQ37
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [stealth, encounter]
@@ -758,8 +776,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-E-DZ-03
+  - id: LDQ38
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [verticality, encounter]
@@ -775,8 +794,9 @@ quests:
     verify_type: screenshot
     quiz: []
 
-  - id: R3-E-DZ-04
+  - id: LDQ39
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [pacing, encounter]
@@ -792,8 +812,9 @@ quests:
     verify_type: writeup
     quiz: []
 
-  - id: R3-E-DZ-05
+  - id: GDQ10
     rank: 3
+    difficulty: expert
     track: bay-design
     seal: design
     subjects: [spawning, blueprint]

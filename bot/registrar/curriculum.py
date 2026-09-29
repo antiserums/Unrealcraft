@@ -18,7 +18,17 @@ ALL = "all"
 ORIENTATION_RANK = -1
 VERIFY_TYPES = {"action", "quiz", "screenshot", "writeup", "package", "mentor"}
 QUIZ_PASS_RATIO = 0.8          # 4/5
-REQUIRED_QUIZ_LEN = 5
+
+# Quest difficulty. Every quest has one (`difficulty:` in YAML); each guild rank opens the next tier
+# (majors.yaml ranks[].tier). Harder tiers have longer quizzes.
+TIERS = {
+    "novice":     {"name": "Novice",     "emoji": "🟢", "color": "#4FA36C", "quiz_len": 5},
+    "apprentice": {"name": "Apprentice", "emoji": "🔵", "color": "#3D7DD8", "quiz_len": 6},
+    "adept":      {"name": "Adept",      "emoji": "🟣", "color": "#8E6CCF", "quiz_len": 8},
+    "expert":     {"name": "Expert",     "emoji": "🟠", "color": "#D9824A", "quiz_len": 10},
+    "master":     {"name": "Master",     "emoji": "🔴", "color": "#D9534F", "quiz_len": 12},
+}
+TIER_BY_RANK = {-1: "novice", 0: "novice", 1: "apprentice", 2: "adept", 3: "expert"}   # default; 4+ = master
 
 
 def natural_key(qid: str):
@@ -43,6 +53,12 @@ class Quest:
     def spine(self) -> bool: return bool(self.raw.get("required_spine"))
     @property
     def xp(self) -> int: return int(self.raw.get("xp", 0))
+    @property
+    def difficulty(self) -> str: return self.raw.get("difficulty") or TIER_BY_RANK.get(self.rank, "master")
+    @property
+    def tier(self) -> dict: return TIERS.get(self.difficulty, TIERS["novice"])
+    @property
+    def tier_label(self) -> str: return f"{self.tier['emoji']} {self.tier['name']}"
     @property
     def quiz(self) -> list[dict]: return self.raw.get("quiz") or []
     @property
@@ -122,8 +138,11 @@ class Catalog:
             if r.get("verify_type") not in VERIFY_TYPES:
                 errs.append(f"{where}: bad verify_type {r.get('verify_type')!r}")
             required_somewhere = not q.elective and q.rank >= 0 and bool(q.required_for)
-            if required_somewhere and q.quiz and len(q.quiz) != REQUIRED_QUIZ_LEN:
-                warns.append(f"{where}: required quest has {len(q.quiz)} quiz questions (want {REQUIRED_QUIZ_LEN})")
+            if r.get("difficulty") not in TIERS:
+                errs.append(f"{where}: difficulty must be one of {', '.join(TIERS)} (got {r.get('difficulty')!r})")
+            want = q.tier["quiz_len"]
+            if required_somewhere and q.quiz and len(q.quiz) < want:
+                warns.append(f"{where}: {q.difficulty} quiz has {len(q.quiz)} questions (want {want})")
             if required_somewhere and not q.quiz and r.get("verify_type") != "action":
                 warns.append(f"{where}: required quest has no quiz yet")
             if r.get("official_url") == "TODO_URL":
@@ -286,7 +305,7 @@ class Catalog:
         def row(q: Quest, extra: str = "") -> str:
             mark = "✔" if q.id in u.done else ("▶" if q.id == now_id else "·")
             cap = " ★" if q.capstone else ""
-            return f"  {mark} {q.id:<10} {q.raw['title']}{cap}{extra}"
+            return f"  {mark} {q.tier['emoji']} {q.id:<7} {q.raw['title']}{cap}{extra}"
 
         if u.rank == ORIENTATION_RANK or any(q.id not in u.done for q in self.orientation()):
             lines.append("ORIENTATION")

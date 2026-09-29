@@ -26,16 +26,16 @@ ROLES = [
     ("Curriculum", "#B0A48A", False, True, ("staff", "curriculum")),
     ("Mentor", "#6FB3A0", False, True, ("staff", "mentor")),
     ("Mentor-in-Training", "#8FC4B5", False, False, ("staff", "mentor_in_training")),
-    ("Studio Lead", "#D4AF37", True, True, ("rank", 6)),
-    ("Systems Architect", "#8E6CCF", True, True, ("rank", 5)),
-    ("Engineer", "#8A9BA8", True, True, ("rank", 4)),
-    ("Specialist · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
-    ("Specialist · Design", "#4FA36C", False, True, ("specialist", "design")),
-    ("Specialist · Anim", "#C85C8E", False, True, ("specialist", "anim")),
-    ("Specialist · Code", "#4AA3B5", False, True, ("specialist", "code")),
-    ("Gameplay Prototyper", "#3D7DD8", False, False, ("rank", 2)),
-    ("Blockout Artist", "#B5714B", False, False, ("rank", 1)),
-    ("Greenlit", "#7A8C7E", False, False, ("rank", 0)),
+    ("Guildmaster", "#D4AF37", True, True, ("rank", 6)),
+    ("Grandmaster", "#8E6CCF", True, True, ("rank", 5)),
+    ("Master Artisan", "#8A9BA8", True, True, ("rank", 4)),
+    ("Artisan · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
+    ("Artisan · Design", "#4FA36C", False, True, ("specialist", "design")),
+    ("Artisan · Anim", "#C85C8E", False, True, ("specialist", "anim")),
+    ("Artisan · Code", "#4AA3B5", False, True, ("specialist", "code")),
+    ("Craftsman", "#3D7DD8", False, False, ("rank", 2)),
+    ("Journeyman", "#B5714B", False, False, ("rank", 1)),
+    ("Initiate", "#7A8C7E", False, False, ("rank", 0)),
     ("Oriented", None, False, False, ("oriented",)),
     ("Recruit", None, False, False, ("recruit",)),
     ("Major · Level Design", None, False, False, ("major", "level_design")),
@@ -87,8 +87,12 @@ class SetupServer(commands.Cog):
 
     # ------------------------------------------------------------------ helpers
     RENAMED_ROLES: dict[str, str] = {}                   # new prefix -> old prefix (for future renames)
-    RENAMED_EXACT = {"Specialist · Environment Art": "Specialist · Lookdev",   # new name -> old name
-                     "Major · Environment Art": "Major · Lookdev"}
+    RENAMED_EXACT = {"Major · Environment Art": "Major · Lookdev",          # new name -> old name
+                     # guild ranks (were studio job titles)
+                     "Initiate": "Greenlit", "Journeyman": "Blockout Artist", "Craftsman": "Gameplay Prototyper",
+                     "Master Artisan": "Engineer", "Grandmaster": "Systems Architect", "Guildmaster": "Studio Lead",
+                     "Artisan · Environment Art": "Specialist · Environment Art", "Artisan · Design": "Specialist · Design",
+                     "Artisan · Anim": "Specialist · Anim", "Artisan · Code": "Specialist · Code"}
 
     async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None) -> discord.Role:
         r = discord.utils.get(g.roles, name=name)
@@ -238,8 +242,8 @@ class SetupServer(commands.Cog):
         report.append(f"roles: {len(ROLES)} ready")
 
         R = roles
-        rank_roles = {n: R[x] for n, x in ((0, "Greenlit"), (1, "Blockout Artist"), (2, "Gameplay Prototyper"),
-                                           (4, "Engineer"), (5, "Systems Architect"), (6, "Studio Lead"))}
+        rank_roles = {n: R[x] for n, x in ((0, "Initiate"), (1, "Journeyman"), (2, "Craftsman"),
+                                           (4, "Master Artisan"), (5, "Grandmaster"), (6, "Guildmaster"))}
         spec = [R[name] for name, *_rest, key in ROLES if key and key[0] == "specialist"]   # by key, not by name
         staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
         cat = self.bot.catalog
@@ -365,7 +369,7 @@ class SetupServer(commands.Cog):
         if old_foundations and not discord.utils.get(workshop.channels, name=STARTER):
             await old_foundations.edit(name=STARTER, reason="Unrealcraft: renamed")
             report.append("#foundations → #starter-quests")
-        forums = [(STARTER, None, "The 11 Starter Quests (Q1–Q11) everyone does. Share WIP, ask for help, see turn-ins.")]
+        forums = [(STARTER, None, "The 11 Starter Quests (SQ1–SQ11) everyone does. Share WIP, ask for help, see turn-ins.")]
         forums += [(major_slug(cat, k), k, f"{cfg['title']}: quests, WIP, help and turn-ins. Everyone can read; "
                                          f"members who picked {cfg['title']} can post.")
                    for k, cfg in cat.majors.items() if k != "undecided"]
@@ -412,11 +416,11 @@ class SetupServer(commands.Cog):
         st = await self._category(g, "04 · STAFF", {everyone: P(view_channel=False), me: bot_ow,
                                                     **{r: P(view_channel=True) for r in staff}})
         modlog = await self._text(g, st, "mod-log")
-        wip = await self._text(g, st, "curriculum-wip", overwrites={R["Studio Lead"]: P(view_channel=True)})
+        wip = await self._text(g, st, "curriculum-wip", overwrites={R["Guildmaster"]: P(view_channel=True)})
         mq = await self._text(g, st, "mentor-queue", overwrites={
             R["Mentor-in-Training"]: P(view_channel=True, send_messages=False),
-            R["Systems Architect"]: P(view_channel=True, send_messages=False),
-            R["Studio Lead"]: P(view_channel=True)})
+            R["Grandmaster"]: P(view_channel=True, send_messages=False),
+            R["Guildmaster"]: P(view_channel=True)})
         chans.update(mod_log=modlog.id, curriculum_wip=wip.id, mentor_queue=mq.id)
 
         if "COMMUNITY" in g.features:
@@ -426,7 +430,7 @@ class SetupServer(commands.Cog):
                                              overwrites={**training.overwrites,
                                                          R["Recruit"]: P(view_channel=False),
                                                          **{r: P(request_to_speak=True, speak=True) for r in speakers}})
-                report.append("Lecture Hall stage created (Architect+ speak)")
+                report.append("Lecture Hall stage created (Grandmaster+ speak)")
             report += await self._community(g, welcome, welcome, qb, helpdesk, showcase, modlog)
             report += await self.onboarding(g)
             # Discord's community-updates channel can't be an announcement channel; _community moved it to #mod-log.
@@ -750,7 +754,7 @@ class SetupServer(commands.Cog):
             dict(key="mentor-queue-guide", channel=ch("mentor_queue"), embeds=[
                 E("📋 Mentor queue", "Turn-ins that need a person to review them show up here as cards, "
                   "newest at the bottom.\n**Aim to review within 48 hours.**\n"
-                  "Who can review: Mentors, Studio Leads and server admins."),
+                  "Who can review: Mentors, Guildmasters and server admins."),
                 E("✅ Review cards", "Rank 2 and up. Three buttons:\n"
                   "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
                   "• **Changes**: close, but something is missing. Write exactly what to fix. "
@@ -778,7 +782,7 @@ class SetupServer(commands.Cog):
             ]),
         ]
         from .workshop import STARTER, major_slug
-        abouts = [(STARTER, "For the 11 Starter Quests (Q1–Q11) everyone does after Orientation.\n"
+        abouts = [(STARTER, "For the 11 Starter Quests (SQ1–SQ11) everyone does after Orientation.\n"
                             "Everyone can post here.")]
         abouts += [(major_slug(cat, k), f"The {cfg['title']} forum.\n"
                                        f"Everyone can read it. Members who picked **{cfg['title']}** can post.")
