@@ -82,7 +82,7 @@ class Quartermaster(commands.Bot):
         if not self.watch_releases.is_running():
             self.watch_releases.start()
 
-    @tasks.loop(minutes=10)
+    @tasks.loop(minutes=1)
     async def watch_releases(self) -> None:
         """Post patch notes for any version tag that has been pushed to GitHub since the last check."""
         g = self.get_guild(self.settings.guild_id or 0)

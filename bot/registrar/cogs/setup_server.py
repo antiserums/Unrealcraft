@@ -788,9 +788,26 @@ class SetupServer(commands.Cog):
                     removed += 1
         return [f"cleaned up {removed} old bot posts"]
 
+    @staticmethod
+    def patch_embed(rel: dict) -> discord.Embed:
+        """One embed per version: the summary line as description, each '### Section' as a field."""
+        import re
+        parts = re.split(r"\n(?=### )", rel["body"])
+        intro = parts[0].strip() if not parts[0].startswith("### ") else ""
+        sections = [p for p in parts if p.startswith("### ")]
+        e = discord.Embed(title=f"{rel['version']} · {rel['title']}", color=C("#D4AF37"),
+                          description=(intro or ("" if sections else rel["body"]))[:4000] or None)
+        for sec in sections[:25]:
+            head, _, body = sec.partition("\n")
+            e.add_field(name=head[4:].strip()[:256], value=body.strip()[:1024] or "—", inline=False)
+        e.set_footer(text=f"{rel['date']} · Something broken since this update? #help-desk → Server / bot problem")
+        return e
+
     async def post_patch_notes(self, g: discord.Guild, force_latest: bool = False) -> list[str]:
-        """#patch-notes is a full history: one message per released version, oldest first, never edited.
-        A version counts as released only once its tag (e.g. v0.2.0) has been pushed to GitHub."""
+        """#patch-notes is a full history: one message per released version, oldest first.
+        A version counts as released once its tag (e.g. v0.2.0) is on GitHub. If a released entry's text is
+        corrected later, its existing message is edited; nothing is re-posted."""
+        import hashlib
         from .. import release
         from ..config import BOT_ROOT
         ch = g.get_channel(self.bot.unlocks.channel("patch_notes"))
@@ -801,26 +818,33 @@ class SetupServer(commands.Cog):
         if tags is None:
             log.warning("patch notes: couldn't reach the git remote; nothing posted")
             return []
-        posted = []
+        done = []
         es = [e for e in release.entries(repo / "CHANGELOG.md") if e["version"] in tags]
         for rel in reversed(es):                                   # oldest first
             key = f"patchnotes:{rel['version']}"
-            is_latest = rel is es[0]
-            if await self.bot.db.kv_get(0, key) and not (force_latest and is_latest):
+            fp = hashlib.sha1((rel["title"] + rel["body"]).encode()).hexdigest()[:12]
+            rec = await self.bot.db.kv_get(0, key)
+            mid, _, old_fp = (rec or "").partition(":")
+            embed = self.patch_embed(rel)
+            if mid and not (force_latest and rel is es[0]):
+                if old_fp != fp:                                   # corrected entry: edit, don't re-post
+                    try:
+                        msg = await ch.fetch_message(int(mid))
+                        await msg.edit(embed=embed)
+                        await self.bot.db.kv_set(0, key, f"{mid}:{fp}")
+                        done.append(f"{rel['version']} (edited)")
+                    except discord.HTTPException as ex:
+                        log.warning("patch notes: couldn't edit %s: %s", rel["version"], ex)
                 continue
-            e = discord.Embed(title=f"{rel['version']} · {rel['title']}", description=rel["body"][:4000],
-                              color=C("#D4AF37"))
-            e.set_footer(text=f"{rel['date']} · Something broken since this update? "
-                              "#help-desk → Server / bot problem")
-            msg = await ch.send(embed=e)
+            msg = await ch.send(embed=embed)
             if ch.is_news():
                 try:
                     await msg.publish()                            # reach servers that follow #patch-notes
                 except discord.HTTPException:
                     pass
-            await self.bot.db.kv_set(0, key, str(msg.id))
-            posted.append(rel["version"])
-        return posted
+            await self.bot.db.kv_set(0, key, f"{msg.id}:{fp}")
+            done.append(rel["version"])
+        return done
 
     # ------------------------------------------------------------------ commands
     admin = app_commands.Group(name="setup", description="Owner: build the server",

@@ -17,9 +17,9 @@ Patch notes are only posted for versions that have been **pushed to GitHub as a 
    `python bot/tools/validate_curriculum.py` checks the format and that the version went up.
 4. Commit, tag and push:
    ```bash
-   git add -A && git commit -m "v0.2.0: short title" && git tag v0.2.0 && git push --follow-tags
+   git add -A && git commit -m "v0.2.0: short title" && git tag -a v0.2.0 -m "v0.2.0" && git push --follow-tags
    ```
-5. Within 10 minutes the Quartermaster sees the new tag on GitHub and posts the entry to **#patch-notes**
+5. Within a minute the Quartermaster sees the new tag on GitHub and posts the entry to **#patch-notes**
    (one message per version, never edited, so the channel is the full history). Restart the bot if the update changed its code.
 
 If members report problems after an update, they use **#help-desk → 🐞 Server / bot problem**, which includes the
