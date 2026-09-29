@@ -1,0 +1,1820 @@
+# Unrealcraft — Environment Art major, all ranks. IDs EAQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: EAQ36
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, directional-light, sky-atmosphere]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Sun and sky, the physical way
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/directional-lights-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-properties-in-unreal-engine"
+    checklist:
+      - "Make a new level (Empty Level). Place a Directional Light and a Sky Atmosphere from the Place Actors panel."
+      - "On the Directional Light, enable Atmosphere Sun Light. Check that Atmosphere Sun Light Index is 0."
+      - "Hold Right Ctrl + L and move the mouse to rotate the sun. Find a low sun angle (sunset) and a high sun angle (noon)."
+      - "On the Directional Light, set Use Temperature on and try Temperature 6500 K, then 3000 K. Note the color change."
+      - "Turn on Show > Shadow Frustum for the light. Look at the parallel rays."
+      - "On the Sky Atmosphere, change Mie Scattering Scale up and down. Then change Mie Anisotropy to 0 and to 0.9. Reset to defaults after."
+      - "Add a second Directional Light with Atmosphere Sun Light Index 1 as a dim blue moon. Rotate it opposite to the sun."
+    done_when: "Two screenshots of the same view: one at sunset (low sun), one at noon (high sun). The Directional Light Details panel with Atmosphere Sun Light enabled is visible in one of them."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why are all shadows from a Directional Light parallel?"
+        choices: ["The light is simulated as a source that is infinitely far away", "The light has a Source Radius of zero", "The light uses lightmaps only", "The shadow frustum forces the rays to align"]
+        answer_index: 0
+        explain: "A Directional Light simulates a source infinitely far away, so its rays and shadows are parallel. That makes it the right choice for sunlight."
+      - q: "The Source Angle of a Directional Light defaults to 0.5357. What is this number?"
+        choices: ["The number of shadow cascades", "The angle our sun subtends in degrees", "The default Temperature divided by 100", "The Shadow Bias value"]
+        answer_index: 1
+        explain: "Source Angle is the angle subtended by the light source in degrees. The default 0.5357 is the angle of our sun."
+      - q: "With Use Temperature enabled, which Temperature value gives white light?"
+        choices: ["3000K", "1000K", "6500K", "10000K"]
+        answer_index: 2
+        explain: "The docs say Temperature is the color temperature in Kelvin of the blackbody illuminant, and white is 6500K."
+      - q: "You want a sun and a moon, both affecting the atmosphere. How do you set the Atmosphere Sun Light Index?"
+        choices: ["Both lights get index 0", "Sun 0 and moon 1", "Sun 1 and moon 2", "Only one light can affect the atmosphere"]
+        answer_index: 1
+        explain: "Two atmosphere lights are supported at any time. The primary (sun) is index 0 and the secondary (moon) is index 1."
+      - q: "Which shortcut rotates the Directional Light with index 0 while you move the mouse?"
+        choices: ["Ctrl + Shift + L", "Right Ctrl + L", "Alt + drag", "Right Ctrl + L + Shift"]
+        answer_index: 1
+        explain: "Right Ctrl + L with mouse movement adjusts the light at index 0 (the sun). Adding Shift adjusts the light at index 1 (the moon)."
+      - q: "In the Sky Atmosphere, Mie Anisotropy is moved from 0.8 toward 0.9. What changes?"
+        choices: ["Light scatters more uniformly, so the halo around the sun disappears", "The sky becomes bluer because of Rayleigh scattering", "Light scatters more forward, so the halo around the sun becomes tighter and brighter", "The planet radius grows"]
+        answer_index: 2
+        explain: "A value closer to 1 scatters light more forward. This makes a stronger, tighter halo around the light source. A value of 0 scatters uniformly."
+    flavors:
+      _default: {why: "A physically based sun and sky is the base of almost every outdoor scene."}
+      level_design: {why: "Sun angle decides what the player can read at a distance.", do: "Save the two sun angles as viewport bookmarks so you can compare readability."}
+      cinematics: {why: "Time of day is a story tool. Knowing the sun controls means fast iteration on a shot.", do: "Animate the sun rotation in a Level Sequence from sunset to noon."}
+
+  - id: EAQ37
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, point-light, spot-light, rect-light]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics, tech_art]
+    required_spine: false
+    elective: true
+    title: Local lights up close
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/spot-lights-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/point-lights-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/rectangular-area-lights-in-unreal-engine"
+    checklist:
+      - "Build a small dark room (floor, 3 walls) with a few props. Set the Directional Light and Sky Light to very low or delete them."
+      - "Place a Point Light. Change Attenuation Radius until the light stops at the walls. Set Source Radius to 20 and look at the highlight on a smooth prop."
+      - "Place a Spot Light aimed at the floor. Set Inner Cone Angle 20 and Outer Cone Angle 40. Then try 35 and 40. Compare the soft edge."
+      - "Place a Rect Light as a TV screen. Set Source Width 100 and Source Height 60. Point its X axis into the room."
+      - "On the Rect Light, try Barn Door Angle and Barn Door Length to cut the spill on the wall."
+      - "Set the Rect Light Mobility to Movable, then Stationary. Note the change in the shadow shape (blocky vs. soft)."
+    done_when: "One screenshot of the room with all three lights on, and the Details panel of the Spot Light showing your Inner and Outer Cone Angle values."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where does a Spot Light have full brightness?"
+        choices: ["Between the inner and outer cone", "Inside the Inner Cone Angle", "Only at the Attenuation Radius", "Outside the Outer Cone Angle"]
+        answer_index: 1
+        explain: "Inside the Inner Cone Angle the light is at full brightness. From the inner cone to the Outer Cone Angle the light falls off, which makes the soft edge."
+      - q: "A Point Light has Use Inverse Squared Falloff enabled. What does Attenuation Radius do then?"
+        choices: ["It only clamps the light's contribution", "It sets the radius of the light source shape", "It controls the specular highlight size", "It is ignored completely"]
+        answer_index: 0
+        explain: "With physically based inverse squared falloff, Attenuation Radius only clamps where the light stops. The falloff itself comes from distance."
+      - q: "What are Source Radius and Source Length on a Point Light used for?"
+        choices: ["Changing the attenuation distance", "Deciding the lightmap resolution", "Giving the light a shape in reflections and specular highlights", "Setting the shadow bias"]
+        answer_index: 2
+        explain: "The light still emits from one point, but Unreal uses a radius and length for reflections and specular highlights so the light feels more physical."
+      - q: "In which direction does a Rect Light emit light?"
+        choices: ["In all directions like a Point Light", "Along its local Z axis (up)", "Along its positive local X axis, inside its sphere of attenuation", "Only along the Barn Door direction"]
+        answer_index: 2
+        explain: "A Rect Light emits within its attenuation sphere only in the positive local X direction, like a Spot Light with a 180 degree cone. Width is along Y and Height along Z."
+      - q: "A Rect Light is set to Movable. What do Source Width and Source Height affect?"
+        choices: ["The shadow softness from every point of the rectangle", "Only the specular reflections; the light itself is emitted from the center like a Point Light", "The lightmap samples across the rectangle", "Nothing at all until lighting is built"]
+        answer_index: 1
+        explain: "For Movable Rect Lights the width and height are only used for specular reflections. The light is emitted from the center, so shadows are sharp like a Point Light."
+      - q: "You make a Rect Light twice as big but keep Intensity the same. What happens?"
+        choices: ["It looks brighter because it is larger", "It looks dimmer because Intensity is averaged over the surface area", "Nothing, size does not change brightness", "It stops casting shadows"]
+        answer_index: 1
+        explain: "For Rect Lights the Intensity is averaged over the surface area. When you increase Source Width and Height you must raise Intensity to keep the same apparent brightness."
+    flavors:
+      _default: {why: "Point, Spot and Rect lights are the tools for interiors and hero props. Their details make the difference between flat and rich lighting."}
+      level_design: {why: "Local lights guide the player. Cone angles and radius decide what is seen.", do: "Use a Spot Light with a tight cone to mark a door the player must find."}
+      cinematics: {why: "Rect lights behave like film softboxes.", do: "Light a character with one Rect Light as key and one Point Light as rim."}
+      tech_art: {why: "Light shape affects specular and shadow cost.", do: "Compare Cast Shadows on and off on the Rect Light and note the difference in the Stat GPU shadow depths."}
+
+  - id: EAQ38
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, mobility, performance]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Static, Stationary or Movable
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/light-types-and-their-mobility-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/stationary-light-mobility-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/movable-light-mobility-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-light-mobility-in-unreal-engine"
+    checklist:
+      - "Open a small test level with a floor and a few props. Place five Point Lights close together so they overlap."
+      - "Set all five lights to Stationary. Look at the light icons in the viewport for the red X."
+      - "Open View Mode > Optimization Viewmodes > Stationary Light Overlap. Take a screenshot showing the red overlap."
+      - "Change one light to Movable and one to Static. Check the overlap view again."
+      - "On a Movable Point Light, turn Cast Shadows off and on. Read the docs section on why non-shadowing Movable lights are cheap."
+      - "Write down for each of your five lights which mobility you would use in a real scene and why (one line each)."
+    done_when: "One screenshot in the Stationary Light Overlap view mode showing the red overlap, plus your five one-line mobility choices as text."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which mobility lets a light change color and intensity in game, but not move?"
+        choices: ["Static", "Stationary", "Movable", "None, only Movable lights can change"]
+        answer_index: 1
+        explain: "Stationary lights stay in one position but can change in other ways, such as brightness and color. Static lights cannot change at all."
+      - q: "How many Stationary Lights can overlap a single object at the same time before the limit is reached?"
+        choices: ["Two", "Eight", "There is no limit", "Four"]
+        answer_index: 3
+        explain: "Only four or fewer Stationary Lights can overlap one another or a single piece of geometry. Beyond that, the extra light falls back to costly dynamic shadows."
+      - q: "What does the editor show when the Stationary light overlap limit is exceeded?"
+        choices: ["A yellow warning in the Output Log only", "The light turns invisible", "A red X over the light icon, and the Stationary Light Overlap view mode highlights it in red", "The light is switched to Static automatically"]
+        answer_index: 2
+        explain: "The offending light icon gets a red X, and the Stationary Light Overlap view mode (under Optimization Viewmodes) highlights it in red until you fix it."
+      - q: "A Movable Point Light with Cast Shadows turned off: how expensive is it?"
+        choices: ["Very inexpensive, even lower cost than a Static light because no lighting data is saved to disk", "The most expensive light type", "The same cost as a Stationary light", "It cannot be rendered without shadows"]
+        answer_index: 0
+        explain: "Non-shadowing Movable lights are very inexpensive. The docs say they carry a lower cost than Static lights because nothing needs to be saved to disk. Shadows are the expensive part."
+      - q: "What happens to the runtime cost of a Static light after the lighting build is done?"
+        choices: ["It costs the same as a Movable light", "It has no further impact on performance; its data lives in lightmaps", "It still computes shadows every frame", "It only costs performance when the player moves"]
+        answer_index: 1
+        explain: "Static lights are precomputed with Lightmass and stored in lightmaps. After the build they have no further impact on performance."
+      - q: "A Stationary Directional Light shows no dynamic shadows near the player. What is the likely cause?"
+        choices: ["Cast Shadows is always off for Stationary lights", "Dynamic Shadow Distance StationaryLight is at its default of 0", "The light needs Source Radius above 0", "Stationary lights never cast dynamic shadows"]
+        answer_index: 1
+        explain: "By default all Directional Stationary Lights start with Dynamic Shadow Distance StationaryLight at 0, which means no dynamic shadowing. Raise it to get Cascaded Shadow Maps near the player."
+    flavors:
+      _default: {why: "Mobility is the first performance and quality decision you make for every light."}
+      level_design: {why: "Too many overlapping Stationary lights silently become expensive.", do: "Run the overlap view mode on one of your own blockout levels."}
+      tech_art: {why: "Mobility decides which shadow path the renderer uses.", do: "Note which mobility combinations trigger per-object shadows in the docs and test one."}
+
+  - id: EAQ39
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, lumen, global-illumination, reflections]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Lumen dials that matter
+    time_min: 55
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open Project Settings > Engine > Rendering. Confirm Dynamic Global Illumination Method and Reflection Method are both set to Lumen. Note whether Generate Mesh Distance Fields is on."
+      - "Build a small room with one open door and a bright white floor. Place a strong Directional Light outside so light bounces in through the door."
+      - "Add a Post Process Volume, enable Infinite Extent (Unbound)."
+      - "In the PPV, under Global Illumination, try Final Gather Quality at 1 and at 4. Compare noise in the dark corners."
+      - "Try Max Trace Distance at a very small value (for example 200) and watch the corners. Then set it back."
+      - "Place a mirror-like sphere (Roughness 0, Metallic 1). Under Reflections, set Max Reflection Bounces to 1, then 3. Compare the black areas in the reflection."
+      - "Try Skylight Leaking at 0 and at 0.2 and note which one keeps the room from going fully black."
+    done_when: "Two screenshots of the room: Final Gather Quality 1 vs. 4, plus a screenshot of the sphere with Max Reflection Bounces 3 and the PPV Details panel visible."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you turn Lumen on for a whole project?"
+        choices: ["World Settings > Lightmass", "Project Settings > Engine > Rendering, Dynamic Global Illumination Method and Reflection Method", "The Sky Light Details panel", "Each light's Mobility dropdown"]
+        answer_index: 1
+        explain: "Lumen is enabled in Project Settings under Rendering, by setting Dynamic Global Illumination Method and Reflection Method to Lumen. They can be set independently."
+      - q: "Why does enabling Lumen also turn on Generate Mesh Distance Fields?"
+        choices: ["It is required for Lumen's Software Ray Tracing mode", "Distance fields store the lightmaps", "It makes Nanite meshes render faster", "It is needed to place a Post Process Volume"]
+        answer_index: 0
+        explain: "Software Ray Tracing traces against mesh distance fields, so Lumen needs them. Hardware Ray Tracing is the alternative when the GPU supports it."
+      - q: "A light is set to Static in a Lumen project. What happens to its contribution?"
+        choices: ["It becomes fully dynamic", "It is disabled, because Static lights live in lightmaps which Lumen hides", "It only affects reflections", "It doubles because Lumen adds bounces"]
+        answer_index: 1
+        explain: "Lights with Mobility set to Static are not supported by Lumen. Their contribution is stored completely in lightmaps, and lightmaps are hidden when Lumen is on."
+      - q: "Light seems to leak into a large cave. Which Post Process setting is the most likely fix?"
+        choices: ["Lower Lumen Scene Detail", "Raise Skylight Leaking", "Raise Max Trace Distance", "Set Max Reflection Bounces to 1"]
+        answer_index: 2
+        explain: "Max Trace Distance values that are too small cause lighting to leak into large areas such as caves. Larger values fix it at higher GPU cost."
+      - q: "A mirror sphere shows black patches in its reflection. Max Reflection Bounces is at the default. What is the default, and what can you do?"
+        choices: ["Default 0; set it to 1", "Default 1; raise it to 2 or more (up to 8 in the PPV)", "Default 8; lower it", "Default 64; it cannot be changed"]
+        answer_index: 1
+        explain: "The default is 1 bounce, one reflection ray with no secondary reflections. 2 or more bounces can prevent black areas in reflections when there is performance budget. The PPV allows up to 8."
+      - q: "You switch the sun off in a Lumen scene and the room stays lit for a few seconds. Why?"
+        choices: ["Lumen caches lighting, so global changes take time to propagate; Lighting Update Speed controls it at GPU cost", "The Sky Light needs a recapture", "Lightmaps still hold the old lighting", "Screen Traces are disabled"]
+        answer_index: 0
+        explain: "Lumen uses caches for real-time performance. Global lighting changes can take multiple seconds. Lumen Scene Lighting Update Speed and Final Gather Lighting Update Speed in the PPV speed this up but cost more GPU."
+    flavors:
+      _default: {why: "Lumen is the default GI. Knowing the few dials that matter saves hours of guessing."}
+      tech_art: {why: "Every Lumen dial trades quality for GPU time.", do: "Record GPU ms with Stat GPU for Final Gather Quality 1 and 4 and note the difference."}
+      cinematics: {why: "Reflection bounces and quality matter most on hero shots.", do: "Set up one shot-specific PPV with higher Reflection Quality and compare."}
+
+  - id: EAQ40
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, shadows, virtual-shadow-maps, nanite]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Soft shadows with Virtual Shadow Maps
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-shadow-maps-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open Project Settings > Engine > Rendering > Shadows. Confirm Shadow Map Method is Virtual Shadow Maps."
+      - "Place a tall thin mesh (a pole or a fence) on a floor with a Movable Directional Light at a low angle."
+      - "On the Directional Light, set Source Angle to 0.5, then 3. Watch the shadow: sharp at the base, softer far from the pole."
+      - "Place a Movable Point Light near a prop. Set Source Radius from 0 to 10 and compare the penumbra."
+      - "Open Show > Visualize > Virtual Shadow Map and pick the Cached Page view. Move the camera and watch green and red pages."
+      - "Add a mesh with a World Position Offset material (for example wind on foliage). See how it keeps showing red pages."
+      - "Compare Contact Shadow Length 0 vs. 0.1 on the Directional Light. Decide if it adds anything with VSM on."
+    done_when: "Two screenshots: the pole shadow with Source Angle 3 showing contact hardening, and the Cached Page visualization with red and green pages visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where does a project choose between Virtual Shadow Maps and conventional Shadow Maps?"
+        choices: ["World Settings > Lightmass", "On each light's Mobility dropdown", "Sky Light Details panel", "Project Settings > Engine > Rendering > Shadows > Shadow Map Method"]
+        answer_index: 3
+        explain: "The Shadow Map Method project setting (or the console variable r.Shadow.Virtual.Enable) selects VSM. New projects use VSM by default."
+      - q: "What makes a Point Light's shadow soft with VSM?"
+        choices: ["Increasing Attenuation Radius", "Setting Source Radius above 0; local lights have none by default", "Enabling Cast Translucent Shadows", "Lowering Shadow Bias to 0"]
+        answer_index: 1
+        explain: "Shadow Map Ray Tracing distributes rays based on Source Radius on local lights or Source Angle on Directional Lights. Local lights have no Source Radius by default, so set one."
+      - q: "In the Cached Page visualization, what do red pages mean?"
+        choices: ["Pages fully cached from last frame", "Pages with the highest resolution", "Pages outside the camera view", "Pages that are new or invalidated and must be re-rendered"]
+        answer_index: 3
+        explain: "Fully cached pages are green. New or invalidated pages are red. With a static camera, most red comes from cache invalidations you should reduce."
+      - q: "Which of these invalidates cached shadow pages every frame?"
+        choices: ["A Static Mesh with Static mobility", "A Directional Light that never moves", "A material using World Position Offset", "A Nanite mesh with a plain material"]
+        answer_index: 2
+        explain: "Skeletal animation and materials using World Position Offset or Pixel Depth Offset always invalidate cached pages every frame, so use them carefully and keep bounds tight."
+      - q: "With VSM enabled, is the Contact Shadow Length setting still needed for sharp contact shadows?"
+        choices: ["Yes, it is required for VSM to work", "No, VSM's high resolution makes it unnecessary and it can be less accurate", "Yes, but only on Point Lights", "No, because VSM disables all screen space effects"]
+        answer_index: 1
+        explain: "Because of VSM's high resolution and accuracy, screen space Contact Shadows are no longer necessary for sharp contact shadows and are not recommended otherwise."
+      - q: "How large is a Virtual Shadow Map, and how is it split up?"
+        choices: ["16k x 16k virtual resolution, split into 128x128 pages that render only when needed", "2k x 2k, split into cascades", "4k x 4k, one texture per object", "Unlimited, streamed from disk"]
+        answer_index: 0
+        explain: "VSMs have a virtual resolution of 16k x 16k and are split into 128x128 pages. Pages are allocated and rendered only as needed for on-screen pixels and are cached between frames."
+    flavors:
+      _default: {why: "VSM is the default shadow method in UE5. Soft, contact-hardened shadows are one setting away once you know which one."}
+      tech_art: {why: "Cache invalidations are the main VSM cost.", do: "Use the ShadowCasters view mode and find one object with inflated bounds."}
+      level_design: {why: "Shadows sell scale and grounding in a blockout.", do: "Set Source Angle on the sun in your blockout and see how contact hardening reads."}
+
+  - id: EAQ41
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, materials, light-functions]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Light functions, caustics and cloud shadows
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-light-functions-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Create a material M_LF_Caustic. In the Details panel set Material Domain to Light Function."
+      - "Feed a tiling noise or caustic texture (panned with a Panner node) into Emissive Color. Keep the values between 0 and 1."
+      - "Place a Movable Spot Light aimed at a floor. Assign M_LF_Caustic to Light Function Material in the light's Details panel."
+      - "Change Light Function Scale (X and Y) until the pattern size looks right. Note what the Z value does."
+      - "Set Fade Distance so the pattern fades far from the camera. Set Disabled Brightness to the average brightness of your pattern."
+      - "Enable Volumetric Fog on an Exponential Height Fog and see the pattern in the fog."
+      - "Run ShowFlag.VisualizeLightFunctionAtlas 1 in the console. Check if your material is in the atlas."
+    done_when: "One screenshot of the animated caustic pattern on the floor and one of the Light Function Atlas visualization showing your material listed."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How do you turn a material into a light function?"
+        choices: ["Set Blend Mode to Additive", "Set Material Domain to Light Function and feed nodes into Emissive Color", "Enable Two Sided and use Opacity", "Set Shading Model to Unlit"]
+        answer_index: 1
+        explain: "Light functions are materials with Material Domain set to Light Function. All nodes feed into the Emissive Color input on the main material node."
+      - q: "Which light mobility can use a light function?"
+        choices: ["Static only", "Any mobility", "Movable or Stationary only; they cannot be baked into lightmaps", "Movable only"]
+        answer_index: 2
+        explain: "Light functions can only be applied to lights with mobility set to Movable or Stationary, and they cannot be baked into lightmaps."
+      - q: "Does the light need Cast Shadows enabled to show its light function?"
+        choices: ["Yes, always", "No, once assigned it shows without Cast Shadows", "Only for Directional Lights", "Only when Volumetric Fog is on"]
+        answer_index: 1
+        explain: "Once a light function is assigned, it does not require Cast Shadows to be enabled to display the light function material."
+      - q: "What does the Z value of Light Function Scale control?"
+        choices: ["Scale along the light direction", "The brightness of the function", "The fade distance", "The width perpendicular to the light"]
+        answer_index: 0
+        explain: "X and Y scale the directions perpendicular to the light's direction. Z scales along the light direction."
+      - q: "What value should Disabled Brightness be set to?"
+        choices: ["Always 0", "Always 1", "The average brightness of the material's emissive input, between 0 and 1", "The light's Intensity in candela"]
+        answer_index: 2
+        explain: "Disabled Brightness is used when the light function is specified but disabled, such as beyond Fade Distance. It should match the average brightness of the emissive input, between 0 and 1."
+      - q: "Which light type is currently forced NOT to sample the Light Function Atlas?"
+        choices: ["Spot Lights", "Point Lights", "Rect Lights", "Directional Lights"]
+        answer_index: 3
+        explain: "The atlas restrictions list says Directional Lights are currently forced to not sample the atlas. Also, materials that read the depth buffer, world position or GBuffer cannot be baked into it."
+    flavors:
+      _default: {why: "Light functions add moving, material-driven variation to light: water caustics, cloud shadows, projected shapes."}
+      tech_art: {why: "Light functions cost like dynamic-shadow lights unless the atlas can bake them.", do: "Check the atlas visualization and make your material atlas-compatible (no depth, no UV tricks)."}
+      cinematics: {why: "A gobo-style light function is a classic film lighting trick.", do: "Make a window-blind pattern and project it onto a wall with a Spot Light."}
+
+  - id: EAQ42
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, fog, atmosphere]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Height fog, layer by layer
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/exponential-height-fog-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
+    checklist:
+      - "Open an outdoor level with some height difference (a hill or a Landscape). Place an Exponential Height Fog from Place Actors > Visual Effects."
+      - "Move the fog actor up and down in Z. Watch where the thick fog sits. Then adjust Fog Height Falloff to a smaller and a larger value."
+      - "Set Fog Inscattering Color and Directional Inscattering Color to two clearly different colors. Look toward the sun and away from it."
+      - "Open Second Fog Data. Give the second layer a small density and a Fog Height Offset so it sits in a valley."
+      - "Set Start Distance to 0, then 5000. Compare the look and read the Performance section about why this is cheaper."
+      - "If your project uses Sky Atmosphere: turn on Support Sky Atmosphere Affecting Height Fog in Project Settings, set both inscattering colors to black, and try Height Fog Contribution on the Sky Atmosphere."
+    done_when: "Two screenshots: one looking toward the sun and one away from it with the two inscattering colors visible, plus the Details panel showing your Second Fog Data values."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How does Exponential Height Fog distribute density?"
+        choices: ["Same density everywhere", "More density in low places, less in high places, with a smooth transition", "Only inside a box volume", "Denser near the camera only"]
+        answer_index: 1
+        explain: "Exponential Height Fog creates more density in low places and less in high places. The transition is smooth, so there is no hard cutoff with altitude."
+      - q: "Exponential Height Fog has two fog colors. What decides which one you see?"
+        choices: ["Camera height", "Time of day", "The fog actor's rotation", "Whether you look at the hemisphere facing the dominant Directional Light or the opposite one"]
+        answer_index: 3
+        explain: "One color is for the hemisphere facing the dominant directional light (or straight up if none exists), the other is for the opposite hemisphere."
+      - q: "You lower Fog Height Falloff to a smaller value. What happens?"
+        choices: ["The transition from thick to thin fog becomes larger", "The fog becomes fully opaque", "The fog moves up in Z", "The fog is disabled"]
+        answer_index: 0
+        explain: "Fog Height Falloff controls how density increases as height decreases. Smaller values make the transition larger."
+      - q: "Why can a far Start Distance make height fog cheaper to render?"
+        choices: ["It reduces the fog texture resolution", "Pixels in the fog-free area in front of the viewer can be culled by the Z-buffer, so the cost can drop to 50% or less", "It disables the second fog layer", "It turns off directional inscattering"]
+        answer_index: 1
+        explain: "The start distance keeps an area in front of the viewer without fog. It is rendered as a full-screen quad with a depth test, so pixels are culled and the cost can be 50% or less."
+      - q: "Your skybox already has fog painted in it and now looks doubled. Which setting helps?"
+        choices: ["Fog Max Opacity 1", "Directional Inscattering Exponent", "Fog Cutoff Distance, so elements past that distance get no fog", "Emissive"]
+        answer_index: 2
+        explain: "Fog Cutoff Distance stops fog on scene elements past that distance. The docs say this is useful for excluding skyboxes that already have fog baked in."
+      - q: "You want the Sky Atmosphere to light the height fog. Besides the project setting, what must you do to the fog colors?"
+        choices: ["Set Fog Inscattering Color and Directional Inscattering Color to black", "Set both colors to white", "Match both colors to the sun color", "Delete the fog actor"]
+        answer_index: 0
+        explain: "The atmosphere contribution is additive on top of the fog's faked colors. To let the Sky Atmosphere drive the fog, set both inscattering colors to black, then use Height Fog Contribution on the Sky Atmosphere."
+    flavors:
+      _default: {why: "Height fog is the cheapest way to add depth and mood to an outdoor scene. The details decide if it looks real or milky."}
+      level_design: {why: "Fog controls how far a player can read the space.", do: "Set Start Distance so the play space is clear but the far background fades."}
+      cinematics: {why: "Directional inscattering is your free backlight haze.", do: "Frame a shot into the sun with a warm Directional Inscattering Color."}
+
+  - id: EAQ43
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lighting, sky-light, reflections]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: true
+    title: Sky Light capture and real-time sky
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-lights-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
+    checklist:
+      - "Start from your EAQ36 level (Directional Light + Sky Atmosphere). Place a Sky Light and set its Mobility to Movable."
+      - "Place a chrome sphere (Roughness 0, Metallic 1) to see the sky reflection."
+      - "Rotate the sun to a sunset. Notice the sphere and the ground lighting do not change until you press Recapture in the Sky Light Details panel."
+      - "Enable Real Time Capture on the Sky Light. Rotate the sun again and watch the reflection and lighting follow."
+      - "Change Cubemap Resolution from 128 to 64 and to 256. Compare the sphere reflection."
+      - "Open the Advanced section and enable Lower Hemisphere is Solid Color. Note the change under overhangs."
+      - "Switch Source Type to SLS Specified Cubemap with any HDRI, then back to SLS Captured Scene."
+    done_when: "Two screenshots of the chrome sphere at sunset: one before Recapture (stale sky) and one with Real Time Capture enabled, with the Sky Light Details panel visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "A Stationary or Movable Sky Light: when does it capture the scene?"
+        choices: ["Every frame, always", "Once on load, and then only when Recapture is called or Real Time Capture is enabled", "Only when lighting is built", "Only when the level is saved"]
+        answer_index: 1
+        explain: "For Stationary or Movable Sky Lights, updates happen once on load and then only when Recapture is called, unless Real Time Capture is enabled. Static Sky Lights update when building lighting."
+      - q: "You swap the texture in your skybox material. What does the Sky Light do?"
+        choices: ["Updates automatically", "Rebuilds lighting by itself", "Switches to a specified cubemap", "Nothing until you Recapture or use Real Time Capture"]
+        answer_index: 3
+        explain: "The docs say changing the skybox texture does not automatically update the Sky Light. You must use Recapture, Blueprint, or Real Time Capture."
+      - q: "Real Time Capture is enabled but nothing changes. What does the mode require?"
+        choices: ["A Sky Atmosphere component in the scene", "A Static Sky Light", "Volumetric Fog enabled", "A Reflection Capture actor"]
+        answer_index: 0
+        explain: "Real Time Capture requires a Sky Atmosphere component to be present. It works with Stationary or Movable Sky Lights, and Volumetric Fog is not supported by it."
+      - q: "Which values are valid for Cubemap Resolution?"
+        choices: ["Any integer", "Only 128", "Powers of two such as 64, 128, 256", "Multiples of 100"]
+        answer_index: 2
+        explain: "Cubemap Resolution uses power of two values (64, 128, 256 and so on). Higher values increase quality at the cost of performance."
+      - q: "For a Static Sky Light, why should the skybox material be Unlit?"
+        choices: ["Unlit is faster to compile", "Only the emissive contribution of materials is captured, to avoid a feedback loop", "Lit materials cannot be seen by the Sky Light at all", "Static Sky Lights only capture cubemaps"]
+        answer_index: 1
+        explain: "A Static Sky Light captures only the emissive contribution of materials to avoid a feedback loop, so the skybox must use an Unlit material."
+      - q: "Why is Real Time Capture preferred over calling RecaptureSky() from Blueprint during gameplay?"
+        choices: ["RecaptureSky() gives lower quality", "RecaptureSky() only works in the editor", "Real Time Capture is free", "Real Time Capture stays on the GPU; RecaptureSky() costs at least 120 ms and can pause gameplay"]
+        answer_index: 3
+        explain: "Real Time Capture keeps all work on the GPU with time slicing. RecaptureSky() has a high processing cost, at least 120 ms, which can cause a pause or slowdown."
+    flavors:
+      _default: {why: "The Sky Light gives ambient light and reflections to everything. If it is stale, the whole scene looks wrong."}
+      cinematics: {why: "Time-of-day shots need the sky lighting to follow the sun.", do: "Animate the sun in Sequencer with Real Time Capture on and check the reflection on a chrome ball."}
+      tech_art: {why: "Real Time Capture has a per-frame cost that time slicing spreads out.", do: "Try r.SkyLight.RealTimeReflectionCapture.TimeSlice 0 and 1 and compare Stat GPU."}
+
+  - id: EAQ44
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [static-mesh, import, fbx, pivot, lods]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Import a prop the right way
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-static-meshes-using-fbx-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-static-mesh-lods-using-fbx-in-unreal-engine"
+    checklist:
+      - "In your 3D app, make a small prop (a crate, a barrel, a lamp). Put it at the origin, with the origin at one corner or at the bottom center."
+      - "Triangulate the mesh in your 3D app before export. Export it as FBX (FBX 2020.2 is what Unreal uses)."
+      - "In Unreal, click Add/Import in the Content Browser and choose your FBX. In the FBX Import Options, look at Import Uniform Scale, Convert Scene Unit and Generate Lightmap UVs before you click Import."
+      - "Name the asset SM_<PropName>. Open it in the Static Mesh Editor and check the size and the pivot."
+      - "If the scale is wrong, reimport with a different Import Uniform Scale instead of scaling the actor in the level."
+      - "Place SM_<PropName> in a level next to the default 180 cm mannequin or a 100 cm cube to check the size."
+    done_when: "Screenshot of the Static Mesh Editor showing SM_<PropName>, plus one screenshot of the prop in the level next to a size reference. In one line, say where your pivot is."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where does Unreal put the pivot of an imported FBX mesh?"
+        choices: ["At the origin (0,0,0) of the 3D app scene", "At the center of the mesh bounds", "At the first vertex of the mesh", "At the camera position when you export"]
+        answer_index: 0
+        explain: "The pivot is always at the origin when exporting. So you should model at the origin, usually with the origin at one corner, to snap well to the grid."
+      - q: "Which is the BEST way to make sure your mesh is triangulated, according to Epic?"
+        choices: ["Let the importer triangulate it", "Let the FBX exporter triangulate it", "Triangulate it yourself in the 3D app, controlling the edges", "Do nothing, Unreal renders quads directly"]
+        answer_index: 2
+        explain: "Manual triangulation in the 3D app gives control over edge direction and placement. Automatic triangulation can give bad results."
+      - q: "You want a doorway prop with a hole the player can walk through. What should the collision mesh in the FBX be called if the render mesh is Door_01?"
+        choices: ["COL_Door_01", "UCX_Door_01", "Door_01_Collision", "PHYS_Door_01"]
+        answer_index: 1
+        explain: "Custom collision is found by name. UCX_[RenderMeshName] makes a convex collision piece, and you can add _00, _01 for more pieces."
+      - q: "Your FBX has three separate props. What does the importer do by default?"
+        choices: ["It refuses to import more than one mesh", "It always merges them into one Static Mesh", "It imports only the first mesh", "It makes three separate Static Mesh assets"]
+        answer_index: 3
+        explain: "Multiple Static Meshes in one FBX become multiple assets unless you enable Combine Meshes at import."
+      - q: "Your prop arrives 100 times too small because the 3D app used meters. Which import option is made for this?"
+        choices: ["Bake Pivot in Vertex", "Remove Degenerates", "Convert Scene Unit", "Force Front XAxis"]
+        answer_index: 2
+        explain: "Convert Scene Unit converts the FBX units of measurement to Unreal's unit, centimeters. Import Uniform Scale is another way to fix scale."
+      - q: "What does the Generate Lightmap UVs import option do?"
+        choices: ["It makes a set of unique, non-overlapping UVs for static lighting", "It deletes the texture UVs", "It makes the mesh use Nanite", "It bakes the lighting into vertex colors"]
+        answer_index: 0
+        explain: "Generate Lightmap UVs creates a unique, non-overlapping UV set that baked (static) lighting can use."
+    flavors:
+      _default: {why: "A prop with a wrong pivot, wrong scale or missing collision will be fought by every person who places it later."}
+      environment_art: {why: "Clean imports are the base of a prop kit. Fix scale and pivot once at import, not on every placed actor.", do: "Add a UCX_ collision mesh in your 3D app and check that Unreal picks it up in the Static Mesh Editor."}
+      level_design: {why: "Props that snap to the grid and have correct scale make blockout-to-art handoff fast.", do: "Place ten copies of the prop with grid snapping on and check that they line up without gaps."}
+
+  - id: EAQ45
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [static-mesh, collision, physics]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Collision that fits the prop
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-collisions-with-static-meshes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
+    checklist:
+      - "Open a simple prop (for example SM_Door from Starter Content, or your own SM_) in the Static Mesh Editor."
+      - "In the Collision menu, add a Box Simplified Collision. Then add a Sphere Simplified Collision and see that both exist. Use Remove Collision to clear them."
+      - "Open a prop with a complex shape (for example SM_Chair). Try 10-DOP, 18-DOP and 26-DOP and look at the difference."
+      - "Try Auto Convex Collision. Change Hull Count and Max Hull Verts, click Apply, and compare the result."
+      - "Build a hand-made collision: add a Box Simplified Collision, move and scale it to one part, duplicate it (Ctrl + D) and fit the other parts."
+      - "Place the prop in a level, set Simulate Physics to true and play. Then change the Collision Preset and see what changes."
+    done_when: "Two screenshots of the Static Mesh Editor: one with the auto convex result and one with your hand-made collision from several boxes. Write one line on which one you would ship and why."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You add a Box Simplified Collision to a mesh that already has a Sphere Simplified Collision. What happens?"
+        choices: ["The box replaces the sphere", "The box is added, and both collisions stay", "Unreal shows an error", "The sphere is converted to a box"]
+        answer_index: 1
+        explain: "A new simplified collision does not replace the old one. It adds to it. Use Remove Collision to clear all of them."
+      - q: "What does the 18 in 18-DOP mean?"
+        choices: ["18 triangles in the hull", "18 convex hulls", "A box with all edges beveled, using 18 axis-aligned planes", "18 percent of the mesh detail"]
+        answer_index: 2
+        explain: "K-DOP pushes K axis-aligned planes as close to the mesh as possible. 10 bevels 4 edges, 18 bevels all edges, 26 bevels edges and corners."
+      - q: "A prop has no collision at all. Which option is NOT available in the Details panel when you place it?"
+        choices: ["Mobility", "Material", "Simulate Physics", "Scale"]
+        answer_index: 2
+        explain: "Simulate Physics is not available by default when the Static Mesh has no collision. Add collision first."
+      - q: "In Auto Convex Collision, which setting controls the number of primitives used to represent the collision?"
+        choices: ["Hull Count", "Hull Precision", "Max Hull Verts", "Collision Preset"]
+        answer_index: 0
+        explain: "Hull Count sets the number of primitives. Max Hull Verts sets vertices per hull, and Hull Precision sets the voxels used to generate the shape."
+      - q: "You set Simulate Physics on and change the Collision Preset to Overlap All. What happens when you play?"
+        choices: ["The prop becomes unbreakable", "The prop stops moving", "The prop turns invisible", "The prop falls through the level"]
+        answer_index: 3
+        explain: "With Overlap All the mesh no longer blocks anything, so it falls right through the level as soon as play begins."
+      - q: "When a custom collision is made of several convex hulls, what does Epic advise?"
+        choices: ["Make the hulls overlap a lot", "Leave a small gap between the hulls so they do not intersect", "Use only one hull always", "Use spheres, not convex hulls"]
+        answer_index: 1
+        explain: "Results are best when the hulls do not intersect. The lollipop example leaves a gap between the candy hull and the stick hull."
+    flavors:
+      _default: {why: "Players do not see collision, they feel it. Bad collision blocks the player for no reason or lets them fall through."}
+      environment_art: {why: "Every prop you ship needs collision that matches its shape at the places players touch.", do: "Turn on the Player Collision view mode in the level and take one screenshot of your prop with it."}
+      level_design: {why: "Props with tight collision let you plan jumps, cover and paths with confidence.", do: "Walk your character along the prop in PIE and note any invisible wall."}
+
+  - id: EAQ46
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [modeling-mode, booleans, polygroups, props]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Quick prop with Boolean and Bevel
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-tools-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/boolean-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/polygroup-edit-tool-in-unreal-engine"
+    checklist:
+      - "Press SHIFT+5 to enter Modeling Mode. If it is missing, enable the Modeling Tools Editor Mode plugin."
+      - "In Create, place a Box (Output Type: Static Mesh) as the body of a prop. Place a Cylinder that cuts into it."
+      - "Select the Box first, then the Cylinder. Open Model > Boolean and use Difference A - B to cut a hole. Accept."
+      - "Open Model > PolyGroup Edit on the result. Select the top face and use Extrude to add a lip. Select the outer edges and use Bevel. Accept."
+      - "Use Xform > Edit Pivot and set the pivot to Bottom. Accept."
+      - "Save the asset as SM_Quick_<Name> and place two copies in the level."
+    done_when: "Screenshot of the finished mesh in the level and a screenshot of the Content Browser showing SM_Quick_<Name>. Say which Boolean operation you used."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "In the Boolean tool, which mesh becomes A?"
+        choices: ["The larger mesh", "The mesh you selected first", "The mesh you selected last", "The mesh closest to the camera"]
+        answer_index: 1
+        explain: "The first selection becomes A and the second becomes B. This order matters for Difference A - B and Difference B - A."
+      - q: "You cut a hole in a wall with Boolean but the hole cutter remains and the wall is gone. What went wrong?"
+        choices: ["You used Union", "You used Intersection", "You selected the meshes in the wrong order for Difference", "You forgot to press Accept"]
+        answer_index: 2
+        explain: "Difference A - B subtracts the second mesh from the first. If the cutter was selected first, the operation subtracts the wall from the cutter."
+      - q: "What happens to your edits if you leave Modeling Mode without pressing Accept?"
+        choices: ["They are applied automatically", "They are saved as a new asset", "The editor asks you to name the mesh", "They are discarded and the mesh reverts"]
+        answer_index: 3
+        explain: "Most tools only preview changes. Exiting the mode or pressing Cancel discards them. Accept applies them to the mesh."
+      - q: "You create a mesh with Output Type set to Dynamic Mesh. Where is it saved?"
+        choices: ["In the Content Browser as an asset", "In the level only", "In the Project Settings", "In a plugin folder"]
+        answer_index: 1
+        explain: "A Dynamic Mesh is saved in the level only. A Static Mesh is saved in the Content Browser with an instance placed in the level."
+      - q: "PolyGroup Edit is greyed out for an imported mesh. What is the most likely reason?"
+        choices: ["The mesh has no PolyGroup information", "The mesh is too small", "The mesh uses Nanite", "The mesh has a material"]
+        answer_index: 0
+        explain: "PolyGroup Edit is not available for meshes with no PolyGroups. Create them with Generate PolyGroups, Paint PolyGroups or Tri Select first."
+      - q: "After you Accept a sculpting tool with many brush strokes, what can Undo do?"
+        choices: ["Undo each stroke one by one", "Undo only the combined result of all strokes", "Nothing, the change is permanent", "Undo the strokes but keep the tool open"]
+        answer_index: 1
+        explain: "While the tool is open you can undo single changes. After Accept, undo history only tracks the mesh before and after the tool."
+    flavors:
+      _default: {why: "A quick prop made in the editor fills gaps in a kit without a round trip to another program."}
+      environment_art: {why: "Boolean and Bevel let you make trims, cutouts and holders in minutes while you see them in the scene.", do: "Use Xform > Bake Transform after scaling so the asset has scale 1 before you share it."}
+      tech_art: {why: "Knowing how Modeling Mode handles triangles, PolyGroups and Accept helps you write tools that use the same data.", do: "Open the result in the UV Editor and check what the Boolean did to the UVs."}
+
+  - id: EAQ47
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [uvs, uv-editor, modeling-mode, texturing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Fix UVs in the UV Editor
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/uv-editor-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/uvs-category-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-uv-channels-with-static-meshes-in-unreal-engine"
+    checklist:
+      - "Take the SM_Quick_ prop from EAQ46 or any mesh made in Modeling Mode. Right-click it in the Content Browser and open the UV Editor."
+      - "In Display, turn on a checker texture as background. Look at the 3D Viewport for stretched checkers."
+      - "Run AutoUV with the default Patch Builder method. Apply. Check the checkers again."
+      - "Use the Seam tool to cut one seam on a hidden edge. Then use Unwrap on that island."
+      - "Use Layout with type Repack so no islands overlap in the 0-1 square. Apply and Save."
+      - "Assign a material with a visible texture to the mesh in the level and compare before and after."
+    done_when: "Two screenshots: the UV Editor 2D view after Repack, and the prop in the level with a checker or textured material showing even squares."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which of these is a way to open the UV Editor?"
+        choices: ["Right-click the mesh in the Content Browser", "Window > Cinematics", "Edit > Project Settings", "Press F in the Material Editor"]
+        answer_index: 0
+        explain: "You can open the UV Editor from the UV category in Modeling Mode, by right-clicking a mesh in the level, or right-clicking it in the Content Browser."
+      - q: "What does the Sew tool do?"
+        choices: ["It splits an island in two", "It connects two corresponding edges into one island", "It scales all UVs to 0-1", "It bakes lighting into the UVs"]
+        answer_index: 1
+        explain: "Sew joins the selected edge (red) with its counterpart (green). The two parts become one UV island."
+      - q: "You want the islands packed into the 0-1 square with NO overlap. Which Layout Type do you pick?"
+        choices: ["Transform", "Stack", "Repack", "Mirror"]
+        answer_index: 2
+        explain: "Repack scales and moves islands together to pack the square with no overlap. Stack packs with overlap, Transform only scales and moves everything."
+      - q: "Which AutoUV method does Epic describe as designed for lightmaps and mechanical meshes?"
+        choices: ["Patch Builder", "UV Atlas", "XAtlas", "ExpMap"]
+        answer_index: 2
+        explain: "XAtlas is for lightmaps and mechanical meshes. UV Atlas is for organic objects, and Patch Builder is the default and supports large models."
+      - q: "Where should seams usually go?"
+        choices: ["On the most visible faces", "Where the audience will not see them", "Always on the top of the mesh", "Never, seams are not allowed"]
+        answer_index: 1
+        explain: "Seams should be invisible to the audience unless you want them as a look. Think about which parts are seen in the experience."
+      - q: "You edited UVs but the mesh in the level did not change. What did you probably forget?"
+        choices: ["To restart the editor", "To rebuild lighting", "To enable Nanite", "To click Apply in the UV Editor toolbar"]
+        answer_index: 3
+        explain: "Apply writes your UV changes to the original mesh. Until then the edit lives only in the UV Editor."
+    flavors:
+      _default: {why: "Stretched or overlapping UVs make every texture look wrong. Good UVs are the base of good materials."}
+      environment_art: {why: "Meshes made in the editor get default UVs that often stretch. The UV Editor fixes this without leaving Unreal.", do: "Add a second UV channel with the Channels tool and note what you would use it for."}
+      tech_art: {why: "UV channels are data your materials read. Knowing how they are made helps you debug texture bugs.", do: "Compare the results of the three AutoUV methods on the same mesh."}
+
+  - id: EAQ48
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [lightmaps, lumen, static-lighting, uvs]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Lightmap UVs or Lumen
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-lightmapping-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/generating-lightmap-uvs-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/global-illumination-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+    checklist:
+      - "Open Project Settings > Engine > Rendering and note whether Lumen is set for Dynamic Global Illumination and whether Allow Static Lighting is on."
+      - "Open a prop SM_ in the Static Mesh Editor. In the Details panel, expand LOD0 > Build Settings and find Generate Lightmap UVs, Min Lightmap Resolution, Source Lightmap Index and Destination Lightmap Index."
+      - "Set Min Lightmap Resolution to 64 and click Apply Changes. Use the UV toolbar button to view the lightmap UV channel."
+      - "Under General Settings, check Lightmap Resolution and Lightmap Coordinate Index match the channel you generated."
+      - "Write three lines: does this project bake lighting or use Lumen, and does this prop need a lightmap UV at all?"
+    done_when: "Screenshot of the Static Mesh Editor showing the lightmap UV channel and the Build Settings, plus your three-line writeup."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "When does a Static Mesh need a lightmap UV?"
+        choices: ["Always, for every mesh", "Only when it will be lit with baked (precomputed) lighting", "Only when it uses Nanite", "Only when it has a normal map"]
+        answer_index: 1
+        explain: "Lightmaps are only needed for baked lighting. If the project uses only dynamic lighting, no lightmap UV is needed."
+      - q: "Which rule applies to a lightmap UV but NOT to a texture UV?"
+        choices: ["It must be inside the level bounds", "Islands may overlap freely", "No overlapping faces and enough padding between islands", "It must use UDIMs"]
+        answer_index: 2
+        explain: "Texture UVs can overlap or tile. Lightmap UVs must give each face unique space and padding so light and shadow do not bleed."
+      - q: "From which UV channel does the auto lightmap generator repack by default?"
+        choices: ["UV channel 0", "UV channel 1", "The last channel", "A random channel"]
+        answer_index: 0
+        explain: "By default the generated lightmap UV repacks the charts from the first UV, channel 0, which is usually the texture UV."
+      - q: "What does the auto generator NOT do while repacking?"
+        choices: ["Add padding between charts", "Split UV chart edges into new islands", "Normalize chart scale", "Store the result in a new channel"]
+        answer_index: 1
+        explain: "The repacker never splits charts. If the source charts are badly cut, the lightmap will be bad too. Split them before import."
+      - q: "Why is at least four texels of padding recommended between charts?"
+        choices: ["Because DXT compression works on 4x4 texel blocks", "Because Lumen needs it", "Because the UV Editor requires it", "Because meshes have four sides"]
+        answer_index: 0
+        explain: "Texture compression uses 4x4 blocks, so a padding of about four texels avoids bleeding between charts."
+      - q: "What happens to precomputed (static) lighting when Lumen is enabled?"
+        choices: ["It is blended with Lumen", "It becomes brighter", "It is used for reflections only", "It is removed"]
+        answer_index: 3
+        explain: "Precomputed lighting from static lights is removed when Lumen is enabled. You can also turn off Allow Static Lighting in Project Settings."
+    flavors:
+      _default: {why: "Knowing if your project bakes light or uses Lumen decides how much UV work each prop needs."}
+      environment_art: {why: "Lightmap UVs cost time. Spend it only when the project actually bakes lighting.", do: "Set Lightmap Resolution to a value higher than Min Lightmap Resolution and explain why."}
+      cinematics: {why: "Cinematic scenes often use Lumen for moving lights. Check this before you ask for lightmaps.", do: "Move a light in a Lumen scene and note how many seconds the global lighting takes to update."}
+
+  - id: EAQ49
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [mesh-paint, vertex-color, texture-blending, props]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Mesh Paint tools and texture weights
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/mesh-paint-tool-reference-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/mesh-paint-mode-in-unreal-engine"
+    extra_urls: []
+    checklist:
+      - "Make a material M_Blend2 that lerps two textures using the vertex color alpha. Apply it to a prop SM_ placed in the level."
+      - "Enter Mesh Paint mode. Choose the Vertex Weight paint method. Set Texture Weight Type to Alpha (Two Textures)."
+      - "Paint dirt or moss on the lower part of the prop with Paint Texture Weight Index set to the second texture. Use Ctrl + [ and Ctrl + ] to change brush size."
+      - "Use Color View Mode to look at the Alpha channel and check where you painted."
+      - "Click To LODs so the paint is copied to all LOD levels. Click Save."
+      - "Duplicate the prop, use Copy on the painted one and Paste on the copy."
+    done_when: "Screenshot of the painted prop in the level and a screenshot with Color View Mode set to Alpha Channel. Say which Texture Weight Type you used."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Erase Color really do?"
+        choices: ["It removes all paint from the mesh", "It is a second paint color you can swap to", "It resets the mesh to white", "It deletes the material"]
+        answer_index: 1
+        explain: "Erase Color does not erase. It is a secondary color, and you can swap it with Paint Color at any time."
+      - q: "Which Texture Weight Type blends exactly three textures?"
+        choices: ["Alpha (Two Textures)", "RGB (Three Textures)", "ARGB (Four Textures)", "ARGB - 1 (Five Textures)"]
+        answer_index: 1
+        explain: "RGB blends three textures using painted RGB values. It needs a 3-way lerp blend material on the mesh."
+      - q: "What does the To LODs tool do?"
+        choices: ["Creates new LODs", "Applies the vertex colors from LOD0 to all LOD levels", "Removes paint from all LODs", "Sets the LOD screen size"]
+        answer_index: 1
+        explain: "To LODs copies the vertex colors from LOD0 to every other LOD so the paint does not vanish at a distance."
+      - q: "Which keys change the brush size?"
+        choices: ["Ctrl + [ and Ctrl + ]", "Shift + Mouse Wheel", "Alt + Arrow keys", "Page Up and Page Down"]
+        answer_index: 0
+        explain: "Ctrl + Left Bracket makes the brush smaller and Ctrl + Right Bracket makes it larger."
+      - q: "The Fill tool fills the mesh with the paint color while respecting which setting?"
+        choices: ["The Falloff", "The LOD Group", "The Collision Preset", "The Channels settings"]
+        answer_index: 3
+        explain: "Fill uses the paint color but only on the color and alpha channels you enabled in Channels."
+      - q: "What does the Vertex Weight painting method require on the mesh?"
+        choices: ["A material set up to blend textures between layers", "A Nanite mesh", "A lightmap UV", "A Skeletal Mesh"]
+        answer_index: 0
+        explain: "Painting texture weights needs a Texture Blended Material with several textures so each layer can be painted and erased."
+    flavors:
+      _default: {why: "Painting wear and dirt on props per instance makes a kit look hand-placed instead of copied."}
+      environment_art: {why: "Mesh Paint lets you break up repetition on placed props with no new textures.", do: "Try Texture Color painting and compare its resource size in the Resource Usage section with vertex colors."}
+      tech_art: {why: "The blend material and the paint tool must agree on how many layers there are.", do: "Build the 3-way lerp version of the material and paint with the RGB (Three Textures) type."}
+
+  - id: EAQ50
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [snapping, placement, pivot, set-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Place props with surface snapping
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-snapping-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/edit-pivot-tool-in-unreal-engine"
+    checklist:
+      - "Make a small test level with a floor, a sloped ramp and a table mesh."
+      - "In the Level Viewport toolbar, enable Surface Snapping and Rotate to Surface Normal. Drag five small props onto the ramp and see them tilt with the slope."
+      - "Set Surface Offset to 5 and place one prop. Then set it back to 0."
+      - "Select a prop floating in the air and press End. Watch it drop to the nearest surface."
+      - "Hold V and drag one prop so its pivot snaps to a vertex of the table."
+      - "In Modeling Mode use Xform > Edit Pivot to move a prop's pivot to Bottom, then place it again with surface snapping."
+    done_when: "Screenshot of the ramp with at least five props sitting on the slope and rotated to it, plus a screenshot of a prop vertex-snapped to the table corner."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "What does Rotate to Surface Normal do?"
+        choices: ["It rotates the camera to face the surface", "It rotates snapped actors to match the surface they snap to", "It flips the surface normals of the mesh", "It rotates the grid"]
+        answer_index: 1
+        explain: "With this option on, actors automatically rotate to match the alignment of the surface they snap to, like a slope."
+      - q: "Which key snaps the selected actor to the nearest surface, such as the floor?"
+        choices: ["Home", "End", "Insert", "Delete"]
+        answer_index: 1
+        explain: "Pressing End moves the selected actor down to the nearest surface below it."
+      - q: "How do you use vertex snapping?"
+        choices: ["Hold V while using the translation gizmo", "Press Ctrl + V", "Enable it in Project Settings", "Hold Alt while rotating"]
+        answer_index: 0
+        explain: "Hold V while moving an object. The polygon vertices you can snap to appear, and the pivot snaps to them."
+      - q: "Your translation snap is set to 10 units. What does this mean?"
+        choices: ["Actors cannot be moved more than 10 units", "The grid is drawn every 10 meters", "Rotation snaps to 10 degrees", "Actors move only in 10 unit steps"]
+        answer_index: 3
+        explain: "Grid snapping moves actors in increments of the snap value. Rotation and scale have their own separate grids."
+      - q: "Where do you change the list of grid sizes shown in the viewport toolbar?"
+        choices: ["Edit > Editor Preferences > Viewports, Snap category", "Window > Layers", "Project Settings > Physics", "The Static Mesh Editor"]
+        answer_index: 0
+        explain: "The Snap category in Editor Preferences > Viewports holds the Decimal Grid Sizes, rotation grid sizes and other snap options."
+      - q: "You accept a new pivot in the Edit Pivot tool. What is changed?"
+        choices: ["Only the selected actor in the level", "The static mesh asset and all its instances", "Only the preview in Modeling Mode", "The world origin"]
+        answer_index: 1
+        explain: "The new pivot is baked into the asset, so every placed instance changes. Use Duplicate first if you want to keep the original asset."
+    flavors:
+      _default: {why: "Snapping tools turn slow, careful placement into fast, exact placement."}
+      environment_art: {why: "Surface snapping with a bottom pivot is the fastest way to set dress a scene with many props.", do: "Place twenty props on a rocky surface in under five minutes using only surface snapping and End."}
+      level_design: {why: "Vertex snapping joins modular pieces with no gaps.", do: "Snap three wall pieces together with V and check for gaps in a top view."}
+
+  - id: EAQ51
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [level-instancing, packed-level-actor, prop-kits, set-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Packed Level Actor prop kit
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "In a level, arrange a small prop group from Static Meshes only: for example a table, two chairs and a lamp."
+      - "Select all the actors, right-click one, go to Level and choose Create Packed Level Actor. Set Pivot Type to Center Min Z and click Ok. Save it as BP_Kit_TableSet."
+      - "Drag three more copies of BP_Kit_TableSet into the level and rotate them."
+      - "Edit the Packed Level Actor: click Edit in the Outliner, move one chair, then commit and see all copies update."
+      - "Select the same kind of group and make a Level Instance instead with Create Level Instance. Note the difference in the Outliner."
+      - "Break one instance with the Break option and see the original actors come back."
+    done_when: "Screenshot of the level with at least four copies of BP_Kit_TableSet, and one screenshot of the Outliner. Write one line: when would you choose a Level Instance instead?"
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is a Packed Level Blueprint made from?"
+        choices: ["A single skeletal mesh", "A Landscape and its foliage", "A Blueprint with gameplay logic", "Static Mesh assets combined into one Blueprint actor optimized for rendering"]
+        answer_index: 3
+        explain: "Static Meshes are combined into a Packed Level Blueprint, a single actor optimized for rendering. Epic recommends it for static buildings and dense visual setups."
+      - q: "Which type does Epic recommend for a point of interest with a standalone gameplay setup?"
+        choices: ["Packed Level Actor", "Level Instance", "HLOD", "Data Layer"]
+        answer_index: 1
+        explain: "Level Instances are for points of interest and standalone gameplay setups. Packed Level Actors are for static visual setups."
+      - q: "What does Pivot Type Center Min Z do?"
+        choices: ["Puts the pivot at the world origin", "Puts the pivot at the center of the instance at its lowest Z", "Puts the pivot on the first selected actor", "Puts the pivot at the highest point"]
+        answer_index: 1
+        explain: "Center Min Z places the pivot at the center of the instance at the lowest Z value, which is good for placing on the ground."
+      - q: "You edited a Level Instance and moved a chair. What must you do so all copies get the change?"
+        choices: ["Press Esc twice", "Select the Level Instance Actor and click Commit Changes", "Rebuild lighting", "Restart the editor"]
+        answer_index: 1
+        explain: "Commit Changes in the Details panel saves the edit and the change propagates to all copies. Esc twice leaves without committing."
+      - q: "What is true about breaking a Level Instance?"
+        choices: ["It deletes the Level Instance asset from the Content Browser", "It cannot be undone, but the asset stays in the Content Browser", "It can be undone with Ctrl + Z", "It converts it to a Packed Level Actor"]
+        answer_index: 1
+        explain: "Break replaces the instance with the original actors. It cannot be undone, and the asset is not deleted."
+      - q: "When you make a Level Instance, what happens to the selected actors in the level?"
+        choices: ["They are deleted forever", "They stay as they were, plus a copy is made", "They are replaced by a Level Instance Actor and become its non-selectable children", "They are moved to a new level and removed from the Outliner"]
+        answer_index: 2
+        explain: "A new Level Instance Actor replaces the selection. The actors are still in the Outliner as children but are not selectable."
+    flavors:
+      _default: {why: "Prop groups that repeat across a world should be one asset, not many loose actors."}
+      environment_art: {why: "A Packed Level Actor is how you ship a reusable set-dressing kit that is cheap to render and easy to update.", do: "Update the kit once and take a before and after screenshot of all copies."}
+      level_design: {why: "Level Instances let you place gameplay setups many times and edit them in context.", do: "Put a trigger or light in your group and see why it needs a Level Instance rather than a Packed Level Actor."}
+
+  - id: EAQ52
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [post-process, post-process-volume, lookdev]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Global and local Post Process Volumes
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
+    checklist:
+      - "Open a small level with two rooms or two clearly different areas (a template level is fine)."
+      - "Place a Post Process Volume. Name it PPV_Global. In Post Process Volume Settings, turn on Infinite Extent (Unbound) and keep Priority 0."
+      - "Place a second Post Process Volume around one room. Name it PPV_Room. Leave Infinite Extent off and set Priority to 100."
+      - "In PPV_Room, override one visible setting, for example Color Grading > Global > Saturation set to 0.2."
+      - "Set Blend Radius on PPV_Room to 0. Play from the viewport and walk in and out. Then set Blend Radius to 1000 and walk again. Note the difference."
+      - "Set Blend Weight on PPV_Room to 0.5 and look at the room again."
+      - "Open Project Settings > Rendering > Default Settings and find where the project-wide post process defaults live. Do not change them."
+    done_when: "Two screenshots from the same spot at the edge of PPV_Room: one with Blend Radius 0 and one with Blend Radius 1000, plus the Details panel of PPV_Room showing Priority, Blend Radius and Blend Weight."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Two Post Process Volumes overlap. Which one wins?"
+        choices: ["The one with the highest Priority", "The one placed first in the level", "The larger one", "The one closest to the player"]
+        answer_index: 0
+        explain: "With overlapping volumes, the highest Priority overrides the lower ones. If two have the same priority, the order is undefined."
+      - q: "What does Infinite Extent (Unbound) do?"
+        choices: ["It makes the volume grow slowly over time", "It makes the volume affect the whole scene, ignoring its bounds", "It disables the volume", "It doubles the Blend Radius"]
+        answer_index: 1
+        explain: "With Infinite Extent on, the volume affects the entire scene no matter its size. Off, it only affects the area inside its bounds."
+      - q: "What is Blend Radius?"
+        choices: ["The size of the bloom effect", "The distance a light can reach inside the volume", "A transition area (in world units) around the volume where the look blends in", "The radius of the ambient occlusion"]
+        answer_index: 2
+        explain: "Blend Radius is a distance around the volume used for blending. It creates a transition zone so the look changes gradually when you walk in."
+      - q: "You set Blend Weight to 0 on a volume. What happens?"
+        choices: ["The volume has full effect", "The volume has no effect", "The volume becomes unbound", "The volume gets the highest priority"]
+        answer_index: 1
+        explain: "Blend Weight is the amount of influence the volume has. 1 is full effect, 0 is no effect."
+      - q: "There is no Post Process Volume in the level at all. Where do the default post process settings come from?"
+        choices: ["The level has no post processing at all", "The Directional Light", "The Sky Light", "Project Settings > Rendering > Default Settings"]
+        answer_index: 3
+        explain: "The engine always uses some default post process settings. They live in Project Settings under Rendering > Default Settings."
+      - q: "The tutorial suggests choosing Priority values like 0, 100, 200 instead of 0, 1, 2. Why?"
+        choices: ["Higher numbers render faster", "It leaves room to insert or remove volumes later without renumbering the others", "Priorities below 10 are ignored", "Blend Radius only works with big numbers"]
+        answer_index: 1
+        explain: "A wide gap between values lets you add a new volume between existing ones without updating every priority."
+    flavors:
+      _default: {why: "One global volume plus small local volumes is how a level gets a base look and special moments."}
+      lookdev: {why: "Every grade and exposure choice you make later lives in these volumes, so their priority and blending must be clean.", do: "Add a third small volume with Priority 200 inside the room and give it a different Saturation."}
+      level_design: {why: "Local volumes can mark a special area (a shrine, a danger zone) without changing any asset."}
+      cinematics: {why: "Cine cameras have their own post process layer that blends on top of these volumes."}
+
+  - id: EAQ53
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [exposure, auto-exposure, cine-camera, lookdev]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, level_design]
+    required_spine: false
+    elective: true
+    title: Exposure, three ways
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    checklist:
+      - "Open a level that has a dark interior and a bright exterior (or build a box with one open door)."
+      - "In your global Post Process Volume, open Lens > Exposure. Set Metering Mode to Auto Exposure Histogram. Turn on the viewport Show > Visualize > HDR (Eye Adaptation) view and watch the graph as you move from dark to bright."
+      - "Override Speed Up and Speed Down. Try Speed Up 10 and Speed Down 1, then the reverse. Note which feels more like real eyes."
+      - "Override Exposure Compensation. Try -1 and +1 and note what happens to the image."
+      - "Place a Cine Camera Actor. Pilot it (Ctrl+Shift+P). In the camera's own post process, set Metering Mode to Manual and turn on Apply Physical Camera Exposure."
+      - "Set ISO, Shutter Speed and Aperture on the camera until the interior looks right. Write the three values down."
+      - "Turn on Local Exposure in the volume and use Show > Visualization > Local Exposure to see where it works."
+    done_when: "Three screenshots from the doorway: histogram auto exposure with the HDR visualization on, manual physical camera exposure with the ISO/shutter/aperture values written in the caption, and the Local Exposure visualization."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which metering mode is the default in Unreal Engine?"
+        choices: ["Manual", "Auto Exposure Basic", "Auto Exposure Histogram", "Physical Camera"]
+        answer_index: 2
+        explain: "Auto Exposure Histogram is the default. It builds a 64-bin histogram and gives finer control. Basic is faster but has fewer settings."
+      - q: "You set Exposure Compensation to -1. What does the page say happens?"
+        choices: ["The image becomes two times darker", "The image becomes two times brighter", "Auto exposure turns off", "Nothing, the value must be positive"]
+        answer_index: 0
+        explain: "Exposure Compensation is logarithmic. -1 is two times darker, -2 four times darker, +1 two times brighter."
+      - q: "Min Brightness and Max Brightness are set to the same value. What happens?"
+        choices: ["The scene turns black", "Auto exposure is disabled", "Local Exposure turns on", "The engine picks a new value automatically"]
+        answer_index: 1
+        explain: "If Min Brightness equals Max Brightness (or Min EV100 equals Max EV100), the camera cannot adapt, so auto exposure is disabled."
+      - q: "Apply Physical Camera Exposure is turned on. Which statement is true?"
+        choices: ["It affects all metering modes", "It only affects Manual mode, and the scene is usually much darker", "It makes the scene brighter", "It disables the Cine Camera"]
+        answer_index: 1
+        explain: "The toggle only affects Manual metering mode. With it on, ISO, Shutter Speed and Aperture control brightness, and most scenes get significantly darker."
+      - q: "To mimic real eyes, which pair of values does the page recommend?"
+        choices: ["Speed Up low, Speed Down high", "Speed Up and Speed Down both 0", "Speed Up high, Speed Down low", "Speed Up equal to Speed Down"]
+        answer_index: 2
+        explain: "Eyes adapt fast from dark to bright (Speed Up high) and slowly from bright to dark (Speed Down low)."
+      - q: "When is Local Exposure most useful?"
+        choices: ["In flat, evenly lit scenes", "Only on mobile", "When the tonemapper is off", "In high-contrast scenes, like a dark interior with a bright exterior visible through a door"]
+        answer_index: 3
+        explain: "Local Exposure applies local adjustments to keep both highlight and shadow detail. The page says to always set it up when using Lumen GI."
+    flavors:
+      _default: {why: "Exposure decides what the player sees before any color grade is applied."}
+      lookdev: {why: "You cannot judge lighting or materials while exposure is drifting. Learn to control it.", do: "Add an Exposure Metering Mask texture that favors the screen center and compare stability."}
+      cinematics: {why: "Manual physical camera exposure gives you the same ISO, shutter and f-stop language as a real set."}
+      level_design: {why: "Exposure speed changes how a dark cave entrance feels to the player."}
+
+  - id: EAQ54
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [color-grading, post-process, white-balance, lookdev]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, level_design]
+    required_spine: false
+    elective: true
+    title: First color grade
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-grading-and-the-filmic-tonemapper-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
+    checklist:
+      - "Pick one camera view in a lit scene. Take an ungraded screenshot first."
+      - "In the Post Process Volume, open Color Grading > Temperature. Keep Temperature Type on White Balance. Move Temp up and down and note which direction makes the image warm."
+      - "Adjust Tint a little to remove any green or magenta cast."
+      - "Open Color Grading > Global. Do the main pass here: set Saturation, Contrast and Gamma to your target mood."
+      - "Use Global > Offset in a small amount to lift or lower the shadows."
+      - "Only now touch Shadows or Highlights, and only if one region still needs help."
+      - "Take the graded screenshot from the same camera."
+    done_when: "Two stills from the same camera: ungraded and graded, plus a short list of the values you changed (Temp, Tint, Saturation, Contrast, Gamma, Offset)."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You set the Temp value higher than the temperature of the light in the scene. What happens?"
+        choices: ["The image gets a cool, blue look", "The image gets a warm, yellow look", "The image gets darker", "Nothing until you change Tint"]
+        answer_index: 1
+        explain: "When Temp matches the light, the light looks white. Higher than the light gives a warm, yellow color; lower gives a cool, blue color."
+      - q: "What does Tint adjust?"
+        choices: ["The cyan and magenta ranges", "The red and blue ranges", "The brightness of highlights", "The strength of the LUT"]
+        answer_index: 0
+        explain: "Tint adjusts the white balance tint by moving between cyan and magenta. Use it after Temp to get natural colors."
+      - q: "Which section should you use for most of your color grading changes?"
+        choices: ["Highlights", "Shadows", "Global", "Film"]
+        answer_index: 2
+        explain: "The page says to start with the Global properties and do the majority of grading there before touching the other sections."
+      - q: "You want the scene brighter. The page says NOT to do this with which property?"
+        choices: ["Exposure Compensation", "Gain", "Blend Radius", "Tone Curve Amount"]
+        answer_index: 1
+        explain: "Do not use Gain to adjust exposure. Gain is for fine color tweaks; use exposure settings in the Lens section for brightness."
+      - q: "What does Offset mainly affect?"
+        choices: ["The whites and highlights", "The mid-tones only", "The color temperature", "The blacks and shadows"]
+        answer_index: 3
+        explain: "Offset adjusts the luminance of the image's blacks (shadows). Small amounts lift or lower the dark areas."
+      - q: "Why does Unreal do color correction in scene-referred linear space instead of a LUT after tonemapping?"
+        choices: ["Because LUTs are slower to render", "So one grade looks correct on both HDR and LDR displays", "Because LUTs cannot change saturation", "Because linear space has no black point"]
+        answer_index: 1
+        explain: "A LUT is a snapshot for one display type. Grading before the tonemap, in linear space, makes the grade correct on any display, HDR or LDR."
+    flavors:
+      _default: {why: "A grade finishes the image, but only after lighting and exposure are right."}
+      lookdev: {why: "Temperature, global and offset are the three moves you will use in every scene.", do: "Try Temperature Type set to Color Temperature and describe how it differs from White Balance."}
+      cinematics: {why: "The same controls exist on a Cine Camera's post process, per shot."}
+      level_design: {why: "A small grade in a local volume can tell the player they entered a different zone."}
+
+  - id: EAQ55
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [tonemapper, film, aces, post-process, lookdev]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: true
+    title: Filmic tonemapper controls
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-grading-and-the-filmic-tonemapper-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    checklist:
+      - "Place a few spheres with different colors and a strong emissive material in a lit scene. Take a reference screenshot."
+      - "In the Post Process Volume, open the Film category. Override Slope and move it up and down. Note the direction that makes the image darker."
+      - "Override Toe and Shoulder one at a time. Watch what happens to the darkest and brightest areas."
+      - "Raise the emissive brightness of one sphere a lot. Watch how the color changes as it gets very bright."
+      - "Put Slope, Toe and Shoulder back to defaults. Write one line about when the Film settings should be changed."
+      - "Optional: set Tone Curve Amount and Expand Gamut to 0 in Color Grading > Misc to see the image without the tone curve. Then restore."
+    done_when: "One image with 4 labeled crops of the same view: default, high Slope, high Toe, high Shoulder, plus one sentence on when Film settings should be changed."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Which standard does Unreal's filmic tonemapper follow?"
+        choices: ["ACES (Academy Color Encoding System)", "sRGB gamma 2.2", "Rec.601", "Kodak Vision3"]
+        answer_index: 0
+        explain: "The filmic tonemapper matches the ACES standard for television and film, so color stays consistent across displays and formats."
+      - q: "You increase Slope. What happens to the image?"
+        choices: ["It gets lighter", "It gets darker because the S-curve gets steeper", "Only the shadows change", "Bloom turns off"]
+        answer_index: 1
+        explain: "Slope sets the steepness of the tonemapper S-curve. Larger values make it steeper and the image darker; lower values make it lighter."
+      - q: "Which property adjusts the dark colors of the tonemapper?"
+        choices: ["Shoulder", "White Clip", "Toe", "Gain"]
+        answer_index: 2
+        explain: "Toe adjusts the dark colors. Shoulder adjusts the bright colors."
+      - q: "What does the page say about Black Clip?"
+        choices: ["It should be raised in every night scene", "It controls the bloom threshold", "It only works with LUTs", "In general it should not be adjusted"]
+        answer_index: 3
+        explain: "Black Clip sets where blacks start to cut off. The page says it should ideally never need to be adjusted."
+      - q: "How should the Film settings be used in a project?"
+        choices: ["Changed per shot to match the mood", "Animated during gameplay", "Set once project-wide; use Color Grading for artistic changes", "Set only inside Cine Cameras"]
+        answer_index: 2
+        explain: "Film controls define one project-wide look. They should not change per shot or dynamically. Use the Color Grading properties for artistic adjustments."
+      - q: "With the filmic tonemapper, a colored emissive surface gets extremely bright. What happens to its color?"
+        choices: ["It becomes white, like a saturated film sensor", "It becomes more saturated", "It becomes black", "It keeps the exact same color"]
+        answer_index: 0
+        explain: "Emissive is physically correct: as power increases the color gets lighter, and when bright enough to saturate the film it becomes white. The legacy tonemapper just over-saturated."
+    flavors:
+      _default: {why: "The tonemapper is the last step from HDR light to the pixels on screen. Know what it does before you fight it."}
+      lookdev: {why: "Most 'my colors look wrong' problems are the tone curve, not the material.", do: "Compare the same scene with Tone Curve Amount 1 and 0 and describe the difference in the highlights."}
+      cinematics: {why: "Shot-to-shot consistency depends on Film settings staying fixed."}
+      tech_art: {why: "The tone curve changes how emissive and bloom values read; keep it in mind when setting VFX brightness."}
+
+  - id: EAQ56
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [reflections, lumen, ssr, planar-reflections, reflection-captures]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Four kinds of reflections
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/reflections-environment-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/screen-space-reflections-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/planar-reflections-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/reflections-captures-in-unreal-engine"
+    checklist:
+      - "Build a small room with a floor plane using material M_Floor_Shiny (Roughness 0.1) and a few colored props. Put one tall prop just outside the camera view."
+      - "In the Post Process Volume, set Reflections > Method to Lumen. Screenshot. Change Max Roughness To Trace and watch the floor."
+      - "Set Method to Screen Space Reflections. Look at the floor near the screen edge and find where the off-screen prop disappears. Screenshot."
+      - "Place a Sphere Reflection Capture in the room. Change Method to None. Observe how the capture alone reflects the room. Screenshot."
+      - "In Project Settings > Rendering > Reflections turn on Support global clip plane for Planar Reflections, restart, then place a Planar Reflection Actor on the floor. Screenshot."
+      - "Write one line per method: what it can reflect and what it costs."
+    done_when: "Four labeled screenshots of the same floor (Lumen, SSR, capture only, planar) plus the four one-line notes."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "A prop is just off screen. Why does its reflection vanish with Screen Space Reflections?"
+        choices: ["SSR only reflects what is visible on screen", "SSR only works on metals", "SSR ignores props", "The Blend Radius is too small"]
+        answer_index: 0
+        explain: "SSR is limited to information on the screen. Objects off screen or hidden behind others cannot appear in the reflection."
+      - q: "What is the runtime cost of Reflection Capture Actors?"
+        choices: ["Very high, they render the level again", "None, they are captured before runtime and are static", "Medium, they update every frame", "They only cost memory on mobile"]
+        answer_index: 1
+        explain: "Reflection captures are static images of the area, computed before runtime. Many can be placed with no runtime performance cost."
+      - q: "How do Planar Reflections work, and why are they costly?"
+        choices: ["They blur a cubemap", "They trace rays in screen space", "They render the level again from the direction of the reflection", "They copy the sky light"]
+        answer_index: 2
+        explain: "A Planar Reflection Actor renders the level a second time from the reflected direction. That is accurate and works on all platforms, but expensive."
+      - q: "You placed a Planar Reflection Actor but nothing reflects. What did the page say to do first?"
+        choices: ["Set Roughness to 1 on the floor", "Enable Support global clip plane for Planar Reflections in Project Settings and restart the editor", "Set the Reflection Method to Screen Space", "Build lighting"]
+        answer_index: 1
+        explain: "Planar Reflections need the project setting Support global clip plane for Planar Reflections. Without a restart after enabling it, they do not work."
+      - q: "A large sphere capture and a small sphere capture overlap. Which one is used?"
+        choices: ["The larger one", "Neither, they cancel out", "The one placed first", "The smaller one overrides the larger one"]
+        answer_index: 3
+        explain: "Smaller captures override larger ones. Place one large capture for the area and smaller ones for refinement."
+      - q: "What does Max Roughness To Trace do in the Lumen Reflections settings?"
+        choices: ["Sets the roughness below which Lumen still traces dedicated reflection rays; higher costs more", "Makes every surface a mirror", "Turns off reflections on rough surfaces only", "Sets the floor roughness"]
+        answer_index: 0
+        explain: "Lumen traces dedicated reflection rays for surfaces up to this roughness. Higher values improve quality but greatly increase GPU cost."
+    flavors:
+      _default: {why: "Reflections ground objects in the scene. Each method has a different cost and a different failure."}
+      lookdev: {why: "Choosing the reflection method is a look decision and a budget decision at the same time.", do: "Set Max Roughness on SSR to 0.3 and to 0.8 and note which surfaces lose reflections."}
+      level_design: {why: "A puddle or a wet floor needs the right reflection method or it will look broken at the screen edge."}
+      tech_art: {why: "Planar reflections double the scene cost; know when a capture is enough."}
+      cinematics: {why: "A still can afford planar or high-quality Lumen reflections that a game cannot."}
+
+  - id: EAQ57
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [materials, translucency, blend-modes, lighting-modes]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Blend modes and lit translucency
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-blend-modes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lit-translucency-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
+    checklist:
+      - "Create M_Blend_Test with a colored Base Color. Place four spheres in front of a wall, each with a Material Instance of it."
+      - "Set the first instance's parent Blend Mode to Masked. Plug a striped texture into Opacity Mask and try two Opacity Mask Clip Values."
+      - "Duplicate the material as M_Blend_Translucent. Set Blend Mode to Translucent and plug a gradient into Opacity."
+      - "Duplicate again as M_Blend_Additive (Additive) and M_Blend_Modulate (Modulate, Unlit, color into Emissive). Overlap two spheres and look at the overlap."
+      - "On M_Blend_Translucent, open Translucency in the Details panel. Compare Lighting Mode Volumetric NonDirectional, Surface TranslucencyVolume and Surface ForwardShading with a Point Light nearby."
+      - "Take one screenshot with all four blend modes visible and one with the three lighting modes side by side."
+    done_when: "Two screenshots: the four blend modes labeled, and the three translucency lighting modes labeled, with one line saying which mode showed a specular highlight."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Opacity Mask Clip Value do in a Masked material?"
+        choices: ["It sets the cutoff: mask values darker than it are not rendered", "It blurs the mask", "It sets how transparent the material is", "It controls the refraction"]
+        answer_index: 0
+        explain: "Masked is on/off. Pixels whose mask value is below the Opacity Mask Clip Value are discarded. There are no in-between levels."
+      - q: "A translucent gradient sphere: what does black in the Opacity input mean?"
+        choices: ["Fully opaque", "Fully transparent", "Half transparent", "Not rendered and no reflections"]
+        answer_index: 1
+        explain: "In Translucent mode, black areas of Opacity are fully transparent, white areas are fully opaque, and grays are in between."
+      - q: "Two Additive spheres overlap. What do you see in the overlap?"
+        choices: ["It gets darker", "It disappears", "It gets brighter, because pixel values are added", "It turns gray"]
+        answer_index: 2
+        explain: "Additive adds the material's pixels to the background. Overlaps are brighter and black renders as transparent. Modulate multiplies and darkens instead."
+      - q: "Why can Masked be cheaper than Translucent for a fence?"
+        choices: ["Masked uses fewer textures", "Masked pixels that are cut are not drawn or calculated at all", "Masked disables lighting", "Masked has no Opacity input"]
+        answer_index: 1
+        explain: "Culled masked pixels simply do not draw, so nothing is calculated for them. But they also show no reflections in those areas."
+      - q: "You need specular highlights from a Point Light on a translucent surface. Which Lighting Mode gives them?"
+        choices: ["Volumetric NonDirectional", "Volumetric PerVertex NonDirectional", "Surface TranslucencyVolume", "Surface ForwardShading"]
+        answer_index: 3
+        explain: "Surface ForwardShading computes each light per pixel, so specular highlights from local lights are supported. It is also the most expensive mode."
+      - q: "Which Lighting Mode is the cheapest per pixel and meant for smoke and dust?"
+        choices: ["Volumetric NonDirectional", "Surface ForwardShading", "Surface TranslucencyVolume", "Thin Translucent"]
+        answer_index: 0
+        explain: "Volumetric NonDirectional lights a volume without direction and ignores the material normal. It is the cheapest per-pixel method."
+    flavors:
+      _default: {why: "Blend mode and lighting mode decide what a see-through material can do and what it costs."}
+      lookdev: {why: "Glass, water, fog cards and holograms all start with the right blend and lighting mode.", do: "Try AlphaComposite on the additive sphere against a bright sky and note the difference."}
+      tech_art: {why: "Translucency lighting modes are a big cost lever. Know the cheap ones."}
+      level_design: {why: "Fences and grates should be Masked, not Translucent, unless you need reflections."}
+
+  - id: EAQ58
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [materials, glass, refraction, fresnel, translucency]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Glass with refraction
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-refraction-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lit-translucency-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-fresnel-in-your-unreal-engine-materials"
+    checklist:
+      - "Create M_Glass. Set Blend Mode to Translucent and Translucency > Lighting Mode to Surface TranslucencyVolume so the Refraction pin appears."
+      - "Add a Scalar Parameter Opacity (0.3) into Opacity and a Scalar Parameter IOR (1.52). Use a Fresnel node to Lerp between 1.0 (center) and IOR (edges) into Refraction."
+      - "Create MI_Glass and apply it to a sphere in front of a textured wall. Try IOR 1.0, 1.33, 1.52 and 2.42 and screenshot each."
+      - "Add a Normal Map texture parameter (T_Water_N from Starter Content works) into Normal and see how the refraction breaks up."
+      - "Find Refraction Depth Bias in the material Details and try a small value while looking at a close object through the glass."
+      - "Optional: duplicate as M_Glass_Thin with Shading Model Thin Translucent and Lighting Mode Surface ForwardShading. Compare the highlights."
+    done_when: "Four screenshots of the sphere with IOR 1.0, 1.33, 1.52 and 2.42 labeled, plus one with the normal map on."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which IOR value does the page give for glass?"
+        choices: ["1.00", "1.33", "1.52", "2.42"]
+        answer_index: 2
+        explain: "Glass is 1.52. Water is 1.33, air is 1.00, diamond is 2.42. Use real values for realism."
+      - q: "The Refraction pin is greyed out on the main material node. What two settings enable it?"
+        choices: ["Blend Mode Translucent and Lighting Mode Surface TranslucencyVolume", "Blend Mode Masked and Two Sided", "Shading Model Unlit and Blend Mode Additive", "Blend Mode Opaque and a Fresnel node"]
+        answer_index: 0
+        explain: "The tutorial changes Blend Mode to Translucent and the Lighting Mode from Volumetric NonDirectional to Surface TranslucencyVolume. That enables the Refraction input."
+      - q: "Why does the tutorial use a Fresnel node to drive refraction?"
+        choices: ["To make the glass darker", "Because glass refracts little when viewed straight on and more at glancing angles", "To disable refraction on mobile", "To add roughness"]
+        answer_index: 1
+        explain: "Fresnel blends the constant at the center of the sphere with the IOR at the edges, so refraction is strongest where the surface curves away from the camera."
+      - q: "What is Refraction Depth Bias for?"
+        choices: ["Making refraction stronger", "Changing the IOR by distance", "Preventing closer objects from rendering into the distorted surface at sharp viewing angles", "Enabling Thin Translucent"]
+        answer_index: 2
+        explain: "The depth bias stops nearby objects from being pulled into the refraction at acute angles, at the cost of a disconnect between the surface and where refraction starts."
+      - q: "What does adding a normal map to the refractive material do?"
+        choices: ["Nothing, refraction ignores normals", "It bends the refraction following the normal detail", "It turns the material opaque", "It changes the IOR value"]
+        answer_index: 1
+        explain: "The normal map changes the refraction wherever it has detail. Panning two normal maps is how the page builds moving water or heat haze."
+      - q: "For a Thin Translucent glass, which Lighting Mode does the page require?"
+        choices: ["Volumetric Directional", "Surface TranslucencyVolume", "Volumetric PerVertex NonDirectional", "Surface ForwardShading"]
+        answer_index: 3
+        explain: "Thin Translucent needs Blend Mode Translucent, Shading Model Thin Translucent and Lighting Mode Surface ForwardShading. It gives white specular highlights and tints the background."
+    flavors:
+      _default: {why: "Glass is the first material where the camera angle changes what you see. Refraction and Fresnel make it read."}
+      lookdev: {why: "Windows, bottles and water all use this same Fresnel-driven refraction setup.", do: "Add two panned normal maps blended with a Lerp to make the surface move like water."}
+      tech_art: {why: "Refraction adds a distortion pass; keep the material simple and the IOR real."}
+      cinematics: {why: "A glass prop in the foreground of a shot needs correct IOR or the edges look wrong."}
+
+  - id: EAQ59
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [materials, substrate, slab, pbr]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Substrate awareness
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/substrate-materials-in-unreal-engine"
+    checklist:
+      - "Open Project Settings > Rendering and check whether Substrate materials is enabled in your project. Write down what you found and the GBuffer Format."
+      - "Create M_Substrate_Test. If Substrate is on, add a Substrate Slab node and connect it to the Front Material input on the root node."
+      - "Set Diffuse Albedo to a color, F0 to 0.04 (a plastic) and Roughness 0.3. Apply to a sphere."
+      - "Duplicate the material, set F0 to a bright color (a metal) and Diffuse Albedo to black. Apply to a second sphere and compare."
+      - "Open any old non-Substrate material, right-click the root node and read the Convert to Substrate option. Do NOT convert a shared material; use a copy."
+      - "Write two lines: what a Slab is made of, and what happens to a converted material if Substrate is turned off."
+    done_when: "Screenshot of the M_Substrate_Test graph with the Slab connected to Front Material, the two spheres side by side, and the two lines from the last step."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "A new project is created in UE 5.7 or later. Is Substrate on?"
+        choices: ["No, it must always be enabled manually", "Yes, Substrate is enabled by default for new projects", "Only on consoles", "Only in the Automotive template"]
+        answer_index: 1
+        explain: "Substrate is on by default for new projects. Existing projects that upgrade keep the non-Substrate path unless they opt in from Project Settings > Rendering and restart."
+      - q: "What must every Substrate material graph connect to?"
+        choices: ["The Base Color input", "The Emissive input", "The Front Material input on the root node", "A Material Attributes node"]
+        answer_index: 2
+        explain: "All Substrate graphs end at the Front Material input on the Material Root node."
+      - q: "A Substrate Slab is described as two parts. Which two?"
+        choices: ["An interface and a medium", "A base color and a normal", "A diffuse layer and a specular layer", "A front face and a back face"]
+        answer_index: 0
+        explain: "The interface is where light meets the surface (Roughness, Normal, F0, F90, Diffuse Albedo). The medium is the matter below, where light scatters and is absorbed (Mean Free Path, Diffuse Albedo)."
+      - q: "You converted a material with Convert to Substrate. Which statement is true?"
+        choices: ["You can undo it any time from the same menu", "The conversion is permanent and the material no longer works in non-Substrate projects", "It only changes the preview", "It deletes the old inputs"]
+        answer_index: 1
+        explain: "Explicit conversion is permanent and cannot be reverted. Converted materials are not compatible with non-Substrate projects, and render black if Substrate is disabled."
+      - q: "A typical dielectric (non-metal) plastic should have which F0 value, in linear space?"
+        choices: ["Between 0.02 and 0.06", "Exactly 1.0", "Between 0.5 and 1.0", "Zero"]
+        answer_index: 0
+        explain: "Dielectrics have F0 around 0.02 to 0.06. Conductors (metals) go from about 0.5 up to 1. Gemstones can reach about 0.18."
+      - q: "Your project runs at 60Hz and needs predictable speed. Which GBuffer format does the page describe for that?"
+        choices: ["Adaptive GBuffer", "Blendable GBuffer", "High Precision Normals GBuffer", "DBuffer"]
+        answer_index: 1
+        explain: "Blendable GBuffer targets a fixed memory footprint and predictable speed for 60Hz projects. Adaptive GBuffer targets visual fidelity at a higher, content-dependent cost."
+    flavors:
+      _default: {why: "Substrate is the material system new projects use. Knowing Slab, F0 and the root input keeps you from being lost."}
+      lookdev: {why: "F0 and Diffuse Albedo replace Base Color, Specular and Metallic. Learn the new words before you build a library.", do: "Read one of the Developer's Blog examples (Simple Dielectric) and rebuild it."}
+      tech_art: {why: "Conversion is one-way and the GBuffer format changes cost; the team needs one decision, not many."}
+      cinematics: {why: "Adaptive GBuffer is what the Automotive and Architectural templates use for fidelity."}
+
+  - id: EAQ60
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [textures, import, mipmaps, texture-editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Import a texture set the right way
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/textures-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
+    checklist:
+      - "Prepare three images for one surface (color, normal, roughness) at a power-of-two size such as 1024x1024. Save them as .png or .tga."
+      - "Also prepare one image at a non-power-of-two size, for example 1000x700."
+      - "Import all four with the Import button in the Content Browser, or drag them from your file explorer. Name them T_Wood_BC, T_Wood_N, T_Wood_R and T_Test_NPOT."
+      - "Double-click T_Wood_BC to open the Texture Asset Editor. Read Imported, Displayed, Max In-Game and Number of Mips in the Details panel."
+      - "Enable the Mip Level checkbox in the toolbar and step through the mips. Watch the Displayed size change."
+      - "Open T_Test_NPOT and check what Mip Gen Settings was set to at import. Write the value down."
+    done_when: "One screenshot of the Texture Asset Editor for T_Wood_BC with the texture information visible (Imported size and Number of Mips), plus one line saying what Mip Gen Settings T_Test_NPOT got at import."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which texture sizes can be mipmapped and streamed?"
+        choices: ["Any size, as long as it is under 8192", "Power-of-two sizes such as 512, 1024, 2048", "Only square sizes", "Only sizes that end in 00, such as 1000 or 2000"]
+        answer_index: 1
+        explain: "The Textures page says to use power-of-two sizes. They can be mipmapped and streamed. Non-power-of-two sizes are never streamed."
+      - q: "You import a 1000x700 image. What does Unreal do to its Mip Gen Settings?"
+        choices: ["It sets Mip Gen Settings to NoMipMaps automatically", "It resizes the image to 1024x1024", "It refuses to import the image", "It sets Mip Gen Settings to Sharpen"]
+        answer_index: 0
+        explain: "Non-power-of-two textures get Mip Gen Settings set to NoMipMaps at import. You can change it later in the Texture Asset Editor."
+      - q: "How many mip levels does a 1024x1024 texture get?"
+        choices: ["Four", "Twenty", "Ten", "One"]
+        answer_index: 2
+        explain: "Each mip halves the resolution. The Texture Asset Editor page says a 1024x1024 texture has ten mip levels and a 4096x4096 texture has twelve."
+      - q: "Which file type is NOT in the list of supported image formats for import?"
+        choices: [".tga", ".exr", ".psd", ".svg"]
+        answer_index: 3
+        explain: "The supported list includes .bmp, .float, .jpeg, .jpg, .pcx, .png, .psd, .tga, .dds, .exr, .tif and .tiff. Vector formats like .svg are not on it."
+      - q: "In the Texture Asset Editor, what does Max In-Game tell you?"
+        choices: ["The size of the source file on disk", "The largest size the texture can be in the game, which is never larger than the imported size", "The number of mips that stream", "The size of the checkered background"]
+        answer_index: 1
+        explain: "Max In-Game is the maximum size while in game. It cannot be larger than the imported size, but it can be smaller because of texture settings."
+      - q: "Why do textures use mip maps?"
+        choices: ["To make the texture brighter", "To add an alpha channel", "To reduce aliasing at a distance by using lower resolution versions", "To turn on texture streaming for non-power-of-two sizes"]
+        answer_index: 2
+        explain: "Mip mapping downscales the texture step by step. Far away surfaces use smaller mips, which reduces aliasing and saves rendering time."
+    flavors:
+      _default: {why: "Every material starts with a texture. Importing it wrong costs memory and makes far surfaces shimmer."}
+      environment_art: {why: "A clean import habit means your whole texture library streams and mips correctly.", do: "Set the Texture Group for each of the three textures to match its use (World, WorldNormalMap)."}
+      tech_art: {why: "Import rules are the first place a pipeline breaks.", do: "Note which Details fields you would check in an automated import validator."}
+
+  - id: EAQ61
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [textures, compression, oodle, memory]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Pick the right compression
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-format-support-and-settings-in-unreal-engine"
+    checklist:
+      - "Open T_Wood_BC (or any color texture) in the Texture Asset Editor. Find the Compression category in the Details panel."
+      - "Note the Compression Settings value and the Format shown in the texture information at the top. Write down the Resource Size."
+      - "Open a packed mask texture (or import one) and change Compression Settings to BC7. Compare Resource Size before and after."
+      - "Open the Oodle panel. Enable On-disk Sizes and read Uncompressed Size and Compressed Size (Estimate)."
+      - "In the Oodle panel, enable Try Encodings and test RDO Lambda values 0, 30 and 100. Look for artifacts in the viewport."
+      - "Open Project Settings > Engine > Texture Encoding and find the Fast and Final settings. Do not change them."
+    done_when: "One screenshot of the Oodle panel with On-disk Sizes enabled, plus a short table (two lines are enough) with Resource Size for BC1/AutoDXT and BC7 on the same texture."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "A texture holds four unrelated masks, one in each channel, and looks blocky with default DXT compression. Which format does Epic suggest?"
+        choices: ["BC7, because it is higher quality for images that do not encode well in BC1", "HDR Compressed (BC6)", "Uncompressed RGBA16F", "Grayscale"]
+        answer_index: 0
+        explain: "The page says BC7 is higher quality than BC1 and is a good choice for images such as unrelated masks packed into channels. It costs about twice the bytes of BC1 for RGB."
+      - q: "How much smaller is HDR Compressed (BC6H) in GPU memory compared to uncompressed HDR (RGBA16F)?"
+        choices: ["The same size", "2x smaller", "8x smaller", "100x smaller"]
+        answer_index: 2
+        explain: "The page recommends BC6H instead of RGBA16F because it is 8x smaller in GPU memory and still high quality."
+      - q: "When you import a new texture in the editor, which encode does it get by default?"
+        choices: ["Final RDO encode", "Fast non-RDO encode", "No encode until you package", "ASTC encode"]
+        answer_index: 1
+        explain: "Newly imported textures are encoded with the Fast non-RDO option for speed. Final RDO encoding is used for cooking."
+      - q: "In the Oodle Try Encodings section, what does RDO Lambda 0 mean?"
+        choices: ["Smallest file size", "Maximum quality loss", "The texture is not compressed at all on the GPU", "RDO is disabled"]
+        answer_index: 3
+        explain: "The page says 0 disables RDO entirely, 1 gives the largest file size and 100 the smallest."
+      - q: "What does a Maximum Texture Size of 0 mean?"
+        choices: ["The texture is not rendered", "The texture is 1x1", "The maximum size for the format on each platform is used", "The texture is uncompressed"]
+        answer_index: 2
+        explain: "0 is the default. It means the maximum size for the format on each platform, not a real zero."
+      - q: "Where do you set the project-wide Fast and Final texture encoding options?"
+        choices: ["Editor Preferences > Texture Editor", "Project Settings > Engine > Texture Encoding", "The Oodle panel of each texture", "Project Settings > Packaging > Compression"]
+        answer_index: 1
+        explain: "The page says the Fast and Final settings for the project are found in Project Settings under Engine > Texture Encoding. The Oodle panel Try Encodings are not saved."
+    flavors:
+      _default: {why: "Textures are the biggest part of most projects. The right format saves memory and disk with no visible loss."}
+      environment_art: {why: "You will make hundreds of textures. A wrong default multiplies across all of them.", do: "Write a three-line rule for your project: color, normal and mask textures each get which Compression Setting."}
+      tech_art: {why: "RDO and format choices are pipeline policy, not per-artist taste.", do: "Read the Platforms panel for one texture and note how Size and Mips differ between two platforms."}
+
+  - id: EAQ62
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [normal-maps, textures, texture-editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Normal maps that point the right way
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-inputs-in-unreal-engine"
+    checklist:
+      - "Import a normal map named T_Brick_N and confirm its Compression Settings is set to Normalmap in the Texture Asset Editor."
+      - "Make a material M_NormalTest. Plug T_Brick_N into the Normal input and apply the material to a cube in a level with one directional light."
+      - "In the Texture Asset Editor, toggle Flip Green Channel on and off. Watch the cube. Note which setting makes bumps look raised, not sunken."
+      - "Enable Normalize after making Mips. Move the camera far from the cube and compare the surface with the setting off."
+      - "On a roughness texture, set Composite Texture to T_Brick_N and Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power 1 and 4."
+    done_when: "Two screenshots of the lit cube: one with Flip Green Channel off and one with it on. Say in one line which one is correct for your source normal map."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Your imported normal map makes bumps look like dents. Which Texture setting is made for this problem?"
+        choices: ["Flip Green Channel", "sRGB", "Compress without Alpha", "Preserve Border"]
+        answer_index: 0
+        explain: "Flip Green Channel inverts the green channel of the texture. The page says this is useful for some normal maps."
+      - q: "Which mip levels does Normalize after making Mips change?"
+        choices: ["Only the top mip level", "All mip levels equally", "Only the lower mip levels, not the top one", "No mip levels; it changes the material"]
+        answer_index: 2
+        explain: "The page says this setting does not affect the top mip level, only lower mip levels. It makes normal maps in the distance look sharper."
+      - q: "Why should normals be normalized before an encoding like BC5 drops components?"
+        choices: ["Because BC5 stores color", "Because blended normals in mips get shorter, and dropping components then loses detail so the surface looks flatter far away", "Because it makes the texture smaller on disk", "Because the top mip would otherwise be too sharp"]
+        answer_index: 1
+        explain: "When mips are made, normals are blended and become shorter (unnormalized). If you drop components without normalizing, the detail disappears in distant mips."
+      - q: "What is the Composite Texture setting used for?"
+        choices: ["To combine two color textures into one", "To flip the red channel", "To pack four masks into one texture", "To modify roughness based on the normal map variation, mostly from mip maps"]
+        answer_index: 3
+        explain: "Composite Texture can modify the roughness based on the normal map variation. The normal map should have at least as many mips as this texture."
+      - q: "What is the default Composite Power, and which values make the effect stronger?"
+        choices: ["Default 0; negative values are stronger", "Default 1; higher whole numbers like 2, 4, 8 are stronger", "Default 100; lower values are stronger", "Default 0.5; any decimal works"]
+        answer_index: 1
+        explain: "The page says the default is 1 and higher whole number values (1, 2, 4, 8) give a stronger effect. It is not a slider."
+      - q: "What does the Normal input on the main material node change?"
+        choices: ["The number of polygons on the mesh", "The color of the surface", "The position of the vertices", "The facing direction of each pixel, which gives the illusion of more detail"]
+        answer_index: 3
+        explain: "The Normal input takes a normal map that modifies the facing direction of each pixel. This gives the illusion of many more polygons than are rendered."
+    flavors:
+      _default: {why: "A normal map that points the wrong way makes every prop look wrong in every light."}
+      environment_art: {why: "Different tools export normal maps with different green channels. You need to know how to fix that in seconds.", do: "Write one line saying which green channel convention your main texturing tool uses."}
+      tech_art: {why: "Mip behavior of normal maps is a common cause of flat distant surfaces.", do: "Compare a far view of the cube with Normalize after making Mips on and off and report the difference."}
+
+  - id: EAQ63
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [decals, materials, set-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Decal materials, first look
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-materials-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
+    checklist:
+      - "Create M_Decal_Crack. In the Details panel set Material Domain to Deferred Decal and Blend Mode to Translucent."
+      - "Sample a crack or dirt texture. Plug its color into Base Color and its mask into Opacity. Optionally plug a normal map into Normal."
+      - "Place a Decal Actor from the Place Actors panel (Visual Effects category). Assign M_Decal_Crack to Decal Material and point the arrow at a wall."
+      - "Scale the Decal Actor with the non-uniform scale tool and watch the projection fade at the edges of the box."
+      - "Place a second decal that overlaps the first. Change Sort Order on one of them so it draws on top."
+      - "Put a Static Mesh inside the decal box and turn off Receives Decals on it. Confirm the decal no longer shows on that mesh."
+      - "Switch the viewport to the Shader Complexity view mode and look at the cost where the two decals overlap."
+    done_when: "One screenshot of the two overlapping decals on the wall (the Sort Order values visible in Details), and one screenshot of the same view in Shader Complexity."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which two settings define a decal material?"
+        choices: ["Material Domain Surface and Blend Mode Masked", "Material Domain Deferred Decal and Blend Mode Translucent or Alpha Composite", "Shading Model Unlit and Blend Mode Additive", "Material Domain Post Process and Blend Mode Opaque"]
+        answer_index: 1
+        explain: "Decal Materials use the Deferred Decal material domain with the Translucent or Alpha Composite blend mode."
+      - q: "You set a decal material to the Modulate blend mode. What happens?"
+        choices: ["The material fails to compile", "The decal turns black", "It compiles, but the blend mode silently falls back to Translucent", "The decal is projected twice"]
+        answer_index: 2
+        explain: "Modulate is not supported with DBuffer decals. The material still compiles, but the Blend Mode falls back to Translucent."
+      - q: "Two decals overlap. How do you choose which one draws on top?"
+        choices: ["Set a higher Sort Order on the decal that should be on top", "Move it one unit closer to the wall", "Give it a larger Decal Size", "Set its Fade Duration to 0"]
+        answer_index: 0
+        explain: "Sort Order controls the render order. Higher values render later, so they appear on top of lower values."
+      - q: "A character walks through a Decal Actor box and gets the decal projected on it. What is the fix the page suggests?"
+        choices: ["Make the decal smaller", "Disable Receives Decals on the character mesh", "Set the Decal Response of the decal to None", "Change the decal to Alpha Composite"]
+        answer_index: 1
+        explain: "Static and skeletal meshes have a Receives Decals property. Turn it off on actors like moving characters so the volume does not affect them."
+      - q: "What is the default Decal Response of a material that receives decals?"
+        choices: ["None", "Color", "Normal Roughness", "Color Normal Roughness"]
+        answer_index: 3
+        explain: "All materials default to Color Normal Roughness, which applies all DBuffer channels. You can reduce it to only the channels a surface needs."
+      - q: "What decides the performance cost of a Decal Actor?"
+        choices: ["The polygon count of the meshes under it", "The shader complexity and the size of the decal box on screen", "The number of lights in the level", "The texture import size only"]
+        answer_index: 1
+        explain: "The Decal Actors page says mesh complexity does not matter. Cost depends on shader complexity and the size of the box on screen, which you can check with the ShaderComplexity view mode."
+    flavors:
+      _default: {why: "Decals break up repeated textures and add damage and dirt without new geometry."}
+      environment_art: {why: "Most of the grime and wear you see in a level is decals, not unique textures.", do: "Make a Material Instance of M_Decal_Crack and use the Decal Color property on the actor to tint one copy."}
+      level_design: {why: "Decals are the fastest way to mark a path or a point of interest on a blockout.", do: "Place three decals that guide the player along one route."}
+
+  - id: EAQ64
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [texture-streaming, performance, console-commands, view-modes]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Watch the texture streamer work
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-overview-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-metrics-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/building-texture-streaming-data-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-configuration-in-unreal-engine"
+    checklist:
+      - "Open a level with several textured props. Click the dropdown next to the Build button and run Build Texture Streaming."
+      - "Play in editor, open the console and type STAT STREAMING. Read Texture Pool, Streaming Pool and Wanted Mips."
+      - "Walk close to a prop and then far away. Watch Visible Mips and Cached Mips change."
+      - "Stop playing. In the viewport View Mode menu, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any red or green meshes."
+      - "Type r.Streaming.PoolSize 50 in the console, play again and look for blurry textures. Then restore the value you had before."
+      - "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it; just note where it is."
+    done_when: "One screenshot of STAT STREAMING on screen during play, plus one screenshot of the Primitive Distance Accuracy view mode with a short line about what the colors on your meshes mean."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "The streaming pool is too small for the ideal resolution of every texture. What does the streamer do?"
+        choices: ["It turns off texture streaming", "It reduces planned quality for selected textures, dropping one mip at a time until it fits the budget", "It deletes textures from the project", "It stops rendering distant objects"]
+        answer_index: 1
+        explain: "The overview says the streamer drops one mip at a time on selected textures until the planned solution is under budget."
+      - q: "Which textures does the streamer try to keep first when dropping mips?"
+        choices: ["The largest textures", "UI textures only", "Landscape textures, forced load textures and textures that are already missing resolution", "Textures that were seen longest ago"]
+        answer_index: 2
+        explain: "The retention priority keeps landscape, forced load and already-reduced textures first, then visible mips, then character and small textures. Non-visible mips are dropped first."
+      - q: "Which console command shows texture streaming performance and memory stats?"
+        choices: ["STAT STREAMING", "STAT TEXTURES", "SHOW STREAMING", "r.Streaming.Show"]
+        answer_index: 0
+        explain: "The metrics page says to profile texture streaming with STAT STREAMING, for example STAT STREAMING sortby=name."
+      - q: "What happens when r.TextureStreaming is disabled?"
+        choices: ["Textures render at the lowest mip", "All texture mips are fully loaded in memory, even for textures never used for rendering", "Only visible mips are loaded", "The texture pool becomes zero"]
+        answer_index: 1
+        explain: "The configuration page says that with the streamer disabled all mips are fully loaded, even if a texture is never rendered."
+      - q: "In the texture streaming accuracy view modes, what does red mean?"
+        choices: ["Good data", "One extra mip", "Two or more mips missing", "The material is unsupported"]
+        answer_index: 2
+        explain: "The legend is: red 2X+ mips missing, yellow 1 mip missing, white good, cyan 1 extra mip, green 2X+ extra mips."
+      - q: "What does r.Streaming.PoolSize 0 do?"
+        choices: ["Disables all textures", "Sets the pool to 1 MB", "Forces every texture to Never Stream", "Makes the pool size unlimited"]
+        answer_index: 3
+        explain: "The configuration page says the pool size is in MB and when set to 0 the pool size is unlimited."
+    flavors:
+      _default: {why: "Blurry textures in a shipped game are almost always a streaming budget problem. Learn to see it early."}
+      environment_art: {why: "Your texture choices decide how much of the streaming pool a scene needs.", do: "Find the one prop in your level that needs the most texture memory and write down its texture sizes."}
+      tech_art: {why: "Streaming data and pool size are tuned by tech art on most teams.", do: "Try r.Streaming.DropMips 2 and describe what changed in the Required Texture Resolution view mode."}
+
+  - id: EAQ65
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [materials, detail-textures, tiling, uvs]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Detail textures for close-ups
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/adding-detail-textures-to-unreal-engine-materials"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coordinates-material-expressions-in-unreal-engine"
+    checklist:
+      - "Create M_DetailWall in a project that has the Starter Content. Drag in T_Brick_Clay_Old_D, T_Brick_Clay_Old_N, T_Ground_Gravel_D and T_Ground_Moss_N."
+      - "Add the DetailTexturing material function (Misc category). Right-click the gravel and moss textures and choose Convert To Texture Object."
+      - "Connect the brick textures to Diffuse and Normal, the Texture Objects to DetailDiffuse and DetailNormal, and the outputs to Base Color and Normal."
+      - "Add Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, all set to 1. Connect them to the function."
+      - "Make a Material Instance MI_DetailWall. Try Scale 1, 5 and 10 and look at a wall from very close."
+      - "Add a TextureCoordinate node before the brick textures and set UTiling and VTiling to 2 to tile the base textures."
+    done_when: "Two close-up screenshots of the wall in the level: one with Scale 1 and one with Scale 10, and one screenshot of the M_DetailWall graph."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What type of input do the DetailDiffuse and DetailNormal pins of the DetailTexturing function accept?"
+        choices: ["A Texture Sample", "A Texture Object only", "A Vector3 color", "A Scalar Parameter"]
+        answer_index: 1
+        explain: "The page says these inputs can only accept a Texture Object. Right-click a Texture Sample and choose Convert To Texture Object."
+      - q: "You raise the Scale input from 1 to 10. What happens?"
+        choices: ["The detail texture tiles more times and looks finer", "The detail texture becomes larger and blurrier", "The base texture disappears", "The normal map is inverted"]
+        answer_index: 0
+        explain: "Bigger Scale numbers give more tiling. At 10 the detail texture tiles more times across the mesh and appears smaller and finer."
+      - q: "What is the performance trade-off of detail texturing?"
+        choices: ["It adds no cost", "It doubles the polygon count", "It can add two or more extra texture lookups to the material", "It disables mip maps"]
+        answer_index: 2
+        explain: "The conclusion says detail texturing can add two or more texture lookups, which can be a performance or memory issue, especially on mobile."
+      - q: "On a TextureCoordinate node, what does Coordinate Index 1 select?"
+        choices: ["The first UV channel", "The second UV channel", "The tiling amount", "The mirror mode"]
+        answer_index: 1
+        explain: "Coordinate Index picks the UV channel. 0 is the first channel and 1 is the second channel."
+      - q: "Where do you find the DetailTexturing node in the material context menu?"
+        choices: ["Under the Misc category as a Material Function", "Under Texture as a Texture Sample", "Under Parameters", "It must be downloaded from Fab"]
+        answer_index: 0
+        explain: "Search for detail texturing and click DetailTexturing under the Misc category. It is a Material Function that contains all the logic."
+      - q: "In the distance-based example, the blend happens at 512 units. How do you make it happen sooner?"
+        choices: ["Increase the Power constant", "Set Scale to 0", "Convert the textures back to Texture Samples", "Reduce the 512 value in the Constant plugged into the Divide node"]
+        answer_index: 3
+        explain: "The distance is controlled by the first Constant plugged into Divide. Reducing it from 512 to something smaller makes the transition occur sooner."
+    flavors:
+      _default: {why: "Players walk right up to walls. Detail textures keep surfaces sharp without giant base textures."}
+      environment_art: {why: "This is the cheapest way to make a 1K texture look like 4K up close.", do: "Also test the material on a floor and note whether the detail normal is too strong at grazing angles."}
+      tech_art: {why: "Detail texturing is a common master material feature you will maintain.", do: "Build the manual version from the page (without the function) and compare instruction counts."}
+
+  - id: EAQ66
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [virtual-textures, texture-streaming, materials]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Virtual textures, first look
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-texturing-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/streaming-virtual-texturing-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtime-virtual-texturing-in-unreal-engine"
+    checklist:
+      - "Read the table of Runtime Virtual Textures versus Streaming Virtual Textures on the Virtual Texturing page. Write one sentence for each."
+      - "Import a large power-of-two color texture (4096x4096 is enough) named T_Big_BC and use it in M_BigTest on a plane."
+      - "In the Content Browser, right-click T_Big_BC and choose Convert to Virtual Texture. Read the list of materials in the Convert To window and click Ok."
+      - "Open M_BigTest and confirm the Texture Sample now shows VT in its corner and uses a Virtual sampler type."
+      - "Play in editor. In the console type stat virtualtexturing, then r.VT.Borders 1. Move around and look at the grid. Turn it off with r.VT.Borders 0."
+    done_when: "One screenshot of the plane with r.VT.Borders 1 active and stat virtualtexturing on screen, plus your two sentences about RVT and SVT."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which virtual texturing method makes its texel data on the GPU at runtime?"
+        choices: ["Streaming Virtual Texturing", "Runtime Virtual Texturing", "Mip-based texture streaming", "UDIM"]
+        answer_index: 1
+        explain: "RVT texel data is generated by the GPU at runtime. SVT texel data is cooked and loaded from disk."
+      - q: "How does Streaming Virtual Texturing decide what to load?"
+        choices: ["It loads the full mip level of any texture on a visible object", "It loads all textures at startup", "It loads textures based on actor names", "It splits mips into small fixed-size tiles and loads only the tiles that visible pixels use"]
+        answer_index: 3
+        explain: "SVT splits all mip levels into fixed-size tiles. The GPU finds which tiles visible pixels touch and the CPU loads only those."
+      - q: "You enable Virtual Texture Streaming by hand on a texture and its material shows an error. What is the fix?"
+        choices: ["Change the Texture Sample's Sampler Type to a Virtual type such as Virtual Color", "Reimport the texture", "Set the texture to Never Stream", "Delete the material"]
+        answer_index: 0
+        explain: "A virtual texture needs a Virtual Sampler Type. The conversion menu does this for you; manual conversion does not."
+      - q: "What does r.VT.Borders 1 do?"
+        choices: ["Draws a mip visualization grid on materials that use streaming virtual textures", "Adds a border color to all textures", "Disables virtual texturing", "Increases the tile border size"]
+        answer_index: 0
+        explain: "The page says r.VT.Borders 1 draws a mip visualization grid on SVT materials and r.VT.Borders 0 hides it."
+      - q: "How does the cost of sampling a virtual texture compare to a regular texture?"
+        choices: ["It is always cheaper", "It is the same", "It is always more expensive, with at least two texture fetches plus some math", "It is free when Nanite is enabled"]
+        answer_index: 2
+        explain: "Virtual textures always cost more than a regular sample. Stacks that share the same UVs can be combined, up to 8, to save fetches."
+      - q: "What happens when you import an image that uses the UDIM naming convention?"
+        choices: ["Each image becomes a separate texture asset", "Unreal groups the images with the same base name and different four-digit numbers into a single Virtual Texture asset", "The import fails", "The images are merged into one 8K texture on disk"]
+        answer_index: 1
+        explain: "UE scans the folder for images with the same BaseName and a different four-digit coordinate and imports them as one Virtual Texture asset."
+    flavors:
+      _default: {why: "Virtual textures are how modern projects use huge textures without huge memory. Know when they help and what they cost."}
+      environment_art: {why: "Hero assets with 8K textures and UDIMs need SVT to fit in memory.", do: "Write down one asset in your project that would benefit from SVT and one that would not."}
+      tech_art: {why: "RVT is the base of most landscape material pipelines.", do: "Read the RVT Material Types table and note which type stores a normal in a BC5 texture."}
+
+  - id: EAQ67
+    rank: 1
+    difficulty: apprentice
+    track: environment-art
+    subjects: [fab, megascans, content, import]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Bring a Megascans surface in from Fab
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fab-window-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/quixel-bridge-plugin-for-unreal-engine"
+    checklist:
+      - "Open the Fab window with Window > Fab (in the Get Content section) or the Fab button next to Add+ in the Content Drawer. If it is missing, enable the Fab plugin in Edit > Plugins."
+      - "Open the Account menu > Fab settings. Under Megascans, read the Preferred Quality Tier and set it to Medium if it is not already."
+      - "Use the Price filter to show only free products and the product type panel to show surfaces. Pick one Quixel surface, open the preview and read its license and included formats."
+      - "Click Add to My Library. Then open My Library and click the + icon on the tile to download it into your project."
+      - "Find the new assets in the Content Browser. Open the material instance and note which textures it uses (color, normal, packed mask)."
+      - "Apply the surface to a plane or a cube in your level."
+    done_when: "One screenshot of the surface applied in the level plus one screenshot of the Content Browser showing the imported texture set."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Which two places open the Fab window in the editor?"
+        choices: ["Window > Fab, or the Fab button next to Add+ in the Content Drawer", "File > Import, or Edit > Plugins", "Build > Fab, or the Modes panel", "Tools > Fab, or the Level Blueprint"]
+        answer_index: 0
+        explain: "The page says to use the Window menu under Get Content, or the Fab button beside Add+ in the Content Drawer."
+      - q: "What is the default Megascans Preferred Quality Tier in Fab settings?"
+        choices: ["Low", "Medium", "High", "Raw"]
+        answer_index: 1
+        explain: "The options are Low, Medium, High and Raw. The page marks Medium as the default."
+      - q: "How do you get a free product from a Fab preview?"
+        choices: ["Click Buy now", "Drag the tile into the viewport", "Click Add to My Library", "Right-click and choose Import"]
+        answer_index: 2
+        explain: "For a free product you click Add to My Library. Buy now is for priced products and starts checkout."
+      - q: "Which products appear in the Fab window inside Unreal Engine?"
+        choices: ["Every product on Fab", "Only Quixel products", "Only products you already bought", "Only products usable by Unreal Engine"]
+        answer_index: 3
+        explain: "Only Fab products usable by Unreal Engine show in the Fab window. For other applications you use the Fab home page."
+      - q: "With the Quixel Bridge plugin, which folders does the first download create in your Content Browser?"
+        choices: ["Megascans and MSPresets", "Quixel and Fab", "Textures and Materials", "Bridge and Library"]
+        answer_index: 0
+        explain: "Megascans holds the assets and MSPresets holds the template master materials used to render them."
+      - q: "The Fab window is not in the Window menu. What do you do?"
+        choices: ["Reinstall the engine", "Go to Edit > Plugins, search for Fab and enable the Fab plugin", "Install the Fab desktop app", "Use the Epic Games Launcher instead; it cannot be fixed in the editor"]
+        answer_index: 1
+        explain: "The Fab window needs the Fab plugin, which is on by default. If it is missing, enable it in Edit > Plugins."
+    flavors:
+      _default: {why: "Scanned surfaces are the fastest way to get believable materials. Fab is how they enter Unreal now."}
+      environment_art: {why: "Knowing the quality tiers and the license before you download saves disk space and legal trouble.", do: "Compare the texture sizes of the same surface at the Medium and High tiers."}
+      level_design: {why: "Quick surfaces let you dress a blockout for a playtest in minutes.", do: "Apply the surface to your blockout floor and check it reads well from the play camera."}

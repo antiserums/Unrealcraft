@@ -357,3 +357,134 @@ Backup videos: none verified. Always `backup_url: TODO_URL` plus a `backup_searc
 | using-layered-animations-in-unreal-engine | Using Layered Animations |
 | working-with-modular-characters-in-unreal-engine | Working With Modular Characters |
 | working-with-plugins-in-unreal-engine | Working With Plugins |
+
+## Cinematics (checked 2026-09-29)
+| Slug | Page |
+|---|---|
+| animation-curve-editor-in-unreal-engine | Animation Curve Editor |
+| blend-gameplay-animation-to-cinematic-animation-in-unreal-engine | Blend Gameplay Animation To Cinematic Animation |
+| camera-jibs-and-dollies-in-unreal-engine | Camera Jibs And Dollies |
+| camera-shakes-in-unreal-engine | Camera Shakes |
+| cinematic-actor-tracks-in-unreal-engine | Cinematic Actor Tracks |
+| cinematic-animation-track-in-unreal-engine | Cinematic Animation Track |
+| cinematic-audio-track-in-unreal-engine | Cinematic Audio Track |
+| cinematic-camera-cut-track-in-unreal-engine | Cinematic Camera Cut Track |
+| cinematic-cameras-in-unreal-engine | Cinematic Cameras |
+| cinematic-depth-of-field-in-unreal-engine | Cinematic Depth Of Field |
+| cinematic-event-track-in-unreal-engine | Cinematic Event Track |
+| cinematic-render-passes-in-unreal-engine | Cinematic Render Passes |
+| cinematic-render-settings-and-formats-in-unreal-engine | Cinematic Render Settings And Formats |
+| cinematic-rendering-export-formats-in-unreal-engine | Cinematic Rendering Export Formats |
+| cinematic-rendering-image-quality-settings-in-unreal-engine | Cinematic Rendering Image Quality Settings |
+| cinematic-transform-and-property-tracks-in-unreal-engine | Cinematic Transform And Property Tracks |
+| cinematic-viewport-controls-in-unreal-engine | Cinematic Viewport Controls |
+| cinematic-workflow-tips-for-sequencer-in-unreal-engine | Cinematic Workflow Tips For Sequencer |
+| color-grading-and-the-filmic-tonemapper-in-unreal-engine | Color Grading And The Filmic Tonemapper |
+| color-management-with-opencolorio-in-unreal-engine | Color Management With Opencolorio |
+| controlling-a-virtual-camera-actor-using-live-link-in-unreal-engine | Controlling A Virtual Camera Actor Using Live Link |
+| creating-animation-keyframes-in-unreal-engine | Creating Animation Keyframes |
+| creating-camera-cuts-using-sequencer-in-unreal-engine | Creating Camera Cuts Using Sequencer |
+| dynamic-binding-in-sequencer | Dynamic Binding In Sequencer |
+| fire-blueprint-events-during-cinematics-in-unreal-engine | Fire Blueprint Events During Cinematics |
+| how-to-add-cinematic-animation-to-a-character-in-unreal-engine | How To Add Cinematic Animation To A Character |
+| how-to-animate-cinematic-cameras-in-unreal-engine | How To Animate Cinematic Cameras |
+| how-to-animate-lights-in-unreal-engine | How To Animate Lights |
+| how-to-make-movies-in-unreal-engine | How To Make Movies |
+| live-link-in-unreal-engine | Live Link |
+| movie-render-pipeline-in-unreal-engine | Movie Render Pipeline |
+| nne-denoiser-in-unreal-engine | Nne Denoiser |
+| organize-cinematic-tracks-in-unreal-engine | Organize Cinematic Tracks |
+| path-tracer-in-unreal-engine | Path Tracer |
+| play-cinematics-from-blueprints-in-unreal-engine | Play Cinematics From Blueprints |
+| record-gameplay-in-unreal-engine | Record Gameplay |
+| sequencer-blueprint-component-in-unreal-engine | Sequencer Blueprint Component |
+| sequencer-track-list-in-unreal-engine | Sequencer Track List |
+| sequences-shots-and-takes-in-unreal-engine | Sequences Shots And Takes |
+| spawn-temporary-actors-in-unreal-engine-cinematics | Spawn Temporary Actors Cinematics |
+| take-recorder-in-unreal-engine | Take Recorder |
+| template-sequences-in-unreal-engine | Template Sequences |
+| transitioning-to-the-movie-render-graph-from-movie-render-queue-in-unreal-engine | Transitioning To The Movie Render Graph From Movie Render Queue |
+| trigger-level-blueprint-events-from-sequencer-in-unreal-engine | Trigger Level Blueprint Events From Sequencer |
+| unreal-engine-sequencer-movie-tool-overview | Unreal Engine Sequencer Movie Tool Overview |
+| using-lighting-channels-in-unreal-engine | Using Lighting Channels |
+| using-lookup-tables-for-color-grading-in-unreal-engine | Using Lookup Tables For Color Grading |
+| virtual-cameras-in-unreal-engine | Virtual Cameras |
+| what-happens-when-my-cinematic-ends-in-unreal-engine | What Happens When My Cinematic Ends |
+
+## Level Design electives (checked 2026-09-29)
+| Slug | Page |
+|---|---|
+| 3d-text-actor-in-unreal-engine | 3D Text Actor |
+| actor-editor-context-in-unreal-engine | Actor Editor Context |
+| ai-debugging-in-unreal-engine | Ai Debugging |
+| behavior-tree-in-unreal-engine---quick-start-guide | Behavior Tree   Quick Start Guide |
+| blueprint-spline-component-property-reference-in-unreal-engine | Blueprint Spline Component Property Reference |
+| blueprint-spline-components-overview-in-unreal-engine | Blueprint Spline Components Overview |
+| blueprints-visual-scripting-editor-user-interface-for-level-blueprints-in-unreal-engine | Blueprints Visual Scripting Editor User Interface For Level Blueprints |
+| draw-spline-tool-in-unreal-engine | Draw Spline Tool |
+| dynamic-loading-range-scaling-in-unreal-engine | Dynamic Loading Range Scaling |
+| environment-query-system-overview-in-unreal-engine | Environment Query System Overview |
+| environment-query-testing-pawn-in-unreal-engine | Environment Query Testing Pawn |
+| eqs-node-reference-generators-in-unreal-engine | Eqs Node Reference Generators |
+| eqs-node-reference-tests-in-unreal-engine | Eqs Node Reference Tests |
+| geometry-scripting-through-blueprints-in-unreal-engine | Geometry Scripting Through Blueprints |
+| geometry-scripting-users-guide-in-unreal-engine | Geometry Scripting Users Guide |
+| ineditor-testing-play-and-simulate-in-unreal-engine | Ineditor Testing Play And Simulate |
+| landscape-edit-layers-in-unreal-engine | Landscape Edit Layers |
+| landscape-erosion-tool-in-unreal-engine | Landscape Erosion Tool |
+| landscape-flatten-tool-in-unreal-engine | Landscape Flatten Tool |
+| landscape-hydroerosion-tool-in-unreal-engine | Landscape Hydroerosion Tool |
+| landscape-ramp-tool-in-unreal-engine | Landscape Ramp Tool |
+| layers-panel-in-unreal-engine | Layers Panel |
+| level-blueprint-in-unreal-engine | Level Blueprint |
+| navigation-components-in-unreal-engine | Navigation Components |
+| navigation-mesh-settings-in-the-unreal-engine-project-settings | Navigation Mesh Settings In The Unreal Engine Project Settings |
+| one-file-per-actor-in-unreal-engine | One File Per Actor |
+| optimizing-navigation-mesh-generation-speed-in-unreal-engine | Optimizing Navigation Mesh Generation Speed |
+| overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine | Overview Of How To Modify The Navigation Mesh |
+| play-in-editor-multiplayer-options-in-unreal-engine | Play In Editor Multiplayer Options |
+| play-in-editor-settings-in-unreal-engine | Play In Editor Settings |
+| polygroup-edit-tool-reference-in-unreal-engine | Polygroup Edit Tool Reference |
+| simulating-waves-using-the-water-waves-asset-in-unreal-engine | Simulating Waves Using The Water Waves Asset |
+| sky-atmosphere-component-properties-in-unreal-engine | Sky Atmosphere Component Properties |
+| smart-objects-in-unreal-engine | Smart Objects |
+| smart-objects-in-unreal-engine---overview | Smart Objects   Overview |
+| target-point-actors-in-unreal-engine | Target Point Actors |
+| understanding-polygroups-in-unreal-engine | Understanding Polygroups |
+| using-editor-viewports-in-unreal-engine | Using Editor Viewports |
+| water-body-actors-in-unreal-engine | Water Body Actors |
+| working-with-meshes-in-unreal-engine | Working With Meshes |
+| world-partition---hierarchical-level-of-detail-in-unreal-engine | World Partition   Hierarchical Level Of Detail |
+
+## Environment Art electives (checked 2026-09-29)
+| Slug | Page |
+|---|---|
+| adding-detail-textures-to-unreal-engine-materials | Adding Detail Textures To Unreal Engine Materials |
+| boolean-tool-in-unreal-engine | Boolean Tool |
+| decal-materials-in-unreal-engine | Decal Materials |
+| fab-window-in-unreal-engine | Fab Window |
+| global-illumination-in-unreal-engine | Global Illumination |
+| importing-static-mesh-lods-using-fbx-in-unreal-engine | Importing Static Mesh Lods Using Fbx |
+| importing-static-meshes-using-fbx-in-unreal-engine | Importing Static Meshes Using Fbx |
+| lit-translucency-in-unreal-engine | Lit Translucency |
+| mesh-paint-mode-in-unreal-engine | Mesh Paint Mode |
+| mesh-paint-tool-reference-in-unreal-engine | Mesh Paint Tool Reference |
+| movable-light-mobility-in-unreal-engine | Movable Light Mobility |
+| planar-reflections-in-unreal-engine | Planar Reflections |
+| point-lights-in-unreal-engine | Point Lights |
+| quixel-bridge-plugin-for-unreal-engine | Quixel Bridge Plugin |
+| rectangular-area-lights-in-unreal-engine | Rectangular Area Lights |
+| reflections-captures-in-unreal-engine | Reflections Captures |
+| reflections-environment-in-unreal-engine | Reflections Environment |
+| screen-space-reflections-in-unreal-engine | Screen Space Reflections |
+| spot-lights-in-unreal-engine | Spot Lights |
+| static-light-mobility-in-unreal-engine | Static Light Mobility |
+| stationary-light-mobility-in-unreal-engine | Stationary Light Mobility |
+| streaming-virtual-texturing-in-unreal-engine | Streaming Virtual Texturing |
+| using-fresnel-in-your-unreal-engine-materials | Using Fresnel In Your Unreal Engine Materials |
+| using-light-functions-in-unreal-engine | Using Light Functions |
+| using-refraction-in-unreal-engine | Using Refraction |
+| using-uv-channels-with-static-meshes-in-unreal-engine | Using Uv Channels With Static Meshes |
+| uv-editor-in-unreal-engine | Uv Editor |
+| uvs-category-in-unreal-engine | Uvs Category |
+| virtual-texturing-in-unreal-engine | Virtual Texturing |

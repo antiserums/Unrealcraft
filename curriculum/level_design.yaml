@@ -1,0 +1,1841 @@
+# Unrealcraft — level_design major, all ranks. IDs LDQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: LDQ41
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [snapping, grid, viewport, blockout]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, lookdev]
+    required_spine: false
+    elective: true
+    title: Snap every block to the grid
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-snapping-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-controls-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Open a blockout level. In the Level Viewport toolbar, turn on the Drag Grid and set it to 100 units."
+      - "Place 6 cube meshes (SM_Cube or Modeling Mode Box) to make a room. Move them only with the grid on. No gaps."
+      - "Set the Rotation Grid to 90 degrees. Rotate one wall piece and check it lands exactly."
+      - "Select a prop, press End. Watch it drop to the floor (surface snapping)."
+      - "Turn on Surface Snapping with Rotate to Surface Normal. Drag a prop onto a sloped block and see it tilt."
+      - "Hold V and move one cube so its corner vertex snaps to a vertex of another cube."
+      - "Open Edit > Editor Preferences > Viewports > Snap. Turn on Use Power of Two Snap Size and look at the new grid sizes."
+    done_when: "One screenshot of your room with the viewport toolbar visible (Drag Grid and Rotation Grid highlighted), plus a second screenshot of the vertex-snapped cube corner."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which three kinds of snapping does the page list?"
+        choices: ["Grid, spline, and camera snapping", "Vertex, edge, and face snapping", "Surface, landscape, and light snapping", "Surface, grid, and vertex snapping"]
+        answer_index: 3
+        explain: "The page names surface snapping, grid snapping, and vertex snapping. Each one aligns an Actor in a different way."
+      - q: "You select an Actor and press the End key. What happens?"
+        choices: ["The Actor is deleted", "The Actor snaps to the nearest surface, for example the floor", "The Actor rotates 90 degrees", "The Actor resets its scale"]
+        answer_index: 1
+        explain: "End snaps the selected Actor to the nearest surface below it. This is a fast way to put props on the floor."
+      - q: "Which key do you hold to snap an object to a vertex of another mesh?"
+        choices: ["Shift", "Ctrl", "V", "Alt"]
+        answer_index: 2
+        explain: "Hold V while using the translation gizmo. The vertices you can snap to appear as soon as you move the object."
+      - q: "Where do you change the Drag Grid, Rotation Grid, and Scale Grid settings?"
+        choices: ["Project Settings > Rendering", "Edit > Editor Preferences > Viewports, in the Snap category", "Window > Layers", "World Settings > Grid"]
+        answer_index: 1
+        explain: "The page says to open Edit > Editor Preferences > Viewports and scroll down to the Snap category."
+      - q: "What does the option Use Power of Two Snap Size change?"
+        choices: ["It doubles the size of every Actor", "It limits rotation to 2 degrees", "It uses grid sizes like 1, 2, 4, 8, 16 instead of decimal sizes", "It turns off scale snapping"]
+        answer_index: 2
+        explain: "With this option the grid uses power-of-two sizes (1, 2, 4, 8, 16...) instead of decimal grid sizes."
+      - q: "With Surface Snapping on, what does Rotate to Surface Normal do?"
+        choices: ["The Actor rotates to match the surface it snaps to", "The Actor keeps its rotation but moves up", "The Actor rotates to face the camera", "The Actor rotates 180 degrees"]
+        answer_index: 0
+        explain: "Rotate to Surface Normal makes the Actor rotate to match the alignment of the surface it snaps to."
+    flavors:
+      _default: {why: "A blockout that sits on the grid is fast to edit and easy to measure."}
+      level_design: {why: "Grid discipline is what keeps your metrics (door width, step height) true across the whole level.", do: "Set the Drag Grid to your metric unit (for example 50 or 100) and build one corridor with zero off-grid pieces."}
+      gameplay_design: {why: "Snapped blocks make cover and jump distances repeatable, so tests give clean answers.", do: "Place two cover blocks exactly 400 units apart using the grid and note the distance in your writeup."}
+
+  - id: LDQ42
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [modeling-mode, cubegrid, blockout]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, lookdev]
+    required_spine: false
+    elective: true
+    title: CubeGrid blockout room
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cubegrid-tool-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-meshes-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Switch to Modeling Mode (Shift+5). If it is missing, enable the Modeling Tools Editor Mode plugin."
+      - "In the Create category, open CubeGrid. Click and drag to select a grid of cells for a floor."
+      - "Press E to pull the floor up one cell. Use Ctrl+Drag to pull walls up around the edge."
+      - "Press Ctrl+E to make the grid bigger and add one large platform. Press Ctrl+Q to make it smaller again for a set of steps."
+      - "Press Z to enter Corner Mode. Pull only two corners of a cell to make a ramp. Press Z again to apply."
+      - "Press R to show the grid gizmo and move it to a new position. Build a small second room there."
+      - "Set Output Type to Static Mesh, press Accept, and name the asset SM_Blockout_Room."
+    done_when: "Screenshot of the finished CubeGrid room in the viewport, with the Tool Properties panel showing Output Type: Static Mesh, and the asset SM_Blockout_Room visible in the Content Browser."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "In which Modeling Mode category do you find CubeGrid?"
+        choices: ["Model", "Create", "Xform", "Misc"]
+        answer_index: 1
+        explain: "CubeGrid is in the Create category, together with the primitive shapes and other tools that build new meshes."
+      - q: "Which hotkey pulls geometry out from the selected grid?"
+        choices: ["Q", "Z", "E", "R"]
+        answer_index: 2
+        explain: "E pulls geometry from the selected grid. Q pushes it in. You can also use Ctrl+Drag for both."
+      - q: "What does Ctrl+E do in CubeGrid?"
+        choices: ["Increases the grid size", "Exits the tool", "Extrudes all cells", "Enters Corner Mode"]
+        answer_index: 0
+        explain: "Ctrl+E increases the grid size and Ctrl+Q decreases it. Bigger cells are good for large shapes, small cells for detail."
+      - q: "You want to pull only some corners of a selected cell to make a slope. What do you press?"
+        choices: ["Shift+E", "Z, to enter Corner Mode", "Ctrl+Middle-Click", "Shift+Q"]
+        answer_index: 1
+        explain: "Z enters Corner Mode. You select corners, push or pull them, then press Z again to apply the change."
+      - q: "What does Ctrl+Middle-Click do?"
+        choices: ["Deletes the nearest cell", "Duplicates the mesh", "Moves the grid gizmo to the corner of the nearest cell", "Changes the output type"]
+        answer_index: 2
+        explain: "Ctrl+Middle-Click moves the grid gizmo to the corner of the nearest cell. The R key toggles the gizmo itself."
+      - q: "Which Output Types can CubeGrid produce?"
+        choices: ["Static mesh, skeletal mesh, landscape", "Brush, volume, foliage", "Static mesh only", "Static mesh, dynamic mesh, volume"]
+        answer_index: 3
+        explain: "When you finish, you can output a Static Mesh, a Dynamic Mesh, or a Volume."
+    flavors:
+      _default: {why: "CubeGrid lets you block a room in minutes without leaving the editor."}
+      level_design: {why: "Push and pull on a grid is the fastest way to test a space before any art exists.", do: "Build the room to your metrics: doors 2 cells wide, steps 1 cell high. Write the cell size you used."}
+      lookdev: {why: "A CubeGrid blockout gives you clean, gridded surfaces to test materials and light on.", do: "Apply one grey checker material to the finished mesh to check texel scale."}
+
+  - id: LDQ43
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [modeling-mode, polygroups, blockout]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Shape a block with PolyGroup Edit
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/polygroup-edit-tool-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/polygroup-edit-tool-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-polygroups-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "In Modeling Mode, use Create > Box to place a box. Set Output Type to Static Mesh and Accept."
+      - "Open the Model category and click PolyGroup Edit. Click the box to start editing."
+      - "In the Selection Filter, choose faces. Select the top face and run Extrude with Distance Mode set to Fixed, Distance 200."
+      - "Select one side face and run Inset, then Extrude it inward to make a doorway."
+      - "Switch the Selection Filter to edges. Select the top edges and run Bevel."
+      - "Use Shift+Click to add faces to a selection and Ctrl+Click to remove one. Then run Push Pull on the group."
+      - "Press Enter to accept. Save the mesh as SM_Blockout_Pillar."
+    done_when: "Screenshot of SM_Blockout_Pillar in the viewport with the doorway and the beveled top visible, and the PolyGroup Edit Tool Properties panel open."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "PolyGroup Edit is not available for a mesh when..."
+        choices: ["The mesh has more than one material", "The mesh has no PolyGroup information", "The mesh is a Static Mesh", "The mesh was made with CubeGrid"]
+        answer_index: 1
+        explain: "The tool needs PolyGroups. A mesh with no PolyGroup information cannot be edited with it; generate PolyGroups first."
+      - q: "Where are PolyGroups created automatically?"
+        choices: ["On predefined shapes from the Create category", "On every imported mesh", "Only on Nanite meshes", "Only on Landscape"]
+        answer_index: 0
+        explain: "Predefined shapes in the Create category get PolyGroups automatically. Other meshes need Paint PolyGroups, Generate PolyGroups, or Tri Select."
+      - q: "What are the three categories of PolyGroup Edit operations?"
+        choices: ["Vertex, Edge, and Normal Edits", "Face, Shape, and Edge Edits", "Cut, Merge, and Weld Edits", "UV, Material, and LOD Edits"]
+        answer_index: 1
+        explain: "The page groups operations into Face Edits, Shape Edits (the mesh as a whole), and Edge Edits."
+      - q: "You want to add faces to your current selection. What do you do?"
+        choices: ["Alt+Click", "Ctrl+Click", "Shift+Click", "Double-click"]
+        answer_index: 2
+        explain: "Shift+Click adds to the current selection. Ctrl+Click removes from it."
+      - q: "Marquee selection is selecting faces you cannot see. Which setting fixes this?"
+        choices: ["Turn on Show Wireframe", "Uncheck Marquee Ignore Occlusion", "Set Distance Mode to Fixed", "Lock the gizmo rotation"]
+        answer_index: 1
+        explain: "By default the marquee toggles all elements in the area, even hidden ones. Unchecking Marquee Ignore Occlusion stops that."
+      - q: "In Extrude, what does Distance Mode = Fixed do?"
+        choices: ["Extrudes along the world Z axis only", "Locks the mesh so it cannot be edited", "Extrudes until it hits another mesh", "Sets the extrusion height from a numerical Distance input"]
+        answer_index: 3
+        explain: "Fixed uses a number you type in (Distance). Click in Viewport instead uses mouse movement and a click to set the height."
+    flavors:
+      _default: {why: "Box modeling inside Unreal means you can fix a blockout shape without going to another program."}
+      level_design: {why: "Doorways, ledges, and ramps are quick face edits when you know Extrude, Inset, and Bevel.", do: "Add one ledge with a Fixed extrude equal to your crouch height metric."}
+      lookdev: {why: "Bevels on blockout edges catch light and show how a final asset may read.", do: "Compare a beveled and a sharp-edged pillar under one light and note the difference."}
+
+  - id: LDQ44
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [modeling-mode, splines, blockout, duplication]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, lookdev]
+    required_spine: false
+    elective: true
+    title: Blocks along a path
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/draw-spline-tool-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-tools-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "In Modeling Mode, open Create > Draw Spline. Set Output Mode to Empty Actor."
+      - "Set Draw Mode to Tangent Drag. Under Raycast Targets, keep only Ground Planes on. Draw a curved path with 5 points. Click without dragging at one point to make a sharp corner."
+      - "Press Enter to accept. Rename the actor in the Outliner to SplinePath_Main."
+      - "Draw a second spline with Draw Mode Free Draw and turn Loop on. Accept it and name it SplinePath_Loop."
+      - "Place one blockout cube next to the path. Open the Xform category, select the cube, and run the Pattern tool. Choose Line and tile 8 copies along the path direction."
+      - "Run Pattern again on a cube with Circle to make a ring of pillars around the loop. Accept."
+    done_when: "Screenshot of the viewport showing SplinePath_Main (with its sharp corner), SplinePath_Loop, the line of 8 cubes, and the ring of pillars; Outliner visible with the two spline actor names."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which Output Mode of Draw Spline creates a new actor that only holds a spline component?"
+        choices: ["Existing Actor", "Create Blueprint", "Empty Actor", "Mesh Spline"]
+        answer_index: 2
+        explain: "Empty Actor creates an empty actor with a spline component. Existing Actor attaches to an actor you pick, Create Blueprint spawns a chosen Blueprint."
+      - q: "In Tangent Drag mode, what happens if you click without dragging?"
+        choices: ["The spline is deleted", "A sharp corner is created at that point", "The tool exits", "The point gets an automatic smooth tangent"]
+        answer_index: 1
+        explain: "In Tangent Drag you drag to set the tangent. Clicking without dragging creates a sharp corner."
+      - q: "Which Draw Mode places many points with a freehand motion, spaced by Min Point Spacing?"
+        choices: ["Free Draw", "Click Auto Tangent", "Tangent Drag", "Loop"]
+        answer_index: 0
+        explain: "Free Draw places multiple points as you click and drag. Min Point Spacing controls the distance between them."
+      - q: "How many Raycast Targets must be enabled to draw a spline?"
+        choices: ["None, they are optional", "All three", "Exactly two", "At least one"]
+        answer_index: 3
+        explain: "The page says you must have at least one Raycast Target (World, Custom Plane, or Ground Planes) enabled to draw."
+      - q: "The Pattern tool (Xform category) tiles selected meshes along which shapes?"
+        choices: ["Spline, Arc, or Spiral", "Line, Grid, or Circle", "Row, Column, or Stack", "Path, Wall, or Ramp"]
+        answer_index: 1
+        explain: "The Modeling Tools page describes Pattern as tiling one or more selected meshes along a Line, Grid, or Circle on a movable 3D plane."
+      - q: "Your Blueprint actor has a slow construction script and dragging spline points lags. What does the page suggest?"
+        choices: ["Turn off Rerun Construction Script on Drag in advanced options", "Use Free Draw only", "Switch to a Static Mesh output", "Disable all Raycast Targets"]
+        answer_index: 0
+        explain: "For an expensive construction script, turn off Rerun Construction Script on Drag under advanced options so the script does not run on every drag."
+    flavors:
+      _default: {why: "Paths and repeated blocks are the fastest way to lay out corridors, fences, and colonnades."}
+      level_design: {why: "A spline shows the route your player takes; tiled blocks fill it without hand-placing each piece.", do: "Match the spline to your beat chart: one point per beat, and a pillar row at the big reveal."}
+      cinematics: {why: "The same spline tool can hold a camera path later, so learning it now pays twice.", do: "Draw one spline with Loop off that a camera could follow through the corridor."}
+
+  - id: LDQ45
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [level-instances, packed-level-actors, world-partition, organization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Level Instance or Packed Level Actor?
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/one-file-per-actor-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Build a small guard post from 5 to 8 blockout meshes plus one PlayerStart or trigger (anything that is not a Static Mesh)."
+      - "Select all of it, right-click > Level > Create Level Instance. Set Pivot Type to Center Min Z. Save it as LI_GuardPost."
+      - "Copy LI_GuardPost three times across the map. Edit one (right-click > Level > Edit), move a wall, then click Commit Changes in the Details panel. Check all copies changed."
+      - "Build a second kit of only Static Meshes (a bridge). Select it, right-click > Level > Create Packed Level Actor. Save as PLA_Bridge."
+      - "Place PLA_Bridge three times. Open its Blueprint from the Outliner Edit button and look at what it contains."
+      - "Write 3 lines: which one you would use for a repeated building, which for a gameplay setup, and why."
+    done_when: "Screenshot of the Outliner showing three LI_GuardPost and three PLA_Bridge actors, plus your 3-line writeup."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which type is recommended for static buildings and dense visual setups?"
+        choices: ["Level Instance", "Packed Level Blueprint (Packed Level Actor)", "Level Streaming Volume", "Data Layer"]
+        answer_index: 1
+        explain: "Packed Level Blueprints combine Static Mesh assets into one Blueprint Actor that is optimized for rendering. The page recommends them for static buildings."
+      - q: "How do you make a Level Instance from selected Actors?"
+        choices: ["Drag them into the Content Browser", "Press Ctrl+G", "Window > Levels > New", "Right-click one, then Level > Create Level Instance"]
+        answer_index: 3
+        explain: "Select the Actors, right-click one, go to the Level option, and choose Create Level Instance."
+      - q: "After editing a Level Instance in context, how do you save the change to all copies?"
+        choices: ["Press Esc twice", "Save the map only", "Select the Level Instance Actor and click Commit Changes in the Details panel", "Right-click > Break"]
+        answer_index: 2
+        explain: "Commit Changes saves the edit and it propagates to every copy. Pressing Esc twice leaves editing without committing."
+      - q: "What does Breaking a Level Instance do?"
+        choices: ["Deletes the Level Instance asset from the Content Browser", "Replaces the Level Instance Actor with the original Actors; it cannot be undone", "Hides the Level Instance", "Converts it to a Packed Level Actor"]
+        answer_index: 1
+        explain: "Break puts the original Actors back in the world and removes the instance actor. The asset stays in the Content Browser, but the operation cannot be undone."
+      - q: "Which Pivot Type puts the pivot at the center of the instance at its lowest Z?"
+        choices: ["Center Min Z", "Center", "Pivot Actor", "World Origin"]
+        answer_index: 0
+        explain: "Center Min Z places the pivot at the center and at the lowest Z value. That is useful for placing on floors."
+      - q: "In a World Partition world, what is the default runtime mode for Level Instances that use One File Per Actor?"
+        choices: ["Level Streaming Mode", "Embedded Mode", "Always Loaded", "Data Layer Mode"]
+        answer_index: 1
+        explain: "Embedded Mode is the default: OFPA instances are discarded at runtime and their Actors are added to the World Partition grid."
+    flavors:
+      _default: {why: "Repeating a setup as an instance means one edit fixes every copy."}
+      level_design: {why: "Guard posts, checkpoints, and bridges repeat across a map; instances keep them in sync.", do: "Put one gameplay Actor (trigger or spawn) in the Level Instance and confirm it still works in a copy."}
+      lookdev: {why: "Packed Level Actors are how big asset kits are rendered cheaply in City Sample style scenes.", do: "Count the Static Meshes in PLA_Bridge and note that they became one Blueprint Actor."}
+
+  - id: LDQ46
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [layers, organization, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Layers that hide the clutter
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/layers-panel-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-editor-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Open Window > Layers on a blockout level with at least two floors."
+      - "Select all blocks of floor 1. Right-click in the Layers panel and choose Add Selected Actors to New Layer. Rename it Floor_1."
+      - "Do the same for floor 2 (Floor_2). Then make an empty layer named Doors and drag every door block from the Outliner onto it."
+      - "Click the eye icon on Floor_2 to hide it. Take a screenshot of the clean top view of Floor_1."
+      - "Double-click the Doors layer to select all doors. Then right-click Floor_1 and choose Append Actors to Selection."
+      - "Press See Contents on Floor_1 and use the type buttons to select only the StaticMeshActors."
+    done_when: "Two screenshots: the Layers panel with Floor_1, Floor_2 (hidden) and Doors listed, and the layer contents view of Floor_1 showing the Actor type buttons."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "How many layers can one Actor belong to?"
+        choices: ["Exactly one", "One or two", "As many as you want", "None, layers hold levels not Actors"]
+        answer_index: 2
+        explain: "An Actor can be in as many layers as you want. The page gives the example of a zone layer plus a doors layer."
+      - q: "Which menu option makes a new layer from the Actors you selected?"
+        choices: ["Create Empty Layer", "Add Selected Actors to New Layer", "Select Actors", "Deselect Actors"]
+        answer_index: 1
+        explain: "Add Selected Actors to New Layer creates a layer and fills it with the current selection. Create Empty Layer makes an empty one."
+      - q: "What is the default name pattern for a new layer?"
+        choices: ["Layer[number]", "NewLayer", "Untitled", "The name of the first Actor"]
+        answer_index: 0
+        explain: "New layers are named Layer[number] with the number going up. The page says to always rename them with descriptive names."
+      - q: "How do you select all Actors in a layer, replacing the current selection?"
+        choices: ["Click the eye icon", "Drag the layer into the viewport", "Press Ctrl+A in the Layers panel", "Double-click the layer"]
+        answer_index: 3
+        explain: "Double-click the layer, or right-click it and choose Select Actors. Both replace the current selection."
+      - q: "You already have some Actors selected. Which option adds a layer's Actors without losing them?"
+        choices: ["Select Actors", "Append Actors to Selection", "Remove Selected Actors from Layers", "See Contents"]
+        answer_index: 1
+        explain: "Append Actors to Selection keeps your current selection and adds the layer's Actors to it."
+      - q: "In the Details panel, the Layers category shows which layers?"
+        choices: ["All layers in the level", "Only the layers common to all selected Actors", "Only hidden layers", "Only layers with Static Meshes"]
+        answer_index: 1
+        explain: "The Details Layers section only displays the layers that all selected Actors share."
+    flavors:
+      _default: {why: "Hiding what you are not working on makes big levels manageable."}
+      level_design: {why: "A layer per floor or per zone gives a clean top-down view for route checks.", do: "Make a Metrics layer that holds only your reference blocks (door, step, jump) and toggle it during review."}
+      lookdev: {why: "Layers let you hide props and see only structure when you judge light and composition.", do: "Make a Props layer and hide it to check the silhouette of the architecture alone."}
+
+  - id: LDQ47
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [outliner, organization, editor, search]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Outliner search and custom filters
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/outliner-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/advanced-search-syntax-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/filters-and-collections-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "In a blockout level, rename Actors with a clear prefix: Wall_, Floor_, Door_, Light_. Put them in Outliner folders with the same names."
+      - "Type Wall in the Outliner search. Then type Wall Door and note that fewer or no Actors show (all terms must match)."
+      - "Type -Light to hide all lights. Then type +Door and check that Door matches but DoorFrame does not."
+      - "Open the Filter drop-down and save your search as a custom filter named BlockoutWalls."
+      - "Right-click a column header and turn on one extra column (for example Type). Resize it."
+      - "Select an Actor in the viewport and press F with the Outliner focused; then do the same from the Outliner."
+      - "Open Window > Outliner and add a second Outliner instance with a different filter."
+    done_when: "Screenshot of the Outliner showing your folders, the extra column, and the Filter drop-down open with BlockoutWalls under Custom Filters."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "How many Outliner instances can you have open with separate settings?"
+        choices: ["One", "Two", "Up to four", "Unlimited"]
+        answer_index: 2
+        explain: "You can have up to four Outliner instances, each with its own settings. Switch with Window > Outliner or by right-clicking the tab."
+      - q: "You search for two words in the Outliner. Which Actors appear?"
+        choices: ["Actors that match either word", "Only Actors that match all the terms", "Only exact name matches", "All Actors, sorted by match"]
+        answer_index: 1
+        explain: "With more than one term, only Actors that match all the terms appear. A single term matches partially."
+      - q: "What does typing -Sky in the search box do?"
+        choices: ["Shows only Actors named Sky", "Excludes Actors that match Sky", "Selects the Sky Atmosphere", "Sorts Sky Actors first"]
+        answer_index: 1
+        explain: "The minus operator excludes Actors that match the term. -Sky hides everything with Sky in its name."
+      - q: "Which operator forces an exact match, so +Sky matches Sky but not Skylight?"
+        choices: ["-", "!", "+", "..."]
+        answer_index: 2
+        explain: "The plus operator forces an exact match instead of a partial match."
+      - q: "Where are custom filters saved?"
+        choices: ["In the level file", "In the Content folder", "Only for the current session", "Globally per user, available across projects"]
+        answer_index: 3
+        explain: "Custom filters are saved globally for each user, so they are available in all of that user's projects."
+      - q: "An Actor is selected in the Outliner. What does the F key do?"
+        choices: ["Focuses that Actor in the Viewport", "Freezes the Actor", "Creates a folder", "Opens the Actor's Blueprint"]
+        answer_index: 0
+        explain: "With an Actor selected in the Outliner, F focuses it in the Viewport. Selected in the Viewport, F scrolls the Outliner to it."
+    flavors:
+      _default: {why: "Finding the right Actor in one second is a big part of working fast."}
+      level_design: {why: "Clear names, folders, and saved filters let you jump between routes, doors, and triggers during a review.", do: "Save a custom filter that shows only your gameplay triggers and use it in your next playtest."}
+      gameplay_design: {why: "Filtering to spawns, triggers, and pickups shows the whole gameplay layer at once.", do: "Search +Trigger and count how many trigger volumes the level has."}
+
+  - id: LDQ48
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [geometry-script, blueprint, procedural, blockout]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, lookdev]
+    required_spine: false
+    elective: true
+    title: A box that cuts itself (Geometry Script)
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-through-blueprints-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-users-guide-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Edit > Plugins, search geometry script, enable Geometry Script, restart the editor."
+      - "Create a Blueprint Class from GeneratedDynamicMeshActor named BP_ProceduralGen."
+      - "In the Event Graph add Event On Rebuild Generated Mesh. Promote Target Mesh to a private variable DynamicMesh."
+      - "Add Append Box. Make a public Vector variable BoxSize (Instance Editable, Show 3D widget, default 200,200,200) and split it into the box dimensions."
+      - "Add Get Compute Mesh Pool > Request and Release Mesh > Append Cylinder. Promote to BoolMesh, then Apply Mesh Boolean with Operation Subtract and BoolMesh as Tool Mesh."
+      - "Add BoolLocation and BoolSize Vector widgets for the cylinder. Compile, drag BP_ProceduralGen into the level and drag the 3D widgets."
+      - "Create a Bake Static Mesh function with Call in Editor that uses Copy Mesh to Static Mesh into a TargetMesh variable."
+    done_when: "Screenshot of BP_ProceduralGen in the level with a visible cylinder hole, the 3D widgets shown, and the Details panel showing the Bake Static Mesh button."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which Blueprint parent class does the guide use for the procedural level tool?"
+        choices: ["Actor", "StaticMeshActor", "GeneratedDynamicMeshActor", "ProceduralMeshComponent"]
+        answer_index: 2
+        explain: "The guide uses GeneratedDynamicMeshActor. If it is missing from the list, the Geometry Script plugin is not enabled."
+      - q: "Which event rebuilds the mesh every time you change a parameter?"
+        choices: ["Event BeginPlay", "Event On Rebuild Generated Mesh", "Construction Script", "Event Tick"]
+        answer_index: 1
+        explain: "Event On Rebuild Generated Mesh triggers every time the Dynamic Mesh parameters change. It only exists on GeneratedDynamicMeshActor Blueprints."
+      - q: "In Apply Mesh Boolean, what is the Tool Mesh pin?"
+        choices: ["The mesh you cut with, for example the cylinder", "The mesh that receives the result", "A debug mesh", "The static mesh asset to bake into"]
+        answer_index: 0
+        explain: "Tool Mesh is the second mesh used for the boolean. Target Mesh is the mesh being edited, here the box."
+      - q: "Why does the guide use Request and Release Mesh from a mesh pool for the cylinder?"
+        choices: ["Because cylinders cannot be appended directly", "To get a temporary mesh and avoid extra geometry in the editor", "To make the mesh a Static Mesh asset", "To enable Nanite"]
+        answer_index: 1
+        explain: "A pooled temporary mesh avoids unnecessary geometry and is released automatically, which is cheaper than creating objects each time."
+      - q: "What setting makes the Bake Static Mesh function appear as a button in the Level Editor Details panel?"
+        choices: ["Pure", "Instance Editable", "Call in Editor", "Show 3D widget"]
+        answer_index: 2
+        explain: "Enabling Call in Editor on the function exposes it as a button in the Details panel."
+      - q: "How is a Dynamic Mesh different from a Static Mesh, according to the User Guide?"
+        choices: ["It is an asset shared by many components", "It supports Nanite but not raytracing", "It can only be edited in C++", "It is stored in the level only and is not an asset"]
+        answer_index: 3
+        explain: "A UDynamicMesh is not an asset; it is stored in the level, owned by its component. Duplicating the component copies the mesh."
+    flavors:
+      _default: {why: "A mesh that rebuilds from parameters is a blockout you can resize in seconds."}
+      level_design: {why: "Lyra's level design tools are built this way; one Blueprint gives you an editable wall, door, or platform.", do: "Add a second boolean cylinder so the box has two windows, and expose the spacing as a variable."}
+      gameplay_design: {why: "Parametric blocks let you tune cover height or gap width live while testing.", do: "Expose a Height float and test three values with a character jump."}
+
+  - id: LDQ49
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [landscape, sculpting, terrain]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: "Flatten, Ramp and Erosion"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-sculpt-mode-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-flatten-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-ramp-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-erosion-tool-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-hydroerosion-tool-in-unreal-engine"
+    checklist:
+      - "Open a level with a Landscape (or create a small one). Enter Landscape mode and select the Sculpt tab."
+      - "With the Sculpt tool, raise a hill. Hold Shift and drag to lower a valley next to it."
+      - "Select the Flatten tool. Set Flatten Mode to Raise and make a flat plateau on the hill side. Note that the higher parts do not change."
+      - "Select the Ramp tool. Click two points from the plateau down to the valley, set Ramp Width and Side Falloff, then click Add Ramp."
+      - "Select the Erosion tool. Lower the Threshold and paint the steep side of the hill. Watch how the steep side erodes faster."
+      - "Select the Hydro tool. Raise Rain Amount and paint a few strokes on the hill to add water channels."
+      - "Walk the ramp in Play In Editor to check it can be climbed."
+    done_when: "Two screenshots of the same hill: before and after. The after image must show the flat plateau, the ramp and the eroded slope. Add one line about which tool surprised you most."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "In Sculpt mode, what does Left Mouse Button + Shift do?"
+        choices: ["Smooths the terrain", "Lowers the terrain (subtractive stroke)", "Undoes the last stroke", "Selects a region"]
+        answer_index: 1
+        explain: "A normal stroke raises the terrain. Holding Shift makes the stroke subtractive, so it lowers the heightmap."
+      - q: "You set the Flatten tool to Flatten Mode: Raise and click a point on a slope. What happens to terrain that is higher than the clicked point?"
+        choices: ["It is left unchanged", "It is lowered to the clicked height", "It is smoothed", "It is deleted"]
+        answer_index: 0
+        explain: "In Raise mode, only values lower than the clicked height are raised. Values above the clicked point are left unchanged."
+      - q: "In the Ramp tool, what does a Side Falloff of 0 mean?"
+        choices: ["The ramp is all falloff, with no flat surface", "The ramp is invisible", "No falloff: the sides are hard edges", "The ramp is twice as wide"]
+        answer_index: 2
+        explain: "The page says 0 means no falloff and 1 means all falloff with no flat surface. A soft edge needs a value between them."
+      - q: "The Erosion tool has a Threshold setting. What does a smaller Threshold value do?"
+        choices: ["Less erosion is applied", "More erosion is applied", "The brush gets smaller", "The noise is turned off"]
+        answer_index: 1
+        explain: "Threshold is the minimum height difference needed for erosion. Smaller values mean more places qualify, so more erosion is applied."
+      - q: "Why did the steep back side of the mountain erode faster than the gentle front side in the Erosion tool example?"
+        choices: ["The brush was bigger on the back side", "Erosion only works on north-facing slopes", "The larger the difference in elevation, the more erosion occurs", "The back side had a different material"]
+        answer_index: 2
+        explain: "Thermal erosion moves soil from high to low. The bigger the height difference, the more erosion happens, so steep slopes erode more."
+      - q: "How is the Hydro Erosion tool different from the Erosion tool?"
+        choices: ["It simulates erosion by water, using rain and sediment settings", "It only raises the terrain", "It works on the weightmap, not the heightmap", "It needs the Landmass plugin"]
+        answer_index: 0
+        explain: "Hydro Erosion is a hydraulic simulation. Rain Amount and Sediment Capacity control how much water erodes the heightmap."
+    flavors:
+      _default: {why: "Hills and ramps made with the right tool read better and play better than ones made only with the Sculpt brush."}
+      level_design: {why: "Flatten and Ramp give you playable plateaus and slopes with exact widths. Erosion makes the blockout terrain look natural for free.", do: "Measure the ramp with your character. Note the Ramp Width you used and if the player can climb it."}
+      lookdev: {why: "Erosion and Hydro strokes add believable detail to a terrain before any material is painted."}
+      cinematics: {why: "A flattened plateau is a stable place for a camera or a set piece."}
+
+  - id: LDQ50
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [landscape, paint-layers, edit-layers]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: "Paint the ground: layers and weights"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-paint-mode-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-edit-layers-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-materials-in-unreal-engine"
+    checklist:
+      - "Use a Landscape with a Landscape Material that has at least two layers (for example Grass and Dirt). A template or sample material is fine."
+      - "Enter Landscape mode, Paint tab. In Target Layers, click the Plus icon next to each layer and create a Weight-Blended layer info object."
+      - "Select the Dirt layer and paint a path across the grass. Watch the grass go away where you paint."
+      - "Hold Ctrl+Shift and paint on the path. Note that you cannot fully remove the dirt this way."
+      - "Open the Layers section and add a new Edit Layer named PaintDetails. Select it and paint a second path there."
+      - "Toggle the eye icon on PaintDetails to hide and show your second path."
+      - "Turn on Lit > Visualizers > Layer Contribution and take a screenshot of the PaintDetails layer highlighted."
+    done_when: "One screenshot of the painted path and one screenshot of the Landscape panel showing your Target Layers with layer info objects and your PaintDetails edit layer."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where does the list of Target Layers in the Landscape panel come from?"
+        choices: ["From the layers defined in the Landscape Material", "From the Content Browser folder names", "From the Edit Layers you add", "From the Foliage panel"]
+        answer_index: 0
+        explain: "Each layer defined in the Landscape Material automatically appears in the Target Layers list with its name and thumbnail."
+      - q: "What is the main purpose of a Layer Info Object?"
+        choices: ["To store the heightmap", "To store the weightmap data for a painted layer", "To hold the material graph", "To store foliage instances"]
+        answer_index: 1
+        explain: "A layer info object stores the weightmap and other data for a layer. Every landscape layer must have one assigned."
+      - q: "You paint Mud on top of Grass. Both are weight-blended layers. What happens to the Grass?"
+        choices: ["Nothing; layers are independent", "The Grass layer is deleted", "The Grass becomes an orphaned layer", "The Grass weight goes down where you paint Mud"]
+        answer_index: 3
+        explain: "Painting a weight-blended layer decreases the weight of all other weight-blended layers. Painting mud removes grass, and painting grass removes mud."
+      - q: "Why can you not fully remove a weight-blended layer by painting with Ctrl+Shift?"
+        choices: ["Because Ctrl+Shift is the undo shortcut", "Because weight-blended layers are locked", "Because subtracting one layer uniformly raises the other layers, so some weight always remains", "Because the brush is too small"]
+        answer_index: 2
+        explain: "Ctrl+Shift lowers the selected layer and raises the others uniformly. The page recommends painting the layer you want in its place additively instead."
+      - q: "A layer in the Target Layers list shows a ? icon. What does that mean?"
+        choices: ["The layer has no texture", "The layer was removed from the material but still has painted data on the Landscape", "The layer is locked", "The layer is a non weight-blended layer"]
+        answer_index: 1
+        explain: "This is an orphaned layer. Its painted data stays until you delete the layer, so nothing is lost if the material change was a mistake."
+      - q: "By default, how many Edit Layers can a Landscape have, and where is this limit set?"
+        choices: ["8, in Project Settings under Landscape", "2, in the Landscape Material", "16, in World Settings", "Unlimited"]
+        answer_index: 0
+        explain: "The editor sets a limit of 8 edit layers by default. You can change it in Project Settings under Landscape: Max Number of Layers."
+    flavors:
+      _default: {why: "Paint layers show the player where to walk. A dirt path is one of the strongest guiding tools in an outdoor level."}
+      level_design: {why: "Painting the path on a separate edit layer lets you try guiding ideas and hide them without breaking the artist's work.", do: "Paint a second path option on another edit layer and compare both in a screenshot."}
+      lookdev: {why: "Understanding weight-blended layers explains why painting one material removes another."}
+
+  - id: LDQ51
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [water, splines, landscape]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: "River, lake and waves"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-body-actors-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/simulating-waves-using-the-water-waves-asset-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-system-in-unreal-engine"
+    checklist:
+      - "Enable the Water plugin (Edit > Plugins) and restart the editor. Use a Landscape with Enable Edit Layers checked."
+      - "From Place Actors, drag a Water Body Lake into a low area. Move its spline points to shape the lake and watch the terrain carve under it."
+      - "Drag a Water Body River from the lake up a slope. Give the spline points different heights so the river runs downhill into the lake."
+      - "Select a river spline point. Set its River Width, Depth and Velocity. Right-click the spline and enable Visualize Water Velocity."
+      - "In the Content Browser, right-click > Water > Water Waves to create WW_Calm. Lower Max Amplitude and set Num Waves to 8."
+      - "Assign WW_Calm to the lake in its Water Waves Asset slot. Compare the lake with the default asset."
+      - "Play In Editor and walk into the lake to see the underwater post-process."
+    done_when: "One screenshot of the river flowing into the lake with velocity arrows visible, and one screenshot of your WW_Calm asset editor with Num Waves and Max Amplitude visible."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which Water Body type allows its spline points to have different heights?"
+        choices: ["Lake", "Ocean", "River", "Island"]
+        answer_index: 2
+        explain: "Lakes and oceans keep all spline points at the same height. Rivers allow varying heights, so a river can run downhill."
+      - q: "How do rivers drive the motion of their water surface?"
+        choices: ["With Gerstner waves from the Water Waves asset", "With velocity values on the spline points, written to a flow map", "With a Niagara system", "They do not move"]
+        answer_index: 1
+        explain: "Rivers do not use waves. Each spline point has a velocity, and this is written to a flow map that moves the water along the spline."
+      - q: "A lake does not carve the landscape under it. What is the most likely cause?"
+        choices: ["The Landscape does not have Enable Edit Layers checked", "The lake needs more than 4 spline points", "The Water plugin has no terrain support", "The lake is too small"]
+        answer_index: 0
+        explain: "Water bodies carve terrain with a Landscape Brush. That brush only works when the Landscape has Enable Edit Layers checked."
+      - q: "From the ground you can see a gap between the end of your Ocean Water Body and the horizon. What fills it cheaply?"
+        choices: ["A second Ocean Water Body", "A bigger Cell Size", "The Far Distance Mesh of the Water Zone actor", "A Post Process Volume"]
+        answer_index: 2
+        explain: "The Water Zone actor has a Far Distance Mesh with a simple material. It fills the gap to the horizon at lower cost than the full water mesh."
+      - q: "What is the trade-off when you lower Num Waves in a Water Waves asset?"
+        choices: ["Better performance, but less variation in the waves", "The waves get taller", "Rivers stop flowing", "The lake stops carving terrain"]
+        answer_index: 0
+        explain: "By default 16 waves are summed. Fewer waves is more performant but gives less variation in how waves collide."
+      - q: "What is the purpose of an Island Water Body?"
+        choices: ["To render a small ocean", "To raise the landscape inside its spline so that land stays above water", "To block the player from swimming", "To add caustics"]
+        answer_index: 1
+        explain: "Islands only affect the landscape under them. Their terraforming is applied after all other water bodies to keep that land above water."
+    flavors:
+      _default: {why: "Water shapes the map. A river is a path, a lake is a barrier, and both tell the player where they are."}
+      level_design: {why: "Rivers and lakes carve the terrain for you, so you can block out routes and barriers fast, and the flow direction is a natural guide.", do: "Add a Water Body Island to keep a small piece of land above the lake as a goal for the player."}
+      lookdev: {why: "The Water Waves asset controls the macro look of the surface; the material handles the fine detail."}
+      cinematics: {why: "Calm and rough wave assets change the mood of a shot without touching lighting."}
+
+  - id: LDQ52
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [world-partition, streaming, open-world]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: "World Partition: load only what you need"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-partition-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/one-file-per-actor-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/dynamic-loading-range-scaling-in-unreal-engine"
+    checklist:
+      - "Create a new level with File > New Level > Open World. Save it as L_WP_Test."
+      - "Open Window > World Partition > World Partition Editor. Drag a region on the map, right-click and choose Load Region from Selection."
+      - "Place 10 cubes far apart in the loaded region. Select one cube and find the World Partition section in Details. Note Is Spatially Loaded."
+      - "Turn off Is Spatially Loaded on one cube and rename it Cube_AlwaysLoaded."
+      - "Open World Settings > World Partition Setup. Enable Preview Grids and write down the Cell Size and Loading Range."
+      - "Drag a Location Volume from Place Actors around your cubes and save. Find its region in the World Partition window."
+      - "Play In Editor and walk away from the cubes until they unload. Come back and see them load again."
+    done_when: "One screenshot of the World Partition window with your loaded region, and one screenshot of World Settings showing Cell Size and Loading Range. Add one line: which actor did you make always loaded and why."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is World Partition, in one sentence?"
+        choices: ["A tool that splits a map into many sublevel files by hand", "An automatic data management and distance-based streaming system that keeps the world in one persistent level split into grid cells", "A plugin for landscapes only", "A way to package the game"]
+        answer_index: 1
+        explain: "World Partition stores the world in a single persistent level, divides it into grid cells, and loads or unloads cells based on distance from a streaming source."
+      - q: "You turn off Is Spatially Loaded on a backdrop mountain actor. What does this mean?"
+        choices: ["The actor is never loaded", "The actor is loaded only when the player is close", "The actor is loaded regardless of distance, as long as it is not in a disabled Data Layer", "The actor is deleted at runtime"]
+        answer_index: 2
+        explain: "Non spatially loaded actors do not depend on distance. They load when not assigned to a disabled Data Layer, which is why they are used for backdrops and managers."
+      - q: "By default, what acts as a streaming source in a World Partition level?"
+        choices: ["Every Static Mesh", "Each Player Controller", "The Sky Light", "The Landscape"]
+        answer_index: 1
+        explain: "Each Player Controller is used as a streaming source through its Enable Streaming Source option, which is on by default."
+      - q: "In the World Settings example on the page, Cell Size is 256 m and Loading Range is 768 m. What does Loading Range control?"
+        choices: ["The size of one grid cell", "The draw distance of foliage", "The size of the minimap", "The range from a streaming source where cells are loaded"]
+        answer_index: 3
+        explain: "Cell Size is the size of each cell. Loading Range is the radius around a streaming source inside which cells are loaded."
+      - q: "You open a big World Partition level and the editor viewport is almost empty. Why?"
+        choices: ["The world starts unloaded; only actors with Is Spatially Loaded set to False are loaded, and you load regions yourself", "The level is broken", "The level needs a Lightmass build", "World Partition only works in Play In Editor"]
+        answer_index: 0
+        explain: "To support huge worlds, the level opens unloaded. Use the World Partition window or Location Volumes to load the regions you want to work in."
+      - q: "What is a Location Volume?"
+        choices: ["A trigger that teleports the player", "A runtime volume that blocks streaming", "An editor-only volume that appears as a named region in the World Partition window so you can load or unload it", "A volume that changes the Cell Size"]
+        answer_index: 2
+        explain: "A Location Volume is editor-only. After saving, its region appears in the World Partition window with the same name, ready to load or unload."
+    flavors:
+      _default: {why: "Big levels need streaming. Knowing what loads, when, and why keeps your open world running."}
+      level_design: {why: "You will spend hours in the World Partition window. Loading regions and choosing what is always loaded is daily work on open-world maps.", do: "Find a template map with World Partition enabled but Enable Streaming turned off, and write down which one it is."}
+      gameplay_design: {why: "If a trigger or manager unloads with distance, your gameplay breaks. Is Spatially Loaded is the fix."}
+      cinematics: {why: "A camera far from the player is not a streaming source by default; you may need a streaming source component."}
+
+  - id: LDQ53
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [data-layers, world-partition, organization]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: "Data Layers: two versions of one place"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-partition---data-layers-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-editor-context-in-unreal-engine"
+    checklist:
+      - "Open a World Partition level (the Open World template works). Open Window > World Partition > Data Layer Outliner."
+      - "In the Content Browser, right-click > Miscellaneous > Data Layer. Make two assets: DL_Blockout (type Editor) and DL_Ruins (type Runtime)."
+      - "Drag both assets into the Data Layer Outliner to create Data Layer Instances."
+      - "Select your blockout cubes, right-click DL_Blockout in the outliner and choose Add Selected Actors to Selected Data Layers."
+      - "Place a few ruin meshes on the same spot and add them to DL_Ruins. Set the DL_Ruins instance Initial Runtime State so it starts unloaded."
+      - "Toggle the eye icon on DL_Blockout to hide and show the blockout."
+      - "In the Level Blueprint, on a key press use Set Data Layer Instance Runtime State to set DL_Ruins to Activated. Test in Play In Editor."
+    done_when: "One screenshot of the Data Layer Outliner with both instances and their actors, plus a short clip or two screenshots in Play In Editor: before and after the key press."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is the difference between a Data Layer Asset and a Data Layer Instance?"
+        choices: ["They are the same thing with two names", "The Asset is project-level and not world specific; the Instance is world specific and created in the Data Layer Outliner", "The Asset is runtime only; the Instance is editor only", "The Instance lives in the Content Browser; the Asset lives in the level"]
+        answer_index: 1
+        explain: "Data Layer Assets exist at project level and can be made in the Content Browser. Data Layer Instances hold world-specific data and are made in the outliner."
+      - q: "You want to toggle a set of actors from a Blueprint during the game. Which Data Layer type do you need?"
+        choices: ["Editor", "Static", "Legacy", "Runtime"]
+        answer_index: 3
+        explain: "Editor Data Layers are for organization in the editor. Runtime Data Layers can be loaded or unloaded with Blueprints or C++ during play."
+      - q: "Where do you open the Data Layer Outliner?"
+        choices: ["Window > World Partition > Data Layer Outliner", "Edit > Project Settings > Data Layers", "Tools > Data Layers", "Build > Data Layers"]
+        answer_index: 0
+        explain: "The outliner lives under Window > World Partition. It shows all Data Layer Instances and lets you create new ones."
+      - q: "A Blueprint sets a Data Layer Instance runtime state to Loaded. What does the player see?"
+        choices: ["The actors are loaded and visible", "The actors are loaded but not visible; Activated makes them visible", "The actors are deleted", "Nothing changes until the level restarts"]
+        answer_index: 1
+        explain: "Loaded means the actors are in memory but not shown. Activated means loaded and visible. The page example uses both states."
+      - q: "What does Make Current Data Layer in the outliner context menu do?"
+        choices: ["Deletes the other layers", "Loads the layer at runtime", "Sets that layer as the Actor Editor Context, so new actors you add are assigned to it automatically", "Renames the layer"]
+        answer_index: 2
+        explain: "With a Data Layer set as Current, every actor you place is added to it. This saves manual assignment while you build."
+      - q: "The page warns about a performance risk with Data Layers. What is it?"
+        choices: ["Widely used assets on too many Runtime Data Layer Instances can degrade World Partition streaming", "Editor Data Layers slow down packaging", "Each Data Layer needs its own level file", "Data Layers disable HLODs"]
+        answer_index: 0
+        explain: "Loading too many assets at once through Data Layers can cause problems. Watch how many Runtime Data Layer Instances share widely used assets."
+    flavors:
+      _default: {why: "Data Layers let one map hold the blockout, the final art, and gameplay states side by side."}
+      level_design: {why: "Keeping your blockout on its own Editor Data Layer means you can compare it with the art at any time without deleting anything.", do: "Add a third Editor layer DL_Notes with Text Render actors that explain your intent, and hide it for screenshots."}
+      gameplay_design: {why: "Runtime Data Layers are a clean way to change the world after a quest step or a story beat."}
+      cinematics: {why: "A cutscene version of a place can live on a Runtime Data Layer that is activated only for the scene."}
+
+  - id: LDQ54
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [hlod, world-partition, performance]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: "HLOD: keep the far mountains visible"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-partition---hierarchical-level-of-detail-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open a World Partition level. In the Content Drawer, click + Add > Miscellaneous > HLOD Layer. Name it HLOD_Rocks and set Layer Type to Merged Mesh."
+      - "Make a second HLOD Layer HLOD_Trees with Layer Type Instancing."
+      - "Place 20 rock meshes and 20 tree meshes far from the player start. Set their Mobility to Static."
+      - "Select the rocks and set their HLOD Layer property in Details to HLOD_Rocks. Do the same for trees with HLOD_Trees."
+      - "Run Build > Build HLODs and wait for it to finish."
+      - "Switch the viewport to Level of Detail Coloration > Hierarchical LOD Coloration. Move the camera close (green) and far (blue)."
+      - "Play In Editor, walk far away, and run wp.Runtime.ToggleDrawRuntimeHash2D to see loaded HLOD cells."
+    done_when: "Two screenshots in Hierarchical LOD Coloration: one close with green actors and one far with the blue proxy. Add one line about which layer type you gave the trees and why."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What problem does World Partition HLOD solve?"
+        choices: ["Actors in unloaded cells are invisible; HLOD replaces them with a cheap proxy so distant things stay visible", "Actors load too slowly", "Lightmaps are too big", "Foliage cannot be painted far away"]
+        answer_index: 0
+        explain: "Unloaded cells show nothing. HLOD generates a single proxy mesh and material per cell group to show distant content and reduce draw calls."
+      - q: "Which HLOD Layer Type is best for trees and foliage?"
+        choices: ["Merged Mesh", "Simplified Mesh", "Instancing", "Always Loaded"]
+        answer_index: 2
+        explain: "Instancing replaces the meshes with Instanced Static Mesh components using their lowest LOD. The page calls it ideal for imposter meshes like trees."
+      - q: "Which of these is NOT required for an actor to get an HLOD proxy?"
+        choices: ["The actor is assigned to an HLOD Layer", "The actor's Mobility is Static", "You run Build > Build HLODs or the builder commandlet", "The actor has a Nanite mesh"]
+        answer_index: 3
+        explain: "Actors need an HLOD Layer, Static mobility, and a build. Nanite is not required; there is only an option to generate a Nanite proxy."
+      - q: "Name the three ways an actor can be assigned to an HLOD Layer."
+        choices: ["Actor HLOD property, Default HLOD Layer of a Data Layer, Default HLOD Layer in World Settings", "Material, Mesh, Texture", "Level Blueprint, Game Mode, Player Controller", "Only the actor HLOD property"]
+        answer_index: 0
+        explain: "You can set it per actor, per Data Layer, or as a world default in World Settings."
+      - q: "In Hierarchical LOD Coloration view mode, what do green and blue mean?"
+        choices: ["Green is unloaded, blue is loaded", "Green is an actor assigned to an HLOD Layer, blue is its HLOD proxy mesh shown from far away", "Green is Static, blue is Movable", "Green is Nanite, blue is not"]
+        answer_index: 1
+        explain: "Actors in an HLOD Layer draw green. When the camera moves away, their proxy draws blue."
+      - q: "You check Always Loaded on an HLOD Layer. Which settings become unavailable?"
+        choices: ["Layer Type", "Cell Size and Loading Range", "HLODMaterial", "Parent Layer"]
+        answer_index: 1
+        explain: "An always loaded proxy does not stream, so the runtime grid settings Cell Size and Loading Range are not available."
+    flavors:
+      _default: {why: "Players judge a world by what they see on the horizon. HLOD keeps the horizon full without the cost."}
+      level_design: {why: "Landmarks guide the player. If your tower disappears when its cell unloads, the guiding fails. HLOD keeps landmarks visible.", do: "Pick one landmark and confirm its proxy is visible from the far end of the map."}
+      lookdev: {why: "Merged and simplified proxies bake materials; knowing the settings helps you avoid ugly far views."}
+      cinematics: {why: "Wide establishing shots depend on HLOD proxies for everything outside the loaded cells."}
+
+  - id: LDQ55
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [foliage, instancing, set-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: true
+    title: "Foliage mode: paint, erase, reapply"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-mode-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open a level with a Landscape. Press Shift+3 to enter Foliage mode."
+      - "Drag two Static Meshes (a rock and a bush, any assets) from the Content Drawer into the Mesh List to create Static Mesh Foliage types."
+      - "Select the Paint tool. Set Brush Size to 512 and Paint Density to 0.3. Paint both types across a slope."
+      - "Hold Shift and paint to erase a clear path through the foliage, wide enough for a player."
+      - "In Filters, turn off Landscape and turn on Static Mesh. Try to paint on the landscape and note what happens."
+      - "Select the bush type, change Scale Min and Max, then use the Reapply tool to paint the new scale onto bushes already placed."
+      - "In Foliage Details, set an End Cull Distance and a Start Cull Distance for the bush. Play In Editor and walk away to watch the cull."
+    done_when: "One screenshot of the painted slope with a clear path through it, and one screenshot of the Foliage panel showing your two types and the Cull Distance values."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why is Static Mesh Foliage cheaper than Actor Foliage?"
+        choices: ["Static Mesh Foliage uses hardware instancing, so many instances draw in one draw call; Actor Foliage costs the same as normal actors", "Static Mesh Foliage has no collision", "Actor Foliage uses bigger textures", "There is no difference"]
+        answer_index: 0
+        explain: "Static Mesh foliage is batched and rendered with hardware instancing. Actor Foliage places real actors, so high densities can cause performance issues."
+      - q: "How do you erase foliage while the Paint tool is active?"
+        choices: ["Right-click", "Hold Shift while painting", "Hold Ctrl while painting", "Press Delete"]
+        answer_index: 1
+        explain: "Holding Shift with the Paint tool erases instances of the selected foliage type."
+      - q: "You changed the scale settings of a foliage type. How do you apply the change to bushes already in the level?"
+        choices: ["Erase and paint again", "Rebuild lighting", "Save the level", "Use the Reapply tool and paint over them"]
+        answer_index: 3
+        explain: "The Reapply tool selectively changes parameters on instances that are already placed, by painting the changes onto them."
+      - q: "What do the Filter options (Landscape, Static Mesh, BSP, Foliage, Translucent) control?"
+        choices: ["Which foliage types show in the palette", "The draw distance", "Which surfaces the selected tool will place foliage on", "The LOD of the foliage"]
+        answer_index: 2
+        explain: "Filters decide which surface types receive foliage. Turn off Landscape and you cannot paint on the landscape."
+      - q: "You set only End Cull Distance and groups of bushes pop out of view suddenly. What does the page recommend?"
+        choices: ["Increase Brush Size", "Add a Start Cull Distance and use PerInstanceFadeAmount in the material to fade instances out", "Switch to Actor Foliage", "Disable LODs"]
+        answer_index: 1
+        explain: "Whole clusters cull at End Cull Distance. A Start Cull Distance plus the PerInstanceFadeAmount node lets instances fade before they are removed."
+      - q: "How can you let players lower foliage density with scalability settings?"
+        choices: ["Enable Density Scaling on the foliage type and use foliage.DensityScale", "Delete half the instances", "Set Brush Size to 0", "Use the Fill tool"]
+        answer_index: 0
+        explain: "With Enable Density Scaling checked in the Scalability section, the foliage.DensityScale command controls how many instances render."
+    flavors:
+      _default: {why: "Foliage fills a level fast, but it also blocks paths and sightlines. Painting and erasing it is level design work."}
+      level_design: {why: "Erasing foliage is how you cut the path. The Filter and cull settings decide if your path stays readable from far away.", do: "Stand at the start of your path and check that the cleared route is visible from 30 meters away."}
+      lookdev: {why: "Cull and fade settings decide whether a forest edge looks natural or pops in and out."}
+
+  - id: LDQ56
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [sky-atmosphere, lighting, readability]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: "Sky Atmosphere: depth you can read"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environmental-light-with-fog-clouds-sky-and-atmosphere-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-properties-in-unreal-engine"
+    checklist:
+      - "Start from an empty level. From Place Actors add a Sky Atmosphere, a Directional Light and a Sky Light."
+      - "On the Directional Light, enable Atmosphere Sun Light. Hold Right Ctrl + L and move the mouse to move the sun."
+      - "Place 5 large cubes in a line going away from the camera, each about 100 meters further than the last."
+      - "Set the sun low for a sunset. Take a screenshot. Set the sun high for noon. Take a screenshot."
+      - "Raise Mie Scattering Scale a little and watch the haze and the halo around the sun."
+      - "Raise Aerial Perspective View Distance Scale. Compare how easy it is to tell which cube is nearer."
+      - "Pick the settings that make distance easiest to read and save them."
+    done_when: "Three screenshots of the same cube line: sunset, noon, and your final readable setting. One line about which setting helped depth the most."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which three actors does the page say to place for a working Sky Atmosphere?"
+        choices: ["Sky Atmosphere, Directional Light with Atmosphere Sun Light enabled, Sky Light", "Sky Atmosphere, Point Light, Post Process Volume", "Exponential Height Fog, Sky Light, Rect Light", "Sky Atmosphere only"]
+        answer_index: 0
+        explain: "The Sky Atmosphere needs a Directional Light with Atmosphere Sun Light on, and a Sky Light to capture the sky and light the scene."
+      - q: "Why is the sky blue at noon but red at sunset in the Sky Atmosphere model?"
+        choices: ["Because of Mie scattering from dust", "Because of Rayleigh scattering: blue scatters most, and at sunset the long path scatters the blue away first", "Because the Sky Light changes color", "Because of the tonemapper"]
+        answer_index: 1
+        explain: "Rayleigh scattering depends on wavelength. Blue scatters most, giving a blue sky. At sunset light travels further, so blue is lost and red remains."
+      - q: "You raise the Mie Scattering Scale. What do you see?"
+        choices: ["A clearer, sharper sky", "The sun disk disappears", "The sky turns green", "A hazier sky with a stronger bright halo around the sun"]
+        answer_index: 3
+        explain: "Mie scattering comes from larger particles like dust. More of it makes the sky hazy and scatters light forward, so the halo around the sun grows."
+      - q: "What keyboard shortcut moves the Directional Light set to Atmosphere Sun Light Index 0?"
+        choices: ["Ctrl + Shift + S", "Right Ctrl + L with mouse movement", "Alt + drag", "F key"]
+        answer_index: 1
+        explain: "Right Ctrl + L with mouse movement moves index 0 (the sun). Adding Shift moves index 1 (the moon)."
+      - q: "What does the Aerial Perspective View Distance Scale do?"
+        choices: ["Changes the size of the planet", "Moves the sun", "Scales the distance from the view to surfaces so the atmosphere looks thicker on distant objects", "Sets the cloud height"]
+        answer_index: 2
+        explain: "It scales view distances, so far surfaces pick up more atmosphere. This is a direct tool for making depth readable."
+      - q: "You want the Sky Atmosphere to influence an Exponential Height Fog component. What must you do to the fog?"
+        choices: ["Set Fog Inscattering Color and Directional Inscattering Color to black", "Delete the fog", "Set its density to zero", "Make it Movable"]
+        answer_index: 0
+        explain: "The atmosphere fog is added on top of the fog component's own colors. Setting both inscattering colors to black lets the Sky Atmosphere drive the fog color, with Height Fog Contribution as the control."
+    flavors:
+      _default: {why: "The atmosphere is the biggest depth cue in an outdoor level. Haze tells the player what is near and what is far."}
+      level_design: {why: "Landmarks only guide if the player can read their distance. Aerial perspective and haze do that job for free.", do: "Place a landmark tower at the far end of the cube line and confirm it still reads as far away at noon."}
+      lookdev: {why: "Rayleigh, Mie and absorption are the three dials of every sky you will ever build."}
+      cinematics: {why: "Sun angle and haze set the time of day and the mood of a shot before any grading."}
+
+  - id: LDQ57
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [navigation, navmesh, project-settings]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Tune the NavMesh to your agent
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-mesh-settings-in-the-unreal-engine-project-settings"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/optimizing-navigation-mesh-generation-speed-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/optimizing-navigation-mesh-generation-speed-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+    checklist:
+      - "Open a blockout level and add a NavMeshBoundsVolume that covers the play area. Press P to see the green NavMesh."
+      - "Build a narrow gap between a wall and a box (about 60 cm). Check that the NavMesh goes through the gap."
+      - "Select the RecastNavMesh-Default actor. In Details > Generation, raise Cell Size from the default to 64. Watch the gap disappear."
+      - "Set Cell Size back. Now change Agent Radius and Agent Max Step Height and watch how stairs and doorways change."
+      - "Pick one small decorative prop. In its Details > Collision, disable Can Ever Affect Navigation."
+      - "Write down the Cell Size, Agent Radius and Agent Max Step Height you keep for this level, and why."
+    done_when: "Two screenshots of the same gap: one with default Cell Size (NavMesh passes) and one with Cell Size 64 (NavMesh gone), plus your three chosen values and one line of reason for each."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Cell Size setting control?"
+        choices: ["The size of one navigation tile in Unreal Units", "The radius of the smallest agent", "The horizontal size of a voxel used to build the NavMesh", "The distance between two Nav Link Proxies"]
+        answer_index: 2
+        explain: "Cell Size is the horizontal size of a voxelization cell. Cell Height is the vertical size. Tile Size UU is the size of a whole tile."
+      - q: "You make the Cell Size bigger. What happens?"
+        choices: ["Generation is faster but the NavMesh is less precise around obstacles", "Generation is slower but more precise", "The NavMesh becomes taller", "Agents move faster"]
+        answer_index: 0
+        explain: "Smaller voxels give more precision but need more processing. Epic recommends making cells as large as possible while keeping the precision your agents need."
+      - q: "You want to change NavMesh generation settings for one level only, not the whole project. Where do you do it?"
+        choices: ["Editor Preferences > Navigation", "Any Nav Modifier Volume in the level", "The Level Blueprint", "The RecastNavMesh-Default actor in the Outliner, Details panel"]
+        answer_index: 3
+        explain: "Project Settings > Navigation Mesh sets the defaults. Selecting the RecastNavMesh-Default actor lets you adjust the NavMesh in that level."
+      - q: "Epic's recommendation for Tile Size is:"
+        choices: ["Exactly 1000 UU", "Between 32 and 128 cells per side", "As small as possible", "The same as the Cell Size"]
+        answer_index: 1
+        explain: "Tiles between 32 and 128 cells per side give the best performance when rebuilding tiles at runtime. Large tiles are expensive; many tiny tiles add overhead."
+      - q: "A small decorative prop should not change the NavMesh. What do you do?"
+        choices: ["Delete its collision", "Put a Nav Link Proxy on it", "Disable Can Ever Affect Navigation in the actor's Collision section", "Set its mobility to Movable"]
+        answer_index: 2
+        explain: "By default Blueprint actors and Static Meshes affect navigation. Turning off Can Ever Affect Navigation removes the object from NavMesh generation and makes the tile cheaper to build."
+      - q: "What does Agent Max Step Height mean?"
+        choices: ["The largest vertical step the agent can perform", "The height of the tallest agent", "The maximum slope angle the agent can walk on", "The height of one voxel"]
+        answer_index: 0
+        explain: "Agent Max Step Height is the largest vertical step. Agent Height is the tallest agent, Agent Max Slope is the angle, Cell Height is the voxel height."
+    flavors:
+      _default: {why: "The NavMesh is built from your geometry. If the settings do not match your character, AI will fail in doorways, on stairs and in narrow gaps."}
+      gameplay_design: {why: "Enemy behavior depends on where the NavMesh exists. Wrong settings make encounters break in ways that look like AI bugs.", do: "Test one enemy in a doorway that is exactly two Agent Radius wide, then one that is narrower, and note the difference."}
+
+  - id: LDQ58
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [navigation, nav-modifier, ai]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Cost zones with Nav Modifier Volumes
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-components-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine"
+    checklist:
+      - "In a blockout level with a NavMesh, place a roaming AI (BP_NPC_NavMesh from the Basic Navigation guide is fine)."
+      - "From Place Actors, drag in a Nav Modifier Volume. Press P and notice no NavMesh inside it. Use it to block one route."
+      - "Add a second Nav Modifier Volume and set Area Class to NavArea_Obstacle. Place it on the short route to a target."
+      - "Simulate. The AI should take the long way around the obstacle area. Then close the long way with another volume and see it walk through the obstacle area."
+      - "Change that volume to NavArea_Null and Simulate again. The AI cannot reach its goal anymore."
+      - "Make BP_MudPatch: an Actor with a Box component as root and a Nav Modifier component. Set its Area Class to NavArea_Obstacle and place two in the level."
+    done_when: "One screenshot in Simulate with P on, showing the green NavMesh, the obstacle zone (different color), and the AI walking around it. Add one sentence: what happened with NavArea_Null."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "An AI should avoid a mud area but must still cross it if there is no other way. Which Area Class do you use?"
+        choices: ["NavArea_Null", "NavArea_Obstacle", "NavArea_LowHeight", "NavArea_Default"]
+        answer_index: 1
+        explain: "NavArea_Obstacle assigns a high cost. The solver avoids it, but will still path through a high-cost area if it is the cheapest path."
+      - q: "What does NavArea_Null do?"
+        choices: ["Halves the cost of the area", "Marks the area as water", "Assigns the same cost as the rest of the mesh", "Applies infinite cost, so no NavMesh is generated inside the volume"]
+        answer_index: 3
+        explain: "NavArea_Null applies an infinite cost and the NavMesh is not generated in that area. An agent can never find a path through it."
+      - q: "You drop a Nav Modifier Volume into the level and change nothing. What do you see?"
+        choices: ["No NavMesh is generated inside the volume", "The NavMesh inside becomes cheaper", "Nothing changes until you press Build", "The volume becomes a Nav Link"]
+        answer_index: 0
+        explain: "The guide says that by default no NavMesh is generated inside a Nav Modifier Volume. You change the Area Class to get other effects."
+      - q: "You add a Nav Modifier component to a Blueprint actor. When does it change the NavMesh?"
+        choices: ["Always, on its own", "Only in Static generation mode", "When a basic shape component is the root; the root's volume is modified by the Area Class", "Only if the actor also has a Nav Link Proxy"]
+        answer_index: 2
+        explain: "The Nav Modifier component does nothing by itself. If a basic shape is the root component, that shape's volume is modified according to the Area Class."
+      - q: "You add two Nav Modifier components to one actor. Result?"
+        choices: ["The costs add together", "Only one has an effect; extra ones do nothing", "The actor stops affecting navigation", "The editor shows an error"]
+        answer_index: 1
+        explain: "You should have only one Nav Modifier component per actor. Multiples have no effect."
+      - q: "The only route to the goal is through a high-cost area. What does the AI do?"
+        choices: ["It stops and fails the move", "It waits for the cost to drop", "It jumps over the area", "It walks through, because that is still the cheapest available path"]
+        answer_index: 3
+        explain: "The solver always picks the cheapest path. A high cost area is still valid, so with no alternative the agent goes through it."
+    flavors:
+      _default: {why: "Cost zones let you steer AI around hazards or off the player's path without walls. It is the level designer's main tool to shape AI routes."}
+      gameplay_design: {why: "Enemy routes decide where fights happen. Cost zones move those fights to where you want them.", do: "Use one NavArea_Obstacle zone to push an enemy patrol along a route that crosses the player's line of sight twice."}
+
+  - id: LDQ59
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [navigation, nav-link, ai]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Bridge a gap with Nav Link Proxies
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-system-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-mesh-settings-in-the-unreal-engine-project-settings"
+    checklist:
+      - "Build two floor areas with a gap between them, and a raised platform with a ledge. Cover all with one NavMeshBoundsVolume."
+      - "Place a roaming AI. Press P and confirm the two floor areas are not connected."
+      - "From Place Actors, drag in a Nav Link Proxy. Move the PointLinks[0].Left and Right handles onto the NavMesh on each side of the gap. The green arrow must stay visible."
+      - "In Details > Point Links > 0, set Direction to Left to Right. Simulate and watch the AI cross one way only."
+      - "Add a second Nav Link Proxy at the ledge: Left on the platform edge, Right on the floor below. Direction Left to Right. The AI can now drop down."
+      - "Select RecastNavMesh-Default and enable Draw Tile Bounds. Check that each link connects adjacent tiles."
+    done_when: "One screenshot with P on showing both Nav Link Proxies (green arrows visible), and one sentence about which Direction each link uses and why."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is a Nav Link Proxy for?"
+        choices: ["To raise the cost of an area", "To hide the NavMesh in Play", "To connect two NavMesh areas that have no continuous path", "To spawn AI at a point"]
+        answer_index: 2
+        explain: "Nav Link Proxies are extra connections used during path search. They bridge separate areas and let agents fall or jump toward their goal."
+      - q: "The green arrow on your Nav Link Proxy disappears. Why?"
+        choices: ["An end point is not touching the NavMesh surface", "The link is set to Both Ways", "The level has no Nav Modifier Volume", "You have too many links"]
+        answer_index: 0
+        explain: "The guide says the green arrow disappears if the Nav Link Proxy does not connect with the surface of the NavMesh. Move the handles onto the mesh."
+      - q: "You want AI to drop off a ledge but never climb back up. Which setting?"
+        choices: ["Area Class = NavArea_Null", "Smart Link Is Relevant off", "Direction = Both Ways", "Direction = Left to Right, with Left on the ledge"]
+        answer_index: 3
+        explain: "Point Links have a Direction: Both Ways, Left to Right or Right to Left. A one-way link from the ledge (Left) to the floor (Right) allows only the drop."
+      - q: "Which of these is NOT a Direction option on a Point Link?"
+        choices: ["Both Ways", "Up to Down", "Left to Right", "Right to Left"]
+        answer_index: 1
+        explain: "The three options are Both Ways, Left to Right and Right to Left. There is no Up to Down."
+      - q: "A long Nav Link Proxy across the map does not work. The likely reason:"
+        choices: ["Links need a Nav Modifier Volume", "Links only work in Dynamic mode", "Links can only connect adjacent NavMesh tiles; check with Draw Tile Bounds", "Links cannot be longer than 1 meter"]
+        answer_index: 2
+        explain: "Nav Link Proxies can only connect adjacent Navigation Mesh tiles. Enable Draw Tile Bounds on the RecastNavMesh actor to see the tiles."
+      - q: "You want the agent to really jump (with a launch) when it uses a link. What does the guide do?"
+        choices: ["A Blueprint child of Nav Link Proxy using Event Receive Smart Link Reached, with Smart Link Is Relevant enabled", "Set the Direction to Both Ways", "Raise Agent Max Step Height", "Add a Nav Modifier component"]
+        answer_index: 0
+        explain: "The guide creates BP_NavProxyLink from Nav Link Proxy, reacts to Event Receive Smart Link Reached to launch the character, copies the end points to the Smart Link and enables Smart Link Is Relevant."
+    flavors:
+      _default: {why: "Ledges, gaps and ladders break the NavMesh. Nav Links are how a level designer tells AI that the jump or drop is allowed."}
+      gameplay_design: {why: "One-way drops let enemies chase the player down but not back up. That is a pacing tool.", do: "Add one one-way drop that lets enemies follow the player into an arena but not leave it."}
+
+  - id: LDQ60
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [navigation, debugging, navmesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Read the NavMesh like a map
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-mesh-settings-in-the-unreal-engine-project-settings"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-mesh-settings-in-the-unreal-engine-project-settings"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-debugging-in-unreal-engine"
+    checklist:
+      - "Open a level with stairs, a doorway and a NavMeshBoundsVolume. Press P to show the NavMesh."
+      - "Select RecastNavMesh-Default. In Details > Display, set Draw Offset to 50 and compare how the stairs look."
+      - "Enable Draw Poly Edges, then Draw Tile Bounds, then Draw Polygon Costs. Take one screenshot of each."
+      - "Enable Draw Nav Links and Draw Failed Nav Links. Note where each is useful."
+      - "Play in Editor. In the console type show Navigation true, then show Navigation false."
+      - "Find one place where the NavMesh is missing but a player could walk. Write one line on why (step height, gap, prop collision)."
+    done_when: "Three screenshots (Poly Edges, Tile Bounds, Polygon Costs) plus your one-line note about the missing NavMesh spot."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Which key toggles the NavMesh display in the editor viewport?"
+        choices: ["N", "P", "F8", "Ctrl+Shift+N"]
+        answer_index: 1
+        explain: "Pressing P shows the NavMesh. It is drawn green by default."
+      - q: "The NavMesh drawing looks broken on the stairs. Which setting raises the drawing for better readability?"
+        choices: ["Cell Height", "Agent Max Step Height", "Draw Filled Polys", "Draw Offset"]
+        answer_index: 3
+        explain: "Draw Offset is a vertical offset added to the NavMesh debug drawing. The Basic Navigation guide sets it to 50 to fix the stair artifacts."
+      - q: "You want to see the polygons that make up the mesh. Which option?"
+        choices: ["Draw Poly Edges", "Draw Octree", "Draw Tile Labels", "Draw Clusters"]
+        answer_index: 0
+        explain: "Draw Poly Edges draws the edges of every polygon, not only the border edges."
+      - q: "Which option shows the boundaries of navigation tiles?"
+        choices: ["Draw NavMesh Edges", "Draw Marked Forbidden Polys", "Draw Tile Bounds", "Draw Path Colliding Geometry"]
+        answer_index: 2
+        explain: "Draw Tile Bounds draws the tile boundaries. Tiles matter for runtime rebuilds and for Nav Links."
+      - q: "During Play in Editor, which console command shows the NavMesh?"
+        choices: ["navmesh 1", "show Navigation true", "stat nav", "r.NavMesh 1"]
+        answer_index: 1
+        explain: "The AI Debugging page says show Navigation true displays the NavMesh in gameplay and show Navigation false hides it."
+      - q: "When does the editor rebuild the NavMesh?"
+        choices: ["Only when you click Build", "Only in Play", "Only after saving the level", "Automatically when a NavMeshBoundsVolume is added or resized"]
+        answer_index: 3
+        explain: "Unreal generates the NavMesh automatically as soon as a Nav Mesh Bounds Volume is added or resized."
+    flavors:
+      _default: {why: "You cannot fix AI movement problems you cannot see. Reading the NavMesh drawing is the first step of every navigation bug."}
+      gameplay_design: {why: "Most reports of broken enemy AI are NavMesh holes. Knowing the display options makes you fast at finding them.", do: "Use Draw Polygon Costs to find one place where a prop makes a cheap route expensive."}
+
+  - id: LDQ61
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [ai, navigation, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: A walker that goes to your point
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---quick-start-guide"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/target-point-actors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---quick-start-guide"
+    checklist:
+      - "In a Third Person project, copy BP_ThirdPersonCharacter into a NavigationSystem folder and rename it BP_NPC_Walker. Delete all input nodes."
+      - "Add a Target Point actor to the level (Place Actors > All Classes). Name it TP_Goal."
+      - "In BP_NPC_Walker add a variable Goal of type Target Point (Object Reference), Instance Editable. On Event BeginPlay: Get Actor Location of Goal, then AI Move To with Pawn = self and Destination = that location."
+      - "From On Fail, add a Delay 0.1 and call the move again. From On Success, print Arrived."
+      - "Place BP_NPC_Walker, set Goal to TP_Goal in Details, add a NavMeshBoundsVolume and click Simulate."
+      - "Optional: replace the goal with Get Random Reachable Point In Radius (1000) and a Delay 4 loop, as in the guide."
+    done_when: "A screenshot of the BP_NPC_Walker event graph plus one screenshot in Simulate with the NPC arriving at TP_Goal."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which Blueprint node moves a pawn along the NavMesh to a location?"
+        choices: ["AI Move To", "Set Actor Location", "Add Movement Input", "Launch Character"]
+        answer_index: 0
+        explain: "The Basic Navigation guide uses AI Move To with a Pawn and a Destination. Set Actor Location teleports; it does not use pathfinding."
+      - q: "In the guide, what is connected to the Pawn pin of AI Move To?"
+        choices: ["The player character", "The NavMeshBoundsVolume", "A reference to Self", "The Target Point"]
+        answer_index: 2
+        explain: "The NPC Blueprint moves itself, so it uses Get a reference to self for the Pawn pin."
+      - q: "Which node gives a random location the agent can actually reach?"
+        choices: ["Random Unit Vector", "Get Random Reachable Point In Radius", "Get Actor Bounds", "Random Point In Bounding Box"]
+        answer_index: 1
+        explain: "Get Random Reachable Point In Radius asks the navigation system for a point on the NavMesh within the radius (1000 in the guide)."
+      - q: "Your NPC is spawned at runtime and never moves. What setting does the Behavior Tree guide point to?"
+        choices: ["Enable Tick in Class Defaults", "Set Max Walk Speed", "Enable Simulate Physics", "Set Auto Possess AI to Spawned"]
+        answer_index: 3
+        explain: "The guide says: if you spawn the AI after the world is loaded, change Auto Possess AI to Spawned so the AI Controller possesses it."
+      - q: "What is a Target Point actor?"
+        choices: ["A camera actor", "A type of trigger volume", "A generic point in the world, useful as a path point for AI or a spawn point", "A NavMesh tile marker"]
+        answer_index: 2
+        explain: "Target Points are generic points, similar to dummy objects in 3D apps. Epic lists path points for AI agents and spawn points as uses."
+      - q: "In the guide, what happens on the On Fail pin of AI Move To?"
+        choices: ["A short Delay (0.1) and the move is tried again", "The NPC is destroyed", "The NavMesh is rebuilt", "Nothing is connected"]
+        answer_index: 0
+        explain: "The guide adds Delay 0.1 to On Fail and calls MoveNPC again, so a failed move quickly picks a new destination."
+    flavors:
+      _default: {why: "A walker that goes where you tell it is the fastest way to test whether your level's NavMesh really connects."}
+      gameplay_design: {why: "This is the smallest possible AI. Every enemy is this plus decisions.", do: "Give the walker three Target Points in an array and make it visit them in order."}
+
+  - id: LDQ62
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [smart-objects, ai, level-dressing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Smart Object slots in your level
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---overview"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---quick-start"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---quick-start"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine"
+    checklist:
+      - "Settings > Plugins > Gameplay: enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Restart the editor."
+      - "Create a Data Asset of class Smart Object Definition. Name it SO_Definition_Bench. Add two Slots."
+      - "Create BP_SO_Bench (Actor) with a Static Mesh bench and a Smart Object component. Set Definition Asset to SO_Definition_Bench."
+      - "Open BP_SO_Bench and move the two slots so each sits on one seat of the bench, facing forward."
+      - "Place three BP_SO_Bench actors in a small plaza blockout. Add a NavMeshBoundsVolume."
+      - "Optional: follow the Quick Start to make an agent claim and use a slot."
+    done_when: "A screenshot of the plaza with the three benches selected so the slot markers are visible, plus one sentence: what Free, Claimed and Occupied mean."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where is the slot layout and default behavior of a Smart Object stored?"
+        choices: ["In the Level Blueprint", "In a Smart Object Definition data asset", "In the AI Controller", "In the NavMesh"]
+        answer_index: 1
+        explain: "The Smart Object Definition is a data asset with the immutable data: Slots, tags and Default Behavior Definitions. The component points to it."
+      - q: "How do you make a bench actor a Smart Object?"
+        choices: ["Add a Nav Modifier component", "Tag it with SmartObject", "Place it inside a Persistent Collection volume", "Add a Smart Object component and set its Definition Asset"]
+        answer_index: 3
+        explain: "The Smart Object component can be added to any actor to mark it as a Smart Object. It references a Smart Object Definition asset."
+      - q: "An agent arrives at its claimed slot and calls Use. What is the slot state now?"
+        choices: ["Occupied", "Free", "Claimed", "Reserved"]
+        answer_index: 0
+        explain: "Use changes the slot from Claimed to Occupied. Release later sets it back to Free."
+      - q: "Two agents want the same slot. What happens?"
+        choices: ["Both use it at the same time", "The closer agent always wins", "After one agent claims it, the other cannot claim it until it is released", "The Smart Object is duplicated"]
+        answer_index: 2
+        explain: "A claimed slot may not be claimed by another agent until the agent that claimed it releases it. That is the reservation system."
+      - q: "Which statement about Smart Objects is true?"
+        choices: ["They run the animation themselves", "They hold no execution logic; each interactor implements the interaction", "They only work with players, not AI", "They replace the NavMesh"]
+        answer_index: 1
+        explain: "Smart Objects provide the information for an interaction. The agent or player does its own implementation logic."
+      - q: "What does a Smart Object Persistent Collection do?"
+        choices: ["Creates the NavMesh under each Smart Object", "Stores the animations", "Deletes unused Smart Objects", "Keeps listed Smart Objects in the simulation even when their actors are unloaded"]
+        answer_index: 3
+        explain: "The Persistent Collection is a level-placed actor. Smart Objects in it stay part of the simulation regardless of whether they are loaded or unloaded."
+    flavors:
+      _default: {why: "Smart Objects turn benches, doors and workstations into places AI can use. Placing and orienting slots is level design work."}
+      gameplay_design: {why: "Ambient life comes from AI using the world. Slots are where that life happens.", do: "Give one bench a single slot and watch two agents from the Quick Start take turns."}
+
+  - id: LDQ63
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [eqs, ai, cover]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Find cover spots with EQS
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-testing-pawn-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-overview-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/eqs-node-reference-generators-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/eqs-node-reference-tests-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-overview-in-unreal-engine"
+    checklist:
+      - "Enable the Environment Query System in Project Settings. Build a small arena with a NavMesh and 5 to 8 cover blocks."
+      - "Create an Environment Query asset EQS_Cover. Add a Points: Grid generator around the Querier."
+      - "Add a Trace test on the grid with the Querier as context. Set Test Purpose to Filter so only points that cannot be seen from the querier remain (adjust Bool Match if needed)."
+      - "Add a Distance test with Test Purpose Score so nearer points score higher."
+      - "Create BP_EQSTestPawn from the EQSTestingPawn class. Place it in the arena and set Query Template to EQS_Cover."
+      - "Move the pawn around. Watch the spheres change. Move one cover block so a bad cover spot becomes a good one."
+    done_when: "Two screenshots of the EQS Testing Pawn spheres from two positions, and one sentence about which cover block you moved and why."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You add a Distance test before a Trace test. Does the order matter?"
+        choices: ["Yes, tests run top to bottom", "Yes, the first test is always the score", "No, filter tests run before scoring tests regardless of order", "No, only the last test is used"]
+        answer_index: 2
+        explain: "The order of tests does not matter. Filters run first so fewer items need to be scored."
+      - q: "With the EQS Testing Pawn selected, some spheres are blue. What does blue mean?"
+        choices: ["The item failed a filter or a bool test returned false", "The item is the winner", "The item is far away", "The item is on a Nav Link"]
+        answer_index: 0
+        explain: "Green to red shows the level of match. Blue spheres are failures, such as a Trace test that returned false."
+      - q: "Which test checks if a point can or cannot be seen from a context?"
+        choices: ["Dot", "Overlap", "Gameplay Tags", "Trace"]
+        answer_index: 3
+        explain: "The Trace test traces to or from an item and reports a hit. You can invert it with Bool Match. It is the typical line-of-sight test."
+      - q: "Which generator creates a grid of points around the querier?"
+        choices: ["Actors of Class", "Points: Grid", "Current Location", "Composite"]
+        answer_index: 1
+        explain: "Points: Grid generates a grid of items around the context set in Generate Around. Points: Circle, Donut and Cone are other shapes."
+      - q: "Some grid points end up inside walls. Which test moves them back onto the NavMesh?"
+        choices: ["Pathfinding", "Distance", "Project", "Overlap"]
+        answer_index: 2
+        explain: "The Project test projects items onto the NavMesh, moving items that are inside walls or blocked back onto it."
+      - q: "You want a brand new kind of Test. Where can you create it?"
+        choices: ["Only in C++", "In Blueprint, like generators", "In the Level Blueprint", "In the Behavior Tree editor"]
+        answer_index: 0
+        explain: "Custom generators can be made in Blueprint or C++, but custom tests can only be created in C++."
+    flavors:
+      _default: {why: "EQS shows you where AI thinks cover is. Testing it in the editor lets you fix cover layout before any enemy code exists."}
+      gameplay_design: {why: "Enemy cover choice is a design decision. EQS scores make it visible and tunable.", do: "Add a second Distance test scored toward the player and compare which cover wins."}
+
+  - id: LDQ64
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [spline, ai, patrol]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Patrol path with spline and target points
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-spline-components-overview-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/target-point-actors-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-spline-component-property-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/target-point-actors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+    checklist:
+      - "Create BP_PatrolPath (Actor) with a Spline component. Place it in a level with a NavMesh and drag the spline points into a loop around a building."
+      - "In the spline Details, enable Closed Loop. Select one point and set its Type to Linear to make a sharp corner."
+      - "Place four Target Point actors on the spline corners. Name them TP_Patrol_1 to TP_Patrol_4."
+      - "Make BP_NPC_Patrol from your walker (LDQ61): add an array Patrol Points of Target Point references, Instance Editable."
+      - "On BeginPlay, loop: AI Move To the next point in the array, on success Delay 2, then move to the next. Wrap to index 0 at the end."
+      - "Simulate. Adjust the spline and Target Points until the patrol passes a window twice per loop."
+    done_when: "One screenshot of the level with the closed spline and the four Target Points visible, plus one screenshot in Simulate of the NPC on the path."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is the difference between a Spline component and a Spline Mesh component?"
+        choices: ["They are the same", "A Spline Mesh has more points", "A Spline Mesh deforms one Static Mesh along a two-point spline and cannot get more points", "A Spline cannot be edited in the level"]
+        answer_index: 2
+        explain: "A Spline component is a path with many editable points. A Spline Mesh component deforms a single Static Mesh along a two-point spline."
+      - q: "Which property makes the spline a loop with no start or end?"
+        choices: ["Closed Loop", "Duration", "Stationary Endpoints", "Draw Debug"]
+        answer_index: 0
+        explain: "Closed Loop makes the spline a closed loop. Duration is the spline length in seconds and Draw Debug controls rendering."
+      - q: "You want a sharp 90 degree corner at one spline point. Which point Type?"
+        choices: ["Curve", "CurveClamped", "CurveCustomTangent", "Linear"]
+        answer_index: 3
+        explain: "Linear makes the curve straight from the selected point to the next. Curve types smooth the tangents."
+      - q: "What is the default Type of a spline point?"
+        choices: ["Linear", "Curve", "Constant", "CurveClamped"]
+        answer_index: 1
+        explain: "The property reference says Curve is the default. The neighbor points define the tangents of the selected point."
+      - q: "Where do you find Target Point actors when placing?"
+        choices: ["Under Volumes", "Under Lights", "Under the All Classes category", "Only by spawning them in Blueprint"]
+        answer_index: 2
+        explain: "Target Point actors are in the All Classes category. Drag one into the world."
+      - q: "Where can you edit spline points?"
+        choices: ["In the Blueprint viewport and in the Level Editor", "Only in the Blueprint viewport", "Only in the Level Editor", "Only in the Construction Script"]
+        answer_index: 0
+        explain: "Splines are fully editable in the Blueprint viewport and in the Level Editor. The Construction Script can also modify them further."
+    flavors:
+      _default: {why: "Patrols are the most common AI in levels. A visible spline plus target points lets you tune routes fast without touching AI code."}
+      gameplay_design: {why: "Patrol timing sets the rhythm of stealth and combat spaces.", do: "Change the Delay at one point so the guard pauses at a window, and note how the player's safe window changes."}
+      cinematics: {why: "The same spline can drive a camera or a vehicle for a cutscene.", do: "Set Draw Debug on and use the spline as a camera dolly path for a 5 second flythrough."}
+
+  - id: LDQ65
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [play-in-editor, playtesting, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Play from the camera, with two players
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/ineditor-testing-play-and-simulate-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/play-in-editor-multiplayer-options-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/play-in-editor-settings-in-unreal-engine"
+    checklist:
+      - "Open one of your blockout levels. Fly the editor camera to a room far from the Player Start."
+      - "Open the Play dropdown. Under Start Location pick Camera Location. Press Play (Alt + P). Note where you spawn."
+      - "Stop. Right-click the floor in another room and choose Play From Here. Note where you spawn."
+      - "Open the Play dropdown again. Set Number of Players to 2 and Net Mode to Play As Listen Server."
+      - "Press Play. You get one player in the viewport and one in a new window. Press Shift + F1 to get the mouse back."
+      - "Open Play > Advanced Settings and find New Viewport Resolution. Set a smaller size for the extra window."
+    done_when: "One screenshot of a 2-player PIE session (viewport plus new window) and one line saying which Start Location you now use for quick tests and why."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which Start Location option makes the game begin where the editor camera is?"
+        choices: ["Default Player Start", "Play From Here", "Camera Location", "New Window"]
+        answer_index: 2
+        explain: "The Play dropdown has two Start Locations. Camera Location begins gameplay at the current camera. Default Player Start uses the Player Start actor."
+      - q: "How do you use Play From Here?"
+        choices: ["Right-click in the viewport and pick Play From Here; play starts at the clicked spot", "Press Alt + S with an actor selected", "Set Number of Players to 0", "Choose Standalone Game in the Play dropdown"]
+        answer_index: 0
+        explain: "Play From Here is in the viewport right-click menu. Gameplay begins at the location you clicked, shown in the Level Viewport."
+      - q: "Which display type cannot be paused or stopped from the editor toolbar?"
+        choices: ["Selected Viewport", "New Editor Window", "Simulate", "Standalone Game"]
+        answer_index: 3
+        explain: "Standalone Game runs in its own process. The page says you cannot pause or stop it, and you cannot switch to Simulate."
+      - q: "During a Play In Editor session in the viewport, what does Shift + F1 do?"
+        choices: ["Skips one frame", "Gives the mouse cursor back to the editor", "Saves the level", "Opens the Play settings"]
+        answer_index: 1
+        explain: "Clicking in the viewport gives the mouse to the game. Shift + F1 returns mouse control to the editor so you can use the toolbar."
+      - q: "You set Number of Players to 3 and play in the Selected Viewport. What do you see?"
+        choices: ["Three players split in one viewport", "Three new windows and an empty viewport", "One player in the viewport and two in new windows", "Only one player; the setting needs Standalone Game"]
+        answer_index: 2
+        explain: "With more than one client and the Viewport display option, one client world is shown in the viewport and all others open in new windows."
+      - q: "What happens when Net Mode is set to Play As Client?"
+        choices: ["A dedicated server is launched in the background with no display or local player", "The editor becomes both server and client", "No server is created at all", "The game runs on a connected mobile device"]
+        answer_index: 0
+        explain: "Play As Client starts a dedicated server world behind the scenes. None of the clients run as a listen server, so you can find dedicated-server-only bugs."
+    flavors:
+      _default: {why: "Starting play exactly where the problem is saves minutes on every test."}
+      level_design: {why: "You will test one room hundreds of times. Camera Location and Play From Here remove the walk from the Player Start.", do: "Write down the Start Location you use for room tests in your metrics sheet."}
+      gameplay_design: {why: "Two-player PIE is the fastest way to see a mechanic from both sides.", do: "Run a 2-player test of one interaction and note what the second player could not see."}
+
+  - id: LDQ66
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [simulate-in-editor, playtesting, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: Simulate, tweak, keep
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ineditor-testing-play-and-simulate-in-unreal-engine"
+    checklist:
+      - "In a test level, place a Static Mesh sphere above a set of stairs and name it SM_SimBall. In Details, enable Simulate Physics."
+      - "Press Alt + S to Simulate. Watch the ball fall. Press Esc to stop."
+      - "Simulate again. Pause at once, then click Frame Skip a few times to step the fall one frame at a time."
+      - "While simulating, select SM_SimBall and move it to a better start spot. Right-click it and choose Keep Simulation Changes (or press K)."
+      - "Stop. Check that the new position stayed in the editor level."
+      - "Simulate again, then click Possess to switch to Play In Editor. Note where the player spawns."
+    done_when: "Screenshot of the editor while simulating (toolbar shows Possess) with SM_SimBall selected, plus one line saying which change you kept with Keep Simulation Changes."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is the Windows shortcut to start Simulate In Editor?"
+        choices: ["Alt + P", "Alt + S", "Shift + F1", "F11"]
+        answer_index: 1
+        explain: "Alt + S (Option + S on macOS) starts Simulate In Editor. Alt + P is Play In Editor."
+      - q: "Why can you not move a character with WASD while simulating?"
+        choices: ["The level is frozen", "Blueprints do not run in Simulate", "Physics is turned off", "No PlayerController is used, so game controls are not available"]
+        answer_index: 3
+        explain: "Simulating runs gameplay code but does not spawn a player or use a PlayerController. You keep the editor tools instead of game controls."
+      - q: "How do you keep a change you made to an actor during simulation?"
+        choices: ["Right-click the actor and choose Keep Simulation Changes, or press K", "Press Ctrl + S while simulating", "Changes are always saved automatically", "Click Possess, then Stop"]
+        answer_index: 0
+        explain: "Changes made during play or simulation are not saved by default. Keep Simulation Changes (or the K key) copies them back to the editor level."
+      - q: "When is the Frame Skip button available, and what does it do?"
+        choices: ["Always; it doubles the game speed", "Only in Standalone Game; it skips a level", "Only while paused; it advances gameplay by one frame", "Only in New Window; it takes a screenshot"]
+        answer_index: 2
+        explain: "Frame Skip is grayed out while the game runs. After you pause, clicking it advances gameplay by one frame."
+      - q: "While a Play or Simulate session is active, what can you still change in a Blueprint?"
+        choices: ["You can add new nodes to the graph", "You can change Blueprint defaults, which apply to all instances in the level", "You can rewire pins but not add nodes", "Nothing; the Blueprint editor is locked"]
+        answer_index: 1
+        explain: "During play or simulation all Blueprint graphs are read-only. You can still change Blueprint defaults, and they apply to every instance in the tested level."
+      - q: "You start with Simulate, then click Possess. Where does the Play In Editor session start?"
+        choices: ["At the editor camera", "At the last place you pressed K", "At the actor you have selected", "At the Default Player Start"]
+        answer_index: 3
+        explain: "Possess after a fresh Simulate session is the same as Play > Selected Viewport > Default Player Start. Only if you ejected from PIE first does Possess resume where you ejected."
+    flavors:
+      _default: {why: "Simulate lets you watch physics, AI and Blueprints run while you keep all editor tools."}
+      level_design: {why: "You can move a prop, watch it settle and keep the result without leaving the test.", do: "Use Keep Simulation Changes to settle at least three physics props in your blockout."}
+      gameplay_design: {why: "Frame Skip shows exactly which frame a mechanic breaks on.", do: "Step one trap or moving platform frame by frame and note the frame where it becomes unfair."}
+      cinematics: {why: "Simulate runs your Sequencer and Blueprint events without a player in the way.", do: "Simulate and select an AI pawn mid-action to inspect its values in Details."}
+
+  - id: LDQ67
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [cinematic-viewport, review, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, lookdev]
+    required_spine: false
+    elective: true
+    title: Review shots with the Cinematic Viewport
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-viewport-controls-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-editor-viewports-in-unreal-engine"
+    checklist:
+      - "Create a Level Sequence named LS_ReviewShots and open it in Sequencer."
+      - "Add a Cine Camera Actor to the sequence and frame your most important vista (the first view a player gets of a goal)."
+      - "Open the viewport view type menu (where it says Perspective) and enable Cinematic Viewport."
+      - "In Film Overlays, turn on Grid (3x3) and Title Safe. Check that the goal sits on a grid line and inside the safe area."
+      - "Press G for Game View to hide editor icons. Press F11 for immersive mode if you want a full-screen check."
+      - "If you have a second viewport, turn off Allow Cinematic Control on it so only the main view follows the camera."
+    done_when: "Screenshot of the Cinematic Viewport showing the 3x3 grid and Title Safe overlay on your vista, plus one line on what you moved so the goal reads better."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you turn on the Cinematic Viewport?"
+        choices: ["In the viewport Perspective (view type) menu", "In Edit > Project Settings > Cinematics", "By pressing Alt + S", "In the Layers panel"]
+        answer_index: 0
+        explain: "The page says to select the Viewport Perspective menu and enable Cinematic Viewport. Sequencer must be open for the cinematic elements to appear."
+      - q: "Which composition overlay helps you frame with the Rule of Thirds?"
+        choices: ["Crosshair", "Rabatment", "Grid (3x3)", "Letterbox Mask"]
+        answer_index: 2
+        explain: "Grid (3x3) draws a three-by-three grid for Rule of Thirds framing. Grid (2x2), Crosshair and Rabatment are the other composition overlays."
+      - q: "What are the default size and color of the Title Safe guideline?"
+        choices: ["95% and red", "90% and yellow", "85% and green", "100% and white"]
+        answer_index: 1
+        explain: "Action Safe is 95% red, Title Safe is 90% yellow and Custom Safe is 85% green by default."
+      - q: "For the Letterbox Mask to match your camera correctly, what must be enabled?"
+        choices: ["Real-time viewport", "Game View", "Immersive Mode", "Constrain Aspect Ratio on the camera"]
+        answer_index: 3
+        explain: "The page says you need Constrain Aspect Ratio enabled on the camera so the letterbox is accurate for the sensor size. The default letterbox ratio is 2.35:1."
+      - q: "On which viewports can Allow Cinematic Control be turned on or off?"
+        choices: ["Any orthographic viewport", "Only viewports in Perspective view mode", "Only the Sequencer preview window", "All viewports at the same time"]
+        answer_index: 1
+        explain: "Allow Cinematic Control works only on Perspective viewports. The primary viewport has it enabled by default; turn it off on the others."
+      - q: "What does pressing G in a focused viewport do?"
+        choices: ["Opens the Grid settings", "Starts Play In Editor", "Turns on Game View, hiding editor-only elements like actor icons", "Groups the selected actors"]
+        answer_index: 2
+        explain: "Game View shows the scene as it would look in the game, without editor icons. F11 is Immersive Mode, which makes the viewport full screen."
+    flavors:
+      _default: {why: "Overlays turn a feeling about framing into a check you can repeat."}
+      level_design: {why: "The first sight of a goal is your strongest guiding tool. Safe areas show if it can be cut off by UI.", do: "Save three review cameras in LS_ReviewShots: entrance, midpoint and goal."}
+      cinematics: {why: "Film overlays and Allow Cinematic Control are daily tools for shot work.", do: "Try the Letterbox Mask at 2.35:1 with Constrain Aspect Ratio on and compare the framing."}
+      lookdev: {why: "A clean, framed viewport is the base for every lighting review.", do: "Take the same shot with and without Game View and note which editor icons were distracting."}
+
+  - id: LDQ68
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [screenshots, review, console]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: High-resolution review captures
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "Open your blockout. Click Viewport Options (the arrow at the top left of the viewport) and choose High Resolution Screenshot."
+      - "Click Specify Region and drag a box around the area you want reviewed. Set the Screenshot Size Multiplier to 2."
+      - "Press the capture (camera) button. Click the message in the lower right corner to open the folder."
+      - "Start PIE, press ~ to open the console and run: HighResShot 2. Then run: Shot (or press F9) for a normal-size capture."
+      - "Pick one capture and mark it up in any image editor: circles on problems, arrows on the intended path, short labels."
+      - "Save the annotated image next to the original in Saved\\Screenshots\\Windows."
+    done_when: "The annotated capture (with at least three notes) and a screenshot of the Screenshots folder showing the original files."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where are screenshots saved by default?"
+        choices: ["Content\\Screenshots", "Saved\\Screenshots\\Windows in your project folder", "Your Windows Pictures folder", "Intermediate\\Captures"]
+        answer_index: 1
+        explain: "The page gives Saved\\Screenshots\\Windows as the default location. A message in the lower right corner opens the folder when you click it."
+      - q: "The F9 key is the default binding for which console command?"
+        choices: ["Shot", "HighResShot", "Stat FPS", "Slomo"]
+        answer_index: 0
+        explain: "Shot takes a standard screenshot at the screen or window resolution. F9 is its default key binding."
+      - q: "What does HighResShot do when you type it with no parameters?"
+        choices: ["Takes a screenshot at the window size", "Opens the High Resolution Screenshot Tool", "Exports every G-Buffer pass", "Takes a screenshot 4 times the game resolution"]
+        answer_index: 3
+        explain: "The default behavior is a screenshot with a resolution 4 times greater than the game resolution. It renders the frame in tiles and joins them into one image."
+      - q: "What does the command HighResShot 3840x2160 do?"
+        choices: ["Sets the game window to 3840 by 2160", "Takes a screenshot that is 3840 times bigger", "Takes a screenshot 3840 pixels wide by 2160 high", "Fails, because only multipliers are allowed"]
+        answer_index: 2
+        explain: "The XxY parameter sets the image width and height. A single number like HighResShot 2 is a multiplier instead."
+      - q: "You want one prop cut out from the background in a capture. What is the setup?"
+        choices: ["Hide every other actor with the Layers panel", "Enable Render CustomDepth Pass on the prop and turn on Use custom depth as mask in the tool", "Set the multiplier to 1 and capture in Game View", "Turn on Write HDR format visualization targets"]
+        answer_index: 1
+        explain: "The Custom Depth Mask option separates objects with Render CustomDepth Pass enabled from the rest. The capture region must include those meshes."
+      - q: "What does the page warn about very large screenshot multipliers?"
+        choices: ["The graphics driver may become unresponsive or crash, so use a lower number", "The image is saved as a video instead", "Colors are converted to grayscale", "The tool ignores the capture region"]
+        answer_index: 0
+        explain: "High resolution screenshots have high system requirements. Very large multipliers can hang or crash the graphics driver."
+    flavors:
+      _default: {why: "A large, marked-up capture explains a layout problem faster than a paragraph."}
+      level_design: {why: "Reviewers need to see the whole space and your notes on it. Region capture plus a multiplier gives both.", do: "Make one annotated capture per route in your three-routes level."}
+      lookdev: {why: "Buffer visualization exports let you inspect base color, roughness and normals from one capture.", do: "Enable Include Buffer Visualization Targets once and look at the WorldNormal and Roughness images."}
+      cinematics: {why: "HighResShot from a review camera is a quick still for a shot list.", do: "Capture the same frame with HighResShot 2 and HighResShot 3840x2160 and compare the files."}
+
+  - id: LDQ69
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [layers, visibility, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, cinematics]
+    required_spine: false
+    elective: true
+    title: Hide the clutter for clean captures
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/layers-panel-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-show-flags-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-editor-viewports-in-unreal-engine"
+    checklist:
+      - "Open Window > Layers. Select all your trigger volumes and helper actors, right-click the panel and choose Add Selected Actors to New Layer. Rename it Review_Helpers."
+      - "Create a second layer named Blockout_Notes and drag your note or text actors into it from the Outliner."
+      - "Take a capture of a room with everything visible."
+      - "Click the eye icon on both layers to hide them. In the viewport Show menu turn off Grid, and press Alt + C to hide collision if it is on."
+      - "Press G for Game View and take the same capture again."
+      - "Double-click Review_Helpers to select all its actors and confirm the count in the contents bar."
+    done_when: "Two screenshots of the same room, before and after hiding layers and show flags, plus a screenshot of the Layers panel with both named layers."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How many layers can one actor belong to?"
+        choices: ["Exactly one", "Up to two", "As many as you want", "One per level streaming volume"]
+        answer_index: 2
+        explain: "An actor can be in as many layers as you want. The page gives the example of a zone layer and a separate layer for all doors."
+      - q: "What name does a new layer get by default?"
+        choices: ["Layer[number], for example Layer1", "The name of the first actor in it", "Untitled", "The current level name"]
+        answer_index: 0
+        explain: "New layers use the Layer[number] scheme with an increasing number. The page says to always rename them to something descriptive."
+      - q: "What is the quickest way to select every actor in a layer?"
+        choices: ["Press Ctrl + A in the viewport", "Click the eye icon", "Drag the layer into the viewport", "Double-click the layer, or right-click it and choose Select Actors"]
+        answer_index: 3
+        explain: "Double-clicking a layer selects all its actors and replaces the current selection. Append Actors to Selection adds them instead."
+      - q: "Which shortcut toggles the Collision show flag in the viewport?"
+        choices: ["Alt + W", "Alt + C", "Alt + F", "P"]
+        answer_index: 1
+        explain: "Alt + C shows or hides collision. Alt + W is Static Meshes, Alt + F is Fog and P is Navigation."
+      - q: "You turn off the Translucency show flag. What else disappears?"
+        choices: ["All static meshes", "The landscape", "All billboard icons, because they are translucent", "Decals only"]
+        answer_index: 2
+        explain: "The page notes that hiding Translucency hides all objects with translucent materials, and this includes all billboard icons."
+      - q: "You select two actors. Which layers does the Details panel Layers section show?"
+        choices: ["Only the layers common to both actors", "All layers in the level", "The layers of the first actor only", "Nothing, until you select one actor"]
+        answer_index: 0
+        explain: "The Details Layers section lists only layers shared by every selected actor, in a tag-cloud style layout."
+    flavors:
+      _default: {why: "Reviewers should see the space, not your helper actors and gizmos."}
+      level_design: {why: "Trigger volumes, notes and nav helpers fill a blockout. Layers hide them in one click.", do: "Keep Review_Helpers hidden while testing sightlines so volumes do not fake a wall."}
+      lookdev: {why: "A capture with no icons or grid is the base for every lighting comparison.", do: "Add a Lights layer so you can select every light in a room with one double-click."}
+      cinematics: {why: "Hidden layers and Game View give a clean frame without moving anything.", do: "Make a Cameras layer and use it to select all review cameras at once."}
+
+  - id: LDQ70
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [level-blueprint, blueprint, testing]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Level Blueprint test triggers
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-blueprint-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprints-visual-scripting-editor-user-interface-for-level-blueprints-in-unreal-engine"
+    checklist:
+      - "Place a Trigger Volume at a door in your blockout and name it TV_TestDoor. Place a Point Light behind the door named PL_TestDoor."
+      - "Click the Blueprints button in the Level Editor toolbar and choose Open Level Blueprint."
+      - "Right-click TV_TestDoor in the level. Under Level Blueprint, add the OnActorBeginOverlap event."
+      - "Select PL_TestDoor in the Outliner, then right-click in the graph and choose Create a reference to PL_TestDoor. Connect a Toggle Visibility node to the event."
+      - "Add a Print String with the text Reached door to the same event. Compile."
+      - "Play, walk through the door and check that the light toggles and the message prints."
+    done_when: "Screenshot of the Level Blueprint graph (event, actor reference, Toggle Visibility, Print String) and a PIE screenshot with the printed message on screen."
+    xp: 58
+    verify_type: screenshot
+    quiz:
+      - q: "How many Level Blueprints does a level have, and can you make more?"
+        choices: ["None until you create one from the Content Browser", "One per level by default; new ones cannot be created through the editor interface", "One per actor", "As many as you want, from the Blueprints toolbar button"]
+        answer_index: 1
+        explain: "Each level gets its own Level Blueprint by default. The page says new Level Blueprints cannot be created through the editor interface."
+      - q: "How do you open the Level Blueprint?"
+        choices: ["Double-click the level in the Content Browser", "Press Alt + S", "Right-click the viewport and choose Level Blueprint", "Click the Blueprints button in the Level Editor toolbar and select Open Level Blueprint"]
+        answer_index: 3
+        explain: "The Blueprints toolbar button has an Open Level Blueprint entry. It opens in the Blueprint Editor with the Graph Editor, My Blueprint and Details panels."
+      - q: "What is one way to get a reference node for an actor placed in the level?"
+        choices: ["Select the actor, then right-click in the graph and choose Create a reference to [SelectedActor]", "Type the actor name into a Get Actor Of Class node", "Copy the actor and paste it into the graph as text", "Add a variable of type Actor and compile"]
+        answer_index: 0
+        explain: "With the actor selected, the graph context menu offers Create a reference to that actor. You can also drag the actor from the Outliner into the graph."
+      - q: "You want an OnActorBeginOverlap event for a trigger volume in the level. Which method does the page give?"
+        choices: ["Open the trigger's own Blueprint class and add it there", "Use Event BeginPlay and a Delay node", "Right-click the actor in the level and pick the event under Level Blueprint in the context menu", "Add the event in Project Settings > Input"]
+        answer_index: 2
+        explain: "Right-clicking an actor in the level shows a Level Blueprint submenu with events for that actor. In the graph, Add Event for [ActorName] does the same."
+      - q: "Which panel is NOT shown by default when editing a Level Blueprint?"
+        choices: ["Details", "Palette", "My Blueprint", "Graph Editor"]
+        answer_index: 1
+        explain: "The default panels are Menu, Toolbar, My Blueprint, Details and Graph Editor. Palette, Compiler Results, Debug, Find Results and Viewport are opened from the Window menu."
+      - q: "Where can a game set the default Level Blueprint class for new maps?"
+        choices: ["In the Level Blueprint itself", "In the World Settings of each map", "In the Play In Editor settings", "In the DefaultGame.ini config file"]
+        answer_index: 3
+        explain: "The page says each game can specify the default Level Blueprint class in DefaultGame.ini. All new maps then use that class."
+    flavors:
+      _default: {why: "A Level Blueprint is the fastest place to wire a one-off test without making a new class."}
+      level_design: {why: "You can prove a trigger, a light or a door works in five minutes before anyone builds the real system.", do: "Add a second trigger that prints the time between two doors to measure a route."}
+      gameplay_design: {why: "Level-specific events belong here, not in reusable Blueprint classes.", do: "Note one thing you tested in the Level Blueprint that should later move to an actor class."}
+
+  - id: LDQ71
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [console, cheats, playtesting]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design]
+    required_spine: false
+    elective: true
+    title: Console cheats for faster playtests
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/CheatManager/Slomo"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/CheatManager/Teleport"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/CheatManager/God"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/CheatManager/Ghost"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/CheatManager/Walk"
+    checklist:
+      - "Play your blockout in the viewport. Press ~ to open the console. Type stat FPS and press Enter."
+      - "Type slomo 0.25 and walk through your hardest jump. Type slomo 1 to return to normal speed."
+      - "Look at a ledge across a gap and type teleport. Check you landed on the surface you looked at."
+      - "Type ghost and fly through a wall to check the far side. Type walk to return to normal movement."
+      - "Type god, then walk into a trap or kill volume to confirm you take no damage."
+      - "Write down which command saved the most time and where you used it."
+    done_when: "PIE screenshot with the stat FPS counter visible and the console open, plus a short writeup (3 to 5 lines) listing each command you used and what it helped you test."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which key opens the console during a Play In Editor session?"
+        choices: ["F1", "Esc", "The tilde (~) key", "Alt + P"]
+        answer_index: 2
+        explain: "Press tilde once to open the PIE console, again to expand it and a third time to close it. It autocompletes commands as you type."
+      - q: "What does the command slomo 0.1 do?"
+        choices: ["Makes everything move very slowly", "Makes everything move ten times faster", "Limits the frame rate to 10 FPS", "Pauses the game for 0.1 seconds"]
+        answer_index: 0
+        explain: "Slomo changes time dilation. Slomo 0.1 makes everything very slow, while Slomo 10 makes everything very fast."
+      - q: "What does the teleport cheat do?"
+        choices: ["Moves you to the Player Start", "Moves you to the last checkpoint", "Moves you to the next level", "Moves you to the surface you are looking at"]
+        answer_index: 3
+        explain: "The Cheat Manager Teleport function teleports the player to the surface they are looking at."
+      - q: "After using ghost, which command returns you to normal movement?"
+        choices: ["god", "walk", "slomo 1", "fly"]
+        answer_index: 1
+        explain: "Walk returns to the walking movement mode from the Fly or Ghost cheat."
+      - q: "What is the difference between fly and ghost?"
+        choices: ["Fly is faster than ghost", "Ghost also makes you invulnerable", "Ghost also removes collision with the world; fly only lets the pawn fly", "There is no difference"]
+        answer_index: 2
+        explain: "Fly means the pawn can fly. Ghost means the pawn no longer collides with the world and can fly. God is the separate invulnerability cheat."
+      - q: "Which stat command lists all the other stat commands?"
+        choices: ["stat Help", "stat List", "stat Quick", "stat Engine"]
+        answer_index: 0
+        explain: "stat Help lists all stat commands. stat Quick shows groups of overall performance data and stat Engine shows general rendering stats."
+    flavors:
+      _default: {why: "Cheats remove the parts of a test you already trust so you can look at the part you do not."}
+      level_design: {why: "Teleport, ghost and slomo let you check any spot of a level in seconds.", do: "Use ghost to look at your level from above and note one place where the intended path is not clear."}
+      gameplay_design: {why: "Slomo shows the exact moment a mechanic feels unfair; god lets you observe a threat safely.", do: "Watch one trap at slomo 0.25 and write down the reaction time a player really has."}
+
+  - id: LDQ72
+    rank: 1
+    difficulty: apprentice
+    track: level-design
+    subjects: [text-3d, annotations, review]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, lookdev]
+    required_spine: false
+    elective: true
+    title: 3D notes inside the level
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/3d-text-actor-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/layers-panel-in-unreal-engine"
+    checklist:
+      - "Go to Edit > Plugins, open the Text tab and enable Text 3D. Accept the experimental warning and restart the editor."
+      - "In Place Actors choose All Classes and drag a Text 3D actor next to a problem spot. Name it T3D_Note_01."
+      - "Set the Text to a short note, for example NOTE 1 and a second line with Shift + Enter. Set Extrude low so it is easy to read."
+      - "Set Horizontal Alignment to Center and give the Front Material a bright unlit material so the note is visible from far away."
+      - "Duplicate the note for two more problem spots (T3D_Note_02, T3D_Note_03) and change the text."
+      - "Put all three in a layer named Blockout_Notes so you can hide them for clean captures."
+    done_when: "Screenshot of the level showing all three Text 3D notes placed at real problem spots, plus a screenshot of the Layers panel with the Blockout_Notes layer."
+    xp: 52
+    verify_type: screenshot
+    quiz:
+      - q: "What must you do before you can place a Text 3D actor?"
+        choices: ["Import a TTF font first", "Enable the Text 3D plugin under Edit > Plugins and restart", "Create a Level Sequence", "Turn on Game View"]
+        answer_index: 1
+        explain: "3D Text needs the Text 3D plugin. Enable it from the Text tab in Edit > Plugins, accept the experimental warning and restart."
+      - q: "How do you make a line break in the Text field?"
+        choices: ["Type a slash", "Press Enter twice", "Increase Line Spacing", "Press Shift + Enter"]
+        answer_index: 3
+        explain: "The page says to press Shift + Enter to create a line break in the Text property."
+      - q: "What does the Extrude setting control?"
+        choices: ["The depth of the letters from front to back", "The space between letters", "The maximum width of the text", "The size of the edge bevel"]
+        answer_index: 0
+        explain: "Extrude sets the depth of the geometry, how thick the letters are. Bevel and Kerning are separate settings."
+      - q: "Which Bevel Type options does the Text 3D actor offer?"
+        choices: ["Round or Square", "Soft or Hard", "Linear or Half Circle", "Inner or Outer"]
+        answer_index: 2
+        explain: "Bevel Type is Linear for a sharp, flat bevel or Half Circle for a rounded edge. Half Circle Segments sets the curve detail."
+      - q: "Which material slots does a Text 3D actor have?"
+        choices: ["One material for the whole text", "Front, Bevel, Extrude and Back", "Base and Emissive", "Left, Right, Top and Bottom"]
+        answer_index: 1
+        explain: "The Details panel has Front Material, Bevel Material, Extrude Material and Back Material for the four surfaces of the letters."
+      - q: "On a Text3DCharacterTransform component, what does a Progress value of 100 mean?"
+        choices: ["The animation has 100 letters", "The animation runs at full speed", "The text is 100 units wide", "The letters are at their End state"]
+        answer_index: 3
+        explain: "Progress moves the letters between the Begin state at 0 and the End state at 100. This is the value you usually animate in a Level Sequence."
+    flavors:
+      _default: {why: "A note that sits in the world is seen by everyone who plays the level, not only by people who read a document."}
+      level_design: {why: "Notes at the exact spot of a problem make review walks faster and fix lists clearer.", do: "Number your notes and match the numbers to a fix list in your metrics sheet."}
+      cinematics: {why: "Text 3D can animate letter by letter in Sequencer for titles and motion graphics.", do: "Add a Text3DCharacterTransform component and scrub Progress from 0 to 100 to preview it."}
+      lookdev: {why: "The four material slots make 3D text a quick test object for your unlit and emissive materials.", do: "Assign a different material to Front and Extrude and check readability at distance."}

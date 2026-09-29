@@ -1,0 +1,1899 @@
+# Unrealcraft — Cinematics major, all ranks. IDs CQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: CQ1
+    rank: 0
+    difficulty: novice
+    track: cinematics
+    subjects: [viewport, camera, navigation, piloting]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, lookdev]
+    required_spine: false
+    elective: true
+    title: Bookmarks and camera speed
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-controls-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "Open a level with a few meshes. Hold RMB and scroll the mouse wheel to change the camera speed. Find a speed that feels good for close work."
+      - "Select one mesh and press F to focus on it. Hold Alt + LMB and drag to orbit around it. Try Alt + RMB (dolly) and Alt + MMB (track)."
+      - "Find three nice views of the level. Save each one as a viewport bookmark (Ctrl + 1, Ctrl + 2, Ctrl + 3). Press 1, 2, 3 to jump between them."
+      - "Place a Cine Camera Actor (Place Actors > Cinematic). Right-click it in the viewport and choose Pilot CineCameraActor. Move the view with the normal controls."
+      - "Click the eject icon to stop piloting. Select the camera again and press Ctrl + Shift + P to pilot it with the keyboard."
+      - "Press G to toggle Game View and see the shot without editor icons."
+    done_when: "One screenshot of the viewport while piloting the Cine Camera Actor (the pilot bar must be visible at the top of the viewport) and one line saying which camera speed you settled on."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "How do you change the movement speed of the viewport camera while flying?"
+        choices: ["Hold RMB and scroll the mouse wheel", "Press F", "Press G", "Hold Alt and drag with LMB"]
+        answer_index: 0
+        explain: "Holding RMB and scrolling the wheel increases or decreases the camera movement speed."
+      - q: "You selected an object and want the camera to orbit around it. What do you press?"
+        choices: ["Press G, then drag with RMB", "Press F to focus, then hold Alt + LMB and drag", "Hold RMB + W", "Press F11"]
+        answer_index: 1
+        explain: "F focuses on the selected object. Alt + LMB drag then orbits around that pivot."
+      - q: "What does the G key do in the Level viewport?"
+        choices: ["Groups the selected actors", "Opens the Game settings", "Toggles Game View, hiding editor-only gizmos and icons", "Toggles the grid"]
+        answer_index: 2
+        explain: "G toggles Game Mode (Game View). The viewport then shows only what would be seen in-game."
+      - q: "Which shortcut starts piloting the selected Cine Camera Actor?"
+        choices: ["Ctrl + P", "Alt + P", "Shift + F", "Ctrl + Shift + P"]
+        answer_index: 3
+        explain: "The Cine Camera Actor page lists Ctrl + Shift + P to jump into pilot mode for the selected camera."
+      - q: "While piloting a camera, what does the eject icon in the viewport do?"
+        choices: ["Deletes the camera", "Stops piloting and unlocks the viewport from the actor, keeping the camera selected", "Resets the camera transform", "Takes a screenshot"]
+        answer_index: 1
+        explain: "The eject icon exits camera pilot mode. The viewport is unlocked but the camera stays selected."
+    flavors:
+      _default: {why: "Fast, precise viewport movement is the base skill for every shot you will ever frame."}
+      cinematics: {why: "Framing a shot starts with moving the editor camera exactly where you want it, then handing that view to a real camera.", do: "Pilot the camera, frame a shot, then open Editor Preferences > Level Editor > Viewports and lower the camera speed for fine framing."}
+      level_design: {why: "Bookmarks let you jump between key spots in your level while you work."}
+      lookdev: {why: "Orbit and dolly around one asset is how you inspect materials from every angle."}
+
+  - id: CQ2
+    rank: 0
+    difficulty: novice
+    track: cinematics
+    subjects: [cine-camera, filmback, lens, focus]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: The Cine Camera Actor
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Add a Cine Camera Actor with Place Actors (Window > Place Actors > Cinematic)."
+      - "Select it. Look at the Picture-in-Picture (PIP) window in the bottom right of the viewport. Click the pin so it stays visible."
+      - "In Details, open Filmback. Change the Filmback preset (for example to a 16:9 one) and watch Sensor Width, Sensor Height and Sensor Aspect Ratio change."
+      - "Open Lens Settings. Pick a lens preset. Then set Current Focal Length to 24 mm, then 85 mm, and compare the PIP."
+      - "Enable Constrain Aspect Ratio in Camera Options and note the black bars in the PIP."
+      - "Set Focus Method to Manual and use the eyedropper next to Manual Focus Distance to pick one object."
+    done_when: "One screenshot with the Cine Camera Actor selected, its Details panel showing Filmback and Lens Settings, and the pinned PIP visible."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Cine Camera Actor add over a normal Camera Actor?"
+        choices: ["A built-in Sequencer", "Filmback, Lens and Focus settings that copy real film cameras", "A wider field of view", "Automatic camera cuts"]
+        answer_index: 1
+        explain: "The page says the Cine Camera Actor is a specialized Camera Actor with Filmback, Lens and Focus settings that replicate real-world film camera behavior."
+      - q: "You select a Filmback preset. Which values change?"
+        choices: ["Focal Length and F-Stop", "Sensor Width and Sensor Height", "Crop Settings", "Manual Focus Distance"]
+        answer_index: 1
+        explain: "Filmback presets set the Sensor Width and Height to emulate the chosen camera body. The aspect ratio and base field of view follow from that."
+      - q: "Why can you not type a value into Sensor Aspect Ratio?"
+        choices: ["It is locked by the Filmback preset until you remove it", "It only changes in Sequencer", "It is read-only and computed from the sensor dimensions", "It is a project setting"]
+        answer_index: 2
+        explain: "Sensor Aspect Ratio is computed from Sensor Width and Height. It is intended for read-only reference."
+      - q: "How do you emulate a prime lens (a lens that cannot zoom)?"
+        choices: ["Set Min Focal Length and Max Focal Length to the same value", "Set Squeeze Factor to 1", "Disable Constrain Aspect Ratio", "Set Focus Method to Disable"]
+        answer_index: 0
+        explain: "The Lens Settings table says to set Min and Max Focal Length to the same value to emulate a prime lens."
+      - q: "When does the Picture-in-Picture (PIP) window appear?"
+        choices: ["Only while piloting the camera", "Only in Play In Editor", "Only when the camera is in Sequencer", "When a Cine Camera Actor is selected; it hides while you pilot the camera"]
+        answer_index: 3
+        explain: "Selecting a Cine Camera Actor shows a PIP preview in the bottom right of the viewport. The PIP is not displayed while piloting."
+    flavors:
+      _default: {why: "The Cine Camera Actor is the camera you will film everything with. Learn its panels once and every shot goes faster."}
+      cinematics: {why: "Filmback and lens choices set the look of a shot before you add a single keyframe.", do: "Set Focus Method to Tracking, pick an actor, and enable Draw Debug Focus Plane to see where focus sits."}
+      lookdev: {why: "Lens and focus settings decide how your materials are seen in a still or a turntable."}
+      level_design: {why: "A quick Cine Camera in the level is the fastest way to check how a space reads from a player-like view."}
+
+  - id: CQ3
+    rank: 0
+    difficulty: novice
+    track: cinematics
+    subjects: [screenshots, high-resolution-screenshot, hdr]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: true
+    title: High-resolution screenshots
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Frame a shot in the viewport. Open Viewport Options and choose High Resolution Screenshot."
+      - "Set the Screenshot Size Multiplier to 2 and click the camera icon. Click the message in the bottom right to open the Saved/Screenshots folder."
+      - "Click Specify Region, drag a rectangle in the viewport, and take a second screenshot of only that region."
+      - "Select one mesh, enable Render CustomDepth Pass in its Details. In the tool, enable Use custom depth as mask and capture again."
+      - "Start Play In Editor, press ~ and type HighResShot 3840x2160. Find the file in the same folder."
+      - "Compare file sizes and pixel sizes of the four images."
+    done_when: "One 2x (or larger) high-resolution screenshot of your shot, plus one screenshot of the Saved/Screenshots folder showing your files with their pixel sizes."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "Where are screenshots saved by default?"
+        choices: ["In the Content folder of the project", "In Saved/Screenshots inside the project folder", "On the Desktop", "In the Engine folder"]
+        answer_index: 1
+        explain: "By default screenshots go to Saved\\Screenshots\\Windows in your project folder. The message in the bottom right opens that folder."
+      - q: "How does the HighResShot command produce an image larger than the screen?"
+        choices: ["It lowers the quality of the scene", "It stretches the normal screenshot", "It renders the frame several times, one tile at a time, and joins the tiles", "It uses the Movie Render Queue"]
+        answer_index: 2
+        explain: "HighResShot renders the game frame multiple times, one tile at a time at full resolution, then concatenates the tiles into one image."
+      - q: "What does the command HighResShot 2 do?"
+        choices: ["Takes two screenshots", "Takes a screenshot twice as big as the screen resolution", "Takes a screenshot at 2K", "Waits two seconds before the screenshot"]
+        answer_index: 1
+        explain: "A single number is a multiplier. HighResShot 2 gives an image twice as big as the screen resolution."
+      - q: "You want an HDR image from the High Resolution Screenshot Tool. Which option do you enable?"
+        choices: ["Use custom depth as mask", "Include Buffer Visualization Targets", "Force 128-bit rendering only", "Write HDR format visualization targets, which writes OpenEXR files"]
+        answer_index: 3
+        explain: "The tool supports OpenEXR output. Enabling the HDR option writes .EXR files with full 16-bit color depth."
+      - q: "What must you enable on an object before Use custom depth as mask can cut it out from the background?"
+        choices: ["Render CustomDepth Pass in the object's Details panel", "Cast Shadows", "Constrain Aspect Ratio", "Game View"]
+        answer_index: 0
+        explain: "The custom depth mask uses the Custom Depth buffer. Objects must have Render CustomDepth Pass enabled to appear in the mask."
+    flavors:
+      _default: {why: "A clean high-resolution still is the fastest proof of your work, and the format most portfolios use."}
+      cinematics: {why: "Storyboard stills and lookdev frames come from this tool long before you render a movie.", do: "Take the same framing at 1x and 4x and compare fine detail like text or thin edges."}
+      lookdev: {why: "EXR output and the GBuffer passes let you inspect your materials outside the editor."}
+      level_design: {why: "High-res captures of your blockout are great for review documents."}
+
+  - id: CQ4
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [sequencer, level-sequence, keyframes, camera]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    title: Your first Level Sequence
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-sequencer-movie-tool-overview"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-make-movies-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-animate-cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "In the main toolbar, click the Cinematics dropdown and choose Add Level Sequence. Name it LS_FirstMove and save it in a Sequences folder."
+      - "Sequencer opens. Click the Create New Camera button in the Sequencer toolbar. Note that the viewport now pilots the new Cine Camera Actor."
+      - "At frame 0, frame a wide view of your level. Select the camera's Transform track and press Enter to set a key."
+      - "Drag the playhead to about 5 seconds. Move the camera to a new position. Select the Transform track and press Enter again."
+      - "Press Play in Sequencer and scrub the playhead back and forth to check the move."
+      - "Select the Level Sequence Actor in the Outliner. In Details, enable Auto Play. Press Play In Editor and watch the move run."
+    done_when: "One screenshot of Sequencer showing LS_FirstMove with a Cine Camera Actor track, at least two Transform keyframes, and the Camera Cuts track, plus one line saying how long your move is."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "What is the difference between a Level Sequence Asset and a Level Sequence Actor?"
+        choices: ["They are the same thing with two names", "The Asset lives in the Content Browser and holds the data; the Actor lives in the Level and binds that data to the Level", "The Actor holds the keyframes; the Asset only holds the camera", "The Asset is only used for rendering"]
+        answer_index: 1
+        explain: "The Level Sequence Asset contains tracks, cameras and keyframes. It is assigned to a Level Sequence Actor in the Level to bind its data to that Level."
+      - q: "Which is one correct way to create a Level Sequence?"
+        choices: ["Window > Levels > New Level", "Right-click the viewport and choose Add Sequence", "Click the Cinematics dropdown in the main toolbar and choose Add Level Sequence", "Edit > Project Settings > Sequencer"]
+        answer_index: 2
+        explain: "The Cinematics dropdown in the Level Editor toolbar has Add Level Sequence. You can also right-click in the Content Browser and choose Cinematics > Level Sequence."
+      - q: "You click Create New Camera in the Sequencer toolbar. What happens?"
+        choices: ["A Camera Actor is placed at the world origin, nothing else", "A Cine Camera Actor is created as a spawnable and the viewport starts piloting it", "The current viewport view is saved as a bookmark", "A Level Sequence Actor is created"]
+        answer_index: 1
+        explain: "The button creates a Cine Camera Actor as a spawnable for the sequence and updates the viewport to the camera's perspective (piloting)."
+      - q: "The fastest way described to set a transform keyframe on the camera is:"
+        choices: ["Select the Transform track and press Enter", "Right-click the viewport and choose Add Key", "Press Ctrl + S", "Drag the camera into the timeline"]
+        answer_index: 0
+        explain: "Select the camera's Transform track and press Enter. This sets a keyframe at the playhead."
+      - q: "You open a Level Sequence by double-clicking it in the Content Browser, but no Level that references it is open. What happens?"
+        choices: ["Unreal creates a new Level for it", "The sequence opens but its contents are unbound", "The Level Sequence Actor is deleted", "Sequencer refuses to open"]
+        answer_index: 1
+        explain: "When opening from the Content Browser you must have a Level open that references the sequence. Otherwise the contents are unbound."
+      - q: "On the Level Sequence Actor, what does Auto Play do?"
+        choices: ["Plays the sequence in the editor every time you save", "Loops the sequence forever", "Renders the sequence to a movie", "Plays the sequence automatically when the actor is created"]
+        answer_index: 3
+        explain: "Auto Play makes the sequence play automatically when the Level Sequence Actor is created, for example when the level starts."
+    flavors:
+      _default: {why: "Every cinematic, cutscene and trailer in Unreal starts with a Level Sequence and a camera move."}
+      cinematics: {why: "This is the core loop of the major: place a camera, key it, scrub, refine.", do: "Add a third key in the middle of the move and make the camera slow down near the subject."}
+      animation: {why: "Sequencer is also where you will place and blend character animation later."}
+      level_design: {why: "A short fly-through sequence is the best way to show a level to your team."}
+
+  - id: CQ5
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [sequencer, camera-cuts, editing]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    title: "Camera Cuts: which camera when"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-camera-cut-track-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-camera-cuts-using-sequencer-in-unreal-engine"
+    checklist:
+      - "Create LS_ThreeCuts. Add a moving object (a cube with two Transform keys is enough) so there is action to cut on."
+      - "Click Create Camera. This makes Cine Camera Actor and a Camera Cuts track. Frame a wide shot at frame 0."
+      - "Move the playhead to where you want the first cut. Click Create Camera again for camera 2 and frame a closer shot."
+      - "On the Camera Cuts track, click Add Camera (+) and pick camera 2 under New Binding or Existing Bindings. A cut appears at the playhead."
+      - "Repeat for a third camera. Drag the touching edges of the cut sections to adjust timing."
+      - "Enable the Camera Lock button on the Camera Cuts track and press Play to watch the cuts. Then right-click the track, enable Can Blend, and overlap two sections to try a blend."
+    done_when: "One screenshot of Sequencer showing the Camera Cuts track with three sections bound to three different cameras (thumbnails visible), plus one line: at which frame is each cut and why there."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "What is the job of the Camera Cut Track?"
+        choices: ["To store the camera's transform keys", "To choose which camera is active at each point in the sequence", "To render the sequence to disk", "To add depth of field"]
+        answer_index: 1
+        explain: "The Camera Cut Track controls which camera Sequencer looks through over time, and can blend cameras or blend to and from gameplay."
+      - q: "How do you make a cut to another camera at a specific time?"
+        choices: ["Move the playhead there, click Add Camera (+) on the Camera Cut Track and pick the camera", "Delete the old camera", "Press S with the camera selected", "Drag the camera actor into the viewport"]
+        answer_index: 0
+        explain: "Move the playhead to the cut point, then Add Camera (+) creates a new Camera Cut section bound to the chosen camera at the playhead."
+      - q: "By default, what is special about the edges of Camera Cut sections?"
+        choices: ["They can only be moved with the keyboard", "They snap to whole seconds", "They do not allow gaps or overlaps between cuts", "They cannot be moved at all"]
+        answer_index: 2
+        explain: "Unlike most sections, Camera Cut sections by default do not allow gaps or overlaps. You drag the touching edges to change cut timing."
+      - q: "The viewport is locked to the Camera Cut Track and you cannot move the active camera. What is going on?"
+        choices: ["The camera is a spawnable", "The sequence is playing", "The camera has no Transform track", "Viewport camera control is disabled while locked to the Camera Cut Track; enable the camera's own track to move it"]
+        answer_index: 3
+        explain: "Locking the view to the Camera Cut Track disables viewport camera control. To move or key the active camera, enable that Camera Track first."
+      - q: "What does enabling Can Blend on the Camera Cut Track allow?"
+        choices: ["Cuts that fade to black", "Overlapping sections that blend transforms and camera properties like focal length and depth of field", "Faster thumbnail rendering", "Mixing two Level Sequences"]
+        answer_index: 1
+        explain: "With Can Blend on, you can overlap Camera Cut sections and blend from one camera to another, including camera component properties, or blend to and from gameplay."
+      - q: "For a long cinematic with many cameras, what does the documentation recommend?"
+        choices: ["Put all cameras and cuts in one Camera Cut Track", "Use one camera and animate it everywhere", "Build it from shots, each with a single camera and camera cut", "Use Blueprints instead of Sequencer"]
+        answer_index: 2
+        explain: "The page does not recommend full-length sequences made of many cameras and cuts in one track. Use shots, each partitioning one camera and one Camera Cut."
+    flavors:
+      _default: {why: "Editing is choosing which camera the viewer sees and when. The Camera Cuts track is that decision inside Unreal."}
+      cinematics: {why: "Cutting on action is the first real editing skill. Everything after this builds on the Camera Cuts track.", do: "Disable Draw Thumbnails on the track and note the editor speed difference on a heavy scene."}
+      animation: {why: "Cuts hide and reveal animation; you decide what the audience sees of a performance."}
+      level_design: {why: "A three-cut sequence is a quick way to present the key views of a level."}
+
+  - id: CQ6
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [sequencer, keyframes, curve-editor, tangents]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, tech_art]
+    required_spine: false
+    elective: false
+    title: Keys and curves
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-animation-keyframes-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-curve-editor-in-unreal-engine"
+    checklist:
+      - "Open LS_FirstMove (or a new sequence) with a camera move of at least two Transform keys."
+      - "Select the camera in the viewport and press S at a new time. Check that a full Transform key was added. Try Shift + W for Location only."
+      - "Enable Auto Key. Move the playhead, move the camera, and watch keys appear. Open the keyframe options and set it to Key Changed."
+      - "Select the last key. Press 4 for Linear, then 5 for Constant, then 1 for Cubic (Auto). Scrub and feel the difference."
+      - "Open the Curve Editor from the Sequencer toolbar. Select the Location Z curve, press F to frame it, and drag a tangent handle to add an ease-out."
+      - "Add a key with MMB on the curve. Then hold Ctrl + MMB to add one without changing the curve shape. Compare the two."
+    done_when: "One screenshot of the Curve Editor showing your camera curve with at least three keys and one edited tangent, plus one line naming which tangent type you used for the final key and why."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "With an actor selected, pressing S in Sequencer does what?"
+        choices: ["Saves the sequence", "Creates a Transform track if needed and keys Location, Rotation and Scale", "Solos the track", "Keys only the Scale"]
+        answer_index: 1
+        explain: "S creates a Transform Track if there is none and keys the full transform. It also works with focus on the viewport and adds the actor to Sequencer if needed."
+      - q: "Auto Key is on but no new keys appear when you move an actor. The most likely reason is:"
+        choices: ["Auto Key only works in Play In Editor", "The Curve Editor is open", "The actor is a spawnable", "The track has no keyframes yet; an empty track is not auto keyed"]
+        answer_index: 3
+        explain: "The track you auto key must already contain keyframes. An empty track will not be auto keyed."
+      - q: "Which is the default tangent type for new keys, and what does it do?"
+        choices: ["Linear: no easing between keys", "Cubic (Auto): keeps a smooth curve and eases both ends, adjusting itself when keys move", "Constant: holds the value until the next key", "Cubic (Break): separate in and out angles"]
+        answer_index: 1
+        explain: "Cubic (Auto) is the default. It maintains a smooth curve, eases start and end, and re-adjusts whenever keys are added or moved."
+      - q: "You want a value to jump at a key with no interpolation before it. Which tangent do you pick?"
+        choices: ["Cubic (User)", "Linear", "Constant", "Weighted"]
+        answer_index: 2
+        explain: "Constant tangents keep the current value until the next keyframe is reached, like a non-interpolating key."
+      - q: "In the Curve Editor, how do you add a key on a curve without changing the shape of the curve?"
+        choices: ["Hold Ctrl and click MMB on the curve segment", "Press Enter", "Double-click the curve", "Press Ctrl + D"]
+        answer_index: 0
+        explain: "MMB on a curve adds a key. Holding Ctrl while clicking MMB adds a key without disturbing the curve structure."
+      - q: "Two keys of Location are the same in Sequencer and you set Key Group in the Auto Key options. You edit only the X location. What gets keyed?"
+        choices: ["Only X location", "X, Y and Z location", "Location, Rotation and Scale", "Nothing until you press Enter"]
+        answer_index: 1
+        explain: "Key Group keys all axes within the changed channel. Key Changed keys only the axis that changed, and Key All keys every channel and group."
+    flavors:
+      _default: {why: "Keys say where; curves say how. The feel of a camera move lives in its tangents."}
+      cinematics: {why: "A move that eases in and out reads as intentional. A linear move reads as a machine.", do: "Use Weighted Tangents on one key and stretch the handle to make a very long ease-out."}
+      animation: {why: "The same Curve Editor edits animation curves everywhere in the engine."}
+      tech_art: {why: "Curve Editor skills carry to Niagara and Curve Assets."}
+
+  - id: CQ7
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [cine-camera, lens, depth-of-field, focus]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev]
+    required_spine: false
+    elective: false
+    title: "Lens: focal length, aperture, focus"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-depth-of-field-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "Place a Cine Camera Actor in front of a subject with something in the foreground and something in the background. Pilot the camera."
+      - "Set Current Focal Length to 35 mm, then 85 mm. Note how the field of view and the background blur change."
+      - "Set Focus Method to Manual. Use the eyedropper on Manual Focus Distance to pick the subject. Enable Draw Debug Focus Plane."
+      - "Set Current Aperture to 1.4, then 5.6. Screenshot both."
+      - "Set Focus Method to Tracking and set Actor to Track to the subject. Move the subject and check that focus follows. Enable Smooth Focus Changes."
+      - "Set Diaphragm Blade Count to 5, then 12, and look at the bokeh shapes on small bright spots in the background."
+    done_when: "Two screenshots of the same framing, one at f/1.4 and one at f/5.6, both with the subject in focus, plus one line with your focal length and focus method."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "You raise the focal length from 50 mm to 100 mm. What happens?"
+        choices: ["The field of view gets narrower and out-of-focus areas become more pronounced", "The field of view gets wider", "The image gets brighter", "The focus distance doubles"]
+        answer_index: 0
+        explain: "As focal length increases the FOV decreases, like zooming in, and background and foreground blur become more noticeable."
+      - q: "Which aperture gives a shallower depth of field with more blur?"
+        choices: ["f/8.0", "f/5.6", "f/1.4", "They are all the same"]
+        answer_index: 2
+        explain: "Smaller F-stop numbers create a shallower depth of field with more background and foreground blur. Larger F-stops keep more in focus."
+      - q: "In Unreal, changing the F-stop also changes how much light reaches the sensor. True or false?"
+        choices: ["True, you must fix exposure every time", "False; the aperture does not control light intensity in Unreal, so exposure stays the same", "True, but only in Sequencer", "False, because Unreal has no exposure"]
+        answer_index: 1
+        explain: "Unlike a real camera, adjusting the F-stop and diaphragm in Unreal does not control light intensity. This is a deliberate choice so you do not have to re-adjust exposure."
+      - q: "Which Focus Method turns depth of field off completely, ignoring even a Post Process Volume?"
+        choices: ["Do Not Override", "Manual", "Tracking", "Disable"]
+        answer_index: 3
+        explain: "Disable turns depth of field off entirely. Do Not Override only stops the camera from influencing it, so other sources like a post process volume still apply."
+      - q: "You type 5m into Manual Focus Distance. What does Unreal store?"
+        choices: ["An error, the field only accepts numbers", "5 units", "500 cm, because the field is type-aware and converts units", "5 mm"]
+        answer_index: 2
+        explain: "Manual Focus Distance is in centimeters and is a type-aware field. Typing 5m converts to 500cm."
+      - q: "You set Diaphragm Blade Count to 5 but the bokeh stays round. What is a likely cause?"
+        choices: ["The Engine Scalability is below Epic, so the diaphragm simulation falls back to circular bokeh", "Blade count only works with Tracking focus", "You need at least 8 blades", "Bokeh is always round in Unreal"]
+        answer_index: 0
+        explain: "The diaphragm simulation is only supported at Epic and Cinematic scalability. Lower settings fall back to circle bokeh of equal area."
+    flavors:
+      _default: {why: "Focal length, aperture and focus distance are the three choices that make a frame look like film."}
+      cinematics: {why: "Choosing a lens is choosing how the audience feels about the subject. This is the language you will speak in every shot.", do: "Key Manual Focus Distance in Sequencer to do a rack focus from foreground to subject."}
+      lookdev: {why: "A long lens with a wide aperture isolates one asset and hides the background."}
+
+  - id: CQ8
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [camera-rigs, rail, crane, sequencer]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: false
+    title: Rails and cranes
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/camera-jibs-and-dollies-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "From Place Actors > Cinematic, drag a Camera Rig Rail into the level. Move its two spline points so the track passes by your subject. Right-click the spline and use Add Spline Point Here to add a curve."
+      - "Place a Cine Camera Actor, position it near the dolly, and drag it onto the Camera Rig Rail in the Outliner to attach it."
+      - "Create LS_Rigs. Add the rail and the camera to Sequencer. On the rail track, click + Track > Properties and add Current Position on Rail."
+      - "Key Current Position on Rail at 0 on frame 0 and at 1 at the end. Enable Lock Orientation to Rail and compare."
+      - "Place a Camera Rig Crane, attach a second Cine Camera Actor to it, and add the crane to Sequencer. Add Crane Pitch, Crane Yaw and Crane Arm Length tracks."
+      - "Key a crane move that starts low and rises. Add both cameras to the Camera Cuts track: rail shot first, crane shot second."
+    done_when: "One screenshot of Sequencer showing the Camera Rig Rail track with a keyed Current Position on Rail and the Camera Rig Crane track with keyed Pitch or Arm Length, and one short clip or two frames (start and end) of the crane shot."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which real-world equipment does the Camera Rig Rail emulate, and for what kind of shot?"
+        choices: ["A tripod, for static shots", "A camera dolly, for tracking shots", "A boom arm, for crane shots", "A handheld rig, for shaky shots"]
+        answer_index: 1
+        explain: "The Camera Rig Rail emulates a camera dolly system used to create tracking shots. The crane emulates a jib or boom arm."
+      - q: "How do you attach a camera to a rig?"
+        choices: ["Set the camera's Actor to Track to the rig", "Add the rig as a component of the camera", "Drag the camera actor onto the rig in the Outliner", "Use the Camera Cuts track"]
+        answer_index: 2
+        explain: "Move the camera near the rig, then drag the camera Actor onto the rig in the World Outliner. It can still be moved to fine-tune after that."
+      - q: "What does the Current Position on Rail property do and what is its range?"
+        choices: ["Moves the dolly along the track, from 0 (start) to 1 (end)", "Sets the rail length in centimeters", "Rotates the camera, from 0 to 360", "Sets the rail speed in cm per second"]
+        answer_index: 0
+        explain: "Current Position on Rail moves the dolly along the track. It is clamped between 0 at the start point and 1 at the end point."
+      - q: "By default, does the camera turn with the rail as the dolly follows a curve?"
+        choices: ["Yes, always", "No; the camera orientation is independent unless you enable Lock Orientation to Rail", "Only in Sequencer", "Only if the rail is straight"]
+        answer_index: 1
+        explain: "The camera's orientation is set independently from the dolly by default. Lock Orientation to Rail makes the camera rotation relative to the dolly."
+      - q: "Which three properties animate the Camera Rig Crane?"
+        choices: ["Speed, Height, Weight", "Roll, Pitch, Yaw", "Position, Rotation, Scale", "Crane Pitch, Crane Yaw, Crane Arm Length"]
+        answer_index: 3
+        explain: "The crane exposes Crane Pitch, Crane Yaw and Crane Arm Length (in centimeters, type-aware). Lock Mount Pitch/Yaw control whether the camera follows."
+      - q: "How do you add the rail's animatable properties to Sequencer?"
+        choices: ["They appear automatically when the rail is added", "Drag the property from the Details panel into the viewport", "Click + Track on the rig's track and choose from the Properties category", "Use Add Track > Camera Cut Track"]
+        answer_index: 2
+        explain: "On the rig's track in Sequencer, click + Track and pick the property from the Properties category. You also add the attached camera as its own track."
+    flavors:
+      _default: {why: "Rigs give you the smooth, physical camera moves that hand-keyed transforms rarely match."}
+      cinematics: {why: "Dolly and crane moves are the two most common camera moves in film. Rigs make them repeatable.", do: "Attach the rail to the crane and animate both together for a combined move."}
+      level_design: {why: "A rail fly-through is a clean, controlled way to record a level walkthrough."}
+
+  - id: CQ9
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [storyboard, cine-camera, lighting, screenshots, capstone]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Three-shot board
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-viewport-controls-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-depth-of-field-in-unreal-engine"
+    checklist:
+      - "Pick a small set (one room or one outdoor spot) and do a simple lighting pass: one key light, one fill or sky, and a clear subject."
+      - "Plan three shots on paper: a wide establishing shot, a medium shot, and a close-up. Write one line for each: what the viewer should notice."
+      - "Place three Cine Camera Actors named CAM_Wide, CAM_Medium, CAM_Close. Give each a different focal length and a focus setting that matches its subject."
+      - "Save a viewport bookmark at each camera position so you can return to them. Turn on the Cinematic Viewport and use the Grid (3x3) overlay to check framing."
+      - "Take a high-resolution screenshot (multiplier 2 or more) from each camera. Name the files Shot01_Wide, Shot02_Medium, Shot03_Close."
+      - "Assemble a one-page board: the three stills in order, each with its one-line description, focal length and aperture."
+    done_when: "One board image (three stills in order, each with a one-line description, focal length and f-stop) plus one screenshot of the level showing the three named cameras and your lights."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "Three stills that tell a small story prove you can frame, light and focus. That is the whole apprentice rank in one piece."}
+      cinematics: {why: "Every sequence starts as a board. Learn to sell a shot in a still before you animate it.", do: "Add a fourth still that breaks the 180-degree line on purpose, and explain in one line why it feels wrong."}
+      lookdev: {why: "A lit three-shot board is also the standard way to present an asset or a material set."}
+      level_design: {why: "Establishing, medium and close views are how you pitch a space to the rest of the team."}
+
+  - id: CQ10
+    rank: 1
+    difficulty: apprentice
+    track: cinematics
+    subjects: [camera-shake, blueprint, sequencer]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation]
+    required_spine: false
+    elective: true
+    title: Camera shake
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/camera-shakes-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "In the Content Browser, add a Blueprint Class with parent CameraShakeBase. Name it CS_Rumble."
+      - "Set Root Shake Pattern to Perlin Noise Camera Shake Pattern. Give Rotation Pitch and Yaw an Amplitude of about 2 and a Frequency of about 20. Set Duration to 1.5 and Blend In/Out to 0.2."
+      - "Open a Level Sequence with a Cine Camera Actor. On the camera track, click + Track > Camera Shake and pick CS_Rumble. Play the sequence."
+      - "Make a second shake CS_Sway with the Wave Oscillator pattern, low amplitude, low frequency, Duration 0. Note the difference in feel."
+      - "Place a Camera Shake Source actor in the level. Set Camera Shake to CS_Sway, enable Auto Start, and set Inner and Outer Attenuation Radius (for example 200 and 1000)."
+      - "Open Window > Camera Shake Previewer, enable Allow Camera Shakes in the viewport options, and press Play Selected. Move the editor camera toward the source."
+    done_when: "One screenshot of the CS_Rumble Blueprint details (pattern and timing visible) and one screenshot of Sequencer with the Camera Shake section on the camera track, plus one line: when would you use Perlin and when Wave."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which parent class do you pick to create a camera shake asset?"
+        choices: ["CameraShakeBase", "CineCameraActor", "PlayerCameraManager", "ActorComponent"]
+        answer_index: 0
+        explain: "Create a Blueprint Class and choose CameraShakeBase. The asset then exposes Root Shake Pattern and other details."
+      - q: "Which shake pattern does the documentation suggest for a nearby explosion or a rumble?"
+        choices: ["Sinusoidal Wave", "Composite", "Perlin Noise", "Sequence Shake"]
+        answer_index: 2
+        explain: "Perlin Noise is described as useful for high-intensity shakes such as rumbles or nearby explosions. Wave is for low-intensity effects like a rocking boat."
+      - q: "In a Perlin or Wave shake, what do Amplitude and Frequency control?"
+        choices: ["Amplitude is the duration, Frequency is the blend time", "Amplitude is the size of the movement, Frequency is its speed", "Amplitude is the FOV, Frequency is the frame rate", "They only affect Location, not Rotation"]
+        answer_index: 1
+        explain: "Amplitude sets how far the shake moves from center on that axis. Frequency sets how rapid the movement is."
+      - q: "You set Duration to 0. What happens?"
+        choices: ["The shake does not play", "The shake plays for one frame", "The shake plays infinitely", "Unreal uses the default of one second"]
+        answer_index: 2
+        explain: "If Duration is 0 or less, the shake plays infinitely. That is how the looping source example works."
+      - q: "How do you add a shake to a camera in Sequencer?"
+        choices: ["Add Track (+) > Camera Cut Track", "Drag the shake asset onto the timeline", "Click + Track on the Cine Camera Actor track and pick the shake under Camera Shake", "Use the Event track"]
+        answer_index: 2
+        explain: "Click + Track on the Cine Camera Actor track (or its CameraComponent) and choose your shake asset in the Camera Shake menu."
+      - q: "What does the Start Camera Shake Blueprint node need as its target?"
+        choices: ["A Player Controller or a Camera Shake Source Component", "A Level Sequence Actor", "A Cine Camera Actor", "The Game Mode"]
+        answer_index: 0
+        explain: "The Start Camera Shake function requires a Player Controller or a Camera Shake Source Component as the target."
+    flavors:
+      _default: {why: "A small shake sells impact and weight. Knowing when not to use it is the real skill."}
+      cinematics: {why: "Shakes add life to a static camera and punch to hits, but too much reads as noise.", do: "Set Play Scale on the Sequencer section to 0.3 and compare against 1.0 on the same frame."}
+      tech_art: {why: "Camera Shake Source with attenuation is a clean way to tie shakes to gameplay events without code."}
+      animation: {why: "A shake timed to an animation contact frame makes hits feel heavier."}
+
+  - id: CQ11
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [sequencer, shots, subsequences, organization]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    title: Shots and subsequences
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequences-shots-and-takes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/organize-cinematic-tracks-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/what-happens-when-my-cinematic-ends-in-unreal-engine"
+    checklist:
+      - "In the Content Browser, create a Level Sequence named LS_Master (Add > Cinematics > Level Sequence)."
+      - "In LS_Master, click Tracks (+) > Shots Track. Then use (+) Shot > Insert Shot three times. Keep the default shot names."
+      - "Open each shot (double-click). Add a Cine Camera and a small camera move in each one. Use the breadcrumbs to go back to LS_Master."
+      - "Trim the three shots so they play one after another with no gaps. Give each shot a different Color Tint (right-click > Properties > Color Tint)."
+      - "Right-click shot 2 and choose New Take. Change the camera move in the take. Switch between Take 1 and Take 2 from the Takes menu."
+      - "Right-click shot 1 > Edit Meta Data. Enter your name and a one-line note."
+      - "Add a Folder track and move any loose tracks into it so the root sequence is tidy."
+    done_when: "Screenshot of LS_Master showing the Shots track with 3 colored shots, the Takes menu open on shot 2 showing two takes (star on the active one), and the meta-data tooltip on shot 1."
+    xp: 170
+    verify_type: screenshot
+    quiz:
+      - q: "You click (+) Shot > Insert Shot on a Shots track. What does Unreal create?"
+        choices: ["A new Level Sequence asset, added to the master sequence as a sub-sequence shot", "A new Camera Cuts section only", "A copy of the master sequence", "A new Cine Camera Actor in the level"]
+        answer_index: 0
+        explain: "Insert Shot makes a new Level Sequence asset and adds it to the main sequence as a Sub-Sequence Shot. A save dialog asks where to put it."
+      - q: "Two shot sections overlap on two different Shots tracks. Which one plays in the overlap?"
+        choices: ["The one on the lower track", "The one on the top-most track", "Both blend together", "The one created last"]
+        answer_index: 1
+        explain: "Shot Sections on the top tracks are prioritized. Where they overlap with lower tracks, the top track evaluates instead."
+      - q: "What is the default Hierarchical Bias of a shot (sub-sequence), compared to the root sequence?"
+        choices: ["Root 100, sub-sequence 0", "Root 0, sub-sequence 0", "Root 0, sub-sequence 100", "Root 1, sub-sequence 2"]
+        answer_index: 2
+        explain: "The root sequence has bias 0 and each sub-sequence adds 100. So the deepest sequence wins by default when the same actor is animated in several places."
+      - q: "The root sequence and a shot both animate the same light. You set both bias values to 0. What happens?"
+        choices: ["The root wins", "The shot wins", "Sequencer shows an error", "Both evaluate together and the results blend"]
+        answer_index: 3
+        explain: "Equal bias means all sources evaluate together and blend when possible. In the doc example, red, green and blue light colors combined to white."
+      - q: "What does New Take do?"
+        choices: ["Creates a separate copy of the shot so you can edit it without changing the original", "Renders the shot to disk", "Deletes the old shot and starts empty", "Creates a bookmark in the timeline"]
+        answer_index: 0
+        explain: "Takes are copies of a shot for experiments. After creating one, the shot switches to it; you can switch back in the Takes menu. The active take has a star icon."
+      - q: "You want to adjust the playable region of a shot (slip it) without changing its length. Which property does this?"
+        choices: ["Time Scale", "Start Frame Offset", "Can Loop", "Hierarchical Bias"]
+        answer_index: 1
+        explain: "Start Frame Offset offsets the start time like slip editing, without affecting duration. You can also hold Shift and drag along the clip."
+      - q: "You add Time Warp to a shot. What is the difference between a Play Rate Curve and a Time Warp Curve?"
+        choices: ["Play Rate Curve is for cameras only", "Time Warp Curve cannot be muted", "Play Rate Curve is a fixed rate that cannot be keyframed; Time Warp Curve can be animated with keys", "There is no difference"]
+        answer_index: 2
+        explain: "The doc says a Play Rate Curve sets a fixed play rate that cannot be keyframed, while a Time Warp Curve has a variable rate you animate with keyframes."
+      - q: "You are inside a shot and want to see only its own tracks, without the root sequence and neighboring shots. What do you enable?"
+        choices: ["Draw Single Thumbnail", "Keep Cursor in Playback Range", "Lock the shot section", "Evaluate Sub Sequences In Isolation, in the Playback menu"]
+        answer_index: 3
+        explain: "By default a shot is shown in the context of the root sequence. Evaluate Sub Sequences In Isolation turns this context view off."
+    flavors:
+      _default: {why: "Real cinematics are built from shots. Shots let you cut, trim and reorder, and let several people work on one sequence."}
+      cinematics: {why: "Shots and takes are how you edit non-linearly and try ideas without breaking the original.", do: "Also try shot blending: overlap two shots on the same track and drag the blend handles."}
+      animation: {why: "Animators usually work inside a shot while the editor keeps the master.", do: "Put a character animation inside one shot and check it evaluates in the master context."}
+      level_design: {why: "Level sequences in your levels will be organized like this by the cinematics team.", do: "Use Origin Overrides to move one whole shot to a different place in the level."}
+
+  - id: CQ12
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [sequencer, blueprint, level-sequence-actor, gameplay]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: false
+    title: Trigger a sequence from Blueprint
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/play-cinematics-from-blueprints-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/what-happens-when-my-cinematic-ends-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequencer-blueprint-component-in-unreal-engine"
+    checklist:
+      - "Place a Box Trigger in your level. Create a Level Sequence LS_Cutscene with one camera move and a Point Light that goes from Intensity 0 to a bright value."
+      - "Open the Level Blueprint. Add OnActorBeginOverlap for the trigger. Create a reference to the LS_Cutscene actor and call Play on its Sequence Player."
+      - "Add Set Playback Position (position 0) before Play so the cutscene can play again when you re-enter the trigger."
+      - "Add an F key event: Branch on Is Playing, then Go to End and Stop. Test that F skips the cutscene."
+      - "Right-click the light Intensity track > Properties > When Finished = Keep State. Check the Level Sequence Actor does not have Restore State on."
+      - "Play in Editor. Enter the trigger, watch the cutscene, leave and enter again, then skip with F."
+    done_when: "Screenshot of the Level Blueprint graph (overlap > Set Playback Position > Play, and the F key > Branch > Go to End and Stop) plus a screenshot in PIE after skipping that shows the light still on."
+    xp: 170
+    verify_type: screenshot
+    quiz:
+      - q: "In the Level Blueprint, which node starts the Level Sequence when the player enters the trigger?"
+        choices: ["Play (SequencePlayer), from a reference to the Level Sequence actor", "Open Level", "Set Actor Hidden In Game", "Spawn Actor from Class"]
+        answer_index: 0
+        explain: "You create a reference to the Level Sequence actor, drag off it, and call Play on its Sequence Player. Connect it after OnActorBeginOverlap."
+      - q: "The cutscene plays the first time you enter the trigger, but not the second time. What is the fix from the docs?"
+        choices: ["Enable Auto Play", "Call Set Playback Position with position 0 before Play", "Use a second trigger box", "Set Loop to true"]
+        answer_index: 1
+        explain: "After playing to the end the player stays at the end. Set Playback Position 0 (or the start) before Play rewinds it so it can play again."
+      - q: "The player presses F to skip. You want the light that the cutscene turns on to still be on afterward. Which node?"
+        choices: ["Stop", "Pause", "Go to End and Stop", "Set Play Rate 0"]
+        answer_index: 2
+        explain: "Go to End and Stop jumps to the end so every change Sequencer would have made is applied. Plain Stop would stop where it is and the light might not be fully on."
+      - q: "A track's When Finished property is set to Restore State. What happens when the section ends?"
+        choices: ["The value freezes at its last keyframe", "The track is deleted", "The sequence loops", "The property returns to its value before Sequencer animated it"]
+        answer_index: 3
+        explain: "Restore State returns the actor to its pre-animated state. Keep State keeps the change. Restore State is the default shown in the docs."
+      - q: "You set a track to Keep State but the change is still lost when the sequence stops. What is the most likely cause?"
+        choices: ["The Level Sequence Actor has Restore State enabled, which overrides the track setting", "Keep State only works in Standalone game", "You need a Camera Cuts track", "Keep State needs a Shots track"]
+        answer_index: 0
+        explain: "The Level Sequence actor has a global Restore State option. If it is on, it overrides the local Keep State on the track."
+      - q: "Where do you turn on Auto Play so the sequence starts when the level starts?"
+        choices: ["Project Settings > Cinematics", "In the Details panel of the Level Sequence Actor in the level", "Inside the Director Blueprint", "In the Content Browser asset settings"]
+        answer_index: 1
+        explain: "Select the Level Sequence Actor in the level and set Auto Play to True in its Details panel."
+      - q: "In the how-to, what does the Branch before Go to End and Stop check?"
+        choices: ["Is Valid", "Has Authority", "Is Playing", "Is Looping"]
+        answer_index: 2
+        explain: "The F key event goes through a Branch with condition Is Playing, so the skip only happens while the sequence is playing."
+      - q: "You want the same small animation on many copies of one Blueprint actor, with no dependency on a level. Which tool from the docs fits?"
+        choices: ["A Camera Rig Rail", "A Shots track", "Take Recorder", "An Actor Sequence Component embedded in the Actor Blueprint"]
+        answer_index: 3
+        explain: "The (experimental) Actor Sequence plugin lets you embed a sequence in an Actor Blueprint. It can Auto Play or be played from the Event Graph, and works in any level."
+    flavors:
+      _default: {why: "A cinematic is only useful in a game if gameplay can start, skip and finish it cleanly."}
+      cinematics: {why: "You must own the hand-off between your sequence and the game: play, replay, skip, and what stays changed.", do: "Also try the Level Sequence Actor's Auto Play and compare it with the trigger."}
+      level_design: {why: "Trigger volumes and cutscenes are level-design tools for guiding the player.", do: "Add a second trigger that plays a different sequence and make sure the first one is stopped."}
+      tech_art: {why: "Keep State vs Restore State decides if Sequencer-driven values leak into gameplay.", do: "Drive a material parameter in the sequence and test both When Finished settings."}
+
+  - id: CQ13
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [sequencer, animation-track, skeletal-mesh, blending]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation]
+    required_spine: false
+    elective: false
+    title: Animate a character in Sequencer
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-animation-track-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-add-cinematic-animation-to-a-character-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-gameplay-animation-to-cinematic-animation-in-unreal-engine"
+    checklist:
+      - "Use the Third Person template. Drag a Skeletal Mesh (for example SKM_Manny) into the level."
+      - "Create LS_CharacterTest. With the mesh selected, click Add Track (+) > Actor to Sequencer. Check that Animation and Transform tracks were created."
+      - "On the Animation track click Add Animation (+) and pick an idle clip. Then add a walk or run clip so the two sections overlap by about 20 frames."
+      - "Drag the blend handle on the overlap to make the blend longer. Right-click the blend curve and try a different Options curve shape."
+      - "Drag the right edge of the second clip outward to loop it. Put the playhead in the middle of it and press Ctrl + / to split it."
+      - "Right-click one section > Properties. Set Play Rate to 0.5 and enable Reverse on the split part. Play the sequence."
+    done_when: "Screenshot of Sequencer showing the Animation track with two overlapping clips and a visible blend, one looped section with notches, and the Properties menu open showing Play Rate 0.5."
+    xp: 170
+    verify_type: screenshot
+    quiz:
+      - q: "You add a Skeletal Mesh Actor to Sequencer. What happens to its Animation track?"
+        choices: ["It is created automatically under the actor's track", "You must create it from the Content Browser", "It only appears after you press Play", "It needs the Take Recorder plugin"]
+        answer_index: 0
+        explain: "By default the Animation track is created automatically when a Skeletal Mesh Actor class is added. If deleted, add it again with Add Track (+) > Animation."
+      - q: "Which animations appear in the Add Animation (+) list?"
+        choices: ["Every animation in the project", "Only animations compatible with the Skeletal Mesh", "Only animations in the same folder", "Only Animation Blueprints"]
+        answer_index: 1
+        explain: "The list is filtered to only show animations compatible with the Skeletal Mesh."
+      - q: "When Sequencer animates a Skeletal Mesh, its Animation Mode switches to Use Custom Mode. When does this NOT happen?"
+        choices: ["When the level is not saved", "When the clip is looped", "When an Animation Blueprint is already assigned to the mesh", "When Play Rate is not 1"]
+        answer_index: 2
+        explain: "If an Animation Blueprint is assigned, the mode does not switch. Then the Anim BP needs a Slot to receive animation from Sequencer (see Slot Name)."
+      - q: "Two animation sections overlap on the same actor. What does Sequencer do by default?"
+        choices: ["Plays only the top one", "Stops at the overlap", "Shows an error", "Creates an automatic blend curve over the overlap"]
+        answer_index: 3
+        explain: "Intersecting two sections creates an automatic blend, and the animations blend over the duration of the intersection. You can move the blend handles."
+      - q: "What is the keyboard shortcut to split a selected animation section at the playhead?"
+        choices: ["Ctrl + /", "Shift + S", "Alt + X", "Ctrl + B"]
+        answer_index: 0
+        explain: "Ctrl + / splits the selected section at the current playhead time. Trim and split are also in the right-click Edit menu."
+      - q: "You hold Ctrl while hovering the edge of a section and drag. What happens?"
+        choices: ["The clip is duplicated", "The clip's play rate is scaled instead of trimming or looping", "The clip is deleted", "The clip moves to a new track"]
+        answer_index: 1
+        explain: "Holding Ctrl on a section edge engages the Play Rate modifier, so dragging scales playback rate rather than trimming or looping."
+      - q: "When Finished is set to Keep State on an animation section. What does the character do when the section ends?"
+        choices: ["Snaps back to its state before Sequencer", "Plays its Animation Blueprint again", "Holds on its last animation frame", "Becomes invisible"]
+        answer_index: 2
+        explain: "Keep State keeps the actor in Sequencer's animation mode and holds the last frame. Restore State returns it to its pre-Sequencer state."
+      - q: "A looped or trimmed clip should return to its original length. Which command does this?"
+        choices: ["Edit > Reset Transform", "Properties > Reverse", "Edit > Simplify", "Edit > Auto Size"]
+        answer_index: 3
+        explain: "Right-click the section and choose Edit > Auto Size to restore the original clip length."
+    flavors:
+      _default: {why: "Characters make a scene. You need clean clip editing and blends to tell a story in Sequencer."}
+      cinematics: {why: "Trimming, looping and blending animation clips is basic editing work on every shot.", do: "Add a Pre/Post Roll of 10 frames to a clip and watch how the pose holds."}
+      animation: {why: "Sequencer is the non-linear editor for your clips; blends and slots decide how they combine with gameplay animation.", do: "Read the Blending Gameplay and Sequencer Animation page and set up a Slot in the Anim BP."}
+
+  - id: CQ14
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [movie-render-queue, rendering, output]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, tech_art]
+    required_spine: false
+    elective: false
+    title: Render a shot with Movie Render Queue
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/rendering-high-quality-frames-with-movie-render-queue-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-render-out-final-images-and-video"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/movie-render-pipeline-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-export-formats-in-unreal-engine"
+    community_urls:
+      - {title: "The 2025 Guide to Rendering in Unreal Engine 5 (William Faucher)", url: "https://www.youtube.com/watch?v=fVg5ihB8Wdc"}
+    checklist:
+      - "Enable the Movie Render Pipeline plugin (Edit > Plugins > Built-In). Restart if asked."
+      - "Open Window > Cinematics > Movie Render Queue. Click + Render and add your Level Sequence (or drag it in from the Content Browser)."
+      - "Click Unsaved Config*. Use + Setting to add .png Sequence [8bit], Deferred Rendering and Anti-aliasing."
+      - "In Anti-aliasing set Spatial Sample Count 1 and Temporal Sample Count 8. Enable Override Anti Aliasing Mode and set it to None."
+      - "In Output set an Output Directory, keep 1920x1080, enable Use Custom Playback Range and render only about 60 frames."
+      - "Presets > Save As Preset, name it MRQ_Preview. Then click Render (Local) and wait for the preview window to close."
+      - "Open the output folder from the link in the Output column and check the PNG files."
+    done_when: "Screenshot of the Movie Render Queue window with your job and the MRQ_Preview preset selected, plus a screenshot of the output folder showing the PNG frame files."
+    xp: 170
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you open the Movie Render Queue?"
+        choices: ["Window > Cinematics > Movie Render Queue", "Edit > Project Settings > Rendering", "Tools > Render", "File > Export"]
+        answer_index: 0
+        explain: "It is under Window > Cinematics > Movie Render Queue. The Movie Render Pipeline plugin must be enabled first."
+      - q: "You need a transparent background in the final frames. Which output format supports an alpha channel?"
+        choices: [".jpg Sequence", ".png Sequence", ".bmp Sequence", ".wav"]
+        answer_index: 1
+        explain: "The table lists .png and .exr as having an alpha channel; .bmp and .jpg do not. Alpha support must also be enabled in Project Settings (linear color space only)."
+      - q: "Which output format is described as lossy and good for previews?"
+        choices: [".exr", ".png", ".jpg", ".bmp"]
+        answer_index: 2
+        explain: ".jpg is lossy with small files, so it is good for previews. .png, .bmp and .exr are lossless."
+      - q: "In the Setting/Presets window, which setting cannot be deleted?"
+        choices: ["Anti-aliasing", "Console Variables", "Deferred Rendering", "Output"]
+        answer_index: 3
+        explain: "Output is the only setting that cannot be deleted. Other settings can be removed or just toggled off for one render."
+      - q: "Console variables added in the MRQ Console Variables setting take effect when?"
+        choices: ["Only when rendering from the queue; they do not change the level permanently", "Always, in editor and in game", "Only in Play In Editor", "Only after restarting the editor"]
+        answer_index: 0
+        explain: "The CVARs listed in the queue execute only when the image is rendered from the queue and do not permanently change level settings."
+      - q: "What is the difference between Render (Local) and Render (Remote)?"
+        choices: ["Local renders at lower quality", "Local renders in the current Editor like PIE; Remote launches a separate process", "Remote requires a render farm", "Remote only makes .exr"]
+        answer_index: 1
+        explain: "Render (Local) renders in the current editor instance, similar to PIE, and is recommended for fast iteration. Render (Remote) launches a separate process by default."
+      - q: "You save a preset with Save As Preset. Where does it go and what is it?"
+        choices: ["A text file in Saved/Config", "A section inside the Level Sequence", "An asset in Cinematics > MoviePipeline > Presets that can be copied to other projects", "A setting in Project Settings"]
+        answer_index: 2
+        explain: "Presets are saved as assets, by default under Cinematics > MoviePipeline > Presets, so they can be reused and copied between projects."
+      - q: "Which statement about temporal samples is correct per the docs?"
+        choices: ["They render the same moment with camera offsets", "They only change the output resolution", "They are cheaper than TAA", "They slice the shutter open time into sub-frames and are good for motion blur quality"]
+        answer_index: 3
+        explain: "Temporal samples split the shutter open time into sub-frames and use engine motion blur between them. Spatial samples render the same moment with small camera offsets."
+    flavors:
+      _default: {why: "A shot that only lives in the viewport cannot be shared. MRQ is how Unreal makes final frames."}
+      cinematics: {why: "MRQ is your delivery tool. Presets, formats and frame ranges are daily work.", do: "Render the same 60 frames as .jpg and compare file sizes and quality with the .png output."}
+      lookdev: {why: "Offline rendering removes real-time limits so materials and lighting can be judged fairly.", do: "Add the Console Variables setting and raise r.Tonemapper.Quality and r.BloomQuality as the guide shows."}
+      tech_art: {why: "Render presets and CVAR lists are pipeline assets you will maintain for a team.", do: "Add the Burn In setting and render a short test with frame numbers on the image."}
+
+  - id: CQ15
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [sequencer, shots, blueprint, movie-render-queue]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: First sequence
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequences-shots-and-takes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/play-cinematics-from-blueprints-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/rendering-high-quality-frames-with-movie-render-queue-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-animation-track-in-unreal-engine"
+    checklist:
+      - "Build LS_First: a 15-second master sequence with a Shots track and at least 2 shots, each with its own Cine Camera."
+      - "Put a character with at least one Animation clip in one of the shots. Blend or trim the clip so it fits the shot."
+      - "Add a Camera Cuts track so the master cuts between the two cameras on a clear beat."
+      - "Trigger LS_First from the Level Blueprint with a Box Trigger (Set Playback Position 0 then Play). Add an F key skip with Go to End and Stop."
+      - "Add LS_First to Movie Render Queue, use your MRQ_Preview preset, and render the full 15 seconds as a PNG sequence."
+      - "Write 5 lines: what each shot shows, and one problem you fixed."
+    done_when: "Send to a mentor: a short video or GIF of the sequence playing in PIE from the trigger, a screenshot of the Level Blueprint, a screenshot of the Shots track, and the rendered PNG folder listing with your 5-line note."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "This is your first complete cinematic pipeline: build, trigger in-game, and render."}
+      cinematics: {why: "Every later quest builds on this loop: shots, gameplay hook, render.", do: "Give each shot a Color Tint and meta-data note so a mentor can read the structure quickly."}
+
+  - id: CQ16
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [take-recorder, sequencer, recording]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [animation]
+    required_spine: false
+    elective: true
+    title: Take Recorder
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/take-recorder-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/record-gameplay-in-unreal-engine"
+    checklist:
+      - "Enable the Take Recorder plugin (Edit > Plugins) and restart."
+      - "Open Window > Cinematics > Take Recorder. Set the Slate name to Walk and the take number to 1."
+      - "Add your player character as a source: + Source > From Actor, or drag it from the Outliner into Sources. Set Record Type to Spawnable."
+      - "Also add Camera Cuts as a source."
+      - "Press Play in the editor, then click the red Record button. Walk and turn for about 10 seconds, then press the button again (or Esc) to stop."
+      - "Click Review Last Recording. Then open the Takes Browser and find the take under Cinematics > Takes."
+      - "Record a second take with the same slate. Check the take number went to 2."
+    done_when: "Screenshot of the Take Recorder panel with your two sources, and a screenshot of the recorded sequence open in Sequencer showing the recorded transform and animation tracks."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Take Recorder will not record a property of an actor. What is the most likely reason per the docs?"
+        choices: ["The property cannot be keyframed, so it has no track Sequencer can play back", "The actor is too far from the camera", "The take number is too high", "Only cameras can be recorded"]
+        answer_index: 0
+        explain: "Take Recorder only records a source that has a recorder and a track Sequencer can play. If a property cannot be keyframed, it cannot be recorded."
+      - q: "You add Camera Cuts as a source. What does Take Recorder do when the active camera changes during recording?"
+        choices: ["Stops the recording", "Creates a new camera actor and a new camera cut section", "Ignores the new camera", "Records only the first camera"]
+        answer_index: 1
+        explain: "With Camera Cuts as a source, all active cameras are recorded. Each camera change creates a new camera actor and camera cut section."
+      - q: "What does the Level Visibility source record?"
+        choices: ["Every level load during the take", "Level streaming distance", "Only the visible state of all levels at the start of the recording", "Actor visibility per frame"]
+        answer_index: 2
+        explain: "It records the visibility states of all Levels at the start. It does not record changes during the session."
+      - q: "What does Record Speed change?"
+        choices: ["The output frame rate", "The number of takes", "The camera focal length", "The engine's time dilation while recording"]
+        answer_index: 3
+        explain: "Record Speed edits the recording speed and overall time dilation of the engine, useful to match animation at a slower pace."
+      - q: "You try to record with a take number that already exists. What happens?"
+        choices: ["Take Recorder warns you and can switch to the next free number when you click the warning", "The old take is overwritten silently", "The editor crashes", "The record button turns green"]
+        answer_index: 0
+        explain: "A warning says a take with that number exists and where it is. Clicking the warning changes to the next available take number."
+      - q: "Record Type on an actor source is set to Project Default. What decides possessable vs spawnable?"
+        choices: ["The actor's mobility", "The Record to Possessable value in Take Recorder settings", "The current level name", "The frame rate"]
+        answer_index: 1
+        explain: "Project Default uses the project's Take Recorder setting Record to Possessable (true or false). Possessable or Spawnable override it."
+      - q: "What does Reduce Keys do?"
+        choices: ["Records fewer bones", "Lowers the frame rate", "Runs a Simplify on all keyframes after recording finishes", "Deletes the first keyframe"]
+        answer_index: 2
+        explain: "When enabled, Reduce Keys executes a Simplify operation on all keyframes once recording finishes."
+      - q: "Which keyboard key stops a recording and saves the take?"
+        choices: ["Space", "Enter", "F", "Esc"]
+        answer_index: 3
+        explain: "Click the record button again or press Esc to stop and save the current take."
+    flavors:
+      _default: {why: "Recording play and cameras is often faster than keyframing. Takes let you keep every attempt."}
+      cinematics: {why: "Recorded camera moves and performances become shots you can edit like any clip.", do: "Use Layered Take Recording: review the first take, start a new recording from it, and add a second actor."}
+      animation: {why: "Take Recorder turns gameplay or mocap into Animation data you can clean in Sequencer.", do: "Enable Reduce Keys on the source and compare the curve count with a take recorded without it."}
+
+  - id: CQ17
+    rank: 2
+    difficulty: adept
+    track: cinematics
+    subjects: [sequencer, event-track, blueprint, director-blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: "Event track: sequence talks to Blueprint"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-event-track-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fire-blueprint-events-during-cinematics-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/trigger-level-blueprint-events-from-sequencer-in-unreal-engine"
+    checklist:
+      - "Open LS_Cutscene (or any sequence). Click Add Track (+) > Event Track > Trigger. Add a key at frame 60."
+      - "Right-click the key > Properties > Unbound > Create New Endpoint. The Director Blueprint opens. Rename the endpoint to SpawnFX."
+      - "In the Director Blueprint, from SpawnFX call Spawn Emitter at Location (or print a string) so something visible happens."
+      - "Select the endpoint and Add Parameter (+) named Scale (float). On the key, set the Payload value to 2.0 and use it in the graph."
+      - "Add a second Event Track under a bound actor (for example a light) and use Quick Bind to call Set Visibility on it."
+      - "Enable Call In Editor on the first key and scrub over frame 60 to see it fire without Play."
+    done_when: "Screenshot of the Director Blueprint with the SpawnFX endpoint (with the Scale parameter) and the object-bound Quick Bind event, plus a screenshot of the Sequencer timeline with both Event tracks."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is the difference between a Trigger event and a Repeater event?"
+        choices: ["Trigger fires once per keyframe; Repeater fires every frame for the duration of its section", "Trigger is for cameras; Repeater is for lights", "Repeater fires once at the end", "There is no difference"]
+        answer_index: 0
+        explain: "Trigger events evaluate on the same frame as the keyframe. Repeater events evaluate for each frame while their section is active."
+      - q: "Where does the logic for Event Track endpoints live?"
+        choices: ["In the Level Blueprint", "In the Director Blueprint of that Level Sequence", "In the Game Mode", "In the Camera Actor"]
+        answer_index: 1
+        explain: "Each Level Sequence has its own Director Blueprint containing all logic for its events."
+      - q: "You create a Trigger key. What must you do before it can run any logic?"
+        choices: ["Set Call In Editor", "Add a Camera Cuts track", "Bind it to an Event Endpoint (Properties > Unbound > Create New Endpoint)", "Save the level"]
+        answer_index: 2
+        explain: "Both trigger and repeater events must be bound to an Event Endpoint. Creating a new endpoint opens the Director Blueprint."
+      - q: "How do you send a value (for example a float) from the keyframe to the event?"
+        choices: ["Use a Camera Shake", "Rename the endpoint", "Set Hierarchical Bias", "Add a parameter on the endpoint and set its value in the key's Payload"]
+        answer_index: 3
+        explain: "Add Parameter (+) on the endpoint creates a pin. Right-click the key and set the value under Payload; it is sent when the event fires."
+      - q: "An Event Track is added under an actor binding. What extra benefit does this give?"
+        choices: ["The event's target object is bound to that actor, and Quick Bind can call functions on it directly", "The event fires twice", "The actor becomes a spawnable", "The event becomes a Repeater"]
+        answer_index: 0
+        explain: "Creating the Event Track under a bound object makes an Object Binding, so the target object is that actor and you can Quick Bind its functions."
+      - q: "What does Call In Editor do?"
+        choices: ["Compiles the Director Blueprint", "Lets the event logic run in the editor without Play or Simulate", "Sends the event to the Level Blueprint", "Makes the key repeat"]
+        answer_index: 1
+        explain: "Call In Editor lets the event evaluate in the editor session. It appears once the event is bound to an endpoint."
+      - q: "You preview a sequence many times and want a reset chain to run when scrubbing backward. Which properties help?"
+        choices: ["Event Position and Time Scale", "Pass Bound Object To", "Fire Event when Forwards and Fire Event when Backwards", "Hierarchical Bias"]
+        answer_index: 2
+        explain: "One track can fire forward only (normal chain) and another backward only (reset chain), using the Forwards and Backwards properties."
+      - q: "An event must run after spawnable actors exist. Which Event Position do you choose?"
+        choices: ["At Start Of Evaluation", "At End Of Evaluation", "Before Spawn", "After Spawn"]
+        answer_index: 3
+        explain: "After Spawn fires after Spawnables have spawned and evaluated. At Start fires before anything else; At End fires last."
+    flavors:
+      _default: {why: "Events let a sequence call game logic at exact frames: sounds, VFX, doors, UI."}
+      cinematics: {why: "A shot that fires its own events needs no extra Blueprint timing in the level.", do: "Use a Repeater section to update a value every frame during a shot and stop it when the section ends."}
+      tech_art: {why: "Director Blueprint endpoints are a clean interface between cinematics and tools code.", do: "Add an Object parameter and use Pass Bound Object To so the same endpoint works for several actors."}
+      level_design: {why: "Level scripting can be driven by a cutscene instead of many timers.", do: "Fire an event that opens a door at the exact frame the camera shows it."}
+
+  - id: CQ18
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [movie-render-queue, anti-aliasing, output-formats, movie-render-graph]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, tech_art]
+    required_spine: false
+    elective: false
+    title: MRQ settings that matter
+    time_min: 100
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-image-quality-settings-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-settings-and-formats-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-export-formats-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/transitioning-to-the-movie-render-graph-from-movie-render-queue-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/movie-render-pipeline-in-unreal-engine"
+    checklist:
+      - "Open Window > Cinematics > Movie Render Queue and add your sequence as a job. Check the Map field."
+      - "Open the job Settings. Delete the default .jpg Sequence [8bit] export. Add an EXR Sequence and a .png Sequence [8bit]."
+      - "Add the Anti-Aliasing setting. Set Temporal Sample Count to 8 and Spatial Sample Count to 1. Enable Override Anti-Aliasing and set the method to None."
+      - "Add the Console Variables setting. Add one variable that raises quality (for example a higher r.MotionBlurQuality) and note that it reverts after the render."
+      - "In Output, set File Name Format to {sequence_name}/{shot_name}.{frame_number} and enable Auto Version. Set the Output Directory to a folder named Renders."
+      - "Save the settings as a preset called MRQ_Final. Click Render (Local)."
+      - "Extra: switch the job to Movie Render Graph, make a new graph asset, and find where Temporal Samples and Spatial Samples are set."
+    done_when: "Screenshot of the Render Settings window showing your settings list (Output, Anti-Aliasing, Console Variables, EXR + PNG exports) plus the output folder with both an .exr and a .png frame. One sentence: why you turned TAA off."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "Temporal sampling and spatial sampling both add samples. Why does the documentation say it is usually more efficient to put samples into temporal sampling?"
+        choices: ["Temporal samples render faster because the GPU skips lighting", "Both give the same anti-aliasing pattern for still objects, and temporal samples also blur moving objects, which hides aliasing", "Spatial samples only work with the Path Tracer", "Temporal samples do not tick the engine, so there is no extra cost"]
+        answer_index: 1
+        explain: "Any mix of spatial and temporal gives the same offset pattern, so still objects look the same. Temporal samples also produce motion blur on moving objects, which hides aliasing."
+      - q: "You set 16 total samples and leave Temporal Anti-Aliasing (TAA) on. What does the documentation recommend?"
+        choices: ["Nothing, TAA always benefits from more samples", "Switch the export to EXR so the extra samples are stored", "Enable Override Anti-Aliasing and set the method to None, or raise r.TemporalAASamples to match the sample count", "Lower the Output Frame Rate so TAA has more time per frame"]
+        answer_index: 2
+        explain: "TAA limits the number of unique sample positions to r.TemporalAASamples, which defaults to 8. With more than 8 samples you should disable TAA (None) or raise that variable."
+      - q: "With Temporal Sample Count above 1, what extra step may be needed in Sequencer?"
+        choices: ["Extend tracks to cover the time just before the sequence start; some tracks like animation and audio cannot be auto-expanded", "Convert all cameras to possessables", "Delete the Camera Cuts track so every camera is sampled", "Set the sequence frame rate to 60 fps"]
+        answer_index: 0
+        explain: "The sequence is evaluated on both sides of each frame. Sections are auto-expanded when possible, but animation and audio sections are skipped and you are told to expand them by hand."
+      - q: "What does the Console Variables setting do with the variables you add?"
+        choices: ["Writes them into DefaultEngine.ini permanently", "Applies them only in the editor viewport, not in the render", "Applies them when the render begins and reverts them when the render completes", "Sends them to the remote render farm only"]
+        answer_index: 2
+        explain: "Console Variables are set when the render begins so you can use quality settings too expensive for real-time preview. They are reverted after the render."
+      - q: "Which statement about the EXR Sequence export is correct?"
+        choices: ["EXR applies the sRGB encoding curve like PNG", "EXR clamps values to the 0 to 1 range, so no HDR is kept", "EXR keeps HDR values, and disabling the Tone Curve writes linear values that can go far above 1", "EXR requires the Apple ProRes plugin"]
+        answer_index: 2
+        explain: "EXR preserves HDR values and no sRGB curve is applied. With the Tone Curve disabled, linear values are written in a 0 to 100 or higher range."
+      - q: "Where do you disable the Tone Curve for a render without using an OCIO workflow?"
+        choices: ["In the Game Overrides setting", "In the Color Output setting", "In the Burn In setting", "In the High Resolution setting"]
+        answer_index: 1
+        explain: "Color Output overrides the color space with an OCIO config, and it can also disable the Tone Curve part of post-processing even without OCIO."
+      - q: "You render frames -2 to 10 and your compositing tool cannot read negative frame numbers. Which Output property solves this?"
+        choices: ["Zero Pad Frame Numbers", "Handle Frame Count", "Output Frame Step", "Frame Number Offset"]
+        answer_index: 3
+        explain: "Frame Number Offset adds a number to every frame number when writing files, so -2, -1, 0, 1 can become 98, 99, 100, 101."
+      - q: "Why does Movie Render Queue have a Render Warm Up Count?"
+        choices: ["To let the GPU driver load shaders before the first job", "To rebuild the temporal history after a camera cut, so the first frame is anti-aliased without ghosts from the previous angle", "To give cloth and particles time to settle before rendering", "To check that the output directory is writable"]
+        answer_index: 1
+        explain: "The TAA history is cleared at each camera cut to avoid ghosts. Render Warm Up samples rebuild that history right before rendering starts. Engine Warm Up Count is the one for cloth and particles."
+      - q: "In Movie Render Graph, how are the anti-aliasing sample settings organized differently from the MRQ config?"
+        choices: ["Both are on the Game Overrides node", "Temporal samples are global in the Sampling Method node, and spatial samples are per render layer on the Renderer node", "Both are set on the File Type Output node", "MRG has no sample settings; it always uses 1 sample"]
+        answer_index: 1
+        explain: "MRG splits them because temporal samples must be set globally, while spatial samples and the anti-aliasing method can differ per render layer on the Renderer node."
+      - q: "Which feature is listed as NOT yet supported when using Movie Render Graph?"
+        choices: ["EXR output", "Console Variables", "High Resolution (tiled) rendering", "Path Tracer rendering"]
+        answer_index: 2
+        explain: "The transition page lists nDisplay, High Resolution Rendering, Apple ProRes, Final Cut Pro XML, Prestreaming Recorder and 32-bit post process material rendering as unsupported in MRG."
+    flavors:
+      _default: {why: "The right MRQ settings are the difference between a noisy preview and a final frame you can deliver."}
+      cinematics: {why: "Final pixels are your job. You must know what each sample and format does to the image.", do: "Render the same 24 frames twice: 1 temporal sample and 8 temporal samples. Put both PNGs side by side in your proof."}
+      lookdev: {why: "Your materials and lights are only judged on the final render. MRQ decides how they are sampled.", do: "Use a Console Variable to raise one rendering quality setting and compare the frame before and after."}
+      tech_art: {why: "Render presets and file name tokens are pipeline glue that other people rely on.", do: "Build a File Name Format that puts each shot in its own folder and includes {version}."}
+
+  - id: CQ19
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [lighting, lighting-channels, spawnables, exposure]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, level_design]
+    required_spine: false
+    elective: false
+    title: Light a shot, not a level
+    time_min: 100
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-lighting-channels-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawn-temporary-actors-in-unreal-engine-cinematics"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-animate-lights-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-actor-tracks-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequencer-track-list-in-unreal-engine"
+    checklist:
+      - "Open a sequence with at least 2 shots. In shot 1, drag a Spot Light from Place Actors into Sequencer so it becomes a Spawnable. Name it L_Key_Shot01."
+      - "Set the light Mobility to Movable. Set the character or hero mesh to Movable too."
+      - "On L_Key_Shot01, open Light > Advanced and enable Lighting Channel 1 only. On the hero mesh, enable Channel 1 in its Lighting category. Confirm the background is not lit by this light."
+      - "Add keyframes on the Intensity and Light Color tracks so the key light changes during shot 1."
+      - "Add a Post Process Volume with Infinite Extent. Set Exposure Metering Mode to Manual and choose a fixed Exposure Compensation. Scrub between shots and confirm brightness does not drift."
+      - "Repeat for shot 2 with a second spawnable light. Play the sequence and check each light exists only in its own shot."
+    done_when: "Two screenshots: shot 1 and shot 2 in the viewport, each showing the Sequencer outliner with its spawnable light (lightning bolt icon) and the Details panel with the Lighting Channel settings. One sentence on why you used Manual exposure."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "How many lighting channels does Unreal Engine support, and which one is enabled by default on lights and lit Actors?"
+        choices: ["8 channels, channel 1 by default", "3 channels, channel 0 by default", "4 channels, none by default", "2 channels, both by default"]
+        answer_index: 1
+        explain: "The page says the engine supports up to 3 lighting channels, and Directional, Spot and Point Lights plus lightable Actors all have channel 0 enabled by default."
+      - q: "For a light to affect only your hero mesh through channel 1, what must be true?"
+        choices: ["Only the light needs channel 1 enabled", "Only the mesh needs channel 1 enabled", "Channel 1 must be enabled on both the light and the mesh", "The mesh must have channel 0 disabled on the light's Details panel"]
+        answer_index: 2
+        explain: "Lights only affect objects when their lighting channels overlap. You must enable the channel on both the Actor and the light."
+      - q: "Your lighting channel setup does nothing on a Static Mesh Actor. What is the most likely cause per the documentation?"
+        choices: ["The mesh Mobility is Static; channels are applied dynamically and need Movable meshes and Stationary or Movable lights", "The light is a Spot Light, which does not support channels", "The mesh has Nanite enabled", "You did not rebuild lighting"]
+        answer_index: 0
+        explain: "Lighting channel influence is dynamic. It does not work with Static lights or Static-mobility meshes. Movable meshes with Stationary or Movable lights do work."
+      - q: "Which materials are affected by lighting channels?"
+        choices: ["All materials including translucent", "Only translucent and masked materials", "Only direct lighting on opaque materials", "Only unlit materials"]
+        answer_index: 2
+        explain: "The Limitations section says lighting channels only affect direct lighting on opaque materials; translucent or masked materials will not work."
+      - q: "Where do you find the Lighting Channels property on a light versus on a lit Actor?"
+        choices: ["Both are in the Rendering category", "On the light under Light > Advanced; on the Actor under the Lighting category", "On the light under Transform; on the Actor under Collision", "Both are only in Project Settings"]
+        answer_index: 1
+        explain: "For lights, the property is in the Advanced pulldown of the Light category. For lightable Actors it is in the Lighting category of the Details panel."
+      - q: "Why does the Spawnables documentation suggest adding shot lights as Spawnables instead of placing them in the level?"
+        choices: ["Spawnable lights render with higher quality", "They exist only for that shot and do not clutter the level with lights that must be enabled or disabled by hand", "Spawnable lights ignore lighting channels", "Placed lights cannot be keyframed"]
+        answer_index: 1
+        explain: "The Lighting Scenes workflow says spawnable lights exist only for the shot, so you avoid many level lights that need manual enabling and disabling per shot."
+      - q: "What happens automatically when you add a light Actor to Sequencer?"
+        choices: ["A Transform track and an Animation track are created", "The light is converted to a Spawnable", "The light Mobility is set to Movable", "A Light Component with Intensity and Light Color property tracks is created"]
+        answer_index: 3
+        explain: "Track Settings in the Level Sequencer plugin settings make Light Actors automatically create a Light Component with Intensity and Light Color tracks."
+      - q: "You want the exposure to stay fixed across every shot. Which Exposure Metering Mode gives a single fixed exposure value?"
+        choices: ["Auto Exposure Histogram", "Auto Exposure Basic", "Manual", "Local Exposure"]
+        answer_index: 2
+        explain: "Manual mode lets you pick one fixed exposure value that is not affected by scene luminance. Histogram is the default auto mode and Basic is a faster auto mode."
+      - q: "What does Exposure Compensation do on top of the metered exposure?"
+        choices: ["It adds a scale of 2 to the power of the compensation value", "It multiplies exposure by the value directly, so 3 means 3 times brighter", "It changes the histogram bin count", "It only works in Manual mode"]
+        answer_index: 0
+        explain: "The page defines Exposure Compensation as an additional scale of 2^ExpComp on top of the exposure from the current metering mode (except with the editor EV100 override)."
+      - q: "You mute a light's Object Binding Track in Sequencer to check a shot. What does the documentation say happens?"
+        choices: ["The light is deleted from the level", "The Actor is hidden in the viewport, but this is editor-only and does not affect the level at runtime unless previewing in PIE", "The light is baked into a lightmap", "All other tracks are muted as well"]
+        answer_index: 1
+        explain: "Muting an Object Binding Track hides the Actor in the viewport. Mute and solo are editor-only operations and do not change the level at runtime."
+    flavors:
+      _default: {why: "Film lighting is per shot. Channels and spawnables let you cheat the light without breaking the level."}
+      cinematics: {why: "A shot needs its own key, fill and rim, and it must not leak into the next shot.", do: "Add a rim light on channel 2 that lights only the hero and keyframe its intensity to fade out at the cut."}
+      lookdev: {why: "Channels let you light a material test object without touching the rest of the scene.", do: "Put a lookdev sphere on channel 2 with its own light and show the background unaffected."}
+      level_design: {why: "Cinematic lights should not become permanent level lights that cost performance.", do: "Confirm none of your shot lights exist in the Outliner when the sequence is not playing."}
+
+  - id: CQ20
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [post-process, color-grading, tonemapper, lut, ocio]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, tech_art]
+    required_spine: false
+    elective: false
+    title: Grade the picture
+    time_min: 100
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-grading-and-the-filmic-tonemapper-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-lookup-tables-for-color-grading-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-management-with-opencolorio-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "Place a Post Process Volume named PPV_Grade_Base. Enable Infinite Extent (Unbound) and set Priority to 0. This is the project-wide look."
+      - "In PPV_Grade_Base, set Film (Slope, Toe, Shoulder) once and do not touch them again."
+      - "Add a second volume PPV_Shot02 around the area of shot 2 with Priority 1 and a Blend Radius. Grade it using Color Grading > Global first (Saturation, Contrast, Gamma), then Shadows and Highlights."
+      - "Set Temperature Type to White Balance and adjust Temp so whites look white under your key light."
+      - "Take a high-resolution screenshot, build a LUT in an image editor, import it, set Mip Gen Settings to NoMipMaps and Texture Group to Color Lookup Table, and try it in Color Grading > Global. Then turn it off and match the look with the grading wheels."
+      - "On your Cine Camera, set Post Process Blend Weight to 1 and add a small Vignette so the camera carries its own lens look."
+      - "Extra: create an OpenColorIO Configuration Asset and add a Color Output setting to your MRQ job."
+    done_when: "Before/after screenshots of one shot (no grade vs graded) plus the Details panel of PPV_Shot02 showing Priority, Blend Radius and your Color Grading values. One sentence on why the Film settings live in the base volume only."
+    xp: 175
+    verify_type: screenshot
+    quiz:
+      - q: "Which industry standard does the Unreal filmic tonemapper match?"
+        choices: ["Rec. 2020", "DCI-P3", "sRGB IEC 61966", "ACES (Academy Color Encoding System)"]
+        answer_index: 3
+        explain: "The page says the filmic tonemapper matches the ACES standard for television and film, so color stays consistent across formats and displays."
+      - q: "The documentation says the Film settings (Slope, Toe, Shoulder, clips) should be used how?"
+        choices: ["Keyframed per shot for artistic control", "Project-wide for one look, not changed per shot; use Color Grading for shot adjustments", "Only when rendering to EXR", "Only inside a Cine Camera post process layer"]
+        answer_index: 1
+        explain: "Film properties are recommended for a project-wide look and should not change dynamically or shot by shot. Artistic per-shot changes belong in Color Grading."
+      - q: "What does a larger Slope value do to the tonemapper curve?"
+        choices: ["Makes the S-curve steeper and the image darker", "Makes the S-curve flatter and the image lighter", "Moves the black clip point", "Increases bloom"]
+        answer_index: 0
+        explain: "Slope adjusts the steepness of the S-curve. Larger values make it steeper (darker), lower values less steep (lighter)."
+      - q: "Why are the Color Grading controls said to work better than a LUT for HDR output?"
+        choices: ["They run on the GPU while LUTs run on the CPU", "They work in Scene Referred Linear Space before tonemapping, so one grade looks correct on both HDR and LDR displays", "LUTs cannot desaturate an image", "LUTs are limited to 8 colors"]
+        answer_index: 1
+        explain: "A LUT is applied in LDR after tonemapping and is a snapshot for one display. Color Grading happens before tonemapping in scene-referred linear space, so it stays consistent on any display."
+      - q: "What is the layout of a LUT texture that Unreal expects?"
+        choices: ["A 32x32x32 cube saved as a .cube file", "A 1D 256x1 gradient strip", "A 16x16x16 color-neutral LUT unwrapped to a 256x16 texture", "A 512x512 square with three gradients"]
+        answer_index: 2
+        explain: "The LUT page says Unreal uses a 16x16x16 color neutral LUT unwrapped to a 256x16 texture."
+      - q: "After importing your LUT texture, which Texture Editor settings does the page recommend?"
+        choices: ["Compression: Normalmap, sRGB on", "Power of two padding and Streaming enabled", "Virtual Texture Streaming on", "Mip Gen Settings: NoMipMaps and Texture Group: Color Lookup Table"]
+        answer_index: 3
+        explain: "For best results the LUT image should use Mip Gen Settings NoMipMaps and Texture Group Color Lookup Table before it is used in a Post Process Volume."
+      - q: "Your image is too dark and you are tempted to raise Global Gain. What does the workflow advice say?"
+        choices: ["Gain is the correct tool for exposure", "Use Offset instead of Gain for exposure", "Do not use Gain for exposure; adjust Exposure Bias in the Lens > Auto-Exposure section instead", "Lower Slope to brighten the frame"]
+        answer_index: 2
+        explain: "The workflow section says not to use Gain to adjust exposure. Gain is for fine color tweaks; use Exposure Bias under Lens > Auto-Exposure."
+      - q: "Two Post Process Volumes overlap the same shot. Which one wins?"
+        choices: ["The one with the larger Blend Radius", "The one placed first in the Outliner", "The one with the higher Priority; the order is undefined if priorities are equal", "The one with Infinite Extent enabled always wins"]
+        answer_index: 2
+        explain: "Priority decides: the highest priority overrides lower ones. If two overlapping volumes share a priority the order is undefined."
+      - q: "On a Cine Camera Actor, what does a Post Process Blend Weight of 0 do?"
+        choices: ["Turns the camera's post process layer fully on", "Makes the camera's post process layer fall through to other layers, so it has no effect", "Disables all Post Process Volumes in the level", "Locks exposure to EV100 0"]
+        answer_index: 1
+        explain: "A weight of 1 makes the camera post process layer fully enabled; 0 causes it to fall through to other layers."
+      - q: "Where does OpenColorIO fit into a Movie Render Queue render?"
+        choices: ["MRQ can apply a color space transformation from an OpenColorIO Configuration Asset to the output image sequence", "OCIO only works in the viewport, not in exports", "OCIO replaces the Film settings in the Post Process Volume", "OCIO is only for nDisplay LED walls"]
+        answer_index: 0
+        explain: "The OCIO page lists exporting through Movie Render Queue as one place where a color space transformation from an OCIO Configuration Asset can be applied to the output."
+    flavors:
+      _default: {why: "Grading is the last thing between your render and the viewer's eyes. Do it in the right place and in the right order."}
+      cinematics: {why: "Every shot needs a consistent base look plus a per-shot grade that cuts cleanly with the next one.", do: "Grade two adjacent shots so the cut between them does not jump in brightness or temperature."}
+      lookdev: {why: "You must know when a look comes from the material and when it comes from the grade.", do: "Take a screenshot with Show > Post Processing off and compare it to the graded frame."}
+      tech_art: {why: "OCIO and LUT pipelines are how Unreal talks to compositing tools.", do: "Set up an OCIO Configuration Asset and describe in one line what it references."}
+
+  - id: CQ21
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [sequencer, spawnables, possessables, bindings]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, tech_art]
+    required_spine: false
+    elective: false
+    title: Spawnables vs possessables
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawn-temporary-actors-in-unreal-engine-cinematics"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-actor-tracks-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/dynamic-binding-in-sequencer"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "Create LS_Bindings. Add an existing door or prop from the level with Track (+) > Actor to Sequencer. This is a Possessable. Keyframe its Transform."
+      - "Drag a Skeletal Mesh or a Blueprint from the Content Browser into an empty area of Sequencer. Note the lightning bolt icon. This is a Spawnable."
+      - "Right-click the possessable prop and choose Convert to Spawnable. Play the sequence and watch the Outliner as the actor appears and disappears."
+      - "Right-click the spawnable track, open the Spawnable category and set Spawned Object Owner to External. Play again and confirm the actor stays after the sequence ends. Set it back to This Sequence."
+      - "On the Spawn track, trim the section so the actor spawns 1 second after the sequence starts."
+      - "Right-click a possessable track, open Assign Actor and use Replace with Selected to rebind it to a different actor of the same class."
+      - "Extra: use Convert Selected Binding(s) To > Replaceable from Director Blueprint > Quick Bind > Resolve to Player Pawn and test in PIE."
+    done_when: "Screenshot of Sequencer showing one possessable and one spawnable track (lightning bolt visible), the Spawnable properties panel open, and the Outliner during playback. Three sentences: one case where you would use a possessable, one where a spawnable, and what Spawned Object Owner = External changes."
+    xp: 170
+    verify_type: screenshot
+    quiz:
+      - q: "According to the documentation, when is a Possessable the better choice?"
+        choices: ["When the actor is temporary and only needed during the scene", "When you need to render the same scene in several levels", "When the scene needs a high degree of interaction with actors that already exist in the level", "When the actor must respawn every tick"]
+        answer_index: 2
+        explain: "Possessables reference existing level actors through a soft object path. The page says possessing is likely best when the scene interacts a lot with existing actors."
+      - q: "What is the default lifetime of a Spawnable actor?"
+        choices: ["It exists permanently after the first play", "It is spawned when the sequence starts and destroyed when it ends", "It exists only while the editor is open", "It is spawned only during Play In Editor"]
+        answer_index: 1
+        explain: "By default a Spawnable is spawned when the sequence starts and destroyed and removed when the sequence ends. The Spawn Track can control the exact frames."
+      - q: "You have an actor already in the level and want it to become a Spawnable. What are the documented steps?"
+        choices: ["Delete it from the level and drag the asset from the Content Browser", "Set its Mobility to Movable and it becomes spawnable automatically", "Enable Create Spawnable Actors in Project Settings", "Add it to Sequencer as a Possessable, then right-click it and choose Convert to Spawnable"]
+        answer_index: 3
+        explain: "The page says to add the actor to Sequencer (Track > Add Actor to Sequencer) and then right-click the track and select Convert to Spawnable."
+      - q: "How can you identify a Spawnable in Sequencer and the Outliner?"
+        choices: ["It shows a lightning bolt overlay on the actor icon", "Its name is written in red", "It has a lock icon", "It is placed in a folder called Spawnables"]
+        answer_index: 0
+        explain: "Once spawned, a lightning bolt overlay appears on the actor in Sequencer and in the Outliner."
+      - q: "What does Spawned Object Owner = External do?"
+        choices: ["The actor spawns at the sequence start but is not destroyed at the end; you can destroy it later via Blueprints using Sequencer Tags and Groups", "The actor is spawned by the root sequence instead of the current one", "The actor is owned by the server for networking", "The actor is spawned into an external level file"]
+        answer_index: 0
+        explain: "External keeps the actor alive after the sequence ends. The page points to Sequencer Tags and Groups for destroying it through Blueprints."
+      - q: "What is the difference between This Sequence and Root Sequence as Spawned Object Owner?"
+        choices: ["There is no difference; they are aliases", "This Sequence spawns the actor only for the current sequence; Root Sequence keeps it for the whole master sequence, so it can exist outside the current sequence bounds", "Root Sequence disables the Spawn track", "This Sequence only works in subsequences"]
+        answer_index: 1
+        explain: "This Sequence (the default) spawns and destroys for the current sequence. Root Sequence spawns for the duration of the master sequence, which may be outside the current sequence bounds."
+      - q: "What does the Change Class option on a Spawnable preserve?"
+        choices: ["All object properties but not tracks", "Nothing; it resets the spawnable", "The Sequencer tracks already added, but not non-Sequencer data such as object properties", "Only the Transform track"]
+        answer_index: 2
+        explain: "Change Class swaps the spawned class while preserving Sequencer tracks. It does not preserve non-Sequencer data like object properties."
+      - q: "When would you enable Continuously Respawn?"
+        choices: ["To make the actor spawn on every level load", "When something outside Sequencer may destroy the actor and you want it re-created while its Spawn track says it should exist", "To spawn a copy each frame", "To make the actor visible in the editor only"]
+        answer_index: 1
+        explain: "Continuously Respawn checks every tick that the actor still exists (based on the Spawn track) and respawns it if an external destroy event removed it."
+      - q: "How do you rebind an Object Binding Track to a different actor?"
+        choices: ["Delete the track and add the actor again; rebinding is not possible", "Rename the track to the new actor name", "Drag the new actor onto the old track's keyframes", "Right-click the track, open the Assign Actor menu and pick the new actor or use Replace with Selected"]
+        answer_index: 3
+        explain: "The Object Binding Track page says bindings can be changed or removed from the Assign Actor menu, including Replace with Selected and Remove All."
+      - q: "What is a Replaceable binding?"
+        choices: ["A binding that uses a preview actor while editing and dynamically binds to an existing in-game actor at runtime", "A spawnable that changes class at runtime", "A possessable that can be renamed", "A binding that is replaced by the Camera Cuts track"]
+        answer_index: 0
+        explain: "The Custom Binding page lists Replaceable as a binding type: a preview actor in the editor, then a dynamic bind to an existing in-game actor at runtime."
+    flavors:
+      _default: {why: "Choosing the wrong binding type is the most common reason a cinematic breaks when the level changes."}
+      cinematics: {why: "Shots must be portable. Spawnables make a shot carry its own props, lights and cameras.", do: "Set the MRQ job Map to a second level and render the same spawnable-based shot there."}
+      animation: {why: "Characters are usually spawnables in shots and possessables in gameplay cinematics.", do: "Use Resolve to Player Pawn so your sequence animates the real player character in PIE."}
+      tech_art: {why: "Binding rules decide what Blueprint code must do when a sequence plays.", do: "Rebind a track from Blueprint using the Sequencer > Player > Bindings functions and describe what you called."}
+
+  - id: CQ22
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [cine-camera, look-at-tracking, camera-rigs, transform-track]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    title: Cameras that follow
+    time_min: 100
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/camera-jibs-and-dollies-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-transform-and-property-tracks-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-animate-cinematic-cameras-in-unreal-engine"
+    checklist:
+      - "Create LS_Follow with a moving character or a prop that travels across the set."
+      - "Add a Cine Camera Actor CAM_Track. In Current Camera Settings > Lookat Tracking Settings enable Look at Tracking, set Actor to Track to the character, and set a Relative Offset so the head is framed. Enable Draw Debug Look at Tracking Position to check."
+      - "Set Look at Tracking Interp Speed to a value above 0 and compare the feel with 0."
+      - "Set Focus Method to Tracking with the same actor. Enable Draw Debug Focus Plane and Smooth Focus Changes."
+      - "Place a Camera Rig Rail. Add spline points and curve the track. Attach CAM_Track by dragging it onto the rail in the Outliner. Add the rail to Sequencer and keyframe Current Position on Rail from 0 to 1."
+      - "Add a Camera Rig Crane with a second camera CAM_Crane. Keyframe Crane Pitch, Crane Yaw and Crane Arm Length for a rise-and-reveal."
+      - "On one camera Transform track, right-click a rotation channel and Override with Double Perlin Noise for a subtle handheld feel. Set a low Amplitude."
+    done_when: "Screenshot of the viewport with the debug look-at cube and the rail visible, plus Sequencer showing the rail, crane and camera tracks with keys. Short note: which Interp Speed you chose and why."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What does enabling Look at Tracking do to the camera?"
+        choices: ["Moves the camera along a spline toward the actor", "Overrides the camera rotation so it aims at the specified actor", "Sets the focus distance to the actor", "Locks the camera to the actor's socket"]
+        answer_index: 1
+        explain: "Look at Tracking overrides the camera's rotation and modifies it to aim at the actor set in Actor to Track."
+      - q: "You enable Look at Tracking but leave Actor to Track empty. What does the camera look at?"
+        choices: ["The last selected actor", "Nothing; tracking is ignored", "The world origin at 0, 0, 0", "The player pawn"]
+        answer_index: 2
+        explain: "The property table says that if no actor is specified, the camera tracks the world origin (0, 0, 0)."
+      - q: "What does a Look at Tracking Interp Speed of 0 mean?"
+        choices: ["The camera never updates its aim", "The camera tracks instantly; values above 0 add an increasing delay", "The camera tracks at 1 degree per frame", "Tracking uses the sequence frame rate"]
+        answer_index: 1
+        explain: "The default of 0 makes the camera track instantly. Numbers greater than 0 add an increasingly large delay to the tracking."
+      - q: "Can the tracked actor change during a shot?"
+        choices: ["No, Actor to Track is fixed per camera", "Only by using two cameras and a Camera Cut", "Only through the Camera Rig Crane", "Yes, Actor to Track can be keyframed in Sequencer so the camera changes target over time"]
+        answer_index: 3
+        explain: "The Actor to Track property can be keyframed in Sequencer, letting the camera change its tracked target over time."
+      - q: "How do you attach a Cine Camera to a Camera Rig Rail per the documentation?"
+        choices: ["Set the camera's Actor to Track to the rail", "Drag the camera actor onto the rig rail in the World Outliner", "Add a Rail component to the camera Blueprint", "Use the Attach track on the rail"]
+        answer_index: 1
+        explain: "After placing the rail, you move the camera to its position and attach it by dragging the camera actor onto the rig rail in the World Outliner."
+      - q: "What range does Current Position on Rail use?"
+        choices: ["0 to 100 in percent", "Centimeters along the spline", "0 to 1, where 0 is the start and 1 is the end of the track", "-1 to 1"]
+        answer_index: 2
+        explain: "Current Position on Rail is clamped between 0 and 1; 0 is the start point of the track and 1 is the end point."
+      - q: "The camera on your rail keeps pointing the same world direction as the rail curves. Which option changes this?"
+        choices: ["Show Rail Visualization", "Preview Mesh Scale", "Lock Orientation to Rail", "Allow Roll"]
+        answer_index: 2
+        explain: "By default the camera orientation is independent from the dolly. Lock Orientation to Rail makes the camera rotation relative to the dolly rotation."
+      - q: "Which three properties animate a Camera Rig Crane shot?"
+        choices: ["Crane Pitch, Crane Yaw and Crane Arm Length", "Focal Length, Aperture and Focus Distance", "Rail Position, Rail Speed and Rail Offset", "Roll, Dutch and Tilt"]
+        answer_index: 0
+        explain: "The crane controls are Crane Pitch, Crane Yaw and Crane Arm Length (in centimeters), plus Lock Mount Pitch / Yaw options."
+      - q: "Your camera rotation flips strangely between two transform keys. Which Transform section property does the page suggest?"
+        choices: ["Show 3D Trajectory", "Use Quaternion Interpolation, which reduces gimbal lock and other Euler rotation problems", "Active Channels", "Display > Show Curve"]
+        answer_index: 1
+        explain: "Use Quaternion Interpolation enables quaternion linear interpolation between transform keys and helps reduce gimbal lock and Euler-based problems."
+      - q: "You override a camera rotation channel with Double Perlin Noise. Around what value does the noise animate?"
+        choices: ["Around 0; to center it on another value, use an additive section", "Around the last keyframe value", "Around the actor being tracked", "Around the Amplitude value"]
+        answer_index: 0
+        explain: "Noise channels animate relative to 0. To get noise in a range like 100 to 200 you keep a base section and add an additive section converted to noise."
+    flavors:
+      _default: {why: "A camera that follows the subject smoothly is the core of most cinematic shots."}
+      cinematics: {why: "Tracking, dollies and cranes are the three moves every operator must own.", do: "Attach the rail to the crane and animate both together for one combined move."}
+      animation: {why: "Tracked cameras must read the character's motion, so the offset and interp speed matter.", do: "Set Relative Offset so the camera tracks the head bone region, not the actor root."}
+      level_design: {why: "A rail spline is a path through your space; it shows what the player will see.", do: "Lay a rail that shows the whole graybox in one 10 second move."}
+
+  - id: CQ23
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [sequencer, cinematics, movie-render-queue, color-grading, animation]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, lookdev]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Scene
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/movie-render-pipeline-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawn-temporary-actors-in-unreal-engine-cinematics"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-grading-and-the-filmic-tonemapper-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-image-quality-settings-in-unreal-engine"
+    checklist:
+      - "Build a 30 to 45 second scene LS_Scene_Master with at least 3 shots in a Shots track. Each shot is its own Level Sequence."
+      - "Put one animated character in the scene (Animation track with at least 2 clips). Characters, cameras and shot lights are Spawnables."
+      - "Use at least one following camera (Look at Tracking, rail or crane) and one static camera. Cut on action, not at random."
+      - "Light each shot with spawnable lights. Use a lighting channel for the hero in at least one shot. Lock exposure with Manual metering."
+      - "Grade: one base Post Process Volume for the project look, and at least one per-shot grade with a different Priority."
+      - "Render with Movie Render Queue: PNG sequence plus EXR, Temporal Sample Count of at least 4, TAA disabled, saved as a preset MRQ_Scene."
+      - "Encode the PNGs to a video (any tool) and write a half-page breakdown: shot list, what each camera does, what the grade does, and your render settings."
+    done_when: "Video link or file (30 to 45 s), the Sequencer screenshot of the master with shots expanded, the MRQ settings screenshot, and the written breakdown. A mentor reviews it live."
+    xp: 300
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "This is the piece that shows you can take a scene from empty level to graded final frames."}
+      cinematics: {why: "A finished scene with picture, light, grade and render is your first reel piece.", do: "Add a one-line director's note per shot in the breakdown."}
+      animation: {why: "A scene tests how your animation reads through a real camera and edit.", do: "Blend two animation clips inside one shot and show the blend region in Sequencer."}
+      lookdev: {why: "The render is where your materials meet the grade.", do: "Include one ungraded EXR frame next to the graded PNG in your breakdown."}
+
+  - id: CQ24
+    rank: 3
+    difficulty: expert
+    track: cinematics
+    subjects: [sequencer, audio-track, sound]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [animation, tech_art]
+    required_spine: false
+    elective: true
+    title: Sound in the sequence
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-audio-track-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-export-formats-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-image-quality-settings-in-unreal-engine"
+    checklist:
+      - "Open a sequence with a character and at least 2 shots. Add an Audio Track with Track (+) and drop a music Sound Wave at frame 0."
+      - "Add a second Audio Track for a footstep or door sound. Trim its edges and drag the end past the clip length so it loops."
+      - "Drag the upper corners of the music section to make a fade in and a fade out. Overlap two clips and adjust the crossfade handles."
+      - "Expand the sound-effect track and set Attach to the character. Right-click the section > Properties and set an Attenuation Settings asset. Move the camera away and listen to the falloff."
+      - "Use Start Frame Offset (Shift + drag) to slip the sound so it lands exactly on the footstep frame."
+      - "Add the WAV Audio export to your MRQ job and render 5 seconds with a PNG sequence."
+    done_when: "Screenshot of Sequencer with both audio tracks (fades and crossfade visible), the Attach and Attenuation settings shown, and the output folder with the .wav next to the PNG frames. One line on what you did if the trimmed clip did not play correctly."
+    xp: 85
+    verify_type: screenshot
+    quiz:
+      - q: "Which asset types can you add to an Audio Track?"
+        choices: ["Sound Waves and Sound Cues", "Only .wav files imported as Sound Waves", "MetaSounds only", "Any .mp3 file from disk"]
+        answer_index: 0
+        explain: "The page says you can add Sound Waves and Sound Cues with the Audio Track, either from the Audio (+) dropdown or by dragging them from the Content Browser."
+      - q: "How do you make an audio section loop?"
+        choices: ["Right-click and choose Duplicate until it fills the timeline", "Drag the end of the section past the duration of the clip", "Set Pitch to 0", "Enable Suppress Subtitles"]
+        answer_index: 1
+        explain: "Dragging the end time past the clip duration causes the sound to loop for the trimmed duration."
+      - q: "A trimmed audio section does not play correctly. What fix does the page give?"
+        choices: ["Re-import the sound at 48 kHz", "Convert the section to a Sound Cue", "Set the Sound Wave's Sound Asset Compression Type to Bink Audio or PCM", "Disable Looping on the section"]
+        answer_index: 2
+        explain: "Trimmed or edited sections may fail due to platform-specific codec settings; setting Sound Asset Compression Type to Bink Audio or PCM fixes it."
+      - q: "How do you create a volume fade on an audio section?"
+        choices: ["Add a Fade track above it", "Keyframe the Attach track", "Set Start Frame Offset", "Drag the upper corner edges of the section"]
+        answer_index: 3
+        explain: "Dragging the upper corner edges of an audio section blends the volume up and down for the duration of the blend."
+      - q: "What happens when two audio sections on the same track overlap?"
+        choices: ["The later one replaces the earlier one", "They crossfade for the duration of the overlap, with adjustable fade handles", "Sequencer shows an error", "The pitch of both is doubled"]
+        answer_index: 1
+        explain: "Intersecting sections crossfade for the overlap. You can adjust the crossfade by dragging each clip's fade handles independently."
+      - q: "Which actors can you choose in an Audio Track's Attach property?"
+        choices: ["Only actors that are currently referenced in the Level Sequence", "Any actor in the level", "Only Skeletal Mesh actors", "Only the active camera"]
+        answer_index: 0
+        explain: "You can only attach Audio Tracks to actors that are currently referenced in your Level Sequence."
+      - q: "After attaching an audio track to an actor, what must you still set for 3D behavior?"
+        choices: ["A Camera Cut", "An Attenuation Mode on each clip, unless the sound asset already has a Sound Attenuation", "The Looping flag", "A Time Dilation track"]
+        answer_index: 1
+        explain: "After attaching, you must specify an Attenuation Mode per audio clip to drive 3D audio, unless the Sound Wave or Cue already has attenuation assigned."
+      - q: "You add an audio asset directly under a character's track with the character's Track (+). What is different about this Audio Track?"
+        choices: ["It cannot be trimmed", "It plays only in Play In Editor", "It is attached to that actor and the attachment cannot be changed; there is no Attach track", "It ignores Attenuation"]
+        answer_index: 2
+        explain: "A dedicated Audio Track created under an actor is automatically attached to that actor, and its attachment cannot be changed to any other actor."
+      - q: "What does Start Frame Offset do?"
+        choices: ["Delays the section start on the timeline", "Changes the sequence start frame", "Sets the frame at which looping begins", "Offsets the playable region of the sound without changing the section duration, like slip editing; Shift + drag is the shortcut"]
+        answer_index: 3
+        explain: "Start Frame Offset works like slip editing: it adjusts which part of the sound plays without changing the duration. Holding Shift and dragging the clip is the mouse shortcut."
+      - q: "You render with MRQ using 8 temporal samples and an audio track. What does the Image Settings page warn about?"
+        choices: ["Audio sections cannot be auto-expanded for the extra evaluated time and may be skipped; you are notified after the render", "Audio is rendered at half speed", "WAV export is disabled above 4 samples", "The audio must be converted to a Sound Cue first"]
+        answer_index: 0
+        explain: "With Temporal Sample Count above 1 the sequence is evaluated before the frame start. Animation and audio sections cannot be auto-expanded and you are told after the render which sections to expand by hand."
+    flavors:
+      _default: {why: "Picture without sound is half a scene. Sequencer can carry music, effects and spatial sound in sync with the cut."}
+      cinematics: {why: "Cutting to sound, and fading across cuts, is a basic editing skill.", do: "Place a music hit exactly on your hardest camera cut and show the frame in Sequencer."}
+      animation: {why: "Footsteps and impacts attached to bones sell the weight of the motion.", do: "Attach a footstep sound to a foot bone using the Skeletal Mesh Component and Bone options."}
+      tech_art: {why: "Attenuation assets and compression settings are shared pipeline decisions.", do: "Create one Sound Attenuation asset and reuse it on two audio sections."}
+
+  - id: CQ25
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [sequencer, shots, takes, pipeline]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [animation, level_design]
+    required_spine: false
+    elective: false
+    title: Shot structure for a real production
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequences-shots-and-takes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-workflow-tips-for-sequencer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-sequencer-movie-tool-overview"
+    checklist:
+      - "In the toolbar click Cinematics > Add Level Sequence with Shots. Name it SEQ_Master, set Number of Shots to 3, Shot Prefix to sh, Shot Num Digits to 4, Shot Increment to 10."
+      - "Open the first shot (sh0010). Add a Cine Camera, a Camera Cuts section and one keyframed camera move. Do the same for sh0020 and sh0030 with different framing."
+      - "Right-click sh0020 > New Take. Save it in the same folder. Change the camera move in the take. Open the Takes menu and confirm the star is on the new take."
+      - "Right-click each shot > Edit Meta Data. Enter your name, the date and a one-line note. Hover a shot to see the tooltip."
+      - "Give each shot a different Color Tint (right-click > Properties > Color Tint)."
+      - "Add one light to SEQ_Master (root) and also to sh0010. Keyframe two different colors. Right-click sh0010 > Properties and change Hierarchical Bias to -50, then back to 0. Watch which color wins."
+      - "Write a short naming and folder rule for your team (shot prefix, digits, take separator, where takes live) in a text file next to SEQ_Master."
+    done_when: "Screenshot of the SEQ_Master timeline showing 3 color-tinted shots and the Takes menu open with the star on Take 2, plus the metadata tooltip visible, plus your naming rule text."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you create a new sequence that already contains shots?"
+        choices: ["Content Browser > Add > Cinematics > Level Sequence", "Toolbar Cinematics button > Add Level Sequence with Shots", "Window > Sequencer > New Shot List", "Right-click a Cine Camera > Make Shots"]
+        answer_index: 1
+        explain: "The Cinematics toolbar button has Add Level Sequence with Shots. It opens a settings window for the name, path and number of shots."
+      - q: "Which setting controls how many digits are added to each generated shot name, like sh0010?"
+        choices: ["Shot Increment", "First Shot Number", "Shot Num Digits", "Take Separator"]
+        answer_index: 2
+        explain: "Shot Num Digits sets the total number of digits added to the end of generated shot names. First Shot Number and Shot Increment set the numbers themselves."
+      - q: "You leave Sequence to Duplicate empty when creating a Level Sequence with Shots. What do the new shots contain?"
+        choices: ["A Camera and a Camera Cut Track", "Nothing, they are empty", "A copy of the current level", "A Skeletal Mesh Actor"]
+        answer_index: 0
+        explain: "If no sequence is given, every shot is created preconfigured with a Camera and a Camera Cut Track."
+      - q: "What does Instance Sub Sequences do when it is enabled?"
+        choices: ["It copies every sub-sequence into every shot", "It disables sub-sequences", "It makes each shot a spawnable", "It creates the sub-sequence assets only for the first shot; other shots reference them"]
+        answer_index: 3
+        explain: "With Instance Sub Sequences on, only the first shot gets its own sub-sequence assets. The other shots reference those same assets instead of getting unique ones."
+      - q: "Two Shots tracks are used and their sections overlap in time. Which one plays?"
+        choices: ["The one created first", "The section on the top-most track", "The section on the bottom track", "Both blend together automatically"]
+        answer_index: 1
+        explain: "Shot sections on the top tracks are prioritized. Where they overlap sections below, the top-most track evaluates instead."
+      - q: "A sub-sequence sits inside a shot, which sits inside the root sequence. With default values, what is the sub-sequence's cumulative Hierarchical Bias?"
+        choices: ["0", "100", "200", "-100"]
+        answer_index: 2
+        explain: "The root is 0 and every sub-sequence level adds 100. A shot is 100, and a sub-sequence inside it is 200, so the deepest level wins by default."
+      - q: "The same light is keyed red in the root, green in a shot and blue in a sub-sequence. You set all Hierarchical Bias values to 0. What happens?"
+        choices: ["All three evaluate together and blend, giving white", "Only the root red plays", "Only the deepest blue plays", "Sequencer shows an error"]
+        answer_index: 0
+        explain: "Equal bias means all sources evaluate together and blend when possible. The docs example blends red, green and blue into white."
+      - q: "You right-click a shot and choose New Take, then save. Which version does the shot play now?"
+        choices: ["Still the original Take 1", "It asks each time", "Both takes at once", "The new take; the star in the Takes menu marks it as active"]
+        answer_index: 3
+        explain: "When a new take is created the shot switches to it. The active take is shown with a star icon in the Takes menu."
+      - q: "Why does the docs page suggest using Edit Meta Data on shots?"
+        choices: ["It changes the shot's frame rate", "To store a name, date and notes as a tooltip, useful when many people work on one scene", "It locks the shot for other users", "It exports an EDL"]
+        answer_index: 1
+        explain: "Edit Meta Data stores your name, date and time, and notes. They appear as a tooltip on the shot and help teams track changes."
+      - q: "What does Evaluate Sub Sequences In Isolation change when you open a shot?"
+        choices: ["It renders the shot with MRQ", "It deletes tracks from the root", "Tracks that are not in the shot no longer evaluate alongside it, so you lose the root context", "It makes the shot loop"]
+        answer_index: 2
+        explain: "By default a shot is shown in the context of its root sequence. Evaluate Sub Sequences In Isolation stops the other tracks from evaluating with the shot."
+      - q: "You changed the start and end inside a shot. What is the fastest way to make the parent shot section match?"
+        choices: ["Right-click the shot > Edit > Auto Size", "Re-trim the section by hand", "Delete and re-insert the shot", "Change the Time Scale property"]
+        answer_index: 0
+        explain: "Auto Size matches the parent shot section to the internal edits, so you do not need to re-trim by hand."
+      - q: "You drag a new actor into the level and want it added to Sequencer as a possessable. Which key do you hold?"
+        choices: ["Alt", "Shift", "Space", "Ctrl"]
+        answer_index: 3
+        explain: "Holding Ctrl adds the new actor as a possessable. Holding Shift adds it as a spawnable."
+    flavors:
+      _default: {why: "A real production has many shots, many takes and many people. A clear structure keeps the master sequence safe."}
+      cinematics: {why: "Shots, takes and hierarchical bias are how you keep a big edit under control without breaking other people's work.", do: "Record a 30-second video walking through your folder structure and say why each rule exists."}
+      animation: {why: "Animators work inside shots; knowing bias and context view avoids fights over the same character.", do: "Put a character animation in a shot and override its transform in the root, then fix it with bias."}
+
+  - id: CQ26
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [movie-render-queue, render-passes, compositing, exr]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, tech_art]
+    required_spine: false
+    elective: false
+    title: Render passes and layers
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-passes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-settings-and-formats-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/transitioning-to-the-movie-render-graph-from-movie-render-queue-in-unreal-engine"
+    checklist:
+      - "Edit > Plugins: enable Movie Render Queue Additional Render Passes. Restart the editor."
+      - "Open Movie Render Queue and add a job for a short shot (24 to 48 frames) from your Scene capstone."
+      - "Under Deferred Rendering: enable Disable Multisample Effects and enable both MovieRenderQueue_WorldDepth and MovieRenderQueue_MotionVectors in Additional Post Process Materials."
+      - "Add the Object Ids pass. Set Id Type to Actor."
+      - "Add Anti-Aliasing: Spatial Sample Count 8, Override Anti Aliasing on, method None."
+      - "Remove other exports. Add EXR Sequence with Multilayer enabled. Set File Name Format to {render_pass}/{sequence_name}.{frame_number}."
+      - "Render. Open the output folder and one EXR in an image viewer or compositing tool that can read layers. Find the Object Ids (cryptomatte), WorldDepth and MotionVectors layers."
+    done_when: "Screenshot of the MRQ settings list for the job, plus a screenshot of the output folder with pass subfolders, plus one frame shown with its Object Ids or depth layer visible."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "Which plugin must be enabled to render the Object Ids pass?"
+        choices: ["Movie Render Graph", "OpenColorIO", "Movie Render Queue Additional Render Passes", "Composure"]
+        answer_index: 2
+        explain: "Object Ids need the Movie Render Queue Additional Render Passes plugin (Rendering section). The editor must restart after enabling it."
+      - q: "Why can MRQ not output common AOVs like Ambient Occlusion or Sub-surface Scattering as separate passes?"
+        choices: ["Because of the limits of Deferred Rendering, the final image cannot be assembled from all passes", "Because they need the Path Tracer", "Because EXR cannot store them", "Because they are only in shipping builds"]
+        answer_index: 0
+        explain: "The docs state that Deferred Rendering makes it impossible to output every pass needed to rebuild the final image. Only the listed passes are supported."
+      - q: "Which File Name Format token puts each pass in its own subfolder?"
+        choices: ["{shot_name}", "{camera_name}", "{version}", "{render_pass}"]
+        answer_index: 3
+        explain: "Using {render_pass}/{sequence_name}.{frame_number} separates passes into pass-named subfolders under the Output Directory."
+      - q: "How are Object Ids stored in the output file?"
+        choices: ["As a PNG mask per actor", "In the EXR using the Cryptomatte specification", "As a JSON list of actor names", "In the WAV metadata"]
+        answer_index: 1
+        explain: "Object Ids are written into the multilayer EXR using the Cryptomatte specification, which third-party plugins can read."
+      - q: "For the Object Ids pass the docs say to use at least 8 Spatial Samples, not Temporal Samples. Why?"
+        choices: ["Temporal samples are slower to compute", "Temporal samples need TAA, which is disabled", "Without motion blur between samples, temporal sampling gives faint multiple copies of objects", "Spatial samples support alpha"]
+        answer_index: 2
+        explain: "Temporal samples move objects in time but there is no motion blur covering the gap, so you get several faint copies of each object superimposed."
+      - q: "What does Disable Multisample Effects do, and why does the Object Ids workflow need it?"
+        choices: ["It turns off DoF, TAA, motion blur and chromatic aberration so IDs line up with crisp edges", "It disables spatial sampling", "It removes stencil layers", "It halves render time"]
+        answer_index: 0
+        explain: "Those post effects blend many pixels together. Turning them off keeps edges crisp so the ID pass matches the final image."
+      - q: "Where can the Object Ids render pass be used?"
+        choices: ["Only in packaged Android builds", "In any shipping build", "Only with the Path Tracer", "Only in the Unreal Editor, not in shipping builds"]
+        answer_index: 3
+        explain: "The pass is experimental and editor-only. It cannot be used in shipping builds."
+      - q: "How is World Depth stored in the post process pass?"
+        choices: ["Normalized 0 to 1 in the alpha channel", "In world units in the red channel", "In centimeters in the blue channel", "As a separate PNG"]
+        answer_index: 1
+        explain: "World Depth is written in world units into the red channel, and camera focal data in the EXR metadata lets a compositor rebuild depth of field."
+      - q: "In the Motion Vectors pass, what value means no motion?"
+        choices: ["0, 0", "1, 1", "0.5, 0.5", "-1, -1"]
+        answer_index: 2
+        explain: "Motion vectors are stored in 0 to 1 space for X and Y, with 0.5, 0.5 meaning no motion."
+      - q: "Which statement about Stencil Layers is true?"
+        choices: ["They are not true layers: translucent objects show other layers behind them, and background layers have black holes where foreground objects are", "Each layer renders only its own objects and nothing else", "They support a different post process material per layer", "They cannot keep an alpha channel"]
+        answer_index: 0
+        explain: "The whole scene renders for each layer and other pixels are clipped to black. The docs warn it is not a true layer system and lists those limits."
+      - q: "You want to recombine stencil layers in a compositing tool. Which output setup does the docs page recommend?"
+        choices: ["PNG with tone curve on", "JPG at 100 quality", "BMP with alpha", "EXR in linear space with the Tone Curve disabled, using an OCIO workflow"]
+        answer_index: 3
+        explain: "To recombine images they should be exported linear (Disable Tone Curve in Color Output), and an OCIO-based workflow is recommended."
+      - q: "In Movie Render Graph, where are Temporal and Spatial sample counts set?"
+        choices: ["Both on the Output node", "Temporal on the global Sampling Method node, Spatial per render layer on the Renderer node", "Both on the Game Overrides node", "Temporal per layer, Spatial global"]
+        answer_index: 1
+        explain: "MRG splits them: Temporal Samples are global in the Sampling Method node, while Spatial Samples and the AA method are per render layer on the Renderer node."
+    flavors:
+      _default: {why: "Passes let a compositor fix or restyle parts of a frame without a full re-render."}
+      cinematics: {why: "A pass hand-off is how cinematics work leaves Unreal and enters post. Getting IDs, depth and motion vectors right saves days.", do: "Use the Object Ids layer in a compositing tool to recolor one object, then show before and after."}
+      lookdev: {why: "Stencil layers and IDs let you tune one material in post without touching the rest of the shot.", do: "Render one stencil layer for a single hero prop and hue-shift it in post."}
+      tech_art: {why: "The same MRQ setup can be built as a Movie Render Graph and reused across shots.", do: "Rebuild this job in Movie Render Graph with two render layers and note what differs."}
+
+  - id: CQ27
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [path-tracer, rendering, movie-render-queue, ray-tracing]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [lookdev, tech_art]
+    required_spine: false
+    elective: false
+    title: Path Tracer for final frames
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/path-tracer-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-passes-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nne-denoiser-in-unreal-engine"
+    community_urls:
+      - {title: "Introduction to Path Tracing | Unreal Engine 5.1 (WINBUSH)", url: "https://www.youtube.com/watch?v=ZRLuaGuvrdw"}
+    checklist:
+      - "Project Settings: set Default RHI to DirectX 12, enable Support Hardware Ray Tracing and Enable Path Tracing. Accept Support Compute Skin Cache. Restart."
+      - "In the viewport set View Modes > Path Tracing. Let the frame converge. Note how long it takes to become clean."
+      - "In your Post Process Volume open the PathTracing category. Set Max Bounces, Samples Per Pixel and Max Path Intensity. Toggle Emissive Materials off and on and look for double lighting."
+      - "Check your materials: keep diffuse Base Color below 0.8. Fix any bright white walls."
+      - "In MRQ create a job. Remove Deferred Rendering and add the Path Tracer renderer. For a still frame use Spatial Sample Count 16, Temporal 1. Render one frame and note the time."
+      - "For a 48-frame moving shot use Spatial 1, Temporal 8 and enable Reference Motion Blur. Render and note seconds per frame."
+      - "Compare a Path Tracer frame with the same frame from Deferred Rendering. Write three differences you can see."
+    done_when: "One path-traced still and one frame from the moving shot, the MRQ settings list, and a short note with seconds per frame for both renders and your three observed differences."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "Which project setting is NOT part of the Path Tracer requirements listed in the docs?"
+        choices: ["Default RHI set to DirectX 12", "Support Hardware Ray Tracing enabled", "Lumen Global Illumination enabled", "Enable Path Tracing enabled"]
+        answer_index: 2
+        explain: "The Path Tracer needs DX12, Support Hardware Ray Tracing and Enable Path Tracing. Lumen is not part of the requirement list."
+      - q: "When you enable Support Hardware Ray Tracing, a pop-up asks about another setting. Which one?"
+        choices: ["Support Compute Skin Cache", "Nanite", "Virtual Shadow Maps", "Enable Alpha Channel Support"]
+        answer_index: 0
+        explain: "Support Compute Skin Cache is required for hardware ray tracing and path tracing, so the editor asks you to enable it."
+      - q: "An interior render is very slow. Which material change does the docs page recommend?"
+        choices: ["Set roughness to 1", "Use only Unlit materials", "Increase Max Bounces", "Keep diffuse Base Color below 0.8"]
+        answer_index: 3
+        explain: "Albedo close to 1.0 makes rays bounce for a long time before Russian Roulette can end them. The docs recommend Base Color under 0.8."
+      - q: "In the editor viewport a skinned character looks blurred and streaky under the Path Tracer. What is the correct fix?"
+        choices: ["Increase Samples Per Pixel in the Post Process Volume", "Render the final frames with Movie Render Queue", "Disable Compute Skin Cache", "Turn off denoising"]
+        answer_index: 1
+        explain: "Animation does not invalidate the accumulated samples in the editor, so it streaks. MRQ renders each frame cleanly, so use it for final output."
+      - q: "In MRQ, how is the total number of samples per pixel computed?"
+        choices: ["Spatial plus Temporal", "Spatial only", "Spatial multiplied by Temporal", "Temporal only"]
+        answer_index: 2
+        explain: "The total is the product of the two counts, so 4 spatial and 4 temporal gives 16 samples per pixel."
+      - q: "The docs give a sampling recommendation for stills and for animations. Which is it?"
+        choices: ["Stills: all spatial with 1 temporal. Animations: 1 spatial with many temporal and Reference Motion Blur on", "Stills: many temporal. Animations: many spatial", "Always 4 and 4", "Stills: 1 and 1. Animations: 16 spatial"]
+        answer_index: 0
+        explain: "For stills put everything in spatial samples. For moving shots use 1 spatial and many temporal samples with Reference Motion Blur for the best blur."
+      - q: "You set Samples Per Pixel in the Post Process Volume, but MRQ ignores it. Why?"
+        choices: ["The volume must be Unbound", "Samples Per Pixel only works on Windows 11", "The Path Tracer plugin is missing", "MRQ uses its own Spatial Sample Count; the volume's Samples Per Pixel is ignored in MRQ"]
+        answer_index: 3
+        explain: "The docs state that the Post Process Volume samples per pixel setting is ignored when using MRQ. Use the Anti-aliasing Spatial Sample Count."
+      - q: "You turn off Emissive Materials in the PathTracing post process settings. What happens?"
+        choices: ["Emissive surfaces turn black", "Emissive surfaces are still visible to the camera but no longer light the scene", "All lights are disabled", "Emissive surfaces double their brightness"]
+        answer_index: 1
+        explain: "The colors stay visible to camera rays but do not emit light. This helps avoid double counting when a light fixture has both emissive geo and a real light."
+      - q: "Which setting exists mainly to reduce firefly artifacts?"
+        choices: ["Reference Atmosphere", "Max Bounces", "Max Path Intensity", "Filter Width"]
+        answer_index: 2
+        explain: "Max Path Intensity clamps the maximum exposure allowed for a path, which reduces firefly artifacts."
+      - q: "You use an HDRIBackdrop with the Path Tracer and get double lighting. What does the docs page suggest?"
+        choices: ["Use a Sky Light with the texture and set r.PathTracing.VisibleLights 2 so the backdrop shows", "Increase Max Bounces to 32", "Enable Emissive Materials", "Switch to Lumen"]
+        answer_index: 0
+        explain: "HDRIBackdrop is not compatible with the Path Tracer. Use a Sky Light with the HDRI and make it visible with r.PathTracing.VisibleLights 2."
+      - q: "Reference Motion Blur is enabled in MRQ. How does sampling change?"
+        choices: ["Spatial samples are doubled", "Denoising happens after each spatial sample", "Temporal samples are ignored", "All temporal samples are taken before denoising, so keep Spatial at 1 and use temporal samples"]
+        answer_index: 3
+        explain: "With Reference Motion Blur, temporal samples are accumulated before the denoiser runs. The docs recommend Spatial 1 and driving quality with temporal samples."
+      - q: "The Denoiser toggle in the Post Process Volume does nothing. What is the most likely reason?"
+        choices: ["Max Bounces is too low", "The denoiser plugin (NNE Denoiser by default) is not enabled", "The camera is orthographic", "Temporal samples are above 8"]
+        answer_index: 1
+        explain: "The toggle uses the loaded denoiser plugin. If no denoiser plugin is enabled it has no effect on the output."
+    flavors:
+      _default: {why: "The Path Tracer gives ground-truth lighting with almost no setup, but it costs render time. You must know when it pays off."}
+      cinematics: {why: "Final-frame cinematics often go through the Path Tracer for hero shots. Knowing sampling and its limits keeps a render farm night from being wasted.", do: "Render the same 48 frames at temporal 4 and temporal 16 and show the time and quality difference."}
+      lookdev: {why: "The Path Tracer is your reference for checking that real-time materials and lights are believable.", do: "Compare one material under Lumen and the Path Tracer and note where they differ."}
+      tech_art: {why: "Firefly clamps, denoiser plugins and CVars are the knobs a tech artist tunes for the team.", do: "Add a Console Variables setting to the MRQ job with one Path Tracer CVar and explain what it does."}
+
+  - id: CQ28
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [movie-render-queue, anti-aliasing, high-resolution, render-budget]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [tech_art, lookdev]
+    required_spine: false
+    elective: false
+    title: High-quality settings and their cost
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-rendering-image-quality-settings-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-workflow-tips-for-sequencer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-settings-and-formats-in-unreal-engine"
+    checklist:
+      - "Pick a 48-frame shot with a moving camera and one moving object. Add a Burn In setting so each frame shows the job name and frame number."
+      - "Render A: Anti-Aliasing Spatial 1, Temporal 1, PNG Sequence at 1920x1080. Write down seconds per frame and total time."
+      - "Render B: Spatial 1, Temporal 8, Override Anti Aliasing on with method None. Extend your tracks one frame before the start so the first temporal sample has data. Note the time."
+      - "Render C: same as B, plus High Resolution with Tile Count 2 and Overlap Ratio 0.1 at 3840x2160. Note the time."
+      - "Add Engine Warm Up Count 32 to the shot that has cloth or particles, and Render Warm Up Count 8. Compare the first frame with and without warm-up."
+      - "Make a table: render, settings, seconds per frame, total minutes, what got better. Add the file name format you used, including {ts_count} and {ss_count} tokens."
+      - "Write a 3-line budget rule: for a 60-second film at 24 fps, which settings fit an overnight render on your machine."
+    done_when: "A writeup with the table for renders A, B and C (seconds per frame and total time), one frame from each, a first-frame comparison with and without warm-up, and your budget rule."
+    xp: 250
+    verify_type: writeup
+    quiz:
+      - q: "How does Temporal sampling produce motion blur?"
+        choices: ["It jitters the camera position each sample", "It slices the time the shutter is open into steps, renders each and blends them, which gives rotational blur", "It blurs the image in post with a vector pass", "It renders at half resolution and upsamples"]
+        answer_index: 1
+        explain: "Temporal samples divide the shutter-open time into slices. The engine ticks to each slice and the results accumulate, so blur can curve and rotate."
+      - q: "Spatial and Temporal samples give the same anti-aliasing offsets. Why does the docs page say temporal is usually more efficient?"
+        choices: ["Temporal samples are free on the GPU", "Spatial samples cannot exceed 4", "Temporal samples skip post processing", "Static objects get the same anti-aliasing, and moving objects also get blur that hides aliasing"]
+        answer_index: 3
+        explain: "With temporal samples, non-moving objects are anti-aliased the same, and moving objects are blurred, so you get more benefit per sample."
+      - q: "TAA is on and you use 16 samples. What does the docs page recommend?"
+        choices: ["Enable Override Anti-Aliasing and set it to None, or raise r.TemporalAASamples to match the sample count", "Nothing, TAA handles it", "Lower the resolution", "Use MSAA"]
+        answer_index: 0
+        explain: "TAA limits the unique positions to r.TemporalAASamples, which defaults to 8. With more samples, disable TAA or raise that value."
+      - q: "You set Temporal Sample Count above 1. What must you check in Sequencer?"
+        choices: ["The frame rate must be 60", "Cameras must be spawnables", "Tracks must cover the time before the first frame; animation and audio sections cannot auto-expand", "The shot must be a subsequence"]
+        answer_index: 2
+        explain: "The sequence is evaluated on both sides of each frame. Sections auto-expand where possible, but animation and audio cannot, so you extend them by hand."
+      - q: "High Resolution Tile Count is set to 2. How many tiles are rendered per frame?"
+        choices: ["2", "4", "8", "16"]
+        answer_index: 1
+        explain: "Tile Count uses square formatting, so a Tile Count of 2 gives a 2x2 grid, which is four tiles."
+      - q: "What is the Overlap Ratio for, and what does it cost?"
+        choices: ["It sharpens textures at no cost", "It sets the tile size and lowers memory use", "It blends tile edges to reduce seams, mainly for Depth of Field, at the cost of extra render time", "It adds motion blur to tiles"]
+        answer_index: 2
+        explain: "Overlap makes tiles share an edge region that is blended. This helps DoF seams but makes the render take longer."
+      - q: "Which feature does High Resolution tiled rendering NOT support?"
+        choices: ["Temporal anti-aliasing and screen space effects like SSR and lens flares", "PNG output", "Spatial samples", "Burn In"]
+        answer_index: 0
+        explain: "The docs state that High Resolution does not support TAA and screen-space features such as screen space reflections, convolution bloom, lens flares and fast motion blur."
+      - q: "What is the difference between Engine Warm Up Count and Render Warm Up Count?"
+        choices: ["They are the same setting with two names", "Engine Warm Up renders to disk; Render Warm Up does not", "Render Warm Up ticks physics; Engine Warm Up does not", "Engine Warm Up ticks the engine for N frames so physics settle; Render Warm Up rebuilds the TAA history with samples taken at the same time, right before rendering"]
+        answer_index: 3
+        explain: "Engine warm-up lets time pass for cloth and particles. Render warm-up takes samples without ticking, to rebuild temporal history after a camera cut."
+      - q: "A cloth character starts in an idle pose and settles visibly on frame 1. What does the tips page suggest?"
+        choices: ["Set Spatial Sample Count to 8", "Set Engine Warm Up Count to a value above 30", "Enable High Resolution", "Disable the Tone Curve"]
+        answer_index: 1
+        explain: "For objects with no starting motion, Engine Warm Up Count gives physics time to settle. The docs suggest a value greater than 30."
+      - q: "You add console variables to an MRQ job. What happens to them after the render?"
+        choices: ["They stay changed in the editor", "They are saved into the level", "They are restored to their original values", "They are written into DefaultEngine.ini"]
+        answer_index: 2
+        explain: "MRQ saves the original value before the render and restores it when the render finishes."
+      - q: "Shutter Timing is set to Frame Close. Where does the motion blur come from?"
+        choices: ["From the motion before the frame in Sequencer", "From the motion after the frame", "Centered around the frame", "There is no motion blur"]
+        answer_index: 0
+        explain: "Frame Close represents the shutter closing, so the blur shows what comes before the frame. Frame Open shows what comes after, and Frame Center is balanced."
+      - q: "Which output format is Overscan Percentage designed for, and what happens with other formats?"
+        choices: ["PNG; other formats crash", "JPG; other formats ignore it", "WAV; other formats ignore it", "EXR, which stores the region data; other formats simply come out larger with changed framing"]
+        answer_index: 3
+        explain: "Overscan encodes the region information in a way unique to EXR. Other formats still work but the output is larger than expected and the framing changes."
+    flavors:
+      _default: {why: "Quality settings multiply render time. A master knows the price of each one before pressing Render."}
+      cinematics: {why: "A production budget is measured in frames per hour. Sampling, tiles and warm-up are where the hours go.", do: "Add a fourth render with Spatial 2, Temporal 8 and show whether it is worth the time."}
+      tech_art: {why: "Warm-up counts and CVars are how you make a render deterministic across machines.", do: "Save the B settings as a Movie Pipeline Master Config asset and share it with the team."}
+      lookdev: {why: "DoF seams and TAA history bugs are look problems that come from render settings, not materials.", do: "Show a tile seam with Overlap 0 and the fix with Overlap 0.1."}
+
+  - id: CQ29
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [template-sequences, camera-rigs, presets, documentation]
+    required_for_majors: [cinematics]
+    taster_for_majors: []
+    adjacent_for: [tech_art, animation]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Shot kit
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/template-sequences-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-settings-and-formats-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/camera-jibs-and-dollies-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequences-shots-and-takes-in-unreal-engine"
+    checklist:
+      - "Make a folder Content/ShotKit with subfolders Cameras, Rigs, Presets, Docs."
+      - "Create at least three Camera Animation Sequences (Content Browser > Animation > Camera Animation Sequence): CAS_PushIn, CAS_Handheld and CAS_Orbit. Make CAS_Handheld additive (Blend Type > Additive) so it can layer on any camera."
+      - "Build two reusable rig Blueprints: BP_RigRail (Camera Rig Rail with a Cine Camera attached) and BP_RigCrane (Camera Rig Crane with a Cine Camera). Expose the useful values as variables."
+      - "In MRQ save two presets: MPC_Final (Movie Pipeline Master Config: EXR, tone curve off, Spatial 1, Temporal 8, AA None, Burn In) and MPC_Preview (PNG, 1 and 1, half resolution). Save one Shot config MPS_HeroDoF for a shot that needs more spatial samples."
+      - "Create SEQ_KitDemo with Add Level Sequence with Shots (3 shots). In each shot use a different kit item: a rig, a Camera Animation Sequence via the Template Sequence track, and CAS_Handheld layered on a rail move. Render it with MPC_Preview, then one shot with MPC_Final."
+      - "Write Docs/README (text or markdown): what each asset is, how to add it to a shot, the naming rule from CQ25, which preset to use when, and expected seconds per frame for each preset on your machine."
+      - "Ask another member to follow the README and build one new shot with the kit without your help. Add their feedback and fix the README."
+    done_when: "Mentor review of the ShotKit folder, the README, the rendered demo (preview and one final shot), and a note from the other member who tested the kit."
+    xp: 400
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A kit that others can use without you is the real proof of mastery."}
+      cinematics: {why: "Studios run on templates and presets. This kit is your reusable toolbox for every future project.", do: "Add a fourth Camera Animation Sequence for a whip pan and document its Property Multipliers."}
+      tech_art: {why: "Rig Blueprints and config assets are pipeline tools; clear exposed variables make them safe for others.", do: "Add a Construction Script to BP_RigRail that draws the rail length in the viewport."}
+      animation: {why: "Template Sequences are how animators reuse camera moves on any Cine Camera.", do: "Use Property Multipliers to make one CAS asset give three different intensities."}
+
+  - id: CQ30
+    rank: 4
+    difficulty: master
+    track: cinematics
+    subjects: [virtual-camera, live-link, virtual-production]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [animation, tech_art]
+    required_spine: false
+    elective: true
+    title: Live Link and virtual cameras
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/controlling-a-virtual-camera-actor-using-live-link-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/live-link-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-cameras-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/take-recorder-in-unreal-engine"
+    checklist:
+      - "Edit > Plugins: enable VirtualCamera, Live Link and Take Recorder. Restart."
+      - "Install the Unreal VCam app on an iOS (15+, ARKit) or Android (ARCore) device. Put the device on the same network as your PC."
+      - "In the Place Actors panel search VCAM and drag a VCam Actor into your scene. Notice the viewport starts piloting it."
+      - "Open the Pixel Streaming dropdown (not Pixel Streaming 2) and read the Signaling Server URL that matches your network. Enter it in the app and press Connect."
+      - "Walk with the device to frame a shot. Then use the touch joysticks to add extra movement on top of the tracked motion."
+      - "Open Window > Live Link. Find the source and subject for your device and confirm the green status light."
+      - "Record a 10-second camera take with Take Recorder and play it back in Sequencer."
+    done_when: "Screenshot of the Live Link window showing the connected source and subject with a green light, plus the recorded take open in Sequencer, plus a short clip or screenshot of the VCam app view."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which plugin is NOT in the list you must enable for the virtual camera guide?"
+        choices: ["VirtualCamera", "Live Link", "Niagara", "Take Recorder"]
+        answer_index: 2
+        explain: "The guide lists VirtualCamera, Live Link and Take Recorder. Niagara is not needed."
+      - q: "Which device requirement matches the docs?"
+        choices: ["iOS 15 or later with ARKit; Android 24 (Nougat) or higher with ARCore", "Any phone with a camera", "iOS 12 with ARKit only", "Android 10 with Bluetooth"]
+        answer_index: 0
+        explain: "The page lists iOS/iPadOS 15.0 or later with ARKit support, and Android 24 or higher with ARCore support."
+      - q: "Where do you find the IP address to type into the Unreal VCam app?"
+        choices: ["Project Settings > Network", "Window > Live Link > Presets", "The Output Log", "The Pixel Streaming toolbar dropdown, under Signaling Server URLs"]
+        answer_index: 3
+        explain: "The Pixel Streaming dropdown lists signaling server URLs. Use the one on the same network as the device."
+      - q: "You see two dropdowns: Pixel Streaming and Pixel Streaming 2. Which one do you use for VCam?"
+        choices: ["Either one", "Pixel Streaming, because Virtual Camera does not support Pixel Streaming 2", "Pixel Streaming 2 only", "Neither; use Live Link presets"]
+        answer_index: 1
+        explain: "The docs say Virtual Camera does not currently support Pixel Streaming 2. Use the Pixel Streaming dropdown."
+      - q: "What happens in the viewport as soon as you drag a VCam Actor into the level?"
+        choices: ["Nothing until the device connects", "A Take Recorder window opens", "The viewport automatically starts piloting the virtual camera", "The level switches to Play mode"]
+        answer_index: 2
+        explain: "The viewport changes to pilot the virtual camera immediately after the VCam Actor is placed."
+      - q: "Your scene has three VCam Actors. What happens when the app connects?"
+        choices: ["You must select which one to connect to", "It connects to all three", "It connects to the newest", "It refuses to connect"]
+        answer_index: 0
+        explain: "With one virtual camera the app connects automatically. With several, you must choose one."
+      - q: "How do the touch screen joysticks relate to ARKit tracking?"
+        choices: ["Joysticks replace tracking", "Joysticks only work when tracking is off", "Joysticks scale the tracking", "Joystick movement is layered on top of the tracked movement"]
+        answer_index: 3
+        explain: "Motion tracking happens automatically, and joystick movement is added on top of it."
+      - q: "Which of these is NOT a Live Link role listed in the docs?"
+        choices: ["Camera", "Material", "Character", "Transform"]
+        answer_index: 1
+        explain: "Supported roles are Cameras, Lights, Characters, Transforms and a Basic role for generic data. There is no Material role."
+      - q: "A Live Link subject is made of which data?"
+        choices: ["A network address only", "A Blueprint and a level", "A name, static data such as a skeleton, and one or more frames of data", "A texture and a sound"]
+        answer_index: 2
+        explain: "A subject has a name, static data that does not change, and frames of data such as bone transforms."
+      - q: "In the Live Link window a subject shows a yellow light. What does that mean?"
+        choices: ["Connected to the source, but no data arrived within the time set in Project Settings", "The subject is recording", "The role is wrong", "The plugin is disabled"]
+        answer_index: 0
+        explain: "Green means data is arriving. Yellow means the source is connected but no data came in the expected time."
+      - q: "Your PC has two network adapters and Live Link gets no data. Where does the docs page say to fix this?"
+        choices: ["Project Settings > Rendering", "The VCam app settings", "Edit > Plugins", "Project Settings > UDP Messaging, set the Unicast Endpoint to the adapter's IP with :0"]
+        answer_index: 3
+        explain: "The Message Bus source uses the first adapter it finds. Set the Unicast Endpoint to the adapter you want; :0 means all ports."
+      - q: "Which Evaluation Mode should you avoid if the engine has no Timecode provider?"
+        choices: ["Engine Time", "Timecode", "Latest", "All modes work without one"]
+        answer_index: 1
+        explain: "Timecode mode evaluates using the engine timecode and the docs say not to use it without a Timecode provider. Engine Time is for smooth motion and Latest uses the newest frame with no interpolation."
+    flavors:
+      _default: {why: "A handheld virtual camera gives natural, human camera moves in minutes."}
+      cinematics: {why: "Virtual cameras are the fastest way to find a shot on set or in previs, then record it as a take.", do: "Record three takes of the same move and pick the best one in Sequencer."}
+      animation: {why: "Live Link is the same pipe that brings mocap and DCC previews into the engine.", do: "Stream a second Live Link subject and compare Engine Time and Latest evaluation."}
+      tech_art: {why: "VCam input mapping and Live Link presets are configuration a tech artist owns.", do: "Save a Live Link preset asset and map one hardware button through the VCam Input Settings."}
