@@ -2,6 +2,7 @@
 # 8 small steps that teach the server before Unreal. Written in simple English on purpose:
 # short sentences, common words, no idioms. Many members don't speak English as a first language.
 #
+# Step 1 is only the rules quiz (Discord's Rules Screening already makes everyone accept the rules).
 # `step` is the one line shown on the Orientation page. `checklist` lines have a `check:` the Quartermaster
 # verifies itself (see bot/registrar/checks.py), so nobody ticks steps by hand.
 
@@ -16,18 +17,16 @@ quests:
     required_spine: false
     elective: false
     title: Rules quiz
-    step: "Read #welcome, then press **Rules quiz** and get 4 of 5 right."
+    step: "Press **Rules quiz** and get 4 of 5 right."
     time_min: 5
     official_url: "discord://#welcome"
     backup_url: null
     checklist:
-      - text: "Accept the server rules (Discord shows them when you join)."
-        check: {fact: rules.accepted}
-      - text: "Pass the rules quiz: press Rules quiz, or type /quiz O1."
+      - text: "Press Rules quiz (or type /quiz O1) and get 4 of 5 right."
         check: {fact: quiz.O1}
-    done_when: "Rules accepted and quiz passed."
+    done_when: "Quiz passed."
     xp: 10
-    verify_type: action
+    verify_type: quiz
     quiz:
       - q: "You are stuck in Unreal. Where do you ask?"
         choices: ["#general", "#help-desk, with the Unreal help button", "Send a private message to a mentor", "#rank-ups"]

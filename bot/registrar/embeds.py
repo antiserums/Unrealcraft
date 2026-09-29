@@ -60,11 +60,14 @@ def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
         e.add_field(name="Checklist  (✅ seen by the bot · ☐ not yet · 📎 checked on submit · ▫ honor)",
                     value="\n".join(checklist)[:1024], inline=False)
     e.add_field(name="Done when", value=r.get("done_when", "—")[:1024], inline=False)
-    steps = []
-    if q.quiz:
-        steps.append(f"`/quiz {q.id}`")
-    steps.append(f"`/submit {q.id}`")
-    e.add_field(name="Turn in", value=" then ".join(steps), inline=False)
+    vt = r.get("verify_type")
+    if vt == "quiz":
+        how = f"Pass `/quiz {q.id}`. That's all."
+    elif vt == "action":
+        how = "Nothing to send. The bot ticks it when it sees you do it."
+    else:
+        how = (f"`/quiz {q.id}` then " if q.quiz else "") + f"`/submit {q.id}`"
+    e.add_field(name="How to finish", value=how, inline=False)
     if reason:
         e.set_footer(text=f"Why this one: {reason}")
     return e
