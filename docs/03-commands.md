@@ -20,6 +20,7 @@ Slash commands only. No prefix commands and no message-content intent except for
 | /profile `[ue_version]` | any | Show or set profile fields. |
 | /post `[forum]` | R0+ | Opens the New post dialog (title, WIP/Help/Done, quest, details with engine version, up to 4 files) for a Workshop forum you have unlocked. Also a **New post** button on each forum's pinned intro. |
 | /skip-voice | Orientation | Completes O7 without voice. |
+| /room rename `name` · /room limit `n` | owner of a voice room | Rename your join-to-create voice room or cap how many can join (0 = no limit). Same as the buttons in the room's chat. |
 | /skip-elective `id` | any | Hides an elective from /quest suggestions. |
 | /critique `link` `question` | R3+ | Opens a #showcase post tagged Critique-wanted and pings people with the same Specialty. |
 
@@ -53,7 +54,7 @@ Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/chec
 | `fact: btn.clockin` | pinned button pressed | O4 |
 | `fact: submit.O5` | `/submit O5 READY` | O5 |
 | `fact: thread.help_desk` | post created through the **Unreal help** or **Server / bot problem** form | (recorded; no step uses it now) |
-| `any: [voice.studio_floor, cmd.skip_voice]` | 60 s in Studio Floor | O7 |
+| `any: [voice.studio_floor, cmd.skip_voice]` | 60 s in any voice room | O7 |
 | `fact: react.showcase` | reaction on someone else's showcase post | O8 |
 | `fact: msg.<channel>` | any message in that channel (author + channel only, no Message Content intent) | O-E3 |
 | `fact: nick.major` | nickname contains `|` | O-E2 |

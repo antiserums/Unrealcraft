@@ -163,7 +163,7 @@ class Onboarding(commands.Cog):
             v.add_item(PracticeSendButton())
         elif step == "O7":
             if (url := self.channel_url("studio_floor_voice")):
-                v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Next: join Studio Floor",
+                v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Next: join a voice room",
                                              emoji="🔊", url=url))
             v.add_item(SkipVoiceButton())
         return v
@@ -230,7 +230,7 @@ class Onboarding(commands.Cog):
     @app_commands.command(name="skip-voice", description="Skip the voice step of Orientation (O7).")
     async def skip_voice(self, itx: discord.Interaction):
         await self.fact(itx.guild, itx.user.id, "cmd.skip_voice")
-        await itx.response.send_message("Voice step skipped. You can join Studio Floor any time.", ephemeral=True)
+        await itx.response.send_message("Voice step skipped. You can make a voice room any time.", ephemeral=True)
 
     # ------------------------------------------------------------ listeners
     @commands.Cog.listener()
@@ -352,15 +352,15 @@ class Onboarding(commands.Cog):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        floor = self.bot.unlocks.channel("studio_floor_voice")
-        if after.channel and after.channel.id == floor and member.id not in self._voice_tasks:
+        # O7: any minute in voice counts (the ➕ hub moves you into your own room right away).
+        if after.channel and not member.bot and member.id not in self._voice_tasks:
             async def wait():
                 await asyncio.sleep(VOICE_SECONDS)
-                if member.voice and member.voice.channel and member.voice.channel.id == floor:
+                if member.voice and member.voice.channel:
                     await self.fact(member.guild, member.id, "voice.studio_floor")
                 self._voice_tasks.pop(member.id, None)
             self._voice_tasks[member.id] = asyncio.create_task(wait())
-        elif (not after.channel or after.channel.id != floor) and member.id in self._voice_tasks:
+        elif not after.channel and member.id in self._voice_tasks:
             self._voice_tasks.pop(member.id).cancel()
 
     @commands.Cog.listener()
@@ -585,7 +585,7 @@ class SkipVoiceButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:s
 
     async def callback(self, itx: discord.Interaction):
         await itx.client.get_cog("Onboarding").fact(itx.guild, itx.user.id, "cmd.skip_voice")
-        await itx.response.send_message("✅ Voice step skipped. You can join Studio Floor any time.", ephemeral=True)
+        await itx.response.send_message("✅ Voice step skipped. You can make a voice room any time.", ephemeral=True)
 
 
 class MajorSelect(discord.ui.Select):

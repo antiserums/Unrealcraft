@@ -21,6 +21,7 @@ COGS = [
     "registrar.cogs.ranks",
     "registrar.cogs.setup_server",
     "registrar.cogs.workshop",
+    "registrar.cogs.voice",
 ]
 
 log = logging.getLogger("quartermaster")

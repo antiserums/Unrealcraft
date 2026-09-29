@@ -16,7 +16,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 |---|---|---|
 | 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Questing + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
-| 02 · VOICE ROOMS | Studio Floor [V], Pair Program [V] (connect R2+), Critique Room [V] (connect R3+), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
+| 02 · TOWN HALL | ➕ Join to create [V]: joining it makes your own room (rename / user limit; deleted after 5 min empty), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 03 · WORKSHOP | #quest-board (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
 | 04 · STAFF | #mod-log (also gets 🐞 bug-report alerts), #curriculum-wip, #mentor-queue | staff (+ Architect read queue, Lead) |
 
@@ -112,9 +112,7 @@ Studio Lead **cannot** ban, kick, manage roles, or use /grant-xp or economy comm
 | Role | Server-level extras |
 |---|---|
 | @everyone | View GATE only, Read History, Add Reactions (GATE ro), Use Application Commands |
-| Oriented | Send Messages, Send in Threads, Create Public Threads, Attach Files, Embed Links, Connect/Speak in Studio Floor |
-| Prototyper+ | Connect Pair Program |
-| Specialist+ | Connect Critique Room |
+| Oriented | Send Messages, Send in Threads, Create Public Threads, Attach Files, Embed Links, Connect/Speak in ➕ Join to create and the rooms it makes |
 | Engineer+ | (hoisted) |
 | Architect+ | Request to Speak/Speak in Lecture Hall stage, Manage Threads in own track lab |
 | Studio Lead | Manage Messages in #showcase and #help-desk (pin/unpin), Priority Speaker |

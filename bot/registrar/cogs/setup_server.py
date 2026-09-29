@@ -322,18 +322,24 @@ class SetupServer(commands.Cog):
         chans.update(general=general.id, introductions=intros.id, showcase=showcase.id, help_desk=helpdesk.id,
                      suggestions=suggestions.id)
 
-        # 02 VOICE ROOMS -------------------------------------------------------------
-        await self._rename_category(g, "02 · TRAINING GROUNDS", "02 · VOICE ROOMS")
-        training = await self._category(g, "02 · VOICE ROOMS", {everyone: P(view_channel=False),
+        # 02 TOWN HALL ---------------------------------------------------------------
+        await self._rename_category(g, "02 · TRAINING GROUNDS", "02 · TOWN HALL")
+        await self._rename_category(g, "02 · VOICE ROOMS", "02 · TOWN HALL")
+        training = await self._category(g, "02 · TOWN HALL", {everyone: P(view_channel=False),
                                                                 R["Recruit"]: recruit_ow,
                                                                 R["Oriented"]: member_ow, me: bot_ow})
         cats["training"] = training.id
-        floor = await self._voice(g, training, "Studio Floor")
-        no_connect = {R["Oriented"]: P(view_channel=True, connect=False), R["Recruit"]: P(view_channel=False)}
-        await self._voice(g, training, "Pair Program",
-                          {**no_connect, **{r: P(connect=True, speak=True) for r in allowed_from(2)}})
-        await self._voice(g, training, "Critique Room",
-                          {**no_connect, **{r: P(connect=True, speak=True) for r in allowed_from(3)}})
+        # One join-to-create hub (cogs/voice.py): joining it makes your own room. It replaced the static rooms.
+        from .voice import HUBS
+        hub_name = HUBS["studio_floor_voice"][0]
+        for old in ("Studio Floor", "➕ New voice room"):
+            if (ch := discord.utils.get(training.voice_channels, name=old)):
+                await ch.edit(name=hub_name, reason="Unrealcraft: join-to-create voice rooms")
+        for old in ("Pair Program", "Critique Room", "➕ Pair Program", "➕ Critique Room"):
+            if (ch := discord.utils.get(training.voice_channels, name=old)) and not ch.members:
+                await ch.delete(reason="Unrealcraft: replaced by ➕ Join to create")
+                report.append(f"removed {old} voice")
+        floor = await self._voice(g, training, hub_name)
         chans.update(studio_floor_voice=floor.id)
 
         # 03 WORKSHOP: the quest board + #starter-quests + one forum per major ----------------------
@@ -594,7 +600,7 @@ class SetupServer(commands.Cog):
             out.append(f"⚠ server guide: {e}")
         return out
 
-    CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · VOICE ROOMS", "03 · WORKSHOP",
+    CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · TOWN HALL", "03 · WORKSHOP",
                       "04 · STAFF"]
     CHANNEL_ORDER = {
         "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
@@ -698,7 +704,7 @@ class SetupServer(commands.Cog):
               "You only see channels you have unlocked.\n"
               "**Everyone:** GATE and Guild Hub channels.\n"
               "**After Orientation:** #quest-board, #starter-quests and the Workshop forums (read all, post in "
-              "your major's), plus Voice Rooms.\n" + rank_lines, "#8E6CCF"),
+              "your major's), plus Town Hall (voice).\n" + rank_lines, "#8E6CCF"),
             E("🆘 Need help?",
               "Go to #help-desk.\n"
               "🛠️ **Unreal help**: a problem in Unreal or with a quest.\n"
