@@ -1,0 +1,1850 @@
+# Unrealcraft — Programming major, all ranks. IDs PQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: PQ31
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, variables, containers]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: "Arrays, Sets and Maps"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-arrays?application_version=4.27"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-sets?application_version=4.27"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-maps?application_version=4.27"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/array-nodes?application_version=4.27"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+    checklist:
+      - "Make an Actor Blueprint BP_Containers. Add a String variable Names. Click the Variable Type icon and pick the Array container."
+      - "Compile. In Class Defaults, add 4 default items to Names (for example Apple, Banana, Cherry, Date)."
+      - "Add a second String variable and turn it into a Set (the { } option). Try to add the same item twice and read the warning."
+      - "Add a Map variable with a String key and an Integer value (name it Scores). Add 3 key-value pairs in the defaults."
+      - "On Event BeginPlay, use a For Each Loop on Names and Print String each item with its index."
+      - "Use Find on Scores with one key. Print the value. Use Contains Item on the Set and print the result."
+      - "Play. Read the Output Log and check the printed order and the index numbers."
+    done_when: "One screenshot of the My Blueprint panel showing the three container variables (Array, Set, Map) with their type icons, and one screenshot of the Output Log with the printed items and index numbers."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You add five items to an Array. What is the index of the first item?"
+        choices: ["1", "0", "5", "-1"]
+        answer_index: 1
+        explain: "Array indices are zero-based. The first item is index 0 and the fifth item is index 4."
+      - q: "An Array holds N items. What does the Length node return, and which indices are valid?"
+        choices: ["N, valid indices 0 to N-1", "N-1, valid indices 1 to N", "N, valid indices 1 to N", "N+1, valid indices 0 to N"]
+        answer_index: 0
+        explain: "Length returns N, the number of items. Valid indices run from 0 to N-1."
+      - q: "What is special about the key of an item in a Set?"
+        choices: ["The key is the item's index in the Set", "The key is a separate String you choose", "The key is the item itself", "Sets do not have keys"]
+        answer_index: 2
+        explain: "In a Set the value of an item is also the key used to find it. This is why items in a Set must be unique."
+      - q: "In a Blueprint Map, which of these is allowed?"
+        choices: ["Two entries with the same key", "A key of one type and a second key of another type", "Editing the Map defaults before compiling", "Two entries with the same value"]
+        answer_index: 3
+        explain: "Duplicate values are allowed, but keys must be unique and all keys must have the same type. You must compile before you can edit the defaults."
+      - q: "You want to know if an Array holds a value, but you do not need its position. Which node fits?"
+        choices: ["Find Item", "Contains Item", "Get", "Last Index"]
+        answer_index: 1
+        explain: "Contains Item returns True or False and does not return the index. Find Item returns the index of the first match."
+      - q: "You call Remove Index on index 1 of a five-item Array. What happens to the other items?"
+        choices: ["Index 1 becomes empty and the others keep their numbers", "The Array is cleared", "The remaining index numbers update to close the gap", "The item is moved to the end"]
+        answer_index: 2
+        explain: "Remove Index removes the item and all remaining index numbers update to close the gap."
+    flavors:
+      _default: {why: "Almost every gameplay system stores lists of things. Picking the right container keeps the code simple and fast."}
+      gameplay_design: {why: "Inventories, spawn lists and score tables are all containers.", do: "Build a tiny inventory as a Map of item name to count."}
+      tech_art: {why: "Tool scripts often loop over many assets or actors.", do: "Fill an Array with all actors of a class and print their names."}
+
+  - id: PQ32
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, casting, communication]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: Cast To, and when it fails
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/casting-quick-start-guide-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-communication-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-communication-usage-in-unreal-engine"
+    checklist:
+      - "In a Third Person project, make BP_RotateActor with a Static Mesh (Shape_Cube). On Event Tick, AddActorLocalRotation with Z = 2.0 behind a Branch that reads a Boolean CanRotate."
+      - "Add a function OverlappedPlayer with a Boolean input Begin Overlap that sets CanRotate."
+      - "In the ThirdPersonCharacter, add a Sphere Collision (Radius 200). Add OnComponentBeginOverlap and OnComponentEndOverlap."
+      - "Drag from Other Actor, Cast To BP_RotateActor, then call OverlappedPlayer from the As BP Rotate Actor pin (True on begin, False on end)."
+      - "Connect Print String to the Cast Failed pin. Place BP_RotateActor and one plain cube in the level."
+      - "Play. Walk near both. The cube from BP_RotateActor spins, the plain cube prints the failed message."
+    done_when: "A screenshot of the character graph with the Cast To node, the Cast Failed pin used, and a PIE screenshot with the actor spinning near the player."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "In simple words, what does a Cast node ask an object?"
+        choices: ["Are you a special version of that class, and if so let me access you", "Do you exist in the level", "Can you send me an event later", "What is your index in the level"]
+        answer_index: 0
+        explain: "A Cast tries to convert a reference to a more specific class. If it works you get access to that class. If not, the cast fails and you disregard the request."
+      - q: "Your project uses a different Character Blueprint than the one you Cast To. What happens?"
+        choices: ["The cast still works because both are Characters", "The cast fails, so you cannot reach that class's functions", "The engine crashes", "The player is converted to the cast class"]
+        answer_index: 1
+        explain: "The docs give this example: if the player is not using the Flying Character Blueprint, Cast To Flying Blueprint fails and you cannot execute the flying command."
+      - q: "What do you need before you can cast?"
+        choices: ["An Event Dispatcher on the target", "An Interface on both Blueprints", "The Level Blueprint open", "A reference to the Actor you want to cast"]
+        answer_index: 3
+        explain: "Casting requires a reference to the Actor. You take that reference and try to convert it to a specific class."
+      - q: "Which relationship does casting use between your working Actor and the target?"
+        choices: ["One-to-many", "Many-to-many", "One-to-one", "No relationship, it is global"]
+        answer_index: 2
+        explain: "Casting, like direct communication, is one-to-one between your working Actor and your target Actor."
+      - q: "In the quick start, which pin of On Component Begin Overlap do you drag from to Cast To BP_RotateActor?"
+        choices: ["Overlapped Component", "Other Comp", "Other Actor", "Sweep Result"]
+        answer_index: 2
+        explain: "Other Actor holds the Actor that entered the sphere. You drag from that pin and choose the Cast To node."
+      - q: "You have Cat, Dog and Bird Blueprints that all come from an Animal Blueprint. Which is a listed case for casting?"
+        choices: ["Bind all animals to one event", "Access one specific child Blueprint such as Cast To Cat", "Share a variable across all animals", "Make the animals talk to the Level Blueprint"]
+        answer_index: 1
+        explain: "The docs list accessing a specific Child Blueprint (Cast to Cat, Cast to Dog or Cast to Bird) as a use case for casting."
+    flavors:
+      _default: {why: "Casting is the first tool most people reach for. Knowing when it fails saves hours of debugging."}
+      gameplay_design: {why: "Most trigger and pickup logic starts with a cast on Other Actor.", do: "Make a second actor type and show that the cast fails for it."}
+      level_design: {why: "Level scripting often needs to check what entered a trigger.", do: "Use the cast in a Trigger Volume to open a door only for the player."}
+
+  - id: PQ33
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, references, variables]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Object reference or class reference
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/direct-actor-communication-quick-start-guide-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/referencing-assets-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawning-actors-in-unreal-engine"
+    checklist:
+      - "In a Third Person project with Starter Content, place Blueprint_CeilingLight in the level."
+      - "In the ThirdPersonCharacter, add a variable LampReference with type Blueprint Ceiling Light > Object Reference. Enable Instance Editable."
+      - "On the F key, use Flip Flop to Set Visibility of the lamp's Point Light 1 on and off through LampReference."
+      - "Select the character in the level. In Details, pick the placed lamp in the Lamp Reference dropdown. Play and press F."
+      - "Add a second variable LampClass with type Blueprint Ceiling Light > Class Reference. Set its default to Blueprint_CeilingLight."
+      - "On the G key, Spawn Actor from Class using LampClass at the player location plus 200 units forward."
+      - "Compare the two variable icons and the two pin colors. Write one sentence on what each variable holds."
+    done_when: "A screenshot of the graph with both variables (one Object Reference, one Class Reference) used, and one sentence explaining the difference in your own words."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Direct Actor communication needs one thing before it can work. What is it?"
+        choices: ["An Interface on the target", "A reference to the target Actor", "A Cast Failed pin", "A Macro Library"]
+        answer_index: 1
+        explain: "Direct communication requires a reference to the target Actor so you can access it from your working Actor."
+      - q: "Why is Instance Editable enabled on LampReference in the quick start?"
+        choices: ["So the variable can be read from C++", "So the lamp spawns at BeginPlay", "So you can pick the placed lamp in the Details panel of the character instance", "So the variable replicates"]
+        answer_index: 2
+        explain: "After making the variable Instance Editable, you select the character in the level and set Lamp Reference in its Details panel."
+      - q: "A variable is set to Private. What changes for other Blueprints?"
+        choices: ["They can still read it but not set it", "They can only access it after a cast", "Nothing changes; Private only hides it in the Details panel", "They cannot access the variable at all"]
+        answer_index: 3
+        explain: "With Private checked, another Blueprint that spawns the Actor cannot access that variable from the Return Value."
+      - q: "What is a hard reference between object A and object B?"
+        choices: ["A points to B by a string path and loads it later", "A and B share the same memory", "A refers to B and causes B to load when A loads", "A can only see B after BeginPlay"]
+        answer_index: 2
+        explain: "A hard reference makes object B load when object A loads. A soft reference stores an indirect path and you load it manually."
+      - q: "What does a soft class reference (TSoftClassPtr) point to?"
+        choices: ["The UClass of the asset, not an instance", "An instance of an Actor in the level", "A texture on disk", "A string that is never loaded"]
+        answer_index: 0
+        explain: "TSoftClassPtr works like TSoftObjectPtr but refers to the UClass for the asset instead of an instance."
+      - q: "When spawning an Actor with no Template, what is used to set the new Actor's starting values?"
+        choices: ["The class default object (CDO)", "The nearest placed Actor of that class", "The Level Blueprint", "The last spawned Actor"]
+        answer_index: 0
+        explain: "If no template Actor is given, the class default object (CDO) initializes the spawned Actor."
+    flavors:
+      _default: {why: "Pin color and icon tell you if you hold a thing or a recipe for a thing. Mixing them up is a common bug."}
+      gameplay_design: {why: "Spawners hold class references; triggers hold object references.", do: "Make a spawner actor with an Instance Editable class reference and spawn it on a key."}
+      tech_art: {why: "Editor tools often take a class to spawn many copies.", do: "Spawn 5 lamps in a row from the class reference in a loop."}
+
+  - id: PQ34
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, interfaces, communication]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: One Interact interface, many actors
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/interface-quick-start-guide-in-unreal-engine?application_version=5.5"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-communication-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-interface-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/implementing-blueprint-interfaces-in-unreal-engine"
+    checklist:
+      - "Create a Blueprint Interface BPI_Interact with one function Interact. Compile and save."
+      - "Duplicate Blueprint_CeilingLight as BP_Lamp. Add a custom event ToggleLight that uses Flip Flop and Set Visibility on Point Light 1."
+      - "In BP_Lamp, open Class Settings, add BPI_Interact under Implemented Interfaces. Implement Event Interact and call ToggleLight."
+      - "Make BP_Door with Frame and Door Static Mesh components. Add OpenDoor with a Timeline TM_Door (Alpha 0 to 1) that lerps the door Yaw to 90."
+      - "Implement Event Interact in BP_Door and call OpenDoor."
+      - "In ThirdPersonCharacter, add a Sphere Collision (Radius 200). On begin overlap, call Interact (Message) with Other Actor as Target."
+      - "Place BP_Lamp, BP_Door and a plain cube. Play and walk near all three."
+    done_when: "A screenshot of the Class Settings panel of one actor with BPI_Interact under Implemented Interfaces, and a PIE screenshot with the door open and the lamp toggled."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which of these can a Blueprint Interface NOT do?"
+        choices: ["Define a function with inputs and outputs", "Be implemented by many Blueprints", "Have a Replicates option in Class Settings", "Add new variables"]
+        answer_index: 3
+        explain: "Blueprint Interfaces cannot add new variables, edit graphs or add Components. They hold function signatures only."
+      - q: "You call Interact (Message) on an Actor that does not implement BPI_Interact. What happens?"
+        choices: ["The Blueprint fails to compile", "The call fails silently", "The Actor is destroyed", "The engine adds the interface automatically"]
+        answer_index: 1
+        explain: "The Message version can be called on any object. If the object does not implement the interface, the call fails silently. It is also slower than the Object and Interface versions."
+      - q: "Where do you add an interface to an existing Blueprint?"
+        choices: ["In the Event Graph right-click menu", "In Project Settings", "In Class Settings, under Interfaces > Implemented Interfaces > Add", "In the Content Browser context menu of the Blueprint"]
+        answer_index: 2
+        explain: "Open the Blueprint, click Class Settings, then add the interface in the Implemented Interfaces list. Then Compile and Save."
+      - q: "The docs prefer an Interface over casting for a door, window and car that all open. Why?"
+        choices: ["Interfaces are the only way to open doors", "The same function call works on all classes without casting to each one", "Casting cannot be used on Actors", "Interfaces run on the server only"]
+        answer_index: 1
+        explain: "With an interface you call the same function on every class. With casting you would need a cast for each class."
+      - q: "What performance risk does casting have that an interface avoids?"
+        choices: ["Loading an Actor that casts to another Actor also loads that Actor into memory, which can cascade", "Casting uses more CPU every frame", "Casting disables Nanite", "Casting cannot be used in packaged builds"]
+        answer_index: 0
+        explain: "An Actor that casts to another Actor loads that Actor too. Without care this causes a cascade of loads. Interfaces avoid that link."
+      - q: "How do you start implementing an interface function in a Blueprint that implements it?"
+        choices: ["Right-click the function under My Blueprint > Interfaces and choose Implement event or Open Graph", "Drag the interface asset into the graph", "Add a Custom Event with the same name", "Cast to the interface first"]
+        answer_index: 0
+        explain: "Interface functions appear under My Blueprint > Interfaces. Double-click or right-click them to open the graph or implement the event."
+    flavors:
+      _default: {why: "Interfaces let very different actors answer the same call. This is how a clean interaction system starts."}
+      gameplay_design: {why: "One Use key, many results: doors, levers, pickups.", do: "Add a third actor that reacts to Interact in a new way."}
+      level_design: {why: "Level scripts can call Interact on anything without knowing its type.", do: "Trigger Interact from a Level Blueprint trigger on the door."}
+
+  - id: PQ35
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, event-dispatchers, communication]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: One event, many listeners
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/event-dispatchers-and-delegates-quick-start-guide-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/event-dispatchers-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/binding-and-unbinding-events-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-dispatcher-events-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/calling-event-dispatchers-in-unreal-engine"
+    checklist:
+      - "Make BP_BossDied with a Box Collision (scale 4, 4, 2, Hidden in Game off). Add an Event Dispatcher OnBossDied."
+      - "On OnComponentBeginOverlap, Call OnBossDied. Place BP_BossDied in the level."
+      - "Make BP_BossDoor (Frame + Door meshes, Timeline TM_Door that rotates the door to Yaw 90 on OpenDoor)."
+      - "In BP_BossDoor add an Instance Editable variable BossDiedReference (BP_BossDied Object Reference). On BeginPlay, Bind Event to OnBossDied with a custom event BossDied that calls OpenDoor."
+      - "Copy Blueprint_Effect_Explosion, turn off Auto Activate on both components, and use Assign OnBossDied on BeginPlay to Activate them."
+      - "Place the door and 3 explosions. Set BossDiedReference on each to the placed BP_BossDied. Play and walk into the box."
+      - "Extra: add an Unbind All Events on one explosion after it fires, and test that it does not fire a second time."
+    done_when: "A screenshot of the BP_BossDoor graph showing Bind Event to OnBossDied, and a PIE screenshot with the door open and the explosions active at the same time."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What relationship do Event Dispatchers use?"
+        choices: ["One-to-one", "Many-to-one only", "They only work inside one Blueprint", "One-to-many"]
+        answer_index: 3
+        explain: "One working Actor triggers the Event Dispatcher and many listening Actors are notified."
+      - q: "You Call an Event Dispatcher but nothing is bound to it. What happens?"
+        choices: ["A compile error", "The call has no effect", "All actors in the level react", "The Level Blueprint receives it"]
+        answer_index: 1
+        explain: "Calling the Event Dispatcher has no effect if there are no events bound to it. Each dispatcher keeps a list of bound events."
+      - q: "The same Bind Event node runs three times for the same event. How many times is that event in the list?"
+        choices: ["Three", "Zero", "One", "Depends on the Target pin"]
+        answer_index: 2
+        explain: "Each event can be bound only once, even if the Bind Event node is executed multiple times."
+      - q: "What does the Assign option do?"
+        choices: ["Creates a Bind Event node and a matching custom event, already wired", "Only calls the dispatcher", "Removes all bound events", "Creates an event with no binding"]
+        answer_index: 0
+        explain: "Assign creates a Bind Event node and a corresponding Event node wired together. The quick start uses it for the explosion."
+      - q: "Inside a Blueprint Class, what is the Target pin of a Bind node set to, and what does that mean?"
+        choices: ["Self, so the event list changes for every instance of the class", "The Level Blueprint, so only the level reacts", "None, so you must always connect an instance", "The player, so only the player is notified"]
+        answer_index: 0
+        explain: "In the Blueprint Class the Target is Self, so the event list is changed for the class and every instance. In the Level Blueprint you must connect a specific instance."
+      - q: "An event node created from the dispatcher's Event option is placed in the graph but never connected to a Bind node. What happens on Call?"
+        choices: ["It fires like any event", "It fires once", "It never triggers", "It fires only in the Level Blueprint"]
+        answer_index: 2
+        explain: "Without a Bind node, that event will never be triggered when the Call node is executed."
+    flavors:
+      _default: {why: "Dispatchers remove hard links between actors. The boss does not need to know about the doors."}
+      gameplay_design: {why: "Score, death and checkpoint events fan out to UI, sound and level logic.", do: "Bind a Print String in the Level Blueprint to the same OnBossDied."}
+      level_design: {why: "One trigger can open many doors and lights without wiring each one.", do: "Bind two more actors of different types to the same dispatcher."}
+
+  - id: PQ36
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, functions, libraries]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: A Blueprint Function Library
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-function-libraries-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/functions-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-best-practices-in-unreal-engine"
+    checklist:
+      - "In the Content Browser, create Blueprints > Blueprint Function Library named BFL_Utils."
+      - "Add a function DistanceXY with two Vector inputs and a Float output. Mark it Pure. Build the math from the inputs."
+      - "Add a second function PrintWithPrefix with a String input. Leave it impure (not Pure). It calls Print String with a prefix."
+      - "In any Actor Blueprint, call both functions on Event Tick and on BeginPlay. Note that the pure one has no exec pins."
+      - "Set a Category on both functions and check that they show under that category in the right-click menu."
+      - "Change the number of inputs on DistanceXY and watch the call node. Compile and see the warning go away."
+    done_when: "A screenshot of BFL_Utils with the two functions and a screenshot of a graph calling both, showing the pure node without exec pins."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What kind of functions does a Blueprint Function Library hold?"
+        choices: ["Static utility functions not tied to a particular gameplay object", "Event Dispatchers for all actors", "Member functions of one Actor class", "Only C++ functions that cannot be called from Blueprint"]
+        answer_index: 0
+        explain: "A Function Library is a collection of static functions that provide utility functionality not tied to a particular gameplay object."
+      - q: "In C++, which class does every Blueprint Function Library inherit from?"
+        choices: ["AActor", "UObject directly", "UBlueprintFunctionLibrary", "UActorComponent"]
+        answer_index: 2
+        explain: "All Blueprint Libraries inherit from UBlueprintFunctionLibrary and should contain only static methods."
+      - q: "A function promises not to change any state and only returns a value. How is it marked?"
+        choices: ["BlueprintCallable, or Pure unchecked", "BlueprintPure, or the Pure checkbox", "Protected", "Transient"]
+        answer_index: 1
+        explain: "Pure functions do not modify state. In C++ they use BlueprintPure; in the editor you check the Pure checkbox."
+      - q: "A Pure function is connected to three different nodes. How many times is it called?"
+        choices: ["Once, the result is cached", "Zero times until an exec wire runs it", "Once per frame", "Three times, once for each node it is connected to"]
+        answer_index: 3
+        explain: "Pure functions are executed when their data is needed, so they are called one time for each node they are connected to."
+      - q: "What is the default Access Specifier of a new function?"
+        choices: ["Private", "Protected", "Public", "Internal"]
+        answer_index: 2
+        explain: "Public is the default. Protected limits calls to this Blueprint and its children. Private limits calls to this Blueprint only."
+      - q: "A call node shows Unable to find function with name. What is the first fix?"
+        choices: ["Delete the function library", "Compile the Blueprint", "Rename the function", "Turn the function into a macro"]
+        answer_index: 1
+        explain: "The docs say to compile your Blueprint when you see that warning, and also after changing the number of inputs or outputs."
+    flavors:
+      _default: {why: "Shared helpers in one place stop the same math being copied into ten Blueprints."}
+      gameplay_design: {why: "Designers reuse helpers like distance checks and formatted prints everywhere.", do: "Add a third helper you used twice already in your project."}
+      tech_art: {why: "Tool helpers (naming, math, color) belong in a library, not in each tool.", do: "Add a pure function that converts a Linear Color to a hex string."}
+
+  - id: PQ37
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, macros, libraries]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: A Blueprint Macro Library
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-macro-library-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/macros-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-best-practices-in-unreal-engine"
+    checklist:
+      - "In the Content Browser, create Blueprints > Blueprint Macro Library. Pick Actor as the Parent Class. Name it BML_Flow."
+      - "Add a macro CheckScore with an Integer input Score, an input exec Test, and two output execs Win and Lose. Compare Score to 10 inside."
+      - "Add a macro WaitThenPrint with a Delay node inside and a String input. Note that a Delay is allowed here."
+      - "Set an Instance Color and a Category on both macros in the Details panel."
+      - "In an Actor Blueprint, use CheckScore on BeginPlay with two Print Strings on Win and Lose. Then use WaitThenPrint."
+      - "Change the macro in the library, then compile the Actor Blueprint and confirm the change appears."
+    done_when: "A screenshot of BML_Flow showing CheckScore with two output exec pins, and a screenshot of an Actor graph using both macros."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why does a Blueprint Macro Library not need to be compiled?"
+        choices: ["Macros are compiled by the Content Browser", "Macros are expanded into the graphs that use them, like collapsed nodes, at compile time", "Macros run in C++", "Macro Libraries are read-only"]
+        answer_index: 1
+        explain: "Macros are auto-expanded into the graphs that reference them during compiling, so the library itself is not compiled."
+      - q: "You edit a macro in the library. When does a Blueprint that uses it see the change?"
+        choices: ["Immediately, at runtime", "Never, you must re-add the node", "Only after restarting the editor", "When that Blueprint is recompiled"]
+        answer_index: 3
+        explain: "Changes to a Macro appear in a graph only when the Blueprint containing that graph is recompiled."
+      - q: "Which of these can a Macro do that a Function cannot?"
+        choices: ["Be called from another Blueprint", "Be overridden in a child Blueprint", "Have more than one output execution pin", "Have a return value"]
+        answer_index: 2
+        explain: "Unlike Functions, Macros can have more than one output execution pin, for example Win and Lose."
+      - q: "Which node type is allowed in a Macro but not in a Function?"
+        choices: ["Latent nodes such as Delay", "Print String", "Branch", "Set variable nodes"]
+        answer_index: 0
+        explain: "Best Practices says you can place latent nodes in a macro, but not in a function."
+      - q: "You want a police car child Blueprint to change how a behavior works. Should it be a Function or a Macro?"
+        choices: ["A Macro, because macros are faster", "A Function, because functions can be overridden in child Blueprints and macros cannot", "Either, they are the same", "A Macro, because functions cannot have inputs"]
+        answer_index: 1
+        explain: "Functions can be overridden in children. Macros are copy-pasted at compile time, so overriding is not possible."
+      - q: "What must you choose when creating a Blueprint Macro Library asset?"
+        choices: ["A Parent Class", "A Level", "A Game Mode", "A Material"]
+        answer_index: 0
+        explain: "After picking Blueprint Macro Library, the Pick Parent Class window appears. Macros can use any node for the class they are scoped to."
+    flavors:
+      _default: {why: "Macros are the right tool for small flow helpers with several exits or a delay inside."}
+      gameplay_design: {why: "Flow macros like IsAlive, Cooldown or Retry keep gameplay graphs short.", do: "Make a Cooldown macro with a Delay and a Busy exit."}
+      tech_art: {why: "Editor tool graphs reuse the same checks over and over.", do: "Make a macro that validates an asset name and exits Valid or Invalid."}
+
+  - id: PQ38
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, construction-script, events, lifecycle]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Construction Script vs BeginPlay
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/construction-script-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/events-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-actor-lifecycle"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+    checklist:
+      - "Make BP_Post with a Static Mesh and an Instance Editable Integer Count (default 3)."
+      - "In the Construction Script, loop Count times and Add Static Mesh Component for each, spaced 150 units apart."
+      - "Place BP_Post. Change Count in the Details panel and watch the meshes update in the editor, before Play."
+      - "Add Event BeginPlay that prints Hello, and Event End Play that prints the End Play Reason. Play and stop."
+      - "Add an Instance Editable Linear Color with Expose on Spawn. In the Level Blueprint, Spawn Actor from Class BP_Post and set the color on the spawn node."
+      - "Write down which script ran in the editor and which ran only in Play."
+    done_when: "A screenshot of the editor viewport with BP_Post rebuilt after changing Count (no Play), and a screenshot of the Output Log showing the BeginPlay and End Play messages."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "When does the Construction Script run?"
+        choices: ["Every frame", "When an instance of the Blueprint Class is created, after the Components list", "Only when the game starts", "Only when the actor is destroyed"]
+        answer_index: 1
+        explain: "The Construction Script runs following the Components list when an instance of a Blueprint Class is created. This lets the instance do its own setup."
+      - q: "Which Blueprint type has no Construction Script?"
+        choices: ["Actor Blueprint Class", "Character Blueprint Class", "Pawn Blueprint Class", "Level Blueprint"]
+        answer_index: 3
+        explain: "Only Blueprint Classes contain Construction Scripts. Level Blueprints do not have them."
+      - q: "An actor is spawned after the game already started. When does it get Event BeginPlay?"
+        choices: ["Never", "At the next level reset", "Immediately after spawning", "Only if it has a Construction Script"]
+        answer_index: 2
+        explain: "BeginPlay fires for all Actors when the game starts, and any Actor spawned later has it called immediately."
+      - q: "In the spawn path of the Actor lifecycle, in which order do these happen?"
+        choices: ["BeginPlay, then OnConstruction, then PostInitializeComponents", "OnConstruction, then PostInitializeComponents, then BeginPlay", "PostInitializeComponents, then OnConstruction, then BeginPlay", "They all run at the same time"]
+        answer_index: 1
+        explain: "OnConstruction (where Blueprint components are created and variables initialized) comes first, then component initialization, then BeginPlay."
+      - q: "What does Event End Play give you that Event Destroyed does not?"
+        choices: ["An End Play Reason enum, and Destroyed is planned for deprecation", "The Delta Seconds", "The Other Actor", "The Hit Location"]
+        answer_index: 0
+        explain: "End Play outputs an End Play Reason enum. The Destroyed event will be deprecated, since its role moved into EndPlay."
+      - q: "What does Expose on Spawn do for a variable?"
+        choices: ["Makes the variable appear as a pin on the Spawn Actor from Class node", "Runs the Construction Script twice", "Makes the variable private", "Replicates it to clients"]
+        answer_index: 0
+        explain: "With Expose on Spawn, the option to set the value is added to the Spawn Actor from Class node, so you can set it when the actor spawns."
+    flavors:
+      _default: {why: "Editor-time setup and play-time logic live in different scripts. Putting code in the wrong one causes strange bugs."}
+      tech_art: {why: "Construction Scripts are the base of most procedural props and placement tools.", do: "Add a Boolean that switches the mesh, and see it update in the editor."}
+      level_design: {why: "Actors that build themselves make blockouts faster.", do: "Make a fence actor whose length follows a Count value."}
+
+  - id: PQ39
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [actors, lifecycle, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Birth and death of an actor
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-actor-lifecycle"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawning-actors-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/DestroyActor"
+    checklist:
+      - "Make a Blueprint Actor BP_LifeProbe with a Static Mesh (a cube). Add a Print String on Event BeginPlay that prints the actor name plus 'BeginPlay'."
+      - "Add Event End Play. Print the actor name plus 'EndPlay' and the End Play Reason."
+      - "Add a Print String in the Construction Script that prints 'Construct'. Drag BP_LifeProbe into the level and watch the message appear before you press Play."
+      - "In the Level Blueprint, on key press 1, Spawn Actor from Class BP_LifeProbe at the player location. On key press 2, call Destroy Actor on the last spawned probe."
+      - "Play. Press 1, then 2. Read the Output Log. Note the order: Construct, BeginPlay, EndPlay."
+      - "Stop PIE while a probe is still alive. Check the log: End Play fires again, this time with the reason End Play in Editor."
+    done_when: "A screenshot of the Output Log that shows the Construct, BeginPlay and EndPlay messages in order for one spawned probe, and a second EndPlay line with the End Play in Editor reason."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "An actor is spawned during play. In which order do these three happen?"
+        choices: ["OnConstruction, BeginPlay, PostInitializeComponents", "PostInitializeComponents, OnConstruction, BeginPlay", "OnConstruction, PostInitializeComponents, BeginPlay", "BeginPlay, OnConstruction, PostInitializeComponents"]
+        answer_index: 2
+        explain: "The Spawning path runs ExecuteConstruction (OnConstruction, where Blueprint components and variables are set up), then PreInitializeComponents, InitializeComponent, PostInitializeComponents, and finally BeginPlay."
+      - q: "What does Destroy do to an actor right away?"
+        choices: ["It frees its memory immediately", "It marks it pending kill and removes it from the level's actor list; memory is freed later by garbage collection", "It only hides the actor", "It deletes the Blueprint asset"]
+        answer_index: 1
+        explain: "Destroy marks the actor pending kill and removes it from the level's array of actors. The memory is de-allocated on the next garbage collection cycle."
+      - q: "Which of these does NOT call EndPlay on an actor?"
+        choices: ["Play in Editor ends", "A streaming level containing the actor is unloaded", "The actor is selected in the Outliner", "An explicit call to Destroy"]
+        answer_index: 2
+        explain: "EndPlay is called by Destroy, when PIE ends, on level transitions, when a streaming level unloads, when the lifetime expires, and on application shutdown. Selecting an actor does nothing to its lifecycle."
+      - q: "You want cleanup logic to run when an actor is destroyed AND when the level changes. Where does the documentation tell you to put it?"
+        choices: ["EndPlay", "OnDestroyed", "BeginDestroy", "Tick"]
+        answer_index: 0
+        explain: "OnDestroyed is a legacy response to Destroy only. Epic recommends moving that logic to EndPlay, which is also called by level transitions and other game cleanup."
+      - q: "In the Play in Editor path, how do actors get into the play world?"
+        choices: ["They are loaded from disk like a packaged game", "They are copied (duplicated) from the Editor world, then initialized like loaded actors", "They are all re-spawned by the Level Blueprint", "They are streamed from the Content Browser"]
+        answer_index: 1
+        explain: "In PIE, actors are duplicated from the Editor into a new World (PostDuplicate is called), and then they follow the same initialization steps as the Load From Disk path."
+      - q: "What does 'Deferred Spawn' allow?"
+        choices: ["Spawning without any components", "Spawning on a background thread", "Skipping BeginPlay forever", "Setting properties on a valid but incomplete actor before its construction script runs"]
+        answer_index: 3
+        explain: "SpawnActorDeferred lets you do setup on the actor after PostActorCreated. FinishSpawning then continues at ExecuteConstruction. Expose on Spawn properties use this path."
+    flavors:
+      _default: {why: "Knowing when BeginPlay, Construction and EndPlay run stops most 'why is my value empty' bugs."}
+      gameplay_design: {why: "Spawn and destroy timing decides when a designer's setup values are usable.", do: "Add an Expose on Spawn variable to the probe and print it in BeginPlay."}
+      tech_art: {why: "Tool actors rely on the Construction Script running in the editor, not BeginPlay.", do: "Move the 'Construct' print to BeginPlay and note which one still shows in the editor."}
+
+  - id: PQ40
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [components, scene-components, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Build an actor from components
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-window-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actors-in-unreal-engine"
+    checklist:
+      - "Make a Blueprint Actor BP_Lantern. Keep the default Scene root. Add a Static Mesh Component (a pole), a second Static Mesh (a lamp head) and a Point Light."
+      - "In the Components window, drag the lamp head onto the pole so it becomes a child of the pole. Drag the Point Light onto the lamp head."
+      - "Select the pole and move it in the viewport. Confirm the head and the light move with it. Move the head alone and confirm only the light follows."
+      - "Rename the components with F2: Pole, Head, Light. Check the new names in the My Blueprint panel."
+      - "Add a Rotating Movement Component. Play and see the lantern spin. Note that this component has no transform in the viewport."
+      - "Add a Box Component named Trigger. In the Details panel, click Add Event and pick On Component Begin Overlap. Print a string when the player walks in."
+    done_when: "A screenshot of the Components window of BP_Lantern showing the hierarchy Pole > Head > Light plus the Rotating Movement and Trigger components, and a PIE screenshot with the overlap message on screen."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which statement about an actor's transform is correct?"
+        choices: ["The actor stores its own location and the components copy it", "The actor's location, rotation and scale come from its root component", "Every component stores the actor's transform", "Only Primitive Components can give an actor a transform"]
+        answer_index: 1
+        explain: "Actors do not store transform data. The transform of the actor's Root Component (a Scene Component) is used instead."
+      - q: "A Rotating Movement Component has no position in the world. Which component family is it in?"
+        choices: ["Primitive Component", "Scene Component", "Actor Component (no transform)", "Child Actor Component"]
+        answer_index: 2
+        explain: "Actor Components (UActorComponent) are for abstract behaviors such as movement or inventory. They have no transform, so no location or rotation in the world."
+      - q: "What is the difference between a Scene Component and a Primitive Component?"
+        choices: ["A Primitive Component is a Scene Component that also has geometry to render or collide with", "A Scene Component can render meshes, a Primitive Component cannot", "A Primitive Component has no transform", "There is no difference; the names are aliases"]
+        answer_index: 0
+        explain: "Scene Components have a transform but no geometry (spring arms, cameras, audio). Primitive Components are Scene Components with geometric representation, like meshes and collision shapes."
+      - q: "You move a parent component in the Blueprint viewport. What happens to its children?"
+        choices: ["Nothing; each component moves alone", "They are detached", "They move with the parent, because transforms propagate down to all child components", "They snap back to the root"]
+        answer_index: 2
+        explain: "Transforming, rotating or scaling a parent component propagates the change to all of its child components."
+      - q: "How can you quickly rename a component in the Components window?"
+        choices: ["Double-click the viewport", "Select it and press F2", "Right-click and choose Compile", "Press Delete and add it again"]
+        answer_index: 1
+        explain: "The docs say you can quickly rename a component by selecting it in the Components window and pressing F2. The Variable Name field in Details also works."
+      - q: "Which of these can you drag from the Content Browser straight into the Components window to make a component?"
+        choices: ["A Material", "A Level", "A Texture", "A Static Mesh"]
+        answer_index: 3
+        explain: "Dragging assets into the Components window works for Static Meshes, Sound Cues, Skeletal Meshes and Particle Systems."
+    flavors:
+      _default: {why: "Every actor you will ever write is a tree of components. Learn to read and build that tree."}
+      tech_art: {why: "Tools often add and arrange components from the Construction Script.", do: "Add the Head mesh from the Construction Script with Add Static Mesh Component and attach it to Pole."}
+      gameplay_design: {why: "Designers place actors, not components; a clean hierarchy makes placement predictable.", do: "Expose the light color as an instance-editable variable."}
+
+  - id: PQ41
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [components, attachment, sockets, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Attach and detach at runtime
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Transformation/AttachActorToComponent"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Transformation/AttachActorToActor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Transformation/DetachFromActor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Transformation/AttachComponentToComponent"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
+    checklist:
+      - "Make BP_Ball: a Static Mesh sphere as root, scale 0.3. Make it Movable."
+      - "Open the Third Person character (BP_ThirdPersonCharacter). Open its Skeletal Mesh in the Skeleton editor and note a socket or bone name on the right hand (for example hand_r)."
+      - "In the character, on key press E: Get All Actors Of Class BP_Ball, take index 0, call Attach Actor To Component with Parent = the character Mesh and Socket Name = the hand bone. Set Location Rule and Rotation Rule to Snap to Target."
+      - "On key press Q: call Detach From Actor on the same ball with Location Rule Keep World."
+      - "Play. Walk near the ball, press E, run around and watch the ball follow the hand. Press Q and confirm the ball stays where it was dropped."
+      - "Change the Location Rule of the attach node to Keep World and test again. Note the difference."
+    done_when: "Two PIE screenshots: the ball attached to the character's hand while moving, and the ball left in the world after detach. Include the Blueprint graph with the Attach and Detach nodes."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What exactly does Attach Actor To Actor attach?"
+        choices: ["Every component of the actor, one by one", "The actor's Root Component, to the parent actor (optionally at a socket)", "Only the actor's collision", "The actor's Blueprint class"]
+        answer_index: 1
+        explain: "Attach Actor To Actor attaches the RootComponent of the actor to the supplied parent actor, optionally at a named socket."
+      - q: "Which components can be attached to each other?"
+        choices: ["Any Actor Component", "Only Static Mesh Components", "Only Scene Components (and their children), because attachment needs a transform", "Only components with physics"]
+        answer_index: 2
+        explain: "Only Scene Components can attach to one another. Attachment needs transforms to describe the spatial relationship between child and parent."
+      - q: "How many parents can a Scene Component have?"
+        choices: ["One at most", "Two", "As many as its children", "Unlimited"]
+        answer_index: 0
+        explain: "A Scene Component can have any number of children but only one parent, or it can be placed directly in the world. Attachment cycles are not supported."
+      - q: "Attach Actor To Component returns false. According to its description, what is one valid reason?"
+        choices: ["The socket name was left empty", "The parent component is not registered yet", "The child has a Static Mesh", "Weld Simulated Bodies was false"]
+        answer_index: 1
+        explain: "The node says it is not valid to call it on components that are not Registered. The socket name is optional, so leaving it empty is fine."
+      - q: "What does the Location Rule input control?"
+        choices: ["Which socket to use", "Whether the attachment is replicated", "How translation is handled when attaching (keep relative, keep world, snap to target)", "The tick group of the child"]
+        answer_index: 2
+        explain: "Location Rule, Rotation Rule and Scale Rule each say how to handle that part of the transform when attaching or detaching."
+      - q: "Weld Simulated Bodies is on and the child simulates physics. What does the documentation warn about?"
+        choices: ["The child stops rendering", "The socket is deleted", "The attachment always fails", "The child's shapes are moved into the parent, which can leave permanent changes even after detaching"]
+        answer_index: 3
+        explain: "Welding transfers the shapes of the welded object into the parent (if simulated). The docs say this can result in permanent changes that persist after detaching."
+    flavors:
+      _default: {why: "Picking up items, mounting turrets and holding tools are all attachment. Get the rules right once."}
+      gameplay_design: {why: "Attachment rules decide whether a picked-up item snaps or keeps its offset.", do: "Try all three Location Rules and write one line about which one you would use for a weapon pickup."}
+      tech_art: {why: "Sockets are the contract between animation and gameplay.", do: "Add a new socket to the hand bone in the Skeleton editor and attach to that socket instead of the bone."}
+
+  - id: PQ42
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [actors, tags, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Find things with actor tags
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/GetAllActorswithTag"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/ActorHasTag"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/GetAllActorsOfClasswithTag"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/FindComponentbyTag"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/ComponentHasTag"
+    checklist:
+      - "Place six cubes in a test level. Select three of them. In the Details panel, find Actor > Tags and add the tag Breakable to each."
+      - "Make BP_TagScanner (Actor). On BeginPlay, call Get All Actors with Tag with Tag = Breakable. Print the length of the array. Expect 3."
+      - "Loop the array. For each actor, call Actor Has Tag with Breakable and print the actor name. Then try the tag Wall and see that it returns false."
+      - "Make BP_Crate with two Static Mesh Components. On one component, add the component tag Lid (Details > Tags on the component). In BeginPlay call Find Component by Tag with class Static Mesh Component and tag Lid, and set its material to something red."
+      - "Change one scanner call to Get All Actors Of Class with Tag (class Static Mesh Actor, tag Breakable). Compare the count."
+      - "Write two lines in the proof: when a tag is easier than a new Blueprint class, and why the tag search should not run every frame."
+    done_when: "A PIE screenshot with the printed count and names, a screenshot of one cube's Tags array in Details, and your two lines about tags vs classes and about cost."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Get All Actors with Tag is called with an empty Tag. What happens?"
+        choices: ["It returns every actor in the world", "The result array is empty", "The Blueprint fails to compile", "It returns only the player"]
+        answer_index: 1
+        explain: "The Tag input must be specified or the result array will be empty."
+      - q: "Why does the documentation say Get All Actors with Tag is a very slow operation?"
+        choices: ["Tags are stored as strings on disk", "It has to search over every actor in the world", "It loads all levels first", "It rebuilds the NavMesh"]
+        answer_index: 1
+        explain: "The node searches over every actor in the world, so it is very slow. Cache the result, do not call it every tick."
+      - q: "Which node checks a tag on one specific actor and returns a boolean?"
+        choices: ["Get All Actors with Tag", "Find Component by Tag", "Actor Has Tag", "Get All Actors Of Class"]
+        answer_index: 2
+        explain: "Actor Has Tag checks whether the actor's Tags array contains the supplied name tag and returns true or false."
+      - q: "Find Component by Tag is used on an actor with two components that both have the tag. What do you get?"
+        choices: ["An array with both", "The first component found in the components array with that tag", "Null, because tags must be unique", "The root component"]
+        answer_index: 1
+        explain: "It searches the components array and returns the first encountered component with the given tag. Use Get Components by Tag for all of them."
+      - q: "What is the data type of a tag in these nodes?"
+        choices: ["String", "Gameplay Tag", "Integer", "Name"]
+        answer_index: 3
+        explain: "The Tag input is a Name. Actor tags are a simple array of names on the actor, not Gameplay Tags."
+      - q: "Get All Actors Of Class with Tag versus Get All Actors with Tag. When is the first one better?"
+        choices: ["When many actors exist but only a few are of the class you want", "Never; they are the same", "When the tag is empty", "When you need components instead of actors"]
+        answer_index: 0
+        explain: "Get All Actors Of Class with Tag only looks at actors of the given class. The docs say it will be slow if there are many actors of that class, but it does not have to scan every actor in the world."
+    flavors:
+      _default: {why: "Tags let designers mark things in the level without making new classes."}
+      level_design: {why: "A tag on a placed actor is the cheapest way to say 'this one matters' to code.", do: "Tag one cube Secret and print a message when the player overlaps it."}
+      gameplay_design: {why: "Tags are a quick way to build rules like 'all Breakable things take damage'.", do: "Destroy all Breakable actors on a key press."}
+
+  - id: PQ43
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [components, child-actor, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Child Actor Components
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/ChildActorComponent/SetChildActorClass"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/GetAllChildActors"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/GetParentActor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/IsChildActor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
+    checklist:
+      - "Make BP_Torch (Actor): a Static Mesh and a Point Light. On BeginPlay print 'Torch BeginPlay' plus Get Parent Actor display name."
+      - "Make BP_Wall (Actor): a Static Mesh cube scaled to 4 x 0.2 x 2. Add two Child Actor Components and set their Child Actor Class to BP_Torch. Move them to the left and right ends of the wall."
+      - "Place BP_Wall in the level. Play. Read the Output Log: each torch prints the wall as its parent actor."
+      - "In BP_Wall on key press T: Get All Child Actors (Include Descendants on) and print the length. Expect 2."
+      - "Make BP_Torch2 (a child Blueprint of BP_Torch with a different light color). In BP_Wall on key press C: call Set Child Actor Class on the first Child Actor Component with BP_Torch2."
+      - "In BP_Torch on BeginPlay, also print Is Child Actor. Drag one BP_Torch directly into the level and compare its output to the wall torches."
+    done_when: "A PIE screenshot of the wall with two torches and the Output Log showing the parent actor names, plus a screenshot of the Child Actor Component details with Child Actor Class set."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What does Get Parent Actor return for an actor that was spawned by a Child Actor Component?"
+        choices: ["The actor that owns that Child Actor Component", "The Level", "The Game Mode", "The Child Actor Component itself"]
+        answer_index: 0
+        explain: "If the actor was created by a Child Actor Component, Get Parent Actor returns the actor that owns that component."
+      - q: "Is Child Actor is called on a torch that was dragged directly into the level. What does it return?"
+        choices: ["True", "False", "An error", "The parent name"]
+        answer_index: 1
+        explain: "Is Child Actor returns whether the actor was spawned by a Child Actor Component. A placed actor was not, so it returns false."
+      - q: "Get All Child Actors is described as NOT returning something. What?"
+        choices: ["Actors spawned by nested Child Actor Components", "The contents of the actor's Children array", "Actors of a different class", "Hidden actors"]
+        answer_index: 1
+        explain: "The node returns the actors spawned by our Child Actor Components (including children of children if asked), but it does not return the contents of the Children array."
+      - q: "What does the Include Descendants input do on Get All Child Actors?"
+        choices: ["Includes attached actors that are not child actors", "Includes actors of child classes", "Includes child actors of child actors (children of children)", "Includes destroyed actors"]
+        answer_index: 2
+        explain: "With Include Descendants, the list includes actors spawned by Child Actor Components deeper in the tree, not only direct children."
+      - q: "Set Child Actor Class is called during play on a component instance in the world and the class changes. What is used as the template for the new child?"
+        choices: ["The previous child actor's values", "The class defaults of the new class", "The parent actor", "Nothing; the child is not created"]
+        answer_index: 1
+        explain: "On a component instance in a world, the created child actor uses the class defaults as its template. Only on a template component (owned by a CDO) does it try to copy the existing child actor template."
+      - q: "A Child Actor Component adds a whole actor inside another actor. Which of these is a real consequence you saw in this quest?"
+        choices: ["The child never gets BeginPlay", "The child cannot have a transform", "The child cannot have components of its own", "The child actor runs its own BeginPlay and can find its parent with Get Parent Actor"]
+        answer_index: 3
+        explain: "The torch printed 'Torch BeginPlay' with the wall as its parent. A child actor is a full actor with its own components and events."
+    flavors:
+      _default: {why: "Child Actor Components let you reuse a whole actor as a part of another one."}
+      level_design: {why: "A wall with torches, a door with a frame: kits become one placeable actor.", do: "Make a BP_Doorway that uses two BP_Wall child actors."}
+      tech_art: {why: "Child actors add cost and complexity; know when a plain component is enough.", do: "Rebuild the torch as a Scene Component tree inside BP_Wall and compare the Components window."}
+
+  - id: PQ44
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [components, actor-component, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Write your own Actor Component
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-components-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/Activation/SetAutoActivate"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/Activation/Activate"
+    checklist:
+      - "Create a new Blueprint Class with parent Actor Component. Name it BPC_Health. Add variables MaxHealth (float, 100) and Health (float)."
+      - "In BPC_Health on Event Begin Play, set Health = MaxHealth. Add a function ApplyDamage(Amount) that lowers Health, clamps at 0, and prints the owner's name plus Health. Use Get Owner for the name."
+      - "Add BPC_Health to BP_ThirdPersonCharacter and to a new BP_Barrel actor. Make MaxHealth instance editable and set the barrel to 30."
+      - "In BP_Barrel on key press K: Get Component by Class (BPC_Health) and call ApplyDamage 10. Play and watch the two actors keep separate Health values."
+      - "In BPC_Health add an event dispatcher OnDied. Broadcast it when Health reaches 0. In BP_Barrel bind it and destroy the barrel."
+      - "Set Auto Activate off in the barrel's component defaults and check Is Active in ApplyDamage; ignore damage when not active. Call Activate from the barrel's BeginPlay."
+    done_when: "A screenshot of BPC_Health's graph (BeginPlay, ApplyDamage, OnDied) and a PIE screenshot showing two different actors printing different Health values from the same component."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why is an Actor Component (not a Scene Component) the right base for BPC_Health?"
+        choices: ["Health needs a transform", "Health is an abstract behavior with no physical location", "Only Actor Components can have variables", "Scene Components cannot be added to characters"]
+        answer_index: 1
+        explain: "Actor Components are most useful for abstract behaviors like movement, inventory or attribute management. They do not have any location or rotation in the world."
+      - q: "Two actors use the same component class. Why do they keep different Health values?"
+        choices: ["Because components in an actor are instanced: each actor instance gets its own component instances", "Because the variable is marked Transient", "Because Blueprint copies the component on every tick", "They do not; components are shared between actors"]
+        answer_index: 0
+        explain: "Unlike sub-objects in general, components created inside an actor are instanced. Each actor instance gets unique instances of its components, like each car gets its own wheels."
+      - q: "By default, does a new Actor Component tick every frame?"
+        choices: ["Yes, always", "Yes, but only in PIE", "No; ticking must be enabled, and leaving it off gives a slight performance boost", "Only if it has a mesh"]
+        answer_index: 2
+        explain: "By default Actor Components do not update. You must enable ticking (bCanEverTick and the tick function) to run code each frame. Leaving it off saves a little performance."
+      - q: "The Components page says everything the player sees or hears is ultimately the work of a component. Why?"
+        choices: ["Because actors cannot exist without a mesh", "Because components are the only way to render meshes and images, implement collision, and play audio", "Because Blueprints can only run inside components", "Because the level is itself a component"]
+        answer_index: 1
+        explain: "Components are the only way to render meshes and images, implement collision, and play audio, so all visible and audible things come from some component type."
+      - q: "When is it safe to call Set Auto Activate, according to the node description?"
+        choices: ["Any time during play", "Only in Tick", "Only during construction scripts", "Only from the Level Blueprint"]
+        answer_index: 2
+        explain: "Set Auto Activate sets whether the component should auto activate. The node says it is only safe during construction scripts."
+      - q: "What is a Visualization Component?"
+        choices: ["A component that only exists in the Editor to show helper info, and is not in packaged builds", "A component that renders the HUD", "Any Primitive Component", "A component that shows the Blueprint graph"]
+        answer_index: 0
+        explain: "Visualization Components are ordinary components marked with SetIsVisualizationComponent that exist only while working in the Editor, like the camera's Draw Frustum Component."
+    flavors:
+      _default: {why: "A component you write once can give health, inventory or any behavior to every actor type."}
+      gameplay_design: {why: "Behaviors in components can be mixed and matched by designers without new classes.", do: "Add BPC_Health to a third actor type without writing any new logic and show it working."}
+      tech_art: {why: "Component-based design is how big projects avoid giant actor classes.", do: "Add a debug text render that shows Health above the owner, created from the component."}
+
+  - id: PQ45
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [tick, tick-groups, performance, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Tick, tick groups and tick interval
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-ticking-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetTickGroup"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetActorTickInterval"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetActorTickEnabled"
+    checklist:
+      - "Make BP_Ticker (Actor) with a Static Mesh. On Event Tick, add Delta Seconds to a float Elapsed and print it each frame."
+      - "In Class Defaults, find Actor Tick. Set Tick Interval to 0.5 and play. The print now appears twice per second. Set it back to 0."
+      - "On key press P: call Set Actor Tick Enabled with Enabled = false. On key press O: set it to true. Play and confirm the print stops and resumes."
+      - "On key press G: call Set Tick Group with Post Physics. Play, press G, and read the Tick Group value in the Details panel of the actor during PIE."
+      - "Make BP_Follower with a Static Mesh that sets its location each Tick to BP_Ticker's location plus 200 on X. Set BP_Follower's tick group to Post Physics and BP_Ticker's to Pre Physics."
+      - "In BP_Follower's BeginPlay call Add Tick Prerequisite Actor with BP_Ticker. Write one line: why this is not needed when the two actors are already in different tick groups."
+    done_when: "A screenshot of BP_Ticker's Actor Tick settings and the graph with Set Actor Tick Enabled and Set Tick Group, plus your line about tick dependency vs tick groups."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "A laser sight must draw exactly at the gun's final position for this frame. Which tick group should the reticule use?"
+        choices: ["TG_PrePhysics", "TG_DuringPhysics", "TG_PostPhysics", "It does not matter"]
+        answer_index: 2
+        explain: "In TG_PostPhysics the physics results are complete, so traces see objects in their final positions. The docs give laser sights as the example."
+      - q: "Which tick group is recommended for an inventory screen or minimap that does not care about physics data?"
+        choices: ["TG_DuringPhysics", "TG_PrePhysics", "TG_PostUpdateWork", "TG_PostPhysics"]
+        answer_index: 0
+        explain: "TG_DuringPhysics runs at the same time as the physics simulation, so its data may be one frame old. That is fine for inventory screens or minimaps."
+      - q: "Your actor moves and should be seen by physics objects this frame. Which tick group?"
+        choices: ["TG_PostUpdateWork", "TG_PrePhysics", "TG_PostPhysics", "TG_DuringPhysics"]
+        answer_index: 1
+        explain: "TG_PrePhysics is for actors that interact with physics objects. Their movement is complete before simulation, so physics can use it."
+      - q: "Set Actor Tick Interval is called on an actor whose tick is disabled. What happens?"
+        choices: ["The tick is enabled with the new interval", "The interval is stored but the tick stays disabled", "The Blueprint fails at runtime", "The actor is destroyed"]
+        answer_index: 1
+        explain: "The node sets the interval of the primary tick function but will not enable a disabled tick function. It takes effect on the next tick."
+      - q: "When should you use a tick prerequisite (Add Tick Prerequisite Actor) instead of moving an actor to a later tick group?"
+        choices: ["When the actor must tick before physics", "When the actor needs to tick after all cameras update", "When it only depends on one or two specific actors and should not wait for a whole group", "Never; tick groups always replace it"]
+        answer_index: 2
+        explain: "Tick dependency makes one actor wait only for specific actors. Moving to a new group would wait for the whole group to finish, which may be less efficient."
+      - q: "Two actors are in different tick groups. Is a tick dependency between them needed?"
+        choices: ["Yes, always", "Only if they share a mesh", "Yes, if they are in the same level", "No; each tick group finishes all its actors before the next group begins"]
+        answer_index: 3
+        explain: "Each tick group completes ticking all of its actors and components before the next tick group can begin, so the order is already guaranteed."
+    flavors:
+      _default: {why: "Wrong tick order causes one-frame lag bugs that are very hard to see and easy to avoid."}
+      tech_art: {why: "Effects that follow the camera belong in TG_PostUpdateWork.", do: "Put a Niagara actor that follows the camera into Post Update Work and compare against Pre Physics."}
+      gameplay_design: {why: "Tick interval is the cheapest performance win for logic that does not need every frame.", do: "Set a 0.2 s tick interval on an AI sensing check and note the saving in stat game."}
+
+  - id: PQ46
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [actors, spawning, garbage-collection, performance, blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Reuse instead of spawn
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-object-handling-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-actor-lifecycle"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/SetLifeSpan"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coder-06-create-a-respawning-pickup-item-in-unreal-engine"
+    checklist:
+      - "Make BP_Bullet: a small sphere mesh with a Projectile Movement Component. On BeginPlay call Set Life Span 2.0 so it destroys itself."
+      - "In the character, on left mouse: Spawn Actor from Class BP_Bullet at the camera location. Hold the button with a 0.05 s loop for 10 seconds. Open the console and run stat game. Note the spawn cost lines while shooting."
+      - "Make BP_BulletPool (Actor). On BeginPlay spawn 30 BP_Bullet, hide each (Set Actor Hidden In Game), disable its collision and set Projectile Movement inactive. Store them in an array Pool."
+      - "Add a function GetBullet: find the first hidden bullet, unhide it, enable collision, activate the movement, and return it. Add a function ReturnBullet that does the opposite."
+      - "Change BP_Bullet: remove Set Life Span. Instead, set a 2 s timer on BeginPlay reuse that calls ReturnBullet on the pool. Change the character to call GetBullet instead of Spawn Actor."
+      - "Shoot for 10 seconds again with stat game open. Write three lines: what changed, why destroyed actors are not freed immediately, and one case where pooling is not worth it."
+    done_when: "Two stat game screenshots (spawn/destroy version and pool version) and your three lines. The Blueprint graph of GetBullet must be visible in one screenshot."
+    xp: 60
+    verify_type: writeup
+    quiz:
+      - q: "An actor is destroyed during play. When is its memory actually freed?"
+        choices: ["Immediately inside Destroy", "At the end of the current tick", "On a later garbage collection pass, after it has been marked pending kill", "When the level is saved"]
+        answer_index: 2
+        explain: "Destroy marks the actor pending kill. The engine de-allocates it on the next garbage collection cycle, not right away."
+      - q: "How does the garbage collector decide that an object can be removed?"
+        choices: ["The object is not reachable from the root set through the reference graph", "The object has no components", "The object has not ticked for one second", "The object is hidden in game"]
+        answer_index: 0
+        explain: "The engine builds a reference graph from the root set. Any object not found by that search is treated as unneeded and removed."
+      - q: "Set Life Span is called with 0. What happens?"
+        choices: ["The actor is destroyed immediately", "The lifespan timer is cleared and the actor will not be destroyed", "The actor is destroyed on the next frame", "The actor is hidden"]
+        answer_index: 1
+        explain: "If the requested lifespan is 0, the timer is cleared and the actor will not be destroyed. Any other value destroys the actor when it expires."
+      - q: "Which Project Setting can reduce hitches by cleaning up unreachable objects more often, in smaller batches?"
+        choices: ["Create Garbage Collector UObject Clusters", "Actor Clustering Enabled", "Merge GC Clusters", "Time Between Purging Pending Kill Objects"]
+        answer_index: 3
+        explain: "Shortening Time Between Purging Pending Kill Objects means fewer unreachable objects pile up before each pass, which helps avoid hitches when many actors are cleaned up at once."
+      - q: "In the respawning pickup tutorial, how is the pickup 'removed' when collected, so it can come back later?"
+        choices: ["It is destroyed and a new one is spawned", "Its mesh is hidden and collision is disabled, then a timer restores them", "It is moved under the floor", "Its level is unloaded"]
+        answer_index: 1
+        explain: "The tutorial hides the mesh with SetVisibility(false), disables collision, and uses a timer (SetTimer) to restore the pickup after a few seconds. No spawn or destroy is needed."
+      - q: "Why are actors usually NOT collected as garbage even when your Blueprint holds no reference to them?"
+        choices: ["Actors are never garbage collected", "The Level references them, and the Level links back to the root set", "Actors have their own memory pool", "Blueprints keep a hidden reference"]
+        answer_index: 1
+        explain: "Actors are usually referenced by the Level they belong to, which links back to the root set. Their components are referenced by the actor. That is why Destroy is the normal way to remove an actor."
+    flavors:
+      _default: {why: "Spawning and destroying many actors per second is a common cause of hitches. Pooling is the standard fix."}
+      gameplay_design: {why: "Bullets, pickups and enemies that respawn all benefit from reuse.", do: "Make the pool size an editable variable and find the smallest size that never runs out."}
+      tech_art: {why: "Particle-like actors (debris, shells) are the first candidates for pooling.", do: "Compare Niagara for the same effect and note when an actor pool is still needed."}
+
+  - id: PQ47
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [project-settings, config, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Project Settings tour
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/project-settings-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/project-section-of-the-unreal-engine-project-settings"
+    community_urls: []
+    checklist:
+      - "Open Edit > Project Settings. Click through the categories on the left. Note the five you think a programmer touches most."
+      - "In Project > Description, set Project Name, Company Name and a Copyright Notice for your project."
+      - "In Project > Maps & Modes, set Editor Startup Map to your test level and Game Default Map to the same level."
+      - "In Project > Maps & Modes, check which Default GameMode is set. Change it to your own BP_ GameMode if you have one."
+      - "Use the search box at the top to find the setting Use Borderless Window. Note which category it lives in."
+      - "Click Export in the upper-right corner and save a backup file of your settings."
+      - "Open <ProjectDirectory>\\Config\\DefaultEngine.ini in a text editor. Find the GameDefaultMap line you just changed."
+    done_when: "Two screenshots: (1) Project Settings > Maps & Modes with your maps and GameMode set, (2) DefaultEngine.ini open in a text editor with the GameDefaultMap line visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you open the Project Settings window?"
+        choices: ["Window > Project Settings", "Edit > Project Settings", "File > Project Settings", "Tools > Project Settings"]
+        answer_index: 1
+        explain: "The page says: from the main menu, go to Edit > Project Settings."
+      - q: "Where are the values you change in the Project Settings window saved?"
+        choices: ["In the .uproject file", "In the level's World Settings", "In <ProjectDirectory>\\Config\\DefaultEngine.ini", "In the Saved folder of the project"]
+        answer_index: 2
+        explain: "The editor .ini file is updated every time you change something in Project Settings. It is <ProjectDirectory>\\Config\\DefaultEngine.ini."
+      - q: "You want a setting that applies only to Windows builds. What does the page say you must do?"
+        choices: ["Edit a platform .ini file like Config\\Windows\\WindowsEngine.ini in a text editor", "Use the Platform dropdown in the Project Settings window", "Change the setting while the Windows platform is selected in the toolbar", "Put the setting in the .uproject file"]
+        answer_index: 0
+        explain: "Platform .ini files have to be edited manually in a text editor. They only apply to one platform. An example is <ProjectDirectory>\\Config\\Windows\\WindowsEngine.ini."
+      - q: "What do the Export and Import buttons in the Project Settings window do?"
+        choices: ["They package the project", "They save settings to a backup file, or load settings from one", "They copy settings to another Unreal Engine version", "They export the level to disk"]
+        answer_index: 1
+        explain: "You can export the settings into a backup file on your computer, or import settings from such a file, using Export and Import in the upper-right corner."
+      - q: "In Maps & Modes, what is the Game Default Map?"
+        choices: ["The map the Editor opens on startup", "The map used when you press Play in Editor", "The map loaded when transitioning between maps", "The map loaded by default when no other map is loaded"]
+        answer_index: 3
+        explain: "Game Default Map is the map that will be loaded by default when no other map is loaded. Editor Startup Map is a separate setting for the Editor."
+      - q: "The settings in Project > Description (name, company, copyright) mainly do what?"
+        choices: ["They change how the project runs", "They are informational and do not affect how the project behaves", "They control the packaging build configuration", "They set the default GameMode"]
+        answer_index: 1
+        explain: "The Project section is for information about your project. The page says these settings are mainly for informational purposes and will not affect how the project runs."
+    flavors:
+      _default: {why: "Project Settings is where the project-wide switches live. Knowing the map helps you fix problems fast."}
+      programming: {why: "Many bugs come from a wrong default map, GameMode or class set in Project Settings. Check it before you debug code.", do: "Also find Engine > General Settings and note the Game Instance Class setting. Write down which class is set."}
+      gameplay_design: {why: "Default GameMode, Pawn and HUD classes for the whole project are set here.", do: "Set the Default Pawn Class to your own BP_ pawn and confirm it spawns in Play."}
+
+  - id: PQ48
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [config, ini, project-settings]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Read and edit config .ini files
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/configuration-files-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/project-settings-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Close the Editor. Open <ProjectDirectory>\\Config in a text editor. List the Default*.ini files you find (DefaultEngine, DefaultGame, DefaultInput, ...)."
+      - "In DefaultEngine.ini find the section [/Script/EngineSettings.GameMapsSettings] and the key GameDefaultMap."
+      - "Open the engine file Engine\\Config\\BaseEngine.ini (read only, do not edit). Find the same section. Compare the two values."
+      - "In DefaultGame.ini add a custom section [MyTestSection] with a line MyValue=42. Add a comment line above it starting with ;."
+      - "Open the Editor. In the console type: GetIni Game:MyTestSection MyValue. Confirm the value 42 is printed."
+      - "In Project Settings change one setting (for example Project Name). Close the editor and check that DefaultGame.ini changed."
+    done_when: "One screenshot of DefaultGame.ini showing your [MyTestSection] and a second screenshot of the Output Log with the GetIni result."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is the basic structure of a config file?"
+        choices: ["JSON objects with keys and values", "Sections in [brackets], each holding KEY=VALUE lines", "XML tags with attributes", "One value per line, no sections"]
+        answer_index: 1
+        explain: "Config files contain lists of key-value pairs organized into sections. Every variable must belong to a [SECTION] and use KEY=VALUE."
+      - q: "How do you write a comment in an .ini file?"
+        choices: ["Start the line with //", "Start the line with #", "Start the line with ;", "Wrap the line in /* */"]
+        answer_index: 2
+        explain: "Prepend a semicolon ( ; ) to any line to make a comment. This also works for commenting out a key-value pair."
+      - q: "A key exists in Engine/Config/BaseEngine.ini and also in your project's Config/DefaultEngine.ini. Which value wins?"
+        choices: ["The project DefaultEngine.ini value, because later files in the hierarchy override earlier ones", "The BaseEngine.ini value, because engine files always win", "Both are used at the same time", "Neither; the engine reports a conflict error"]
+        answer_index: 0
+        explain: "Files in the same category form a hierarchy. Later files override earlier ones. The project DefaultEngine.ini comes after the engine BaseEngine.ini, so its value wins."
+      - q: "In a config file, what does the line +MyArray=Value do?"
+        choices: ["Empties the array", "Removes Value from the array", "Appends Value even if it already exists", "Appends Value only if it is not already in the array"]
+        answer_index: 3
+        explain: "The + operator appends the value if it does not exist yet. The . operator appends even duplicates, - removes, and ! empties the array."
+      - q: "Which console command shows the value of a config setting from the loaded config files?"
+        choices: ["ShowIni", "GetIni", "DumpConfig", "PrintSetting"]
+        answer_index: 1
+        explain: "GetIni [Platform@]IniFile:Section Key prints the value of a configuration setting. It only searches loaded configuration files."
+      - q: "In C++, how do you make a member variable load its value from the config hierarchy automatically?"
+        choices: ["Mark the class UCLASS(config=Game) and the variable UPROPERTY(Config)", "Call LoadConfig() in the constructor", "Name the variable the same as the ini key", "Mark the variable UPROPERTY(EditAnywhere)"]
+        answer_index: 0
+        explain: "You set the config category in the UCLASS (for example config=Game) and mark the variable UPROPERTY(Config). Then a [/Script/Module.Class] section in that category sets it."
+    flavors:
+      _default: {why: "Every Project Setting ends up in a text file. Reading .ini files lets you see and share settings exactly."}
+      programming: {why: "Config files are how you ship default values, override them per platform, and expose your own C++ settings.", do: "Add a UPROPERTY(Config) int32 to one of your C++ classes with UCLASS(config=Game), set it in DefaultGame.ini, and log the value at BeginPlay."}
+      tech_art: {why: "Rendering and scalability defaults live in .ini files. Knowing the hierarchy helps you debug why a setting does not stick.", do: "Find the [/Script/Engine.RendererSettings] section in DefaultEngine.ini and list three keys you recognise from Project Settings > Rendering."}
+
+  - id: PQ49
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [plugins, project-setup, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Enable and inspect a plugin
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-plugins-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin you want)."
+      - "Enable it with the checkbox. Save your work and restart the Editor when asked."
+      - "In the Content Drawer, click the gear icon in the upper right and turn on Plugin Content. Find a plugin folder in the tree."
+      - "On disk, open your engine folder Engine\\Plugins and find the folder of the plugin you enabled. Open its .uplugin file in a text editor."
+      - "In the .uplugin file, find FriendlyName, Category, CanContainContent and the Modules list. Note the Type of each module (Runtime, Editor, ...)."
+      - "In the Editor, use Edit > Plugins > New Plugin to create an empty Content Only plugin named MyToolsPlugin in your project. Find it under <Project>\\Plugins."
+    done_when: "One screenshot of the Plugins window with your enabled plugin, plus a screenshot of a .uplugin file open in a text editor with its Modules list visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you enable or disable a plugin for your project?"
+        choices: ["Edit > Plugins", "Edit > Project Settings > Plugins", "Window > Plugins", "File > Plugins"]
+        answer_index: 0
+        explain: "From the main menu go to Edit > Plugins. This opens the Plugins window where you tick or clear the checkbox next to a plugin."
+      - q: "After you enable a plugin, what does the page tell you to do?"
+        choices: ["Nothing, it works right away", "Recompile the project in Visual Studio", "Save your work, then restart Unreal Engine", "Re-import all assets"]
+        answer_index: 2
+        explain: "The steps end with: save your work, then restart Unreal Engine. A restart is needed for the change to take effect."
+      - q: "You cannot see the assets that come with a plugin in the Content Drawer. What must you turn on?"
+        choices: ["Show Engine Content in View Options", "Plugin Content in the Content Drawer settings (gear icon)", "The Fab plugin", "Show Hidden Folders in Windows"]
+        answer_index: 1
+        explain: "Before you can use plugin content, click the gear icon in the upper right corner of the Content Drawer and enable Plugin Content."
+      - q: "What is a .uplugin file?"
+        choices: ["The compiled binary of the plugin", "A JSON plugin descriptor with basic information the engine reads at startup", "The plugin's icon", "A list of assets the plugin contains"]
+        answer_index: 1
+        explain: "Unreal finds plugins by searching for .uplugin files, called plugin descriptors. They are JSON text files with basic information about the plugin."
+      - q: "Where must a project (game) plugin live so the engine can find it?"
+        choices: ["[Project Root]/Plugins/[Plugin Name]/", "[Project Root]/Content/Plugins/", "[Project Root]/Source/Plugins/", "Anywhere, as long as the path is in the .uproject"]
+        answer_index: 0
+        explain: "Game plugins are searched in [Project Root Directory]/Plugins/[Plugin Name]/. Engine plugins live in [Engine Root]/Engine/Plugins/."
+      - q: "You disable a plugin that other plugins depend on. What happens?"
+        choices: ["The editor refuses and nothing changes", "The other plugins keep working", "You see a notification asking if you want to disable those plugins too", "The dependent plugins are deleted from disk"]
+        answer_index: 2
+        explain: "If the plugin is a dependency for other plugins, you get a notification asking whether to disable those as well. This can break features in your project."
+    flavors:
+      _default: {why: "Plugins add whole features to a project. Knowing how to enable and inspect them saves hours."}
+      programming: {why: "Plugins are how you package reusable code. Their .uplugin and module types decide what loads in the editor and in a shipped game.", do: "In the .uplugin you opened, find a module with Type Editor and one with Type Runtime. Write one line on why the split exists."}
+      tech_art: {why: "Most tool workflows (Modeling Tools, Console Variables Editor, Python) are plugins you must enable first.", do: "Enable the Python Editor Script Plugin and confirm the Python console appears in the Output Log."}
+
+  - id: PQ50
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [source-control, perforce, git, team]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Source control inside the Editor
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-source-control-in-the-unreal-editor"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/source-control-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-perforce-as-source-control-for-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Open Edit > Editor Preferences > Loading & Saving > Source Control. Read each option. Note which ones are on by default."
+      - "Click the Source Control icon in the top-right of the Level Editor toolbar. Look at the provider list in the login dialog (Perforce, Subversion, Git if the plugin is enabled)."
+      - "If you have a server (Perforce, Git repo): pick the provider, enter settings, Accept Settings. If not: click Run Without Source Control and continue with the writeup part."
+      - "With a connection: right-click an asset in the Content Browser and use Check Out, then change and save it. Then use File > Submit to Source Control with a short description."
+      - "Without a connection: read the Checking Out, Submitting, Syncing and Deleting Files sections. Write 5 lines describing that workflow in your own words."
+      - "Open Edit > Project Settings and look for the check-out indicator on the config file. Note why config files cannot be checked back in from the Editor."
+    done_when: "A screenshot of the Source Control Login dialog (with your provider list) plus either a screenshot of a successful Submit dialog or your 5-line workflow writeup."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Why does the Editor lock (check out) an asset while you edit it?"
+        choices: ["Because .uasset and .umap files are binary and cannot be merged in a text merge tool", "Because assets are too large to copy", "Because the license requires it", "Because only one user can open the Editor at a time"]
+        answer_index: 0
+        explain: "Assets are binary files. They cannot be merged like text. So the Editor locks the file (Check Out) so other users cannot edit it at the same time."
+      - q: "Where are the Editor's source control options such as Add New Files when Modified?"
+        choices: ["Edit > Project Settings > Source Control", "Window > Source Control", "Edit > Editor Preferences > Loading & Saving > Source Control", "File > Source Control Settings"]
+        answer_index: 2
+        explain: "The page says these options are under Editor Preferences > Loading & Saving > Source Control."
+      - q: "Which menu option scans your project for changed assets and opens the Submit Files dialog?"
+        choices: ["File > Save All", "File > Submit to Source Control", "Edit > Check In Everything", "Window > Changelists"]
+        answer_index: 1
+        explain: "Submit to Source Control in the File menu scans the project and Engine for changed assets and shows the Submit Files dialog where you enter a description."
+      - q: "How do you get changes that other people made, from inside the Editor?"
+        choices: ["Restart the Editor", "Right-click files or folders in the Content Browser and choose Sync", "Press Ctrl+S on the level", "Use File > Refresh All"]
+        answer_index: 1
+        explain: "Right-click files or folders in the Content Browser and select Sync. You can also sync in an external tool, but the page recommends closing the Editor first."
+      - q: "After you delete an asset that is in source control, what does the Editor usually leave behind?"
+        choices: ["An empty folder", "A backup copy in Saved", "A hidden asset called a Redirector", "Nothing; the file is gone"]
+        answer_index: 2
+        explain: "The file is generally replaced by a hidden asset called a Redirector. You can clean these up with Fix Up Redirectors in Folders."
+      - q: "You checked out a config (.ini) file from Project Settings. How do you check it back in?"
+        choices: ["Click Check In in Project Settings", "Use File > Submit to Source Control", "Use an external tool like P4V or TortoiseSVN, because the Editor cannot check these files in", "Restart the Editor and it checks in automatically"]
+        answer_index: 2
+        explain: "The page says there is currently no way to check config files back in via the Editor. You need an external tool such as P4V or TortoiseSVN."
+    flavors:
+      _default: {why: "Teams live or die by source control. The Editor has it built in, so learn the buttons before you join a team."}
+      programming: {why: "You will submit both code and binary assets. Knowing which files the Editor can handle and which need an external tool prevents lost work.", do: "Read the Perforce page section on which project folders to add first (Config, Content, Source) and write down the list."}
+      level_design: {why: "Levels are binary .umap files. Check Out before you edit, or a teammate may be locked out.", do: "Check out your level, move one actor, save, and submit with a description that says what you changed."}
+
+  - id: PQ51
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [packaging, build, windows, cooking]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: Package a first Windows build
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/build-operations-cooking-packaging-deploying-and-running-projects-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/preparing-unreal-engine-projects-for-release"
+    community_urls: []
+    checklist:
+      - "Open Edit > Project Settings > Maps & Modes. Set Game Default Map to your playable level."
+      - "In Project Settings > Packaging > Project, confirm Build Configuration is Development."
+      - "In the main toolbar open Platforms > Windows. Check that Binary Configuration shows Use Project Setting (Development)."
+      - "Click Package Project. Pick or create an empty staging folder (for example D:\\Builds\\MyGame). Wait for Packaging Complete."
+      - "If it fails, open Window > Message Log and read the Packaging Results section. Fix the first error and try again."
+      - "Open the staging folder. Run the .exe. Find the Pak files under [ProjectName]\\Content\\Paks."
+      - "In the running game, press the backtick key to open the console, type quit and press Enter."
+    done_when: "One screenshot of the packaged game running in a window, and one screenshot of the staging folder showing the .exe and the Content\\Paks folder."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You package a project without setting a Game Default Map. What happens when you launch the .exe?"
+        choices: ["The Editor Startup Map loads", "The game shows a black screen", "Packaging fails with an error", "The first map in the Content folder loads"]
+        answer_index: 1
+        explain: "Every project must set a Game Default Map before packaging. If it is not set, the project displays a black screen when launched."
+      - q: "Put the packaging build operations in the right order."
+        choices: ["Cook, Build, Package, Stage", "Stage, Cook, Build, Package", "Build, Cook, Stage, Package", "Package, Build, Cook, Stage"]
+        answer_index: 2
+        explain: "Build compiles code, Cook converts assets for the platform, Stage copies them to the staging directory, and Package bundles them into distributable files."
+      - q: "Which build configuration is the default if you do not change it?"
+        choices: ["Shipping", "Debug", "Test", "Development"]
+        answer_index: 3
+        explain: "Unreal Engine defaults to the Development configuration unless you change it. Development still gives you the in-game console."
+      - q: "You want the final build for players, with console commands and stats disabled. Which configuration?"
+        choices: ["Shipping", "Development", "DebugGame", "Test"]
+        answer_index: 0
+        explain: "Shipping disables console commands, stats and profiling tools not meant for end users, and enables all optimizations. It is the configuration for distribution."
+      - q: "Where do you start packaging for Windows from inside the Editor?"
+        choices: ["File > Package Project", "Platforms menu in the main toolbar > Windows > Package Project", "Edit > Project Settings > Packaging > Package Now", "Window > Project Launcher > Build"]
+        answer_index: 1
+        explain: "In the main toolbar click the Platforms menu, select Windows, and under Content Management choose Package Project. Then you pick the staging directory."
+      - q: "After packaging, where do you find the Pak files?"
+        choices: ["In the project's Saved folder", "Next to the .exe in the staging root", "In the staging directory under [Project Name] > Content > Paks", "Inside the .exe"]
+        answer_index: 2
+        explain: "The page says the Pak files can be found in the staging directory under [Project Name] > Content > Paks."
+    flavors:
+      _default: {why: "A packaged build is the real test. Things that work in the Editor can break in a standalone .exe."}
+      programming: {why: "Packaging runs the full Build, Cook, Stage, Package pipeline through UAT. Reading its errors is a core coder skill.", do: "Open the Output Log during packaging and find the line that runs BuildCookRun. Copy that line into your writeup."}
+      gameplay_design: {why: "Playtesters need a build, not your Editor. A clean Development build is the fastest way to share a level.", do: "Send the staging folder to one friend and ask for one line of feedback on the first 60 seconds of play."}
+
+  - id: PQ52
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [editor-utility, blueprint, tools, editor-scripting]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Scripted Actions with Editor Utility Blueprints
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-blueprints"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/calling-blueprints-in-the-unreal-editor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-utility-widgets-in-unreal-engine"
+    community_urls: []
+    checklist:
+      - "Right-click in the Content Browser > Editor Utilities > Editor Utility Blueprint. Choose ActorActionUtility as parent. Name it EUB_ActorTools."
+      - "Add a function named PrintSelectedNames. Confirm Call In Editor is checked on the entry node."
+      - "In the function, call Get Selection Set (Development > Editor category), loop the actors, and Print String each actor's Display Name."
+      - "Compile and save. Select 3 actors in the level, right-click, open Scripted Actor Actions and run PrintSelectedNames."
+      - "In Class Defaults, add Static Mesh Actor to Supported Classes. Compile. Check that the action no longer shows for a Light actor."
+      - "Add a second function with a float input named NewScale that sets Actor Scale 3D on each selected actor. Run it and type a value in the pop-up."
+    done_when: "One screenshot of the right-click menu showing your Scripted Actor Actions, and one of the Output Log with the printed actor names."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You want a Scripted Action that works on assets selected in the Content Browser. Which parent class?"
+        choices: ["ActorActionUtility", "AssetActionUtility", "EditorUtilityActor", "EditorUtilityWidget"]
+        answer_index: 1
+        explain: "AssetActionUtility is for Assets selected in the Content Browser. ActorActionUtility is for Actors selected in the Level Viewport or World Outliner."
+      - q: "A Custom Event in your Editor Utility Blueprint does not appear as a Scripted Action. What is the most likely cause?"
+        choices: ["The event has no inputs", "The Blueprint is not saved to the Plugins folder", "Call In Editor is not checked on the Custom Event node", "Custom Events are never allowed as Scripted Actions"]
+        answer_index: 2
+        explain: "Call In Editor must be checked. New functions get it automatically, but for a Custom Event you have to check it yourself."
+      - q: "Which node returns the actors selected in the level at the moment the action runs?"
+        choices: ["Get All Actors of Class", "Get Selected Assets", "Get Player Pawn", "Get Selection Set"]
+        answer_index: 3
+        explain: "Get Selection Set returns an array of the selected Actors. Get Selected Assets returns the Assets selected in the Content Browser. Both are under Development > Editor."
+      - q: "How do you stop a Scripted Action from showing on every actor type?"
+        choices: ["Add classes to Supported Classes in Class Defaults", "Rename the function with the class name", "Use a Cast node inside the function", "Put the Blueprint in a folder named after the class"]
+        answer_index: 0
+        explain: "In Class Defaults, click plus on Supported Classes and add for example Static Mesh Actor. Then the action shows only for that class."
+      - q: "Your Scripted Action function has an input. What happens when you run it?"
+        choices: ["The action is hidden", "The Editor opens a small window asking you to enter the input value", "The input uses its default value silently", "The function fails to compile"]
+        answer_index: 1
+        explain: "Inputs on the function or Custom Event make the editor pop up a window to enter the values each time you run the action."
+      - q: "Why can editor-only Blueprint classes use more Editor Scripting nodes than a normal Actor Blueprint?"
+        choices: ["They compile faster", "They run on the render thread", "Functions from Editor-type modules are only available to editor-only classes, because they cannot work at runtime", "They have a larger memory budget"]
+        answer_index: 2
+        explain: "Operations that change assets or the editor UI cannot run in a packaged game. So functions from Editor modules are only exposed to editor-only classes like Editor Utility Blueprints."
+    flavors:
+      _default: {why: "Small editor tools remove boring work. A Scripted Action is the fastest tool you can build."}
+      programming: {why: "Editor scripting is where coders help the whole team. Learn the Utility classes before you write a C++ editor module.", do: "Add a bool input DryRun. When true, only print what would change and do not modify the actors."}
+      tech_art: {why: "Batch-renaming, fixing materials or scales on many assets is exactly what AssetActionUtility is for.", do: "Make an AssetActionUtility that prints the name of each selected Static Mesh and how many materials it has."}
+
+  - id: PQ53
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [blueprint, compiler, debugging, editor]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Read Blueprint compiler messages
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/compiler-results-in-the-blueprints-visual-scripting-editor-for-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project"
+    community_urls: []
+    checklist:
+      - "Open any Blueprint (for example BP_TestActor). Open Window > Compiler Results in the Blueprint Editor and dock it under the graph."
+      - "Compile with no changes. Read the success line and note the compile time in milliseconds."
+      - "Make an error: add a Cast To node with nothing connected to its Object pin, then a Get on a variable you then delete. Compile."
+      - "Mouse over each message to read the extra detail. Click a message and watch the graph jump to the bad node."
+      - "Fix the error. Now make a warning (for example a node with an unconnected required pin that only warns). Compile and compare the two message colors."
+      - "Click Clear in the panel. Compile once more so it is empty and green."
+    done_when: "One screenshot of the Compiler Results panel showing at least one error with its hyperlink, and one after the fix showing the successful compile line with the time."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you open the Compiler Results panel if it is not visible?"
+        choices: ["Window menu of the Blueprint Editor", "Edit > Editor Preferences", "The Details panel", "Right-click in the graph"]
+        answer_index: 0
+        explain: "The panel is not always open by default. You can find it in the Window menu of the Blueprint Editor. It also opens by itself when a compile gives errors or warnings."
+      - q: "What extra information does a successful compile show in the results list?"
+        choices: ["The number of nodes", "The total compile time in milliseconds", "The memory used by the Blueprint", "Nothing; the list stays empty"]
+        answer_index: 1
+        explain: "If the compile was successful, you also see the total compile time in milliseconds."
+      - q: "How do you jump straight to the node that caused an error?"
+        choices: ["Press F on the graph", "Double-click the Blueprint in the Content Browser", "Click the message in the Compiler Results list", "Search the node name in the palette"]
+        answer_index: 2
+        explain: "Click on a message to jump the graph view directly to the problematic node. Errors and warnings offer a hyperlink to the source."
+      - q: "How do you see more detail about one message in the list?"
+        choices: ["Right-click it and choose Details", "Mouse over the message", "Press Ctrl+I", "Open the Output Log"]
+        answer_index: 1
+        explain: "By mousing over any entry you get pop-up help with more information. Mousing over the hyperlink shows the path to the node."
+      - q: "Where does the Compiler Results panel usually appear when it opens automatically?"
+        choices: ["In a separate window", "At the top of the Details panel", "At the bottom of the current Graph panel", "Inside the Content Browser"]
+        answer_index: 2
+        explain: "Generally the panel appears at the bottom of the current Graph panel."
+      - q: "Which two logs does the packaging page say also show compiler messages, warnings and errors during packaging?"
+        choices: ["Compiler Results and Details", "Output Log and Message Log", "Visual Logger and Gameplay Debugger", "Crash Reporter and Stats"]
+        answer_index: 1
+        explain: "The Output Log shows real-time messages including compiler messages. The Message Log stores important errors and warnings, for example under Packaging Results."
+    flavors:
+      _default: {why: "Reading the message is faster than guessing. The panel points you to the exact node."}
+      programming: {why: "Blueprint compile errors are like C++ compile errors: read the first one, click it, fix it, recompile.", do: "Write down the exact text of three different error messages you produced and what fixed each one."}
+      gameplay_design: {why: "A yellow warning today is a broken mechanic tomorrow. Learn what the messages mean.", do: "Compile all Blueprints in your test level and remove every warning, not just the errors."}
+
+  - id: PQ54
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [console, cvars, commands, debugging]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: true
+    title: Console variables and commands
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/console-variables-cplusplus-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/console-variables-editor"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/console-settings-in-the-unreal-engine-project-settings"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-console-variables-reference"
+    community_urls: []
+    checklist:
+      - "Press Play, then press the backtick key to open the console. Type r.RefractionQuality and press Enter. Read the value and the LastSetBy text."
+      - "Type r.RefractionQuality ? and read the help text. Then type r.RefractionQuality 0 and check the printed new value."
+      - "Type the first letters of a variable (for example r.Shadow) and watch the auto-complete list. Pick one and read its help with ?."
+      - "Enable the Console Variables Editor plugin (Edit > Plugins), restart, and open Window > Console Variables."
+      - "Click Add Console Variable and add r.RefractionQuality. Hover the value to see Custom, Preset and Startup values. Check the Source column."
+      - "Open Edit > Project Settings > Engine > Console. Find Max Scrollback Size and the Auto-Complete options."
+    done_when: "One screenshot of the in-game console showing the r.RefractionQuality output with LastSetBy, and one of the Console Variables Editor with your variable in the list."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "You type only a console variable's name (for example MyConsoleVar) and press Enter. What happens?"
+        choices: ["The variable is reset to default", "The current value is printed in the console", "The variable is deleted", "The help text is printed"]
+        answer_index: 1
+        explain: "Typing the name alone prints the current state, for example MyConsoleVar = 0. Adding a value changes it. Adding ? prints the help text."
+      - q: "What does r.RefractionQuality ? do?"
+        choices: ["Sets the variable to an unknown state", "Toggles the variable on and off", "Prints the variable's help text", "Lists all variables starting with r."]
+        answer_index: 2
+        explain: "A question mark after the name prints the console variable help text, which can be several lines."
+      - q: "The output says r.GBuffer = 1 LastSetBy: Constructor. What does LastSetBy tell you?"
+        choices: ["Which source set the variable last, according to the priority system", "The C++ file that declares it", "Which user changed it", "Whether the value is the default"]
+        answer_index: 0
+        explain: "Console variables can be set by many sources (scalability, project settings, command line, console...). Each has a priority, and LastSetBy shows which one set it last."
+      - q: "A log line says a console variable wasn't set because Priority SetByDeviceProfile < SetByCommandline. What does this mean?"
+        choices: ["The device profile is missing", "The command line already set the variable with a higher priority, so the lower-priority source was ignored", "The variable does not exist", "You must restart the editor"]
+        answer_index: 1
+        explain: "Sources have priorities. A lower-priority source (device profile) cannot override a value set by a higher-priority source (command line)."
+      - q: "What is Engine/Config/ConsoleVariables.ini for?"
+        choices: ["Project-wide default settings", "Local developer startup console variables in a [Startup] section; not for project settings", "Shipping build settings", "Scalability groups"]
+        answer_index: 1
+        explain: "The page says this file is reserved for the local developer to set console variables at startup in the [Startup] section. It should not be used for project settings."
+      - q: "How do you open the Console Variables Editor panel after enabling its plugin?"
+        choices: ["Edit > Console Variables", "Tools > Debug > Console Variables", "Window > Console Variables", "The backtick key"]
+        answer_index: 2
+        explain: "Enable the Console Variables Editor plugin, then choose Window > Console Variables in the main menu. You can dock the panel anywhere."
+    flavors:
+      _default: {why: "The console is the fastest way to change engine behaviour while the game runs."}
+      programming: {why: "CVars are how engine features are toggled and how you will expose your own debug switches. The priority system explains many strange bugs.", do: "Read the Creating / Registering section and write down the four parts of a TAutoConsoleVariable declaration (name, default, help, flags)."}
+      tech_art: {why: "Almost every rendering feature has a CVar. Knowing how to read help and see who set a value speeds up look and performance work.", do: "Add three r. rendering variables to a Console Variables Editor preset and save it."}
+
+  - id: PQ55
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, visual-logger, ai]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Record a session in the Visual Logger
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/visual-logger-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Open a level with a NavMeshBoundsVolume. Add one AI Character (BP_VLogBot) that runs `AI Move To` toward a target point on BeginPlay."
+      - "Open Windows > Developer Tools > Visual Logger."
+      - "Start recording in the Visual Logger, then press Play (PIE). Let the bot walk for 10 to 20 seconds. Stop PIE."
+      - "In the Actor list, search for the bot's AI controller and select it."
+      - "Drag the timeline scrubber to a moment while the bot was moving. Look at the snapshot area and the text window."
+      - "Note in one sentence what changes in the snapshot when you move the scrubber."
+    done_when: "One screenshot of the Visual Logger window with an actor selected in the Actor list, the timeline scrubber at a time bigger than 0, and the snapshot area visible."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you open the Visual Logger in the editor?"
+        choices: ["Edit > Project Settings > Debug", "Windows > Developer Tools > Visual Logger", "Tools > Session Frontend > Logger", "Build > Visual Logger"]
+        answer_index: 1
+        explain: "The page says to use the menu Windows > Developer Tools > Visual Logger. In old versions (before 4.7) the console command was VisLog."
+      - q: "What is the main reason the Visual Logger records data for later review?"
+        choices: ["To make the game run faster", "To replace the Output Log", "To study rare bugs that are hard to reproduce, after they happened", "To compile Blueprints"]
+        answer_index: 2
+        explain: "Recording lets you scrub through the frames around the moment a bug happened, which helps with rare or hard-to-reproduce bugs."
+      - q: "Which part of the Visual Logger viewport lets you move to any point in time?"
+        choices: ["The Actor list", "The snapshot view", "The text window", "The timeline"]
+        answer_index: 3
+        explain: "The timeline has a bar (scrubber) that you drag to view the selected actor's status at different times."
+      - q: "Which macro logs text to the Visual Logger text window?"
+        choices: ["UE_VLOG", "UE_PRINT", "PRINT_STRING", "UE_TRACE"]
+        answer_index: 0
+        explain: "UE_VLOG takes the actor, the log category, the verbosity and the text. UE_VLOG_UELOG also sends a copy to the normal log."
+      - q: "Two visual logging calls happen in the same frame from the same actor. What happens?"
+        choices: ["Both are shown side by side", "The second overwrites the first captured data", "The Visual Logger crashes", "The second call is ignored"]
+        answer_index: 1
+        explain: "The page warns that multiple visual logging calls in the same frame from the same actor overwrite the previously captured data."
+      - q: "What is the third data type you can add, besides actor snapshots and log messages?"
+        choices: ["Saved games", "Debug shapes drawn in the world", "Screenshots", "Network packets"]
+        answer_index: 1
+        explain: "Debug shapes (segments, boxes, cones, capsules and more) can be drawn in the game world and can last for several frames."
+    flavors:
+      _default: {why: "When a bug happens once and you cannot repeat it, a recording is the only way to see what really happened."}
+      programming: {why: "The Visual Logger is the standard tool to debug AI and movement over time.", do: "Add a UE_VLOG_LOCATION call in C++ that draws a sphere at the bot's target point."}
+      gameplay_design: {why: "You can check what the AI was thinking at the moment it did something strange.", do: "Find the frame where the bot reached its goal and write down the time."}
+
+  - id: PQ56
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, gameplay-debugger, ai]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: Gameplay Debugger overlay
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-gameplay-debugger-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-debugger-settings-in-the-unreal-engine-project-settings"
+    checklist:
+      - "Open a level with a NavMeshBoundsVolume and one AI pawn (reuse BP_VLogBot or any AI that moves)."
+      - "Press Play (PIE). Press the apostrophe (') key to open the Gameplay Debugger."
+      - "Point at the AI pawn and press apostrophe again to select it."
+      - "Use the numeric keypad to turn the Navmesh category on and off. Also turn on Basic."
+      - "Open Edit > Project Settings > Gameplay Debugger and look at the Input section. Do not change anything."
+      - "Type ToggleDebugCamera in the console (or press ;) and orbit around the pawn."
+    done_when: "One screenshot of PIE with the Gameplay Debugger overlay visible, the AI pawn selected, and at least two categories shown (for example Basic and Navmesh)."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "Which key opens the Gameplay Debugger by default?"
+        choices: ["F8", "Tab", "The apostrophe (') key", "Backtick (`)"]
+        answer_index: 2
+        explain: "The apostrophe key is the default. You can also use the EnableGDT cheat. The binding can be changed in the Input section of the settings."
+      - q: "How do you pick which AI to debug?"
+        choices: ["Select it in the World Outliner before Play", "Point at it on screen and press the apostrophe key", "Type its name in the console", "Right-click it in the viewport"]
+        answer_index: 1
+        explain: "The page says to press the apostrophe key while pointing to the enemy on screen."
+      - q: "Why does the Gameplay Debugger use categories?"
+        choices: ["Because there is a lot of data; only enabled categories are shown and replicated", "Because each category needs its own plugin", "Because categories are required for Blueprints", "Because the overlay can only show one line"]
+        answer_index: 0
+        explain: "Categories limit the amount of data on screen. Only data from enabled categories is replicated, which saves bandwidth."
+      - q: "You are in Simulate mode, not PIE. What do you need to see the debugger?"
+        choices: ["Restart the editor", "Enable the Debug AI show flag", "Press the numeric keypad 0", "Add a HUD Blueprint"]
+        answer_index: 1
+        explain: "In Simulate you must enable the Debug AI show flag. The GameplayDebuggingReplicator actor in the Outliner controls the visible categories."
+      - q: "Can a Blueprint-only project add its own categories to the Gameplay Debugger?"
+        choices: ["Yes, with an Editor Utility Widget", "Yes, with a Blueprint Function Library", "No, extending it needs C++ code; Blueprint projects use it as-is", "No, the debugger does not work in Blueprint projects at all"]
+        answer_index: 2
+        explain: "The page says the Gameplay Debugger can only be extended with C++ code. Blueprint projects can still use it to show the basic information."
+      - q: "What does the semicolon (;) key do during PIE?"
+        choices: ["Pauses the game", "Opens the Debug Camera Controller", "Switches the debug category", "Ejects from the pawn"]
+        answer_index: 1
+        explain: "The semicolon hotkey (or the ToggleDebugCamera command) opens the Debug Camera Controller, which can orbit and show buffer visualizations."
+    flavors:
+      _default: {why: "The overlay shows what the AI knows right now, without adding any code."}
+      programming: {why: "It works over the network too, so you can debug a client's view of an AI.", do: "Turn on the Behavior Tree category and read the current node name."}
+      level_design: {why: "You can see the NavMesh around a pawn and find why it will not walk somewhere.", do: "Find one spot in your level where the Navmesh category shows a gap."}
+
+  - id: PQ57
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, blueprint, breakpoints]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Breakpoints and the call stack
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugger-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugging-example-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/toolbar-in-the-blueprints-visual-scripting-editor-for-unreal-engine"
+    community_urls:
+      - {title: "How to Debug Blueprints like a Pro - Unreal Engine 5 Tutorial (Cobra Code)", url: "https://www.youtube.com/watch?v=YBuw7JeGt6w"}
+    checklist:
+      - "In BP_Debug (any actor Blueprint), make a function `CountDown` that takes an integer, prints it, and calls itself again with the number minus one until it reaches 0."
+      - "Call CountDown with 3 from BeginPlay. Place the actor in the level."
+      - "Right-click the Print String node inside CountDown and choose Add Breakpoint."
+      - "Open Tools > Blueprint Debugger. Press Play. When the game pauses, look at the Call Stack: CountDown should appear more than once."
+      - "Use Resume and the step button to move through the calls. Watch the Execution Trace list."
+      - "Right-click the breakpoint and choose Disable Breakpoint. Play again and confirm the game does not pause."
+    done_when: "One screenshot at a paused breakpoint (red arrow on the node) with the Blueprint Debugger's Call Stack showing CountDown listed at least twice."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "How do you add a breakpoint to a node?"
+        choices: ["Double-click the node", "Right-click the node and choose Add Breakpoint", "Press F9 in the level viewport", "Drag the node into the Debugger window"]
+        answer_index: 1
+        explain: "Right-click the node and select Add Breakpoint. A solid red octagon appears in the upper-left corner of the node."
+      - q: "A breakpoint shows as an outline of a red octagon. What does that mean?"
+        choices: ["It has been hit", "It is invalid", "It is disabled", "It is on a macro"]
+        answer_index: 2
+        explain: "A disabled breakpoint shows as an outline. Disabling is safer than removing and adding breakpoints again and again."
+      - q: "A breakpoint shows a yellow icon with an exclamation point. What should you try first?"
+        choices: ["Compile the Blueprint", "Restart PIE", "Delete the node", "Turn off Live Coding"]
+        answer_index: 0
+        explain: "A yellow icon means the breakpoint is in an invalid place. Compiling the Blueprint can sometimes fix it; if not, hover over the icon to read the warning."
+      - q: "In the Call Stack, where is the function that is running right now?"
+        choices: ["At the bottom", "In the middle", "In a separate tab", "At the top"]
+        answer_index: 3
+        explain: "The current function is listed at the top. Each line was called by the function on the line below it."
+      - q: "Why does your Blueprint Macro not appear in the Call Stack?"
+        choices: ["Macros cannot be debugged at all", "Macros appear as part of the function that called them", "Macros run in C++", "You must enable a plugin for macros"]
+        answer_index: 1
+        explain: "The page says Blueprint Macros do not show in the Call Stack; they appear inside the function from which they were called."
+      - q: "Where are breakpoints saved?"
+        choices: ["In the Blueprint asset, so teammates get them too", "In the level file", "In your project's .ini files, so they persist for you but are not shared", "They are lost when you close the editor"]
+        answer_index: 2
+        explain: "Breakpoints are saved in the project's .ini files. They persist between sessions but are not duplicated for other developers."
+    flavors:
+      _default: {why: "A breakpoint turns 'I think it runs' into 'I saw it run, with these values'."}
+      programming: {why: "The Blueprint call stack works like a C++ call stack, so the same habits transfer.", do: "Use PrintScriptCallstack() from your IDE's Immediate window while stopped at a C++ breakpoint."}
+      gameplay_design: {why: "You can stop the game at the exact node where a rule goes wrong.", do: "Put a breakpoint on the node that changes score and check the value before it changes."}
+
+  - id: PQ58
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, blueprint, logging]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: "Print String: screen or log?"
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Development/PrintString"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine"
+    checklist:
+      - "In BP_Debug, add a Print String on Tick that prints the frame time. Set Print to Screen on and Print to Log off."
+      - "Play. Watch the screen fill with lines. Stop."
+      - "Set the Key input to `FrameTime`. Play again and see that only one line stays on screen."
+      - "Add a second Print String on BeginPlay with Print to Log on and Print to Screen off. Open Window > Output Log and find the line."
+      - "Open your project's Saved/Logs folder and open the newest .txt log. Find the same BeginPlay message."
+      - "Write two sentences: when you would use screen output, and when you would use the log."
+    done_when: "One screenshot with the Output Log showing your BeginPlay message and the game view showing a single updating on-screen line; plus your two sentences."
+    xp: 50
+    verify_type: screenshot
+    quiz:
+      - q: "Print to Log is off. Where does the message go?"
+        choices: ["It is dropped completely", "It is logged only as Verbose, so it usually does not show", "It goes to the Message Log", "It is saved to a CSV"]
+        answer_index: 1
+        explain: "The node page says that with Print to Log false the message is logged only as Verbose, so it generally will not show up."
+      - q: "What does the Key input do?"
+        choices: ["Encrypts the text", "Sets the keyboard key that shows the message", "Replaces any on-screen message that has the same key", "Selects the log category"]
+        answer_index: 2
+        explain: "If a non-empty key is given, the message replaces existing on-screen messages with the same key. This stops the screen from filling up."
+      - q: "You set Duration to a negative number. What happens?"
+        choices: ["The message never shows", "The message shows forever", "The engine reports an error", "The duration is loaded from the config"]
+        answer_index: 3
+        explain: "A negative Duration means the display time is read from the config."
+      - q: "Where in the editor do you read log output?"
+        choices: ["Window > Output Log", "Edit > Logs", "Tools > Message Board", "Build > Log Viewer"]
+        answer_index: 0
+        explain: "The logging page says to open Window > Output Log to observe your logs."
+      - q: "Where are log files saved on disk?"
+        choices: ["Content/Logs", "Saved/Logs, as .txt files", "Config/Logs", "Binaries/Logs"]
+        answer_index: 1
+        explain: "Logs are saved as .txt files in the project's Saved/Logs directory."
+      - q: "In C++ on-screen debug messages, what is the first parameter (the integer key) for?"
+        choices: ["The number of times to repeat", "The line height", "To prevent the same message from being added many times", "The text color index"]
+        answer_index: 2
+        explain: "The unique integer key prevents the same message from being added multiple times, the same idea as the Key pin on Print String."
+    flavors:
+      _default: {why: "Screen text is fast to read; the log is what you send to a teammate after something breaks."}
+      programming: {why: "Knowing where a message ends up saves time when a bug only appears in a packaged build.", do: "Log the same value with UE_LOG at Warning verbosity and compare its color in the Output Log."}
+      tech_art: {why: "A keyed on-screen value is a clean way to watch a material parameter while you tune it.", do: "Print a scalar parameter value with a Key so it updates in place."}
+
+  - id: PQ59
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, blueprint, watch]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Watch pins and the Data Flow tab
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugger-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugging-example-in-unreal-engine"
+    checklist:
+      - "In BP_Debug, add an integer array variable `Scores` with 3 default values and a float `Speed`. On Tick, add Delta Seconds to Speed and set it."
+      - "Place two copies of BP_Debug in the level. In the Blueprint, use the Debug Object dropdown to pick one instance."
+      - "Right-click the output pin of the Add node and choose Watch this value."
+      - "Press Play. Look at the pulsing active wires. Hover over a pin that has not run yet and read its message."
+      - "Open Tools > Blueprint Debugger and go to the Data Flow tab. Filter to BP_Debug and expand the Scores array."
+      - "Pause with a breakpoint on the Set Speed node and compare the watched value with the tooltip."
+    done_when: "One screenshot of the Data Flow tab with the Scores array expanded and the Speed value visible for the selected instance."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How do you start watching a pin?"
+        choices: ["Right-click the pin name and choose Watch this value", "Drag the pin into the Debugger window", "Double-click the pin", "Select the node and press W"]
+        answer_index: 0
+        explain: "Right-click the pin's name and select Watch this value. If you are already watching, the menu shows Stop watching this value."
+      - q: "What value does a watched pin hold?"
+        choices: ["The value from the first time the node ran", "The value from the most recent execution of its node", "The default value in the Details panel", "The average of all executions"]
+        answer_index: 1
+        explain: "A watched pin keeps the value assigned during the most recent execution of its node."
+      - q: "A pin's tooltip says no debug data is available. Why?"
+        choices: ["The pin is private", "The project is in Shipping mode", "The node has not executed yet", "Watching is off for this Blueprint"]
+        answer_index: 2
+        explain: "Pin values only update when the node executes. Even variable nodes must run code before they show a value."
+      - q: "What can the Data Flow tab expand for you?"
+        choices: ["Only integers and floats", "Arrays, Sets, Maps and other data structures", "Only strings", "Only object references"]
+        answer_index: 1
+        explain: "The Data Flow view supports expansion of Arrays, Sets, Maps and other data structures."
+      - q: "Two instances of the same Blueprint are in the level. How do you choose which one to debug?"
+        choices: ["Delete the other one", "Use the Debug Object dropdown in the Blueprint", "Set a breakpoint in each", "Rename one instance"]
+        answer_index: 1
+        explain: "The Debug Object dropdown lets you select the instance to debug. The magnifying glass jumps to it in the level."
+      - q: "What do pulsing 'active wires' show during PIE?"
+        choices: ["Nodes with errors", "Nodes with breakpoints", "Wires that are disconnected", "The path the execution takes as the script runs"]
+        answer_index: 3
+        explain: "When the game runs with the Blueprint open, the wires pulse as the script executes, showing the execution path."
+    flavors:
+      _default: {why: "Watching a value is faster than adding a Print String and cleaning it up later."}
+      programming: {why: "The Data Flow tab is the closest Blueprint has to a variables panel in an IDE.", do: "Watch a Map variable and read one key/value pair while paused."}
+      gameplay_design: {why: "You can see a stat change per instance without touching the graph.", do: "Watch the health value of two enemies at the same time."}
+
+  - id: PQ60
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [testing, automation, tools]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Run the automation tests
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-test-framework-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-system-user-guide-in-unreal-engine"
+    checklist:
+      - "Open Edit > Plugins. Select the Testing filter on the left. Enable at least one automation test plugin and restart the editor."
+      - "Open Tools > Session Frontend and go to the Automation tab. Select your machine in the Session Browser if the list is empty."
+      - "In the Test Name list, expand Project and enable its tests. Do not enable everything."
+      - "Click Start Tests. Watch the Test Name column and the results panel."
+      - "Use the Errors and Warnings filter buttons to see only failures."
+      - "Use the Export drop-down to save a CSV of the results, or use Copy to copy the result lines."
+    done_when: "One screenshot of the Automation tab after a run, with the results panel showing at least one finished test and the number of tests run."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "The Window > Test Automation menu item is missing. What is the most likely reason?"
+        choices: ["The project is Blueprint-only", "No automation test plugin is enabled yet", "You are not in PIE", "The Output Log is closed"]
+        answer_index: 1
+        explain: "The page says this menu option is only visible after you enable at least one automation tests plugin."
+      - q: "Where do you find the automation test plugins?"
+        choices: ["Edit > Plugins, Testing filter", "Edit > Project Settings > Testing", "Tools > Automation Plugins", "Window > Plugins Browser > Debug"]
+        answer_index: 0
+        explain: "Select Edit > Plugins, then the Testing filter on the left, enable the plugins and restart the editor."
+      - q: "How fast should a Smoke test be?"
+        choices: ["Under 1 minute", "Under 10 seconds", "Under 1 second", "There is no limit"]
+        answer_index: 2
+        explain: "All Smoke tests are intended to complete within 1 second. Only Unit tests or fast Feature tests should be marked Smoke."
+      - q: "What is a Content Stress test for?"
+        choices: ["Measuring network latency", "Thorough testing of one system to avoid crashes, like loading all maps", "Checking one API function", "Comparing screenshots"]
+        answer_index: 1
+        explain: "Content Stress tests do deeper testing of a system, for example loading all maps or compiling all Blueprints."
+      - q: "One of Epic's test design guidelines is:"
+        choices: ["Always run tests in the same order", "Keep generated files so the next test can reuse them", "Do not assume the state of the game or editor; tests may run out of order or in parallel", "Only write tests in Blueprint"]
+        answer_index: 2
+        explain: "Tests can run out of order or across machines, so they must not assume any state. Files you create must be deleted at the end."
+      - q: "After a run, how can you save the results?"
+        choices: ["They are saved automatically as a level", "Use the Export drop-down to write a CSV file", "Take a screenshot; there is no other way", "Use File > Save All"]
+        answer_index: 1
+        explain: "The Export drop-down becomes active once reports exist and writes a CSV file. You can also select lines and click Copy."
+    flavors:
+      _default: {why: "A test run tells you the project still works before you send a build to someone."}
+      programming: {why: "Knowing the Automation tab is the first step before you write your own tests.", do: "Enable Dev Content in the toolbar and note which extra tests appear."}
+      tech_art: {why: "Content stress tests catch broken assets and Blueprints before artists find them.", do: "Find the test that compiles all Blueprints and run only that one."}
+
+  - id: PQ61
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [testing, functional-test, level-blueprint]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, level_design]
+    required_spine: false
+    elective: true
+    title: Your first Functional Test
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/functional-testing-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-system-user-guide-in-unreal-engine"
+    checklist:
+      - "Make a small level L_Test_Pickup with one BP_Pickup actor and a floor."
+      - "Place a Functional Test actor in the level. Name it FT_PickupExists."
+      - "With the test actor selected, open the Level Blueprint. Add its OnTestStart event."
+      - "From OnTestStart, use Get All Actors Of Class (BP_Pickup). Branch on array length > 0. Call Finish Test with Succeeded on true and Failed on false."
+      - "Set an Observation Point actor on the test so the player teleports to a good view."
+      - "Open Tools > Session Frontend > Automation. Click Run Level Test (or find the test under Project) and run it."
+    done_when: "Two screenshots: the Level Blueprint graph from OnTestStart to Finish Test, and the Automation tab showing FT_PickupExists passed."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "What is the first step to set up a functional test?"
+        choices: ["Write a C++ module", "Place a Functional Test actor in a level", "Enable Gauntlet", "Create a Data Table"]
+        answer_index: 1
+        explain: "Setting up a test is done by placing a Functional Test actor in a level, then scripting it in the Level Blueprint or in a child class."
+      - q: "Which node must you always call at the end of your test logic?"
+        choices: ["Finish Test", "Destroy Actor", "Quit Game", "Set Enabled"]
+        answer_index: 0
+        explain: "Connect OnTestStart to your logic and make sure it ends with Finish Test, otherwise the test does not finish."
+      - q: "What does IsReady do?"
+        choices: ["Checks if the player pressed Start", "Runs once at the end of the test", "Is called every tick after PrepareTest; return false until setup is complete", "Marks the test as passed"]
+        answer_index: 2
+        explain: "IsReady runs each tick after PrepareTest until OnTestStart. Returning false delays the main test until your setup is done."
+      - q: "When should you make a child class of the Functional Test instead of using the Level Blueprint?"
+        choices: ["Never; the Level Blueprint is always better", "When the test is simple and runs once", "When the test needs complex setup or must run in many levels", "Only for C++ projects"]
+        answer_index: 2
+        explain: "The page recommends overriding AFunctionalTest for complex setup or tests that run many times or in more than one level."
+      - q: "What does RegisterAutoDestroyActor do?"
+        choices: ["Destroys the player at the start", "Destroys the passed actors automatically when the test ends", "Removes the test actor from the level", "Deletes the level after the test"]
+        answer_index: 1
+        explain: "Actors you pass to RegisterAutoDestroyActor are destroyed when the test ends, which cleans up spawned actors."
+      - q: "What happens when you assign an actor to Observation Point?"
+        choices: ["The test watches that actor's health", "The actor becomes the test's Ground Truth Data", "The player is teleported to its location and rotation when the test starts", "The actor is hidden during the test"]
+        answer_index: 2
+        explain: "Observation Point moves the player to that actor's location and rotation at test start."
+    flavors:
+      _default: {why: "A test that checks one thing in a level can run every day without you."}
+      programming: {why: "Functional tests are the entry point to the whole Automation System.", do: "Add a LogMessage call so progress shows in the LogFunctionalTest category."}
+      level_design: {why: "You can test that a level still has what it needs after edits.", do: "Add a second test that checks a PlayerStart exists."}
+
+  - id: PQ62
+    rank: 1
+    difficulty: apprentice
+    track: programming
+    subjects: [debugging, crash, logs]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Read a crash report and its log
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/crash-reporting-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asserts-in-unreal-engine"
+    checklist:
+      - "Open your project's Saved/Logs folder. Open the newest .txt log. Find three lines with Warning or Error and write down what they say."
+      - "Open the Saved/Crashes folder (make it happen if empty: in BP_Debug, get an invalid object from an empty array and call a function on it in a loop, or use a null reference in C++ with check())."
+      - "Open one crash folder and find the callstack text and the log copy inside."
+      - "Open Editor Preferences > Privacy > Bug Reports and read the options. Do not change them unless you want to."
+      - "Open Project Settings > Project > Packaging > Advanced and find Include Crash Reporter. Leave it as it is."
+      - "Write 5 lines: what crashed, which function is at the top of the callstack, and where you found the report."
+    done_when: "A short writeup with the three log lines, the top of the crash callstack, and the folder path where you found the crash report."
+    xp: 55
+    verify_type: writeup
+    quiz:
+      - q: "Where does the editor store crash reports on your machine?"
+        choices: ["Content/Crashes", "The project's Saved/Crashes folder", "Config/Crashes", "The Engine Binaries folder"]
+        answer_index: 1
+        explain: "Editor crash reports are stored in the project's Saved/Crashes folder (or under AppData/Local/[Project]/Saved/Crashes for a user)."
+      - q: "What is the difference between an assert (check) and an ensure?"
+        choices: ["An ensure crashes; a check only logs", "A check halts the program; an ensure reports to the crash reporter but keeps running", "They are the same", "An ensure only works in Shipping builds"]
+        answer_index: 1
+        explain: "check halts execution when false. ensure reports to the crash reporter and writes to the log, but does not stop the program."
+      - q: "By default, is the Crash Report Client included in a packaged game?"
+        choices: ["Yes, always", "Yes, but only in Shipping", "No; you enable Include Crash Reporter in Packaging settings", "No, and it cannot be added"]
+        answer_index: 2
+        explain: "By default it is not included. Enable Include Crash Reporter under Project > Packaging > Advanced, or set IncludeCrashReporter=True in DefaultGame.ini."
+      - q: "Which of these is listed as a common cause of a crash?"
+        choices: ["Accessing null objects", "Too many Print Strings", "A missing Key on Print String", "A disabled breakpoint"]
+        answer_index: 0
+        explain: "The page lists accessing null objects, writing to objects that do not exist, corrupted data, stack overflows and out-of-memory as common causes."
+      - q: "Which log verbosity is printed in the editor log but NOT in the console?"
+        choices: ["Warning", "Display", "Error", "Log"]
+        answer_index: 3
+        explain: "The verbosity table says Log is printed in the editor log but not in the console. Warning, Display and Error go to both."
+      - q: "How do you stop a Launcher editor build from sending unattended bug reports to Epic?"
+        choices: ["Delete the Saved folder", "Editor Preferences > Privacy > Bug Reports > Don't Send", "Disable the Output Log", "Set Include Crash Reporter to false"]
+        answer_index: 1
+        explain: "The page says to open Editor Preferences, go to Privacy > Bug Reports, and select Don't Send."
+    flavors:
+      _default: {why: "A crash report already tells you where it broke; you only have to open it."}
+      programming: {why: "The callstack and the log copy are the two things a teammate needs to fix a crash you cannot reproduce.", do: "Add FPlatformCrashContext::SetGameData with your current level name so it appears in the report."}
+      tech_art: {why: "Asset warnings in the log show up long before an artist sees a broken material.", do: "Find one warning about an asset in your log and fix its cause."}

@@ -543,3 +543,60 @@ Backup videos: none verified. Always `backup_url: TODO_URL` plus a `backup_searc
 | unreal-engine-behavior-tree-node-reference-services | Unreal Engine Behavior Tree Node Reference Services |
 | using-gameplay-abilities-in-unreal-engine | Using Gameplay Abilities |
 | using-gameplay-tags-in-unreal-engine | Using Gameplay Tags |
+
+## Programming electives (checked 2026-09-29)
+| Slug | Page |
+|---|---|
+| actor-communication-in-unreal-engine | Actor Communication |
+| actor-ticking-in-unreal-engine | Actor Ticking |
+| actors-in-unreal-engine | Actors |
+| array-nodes | Array Nodes |
+| asserts-in-unreal-engine | Asserts |
+| automation-system-user-guide-in-unreal-engine | Automation System User Guide |
+| automation-test-framework-in-unreal-engine | Automation Test Framework |
+| basic-components-in-unreal-engine | Basic Components |
+| binding-and-unbinding-events-in-unreal-engine | Binding And Unbinding Events |
+| blueprint-arrays | Blueprint Arrays |
+| blueprint-best-practices-in-unreal-engine | Blueprint Best Practices |
+| blueprint-debugging-example-in-unreal-engine | Blueprint Debugging Example |
+| blueprint-function-libraries-in-unreal-engine | Blueprint Function Libraries |
+| blueprint-macro-library-in-unreal-engine | Blueprint Macro Library |
+| blueprint-maps | Blueprint Maps |
+| blueprint-sets | Blueprint Sets |
+| build-operations-cooking-packaging-deploying-and-running-projects-in-unreal-engine | Build Operations Cooking Packaging Deploying And Running Projects |
+| calling-blueprints-in-the-unreal-editor | Calling Blueprints In The Unreal Editor |
+| calling-event-dispatchers-in-unreal-engine | Calling Event Dispatchers |
+| casting-quick-start-guide-in-unreal-engine | Casting Quick Start Guide |
+| compiler-results-in-the-blueprints-visual-scripting-editor-for-unreal-engine | Compiler Results In The Blueprints Visual Scripting Editor |
+| components-in-unreal-engine | Components |
+| components-window-in-unreal-engine | Components Window |
+| configuration-files-in-unreal-engine | Configuration Files |
+| console-settings-in-the-unreal-engine-project-settings | Console Settings In The Unreal Engine Project Settings |
+| console-variables-cplusplus-in-unreal-engine | Console Variables Cplusplus |
+| crash-reporting-in-unreal-engine | Crash Reporting |
+| creating-dispatcher-events-in-unreal-engine | Creating Dispatcher Events |
+| direct-actor-communication-quick-start-guide-in-unreal-engine | Direct Actor Communication Quick Start Guide |
+| event-dispatchers-and-delegates-quick-start-guide-in-unreal-engine | Event Dispatchers And Delegates Quick Start Guide |
+| event-dispatchers-in-unreal-engine | Event Dispatchers |
+| functional-testing-in-unreal-engine | Functional Testing |
+| functions-in-unreal-engine | Functions |
+| gameplay-debugger-settings-in-the-unreal-engine-project-settings | Gameplay Debugger Settings In The Unreal Engine Project Settings |
+| implementing-blueprint-interfaces-in-unreal-engine | Implementing Blueprint Interfaces |
+| interface-quick-start-guide-in-unreal-engine | Interface Quick Start Guide |
+| logging-in-unreal-engine | Logging |
+| macros-in-unreal-engine | Macros |
+| plugins-in-unreal-engine | Plugins |
+| preparing-unreal-engine-projects-for-release | Preparing Unreal Engine Projects For Release |
+| project-section-of-the-unreal-engine-project-settings | Project Section Of The Unreal Engine Project Settings |
+| project-settings-in-unreal-engine | Project Settings |
+| referencing-assets-in-unreal-engine | Referencing Assets |
+| source-control-in-unreal-engine | Source Control |
+| spawning-actors-in-unreal-engine | Spawning Actors |
+| toolbar-in-the-blueprints-visual-scripting-editor-for-unreal-engine | Toolbar In The Blueprints Visual Scripting Editor |
+| unreal-engine-actor-lifecycle | Unreal Engine Actor Lifecycle |
+| unreal-engine-console-variables-reference | Unreal Engine Console Variables Reference |
+| unreal-object-handling-in-unreal-engine | Unreal Object Handling |
+| using-perforce-as-source-control-for-unreal-engine | Using Perforce As Source Control |
+| using-source-control-in-the-unreal-editor | Using Source Control In The Unreal Editor |
+| using-the-gameplay-debugger-in-unreal-engine | Using The Gameplay Debugger |
+| visual-logger-in-unreal-engine | Visual Logger |
