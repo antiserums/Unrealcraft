@@ -75,7 +75,7 @@ Reading can't be observed by Discord, so reading is proven by the quiz.
 | 3–4 | any | mentor **or** two peer Approves (peers of rank ≥ quest rank) |
 | 5–6 | any | human mentor only. Senior/Lead promotions also need staff sign-off, plus 2 vouchers for Lead. |
 
-A capstone Pass triggers `check_promotion()`, which promotes only if XP ≥ threshold **and** every required quest and taster for the rank is done.
+A capstone Pass triggers `check_promotion()`, which promotes only if XP ≥ threshold **and** every required quest and taster for the rank is done **and** the member has finished the rank's tier count (`quests_to_leave` in majors.yaml: 30 Apprentice, 60 Adept, 120 Expert, 220 Master quests of that tier in their major, any they choose; capped at what exists).
 
 ## SQLite schema
 See `bot/db/schema.sql`. Tables: users, quests, submissions, unlocks, xp_log, medals, quest_progress, quiz_attempts, raids, review_actions, kv.

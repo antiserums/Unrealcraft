@@ -70,6 +70,7 @@ Then follow `docs/04-discord-setup-checklist.md` sections E–G.
 - The `/quest` picker order is: Orientation → Starter Quests → missing required taster → major-required at the current rank → 2 major electives + 1 adjacent.
 - Level designers are never gated on C++, and programmers are never gated on a hero lighting reel.
 - Verification: R0–1 use quiz + honor system, R2 needs a peer or mentor, R3–4 a mentor or two peers, R5–6 a human mentor only.
+- Leaving a rank needs the core path plus a tier count: 30 Apprentice, 60 Adept, 120 Expert, 220 Master quests (own major + shared required ones, member's choice). Set per rank as `quests_to_leave` in `curriculum/majors.yaml`.
 
 ## Adding quests
 Edit YAML, run `python tools/validate_curriculum.py --warnings`, then use `/admin reload-curriculum`. Only use slugs from
