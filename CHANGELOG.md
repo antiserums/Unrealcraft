@@ -14,6 +14,17 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.7.0 · 2026-09-29
+- Starter Quests are numbered **Q1–Q11** (were S1–S11). Your progress carried over.
+- Workshop forums are named for the majors: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics.
+- #foundations is now #starter-quests. The old #world-lighting, #materials, #blueprint and #characters-anim forums are gone.
+- Everyone can read every major forum after Orientation. You can post in #starter-quests and in the forums of the majors you picked.
+- Turn-ins are posted to #starter-quests (Starter Quests) or your major's forum.
+- Rank-ups now unlock the Blockout showcase tag (Rank 1), Pair Program voice (Rank 2) and the Critique Room plus your Specialty title (Rank 3).
+- **Send my work** form: a separate field for your Unreal version, clear instructions for what to write, and an upload box that says exactly what to upload (up to 4 files).
+- Removed the **I found it** button from #quest-board. Pressing **Continue your quest** there completes that Orientation step.
+- The #welcome button is now **Start Questing**.
+
 ## v0.6.1 · 2026-09-29
 - Channel names in quests and quizzes (like #welcome) are now clickable links.
 - S1 question 5 points to the server rules in #welcome.
