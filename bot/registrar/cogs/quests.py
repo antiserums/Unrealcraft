@@ -161,7 +161,9 @@ class Quests(commands.Cog):
 
     async def do_submit(self, itx: discord.Interaction, quest: str, proof: str,
                         attachment: discord.Attachment | None = None) -> None:
-        """Shared by /submit and the Send-my-work form."""
+        """Shared by /submit and the Send-my-work form. `attachment` may be one file or a list of files."""
+        atts = [a for a in (attachment if isinstance(attachment, list) else [attachment]) if a]
+        attachment = atts[0] if atts else None
         db = self.bot.db
         q = self.cat.quests.get(quest.upper())
         if not q:
@@ -207,7 +209,7 @@ class Quests(commands.Cog):
             await itx.response.send_message("Not yet:\n" + "\n".join(problems), ephemeral=True)
             return
 
-        payload = {"text": proof, "attachments": [attachment.url] if attachment else [],
+        payload = {"text": proof, "attachments": [a.url for a in atts],
                    "ue_version": u["ue_version"]}
         route = route_for(q.rank, q.raw.get("verify_type", "screenshot"))
         sid = await db.create_submission(itx.user.id, q.id, payload, route)
@@ -412,24 +414,58 @@ class SendWorkButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:se
             return
         if not await itx.client.get_cog("Quests").quest_board_only(itx, q):
             return
-        await itx.response.send_modal(SendWorkModal(q))
+        u = await itx.client.db.user(itx.user.id)
+        await itx.response.send_modal(SendWorkModal(q, u["ue_version"]))
+
+
+def upload_need(q) -> str | None:
+    """'image' / 'video' if the quest needs a file, else None."""
+    for it in checks.items(q):
+        if it.check and "attachment" in it.check:
+            return it.check["attachment"]
+    return "image" if q.raw.get("verify_type") == "screenshot" else None
 
 
 class SendWorkModal(discord.ui.Modal):
-    def __init__(self, q):
+    """Send my work: each field says exactly what to type or upload."""
+
+    def __init__(self, q, ue_version: str | None = None):
         super().__init__(title=f"Send your work: {q.id}"[:45])
         self.q = q
-        self.proof = discord.ui.TextInput(style=discord.TextStyle.paragraph, max_length=1500,
-                                          placeholder=(q.raw.get("done_when") or "Describe what you did.")[:100])
-        self.add_item(discord.ui.Label(text="What did you do?", description="Include your Unreal version",
-                                       component=self.proof))
-        self.file = discord.ui.FileUpload(required=False, max_values=1)
-        self.add_item(discord.ui.Label(text="Screenshot or clip", description="Needed for screenshot quests",
-                                       component=self.file))
+        self.version = discord.ui.TextInput(max_length=12, placeholder="For example: 5.8",
+                                            default=ue_version or None)
+        self.add_item(discord.ui.Label(text="Your Unreal version",
+                                       description="Type the version you used, like 5.8.", component=self.version))
+        need = upload_need(q)
+        what = (q.raw.get("done_when") or "").rstrip(".")
+        if need:                               # the file is the proof; the text is a short description
+            proof_desc = "Short is fine. Write it in your own words."
+            placeholder = "Describe what you built or changed in 1-3 sentences."
+        else:                                  # writeup quests: the text IS the answer, so show the question
+            ask = what.split(":", 1)[1].strip() if ":" in what else what
+            proof_desc = (f"Write: {ask}" if ask else "Write your answer in your own words.")[:100]
+            placeholder = "Write your answer here."
+        self.proof = discord.ui.TextInput(style=discord.TextStyle.paragraph, max_length=1500, placeholder=placeholder)
+        self.add_item(discord.ui.Label(text="What did you do?", description=proof_desc, component=self.proof))
+        if need:
+            label = "Upload a screenshot" if need == "image" else "Upload a video clip"
+            show = what
+            for prefix in ("Screenshot of ", "Screenshot: ", "Screenshots of ", "Short PIE clip or ", "Clip "):
+                if show.startswith(prefix):
+                    show = show[len(prefix):]
+                    break
+            desc = (f"Show: {show}" if show else "Required for this quest.")[:92] + " (max 4)"
+        else:
+            label, desc = "Optional: a screenshot or clip", "Not required for this quest."
+        self.need = need
+        self.file = discord.ui.FileUpload(required=bool(need), max_values=4)
+        self.add_item(discord.ui.Label(text=label, description=desc, component=self.file))
 
     async def on_submit(self, itx: discord.Interaction):
-        att = (self.file.values or [None])[0]
-        await itx.client.get_cog("Quests").do_submit(itx, self.q.id, str(self.proof.value), att)
+        version = str(self.version.value).strip()
+        if version:
+            await itx.client.db.set_user(itx.user.id, ue_version=version[:12])
+        await itx.client.get_cog("Quests").do_submit(itx, self.q.id, str(self.proof.value), list(self.file.values or []))
 
 
 class ReviewView(discord.ui.View):
