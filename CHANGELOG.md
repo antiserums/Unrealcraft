@@ -15,6 +15,14 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.3.2 · 2026-09-29 · Start your first quest
+One clear button to begin.
+
+### #welcome
+- The page now has one green button: **⚔️ Start your first quest**. It opens the rules quiz, which is your first quest.
+- After you pass, press **🧭 See my next steps** to see the rest of Orientation. The green button shows your steps from then on.
+- `/start` does the same thing as the button.
+
 ## v0.3.1 · 2026-09-29 · Clearer first step
 Small fixes to make the first step easier.
 
