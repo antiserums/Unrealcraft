@@ -1,0 +1,1905 @@
+# Unrealcraft — Gameplay Design major, all ranks. IDs GDQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: GDQ11
+    rank: 0
+    difficulty: novice
+    track: gameplay-design
+    subjects: [character-movement, tuning, blueprint]
+    required_for_majors: []
+    taster_for_majors: [gameplay_design]
+    adjacent_for: [level_design, animation]
+    required_spine: false
+    elective: true
+    title: "Tune the character: speed and jump"
+    time_min: 30
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-09-sprint-input-action-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+    checklist:
+      - "Create a Third Person template project. Open Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter."
+      - "In the Components panel select the Character Movement component. Write down the current Max Walk Speed."
+      - "Play. Then set Max Walk Speed to half, play again, then set it to double. Note how the level feels each time."
+      - "In the same Details panel search for 'Jump'. Change the jump velocity value and test the jump on the template stairs."
+      - "Pick the two values you like best. Write one line for each: what changed in the feel."
+      - "Optional: add a Float variable SprintSpeed and set Max Walk Speed from it on a key press, like the tutorial."
+    done_when: "Screenshot of the Character Movement details with your chosen speed and jump values, plus 2 lines on how each value changed the feel."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "Which component holds the Max Walk Speed of a Character Blueprint?"
+        choices: ["The Capsule component", "The Skeletal Mesh component", "The Camera component", "The Character Movement component"]
+        answer_index: 3
+        explain: "The tutorial drags the Character Movement (CharMoveComp) component into the graph and reads Max Walk Speed from it."
+      - q: "Why does the tutorial save Max Walk Speed into a DefaultMovementSpeed variable on Event BeginPlay?"
+        choices: ["So the character can return to that speed after sprinting", "Because Max Walk Speed cannot be read later", "To make the character faster at start", "Because BeginPlay runs every frame"]
+        answer_index: 0
+        explain: "Saving the default speed in a variable lets the character go back to it when the sprint action ends."
+      - q: "When does Event BeginPlay run?"
+        choices: ["Every frame", "Once, when the game starts", "Only when the player presses a key", "Every time the character jumps"]
+        answer_index: 1
+        explain: "The tutorial says Event BeginPlay executes once when the game starts."
+      - q: "The tutorial sets Max Walk Speed to Sprint Movement Speed on the Triggered pin. Which pin returns the default speed?"
+        choices: ["Started", "Ongoing", "Completed", "Canceled"]
+        answer_index: 2
+        explain: "Triggered means the key is pressed; Completed means the key was released, so the speed goes back to the default."
+      - q: "In the Third Person template, where is BP_ThirdPersonCharacter?"
+        choices: ["Content/Characters/Mannequins", "Content/LevelPrototyping", "Content/ThirdPerson/Blueprints", "Content/Input/Actions"]
+        answer_index: 2
+        explain: "The template page opens Content/ThirdPerson/Blueprints and double-clicks BP_ThirdPersonCharacter."
+    flavors:
+      _default: {why: "Speed and jump numbers decide how a level feels before any art exists."}
+      gameplay_design: {why: "Movement values are the first tuning knobs a designer owns.", do: "Write the speed you would use for a horror game and for a platformer, and say why they differ."}
+      level_design: {why: "Jump height and speed set the size of gaps and rooms you can build.", do: "Measure the longest gap the character can jump with your values and note it."}
+
+  - id: GDQ12
+    rank: 0
+    difficulty: novice
+    track: gameplay-design
+    subjects: [editor, play-in-editor, testing]
+    required_for_majors: []
+    taster_for_majors: [gameplay_design]
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: true
+    title: "Play In Editor, Simulate, Standalone"
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/play-in-editor-settings-in-unreal-engine"
+    checklist:
+      - "Open a Third Person template project. Click Play, click in the viewport, move around, then press Shift+F1 to get the mouse back."
+      - "Click Pause, then click Frame Skip a few times. Then click Eject and select an actor in the level."
+      - "Change one value on that actor, right-click it and choose Keep Simulation Changes. Stop with Esc and confirm the change stayed."
+      - "Press Alt+S to Simulate. Note that no player character spawns. Stop."
+      - "Open the Play options (vertical ellipsis) and run the level once as New Editor Window and once as Standalone Game."
+      - "Open the PIE console with the tilde key and type 'stat fps'."
+    done_when: "Screenshot of the editor during Simulate (no player character) and one line naming the play mode you would use to test a menu and why."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "What is the key difference between Play In Editor and Simulate In Editor?"
+        choices: ["Simulate is faster", "Play starts at the Player Start and gives you the player character; Simulate does not spawn a player or move the camera", "Simulate runs without physics", "Play cannot be paused"]
+        answer_index: 1
+        explain: "The page says playing always starts at the Player Start with control of the character, while simulating spawns no player and keeps the camera."
+      - q: "Which keyboard shortcut starts Simulate In Editor on Windows?"
+        choices: ["Alt + S", "Shift + F1", "Alt + P", "Ctrl + S"]
+        answer_index: 0
+        explain: "Simulate In Editor is in the Play drop-down or Alt + S (Option + S on macOS)."
+      - q: "During PIE you want the mouse cursor back for the editor. What do you press?"
+        choices: ["Esc", "Tilde (~)", "Shift + F1", "K"]
+        answer_index: 2
+        explain: "Shift + F1 gives mouse control back to the editor. Esc would stop the session."
+      - q: "You changed an actor while ejected during play. How do you keep that change after you stop?"
+        choices: ["Changes are always saved", "Press Ctrl + S during play", "Click Possess", "Right-click the actor and choose Keep Simulation Changes (or press K)"]
+        answer_index: 3
+        explain: "Changes made during play are not saved by default; Keep Simulation Changes (or K) keeps them."
+      - q: "Which Play Mode runs the game outside of the editor?"
+        choices: ["Selected Viewport", "New Editor Window (PIE)", "Standalone Game", "Simulate"]
+        answer_index: 2
+        explain: "Standalone Game launches the game in a standalone version outside the Editor. Selected Viewport is the default."
+    flavors:
+      _default: {why: "You will test hundreds of times; knowing the play modes saves hours."}
+      gameplay_design: {why: "Tuning happens while playing; Eject and Keep Simulation Changes let you tune live.", do: "Tune one value live with Eject, keep it, and note the before/after numbers."}
+      programming: {why: "Standalone and New Window catch bugs that the viewport hides.", do: "Run the same level in Standalone Game and note one difference you see."}
+
+  - id: GDQ13
+    rank: 0
+    difficulty: novice
+    track: gameplay-design
+    subjects: [gameplay-framework, game-mode, blueprint]
+    required_for_majors: []
+    taster_for_majors: [gameplay_design]
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: true
+    title: "Read the template's game loop"
+    time_min: 35
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-mode-and-game-state-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-game-mode-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-character-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+    checklist:
+      - "Open a Third Person template project. Go to Edit > Project Settings > Maps & Modes and read the Default GameMode."
+      - "Expand Selected GameMode and note the Default Pawn Class and Player Controller Class."
+      - "Open the World Settings tab and find GameMode Override. Note if it is set."
+      - "Create a Blueprint Class with parent Game Mode Base, name it GM_Toy. Set its Default Pawn Class to BP_ThirdPersonCharacter."
+      - "Set GM_Toy as the GameMode Override in World Settings. Play to confirm the character still spawns."
+      - "Draw a small diagram: Level (World Settings) -> Game Mode -> Pawn/Character and Player Controller."
+    done_when: "Screenshot of World Settings with GM_Toy as GameMode Override plus your diagram (photo or image)."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "Which class defines the rules of the game, such as how players enter and whether the game can pause?"
+        choices: ["Game State", "Player State", "Game Mode", "Player Controller"]
+        answer_index: 2
+        explain: "The page says the rules of the game make up a Game Mode; the Game State stores and syncs rule-related information."
+      - q: "What does a Game Mode Blueprint let you set?"
+        choices: ["Only the level name", "Default Pawn Class, HUD Class, Player Controller Class, Game State Class and more", "The project's rendering settings", "Only the Player Start location"]
+        answer_index: 1
+        explain: "Game Mode Blueprints set defaults like Default Pawn Class, HUD, Player Controller, Spectator, Game State and Player State classes."
+      - q: "The project has a Default GameMode. How do you use a different one in only one level?"
+        choices: ["Set GameMode Override in that level's World Settings", "Rename the level", "Change the Default GameMode in Project Settings", "Add a second Player Start"]
+        answer_index: 0
+        explain: "World Settings > GameMode Override changes the Game Mode for a single map, with higher priority than the project default."
+      - q: "In a multiplayer game, where does the Game Mode instance exist?"
+        choices: ["On every client", "Only on the first client", "In the Game Instance", "Only on the server"]
+        answer_index: 3
+        explain: "The Game Mode is not replicated; it exists only on the server. The Game State is replicated to all clients."
+      - q: "What is the main job of the PlayerController in the character setup workflow?"
+        choices: ["To hold the Skeletal Mesh", "To parse player input into events that drive the character", "To play animations", "To store the level geometry"]
+        answer_index: 1
+        explain: "The Setting Up a Character page says the PlayerController turns inputs into events, and the Character class turns those events into movement."
+    flavors:
+      _default: {why: "Every mechanic you add plugs into these few classes."}
+      gameplay_design: {why: "Knowing who owns rules, input and body tells you where each idea goes.", do: "Write where a 'score' variable should live and why: Game Mode, Game State or Character."}
+      programming: {why: "Game Mode Base is the C++ entry point for rules.", do: "Note which Game Mode functions from the page you could override in Blueprint."}
+
+  - id: GDQ14
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [blueprint, variables, tuning]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: false
+    title: "Variables designers can tune"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-02-create-a-key-in-unreal-engine"
+    checklist:
+      - "Create an Actor Blueprint BP_Lamp with a Point Light component and a Cube mesh."
+      - "Add a Float variable Intensity and a Linear Color variable LightColor. Click the eye icon to make both Instance Editable."
+      - "Set Category to 'Tuning' on both. Write a Tooltip for each. Check that the eye turns green."
+      - "In the Construction Script, set the light's intensity and color from the two variables."
+      - "Select Intensity and set a Slider Range (for example 0 to 5000) in the Details panel."
+      - "Place three BP_Lamp instances in a level and give each a different Intensity and color from the Details panel."
+      - "Add a Boolean StartOn with Expose on Spawn enabled. Compile and save."
+    done_when: "Screenshot of a placed BP_Lamp instance's Details panel showing the 'Tuning' category with your two variables and a tooltip visible."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "What does the closed eye icon next to a variable mean?"
+        choices: ["The variable is private and cannot be edited on instances", "The variable is hidden from the graph", "The variable is an array", "The variable is deprecated"]
+        answer_index: 0
+        explain: "By default the eye is closed (private). Opening it (or checking Instance Editable) makes the variable public and editable on instances."
+      - q: "After you make a variable public and add a Tooltip, what happens to the eye icon?"
+        choices: ["It disappears", "It turns from yellow to green", "It turns red", "It closes again"]
+        answer_index: 1
+        explain: "The page says the eye changes from yellow to green to show a Tooltip has been written."
+      - q: "What does Expose on Spawn do?"
+        choices: ["Makes the variable replicate", "Saves the variable to disk", "Makes the variable read-only", "Shows the variable as a pin on the Spawn Actor from Class node"]
+        answer_index: 3
+        explain: "With Expose on Spawn, the value can be set on the Spawn Actor from Class node when the Blueprint is spawned."
+      - q: "What does the Category property control?"
+        choices: ["The variable's type", "Where the variable appears in Class Defaults, My Blueprint and the Details tab", "Whether the variable can be replicated", "The default value"]
+        answer_index: 1
+        explain: "Category decides where the variable is grouped in Class Defaults, the My Blueprint tab and the Blueprint's Details tab."
+      - q: "You drag a variable from My Blueprint into the graph while holding Alt. What is created?"
+        choices: ["A Get node", "A Branch node", "A comment", "A Set node"]
+        answer_index: 3
+        explain: "Ctrl-drag creates a Get node and Alt-drag creates a Set node."
+      - q: "Which variable type should hold text that the player will read and that may be translated?"
+        choices: ["String", "Name", "Text", "Byte"]
+        answer_index: 2
+        explain: "The types table says Text is for text displayed to users that you want to localize; String is a plain group of characters."
+    flavors:
+      _default: {why: "A value only counts as tunable when someone can change it without opening the graph."}
+      gameplay_design: {why: "Exposed, categorized, documented variables are how you hand tuning to others.", do: "Add a second category 'Debug' with one Boolean and explain why it is separate."}
+      level_design: {why: "Per-instance values let one Blueprint serve many places in a level.", do: "Place 5 instances and tune each one differently in the Details panel."}
+      tech_art: {why: "Construction Script plus exposed variables is the base of every art tool.", do: "Drive the cube's scale from a third exposed Float."}
+
+  - id: GDQ15
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [blueprint, flow-control]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "Flow control: Branch, Gate, DoOnce, FlipFlop"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/flow-control-in-unreal-engine"
+    backup_url: null
+    checklist:
+      - "Create BP_Switch: a Box Collision and a Cube mesh. Add On Component Begin Overlap for the box."
+      - "Overlap -> FlipFlop: A sets the cube material to red, B sets it to blue. Play and walk in and out."
+      - "Replace the FlipFlop with DoOnce. Add a second Box Collision named ResetZone whose overlap goes into Reset."
+      - "Add a Branch that checks a Boolean IsPowered before the DoOnce. Make IsPowered Instance Editable."
+      - "Add a Gate: Event Tick -> Enter, ResetZone overlap -> Open, main overlap -> Close. Exit -> Print String 'tick'."
+      - "Use a Sequence to print 'A' then 'B' from one overlap and watch the order in the log."
+    done_when: "Screenshot of your BP_Switch event graph showing Branch, DoOnce (with Reset), FlipFlop and Gate all wired, plus one sentence on what each does."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "A DoOnce node has fired. What must happen before it fires again?"
+        choices: ["Nothing, it fires on every call", "An execution pulse must go into its Reset input", "The Blueprint must be recompiled", "The Completed pin must be connected"]
+        answer_index: 1
+        explain: "DoOnce fires once, then stops all outgoing execution until Reset receives a pulse. It equals DoN with N = 1."
+      - q: "A FlipFlop is triggered five times. Which output fires on the fifth call?"
+        choices: ["A", "B", "Both", "Neither"]
+        answer_index: 0
+        explain: "A fires on the first and every odd call, B on every even call. The fifth call is odd, so A."
+      - q: "A Gate is closed and pulses keep hitting Enter. What comes out of Exit?"
+        choices: ["Every pulse", "One pulse", "Nothing", "A False value"]
+        answer_index: 2
+        explain: "When the gate is closed the Exit pin is nonfunctional; only an open gate passes pulses from Enter to Exit."
+      - q: "What does the Toggle input on a Gate do?"
+        choices: ["Resets the gate", "Sends one pulse through", "Deletes the gate", "Reverses the current state: open becomes closed and closed becomes open"]
+        answer_index: 3
+        explain: "Toggle reverses the current state of the gate."
+      - q: "You connect three nodes to a Sequence node. How are they called?"
+        choices: ["In order, with a one-frame delay between each", "In order, with no delay, so they seem to happen at the same time", "In random order", "Only the first is called"]
+        answer_index: 1
+        explain: "Sequence calls all outputs in order without any delay, so to a user they appear simultaneous."
+      - q: "Why should you be careful with a ForLoop that runs many thousands of iterations?"
+        choices: ["Loop iterations happen between frames, so large loops can hurt performance", "ForLoop can only count to 100", "It resets the Blueprint", "It only runs in Simulate mode"]
+        answer_index: 0
+        explain: "The page warns that loop iterations take place between frames, so large loops may incur a performance hit."
+    flavors:
+      _default: {why: "These four nodes are the grammar of most gameplay logic."}
+      gameplay_design: {why: "Most mechanics are gates and one-time triggers dressed up.", do: "Describe one real game moment for each of the four nodes."}
+      programming: {why: "Knowing the node behavior avoids re-writing them as custom logic.", do: "Note which of the nodes are macros and open one to see inside."}
+      level_design: {why: "Doors, traps and checkpoints are DoOnce and Gate patterns.", do: "Build a door that opens once and can be reset by a lever."}
+
+  - id: GDQ16
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [blueprint, timers]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming]
+    required_spine: false
+    elective: false
+    title: "Timers and delays"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-timers-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/Time/SetTimerbyEvent"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/FlowControl/Delay"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/Time/ClearandInvalidateTimerbyHandle"
+    checklist:
+      - "Create BP_Spawner (Actor). On Begin Play use a Delay of 2.0 then Print String 'ready'."
+      - "Add a Custom Event Tick2. Use Set Timer by Event with Time 1.0 and Looping on, calling Tick2. Tick2 prints a counter."
+      - "Promote the timer's Return Value to a variable TimerHandle."
+      - "Add a Box Collision. On overlap, call Clear and Invalidate Timer by Handle with TimerHandle. Confirm the counter stops."
+      - "Set Initial Start Delay to 3.0 and watch when the first print appears."
+      - "Try calling the Delay twice quickly from a key press and note what happens the second time."
+    done_when: "Screenshot of the graph with Delay, Set Timer by Event (looping) and Clear and Invalidate Timer by Handle wired, plus a screenshot of the on-screen counter."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "A Delay node is already counting down and the same node is called again. What happens?"
+        choices: ["The delay restarts", "The second call is ignored", "Two delays run in parallel", "The Blueprint errors"]
+        answer_index: 1
+        explain: "The Delay node doc says calling it again while it is counting down is ignored."
+      - q: "On Set Timer by Event, what does Looping = true do?"
+        choices: ["Runs the event once after Time seconds", "Runs the event every frame", "Pauses the timer", "Keeps executing the event every Time seconds"]
+        answer_index: 3
+        explain: "Looping true keeps executing the delegate every Time seconds; false executes it only once."
+      - q: "What does Set Timer by Event return?"
+        choices: ["A Boolean", "The elapsed time", "A timer handle to pass to other timer functions", "Nothing"]
+        answer_index: 2
+        explain: "The Return Value is the timer handle used to manipulate this timer, for example to clear it."
+      - q: "You call Set Timer with a Time of 0 on an existing timer. What is the effect?"
+        choices: ["The timer fires immediately every frame", "The timer is cleared", "The timer pauses", "The time defaults to 1 second"]
+        answer_index: 1
+        explain: "Setting a timer to <= 0 seconds clears it if it is set; the Gameplay Timers page says the same for a rate of zero."
+      - q: "An actor with a running timer is destroyed before the timer fires. What happens to the timer?"
+        choices: ["It is canceled automatically and the handle becomes invalid", "It fires anyway on the Game Mode", "It crashes the game", "It restarts on the next actor"]
+        answer_index: 0
+        explain: "Timers are canceled automatically if the Object they would be called on is destroyed before the time is up."
+      - q: "What happens to the elapsed and remaining time when a timer is paused?"
+        choices: ["Both reset to zero", "Remaining time keeps counting down", "Elapsed time doubles", "They stay the same until the timer is unpaused"]
+        answer_index: 3
+        explain: "PauseTimer stops the function call but the elapsed and remaining times stay the same while paused."
+    flavors:
+      _default: {why: "Cooldowns, waves, respawns and power-ups are all timers."}
+      gameplay_design: {why: "Timer numbers are tuning: cooldown lengths change the pace of play.", do: "Expose the Time value as an Instance Editable Float and tune it in the level."}
+      programming: {why: "Timers replace Tick polling and are cheaper.", do: "Read the C++ example and note which Blueprint node maps to SetTimer's Looping and first delay."}
+
+  - id: GDQ17
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [blueprint, collision, pickup]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: false
+    title: "A pickup that changes a value"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-02-create-a-key-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/quick-start-guide-for-blueprints-visual-scripting-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/DestroyActor"
+    checklist:
+      - "Create an Actor Blueprint BP_Coin. Add a Capsule Collision, then add a Sphere mesh as its child. Set the mesh Collision Presets to NoCollision."
+      - "Add a Rotating Movement component so the coin spins. Add an Integer variable Value = 1, Instance Editable."
+      - "Open BP_ThirdPersonCharacter and add an Integer variable Score."
+      - "In BP_Coin, right-click the Capsule and Add Event > On Component Begin Overlap."
+      - "From Other Actor, Cast to BP_ThirdPersonCharacter. On success, Set Score = Score + Value on the character."
+      - "Print String the new Score, then Delay 0.2, then Destroy Actor (target self)."
+      - "Place 5 coins in the level, give one a Value of 5, play and collect them all."
+    done_when: "Screenshot of the BP_Coin event graph and a screenshot of the on-screen Score after collecting all coins (should be 9 if you used 4x1 and 1x5)."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "How does the tutorial add an overlap event for the Capsule component?"
+        choices: ["Right-click the component in the Components panel and choose Add Event > Add OnComponentBeginOverlap", "Add a Tick event and check distance", "Use Event BeginPlay", "Drag the component into the level"]
+        answer_index: 0
+        explain: "The event belongs to the collision component, so you add it from the component's Add Event menu."
+      - q: "Which pin of On Component Begin Overlap tells you who touched the pickup?"
+        choices: ["Target", "Other Actor", "Sweep Result", "Overlapped Component"]
+        answer_index: 1
+        explain: "The overlapping actor that triggered the event is passed through the Other Actor pin."
+      - q: "Why does the tutorial set the key mesh to NoCollision and use a Capsule for collision instead?"
+        choices: ["Meshes cannot have collision", "Capsules are the only shape that fires overlap events", "To make the key invisible", "A simple shape gives better detection and performance and stops the player bouncing off the mesh"]
+        answer_index: 3
+        explain: "A collision shape evens out complex geometry, improves performance, and the player collects the key without bouncing off the mesh."
+      - q: "Why is there a short Delay before Destroy Actor in the key graph?"
+        choices: ["Destroy Actor needs a Delay to work", "So the key disappears after a short moment and cannot be picked up again", "To let the key fall to the floor", "Delay is required after every Branch"]
+        answer_index: 1
+        explain: "The tutorial says the key should disappear after a short delay so it cannot be picked up again."
+      - q: "In the Blueprints Quick Start, why is Cast to Character used before Launch Character?"
+        choices: ["Launch Character only works on Characters, and casting checks the Pawn is one", "Casting makes the character faster", "Cast is needed for every node", "To find the Player Start"]
+        answer_index: 0
+        explain: "Launch Character works only on Characters, so the Pawn is cast to Character first; the cast succeeds only if it is one."
+      - q: "What is the Target of the Destroy Actor node when the pickup should remove itself?"
+        choices: ["The player", "The Game Mode", "Self", "The Level"]
+        answer_index: 2
+        explain: "The tutorial sets the Destroy Actor target to self so the key actor removes itself from the level."
+    flavors:
+      _default: {why: "Overlap, change a number, remove the actor: the smallest complete mechanic."}
+      gameplay_design: {why: "Almost every collectible, trigger and power-up is this pattern.", do: "Make a second pickup that subtracts instead and think about where you would place it."}
+      level_design: {why: "Pickups guide the player through a space.", do: "Place your coins to draw the player along one path and explain the trail."}
+      programming: {why: "Casting to the player class is the first place designers create tight coupling.", do: "Note one way to avoid the cast (the tutorial uses a Blueprint Interface)."}
+
+  - id: GDQ18
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [umg, hud, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [tech_art, programming]
+    required_spine: false
+    elective: false
+    title: "Show one number on screen"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-04-player-hud-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/umg-ui-designer-quick-start-guide-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/property-binding-for-umg-in-unreal-engine"
+    checklist:
+      - "Create a Widget Blueprint (parent User Widget) named WBP_Score. Add a Canvas Panel as the root."
+      - "Add a Horizontal Box anchored top-left with Position 20,20. Inside add two Text widgets: 'Score :' and one named txtScore."
+      - "In the Graph, on Event Construct get the player character, cast to BP_ThirdPersonCharacter, and promote it to a variable MyCharacter."
+      - "In the Designer, select txtScore. Under Text click Bind > Create Binding and return MyCharacter's Score."
+      - "In BP_ThirdPersonCharacter, on Event BeginPlay: Create Widget (WBP_Score), promote to variable HUD, then Add to Viewport."
+      - "Play and collect the coins from GDQ17. The number must update on screen."
+    done_when: "Screenshot of the game with the Score number visible and changed from its start value, plus the binding function graph."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which parent class does the tutorial pick when creating the HUD Widget Blueprint?"
+        choices: ["Actor", "User Widget", "Game Mode Base", "Player Controller"]
+        answer_index: 1
+        explain: "In the Pick Parent Class window the tutorial selects User Widget."
+      - q: "What is special about panel widgets like Canvas Panel and Vertical Box?"
+        choices: ["They render an image", "They can only hold one child", "They are only for menus", "They display nothing themselves; they control layout and position of child widgets"]
+        answer_index: 3
+        explain: "Panel widgets do not display anything on screen; they are containers that control layout of widgets inside them."
+      - q: "Why does the tutorial use a Canvas Panel for a HUD?"
+        choices: ["It uses anchors to keep widgets in place when the screen size changes", "It is the only root widget allowed", "It is faster than other panels", "It supports animations"]
+        answer_index: 0
+        explain: "Canvas panels use anchors to place widgets exactly, so everything stays in place if the screen changes size."
+      - q: "Which two nodes put a widget on screen from the character Blueprint?"
+        choices: ["Spawn Actor and Possess", "Create Widget and Add to Viewport", "Open Level and Set Text", "Get Player Controller and Set Input Mode"]
+        answer_index: 1
+        explain: "Create Widget makes an instance of the widget blueprint and Add to Viewport displays it on screen."
+      - q: "In the UMG Quick Start, how is a Text widget kept in sync with the character's Ammo value?"
+        choices: ["By clicking Bind next to Text, Create Binding, and returning the character's variable", "By setting the text every frame in Tick", "By making the widget a child of the character", "By using a Data Table"]
+        answer_index: 0
+        explain: "The guide binds the text's value with Bind > Create Binding and returns Get Ammo from the character reference."
+      - q: "You bound a widget property and then call its Set function directly. What happens?"
+        choices: ["Both work together", "The Set is ignored", "The widget is removed", "The binding is broken"]
+        answer_index: 3
+        explain: "The Property Binding page warns that calling Set directly on a bound property breaks the binding."
+    flavors:
+      _default: {why: "A number on screen is the fastest feedback loop for a mechanic."}
+      gameplay_design: {why: "Players tune themselves by what they see; the HUD shows your loop.", do: "Add a second text that shows coins remaining and say which number matters more."}
+      tech_art: {why: "Bindings and layout panels are the base of every UI skin.", do: "Add a Background Blur behind the text and note the GPU cost warning from the page."}
+      programming: {why: "Bindings run every frame; know the cost before you scale up.", do: "Replace the binding with a SetText call from the character and note the trade-off."}
+
+  - id: GDQ19
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [capstone, graybox, blueprint, umg]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [level_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: "Toy space"
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-01-project-setup-and-level-blockout-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-02-create-a-key-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-04-player-hud-in-unreal-engine"
+    checklist:
+      - "Pick ONE player verb (jump, dash, collect, push...). Sketch a node map on paper: 3 to 5 spaces and what the verb does in each."
+      - "Graybox one room in a new level with basic shapes only (no art). Every space must use the verb."
+      - "Build one actor BP_Toy_* for the verb with at least one Instance Editable Float in a 'Tuning' category with a tooltip (GDQ14)."
+      - "Use at least one flow node (Branch, Gate, DoOnce or FlipFlop) and one timer or delay in its logic (GDQ15, GDQ16)."
+      - "Add a pickup or trigger that changes a variable (GDQ17) and show that number on screen with a widget (GDQ18)."
+      - "Tune the character's speed or jump for the room (GDQ11). Test in PIE and once in Standalone (GDQ12)."
+      - "Record a 30 to 60 second video of one full run and write 5 lines: verb, tunable value, what you changed after testing."
+    done_when: "A mentor session with: the video, your paper node map, the tuning variable in the Details panel, and the 5-line note."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "One verb, one room, one number: the smallest thing that is still a game."}
+      gameplay_design: {why: "This is the loop you will repeat for every mechanic in your career.", do: "Bring two tuning values you tried and rejected, and say why."}
+      level_design: {why: "A room built around a verb teaches how space and mechanic shape each other.", do: "Show where scale, verticality or guiding lines push the player to use the verb."}
+
+  - id: GDQ20
+    rank: 1
+    difficulty: apprentice
+    track: gameplay-design
+    subjects: [blueprint, debugging]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: true
+    title: "Blueprint debugging"
+    time_min: 40
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugger-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/debug-panel-in-the-blueprints-visual-scripting-editor-for-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Development/PrintString"
+    checklist:
+      - "Open BP_Coin from GDQ17. Right-click the Set Score node and Add Breakpoint. Play and walk into a coin."
+      - "While paused, hover the Score pin and read its value. Then right-click the pin and choose Watch this value."
+      - "Open Tools > Blueprint Debugger. Look at the Call Stack and the Execution Trace, then resume."
+      - "Right-click the breakpoint and Disable Breakpoint. Confirm the outline octagon. Play again: no pause."
+      - "Add a Print String with a Key named 'score' and Duration 5. Collect several coins and note that the message replaces itself."
+      - "Change Print to Log to false on one Print String and check the Output Log."
+    done_when: "Screenshot of the editor paused on your breakpoint with the red arrow and a watched value visible, plus a screenshot of the Blueprint Debugger window."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "How does an active breakpoint look on a node?"
+        choices: ["A solid red octagon in the upper-left corner", "A yellow triangle", "A blue circle", "A red outline around the whole node"]
+        answer_index: 0
+        explain: "An active breakpoint is a solid red octagon; a disabled one is an outline of a red octagon."
+      - q: "A breakpoint shows as a yellow icon with an exclamation point. What does that mean?"
+        choices: ["It is disabled", "It is invalid and will never be reached; recompiling may fix it", "It has been hit", "It is shared with other developers"]
+        answer_index: 1
+        explain: "A yellow exclamation icon marks an invalid breakpoint location; compiling the Blueprint can sometimes resolve it."
+      - q: "You watch a pin on a node that has not executed yet. What do you see?"
+        choices: ["The default value", "Zero", "A message saying no debug information is available", "The last saved value"]
+        answer_index: 2
+        explain: "Pin values only update when the node executes at least once; before that a message is shown instead of a value."
+      - q: "Are your breakpoints shared with teammates who open the same project?"
+        choices: ["Yes, they are saved in the Blueprint asset", "No, they are saved in your project .ini files and not duplicated for others", "Only if the Blueprint is compiled", "Only in Standalone mode"]
+        answer_index: 1
+        explain: "Breakpoints persist between editor sessions in your .ini files but are not duplicated for other developers."
+      - q: "Which function is at the top of the Call Stack when a breakpoint is hit?"
+        choices: ["Event BeginPlay", "The Level Blueprint", "The oldest function", "The function currently executing"]
+        answer_index: 3
+        explain: "The currently executing function is listed at the top, with calling functions below it."
+      - q: "On Print String, what does the Key input do?"
+        choices: ["Makes the message replace any on-screen message with the same key", "Sets the text color", "Sends the message to a file", "Delays the message"]
+        answer_index: 0
+        explain: "If a non-empty Key is given, the message replaces existing on-screen messages that have the same key."
+    flavors:
+      _default: {why: "Finding out why a value is wrong is half of tuning."}
+      gameplay_design: {why: "Watching values live shows you what the player really triggers.", do: "Watch your tunable variable during play and note one value you did not expect."}
+      programming: {why: "The Blueprint Call Stack and Execution Trace mirror the C++ debugger.", do: "Find where native code (BeginPlay) appears in the Call Stack."}
+      tech_art: {why: "Construction Script bugs are easier to see with watches.", do: "Put a watch on a pin inside a Construction Script and move the actor."}
+
+  - id: GDQ21
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [gameplay-framework, controller, pawn, character, possession]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "Controller, Pawn, Character"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-quick-reference-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/controllers-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pawn-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/characters-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/player-controllers-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-controllers-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Pawn/Possess"
+    checklist:
+      - "Read the Gameplay Framework overview and the Controllers, Pawn, Characters and Player Controllers pages."
+      - "In a Third Person project, make BP_Drone from the Pawn class (not Character). Add a Static Mesh and a Camera."
+      - "Make BP_MyPlayerController from Player Controller. Add an Input Action that calls Possess on BP_Drone and one that possesses the player Character again."
+      - "Set BP_MyPlayerController as the Player Controller Class in your Game Mode."
+      - "Place a BP_Drone in the level. In Play In Editor, switch control between the Character and the Drone."
+      - "Add a Score integer to BP_MyPlayerController. Add a Score integer to the Character too. Switch pawns and watch which value survives."
+      - "Write 5 lines: which class should own input, score and the mesh in your game, and why."
+    done_when: "A screenshot of the game after you possessed BP_Drone (the drone camera is active), plus your 5-line note on who owns input, score and the mesh."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "A Controller takes control of a Pawn with which function?"
+        choices: ["Attach To", "Set Owner", "Spawn Actor", "Possess"]
+        answer_index: 3
+        explain: "Controllers take control of a Pawn with Possess and give it up with Unpossess."
+      - q: "By default, how many Pawns can one Controller control at the same time?"
+        choices: ["Any number", "Two", "One", "One per player state"]
+        answer_index: 2
+        explain: "By default there is a one-to-one relationship: each Controller controls only one Pawn at a time. Games like RTS may change this."
+      - q: "You spawn a Pawn during gameplay. What happens?"
+        choices: ["The nearest Player Controller possesses it", "It is not possessed by any Controller automatically", "The Game Mode possesses it", "A new AI Controller is always created for it"]
+        answer_index: 1
+        explain: "The Pawn page says Pawns spawned during gameplay are not automatically possessed by a Controller."
+      - q: "In a deathmatch game the player dies and respawns. Where should the score live so it does not reset?"
+        choices: ["On the Pawn", "On the Skeletal Mesh Component", "On the Player Controller", "On the Camera"]
+        answer_index: 2
+        explain: "The Player Controller persists through the game while the Pawn can be transient. A new Pawn is created on respawn, so score on the Pawn would reset."
+      - q: "Which three components make a Character different from a plain Pawn?"
+        choices: ["Audio, Light and Camera components", "Character Movement, Capsule and Skeletal Mesh components", "Static Mesh, Spring Arm and Camera components", "Box collision, Timeline and Text Render components"]
+        answer_index: 1
+        explain: "The Characters page says the Pawn class is extended into Character by adding a CharacterMovementComponent, a CapsuleComponent and a SkeletalMeshComponent."
+      - q: "Can you add a Character Movement Component to a Pawn that is not a Character?"
+        choices: ["Yes, on any Actor", "Yes, but only on a Default Pawn", "No, it is specific to Characters and cannot be used by other classes", "Only in C++"]
+        answer_index: 2
+        explain: "The docs say the CharacterMovementComponent is specific to Characters and cannot be implemented by any other class."
+      - q: "What movement style does the Default Pawn's movement component use?"
+        choices: ["Walking with gravity", "No-gravity flying", "Vehicle wheels", "Rigid body physics"]
+        answer_index: 1
+        explain: "The DefaultPawnMovementComponent uses a no-gravity, flying style with MaxSpeed, Acceleration and Deceleration values."
+      - q: "When does the documentation say it is better to handle input in the Player Controller instead of the Pawn?"
+        choices: ["Always; the Pawn cannot receive input", "Only for AI-controlled pawns", "When needs are complex, such as several players on one client or changing characters at runtime", "Only when using Enhanced Input"]
+        answer_index: 2
+        explain: "Simple cases can handle input in the Pawn. For complex needs like multiple players on one client or changing characters at runtime, the Player Controller decides and sends commands to the Pawn."
+    flavors:
+      _default: {why: "Every mechanic starts by choosing who owns the input, the body and the data."}
+      gameplay_design: {why: "Designers who know which class owns what can prototype pawn swaps, vehicles and respawns without fighting the framework.", do: "Add an AI Controller to a second BP_Drone and note what it does with no player input."}
+      programming: {why: "Possession and class ownership are the same rules you will meet in C++ and networking.", do: "Read the Possess node page and note that it only runs on the network authority."}
+
+  - id: GDQ22
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [damage, health, events, gameplay-statics]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "Damage and health"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage/ApplyDamage"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/AddEvent/Game/Damage/EventAnyDamage"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/AddEvent/Game/Damage/EventPointDamage"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage/ApplyRadialDamage"
+    checklist:
+      - "Read the Apply Damage, Event AnyDamage, Event PointDamage and Apply Radial Damage node pages."
+      - "Make BP_Target from Actor with a Static Mesh. Add a float Health = 100 and a float MaxHealth = 100."
+      - "In BP_Target add Event AnyDamage. Subtract Damage from Health. Print Health. When Health <= 0, play a sound or effect and Destroy Actor."
+      - "Make BP_Hazard from Actor with a Box Collision. On overlap, call Apply Damage on the other actor with Base Damage 25. Set Damage Causer to Self."
+      - "Make BP_Bomb: on overlap with the player, call Apply Radial Damage with Base Damage 50 and Damage Radius 400 at its location."
+      - "Place 3 BP_Targets around BP_Bomb, one behind a wall. Play and check which targets take damage."
+      - "Write 3 lines: what Event Instigator and Damage Causer mean, and which one you passed."
+    done_when: "A screenshot with the Print String health values on screen after the bomb goes off, showing at least one target destroyed and one behind a wall still alive, plus your 3-line note."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Apply Damage node return?"
+        choices: ["The actor that was hit", "The actual damage that ended up being applied", "The new health of the actor", "True if the actor died"]
+        answer_index: 1
+        explain: "Apply Damage returns a float: the actual damage that ended up being applied to the actor."
+      - q: "On Apply Damage, what type of object is the Event Instigator?"
+        choices: ["The Controller responsible for the damage", "The actor that exploded", "The Damage Type class", "The Static Mesh that was hit"]
+        answer_index: 0
+        explain: "Event Instigator is the Controller responsible for causing the damage, such as the player who shot the weapon. Damage Causer is the actor, such as the grenade."
+      - q: "Where does the Event AnyDamage event run in a networked game?"
+        choices: ["On every client", "Only on the owning client", "Only on the server (authority)", "On the client that caused the damage"]
+        answer_index: 2
+        explain: "The node page says Authority Only: this event only fires on the server."
+      - q: "Which output does Event PointDamage have that Event AnyDamage does not?"
+        choices: ["Damage", "Damage Type", "Instigated By", "Hit Location and Bone Name"]
+        answer_index: 3
+        explain: "PointDamage adds hit details such as Hit Location, Hit Normal, Hit Component, Bone Name and Shot from Direction. AnyDamage only gives Damage, Damage Type, Instigated By and Damage Causer."
+      - q: "A target stands behind a wall inside the radius of Apply Radial Damage. Why does it take no damage?"
+        choices: ["Radial damage only works on Characters", "Something blocks the trace on the Damage Prevention Channel between the origin and the victim", "The wall has more health", "Radial damage only hits one actor"]
+        answer_index: 1
+        explain: "Damage is not applied if something between the origin and the victim blocks traces on the Damage Prevention Channel. Radial damage also only hits components that block the Visibility channel."
+      - q: "Your bomb actor is also inside its own damage radius. What happens to it, per the Damage Causer description?"
+        choices: ["It damages itself", "It is not damaged and does not block damage", "It takes double damage", "It blocks all the damage"]
+        answer_index: 1
+        explain: "The Damage Causer actor will not be damaged and it will not block damage."
+      - q: "What does Apply Radial Damage return?"
+        choices: ["The number of actors hit", "The total damage dealt", "True if damage was applied to at least one actor", "The closest actor hit"]
+        answer_index: 2
+        explain: "Its Return Value is a boolean: true if damage was applied to at least one actor."
+      - q: "Which node tells you what kind of damage was done, for example fire or fall damage?"
+        choices: ["Damage Type Class input on Apply Damage", "Base Damage input", "Damaged Actor input", "Hit Info output"]
+        answer_index: 0
+        explain: "Damage Type Class is a class that describes the damage that was done. The same class comes back on the Damage Type output of the damage events."
+    flavors:
+      _default: {why: "Damage and health are the base of almost every action game loop."}
+      gameplay_design: {why: "Knowing the damage inputs lets you tune who gets credit, what type it is and how far it reaches.", do: "Add a second Damage Type class and make BP_Target take half damage from it."}
+      programming: {why: "The Blueprint damage events map directly to TakeDamage in C++.", do: "Note in your writeup which of these events run only on the server."}
+
+  - id: GDQ23
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [data-table, csv, struct, tuning, data-driven]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: false
+    title: "Data Tables for tuning"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-driven-gameplay-elements-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/GetDataTableRow"
+    checklist:
+      - "Read the Data Driven Gameplay Elements page and the Get Data Table Row node page."
+      - "Make a Structure asset S_EnemyStats with Health (float), Speed (float) and Damage (float)."
+      - "Make a Data Table DT_Enemies with row type S_EnemyStats. Add rows Grunt, Runner and Tank with different values."
+      - "Make BP_Enemy with a Name variable RowName (Instance Editable). On Begin Play, use Get Data Table Row with DT_Enemies and RowName. On Row Found, break the row and set Health, Speed and Damage."
+      - "On Row Not Found, print a red warning with the row name."
+      - "Place 3 BP_Enemy in the level with different RowName values. Play and print each one's Health."
+      - "Export DT_Enemies to CSV, change one value in a text editor, and reimport it. Confirm the value changed in the editor."
+    done_when: "A screenshot of DT_Enemies open in the editor next to the Play In Editor print output showing three different Health values, plus one line naming the value you changed by CSV reimport."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "In a CSV for a Data Table, what must the first column be named?"
+        choices: ["ID", "Row", "Name", "Key"]
+        answer_index: 2
+        explain: "The first column is expected to be named Name. It holds the names used to access each row in game."
+      - q: "What does the Get Data Table Row node do when the row name does not exist?"
+        choices: ["It returns a row with default values on the same pin", "It fires the Row Not Found execution pin", "It crashes the game", "It creates the row"]
+        answer_index: 1
+        explain: "The node has two execution outputs: Row Found and Row Not Found. Out Row is only valid when the row is found."
+      - q: "Which import option makes the importer skip columns in the CSV that the row struct does not have?"
+        choices: ["Ignore Missing Fields", "Import Key Field", "Ignore Extra Fields", "Reimport"]
+        answer_index: 2
+        explain: "Ignore Extra Fields ignores extra fields in the import data. Ignore Missing Fields is for fields the struct expects but the file lacks."
+      - q: "You changed the CSV on disk. How do you update the Data Table asset?"
+        choices: ["Delete the asset and import again", "Right-click the asset and choose Reimport; it uses the original file path", "Open the CSV in the editor", "Restart the editor"]
+        answer_index: 1
+        explain: "Right-click the Data Table and select Reimport. The original file path is used when reimporting."
+      - q: "What is the difference between a Curve Table and a Data Table?"
+        choices: ["Curve Tables only support floating point values and can be interpolated", "Curve Tables cannot be imported from CSV", "Data Tables can only hold text", "There is no difference"]
+        answer_index: 0
+        explain: "Data Curves and Curve Tables work like Data Tables but only support floating point types, and code can interpolate along a row."
+      - q: "Which interpolation type clamps to the previous known X value with no blending?"
+        choices: ["Linear", "Cubic", "Constant", "Rich"]
+        answer_index: 2
+        explain: "With Constant, Y values are not interpolated between data points; they clamp to the previous known value of X."
+      - q: "Why does the docs example use a soft reference (TSoftObjectPtr) for the icon in the row struct?"
+        choices: ["Soft references are faster to draw", "So the asset is lazy loaded instead of all icons loading when the table loads", "Hard references are not allowed in tables", "So the icon can be edited in Excel"]
+        answer_index: 1
+        explain: "A soft pointer is lazy loaded. If the field type were UTexture, all assets would be loaded whenever the Data Table was loaded."
+      - q: "Why should code not cache a row struct beyond the local scope of a function?"
+        choices: ["Rows are very large", "So a reimport of the table takes effect right away and no invalid pointers are used", "Blueprints cannot store structs", "Rows are deleted every frame"]
+        answer_index: 1
+        explain: "The page says returned structures should not be cached further than local scope, so that a refresh from reimport takes effect immediately and no invalid pointers are accessed."
+    flavors:
+      _default: {why: "Tuning in a table means changing numbers without touching graphs."}
+      gameplay_design: {why: "Data Tables are how a designer balances a game and ships changes without engineering time.", do: "Add a fourth row and a Description text column and show it in a Print String."}
+      programming: {why: "Row structs and FTableRowBase are the C++ side of the same system.", do: "Note which struct base class a C++ row type must inherit from."}
+
+  - id: GDQ24
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [gameplay-tags, tag-container, queries, project-settings]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, animation]
+    required_spine: false
+    elective: false
+    title: "Gameplay Tags"
+    time_min: 55
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/GameplayTags/HasTag"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/GameplayTags/MatchesTag"
+    checklist:
+      - "Read the Gameplay Tags page. Open Project Settings > Project > GameplayTags and click Manage Gameplay Tags."
+      - "Add tags: Character.Enemy.Grunt, Character.Enemy.Boss, Character.Player, Status.Stunned, Status.Invisible. Give each a short Comment."
+      - "In BP_Enemy add a Gameplay Tag Container variable Tags. Set it per instance: one Grunt, one Boss."
+      - "In BP_Hazard (or a new BP_Zone), on overlap use Has Tag with Character.Enemy and Exact Match off. Print Enemy or Not enemy."
+      - "Add a Gameplay Tag Query variable that matches Any of Status.Stunned or Status.Invisible. Use Does Container Match Tag Query before applying an effect."
+      - "Test: give one enemy Status.Stunned at runtime with Add Gameplay Tag and confirm the query changes result."
+    done_when: "A screenshot of the Gameplay Tag Manager with your tag tree, and a screenshot of the Play In Editor output showing Enemy for both Grunt and Boss when checking Character.Enemy."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "In the tag Event.Movement.Dash, which part is the broadest level of the hierarchy?"
+        choices: ["Dash", "Movement", "Event", "They are equal"]
+        answer_index: 2
+        explain: "Tags are separated by dots. Event is the broadest identifier and Dash is the most specific."
+      - q: "Which is NOT one of the three ways the docs list for defining Gameplay Tags?"
+        choices: ["Adding them in Project Settings", "Importing them from a Data Table", "Defining them in C++", "Typing them in a Blueprint string variable"]
+        answer_index: 3
+        explain: "Tags must be added to the tag dictionary through Project Settings, Data Tables (row type GameplayTagTableRow) or C++ macros. A plain string is not a defined tag."
+      - q: "You edited a tag .ini source file in a text editor. What must you do to see the change?"
+        choices: ["Nothing, it reloads at once", "Restart the editor", "Recompile the Blueprint", "Reimport the Data Table"]
+        answer_index: 1
+        explain: "You can edit the .ini files by hand, but you must restart the editor to load the changes. Data Table sources can be changed while the editor runs."
+      - q: "An object needs several tags at once. Which variable type do the docs recommend?"
+        choices: ["A Gameplay Tag Container", "An array of strings", "A single Gameplay Tag", "A Name variable"]
+        answer_index: 0
+        explain: "A Gameplay Tag Container stores multiple Gameplay Tags. You can use a single Gameplay Tag, but objects often have several tags."
+      - q: "The container holds Character.Enemy.Boss. Has Tag with Character.Enemy and Exact Match false returns what?"
+        choices: ["False, the tags are different", "True, because parent tags are included when Exact Match is off", "An error", "True only if the container is empty"]
+        answer_index: 1
+        explain: "If Exact Match is false the container includes its parent tags while matching, so Character.Enemy.Boss matches Character.Enemy."
+      - q: "You call Has Any Tags with an empty Gameplay Tag Container as input. What is returned?"
+        choices: ["True", "False", "It depends on the source set", "Null"]
+        answer_index: 1
+        explain: "Calling a conditional function with an empty container returns false, except for the All functions such as Has All Tags."
+      - q: "In a Gameplay Tag Query, what does All Tags Match return when the query is empty?"
+        choices: ["An error", "The same as No Tags Match: false", "False", "True"]
+        answer_index: 3
+        explain: "All Tags Match returns true for an empty query. No Tags Match also returns true for an empty query."
+      - q: "A restricted tag was made by another team. How can it be deleted?"
+        choices: ["Right-click it in the Gameplay Tag Manager", "Delete it from the Data Table", "Restart the editor", "Edit the .ini file directly; restricted tags cannot be deleted in the editor"]
+        answer_index: 3
+        explain: "Restricted tags cannot be deleted in the editor once created. You must edit the .ini file directly."
+    flavors:
+      _default: {why: "Tags replace piles of booleans with one clear, shared vocabulary."}
+      gameplay_design: {why: "A good tag tree is a design document the whole team reads and uses in graphs.", do: "Write the tag tree you would use for a small shooter: 5 branches, 3 levels deep."}
+      animation: {why: "Animation and ability systems use tags for states like Movement.Mode.Swimming.", do: "Add a Movement.Mode tag branch and print it when the character jumps."}
+
+  - id: GDQ25
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [core-loop, win-lose, hud, data-table, damage, capstone]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: "Core loop"
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-driven-gameplay-elements-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-mode-and-game-state-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage/ApplyDamage"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine"
+    checklist:
+      - "Pick one verb (shoot, dash, throw, push). Write a 5-line loop: goal, threat, reward, fail state, win state."
+      - "Build BP_Player (Character) with Health and the verb. Build BP_Enemy that uses Apply Damage on the player. Both use Event AnyDamage for health."
+      - "Make DT_Tuning with rows for at least 5 numbers: player Health, enemy Health, enemy Damage, enemy Speed, score to win. Read them with Get Data Table Row on Begin Play. No tuning numbers hard-coded in graphs."
+      - "Tag enemies with Gameplay Tags (Character.Enemy.*) and use Has Tag for at least one decision."
+      - "Make BP_CoreGameMode. Track score and lives. When score reaches the target, show WIN. When player Health <= 0, show LOSE. Add a restart input."
+      - "Make WBP_HUD showing Health, Score and the win target. Add it to viewport from the Player Controller."
+      - "Play 3 full runs, changing one DT_Tuning row between runs; write 1 line on how the feel changed. Then record a 60 to 90 second video: one loss, one win, and the Data Table open."
+    done_when: "A video link (60 to 90 s) showing a loss, a win, the HUD updating and DT_Tuning open, plus your 5-line loop note and the 1-line tuning note. A mentor reviews it."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A loop with win, lose and numbers you can tune is the smallest real game."}
+      gameplay_design: {why: "This is the portfolio piece: a loop you can hand to anyone and tune from a table.", do: "Add a second DT_Tuning row set (Easy and Hard) and pick one in the Game Mode."}
+      level_design: {why: "The loop decides what the space must do.", do: "Graybox one arena that makes the loop harder in the second half."}
+
+  - id: GDQ26
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [save-game, slots, persistence, gameplay-statics]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [programming]
+    required_spine: false
+    elective: true
+    title: "Save and load"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/saving-and-loading-your-game-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame/CreateSaveGameObject"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame/DoesSaveGameExist"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame/DeleteGameinSlot"
+    checklist:
+      - "Read Saving and Loading Your Game (Blueprint tab) and the Create Save Game Object, Does Save Game Exist and Delete Game in Slot node pages."
+      - "Make BP_MySaveGame with parent class SaveGame. Add PlayerName (String), Score (Integer) and LastLocation (Vector). Add SaveSlotName = Slot1 and UserIndex = 0 as defaults."
+      - "In your Player Controller, on key F5: Create Save Game Object (class BP_MySaveGame), set the three values from the game, then Async Save Game To Slot with the slot name and user index."
+      - "On key F9: Does Save Game Exist. If true, Load Game From Slot, cast to BP_MySaveGame, and move the player to LastLocation and set Score."
+      - "On key F8: Delete Game in Slot, then print the return value."
+      - "Test: move, save, move again, load. Then find the .sav file in your project's Saved/SaveGames folder."
+    done_when: "A screenshot of the Saved/SaveGames folder with your .sav file, and a screenshot in Play In Editor after loading, with the printed Score and location matching the saved values."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "Which parent class do you pick when you create the Blueprint for your save data?"
+        choices: ["Actor", "Game Instance", "SaveGame", "Player State"]
+        answer_index: 2
+        explain: "Create a new Blueprint Class, expand Custom Classes in the Pick Parent Class dialog and select SaveGame."
+      - q: "Why does Create Save Game Object not need a Cast To node after it?"
+        choices: ["Casting is never needed in Blueprints", "Its output pin changes type to match the Save Game Class input", "It returns an Actor", "It runs on the server"]
+        answer_index: 1
+        explain: "The node automatically changes its output pin type to match the class you pick on the Save Game Class input."
+      - q: "Async Save Game To Slot has two execution output pins. When are the output values valid?"
+        choices: ["From the first pin", "Both at the same time", "Only after a level restart", "From the second pin, once the save operation is complete"]
+        answer_index: 3
+        explain: "Execution continues from the top pin immediately and from the second pin when saving is done. The outputs are not valid until the second pin has executed."
+      - q: "When do the docs say the plain Save Game To Slot node is acceptable?"
+        choices: ["Never", "When save data is small or you save from a menu or pause screen", "Only on consoles", "Only for the first save"]
+        answer_index: 1
+        explain: "Async saving is recommended to avoid hitches. If data is small or you save from a menu or pause screen, Save Game To Slot is fine."
+      - q: "On a development platform, where does the .sav file appear?"
+        choices: ["Content/SaveGames", "Config/Saves", "The project's Saved/SaveGames folder", "The user's Documents folder"]
+        answer_index: 2
+        explain: "Saved game files use the .sav extension and appear in the project's Saved\\SaveGames folder on development platforms."
+      - q: "What do you need to give Load Game From Slot to find the right file?"
+        choices: ["The slot name and user ID used when saving", "The SaveGame class only", "The file path on disk", "The level name"]
+        answer_index: 0
+        explain: "To load, you provide the save slot name and user ID that you used when you saved."
+      - q: "Load Game From Slot returns a base SaveGame object. What must you do to read your custom variables?"
+        choices: ["Nothing, the variables are already there", "Cast it to your custom SaveGame class", "Call Create Save Game Object again", "Reload the level"]
+        answer_index: 1
+        explain: "The engine returns a base USaveGame object. You cast it back to your custom class to access the data."
+      - q: "Delete Game in Slot returns false. How can you tell a delete failure from a file that never existed?"
+        choices: ["Check the return value again", "Look at the User Index", "Use Async Load", "Use Does Save Game Exist first"]
+        answer_index: 3
+        explain: "The node page says to use Does Save Game Exist to distinguish between delete failures and failure because the file does not exist."
+    flavors:
+      _default: {why: "Players expect to leave and come back to the same place."}
+      gameplay_design: {why: "What you save defines what the player can lose; that is a design choice.", do: "Write 3 lines on what you would NOT save in a roguelike, and why."}
+      programming: {why: "The SaveGame object is the model; the game world is the view.", do: "Try Async Load Game From Slot and use its Success pin instead of the cast failure."}
+
+  - id: GDQ27
+    rank: 2
+    difficulty: adept
+    track: gameplay-design
+    subjects: [game-instance, game-state, game-mode, persistence, subsystems]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: true
+    title: "Game Instance: data that survives level changes"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-framework-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-mode-and-game-state-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-subsystems-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/GetGameInstance"
+    checklist:
+      - "Read the Gameplay Framework overview (Game Instance, Game Mode, Game State, Player State) and the Game Mode and Game State page."
+      - "Make BP_MyGameInstance from Game Instance. Add TotalCoins (Integer) and RunsPlayed (Integer). Set it as the project's Game Instance class in Project Settings (Maps and Modes)."
+      - "Make two small levels, L_Room1 and L_Room2. Put a coin pickup in each. On pickup: Get Game Instance, cast to BP_MyGameInstance, add 1 to TotalCoins."
+      - "Add a trigger in each room that runs Open Level to the other room and adds 1 to RunsPlayed."
+      - "Add a Score integer to the Game Mode too. Add to it on pickup. Print both values after each level change and compare."
+      - "Write 3 lines: which value survived the level change, which did not, and where you would keep team score in a multiplayer game."
+    done_when: "A screenshot after at least two level changes showing the printed TotalCoins (kept) and the Game Mode Score (reset), plus your 3-line note."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "When is the Game Instance created and destroyed?"
+        choices: ["On each level load and unload", "When the engine launches and when it shuts down", "When the player joins and leaves", "When Play In Editor starts and stops for each actor"]
+        answer_index: 1
+        explain: "The game instance is instantiated on engine launch and stays active until the engine shuts down."
+      - q: "Where do the docs say anything that must persist between level loads should live?"
+        choices: ["In the Game Mode", "In the Player Controller", "In the Game Instance", "In the Game State"]
+        answer_index: 2
+        explain: "Anything you want to persist between level loads should live in the game instance, which also makes it a good place to manage a save game system."
+      - q: "Why does a score stored on the Game Mode reset when you open a new level?"
+        choices: ["Game Mode is created when the level loads and is not persistent across levels", "Game Mode cannot hold variables", "Scores must be floats", "Game Mode only exists on clients"]
+        answer_index: 0
+        explain: "The game mode is instantiated after your level is loaded, so it is not persistent across levels. It can be set on a map-by-map basis."
+      - q: "In a multiplayer game, which class holds data relevant to all players, such as team scores, and replicates to clients?"
+        choices: ["Game Instance", "Game Mode", "Game State", "HUD"]
+        answer_index: 2
+        explain: "Game State holds data for all players like team scores and objectives, and replicates from the server to all clients. The Game Mode exists only on the server."
+      - q: "Which class holds data for one player, such as health, ammo and inventory?"
+        choices: ["Player State", "Game Instance", "Game Mode", "Camera"]
+        answer_index: 0
+        explain: "Player State handles data and logic relevant to its associated player, such as health, ammo count and inventory. One is created per player."
+      - q: "Is the Game Instance replicated in a networked game?"
+        choices: ["Yes, from server to clients", "Yes, from clients to server", "No, it exists independently on the server and every client", "Only its subsystems are replicated"]
+        answer_index: 2
+        explain: "The game instance is not replicated. It exists independently on the server and on all connected clients."
+      - q: "Which Game Mode setting method has the highest priority?"
+        choices: ["GlobalDefaultGameMode in DefaultEngine.ini", "GameMode Override in World Settings", "The ?game= URL option", "Map prefixes in DefaultEngine.ini"]
+        answer_index: 3
+        explain: "The list goes from lowest to highest: GlobalDefaultGameMode, World Settings override, URL option, then map prefixes."
+      - q: "When is Initialize called on a Game Instance Subsystem?"
+        choices: ["When the level loads", "When the Game Instance initializes", "When the first Pawn spawns", "When the editor starts"]
+        answer_index: 1
+        explain: "After the Game Instance is created the subsystem is created too; Initialize runs when the Game Instance initializes and Deinitialize when it shuts down."
+    flavors:
+      _default: {why: "Choosing where data lives decides what survives a level change or a respawn."}
+      gameplay_design: {why: "Meta progression, unlocks and run counters all live above the level.", do: "Move TotalCoins into a save slot so it also survives closing the game."}
+      programming: {why: "Game Instance Subsystems are the clean way to add systems without a big Game Instance class.", do: "Read the Subsystems page and note how they show up in the Blueprint context menu without a cast."}
+
+  - id: GDQ28
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [ai, behavior-tree, blackboard, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "Behavior Trees: an enemy that reacts"
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---quick-start-guide"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-trees-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---overview"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-behavior-tree-node-reference-decorators"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-behavior-tree-node-reference-services"
+    checklist:
+      - "In a Third Person project, copy BP_ThirdPersonCharacter to an AI folder and name it Enemy_Character. Delete its input script. Create an AIController Blueprint named Enemy_Controller and set it as the AI Controller Class."
+      - "Create a Blackboard BB_Enemy with keys EnemyActor (Object, base class Actor), HasLineOfSight (Bool) and PatrolLocation (Vector)."
+      - "Create BT_Enemy. Add a Selector named AI Root with two Sequence children: Chase Player and Patrol. Add a Wait task as the last fallback."
+      - "Create the tasks BTT_ChasePlayer and BTT_FindRandomPatrol. Use Event Receive Execute AI, call a function on the character, and end with Finish Execute. Make ChaseSpeed and PatrolRadius Instance Editable."
+      - "In Enemy_Controller, run BT_Enemy on Event On Possess. Add an AIPerception component with an AI Sight config. On Target Perception Updated, set HasLineOfSight and EnemyActor in the Blackboard."
+      - "Put a Blackboard decorator on Chase Player: key HasLineOfSight, Observer aborts = Both. Add a NavMeshBoundsVolume, place the enemy, and play."
+      - "While playing, open BT_Enemy and watch which branch is active. Change ChaseSpeed on the task node and test again."
+    done_when: "Two screenshots: (1) BT_Enemy in the Behavior Tree editor while the game runs, showing the active branch highlighted and the Blackboard values; (2) the AI Perception graph in Enemy_Controller. Add one sentence: what value of ChaseSpeed felt right and why."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What does the Blackboard do in this setup?"
+        choices: ["It runs the tree logic from left to right", "It replaces the AI Controller", "It draws the navigation mesh", "It stores keys (values) that the Behavior Tree reads to make decisions"]
+        answer_index: 3
+        explain: "The Behavior Tree runs the logic. The Blackboard is the 'brain' that holds keys such as HasLineOfSight, and the tree reads those keys to choose a branch."
+      - q: "A Selector has three children. In what order does the tree try them, and when does it stop?"
+        choices: ["Left to right; it stops at the first child that succeeds", "Right to left; it stops at the first child that fails", "All at the same time; it stops when all finish", "Random order; it never stops"]
+        answer_index: 0
+        explain: "Behavior Trees run left to right and top to bottom. A Selector stops moving between subtrees when one succeeds. The small number in the top-right corner of a node shows the order."
+      - q: "A Sequence has children Move To, Check Range, Attack. Check Range fails. What happens?"
+        choices: ["Attack still runs because the Sequence ignores failures", "The Sequence keeps trying Check Range forever", "Attack does not run; the Sequence stops and fails back up the tree", "The tree restarts from the Root immediately"]
+        answer_index: 2
+        explain: "A Sequence runs its children in order until one fails. When a child fails, the rest of the sequence is not run and the branch fails back up to its parent."
+      - q: "Where should a condition such as 'Can the AI see the player?' live in an Unreal Behavior Tree?"
+        choices: ["As a Task leaf node that returns success or fail", "As a Service on the Root node", "As a variable inside the Pawn only", "As a Decorator attached to the branch it controls"]
+        answer_index: 3
+        explain: "The docs recommend Decorators (conditionals) instead of conditional Tasks. The decorator sits at the top of the branch it closes off, so the tree is easier to read and it can observe the value and abort."
+      - q: "Chase Player has a Blackboard decorator with Observer aborts = Lower Priority. What does that setting do?"
+        choices: ["Aborts only the Chase Player branch itself", "Aborts nothing; it only changes the color of the node", "Aborts branches to the right of this node when the key changes", "Aborts the whole tree and stops the AI"]
+        answer_index: 2
+        explain: "Lower Priority aborts any nodes to the right of this node. Self aborts this branch and its subtrees. Both does both. None aborts nothing."
+      - q: "You want the AI to re-check the best target every 0.5 seconds while it keeps doing its current branch. Which node type fits?"
+        choices: ["A Service attached to the Composite node", "A second Root node", "A Wait task with 0.5 seconds", "A Force Success decorator"]
+        answer_index: 0
+        explain: "Services attach to Composite or Task nodes and run at their Interval while their branch is active. They are used for checks and Blackboard updates and replace parallel nodes from other systems."
+      - q: "Why are Unreal Behavior Trees described as event-driven?"
+        choices: ["They only run when the player presses a key", "They check the whole tree every frame to find changes", "They listen for changes (for example a Blackboard key) instead of scanning the tree every tick", "They can only be started from an event in the Level Blueprint"]
+        answer_index: 2
+        explain: "The tree passively listens for events, such as a Blackboard key changing, and reacts. This avoids doing work every frame and makes debugging history cleaner."
+      - q: "Where does the quick start call Run Behavior Tree?"
+        choices: ["In the Level Blueprint on Begin Play", "In the enemy Character on Tick", "In the AI Controller on Event On Possess", "In the Blackboard asset"]
+        answer_index: 2
+        explain: "The AI Controller possesses the Pawn. On Event On Possess it calls Run Behavior Tree with BT_Enemy. Run Behavior Tree targets AI Controller Blueprints."
+      - q: "In a custom Blueprint task, what must happen at the end of the logic?"
+        choices: ["Call Finish Execute with Success true or false", "Call Run Behavior Tree again", "Destroy the task", "Set the Blackboard to null"]
+        answer_index: 0
+        explain: "A task runs from Event Receive Execute AI and must call Finish Execute. Success true means the task finished; Success false marks it as failed and aborts it."
+      - q: "You promote ChaseSpeed to a variable and enable Instance Editable in BTT_ChasePlayer. What do you gain?"
+        choices: ["The value is saved to disk automatically", "The variable is shared with all Blackboards", "The task runs faster", "The value becomes a property you can edit on the task node inside the Behavior Tree"]
+        answer_index: 3
+        explain: "Instance Editable variables of a task show up as properties on the task node in the Behavior Tree, so a designer can tune them without opening the task graph."
+    flavors:
+      _default: {why: "Behavior Trees are the standard way to give enemies readable, tunable behavior in Unreal."}
+      gameplay_design: {why: "An enemy that reacts to the player is the heart of most action loops. You need to read and tune a tree, not only build it.", do: "Add a Cooldown decorator on the Chase branch and write one line about how it changes the feel."}
+      programming: {why: "Blueprint tasks are fast to iterate; native tasks are faster to run. Knowing the structure helps you move code later.", do: "Note which task you would move to C++ first and why."}
+
+  - id: GDQ29
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [ai, eqs, behavior-tree, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "EQS: pick a good spot"
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-quick-start-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-overview-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/eqs-node-reference-tests-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-debugging-in-unreal-engine"
+    checklist:
+      - "Enable the Environment Query Editor plugin. Create BB_Enemy, BT_Enemy, an Environment Query EQS_FindPlayer, an AIController AIC_Enemy and a Blueprint EQC_PlayerContext (parent EnvQueryContext_BlueprintBase)."
+      - "In EQC_PlayerContext, override Provide Single Actor and return Get Player Character."
+      - "In EQS_FindPlayer, add a Points: Grid generator (GridHalfSize 800, Space Between 150). Add a Trace test: Filter Only, Context EQC_PlayerContext, Bool Match off. Add a Distance test: Score Only, Scoring Factor -1.0."
+      - "Build BT_Enemy with an In Combat selector (Attack and Move into Position sequences) and a Patrolling sequence. In Move into Position use Run EQSQuery writing to MoveToLocation, then Move To and Rotate to face BB entry."
+      - "In AIC_Enemy, add AIPerception with Sight (Detect Neutrals on). Update HasLineOfSight and TargetActor keys from On Target Perception Updated."
+      - "Play. Press the apostrophe key, then Numpad 3, to see the grid points, scores and the Winner."
+      - "Change the Distance Scoring Factor to 1.0 and watch how the chosen spot changes. Put it back."
+    done_when: "Two screenshots: (1) the EQS debug view in play (apostrophe then Numpad 3) showing scored points and the Winner label; (2) the EQS_FindPlayer graph with both tests. Add one sentence: what changed when Scoring Factor was 1.0 instead of -1.0."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What are the three main parts of an Environment Query?"
+        choices: ["Generator, Contexts, Tests", "Blackboard, Selector, Sequence", "Pawn, Controller, Character", "Trace, Overlap, Pathfinding"]
+        answer_index: 0
+        explain: "A Generator produces Items (points or actors), Contexts are the frame of reference, and Tests filter or score the Items. The Behavior Tree gets the highest weighted result."
+      - q: "You add a Distance test and a Trace test to the grid. Does the order you added them in matter?"
+        choices: ["Yes, tests always run in the order you added them", "Yes, the last test always wins", "No, all tests run at the same time on the GPU", "No, filters are sorted first and cheaper filters run before expensive ones"]
+        answer_index: 3
+        explain: "The order is irrelevant. EQS puts filter tests first so later tests handle fewer items, and sorts filters by cost, so a distance filter runs before a line-of-sight trace."
+      - q: "What does Test Purpose = Filter Only do?"
+        choices: ["Gives every item a weight between 0 and 1", "Runs the test only once per game", "Removes items that fail the test; it does not score them", "Makes the test visible in the debugger only"]
+        answer_index: 2
+        explain: "Filter Only removes Items that fail. Score Only gives Items a weight. Filter and Score does both. Filtering happens before scoring."
+      - q: "Why does the quick start set the Distance test Scoring Factor to -1.0?"
+        choices: ["To turn the test into a filter", "To make the AI prefer points closer to the player instead of the furthest points", "To disable the test", "To make the grid smaller"]
+        answer_index: 1
+        explain: "With 1.0 the furthest points score highest and the AI may run past the player. A negative factor flips the score so closer points win."
+      - q: "On the Trace test, Bool Match is disabled and the Context is the player. What does this filter out?"
+        choices: ["Points that can see the player", "Points that are too far from the player", "Points that are on stairs", "Points that cannot see the player"]
+        answer_index: 3
+        explain: "Bool Match is the value to match. With it disabled and a Trace to the player context, points that cannot see the player are removed."
+      - q: "How does a Behavior Tree use the result of the query?"
+        choices: ["The Run EQSQuery task writes the result into a Blackboard key such as MoveToLocation", "The query moves the Pawn directly", "The result is printed on screen", "The query changes the NavMesh"]
+        answer_index: 0
+        explain: "The Run EQSQuery node runs a Query Template and updates the assigned Blackboard Key. A following Move To task then uses that key."
+      - q: "Which one can you create in Blueprint without C++?"
+        choices: ["A custom Test", "A new scoring equation", "A custom Generator or Context", "A new normalization type"]
+        answer_index: 2
+        explain: "Custom Generators can be made in Blueprint (or C++). Custom Tests can only be created through C++."
+      - q: "What is the grid half size and spacing warning about?"
+        choices: ["A grid that is too large can hurt performance because more points are tested", "A grid smaller than 800 does not work", "Spacing must be a whole number", "The grid must be square to the world axes"]
+        answer_index: 0
+        explain: "GridHalfSize and Space Between define how many points are generated. The docs say to keep this manageable because a very large grid can impact performance."
+      - q: "How do you see the EQS points and their scores while playing?"
+        choices: ["Press P in the editor viewport", "Open the Blackboard panel", "Use the console command stat eqs", "Press the apostrophe key, then Numpad 3"]
+        answer_index: 3
+        explain: "The apostrophe key opens the AI Debugging tools. Numpad 3 shows EQS. Points are drawn with score values and the chosen point is marked Winner."
+      - q: "You want to check the query in the editor without pressing Play. What does the docs suggest?"
+        choices: ["An EQS Testing Pawn with the Query Template assigned", "A Level Blueprint that calls the query on construction", "A Print String in the context", "A second Behavior Tree"]
+        answer_index: 0
+        explain: "The EQS Testing Pawn is a special Pawn class. Place it and set the Query Template to see results in the editor. The context may need Provide Actors Set with Get All Actors of Class."
+    flavors:
+      _default: {why: "EQS lets AI choose a spot by rules you can read and tune, instead of hard-coded positions."}
+      gameplay_design: {why: "Where an enemy stands changes how a fight feels. EQS turns 'find a good spot' into scores you can tweak.", do: "Add a second Distance test that keeps the AI at least 500 units away and note the effect."}
+      level_design: {why: "Layouts change EQS results. Cover and sight lines are level design problems.", do: "Move one wall and screenshot how the Winner point changes."}
+
+  - id: GDQ30
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [ai, state-tree, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, animation]
+    required_spine: false
+    elective: false
+    title: "State Tree: states, tasks, transitions"
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/statetree-quick-start-guide"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/state-tree-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-state-tree-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/external-statetree-quickstart-guide"
+    checklist:
+      - "In a First Person project, enable the GameplayStateTree and StateTree plugins and restart the editor."
+      - "Create a StateTree ST_ShootingTarget with the StateTreeComponentSchema. Create BP_ShootingTarget (Actor) with a Static Mesh, a StateTree component set to ST_ShootingTarget, an integer HitCount that increases On Component Hit, and a DelayedDestroy custom event."
+      - "In ST_ShootingTarget set Context Actor Class to BP_ShootingTarget. Add states Idle and Dead. On Idle add a transition On Tick to Dead with an Integer Compare condition: Actor > Hit Count greater or equal 5."
+      - "Create STT_Destroy (parent StateTreeTaskBlueprintBase) with an Actor variable in category Context. Override ExitState and call DelayedDestroy. In Dead add Debug Text, Delay 2.0 and STT_Destroy; transition On State Completed to Tree Succeeded."
+      - "Create BP_SplineActor with a Spline. Create the evaluator STE_GetSpline (TreeStart, Find Nearest Actor, output variable SplineActor in category Output) and the task STT_MoveAlongSpline (Tick, Set Actor Location along the spline, Finish Task at the end)."
+      - "Add a child state MoveAlongSpline under Idle, add STT_MoveAlongSpline and bind Spline Actor to the evaluator output. Place both actors, close the spline loop, play and shoot the target."
+    done_when: "Two screenshots: (1) ST_ShootingTarget showing the state list with Idle, MoveAlongSpline and Dead and the Idle transitions; (2) the target destroyed in play (debug text visible). Add two sentences: one thing State Tree does differently from a Behavior Tree, in your words."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What is a State Tree, in one sentence from the docs?"
+        choices: ["A replacement for the Blackboard", "A graph that only animates characters", "A hierarchical state machine that combines behavior tree selectors with states and transitions", "A list of Gameplay Tags"]
+        answer_index: 2
+        explain: "StateTree is a general-purpose hierarchical state machine. It takes Selectors from behavior trees and States and Transitions from state machines."
+      - q: "A State has three Tasks. How do they run when the State is active?"
+        choices: ["One after another, top to bottom", "Concurrently, and the first Task that completes triggers a transition", "Only the first Task runs", "Randomly, one per tick"]
+        answer_index: 1
+        explain: "All Tasks in a State run concurrently while the State is active. The first Task that completes triggers a Transition, which can select a new State."
+      - q: "When a leaf State is selected, which States are active?"
+        choices: ["Only the leaf State", "All States in the tree", "Only the root", "The leaf State and all its parent States up to the root"]
+        answer_index: 3
+        explain: "Selecting a State activates all States from the root down to the leaf. Tasks of all those active States run, starting from the root."
+      - q: "How does State Tree selection differ from a behavior tree, per the overview?"
+        choices: ["State Tree scans the tree every tick; behavior trees do not", "State Tree runs selection on demand when a Transition triggers; behavior trees keep running selection logic", "There is no difference", "State Tree cannot have child States"]
+        answer_index: 1
+        explain: "Behavior trees keep executing selection logic even when a State is selected. State Tree runs selection only when a Transition fires, starting at the target State."
+      - q: "In which order are Transitions evaluated?"
+        choices: ["From the root down to the leaf", "All at once, highest priority number wins", "From the leaf State upward toward the root; the first that succeeds wins", "Only on the root State"]
+        answer_index: 2
+        explain: "Transitions are evaluated from the leaf State upward. The first Transition that succeeds and leads to a State selection is taken. This lets parents group common Transitions."
+      - q: "A parent State's Enter Conditions pass, but none of its child States can be selected. What happens?"
+        choices: ["The parent State is selected anyway", "The parent State is not selected", "The tree stops with an error", "The first child is forced to run"]
+        answer_index: 1
+        explain: "If a State has child States and none can be selected, the State is not selected even though its own Enter Conditions passed."
+      - q: "Which data source lets you expose data such as a nearest spline actor to the whole tree with custom logic on TreeStart?"
+        choices: ["An Evaluator", "A Gameplay Tag", "A Blackboard key", "A Level Blueprint variable"]
+        answer_index: 0
+        explain: "Evaluators expose data that Parameters or Context Data cannot. They run when the tree starts, stops and on tick. The quick start uses STE_GetSpline with a TreeStart override."
+      - q: "In a Blueprint Task, you create an Actor variable and set its Category to 'Context'. Why?"
+        choices: ["It makes the variable private", "It saves the variable to disk", "It hides the variable from the tree", "It auto-binds the variable to the Context Actor of the State Tree"]
+        answer_index: 3
+        explain: "The Context category binds the variable to the Context Actor in the StateTree. The Output category exposes a value for other nodes to bind to."
+      - q: "Your ST_ShootingTarget does not appear in the StateTree component dropdown. What is the likely cause?"
+        choices: ["The tree has too many States", "The plugin cannot be used in Blueprint projects", "The tree was created with the wrong schema; it must use StateTreeComponentSchema", "The actor has no Static Mesh"]
+        answer_index: 2
+        explain: "The quick start notes that if the State Tree does not appear in the dropdown, the wrong schema was selected. The component needs StateTreeComponentSchema."
+      - q: "Which Transition setup makes a State run again after it finishes, as in the quick start's Idle State?"
+        choices: ["Trigger On State Completed, Transition To Root", "Trigger On Tick, Transition To Tree Succeeded", "Trigger On Event with no tag", "No transition at all"]
+        answer_index: 0
+        explain: "Idle uses Trigger On State Completed with Transition To Root, so once the State completes the tree returns to the root and selects again. Tree Succeeded ends the tree."
+    flavors:
+      _default: {why: "State Tree is Epic's newer way to write AI and object logic; Mass and Smart Objects use it too."}
+      gameplay_design: {why: "States and transitions map closely to how designers talk about behavior: idle, alert, attack, dead.", do: "Add a third State Hit Reaction with a Delay task and an On Event transition using a Gameplay Tag."}
+      animation: {why: "State Trees drive contextual animation for crowds and characters.", do: "In the Dead state, play a montage before the delay and note where the Task would live."}
+
+  - id: GDQ31
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [ai, perception, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: "AI Perception: sight and hearing"
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-perception-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artificial-intelligence-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-debugging-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---quick-start-guide"
+    checklist:
+      - "Open the AIController Blueprint of your enemy (AIC_Enemy or Enemy_Controller). Add an AIPerception component."
+      - "Add an AI Sight config: Sight Radius 1500, Lose Sight Radius 2000, Peripheral Vision Half Angle 60, Detect Neutrals on. Add an AI Hearing config with Hearing Range 1200 and Detect Neutrals on."
+      - "Bind On Target Perception Updated. Break the AIStimulus and use Successfully Sensed plus Actor Has Tag 'Player' to set Blackboard keys (or Print String the sensed actor and stimulus location)."
+      - "On the player character, add an AIPerception Stimuli Source component, enable Auto Register as Source, and register for Sight and Hearing. Add the actor Tag 'Player'."
+      - "In the player, on a key press call Report Noise Event with Loudness 1.0 at the player location."
+      - "Play. Press the apostrophe key, then Numpad 4, to see the sight cone and hearing radius. Walk behind the enemy and press the noise key."
+      - "Change Peripheral Vision Half Angle to 30 and note how much harder it is to be seen."
+    done_when: "Two screenshots: (1) the Perception debug view (apostrophe then Numpad 4) with the sight cone and a sensed player; (2) the Senses Config of the AIPerception component. Add one sentence: what happened when you made noise behind the enemy."
+    xp: 175
+    verify_type: screenshot
+    quiz:
+      - q: "Where does the docs say to add the AI Perception Component?"
+        choices: ["On the Pawn's Static Mesh", "On the Game Mode", "On the NavMeshBoundsVolume", "On the Pawn's AIController Blueprint"]
+        answer_index: 3
+        explain: "The AI Perception Component is added to the Pawn's AIController Blueprint. It acts as a stimuli listener and gathers registered stimuli sources."
+      - q: "What is the difference between On Perception Updated and On Target Perception Updated?"
+        choices: ["The first returns one Actor with a stimulus; the second returns an array of Actors", "The first returns an array of Actors; the second returns one Actor plus an AIStimulus struct", "They are the same event with two names", "The second only works for Hearing"]
+        answer_index: 1
+        explain: "On Perception Updated returns an array of Actors that signaled the update. On Target Perception Updated returns the Actor and an AI Stimulus struct you can break down."
+      - q: "Which field of the AIStimulus tells you if the actor was actually sensed (true) or the stimulus was lost (false)?"
+        choices: ["Age", "Strength", "Successfully Sensed", "Receiver Location"]
+        answer_index: 2
+        explain: "Successfully Sensed is True or False. The quick starts use it to branch: true clears the lost-sight timer, false starts it."
+      - q: "Peripheral Vision Half Angle Degrees is 45. How wide is the whole sight cone?"
+        choices: ["45 degrees", "90 degrees", "22.5 degrees", "180 degrees"]
+        answer_index: 1
+        explain: "The value is measured from the forward vector to one side, not the whole range. 45 on each side gives a 90 degree cone."
+      - q: "Why do the Blueprint guides enable Detect Neutrals and then filter with Tags?"
+        choices: ["Because Sight cannot detect enemies", "Because Tags are faster than affiliation", "Because affiliation (team) can only be set in C++, and actors are neutral by default", "Because Neutrals is the only option that works in packaged games"]
+        answer_index: 2
+        explain: "Currently affiliation can only be defined in C++. Actors have no affiliation by default and are neutral, so Blueprint users detect neutrals and filter by Tag."
+      - q: "What produces a stimulus for the AI Hearing sense?"
+        choices: ["Any sound played with Play Sound at Location", "Any actor overlapping the AI", "Only projectiles", "A Report Noise Event"]
+        answer_index: 3
+        explain: "AI Hearing detects sounds generated by a Report Noise Event, for example a projectile that hits something and reports a noise."
+      - q: "Max Age on a sense config is 0. What does that mean?"
+        choices: ["The stimulus is forgotten right away", "The sense is disabled", "The stimulus is never forgotten", "The sense only updates once per second"]
+        answer_index: 2
+        explain: "Max Age is the time before a stimulus is forgotten, and 0 means never forgotten. To forget actors you also need Project Settings > AI System > Forget Stale Actors set to true."
+      - q: "What does Lose Sight Radius do compared to Sight Radius?"
+        choices: ["Lose Sight Radius is where the AI starts to see; Sight Radius is where it stops", "Sight Radius is the max distance to start perceiving; Lose Sight Radius is the max distance at which an already seen target is still perceived", "They must always be equal", "Lose Sight Radius only affects Hearing"]
+        answer_index: 1
+        explain: "Sight Radius is where perception can start. Lose Sight Radius is the larger distance at which a target that was already seen is finally lost. This avoids flicker at the edge."
+      - q: "What does the AI Perception Stimuli Source component do on the player?"
+        choices: ["It lets the player see AI", "It replaces the player's collision", "It stores perceived actors", "It registers the owning actor as a source of stimuli for the chosen senses"]
+        answer_index: 3
+        explain: "The Stimuli Source component registers its owning Actor as a stimuli source for the senses listed in Register as Source for Senses. With Auto Register as Source on, you do not need to call Register with Perception System."
+      - q: "Which function returns actors that were perceived and are not yet forgotten, even if not currently perceived?"
+        choices: ["Get Currently Perceived Actors", "Get Known Perceived Actors", "Forget All", "Request Stimuli Listener Update"]
+        answer_index: 1
+        explain: "Get Known Perceived Actors returns actors that have been perceived and not yet forgotten. Get Currently Perceived Actors returns only those being perceived now."
+    flavors:
+      _default: {why: "Perception is how an AI knows the player exists. Its numbers decide if a stealth or combat moment feels fair."}
+      gameplay_design: {why: "Sight cone, radius and forget time are the tuning knobs of stealth and alert states.", do: "Write down three values (radius, half angle, Max Age) and the play feel each gave."}
+      level_design: {why: "Sight lines and noise ranges decide where cover and patrol routes work.", do: "Place one wall that blocks sight but not hearing and test it."}
+
+  - id: GDQ32
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [design, data-table, playtest, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: "Mechanic + GDD"
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-driven-gameplay-elements-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-tree-in-unreal-engine---quick-start-guide"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ai-perception-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-quick-start-in-unreal-engine"
+    checklist:
+      - "Pick one mechanic that uses at least one system from this rank (Behavior Tree enemy, EQS spot picking, State Tree object, or AI Perception). Example: a guard that hears you, searches, and gives up."
+      - "Make a struct S_MechanicTuning with 3 to 5 numbers that change the feel (for example sight radius, give-up time, chase speed). Create DT_MechanicTuning with exactly 3 rows: Easy, Normal, Hard."
+      - "Read the row at Begin Play (Get Data Table Row) and push the values into the actor, controller or task. Switching the row name must change the behavior without opening a graph."
+      - "Build a small graybox test space with one goal (reach a door, grab an item) and the mechanic in the way."
+      - "Write a one-page design doc: goal, core verb, the 3 variants and their values, what each should feel like, and how you tested it."
+      - "Playtest: ask one person to try each variant. Solo fallback: play each variant 3 times and record your time and result. Write one note: what surprised you, and what you changed after."
+      - "Record a 30 to 60 second video or 3 screenshots showing the 3 variants in play."
+    done_when: "Send a mentor the design doc (PDF or image), the DT_MechanicTuning screenshot with 3 rows, the playtest note, and the video or screenshots. A mentor will check that switching rows changes the feel and that the doc matches what is built."
+    xp: 300
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A designer ships tuned systems with a doc, not a graph. This is the portfolio piece for this rank."}
+      gameplay_design: {why: "Three real variants force you to feel the numbers and to explain your choices.", do: "Add a fourth row you think is bad on purpose and explain why in the doc."}
+      level_design: {why: "The test space is a small level with a mechanic inside; that is level design work too.", do: "Sketch the test space top-down and mark where each variant was hardest."}
+
+  - id: GDQ33
+    rank: 3
+    difficulty: expert
+    track: gameplay-design
+    subjects: [ai, navigation, navmesh]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, programming]
+    required_spine: false
+    elective: true
+    title: "Navigation for AI: NavMesh settings and modifiers"
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-how-to-modify-the-navigation-mesh-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/navigation-system-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modifying-the-navigation-mesh-preparation-guide-in-unreal-engine"
+    checklist:
+      - "In a Third Person project, add a NavMeshBoundsVolume that covers the play area. Press P to see the green NavMesh. Select RecastNavMesh-Default and enable Draw Poly Edges and Draw Tile Bounds."
+      - "Make BP_NPC_NavMesh: a copy of the character with no input, a MoveNPC custom event using Get Random Reachable Point In Radius (1000) and AI Move To, looping with a Delay of 4."
+      - "Place three Nav Modifier Volumes: one with the default Area Class (no NavMesh inside), one with NavArea_Obstacle (high cost), one with NavArea_Null. Simulate and watch how the NPC routes around each."
+      - "Add a raised platform. Place a Nav Link Proxy from the platform edge to the floor, set Direction to Left to Right, and confirm the NPC drops down."
+      - "In Project Settings > Navigation Mesh > Runtime Generation, choose Dynamic Modifiers Only. Make BP_RotatingActor with a Cube, Rotating Movement and a Nav Modifier component. Simulate and watch the NavMesh update in red tiles."
+    done_when: "Two screenshots: (1) the level with the NavMesh visible (P), the three modifier volumes and the Nav Link Proxy; (2) Project Settings showing Runtime Generation = Dynamic Modifiers Only and the rotating actor with its Nav Modifier component. Add one sentence: which Area Class blocked the NPC fully and which only made it avoid the area."
+    xp: 85
+    verify_type: screenshot
+    quiz:
+      - q: "What is the Navigation Mesh built from?"
+        choices: ["The visible materials in the level", "The Landscape heightmap only", "The player's camera view", "The collision geometry in the level, split into tiles and polygons with a cost"]
+        answer_index: 3
+        explain: "The system generates a NavMesh from collision geometry, divides it into tiles and then polygons. Each polygon has a cost, and Agents look for the lowest cost path."
+      - q: "How do you quickly show the NavMesh in the editor viewport?"
+        choices: ["Press the P key", "Press the apostrophe key", "Press Ctrl+N", "Run the command stat nav"]
+        answer_index: 0
+        explain: "The P key toggles the NavMesh display in the editor. In play, the console command show Navigation true or false does the same."
+      - q: "You drop a Nav Modifier Volume into the level and change nothing. What happens inside it?"
+        choices: ["Nothing changes", "The cost is doubled", "No NavMesh is generated inside the volume", "Agents move faster inside it"]
+        answer_index: 2
+        explain: "By default, no NavMesh is generated inside a Nav Modifier Volume. You change this by choosing another Area Class such as NavArea_Obstacle."
+      - q: "What is the difference between NavArea_Obstacle and NavArea_Null?"
+        choices: ["Obstacle assigns a high cost, so agents avoid it unless there is no cheaper path; Null applies infinite cost and no NavMesh is generated", "Obstacle blocks completely; Null is only visual", "They are identical", "Null is cheaper than Default"]
+        answer_index: 0
+        explain: "NavArea_Obstacle is a high cost area. Agents avoid it but can still cross it. NavArea_Null applies infinite cost, so no navigation data is generated and the agent cannot path through."
+      - q: "What is a Nav Link Proxy for?"
+        choices: ["Making the NavMesh higher resolution", "Connecting two NavMesh areas that have no direct path, such as a jump or a drop", "Setting the walk speed of agents", "Hiding the NavMesh from players"]
+        answer_index: 1
+        explain: "Nav Link Proxies add extra connections between areas with no continuous path, for example to build a bridge or let an agent fall or jump from a platform."
+      - q: "Which Direction options does a Nav Link Proxy point link offer?"
+        choices: ["Up, Down, Sideways", "In, Out", "Forward only", "Both Ways, Left to Right, Right to Left"]
+        answer_index: 3
+        explain: "Under Point Links, Direction can be Both Ways, Left to Right or Right to Left. The guide uses Left to Right for a one-way drop."
+      - q: "The green arrow on your Nav Link Proxy disappeared. What does that mean?"
+        choices: ["The link is now active", "The level needs to be saved", "The link end points do not touch the NavMesh surface", "The agent is too big"]
+        answer_index: 2
+        explain: "The green arrow disappears if the Nav Link Proxy does not connect with the surface of the NavMesh. Also, links can only connect adjacent NavMesh tiles."
+      - q: "Which Runtime Generation mode lets modifiers and links change the existing NavMesh at runtime but never builds new surfaces?"
+        choices: ["Static", "Dynamic", "Dynamic Modifiers Only", "Offline"]
+        answer_index: 2
+        explain: "Dynamic Modifiers Only keeps the offline NavMesh and only lets Navigation Areas, Links and dynamic objects change cost or block areas. It can be up to 50 percent cheaper than full Dynamic."
+      - q: "With Dynamic Modifiers Only, your rotating cube does not update the NavMesh. What is missing?"
+        choices: ["A NavMeshBoundsVolume", "A Nav Link Proxy", "A Blackboard", "A Nav Modifier component on the actor"]
+        answer_index: 3
+        explain: "In this mode the NavMesh only updates for actors that have a NavModifier component. The guide adds a Nav Modifier component to BP_RotatingActor and the tiles then update."
+      - q: "Which two avoidance methods does the Navigation System provide for agents?"
+        choices: ["RVO and the Detour Crowd Manager", "EQS and Perception", "Static and Dynamic", "Smart Links and Nav Links"]
+        answer_index: 0
+        explain: "The system offers Reciprocal Velocity Obstacles (RVO) and the Detour Crowd Manager so agents can move around dynamic obstacles and other agents."
+    flavors:
+      _default: {why: "If an AI cannot get there, the behavior does not matter. NavMesh settings decide where enemies can go."}
+      gameplay_design: {why: "Costs and links are design tools: make a path risky, force a detour, allow a drop.", do: "Use one NavArea_Obstacle to make the NPC take the long way past a trap, and explain the intent."}
+      level_design: {why: "Nav problems are usually level geometry problems. Learn to read the green mesh.", do: "Fix one place where the NavMesh has a hole because of collision, and show before and after."}
+
+  - id: GDQ34
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [data-assets, asset-manager, data-driven, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: false
+    title: Data Assets and the Asset Manager
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-assets-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/asset-management-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asynchronous-asset-loading-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-driven-gameplay-elements-in-unreal-engine"
+    checklist:
+      - "Create a Blueprint Class with parent PrimaryDataAsset and name it PDA_Enemy. Add variables: DisplayName (Text), MaxHealth (Float), MoveSpeed (Float), and Mesh as a Soft Object Reference to Skeletal Mesh. Give each a tooltip."
+      - "Right-click in the Content Browser, choose Miscellaneous > Data Asset, pick PDA_Enemy, and make three assets in a folder Data/Enemies: DA_Enemy_Grunt, DA_Enemy_Brute, DA_Enemy_Boss. Fill in different values."
+      - "Open Project Settings > Game > Asset Manager. Under Primary Asset Types to Scan, add a type named Enemy with base class PDA_Enemy and the directory /Game/Data/Enemies."
+      - "Make BP_EnemySpawner. On Begin Play, call Get Primary Asset Id List for the type Enemy, pick one Id, and load it with Async Load Primary Asset. On Completed, cast the object to PDA_Enemy and spawn an enemy that uses its MaxHealth and MoveSpeed. Print DisplayName."
+      - "Add a fourth Data Asset without touching any graph. Play again and confirm the spawner can pick it."
+      - "Write 3 sentences: when would you use a Data Asset instead of a Data Table row, and when the reverse?"
+    done_when: "Two screenshots: (1) the Asset Manager settings with your Enemy type in Primary Asset Types to Scan; (2) the BP_EnemySpawner graph and a Play In Editor window printing the DisplayName of a loaded Data Asset. Add your 3 sentences about Data Asset versus Data Table."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "By default, which assets are Primary Assets in the Asset Manager?"
+        choices: ["Only UWorld assets (levels)", "All Blueprint classes", "All Data Assets", "All textures and meshes"]
+        answer_index: 0
+        explain: "By default only UWorld assets (levels) are Primary. Everything else is Secondary until its class overrides GetPrimaryAssetId to return a valid Id."
+      - q: "A Primary Asset Id has two parts. Which are they?"
+        choices: ["A file path and a package name", "A Primary Asset Type and the asset name", "A class name and a GUID", "A folder name and a version number"]
+        answer_index: 1
+        explain: "The Id is a unique Primary Asset Type that groups assets, plus the name of the specific asset. A UMyGameZoneTheme saved as Forest gets the Id MyGameZoneTheme:Forest."
+      - q: "You create a Data Asset from the Content Browser (Miscellaneous > Data Asset). What is that asset?"
+        choices: ["A new class you can subclass", "A Blueprint with an Event Graph", "An instance of a class, not a class itself", "A copy of the Class Default Object"]
+        answer_index: 2
+        explain: "A Data Asset made this way is an instance of the class. The docs say it is not the same as creating a Blueprint class, and you load it with functions without the word Class in their name."
+      - q: "Your hierarchy is UPrimaryDataAsset -> BP_Parent -> BP_DataOnlyChild. What is the PrimaryAssetType of the child with default settings?"
+        choices: ["BP_DataOnlyChild", "PrimaryDataAsset", "DataAsset", "BP_Parent"]
+        answer_index: 3
+        explain: "The type is the name of the first native class going up, or the highest-level Blueprint class. With UPrimaryDataAsset -> ParentBlueprintClass -> DataOnlyBlueprintClass, the type is ParentBlueprintClass."
+      - q: "Where do you tell the Asset Manager which folders to scan for your Primary Assets, without writing code?"
+        choices: ["Project Settings > Game > Asset Manager > Primary Asset Types to Scan", "Edit > Editor Preferences > Content Browser", "The Data Asset's own Details panel", "World Settings > Game Mode"]
+        answer_index: 0
+        explain: "The Project Settings page under Game / Asset Manager has Primary Asset Types to Scan, which lists the types, where to look for them, and what to do with them. Code can do the same with ScanPathsForPrimaryAssets."
+      - q: "A designer adds a hard object reference to a big mesh on an actor placed in the map. What happens when the map loads?"
+        choices: ["Nothing until the mesh is used", "The mesh is loaded together with the actor, even if never shown", "The mesh loads only on a dedicated server", "The reference is converted to a string"]
+        answer_index: 1
+        explain: "A hard UObject pointer property loads the referenced asset when the object containing it is loaded. If you are not careful you can end up loading 100 percent of your assets at startup. Use a Soft Object Path or Soft Object Pointer to avoid that."
+      - q: "Why does the docs prefer RequestAsyncLoad over SynchronousLoad for larger assets?"
+        choices: ["SynchronousLoad does not work in packaged builds", "SynchronousLoad can stall the main thread for too long", "RequestAsyncLoad uses less disk space", "RequestAsyncLoad is the only one that works with cooked data"]
+        answer_index: 1
+        explain: "SynchronousLoad is a blocking load. It may be fine for small objects but can stall the main thread. RequestAsyncLoad loads a group of assets and calls a delegate when done."
+      - q: "After StreamableManager finishes an async load and calls your delegate, what happens to its hard references to the loaded assets?"
+        choices: ["They are kept forever", "They are released, so you must hard reference the assets somewhere else to keep them", "They move to the Asset Registry", "They are saved to disk"]
+        answer_index: 1
+        explain: "StreamableManager keeps hard references only until the delegate is called. After that it releases them, so if you want the objects to stay in memory you must reference them yourself."
+      - q: "What is an Asset Bundle?"
+        choices: ["A zip file of cooked content", "A folder that is always loaded at startup", "A Blueprint that spawns several actors", "A named list of Secondary Assets associated with a Primary Asset"]
+        answer_index: 3
+        explain: "An Asset Bundle is a named list of specific assets tied to a Primary Asset. When you load a Primary Asset with a bundle name, the Asset Manager also loads the Secondary Assets in that bundle."
+      - q: "A programmer builds a Data Table row struct for you. What must be true for the CSV importer to accept it?"
+        choices: ["The struct must inherit from FTableRowBase and the first CSV column must be Name", "The struct must be a Blueprint struct", "The CSV must have exactly 5 columns", "The struct must contain only floats"]
+        answer_index: 0
+        explain: "Column names map 1:1 to a code UStruct that inherits from FTableRowBase. The first column is expected to be named Name and holds the row names used in game."
+      - q: "A Data Table row has an icon field. Why does the example use a soft object pointer for it instead of a hard UTexture reference?"
+        choices: ["Soft pointers are faster to draw", "Hard references are not allowed in tables", "With a hard reference, all icons would load whenever the table loads", "Soft pointers compress the texture"]
+        answer_index: 2
+        explain: "The docs say the referenced asset is lazy loaded through TSoftObjectPtr. If the field type was set to UTexture, all of the assets would be loaded whenever the Data Table was loaded."
+      - q: "You want enemy types where a Boss inherits and overrides values from a Grunt. Which setup do the docs recommend?"
+        choices: ["Data-Only Blueprint classes that inherit from Primary Data Asset", "Separate Data Asset instances with copied values", "A Curve Table", "A Level Streaming Volume per enemy"]
+        answer_index: 0
+        explain: "Data Asset instances are simpler and more memory-efficient, but if you want data inheritance or a more complex hierarchy the docs recommend Data-Only Blueprint classes, which can be subclassed and update the parent."
+    flavors:
+      _default: {why: "Data Assets let you add and tune content without opening a single graph, and the Asset Manager decides what is loaded and when."}
+      gameplay_design: {why: "This is how you make a whole enemy roster or item list tunable by anyone on the team.", do: "Add a Rarity variable to PDA_Enemy and make the spawner pick by weight."}
+      programming: {why: "Async loading through the Asset Manager is the standard way to keep startup fast.", do: "Write down which assets in your project should become Primary and which bundles they need."}
+
+  - id: GDQ35
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [gas, gameplay-abilities, gameplay-effects, attributes, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, animation]
+    required_spine: false
+    elective: false
+    title: "GAS in Blueprint: attributes and effects"
+    time_min: 180
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-the-unreal-engine-gameplay-ability-system"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-ability-system-for-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-attributes-and-attribute-sets-for-the-gameplay-ability-system-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-effects-for-the-gameplay-ability-system-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-abilities-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-ability-system-component-and-gameplay-attributes-in-unreal-engine"
+    checklist:
+      - "Enable the Gameplay Abilities plugin and restart. Attribute Sets cannot be made in Blueprint, so add one small C++ class UAS_Basic (parent AttributeSet) with two FGameplayAttributeData properties: Health and Stamina. Copy the code from the Attributes page and compile."
+      - "Add an Ability System Component to BP_ThirdPersonCharacter. In its Default Starting Data add AS_Basic and a Data Table DT_AttributeInit (row type AttributeMetaData) with AS_Basic.Health = 100 and AS_Basic.Stamina = 50."
+      - "Create three Gameplay Effect Blueprints: GE_Damage (Duration Policy Instant, modifier Health Add -25), GE_SprintCost (Instant, Stamina Add -10) and GE_Regen (Has Duration 5 s, Period 1 s, Stamina Add +5)."
+      - "Create GA_Slam (parent GameplayAbility). In Activate Ability: Commit Ability, play a short montage or a Delay, Apply Gameplay Effect To Owner with GE_Damage on an overlapped enemy, then End Ability. Add an Activation Blocked Tag State.Stunned."
+      - "On Begin Play (server side) call Give Ability with GA_Slam. Bind a key to Try Activate Ability By Class. Add a second key that applies GE_Regen to self."
+      - "Bind On Attribute Changed (or read Get Float Attribute each tick) to update a health bar widget WBP_Stats. Play, use the ability, and watch Health and Stamina move."
+    done_when: "Two screenshots: (1) the GA_Slam graph with Commit Ability and End Ability visible; (2) Play In Editor with WBP_Stats showing Health and Stamina after one slam and one regen. Add one sentence: which value did you change from base to current, and which effect changed it?"
+    xp: 260
+    verify_type: screenshot
+    quiz:
+      - q: "Can a single Actor have two Ability System Components?"
+        choices: ["Yes, one per Attribute Set", "Yes, but only on the server", "No; several Actors may share one ASC, but one Actor cannot own several", "No; ASCs are only allowed on Player States"]
+        answer_index: 2
+        explain: "The docs say GAS supports multiple Actors sharing a single ASC, but not one Actor with several. That would make querying and applying changes ambiguous."
+      - q: "Why would you put the Ability System Component on the Player State instead of the Character?"
+        choices: ["So that points, money or long cooldowns survive when the Pawn is destroyed and respawned", "Because Characters cannot have components", "To make abilities run faster", "Because Blueprints cannot access a Character's ASC"]
+        answer_index: 0
+        explain: "The ASC page gives exactly these reasons: scores or long-lasting cooldowns that must not reset when the Pawn dies or the player possesses a new Pawn. The Actor's GetAbilitySystemComponent then returns the Player State's ASC."
+      - q: "Can Gameplay Attributes and Attribute Sets be created in Blueprint?"
+        choices: ["Yes, with a Blueprint Struct", "No; they must be created in native C++ code", "Yes, but only inside a Gameplay Effect", "Yes, using a Data Table"]
+        answer_index: 1
+        explain: "The Gameplay Effects page states that Attributes and Attribute Sets must be created in native code and cannot be created in Blueprints. Everything else in this quest can be Blueprint."
+      - q: "An Instant Gameplay Effect changes which attribute value, and what does that mean?"
+        choices: ["The Current value, so it is undone when the effect ends", "Both values by the same amount", "Neither; Instant effects only send Gameplay Cues", "The Base value, so the change is permanent"]
+        answer_index: 3
+        explain: "Instant Gameplay Effects modify the Base value. Any effect with a Duration affects the Current value and is undone when the effect ends."
+      - q: "Jump Height has base 100. A tired debuff sets it to 70 percent. Then a level-up raises the base to 110 while the debuff is still active. What is the current value?"
+        choices: ["70", "110", "77", "100"]
+        answer_index: 2
+        explain: "This is the example in the Attributes page: the base becomes 110, and the active 70 percent effect gives a current value of 77 as long as it remains."
+      - q: "Your AttributeMetaData Data Table has MinValue 0 and MaxValue 150 for Health. What does that clamp?"
+        choices: ["Nothing; those columns have no effect in the default plugin", "Health on the server only", "Health on clients only", "Health during Gameplay Effects only"]
+        answer_index: 0
+        explain: "The docs say Gameplay Attributes and Attribute Sets have no built-in clamping. The MinValue and MaxValue columns are not implemented and have no effect. Clamping is done in the Attribute Set in code."
+      - q: "Which Duration options does a Gameplay Effect have, and which one never enters the Active Gameplay Effects Container?"
+        choices: ["Instant, Infinite, Has Duration; Instant never enters it", "Short, Medium, Long; Short never enters it", "Instant, Periodic; Periodic never enters it", "Has Duration only; nothing enters it"]
+        answer_index: 0
+        explain: "Duration can be Instant, Infinite or Has Duration. Effects with a duration are added to the Active Gameplay Effects Container on the ASC. An Instant effect is Executed and never makes its way into that container."
+      - q: "A Gameplay Cue for a hit spark must use a tag that starts with which prefix, and what should Cues be used for?"
+        choices: ["Ability.; for gameplay-critical logic", "GameplayCue.; for cosmetic feedback only", "Effect.; for damage numbers", "State.; for blocking abilities"]
+        answer_index: 1
+        explain: "All Gameplay Cues must be associated with a tag starting with GameplayCue, such as GameplayCue.WaterSplash.Big. Cues do not use reliable replication, so they should be cosmetic only."
+      - q: "A 'Drink Potion' ability never calls End Ability. What is the likely result?"
+        choices: ["Nothing; abilities end on their own after a few seconds", "The system still thinks the character is drinking, so anything the ability blocks stays blocked", "The potion is applied twice", "The ability is removed from the ASC"]
+        answer_index: 1
+        explain: "Failing to end the ability makes GAS believe it is still running. The docs give exactly this potion example: the character can no longer sprint, climb or drink again, indefinitely."
+      - q: "Who is allowed to give or remove abilities on an Ability System Component?"
+        choices: ["Any client", "Only the owning client", "Only the server", "Only the Level Blueprint"]
+        answer_index: 2
+        explain: "GiveAbility and ClearAbility are server-only. The docs note that only the server can give or revoke abilities, which is why the checklist calls Give Ability on the server side."
+      - q: "GA_Slam has Activation Blocked Tags = State.Stunned. What does this do?"
+        choices: ["Grants State.Stunned to the owner while the ability runs", "Cancels any ability tagged State.Stunned", "Requires the target to have State.Stunned", "Prevents activation while the owner has the State.Stunned tag"]
+        answer_index: 3
+        explain: "Activation Blocked Tags means the ability can only be activated if the activating Actor does not have any of those tags. Activation Owned Tags is the one that grants tags while running."
+      - q: "For a multiplayer dash that must feel instant, which Net Execution Policy do the docs describe as running on the client immediately while the server keeps the final word?"
+        choices: ["Server Only", "Server Initiated", "Local Predicted", "Local Only"]
+        answer_index: 2
+        explain: "Local Predicted runs the ability on the local client at once, then the server can override the result. Server Initiated adds a delay; Local Only never replicates to the server; Server Only never runs on clients."
+    flavors:
+      _default: {why: "GAS is the standard way big Unreal games build abilities, buffs and stats, and designers tune most of it in data."}
+      gameplay_design: {why: "Once attributes and effects exist, new abilities are mostly Blueprint and Gameplay Effect assets you can iterate fast.", do: "Add a GE_Poison with Has Duration 6 s and Period 2 s and make a Gameplay Cue tag for it."}
+      programming: {why: "Knowing which parts must be C++ (Attribute Sets, clamping) and which are data keeps the split clean.", do: "Override PostGameplayEffectExecute to clamp Health to 0..MaxHealth."}
+
+  - id: GDQ36
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [networking, replication, rpc, blueprint, multiplayer]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    title: What the server must own
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-overview-for-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/remote-procedure-calls-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/replicate-actor-properties-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-role-and-remote-role-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-and-multiplayer-in-unreal-engine"
+    checklist:
+      - "In a Third Person project, set Play In Editor to Number of Players 2 and Net Mode Play As Listen Server. Play once and note which window is the server."
+      - "Make BP_ScoreCrate (Actor, Static Mesh, Box collision). In Class Defaults turn Replicates on. Add an Integer variable Score with Replication set to RepNotify; in OnRep_Score update a text render above the crate."
+      - "On the crate's Begin Overlap add a Switch Has Authority node. On the Authority pin add 1 to Score. On the Remote pin do nothing. Play with 2 players and touch the crate from the client window; both windows must show the new number."
+      - "In BP_ThirdPersonCharacter add a Custom Event Server_Kick set to Run on Server and Reliable. It applies an impulse to the crate. Call it from an input key. Add a second Custom Event Multicast_KickFX set to Multicast, Unreliable, that spawns a particle; call it from Server_Kick."
+      - "Add a Print String on Begin Play that prints Get Local Role and Get Remote Role for the character. Compare the four lines you get across the two windows."
+      - "Write 4 sentences: which values in your crate are owned by the server, which are cosmetic, and why the particle is unreliable."
+    done_when: "Two screenshots: (1) both Play In Editor windows side by side after the client touched the crate, with the same Score shown; (2) the character graph with Server_Kick and Multicast_KickFX and their Replicates settings visible. Add your 4 sentences."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "In Unreal's client-server model, where is the multiplayer game actually played?"
+        choices: ["On each client, then averaged", "On the server, which holds the one authoritative game state", "On the client with the best connection", "On whichever machine spawned the actor"]
+        answer_index: 1
+        explain: "The server holds the one true authoritative state. Clients send remote procedure calls from their local pawns, and the server replicates state back so each client simulates a close approximation."
+      - q: "Which network mode has a local player who is also hosting the game for others?"
+        choices: ["Dedicated Server", "Client", "Standalone", "Listen Server"]
+        answer_index: 3
+        explain: "A Listen Server is a server that also has a local player hosting. A Dedicated Server has no local players. Standalone has no networking but still counts as a server."
+      - q: "You build all gameplay with replication in mind. What happens when the game is played single-player in Standalone mode?"
+        choices: ["Replicated variables stop working", "Server RPCs are dropped", "It works with no extra work because Standalone is both server and client", "You must remove all Switch Has Authority nodes"]
+        answer_index: 2
+        explain: "Standalone games serve as both server and client, so any logic created for multiplayer functions in single-player with no additional work. That is why the docs say to plan for multiplayer early."
+      - q: "You turn Replicates on for an actor. Which of these still does NOT replicate by itself?"
+        choices: ["Spawning and destroying the actor", "Location and rotation when Replicate Movement is on", "A normal Blueprint variable you did not mark as Replicated", "Creation of proxies on connected clients"]
+        answer_index: 2
+        explain: "Creation, destruction and movement are handled automatically, but all other gameplay data does not replicate by default. You must mark each property to replicate and any functions to run remotely."
+      - q: "Which of these components or systems runs separately on every client and is not replicated even on a replicated actor?"
+        choices: ["Replicated integer variables", "Skeletal Mesh Components, Materials and Animation Blueprints", "The actor's owner", "Server RPC calls"]
+        answer_index: 1
+        explain: "The overview lists Skeletal Mesh, Static Mesh, Materials, Animation Blueprints, Particles, Sound Emitters and Physics Objects as not replicating. If the variables that drive them are replicated, each client simulates them the same way."
+      - q: "In Blueprint, when does a RepNotify function on a replicated variable get called?"
+        choices: ["Only on the server, every tick", "Never in Blueprint; only C++ supports RepNotify", "When the property is replicated to a client, and also when a Set node writes it in Blueprint", "Only when the value goes to zero"]
+        answer_index: 2
+        explain: "A RepNotify is called on clients when the property replicates. In Blueprint a Set node on that property also calls the RepNotify automatically, but macros and functions that take the property by reference do not."
+      - q: "A Server RPC is called on a client that does NOT own the actor. What happens?"
+        choices: ["It runs on the server anyway", "It runs on the calling client", "It runs on the owning client", "It is dropped"]
+        answer_index: 3
+        explain: "A Server RPC must be called from the client that owns the actor. The RPC matrix shows: called from a client whose actor is owned by a different client, the call is Dropped."
+      - q: "A NetMulticast event is called from a client. Where does it execute?"
+        choices: ["On the server and all clients", "Only locally on that client", "On all other clients but not the caller", "On the owning client only"]
+        answer_index: 1
+        explain: "NetMulticast RPCs are designed to be called from the server. Called from a client, they only execute locally. To reach everyone, run it from the server, for example from inside a Server RPC."
+      - q: "Why do the docs warn against binding Reliable RPCs directly to player input?"
+        choices: ["Players can spam the key and overflow the reliable RPC queue", "Reliable RPCs cannot carry parameters", "Input cannot be read on the server", "Reliable RPCs only work on dedicated servers"]
+        answer_index: 0
+        explain: "Reliable RPCs are re-sent until acknowledged and cost extra bandwidth. Rapid button presses can overflow the reliable queue, so limit how often input may fire an RPC, and use Unreliable for frequent calls."
+      - q: "What is the primary use case the RPC page gives for RPCs, and what can an RPC never do?"
+        choices: ["Saving the game; it cannot run on clients", "Transient or cosmetic events like sounds and particles; it cannot return a value", "Loading levels; it cannot carry a float", "Replacing replicated variables; it cannot be unreliable"]
+        answer_index: 1
+        explain: "RPCs are unidirectional function calls with no return value. Their primary use case is unreliable, transient gameplay events such as playing sounds, spawning particles and animations."
+      - q: "In the client window, your own character prints Local Role = AutonomousProxy and Remote Role = Authority. What does that mean?"
+        choices: ["This client controls the pawn and the server has authority over it", "The client has full authority and the server is only watching", "The pawn is not replicated", "The pawn belongs to another player"]
+        answer_index: 0
+        explain: "AutonomousProxy on a client means the pawn is controlled by this client; the Authority remote role is the server. Another player's pawn shows SimulatedProxy. Only the server sees ROLE_Authority for replicated actors."
+      - q: "The docs list one optimization as among the most significant you can make in network gameplay. Which is it?"
+        choices: ["Using more Multicast RPCs", "Making all RPCs Reliable", "Replicating every component", "Network dormancy"]
+        answer_index: 3
+        explain: "The Networking Tips say to make use of network dormancy, which controls whether an actor is even considered for replication on a connection. The same tips say to use as few RPCs as possible and multicast sparingly."
+    flavors:
+      _default: {why: "A designer who knows what the server must own can write mechanics that work in multiplayer from day one."}
+      gameplay_design: {why: "Every rule you design has an owner: server for truth, client for feel and cosmetics.", do: "For your last core loop, list each variable and mark it Server, Client or Cosmetic."}
+      programming: {why: "The roles and RPC matrix are the same in C++ and Blueprint, so this transfers directly.", do: "Add a WithValidation check to a server RPC and test what happens when it fails."}
+
+  - id: GDQ37
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [chaos, destruction, geometry-collection, fields, blueprint]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [tech_art, level_design]
+    required_spine: false
+    elective: false
+    title: Chaos destruction as a mechanic
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/destruction-quick-start"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/chaos-destruction-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/destruction-overview"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-collections-user-guide"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/chaos-fields-user-guide-in-unreal-engine"
+    checklist:
+      - "In a First Person project, place two box Static Meshes as walls. Select the first, switch to Fracture Mode (Shift-6), click New under Generate, name it GC_Wall_Weak and fracture it with Uniform. Repeat for GC_Wall_Strong with two fracture levels."
+      - "In each Geometry Collection's Details set a Damage Threshold: 200000 for GC_Wall_Weak and 500000 for GC_Wall_Strong. Enable Show Engine Content and find Engine > Content > EditorResources > FieldNodes."
+      - "Open BP_FirstPersonProjectile. On Event Hit: Spawn Actor FS_MasterField at the Hit Location, Set Activation Type to Trigger, call CE Trigger, then Delay and Destroy Actor. Set the field's Strain Magnitude to 400000."
+      - "Drag an FS_AnchorField_Generic over the base of each wall and add it to the wall's Initialization Fields array so the bottom row stays in place. Place an FS_SleepDisable_Generic on the floor with a high Threshold."
+      - "Make it a mechanic: on the wall's Geometry Collection component enable Notify Breaks, bind On Chaos Break Event, and add 1 to a replicated-ready Integer BrokenPieces on the Game State. Show it in a small widget; unlock a door when BrokenPieces reaches 15."
+      - "Play. One shot should crack the weak wall and leave the strong wall intact. Then add a second field setting on the projectile (Use Decay, Decay Amount 100000) and test how many shots the strong wall takes."
+    done_when: "Two screenshots: (1) Play In Editor after shooting both walls, with the BrokenPieces widget visible and the weak wall broken while the strong wall stands; (2) the projectile graph with Spawn Actor FS_MasterField, Set Activation Type and CE Trigger. Add one sentence: how many shots did the strong wall take and which setting you changed."
+    xp: 240
+    verify_type: screenshot
+    quiz:
+      - q: "What is a Geometry Collection?"
+        choices: ["A Static Mesh with LODs", "The base asset that holds the geometry and simulation properties for Chaos destruction", "A Blueprint that spawns debris meshes", "A Niagara emitter for dust"]
+        answer_index: 1
+        explain: "Chaos Destruction uses a Geometry Collection as the base container for geometry and simulation properties. It can be built from one or more Static Meshes, Blueprints with mesh components, or other Geometry Collections, then fractured in Fracture Mode."
+      - q: "How does the connection graph decide when pieces separate?"
+        choices: ["Pieces separate at random after a fixed time", "Pieces separate when the actor is destroyed", "Pieces separate when the camera is close enough", "Each connection has a strain value; it breaks when an impulse from a collision or field exceeds that limit"]
+        answer_index: 3
+        explain: "At the start a connection graph is built between neighbouring rigid bodies with initial strain values. Connections break when collisions or field evaluations apply an impulse above the limit. Fields can also lower the strain values to weaken the structure."
+      - q: "The quick start says the most common way to apply strain to a Geometry Collection is what?"
+        choices: ["A Physics Field such as FS_MasterField", "A Radial Force Component", "Apply Damage from Blueprint", "Setting Simulate Physics on the mesh"]
+        answer_index: 0
+        explain: "The most common way to apply strain is a Physics Field. The quick start spawns the pre-built FS_MasterField at the projectile's impact location so the pieces break apart."
+      - q: "Where do you find the pre-built Chaos Fields like FS_MasterField and FS_AnchorField_Generic?"
+        choices: ["Fab marketplace only", "Project Settings > Physics", "Engine > Content > EditorResources > FieldNodes, after enabling Show Engine Content", "The Fracture Mode toolbar"]
+        answer_index: 2
+        explain: "The Fields guide says to click Settings > Show Engine Content in the Content Browser, then go to Engine > Content > EditorResources > FieldNodes."
+      - q: "Why does the projectile Blueprint set the field's Activation Type to Trigger and then call CE Trigger?"
+        choices: ["Trigger makes the field activate only when a Blueprint tells it to, and CE Trigger fires it at once", "Trigger makes the field activate every tick", "Trigger delays activation by one second", "CE Trigger destroys the field"]
+        answer_index: 0
+        explain: "Activation Types are Delay, OnTick, OnTickWithDelay and Trigger. Trigger means the field is activated by a Blueprint directly; the CE Trigger node immediately activates the Master Field."
+      - q: "A field applies Strain Magnitude 400000. Wall A has Damage Threshold 200000, wall B has 500000. What happens?"
+        choices: ["Both break", "Neither breaks", "Wall B breaks, wall A stays intact", "Wall A breaks, wall B stays intact"]
+        answer_index: 3
+        explain: "If the strain force is lower than the Damage Threshold, it does not cause a fracture. The Fields guide uses this exact example: the 200000 collections break and the 500000 ones remain intact."
+      - q: "What does Internal Strain (decay) on a field do?"
+        choices: ["Adds velocity to the pieces", "Lowers the Damage Threshold of bones inside the volume by the Decay Amount, weakening them over time", "Freezes the pieces in place", "Removes pieces from the simulation"]
+        answer_index: 1
+        explain: "A decay field lowers the internal Damage Threshold of the bones in its volume by the Decay Amount. This weakens a Geometry Collection gradually until external strain breaks it."
+      - q: "What does an Anchor Field do, and how do you attach it to a wall?"
+        choices: ["It adds gravity; drag it onto the mesh", "It sets bones inside its volume to Static; add it to the Geometry Collection's Initialization Fields array", "It plays a sound on break; assign it in Project Settings", "It hides pieces; set it in the material"]
+        answer_index: 1
+        explain: "Anchor Fields set any bone inside their volume to Static so that part stays fixed. You add the field to the Initialization Fields array in the Geometry Collection's Chaos Physics section. One anchor can serve several collections."
+      - q: "What is the difference between a Sleep field, a Disable field and the Kill option?"
+        choices: ["They are the same thing with different colors", "Sleep stops pieces forever; Disable only slows them; Kill respawns them", "Sleeping pieces can wake when hit; disabled pieces are removed and cannot wake; Kill ignores the threshold and removes bodies at once", "Sleep works on Static Meshes only; Disable on Skeletal Meshes; Kill on both"]
+        answer_index: 2
+        explain: "Sleeping bodies can be reawakened by an active object. Disabled bodies are removed after they rest and cannot wake. Kill ignores the Threshold value and stops and removes the body as soon as it overlaps the field."
+      - q: "You raise the Threshold on a Sleep/Disable field from 2 to 200. What changes?"
+        choices: ["Bodies are put to rest more aggressively", "Bodies never rest", "The field becomes an anchor", "Only larger pieces are affected"]
+        answer_index: 0
+        explain: "The field brings bodies to rest when their velocity drops below the Threshold. Higher Threshold values stop objects more aggressively, which improves performance and reduces jitter."
+      - q: "Two source meshes for a Geometry Collection overlap each other. Why is this a problem?"
+        choices: ["Each piece is its own simulated object, so the solver pushes overlapping pieces apart and gives erratic results", "The editor refuses to create the collection", "The collection gets no materials", "Overlap doubles the Damage Threshold"]
+        answer_index: 0
+        explain: "Best practice says sources should be water tight and must not intersect. Because each piece is an individual simulated object, the Chaos solver tries to push overlapping objects away from each other, causing unpredictable results."
+      - q: "After fracturing, the material slots show duplicated elements. What are the extra slots for?"
+        choices: ["Debug bone colors", "LOD materials", "The internal surfaces created by the fracture", "The anchor field volume"]
+        answer_index: 2
+        explain: "Each original material ID is duplicated to represent the internal surfaces. In the guide, Element 1 and Element 3 are the duplicates; replacing them changes how the inside of the broken pieces looks."
+    flavors:
+      _default: {why: "Destruction that changes the game state, not just the picture, is a real mechanic; the threshold and field numbers are your design knobs."}
+      gameplay_design: {why: "Damage Threshold versus Strain Magnitude is a tuning table like any other.", do: "Put the two wall thresholds and the field strain into a Data Table and read them at Begin Play."}
+      tech_art: {why: "Fields, clustering and sleep settings decide whether a destruction scene runs at frame rate.", do: "Compare frame time with and without the Sleep/Disable field on the floor."}
+
+  - id: GDQ38
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [capstone, data-driven, data-assets, data-tables, documentation]
+    required_for_majors: [gameplay_design]
+    taster_for_majors: []
+    adjacent_for: [programming, level_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Data-driven system
+    time_min: 480
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-assets-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-driven-gameplay-elements-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asset-management-in-unreal-engine"
+    checklist:
+      - "Pick one system: a wave spawner, a shop economy, or an ability set. Write its one-page goal: what a designer should be able to change without opening a graph."
+      - "Build the data layer: a Primary Data Asset class (for example PDA_Wave, PDA_Item or PDA_AbilityDef) plus a Data Table for the numbers that change per level or per row. Every field gets a tooltip and a sensible range."
+      - "Build the runtime: one Blueprint (BP_WaveDirector, BP_Shop or the character's ability loader) that reads only from the data, never from hard-coded numbers. Register the asset type in the Asset Manager and load assets by Primary Asset Id."
+      - "Add validation: on Begin Play, check every asset and row (missing mesh, negative cost, empty name) and Print String a clear warning naming the asset."
+      - "Write DESIGNER_GUIDE.md, one page: every field, what it does, its safe range, and the exact steps to add a new wave, item or ability. No graph screenshots allowed."
+      - "Give the guide to someone else (or follow it yourself after a day) and add a third variant using only the guide. Record what was unclear and fix the guide."
+      - "Record a 2-minute video or 6 screenshots showing the system running with all three variants and one validation warning triggered on purpose."
+    done_when: "A mentor review. Send: the project folder or a link, DESIGNER_GUIDE.md, and the video or screenshots. The mentor will add a new variant using only your guide; it must work without touching a Blueprint graph."
+    xp: 400
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A system that anyone can tune from data is the mark of a senior designer; this is your portfolio proof."}
+      gameplay_design: {why: "This is the capstone: data, runtime, validation and a doc that lets others work without you.", do: "Add one hidden field the guide does not mention and see if your tester finds it; then document it."}
+      programming: {why: "Clean data boundaries make the C++ side small and stable.", do: "Move the validation into a single function library so designers can reuse it."}
+
+  - id: GDQ39
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [level-streaming, pacing, blueprint, levels]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [level_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Level streaming for flow
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-streaming-overview-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-streaming-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-streaming-volumes-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-streaming-using-volumes-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/loading-and-unloading-levels-using-blueprints-in-unreal-engine"
+    checklist:
+      - "Create a persistent level L_Hub with a Player Start and a corridor. Create two more levels, L_Arena and L_Reward, each with a few graybox props. In L_Hub open Window > Levels and use Add Existing to add both as sublevels with streaming type Blueprint."
+      - "Place a Level Streaming Volume in L_Hub that covers the corridor and the whole arena. In the Levels window open L_Arena's details, add the volume under Streaming Volumes, uncheck Initially Loaded and Initially Visible, and set the volume's Streaming Usage to SVB Visibility Blocking on Load."
+      - "Make BP_LevelStreamer (Actor with a Box collision) with an editable Name variable LevelToStream. On Begin Overlap by the player, call Load Stream Level with Make Visible After Load on. On End Overlap, call Unload Stream Level. Place one in front of L_Reward's door and set LevelToStream to L_Reward."
+      - "Gate the pacing: add a second Level Streaming Volume for L_Reward with Disabled checked. When the player picks up a key in the arena, set Disabled to false from Blueprint so the reward room only starts loading after the key."
+      - "Test in Play In Editor, then again as Standalone Game. Note the difference in when the levels appear."
+      - "Write 3 sentences: where a player could see a hitch, and how you would resize a volume to hide it."
+    done_when: "Two screenshots: (1) the Levels window showing L_Hub as persistent with L_Arena and L_Reward as Blueprint-streamed sublevels and the volume assigned; (2) the BP_LevelStreamer graph with Load Stream Level and Unload Stream Level. Add your 3 sentences about hitches."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "A sublevel is set to Always Loaded. What happens to its Level Streaming Volumes and Blueprint load requests?"
+        choices: ["They work as normal", "They are ignored; the level loads and shows together with the persistent level", "They only work in Standalone", "Only Unload requests work"]
+        answer_index: 1
+        explain: "Always Loaded sublevels load and become visible with the persistent level and ignore streaming volumes and any load or unload requests from Blueprint or C++. Use the Blueprint streaming type for dynamic loading."
+      - q: "What position does a Level Streaming Volume test to decide whether to load a level?"
+        choices: ["The player's Pawn root location", "The Player Start", "The center of the persistent level", "The active camera viewpoint"]
+        answer_index: 3
+        explain: "Volumes issue load requests when the player's viewpoint is inside and unload when it is outside. The docs warn that the logic tracks the active camera, so with a distant camera you may need to resize the volume."
+      - q: "Where must Level Streaming Volumes be placed?"
+        choices: ["In the sublevel they control", "In any level", "In the persistent level", "In a separate volumes-only level"]
+        answer_index: 2
+        explain: "All Level Streaming Volumes must exist in the persistent level. Volumes living in other levels cannot be used for streaming and produce warnings in map check."
+      - q: "A level has a streaming volume assigned and you also call Load Stream Level on it from Blueprint. What do the docs say?"
+        choices: ["Both work together", "Blueprint wins", "Other streaming methods will not behave correctly for that level", "The volume is deleted"]
+        answer_index: 2
+        explain: "If a level has any streaming volumes associated with it, other methods of streaming that level will not behave correctly. Pick one method per level, or use the Disabled flag to hand control to Blueprint."
+      - q: "Why is Play In Editor not a good test of streaming hitches?"
+        choices: ["In PIE the levels are already in memory, so loading is just unhiding them instantly", "PIE does not support sublevels", "PIE always uses Always Loaded", "PIE runs at a lower frame rate"]
+        answer_index: 0
+        explain: "PIE shows where loads and unloads happen, but the levels are already in memory. The docs say to test in the standalone game on the target platform, where a load can take several seconds."
+      - q: "Players see the arena pop in too late. What is the simplest fix with volume streaming?"
+        choices: ["Grow the volume so the level loads sooner and unloads later", "Shrink the volume", "Set the level to Always Loaded", "Add a second Player Start"]
+        answer_index: 0
+        explain: "Level loading behaviour can be changed by resizing volumes. Growing a volume causes associated levels to load sooner and unload later; shrinking causes later loads and earlier unloads."
+      - q: "A player walks back and forth over a volume edge. Why does the level not unload immediately?"
+        choices: ["Unloading is never automatic", "Unload requests have hysteresis, 2.0 seconds by default, set by Min Time Between Volume Unload Requests", "Loading has a 2 second delay", "The volume is disabled"]
+        answer_index: 1
+        explain: "Hysteresis was added to unloading to avoid needless requests; the default is 2.0 seconds and is set per streaming level. Loading has no hysteresis because a needed level should load as soon as possible."
+      - q: "The docs give an example with a locked door. What is the Disabled flag on a volume used for there?"
+        choices: ["To hide the door", "To remove the volume from the level", "To make the door always loaded", "To keep the level from streaming in until the door is unlocked, then toggle the volume on from Blueprint"]
+        answer_index: 3
+        explain: "bDisabled makes the streaming code ignore the volume without disassociating it from the level. The docs use a locked door: the level behind it should not stream until the objective unlocks the door, then Blueprint or C++ flips the flag."
+      - q: "How does the Load Stream Level node identify which level to load?"
+        choices: ["By a reference to the level asset", "By its name", "By its index in the Levels window", "By the Player Start inside it"]
+        answer_index: 1
+        explain: "The key functions are Load Stream Level and Unload Stream Level, and you designate the level to load by its name. The Blueprint tutorial promotes the Level Name pin to an editable variable."
+      - q: "Which combination lets you stream several copies of the same sublevel at different transforms to build a procedural world?"
+        choices: ["Get Streaming Level with Create Instance", "Two Player Starts", "Always Loaded plus World Composition", "Open Level called twice"]
+        answer_index: 0
+        explain: "Get Streaming Level gives you the level streaming object. Combined with Create Instance you can create and stream in copies of a sublevel, apply transforms and send parameters, which the docs describe as a way to make procedural worlds."
+      - q: "What is the Editor Pre Vis Only flag for?"
+        choices: ["It makes the volume load levels only in packaged builds", "It disables the volume in the editor", "It uses the volume only for editor preview while another streaming method is used in game", "It shows the volume in the game HUD"]
+        answer_index: 2
+        explain: "With Editor Pre Vis Only set, the volume drives hiding and unhiding of levels in the editor viewport for previewing, while in-game streaming uses another method."
+      - q: "What does the Level Streaming page say about World Composition in Unreal Engine 5?"
+        choices: ["It is the recommended way to stream large worlds", "It is required for streaming volumes", "It is legacy; World Partition is recommended for 5.0 and later", "It replaced Level Streaming Volumes"]
+        answer_index: 2
+        explain: "World Composition is described as a legacy system. For projects using Unreal Engine 5.0 or later, the docs recommend World Partition for large-world streaming."
+    flavors:
+      _default: {why: "Streaming is a pacing tool: what loads when decides where the player can go and how the game breathes."}
+      gameplay_design: {why: "A door that only streams after an objective is a pacing rule written in volumes.", do: "Add a third sublevel that only loads after both key and BrokenPieces goals are met."}
+      level_design: {why: "Volume size and placement are level design decisions that hide load time.", do: "Measure how many seconds the reward room takes to appear in Standalone and size the volume for it."}
+
+  - id: GDQ40
+    rank: 4
+    difficulty: master
+    track: gameplay-design
+    subjects: [mass-entity, crowds, performance, data-oriented]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: true
+    title: Mass Entity for crowds
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-mass-entity-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/mass-entity-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-mass-gameplay-in-unreal-engine"
+    checklist:
+      - "Enable the MassEntity, MassGameplay and MassCrowd plugins and restart. In a Third Person level add a NavMeshBoundsVolume that covers a large open area."
+      - "Create a Mass Entity Config asset DA_Crowd_Walker. Add traits for collision, movement, avoidance and a visualization trait that uses a low-poly Static Mesh (Instanced Static Mesh)."
+      - "Place a MassSpawner actor. Set its Entity Types to DA_Crowd_Walker with a Count of 200 and add an instance generator that spreads the entities over the nav mesh."
+      - "Play. Take a screenshot with stat fps and stat unit visible. Then set Count to 1000 and compare the numbers."
+      - "Make a second config DA_Crowd_Runner as a child of DA_Crowd_Walker that only changes the movement speed. Spawn 50 of them with a second spawner."
+      - "Write 5 sentences: what a Fragment, Entity, Archetype and Processor are in your own words, and one case in your game where Mass would matter and one where plain Actors are enough."
+    done_when: "A writeup with your 5 sentences plus two screenshots: (1) the MassSpawner Details with DA_Crowd_Walker and Count 200; (2) Play In Editor with the crowd moving and stat fps visible. Include the frame time at 200 and at 1000 entities."
+    xp: 115
+    verify_type: writeup
+    quiz:
+      - q: "What is a Fragment in MassEntity?"
+        choices: ["An atomic piece of data such as Transform, Velocity or LOD Index", "A Blueprint function", "A piece of broken geometry", "A Niagara particle"]
+        answer_index: 0
+        explain: "The Fragment is MassEntity's primary data structure: an atomic piece of data used in calculations. Fragments are grouped into an Entity."
+      - q: "How is an Entity built, and can its composition change at runtime?"
+        choices: ["By subclassing an Actor; no", "By composing Fragments; yes, the composition can change at runtime", "By a Data Table row; only in the editor", "By a Behavior Tree; no"]
+        answer_index: 1
+        explain: "Creating an Entity is like class instancing, but instead of declaring a class, Entities are built by Fragment composition, and that composition can be changed at runtime."
+      - q: "Where does the logic live in MassEntity?"
+        choices: ["Inside each Fragment", "Inside each Entity", "In Processors, which are stateless classes that use EntityQuery to get batches of Fragments", "In the MassSpawner actor"]
+        answer_index: 2
+        explain: "Fragments and Entities are data-only and contain no logic. Processors are stateless classes that supply the processing logic and use EntityQuery to specify which Fragments they need."
+      - q: "What is an Archetype and why does it matter for speed?"
+        choices: ["A parent Blueprint class", "The first Entity spawned", "A saved copy of the level", "A collection of Entities with identical Fragment composition, stored together in memory Chunks for fast access"]
+        answer_index: 3
+        explain: "An Archetype groups all Entities with the same Fragment composition, for example [Transform, Velocity]. Their data is organized in memory Chunks so retrieving Fragments of the same Archetype is fast."
+      - q: "What is a Tag in MassEntity?"
+        choices: ["A Gameplay Tag from the tag manager", "A string label on an Actor", "A trivial Fragment with no data, whose presence or absence is itself the data", "A name for a Chunk"]
+        answer_index: 2
+        explain: "A Tag is a trivial Fragment that contains no data. Whether the Tag exists on an Entity is used as information, and Tags are part of the Entity's composition."
+      - q: "A Processor wants to add a Fragment to an Entity while processing it. How should it do this?"
+        choices: ["Add it directly at once", "Destroy and respawn the Entity", "Change the Archetype by hand", "Request the change through the MassCommandBuffer so it is batch-processed at the end of the current batch"]
+        answer_index: 3
+        explain: "Changing composition during processing would move the Entity between Archetypes mid-batch. Processors request the change with MassCommandBuffer, and the commands run at the end of the processing batch."
+      - q: "What does EntityView provide?"
+        choices: ["A debug camera", "A safe, optimized way to access data of other Entities not currently being processed", "A widget for crowds", "A list of all Archetypes"]
+        answer_index: 1
+        explain: "Serial processing is most efficient, but sometimes a Processor needs another Entity. EntityView gives safe and optimized access to Entities not in the current processing queue."
+      - q: "Where do Entity Templates come from, and can they inherit?"
+        choices: ["From MassEntityConfig assets made in the editor; yes, a config can have a parent asset and inherit its Traits", "From Behavior Trees; no", "From the Level Blueprint; no", "From C++ only; yes"]
+        answer_index: 0
+        explain: "Entity Templates are generated from MassEntityConfig assets, which declare Traits added at creation. A config can have a parent asset and inherit Traits from it, which is what the DA_Crowd_Runner child uses."
+      - q: "What is a Trait?"
+        choices: ["A floating-point attribute", "A collective name for the Fragments and Processors that supply one piece of functionality, such as Avoidance or Look-At", "A single Tag", "An animation notify"]
+        answer_index: 1
+        explain: "A Trait bundles the Fragments and Processors that give a behaviour. Each Trait instance adds and configures Fragments so the Entity shows that behaviour; examples are Avoidance, Look-At Target and using State Tree."
+      - q: "Mass Representation can show an entity in four ways. Which is the cheapest?"
+        choices: ["A high resolution Actor", "A low resolution Actor", "An Instanced Static Mesh", "No representation is not allowed"]
+        answer_index: 2
+        explain: "The four options are a high-res Actor, a low-res Actor, an Instanced Static Mesh, and no representation. The ISM is the cheapest and can be animated with vertex animation, though ISM animation is experimental."
+      - q: "What does Mass LOD output for each entity, and what can you configure per level?"
+        choices: ["A screen size only", "A boolean visible flag", "Four values High, Medium, Low and Off, with distances and a maximum entity count per level", "A texture resolution"]
+        answer_index: 2
+        explain: "Mass LOD produces High, Medium, Low and Off. For each level you can set the distance at which it applies and a maximum number of Entities, and it can also output a significance value from 0.0 to 3.0."
+      - q: "You want your crowd to replicate custom values to clients in multiplayer. What does the Mass Gameplay page say?"
+        choices: ["It works out of the box in Blueprint", "Crowds cannot be replicated at all", "Use Gameplay Cues instead", "Mass Replication is experimental, one-way server to clients, and custom values need a C++ implementation"]
+        answer_index: 3
+        explain: "Mass Replication replicates entities from the server to clients only, is marked experimental, and requires C++ to replicate custom values. Relevancy and update frequency come from Mass Replication LOD."
+    flavors:
+      _default: {why: "When you need hundreds or thousands of agents, Actors are too heavy; Mass is the data-oriented tool for that scale."}
+      gameplay_design: {why: "Knowing when a crowd should be Mass and when it should be Actors is a scoping decision that saves months.", do: "List three features in your game that would need a Processor and three that need a normal Actor."}
+      programming: {why: "Fragments, Archetypes and Processors are the entity-component-system pattern; Mass is Unreal's version.", do: "Read one built-in Trait in the MassGameplay plugin and note which Fragments it adds."}
