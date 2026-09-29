@@ -35,7 +35,8 @@ MAJOR_ROLE_NAMES = {
 }
 
 QUESTIONS: list[Question] = [
-    Question("major", "What do you want to learn in Unreal?", "Major", required=True, role_names=MAJOR_ROLE_NAMES,
+    Question("major", "What do you want to learn in Unreal? (pick all that apply)", "Major", required=True,
+             single=False, role_names=MAJOR_ROLE_NAMES,
              answers=[
                  Answer("level_design", "Building levels & spaces", "Layouts, flow, encounters (Level Design)", "🧱"),
                  Answer("lookdev", "Making worlds look great", "Materials, lighting, mood (Lookdev / Env Art)", "🎨"),
@@ -68,7 +69,7 @@ QUESTIONS: list[Question] = [
         Answer("world", "Landscapes & worlds", "Terrain, foliage, PCG", "🏔️"),
         Answer("cinematics", "Cinematics", "Sequencer and cameras", "🎬"),
     ]),
-    Question("goal", "What's your goal?", "Goal", pre_join=False, answers=[
+    Question("goal", "What are your goals? (pick all that apply)", "Goal", pre_join=False, single=False, answers=[
         Answer("career", "A job in games", "Portfolio-first", "💼"),
         Answer("indie", "Make my own game", "Ship something playable", "🕹️"),
         Answer("student", "School or a course", "Keep up and get ahead", "🎓"),
@@ -125,6 +126,9 @@ def profile_from_roles(role_names: set[str]) -> dict:
                     prof[q.key] = a.value
                 else:
                     prof.setdefault(q.key, []).append(a.value)
+    # multi-answer questions are stored under plural keys
+    prof["majors"] = prof.pop("major", [])
+    prof["goals"] = prof.pop("goal", [])
     return prof
 
 
@@ -150,7 +154,10 @@ GOAL_SUBJECTS = {"career": {"meta", "critique", "review", "showcase", "screensho
                  "indie": {"blueprint", "interaction", "gameplay", "loop", "hud"}}
 
 
-def elective_score(q, prof: dict) -> int:
-    """Higher = suggest earlier. Curiosity counts double, goal fit once."""
+def elective_score(q, prof: dict, major: str | None = None) -> int:
+    """Higher = suggest earlier. Curiosity and other picked majors count double, goal fit once."""
     words = {s.lower() for s in (q.raw.get("subjects") or [])}
-    return 2 * quest_matches_curious(q, prof) + (1 if words & GOAL_SUBJECTS.get(prof.get("goal", ""), set()) else 0)
+    goal_words = set().union(*[GOAL_SUBJECTS.get(g, set()) for g in prof.get("goals") or []]) if prof.get("goals") else set()
+    interests = [m for m in prof.get("majors") or [] if m != major]
+    interest_hit = any(m in (q.raw.get("required_for_majors") or []) for m in interests)
+    return 2 * quest_matches_curious(q, prof) + 2 * interest_hit + (1 if words & goal_words else 0)

@@ -213,7 +213,7 @@ class Catalog:
         # 5. Offer 2 major electives + 1 adjacent
         pool = [q for q in self.sorted(self.quests.values())
                 if q.elective and 0 <= q.rank <= u.rank and todo(q)]
-        score = lambda q: -prof_mod.elective_score(q, u.profile)      # stable sort keeps catalog order on ties
+        score = lambda q: -prof_mod.elective_score(q, u.profile, u.major)      # stable sort keeps catalog order on ties
         majors = sorted([q for q in pool if self.affinity(q, u.major) == "major"], key=score)[:2]
         adj_pool = [q for q in self.sorted(self.quests.values())
                     if 1 <= q.rank <= u.rank and todo(q) and q not in majors

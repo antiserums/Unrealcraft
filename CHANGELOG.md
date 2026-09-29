@@ -15,6 +15,19 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.2.0 · 2026-09-29 · Pick more than one answer
+Joining now lets you tell us everything you're into, not just one thing.
+
+### Join questions
+- **What do you want to learn in Unreal?** now accepts several answers.
+- If you pick more than one, the Quartermaster DMs you buttons to choose your **main path** (your major). The others stay as interests.
+- **What are your goals?** (on Channels & Roles) now accepts several answers too, e.g. a job in games *and* making your own game.
+- Experience, coding and weekly time stay single-answer, since only one can be true.
+
+### Your path
+- Quests from your other interests are suggested first in `/quest` and move up your `/path` shelf.
+- Suggestions blend all your goals: career picks favour portfolio and critique quests, indie picks favour playable ones.
+
 ## v0.1.0 · 2026-09-29 · First release
 Everything built for the first version of Unrealcraft and its bot, the Quartermaster.
 

@@ -168,11 +168,32 @@ class Onboarding(commands.Cog):
         prof = profile.profile_from_roles({r.name for r in member.roles})
         await self.bot.db.kv_set(member.id, "profile", json.dumps(prof))
         u = await self.bot.db.user(member.id)
-        if prof.get("major") and u["rank"] <= 0 and not await self.bot.db.kv_get(member.id, "major_set"):
-            await self.bot.db.set_user(member.id, major=prof["major"])
-            await self.bot.db.kv_set(member.id, "major_set", "1")
-            await self.fact(member.guild, member.id, "cmd.major")
+        majors = prof.get("majors") or []
+        if majors and u["rank"] <= 0 and not await self.bot.db.kv_get(member.id, "major_set"):
+            if len(majors) == 1:
+                await self.bot.db.set_user(member.id, major=majors[0])
+                await self.bot.db.kv_set(member.id, "major_set", "1")
+                await self.fact(member.guild, member.id, "cmd.major")
+            else:
+                await self.ask_primary_major(member, majors)
         return prof
+
+    async def ask_primary_major(self, member: discord.Member, majors: list[str]) -> None:
+        """Several 'what do you want to learn' answers: ask once which one is the main path."""
+        if await self.bot.db.kv_get(member.id, "primary_asked") == ",".join(sorted(majors)):
+            return
+        await self.bot.db.kv_set(member.id, "primary_asked", ",".join(sorted(majors)))
+        titles = [self.cat.majors.get(m, {}).get("title", m) for m in majors]
+        v = discord.ui.View(timeout=None)
+        for m in majors[:5]:
+            v.add_item(PrimaryMajorButton(m, self.cat.majors.get(m, {}).get("title", m)))
+        try:
+            await member.send(
+                f"You picked **{', '.join(titles)}**. Which one is your **main path**? That becomes your major "
+                "(~70% of your quests after the Starter Quests). The others stay as interests: their quests get "
+                "suggested first. You can change your major once for free with `/major`.", view=v)
+        except discord.HTTPException:
+            pass
 
     async def send_path_dm(self, member: discord.Member) -> None:
         """One DM after Discord onboarding: what the bot did with their answers."""
@@ -182,9 +203,15 @@ class Onboarding(commands.Cog):
         await self.bot.db.kv_set(member.id, "path_dm_sent", "1")
         cat = self.cat
         lines = ["**Your Unrealcraft path**"]
-        major = prof.get("major", "undecided")
-        lines.append(f"• Major: **{cat.majors.get(major, {}).get('title', major)}**. "
-                     "~70% of your quests after the Starter Quests are for this. Change it once for free with /major.")
+        majors = prof.get("majors") or ["undecided"]
+        major = majors[0] if len(majors) == 1 else (await self.bot.db.user(member.id))["major"]
+        if len(majors) > 1 and not await self.bot.db.kv_get(member.id, "major_set"):
+            names = ", ".join(cat.majors.get(m, {}).get("title", m) for m in majors)
+            lines.append(f"• You want to learn **{names}**. Pick your **main path** with the buttons I sent; "
+                         "the others stay as interests.")
+        else:
+            lines.append(f"• Major: **{cat.majors.get(major, {}).get('title', major)}**. "
+                         "~70% of your quests after the Starter Quests are for this. Change it once for free with /major.")
         if major == "undecided" and (sug := profile.suggested_major(prof)):
             lines.append(f"• Your curiosities point at **{cat.majors[sug]['title']}**. Try it with `/major`.")
         if profile.can_test_out(prof):
@@ -417,6 +444,33 @@ class BugModal(discord.ui.Modal, title="Server / bot problem"):
                                         ephemeral=True)
 
 
+class PrimaryMajorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uc:primary:(?P<m>[a-z_]+)"):
+    """DM button: choose the main path when several 'what do you want to learn' answers were picked."""
+
+    def __init__(self, major: str, label: str = ""):
+        super().__init__(discord.ui.Button(label=(label or major)[:80], style=discord.ButtonStyle.primary,
+                                           custom_id=f"uc:primary:{major}"))
+        self.major = major
+
+    @classmethod
+    async def from_custom_id(cls, itx, item, match):
+        return cls(match["m"])
+
+    async def callback(self, itx: discord.Interaction):
+        bot = itx.client
+        if await bot.db.kv_get(itx.user.id, "major_set"):
+            await itx.response.send_message("Your main path is already set. Use `/major` in the server to change it.",
+                                            ephemeral=True)
+            return
+        await bot.db.set_user(itx.user.id, major=self.major)
+        await bot.db.kv_set(itx.user.id, "major_set", "1")
+        guild = bot.get_guild(bot.settings.guild_id or 0)
+        await bot.get_cog("Onboarding").fact(guild, itx.user.id, "cmd.major")
+        title = bot.catalog.majors.get(self.major, {}).get("title", self.major)
+        await itx.response.edit_message(content=f"Main path set: **{title}**. The other picks stay as interests. "
+                                                "Next: press **Start Orientation** in #welcome.", view=None)
+
+
 class StartButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:start"):
     """Pinned in #welcome."""
 
@@ -454,5 +508,6 @@ class HonorButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:honor
 
 
 async def setup(bot):
-    bot.add_dynamic_items(ClockInButton, HelpPostButton, BugReportButton, StartButton, HonorButton)
+    bot.add_dynamic_items(ClockInButton, HelpPostButton, BugReportButton, StartButton, HonorButton,
+                          PrimaryMajorButton)
     await bot.add_cog(Onboarding(bot))
