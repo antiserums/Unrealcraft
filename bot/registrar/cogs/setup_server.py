@@ -586,7 +586,7 @@ class SetupServer(commands.Cog):
                 act("welcome", "Start Questing", "Press the green button. It is a short rules quiz.", "🚪"),
 
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
-                act("quest_board", "Find #quest-log", "Press Continue your quest on the pinned post.", "🗺️"),
+                act("quest_board", "Find #quest-log", "Press Continue questing on the pinned post.", "🗺️"),
                 act("help_desk", "Ask for help the right way", "Use the New help post button.", "🛠️"),
             ) if a],
             "resource_channels": [r for r in (
@@ -673,7 +673,7 @@ class SetupServer(commands.Cog):
         from .onboarding import BugReportButton, HelpPostButton, StartButton
         from .quiz import QuizButton
         from .quests import NextQuestButton
-        QuestBoardButton = lambda: NextQuestButton("Continue your quest")
+        QuestBoardButton = lambda: NextQuestButton("Continue questing")
         from .workshop import NewPostButton
         unl, cat = self.bot.unlocks, self.bot.catalog
         ch = lambda *k: g.get_channel(unl.channel(*k))
@@ -723,7 +723,7 @@ class SetupServer(commands.Cog):
             dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), embeds=[
                 E("📋 Quest log", "**This is your home for quests.**\n"
                   "After Orientation, quests only work in this channel."),
-                E("▶️ How to quest", "1. Press **Continue your quest** (or type `/quest`).\n"
+                E("▶️ How to quest", "1. Press **Continue questing** (or type `/quest`).\n"
                   "2. Read the guides the quest links to.\n"
                   "3. Do the work in Unreal.\n"
                   "4. Take the quiz.\n"

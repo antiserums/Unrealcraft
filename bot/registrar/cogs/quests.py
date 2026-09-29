@@ -76,7 +76,7 @@ class Quests(commands.Cog):
         v = discord.ui.View(timeout=None)
         v.add_item(discord.ui.Button(style=discord.ButtonStyle.link, label="Go to #quest-log", emoji="🗺️",
                                      url=f"https://discord.com/channels/{self.bot.settings.guild_id}/{board}"))
-        await itx.response.send_message("Quests only work in **#quest-log**. Go there and press **Continue your quest**.", view=v, ephemeral=True)
+        await itx.response.send_message("Quests only work in **#quest-log**. Go there and press **Continue questing**.", view=v, ephemeral=True)
         return False
 
     async def card_view(self, q, uid: int) -> discord.ui.View:

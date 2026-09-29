@@ -125,7 +125,7 @@ class Onboarding(commands.Cog):
             desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
             desc += ("\n\n🎉 **All done!** From now on, **quests only work in #quest-log**. "
-                     "Go there and press **Continue your quest**.")
+                     "Go there and press **Continue questing**.")
         return discord.Embed(title=f"🧭 Orientation: {len(steps)} small steps", description=desc,
                              color=discord.Color.from_str("#7A8C7E"))
 
@@ -203,7 +203,7 @@ class Onboarding(commands.Cog):
                 v.add_item(b)
             await itx.response.send_message(
                 "🎉 Orientation is done.\n**From now on, quests only work in #quest-log.** "
-                "Go there and press **Continue your quest**.", view=v, ephemeral=True)
+                "Go there and press **Continue questing**.", view=v, ephemeral=True)
             return
         facts = await self.bot.db.facts(itx.user.id)
         await itx.response.send_message(embed=self.orientation_embed(done, facts), ephemeral=True,

@@ -144,7 +144,7 @@ class Ranks(commands.Cog):
         lines = {
             0: ["You're an Initiate of the guild. Welcome in.",
                 "You owe the Starter Quests (SQ1–SQ11): short 🟢 Novice quests, each one sitting.",
-                f"Next: {nxt}. From now on, quests only work in #quest-log: press Continue your quest there.",
+                f"Next: {nxt}. From now on, quests only work in #quest-log: press Continue questing there.",
                 "Stuck? #help-desk with the template. Mentors answer formatted posts first.",
                 "New power: #starter-quests and the major forums are open (post in your major's)."],
             1: ["Journeyman. You can build a space and find your way around Unreal.",
