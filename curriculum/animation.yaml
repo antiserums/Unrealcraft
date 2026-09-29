@@ -1,0 +1,1912 @@
+# Unrealcraft — Animation major, all ranks. IDs AQ1…
+# Difficulty tiers: novice (rank 0) · apprentice (1) · adept (2) · expert (3) · master (4).
+# Every URL was checked against the live UE 5.8 docs when written.
+
+quests:
+  - id: AQ9
+    rank: 0
+    difficulty: novice
+    track: animation
+    subjects: [skeletal-mesh, animation-sequence, actors]
+    required_for_majors: []
+    taster_for_majors: [animation]
+    adjacent_for: [cinematics, gameplay_design]
+    required_spine: false
+    elective: true
+    title: Play an animation on a mesh
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-actors-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-assets-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
+    checklist:
+      - "Open a Third Person template project. In the Content Browser, find SKM_Quinn or SKM_Manny."
+      - "Drag the Skeletal Mesh into the Level Viewport. This creates a Skeletal Mesh Actor. Move it to an empty spot."
+      - "In the Details panel, find the Animation section. Set Animation Mode to Use Animation Asset."
+      - "Set Anim to Play to one animation from Content/Characters/Mannequins/Animations (for example an idle or a run)."
+      - "Turn on Looping. Press Play and watch the mesh animate in the level."
+      - "Try one more thing: drag a different Material onto the actor. If it looks wrong, open the Material and enable Used with Skeletal Mesh."
+    done_when: "A screenshot in Play mode of your Skeletal Mesh Actor in the middle of the animation, and a second screenshot of its Details panel showing Animation Mode and Anim to Play."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "What are the two basic ways to animate a Skeletal Mesh Actor?"
+        choices: ["A Material and a Texture", "An Animation Blueprint, or a single Animation Asset", "A Static Mesh and a Physics Asset", "A Level Sequence only"]
+        answer_index: 1
+        explain: "You can use an Animation Blueprint to play and blend many animations, or use one Animation Asset to play a single sequence once or in a loop."
+      - q: "What is the quickest way to place a Skeletal Mesh Actor in a level?"
+        choices: ["Write a Blueprint that spawns it", "Import it again from FBX", "Drag it from the Content Browser into the Level Viewport", "Right-click the level and pick Add Skeleton"]
+        answer_index: 2
+        explain: "The docs say the quickest way is to drag the mesh from the Content Browser into the Level Viewport, then set its Transform."
+      - q: "You drag a Material onto a Skeletal Mesh Actor and it does not render correctly. What must you enable in the Material?"
+        choices: ["Two Sided", "Used with Static Lighting", "Cast Shadows", "Used with Skeletal Mesh"]
+        answer_index: 3
+        explain: "A Material needs the Used with Skeletal Mesh option enabled before it can be used on a Skeletal Mesh."
+      - q: "Why does a Skeletal Mesh Actor not collide with objects like a Static Mesh does?"
+        choices: ["It needs a Physics Asset made for it", "Skeletal Meshes can never collide", "It needs a Nav Mesh", "It collides only when it has an Animation Blueprint"]
+        answer_index: 0
+        explain: "Normal collision does not work with Skeletal Mesh Actors. They need a Physics Asset created for them (Create > Physics Asset > Create and Assign)."
+      - q: "Which property do you set so a mesh plays one Animation Sequence without an Animation Blueprint?"
+        choices: ["Anim Class", "Animation Mode set to Use Animation Asset, then Anim to Play", "Skeleton", "Preview Pose Asset"]
+        answer_index: 1
+        explain: "Set Animation Mode to Use Animation Asset and choose the sequence in Anim to Play. Anim Class is for Animation Blueprints."
+    flavors:
+      _default: {why: "Placing a mesh and playing one animation is the first step of every animation task."}
+      animation: {why: "You will do this many times to check an animation in a real scene with real lighting.", do: "Also test the same animation with Looping off and note what pose the mesh stops in."}
+      cinematics: {why: "A Skeletal Mesh Actor playing a loop is the simplest background character for a shot."}
+      gameplay_design: {why: "Quick animation previews help you judge timing before any Blueprint work."}
+
+  - id: AQ10
+    rank: 0
+    difficulty: novice
+    track: animation
+    subjects: [skeletal-mesh, skeleton, animation-sequence]
+    required_for_majors: []
+    taster_for_majors: [animation]
+    adjacent_for: [tech_art, programming]
+    required_spine: false
+    elective: true
+    title: "Skeleton, mesh, animation: three assets"
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletons-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-assets-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-animation-system-in-unreal-engine"
+    checklist:
+      - "In a Third Person project, open Content/Characters/Mannequins. Find the Skeleton asset, one Skeletal Mesh (SKM_) and one Animation Sequence."
+      - "Double-click the Skeleton asset. Look at the Skeleton Tree. Find the root bone, the pelvis and one hand bone."
+      - "Open the Skeletal Mesh asset. In its Asset Details, find the Skeleton property. Note that it points to the same Skeleton asset."
+      - "Open the Animation Sequence. In Asset Details, find the Skeleton property again."
+      - "Write 3 short lines: what the Skeletal Mesh holds, what the Skeleton holds, what the Animation Sequence holds."
+      - "Bonus: in the Skeleton Editor, open Window > Anim Notifies or Anim Curves and note that this data lives on the Skeleton."
+    done_when: "A screenshot of the Skeleton Tree with the three bones named, plus your 3 lines that say what each asset holds and how they are linked."
+    xp: 30
+    verify_type: writeup
+    quiz:
+      - q: "What does a Skeletal Mesh asset contain?"
+        choices: ["Only the animation keyframes", "The visual mesh and the skeleton bone data used to animate it", "Only Materials", "The Animation Blueprint logic"]
+        answer_index: 1
+        explain: "The Skeletal Mesh is the foundation asset. It holds the geometric model and the skeleton with bone data. The skeleton is also saved as a separate Skeleton asset."
+      - q: "Why can one Animation Sequence be used on several different Skeletal Meshes?"
+        choices: ["Because sequences store vertex positions", "Because Unreal converts them automatically each time", "Because each sequence is tied to a Skeleton, and any mesh that uses that Skeleton can play it", "Because they are tied to a Material"]
+        answer_index: 2
+        explain: "Animation Sequences are tied to a specific Skeleton. Meshes that share that Skeleton can share the animations."
+      - q: "During FBX import you leave the Skeleton field empty. What happens?"
+        choices: ["The import fails", "A new Skeleton asset is created from the imported character", "The mesh is imported as a Static Mesh", "The last used Skeleton is picked"]
+        answer_index: 1
+        explain: "Leaving the Skeleton field empty creates a new Skeleton asset based on the skinned character being imported."
+      - q: "Two meshes want to share one Skeleton asset. What must be the same on both?"
+        choices: ["Bone names and their hierarchy order", "The number of vertices", "The Material slots", "The animation length"]
+        answer_index: 0
+        explain: "Sharing works only if bone names and hierarchy order are consistent. The second mesh may add extra bones but cannot rename or reorder the existing ones."
+      - q: "You add an Animation Notify inside an Animation Sequence. Where is that notify data stored?"
+        choices: ["In the Level", "In the Skeletal Mesh", "In the Material", "On the Skeleton asset, as shared data"]
+        answer_index: 3
+        explain: "Skeletons store animation-specific data such as notifies. When you create one in a sequence, it is added to the Skeleton as shared data."
+    flavors:
+      _default: {why: "Most animation problems come from mixing up these three assets. Know which one holds what."}
+      animation: {why: "Every retarget, notify and curve depends on the Skeleton. Understanding the link saves hours later.", do: "Open the Skeleton Editor toolbar and find the Retarget Manager. Read the Manage Compatible Skeletons section."}
+      tech_art: {why: "Pipelines and naming rules for bones start here."}
+      programming: {why: "Code that plays or swaps animations has to reference the right asset type."}
+
+  - id: AQ11
+    rank: 0
+    difficulty: novice
+    track: animation
+    subjects: [mannequin, third-person-template, project-content]
+    required_for_majors: []
+    taster_for_majors: [animation]
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: true
+    title: The Mannequins
+    time_min: 25
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
+    checklist:
+      - "Create a new Third Person template project (Games > Third Person). Press Play once and move with WASD and Space."
+      - "Open Content/Characters. Find the UE5 mannequins Quinn and Manny and note which one is the default."
+      - "Open Content/Characters/Mannequins/Animations. Count the animation sets and open one animation of each."
+      - "Open Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter. Select the Mesh component. Change Skeletal Mesh to SKM_Manny."
+      - "In the Animation section set Animation Mode to Use Animation Blueprint and Anim Class to ABP_Manny. Compile, save, press Play."
+      - "Open the Rigs folder and find CR_Mannequin_Body and CR_Mannequin_BasicFootIK. Read what each one is for on the doc page."
+    done_when: "A screenshot in Play mode with Manny as the player character, and a screenshot of the Animations folder. Add one line naming the two Control Rig assets in the Rigs folder."
+    xp: 30
+    verify_type: screenshot
+    quiz:
+      - q: "Which mannequin does the UE5 Third Person template use by default?"
+        choices: ["Manny", "The legacy UE4 mannequin", "Quinn", "A MetaHuman"]
+        answer_index: 2
+        explain: "The template starts with the feminine UE5 mannequin, Quinn. Manny is the male mannequin and is also included."
+      - q: "Where are the mannequin animations stored in the template?"
+        choices: ["Content/Characters/Mannequins/Animations", "Content/LevelPrototyping", "Content/ThirdPerson/Blueprints", "Engine/Content/Animations"]
+        answer_index: 0
+        explain: "Animations for the mannequins live in Content/Characters/Mannequins/Animations. There are two sets, one per mannequin."
+      - q: "To swap the player mesh to Manny, which Blueprint do you edit?"
+        choices: ["ABP_Manny", "BP_ThirdPersonCharacter in Content/ThirdPerson/Blueprints", "CR_Mannequin_Body", "The Level Blueprint"]
+        answer_index: 1
+        explain: "You open BP_ThirdPersonCharacter, select the Mesh component, and change its Skeletal Mesh, Animation Mode and Anim Class."
+      - q: "What is CR_Mannequin_BasicFootIK used for?"
+        choices: ["Changing the mannequin's LODs", "Adjusting the feet to the terrain with IK", "Playing the run animation", "Spawning physics cubes"]
+        answer_index: 1
+        explain: "The template's Animation Blueprints use the IK Rig system. CR_Mannequin_BasicFootIK adjusts the position of the feet to match the terrain."
+      - q: "What is CR_Mannequin_Body for?"
+        choices: ["Posing and animating the mannequin directly in the editor", "Importing FBX files", "Controlling the camera distance", "Setting the mannequin's Materials"]
+        answer_index: 0
+        explain: "CR_Mannequin_Body is a Control Rig asset you can use to pose and animate the mannequin in the editor."
+    flavors:
+      _default: {why: "Almost every tutorial starts from the mannequins. Knowing where their parts live saves time."}
+      animation: {why: "Manny and Quinn are your free test characters. Their skeleton and animations are the base for retargeting and rigs.", do: "Open the LOD Data Asset in Content/Characters/Mannequins/Meshes and note how many LODs the mannequin has."}
+      gameplay_design: {why: "Prototyping a mechanic is faster when you know which template assets you can reuse."}
+      cinematics: {why: "The mannequin plus CR_Mannequin_Body is a quick way to pose a stand-in character in a shot."}
+
+  - id: AQ12
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [fbx, import, skeletal-mesh, pipeline]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: false
+    title: Import a skeletal mesh
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-skeletal-mesh-pipeline-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-skeletal-meshes-using-fbx-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-animation-pipeline-in-unreal-engine"
+    checklist:
+      - "Get a rigged character FBX with one animation. Export one from Unreal if you have none: right-click SKM_Manny > Asset Actions > Export, and export one animation the same way."
+      - "Make a folder Content/Import_Test. Click Import in the Content Browser and pick the mesh FBX."
+      - "In FBX Import Options, leave Skeleton empty, keep Create Physics Asset on, and check Import Uniform Scale and Convert Scene Unit. Click Import."
+      - "Open the new Skeletal Mesh in the editor. Check the scale against the mannequin. Check the bone list in the Skeleton Tree."
+      - "Import the animation FBX alone. This time set Skeleton to the skeleton you just created. Confirm an Animation Sequence appears."
+      - "Import the mesh a second time into another folder, but now select the existing Skeleton in the dropdown. Note that no new Skeleton asset is created."
+    done_when: "A screenshot of the Content Browser showing the imported Skeletal Mesh, Skeleton, Physics Asset and Animation Sequence, and a screenshot of the imported mesh next to the mannequin in a level at the correct size."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "Where is the pivot point of an imported Skeletal Mesh?"
+        choices: ["At the center of the mesh bounds", "At the scene origin of the FBX file", "At the root bone of the skeleton", "At the first vertex"]
+        answer_index: 2
+        explain: "The pivot of a Skeletal Mesh is always at the root bone. Where the root sits in the DCC scene does not matter; it acts as if it were at the origin."
+      - q: "How many animations can one FBX file carry for a Skeletal Mesh in the standard FBX pipeline?"
+        choices: ["One animation per file", "Up to 10", "Unlimited, always", "None; animations need a separate format"]
+        answer_index: 0
+        explain: "The FBX pipeline currently supports a single animation for each Skeletal Mesh per file. Multiple morph targets are fine in one file."
+      - q: "You import an animation FBX on its own, with no mesh. What must you set?"
+        choices: ["Create Physics Asset", "An existing Skeleton", "Import Mesh LODs", "Force Front XAxis"]
+        answer_index: 1
+        explain: "When importing an animation by itself you must specify an existing Skeleton. The docs stress this with a warning."
+      - q: "What does Create PhysicsAsset do during import?"
+        choices: ["Adds collision to the Material", "Creates a Nav Mesh", "Generates a Physics Asset, mostly spheres with a capsule at the root", "Bakes the animation into the mesh"]
+        answer_index: 2
+        explain: "With Create PhysicsAsset on, a new Physics Asset is generated. It is made mostly of spheres, with a capsule for the root, and free rotation on the constraints."
+      - q: "Your imported character is 100 times too small. Which option converts FBX units to centimeters?"
+        choices: ["Import Rotation", "Preserve Smoothing Group", "Use T0 As Ref Pose", "Convert Scene Unit"]
+        answer_index: 3
+        explain: "Convert Scene Unit converts the FBX units into Unreal's unit, centimeters. Import Uniform Scale can also scale the mesh by a factor."
+      - q: "You leave the Skeleton field empty when importing a mesh named SK_Hero. What is the new Skeleton asset called?"
+        choices: ["SK_Hero_Skeleton (the mesh name with Skeleton appended)", "Skeleton_01", "SK_Hero_Rig", "It is not named until you rename it"]
+        answer_index: 0
+        explain: "If no existing Skeleton is selected, a new one is created and named after the Skeletal Mesh with Skeleton appended."
+    flavors:
+      _default: {why: "Every animated character enters Unreal through this door. Bad import settings cause bugs that show up much later."}
+      animation: {why: "Wrong scale, a duplicated Skeleton or a missing Physics Asset will break retargeting and physics later. Get the import right first.", do: "Reimport the animation with Animation Length set to Set Range and a shorter Frame Import Range. Compare the length in the Asset Details."}
+      tech_art: {why: "You will write the import rules for the team. You have to know what each option does."}
+      cinematics: {why: "Characters and props from outside the engine come in through FBX. Wrong scale ruins a shot."}
+
+  - id: AQ13
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [animation-sequence, editor, additive, root-motion, curves]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: false
+    title: Inside the Animation Sequence editor
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequence-editor-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-curves-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-editors-in-unreal-engine"
+    checklist:
+      - "Open a mannequin run animation. Find the six areas: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, Asset Browser."
+      - "In Asset Details, set Rate Scale to 0.5, press play, then set it back to 1. Read the Number of Sampled Frames and Target Frame Rate."
+      - "Find Additive Anim Type. Read its options. Leave it on No additive."
+      - "Find EnableRootMotion. Turn it on, watch the viewport, then turn it off again. Read the Root Motion Root Lock options."
+      - "Select a bone in the Skeleton Tree, rotate it a little in the viewport and press Key in the Toolbar. See the additive track appear in the timeline. Then undo."
+      - "In the timeline, use the Curves track menu: Add Curve... > Create Curve, name it TestCurve. Open Window > Anim Curves to see it. Delete it after and save the Skeleton."
+    done_when: "A screenshot of the editor with the six areas labeled, and a screenshot of Asset Details showing Rate Scale, Additive Anim Type and EnableRootMotion. Add one line: what the Key button does."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "What does Rate Scale control in an Animation Sequence?"
+        choices: ["The number of bones", "The playback speed; 1 is default, lower is slower", "The size of the mesh", "The frame rate of the import"]
+        answer_index: 1
+        explain: "Rate Scale is the playback speed. 1 is the default, lower values play slower and higher values play faster."
+      - q: "Which Additive Anim Type is the most common for additive animation?"
+        choices: ["Local Space", "Mesh Space", "No additive", "World Space"]
+        answer_index: 0
+        explain: "Local Space is the most common option. Mesh Space applies the delta in component space and is required for Aim Offsets."
+      - q: "What does the Key button in the Toolbar do?"
+        choices: ["Locks the asset", "Exports the current frame", "Adds a keyframe of the current pose as an additive layer in the timeline", "Creates a new Skeleton"]
+        answer_index: 2
+        explain: "Key adds a keyframe of the current pose to the Asset Editor as an additive layer. After you move a bone, this saves the change in an additive track."
+      - q: "What does EnableRootMotion do?"
+        choices: ["Deletes the root bone", "Allows root motion data to be extracted from the animation", "Plays the animation in reverse", "Locks all bones in place"]
+        answer_index: 1
+        explain: "EnableRootMotion allows extraction of root motion data so it can move the character instead of only moving the root bone in place."
+      - q: "What is the difference between Linear and Step interpolation?"
+        choices: ["Linear is faster to compute; Step is slower", "Linear only works on curves", "Step is smoother", "Linear eases between keyframes; Step holds a value until the next keyframe"]
+        answer_index: 3
+        explain: "Linear interpolation eases between keyframes. Step keeps the value until the next keyframe is reached, with no blending."
+      - q: "You create an Animation Curve in a sequence. Which asset must you also save?"
+        choices: ["The Skeletal Mesh", "The Level", "The Skeleton asset, because curves are stored on it", "The Physics Asset"]
+        answer_index: 2
+        explain: "Animation Curves are stored on the Skeleton asset. Creating a curve edits the Skeleton, so you must save it."
+    flavors:
+      _default: {why: "This editor is where you inspect and fix every animation. Its settings decide how the clip behaves in the game."}
+      animation: {why: "Additive type, root motion and rate scale are settings you will change every week. Learn where they are and what they do.", do: "Use the Record button to record the mesh during playback and save it as a new sequence. Compare its frame count with the original."}
+      cinematics: {why: "Edit In Sequencer starts from this editor. Knowing the playback settings avoids surprises in a shot."}
+      tech_art: {why: "Curves and compression settings on a sequence drive materials and memory cost."}
+
+  - id: AQ14
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [animation-blueprint, animgraph, event-graph]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [programming, gameplay_design]
+    required_spine: false
+    elective: false
+    title: Your first Animation Blueprint
+    time_min: 55
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/graphing-in-animation-blueprints-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
+    checklist:
+      - "In the Content Browser click Add (+) > Animation > Animation Blueprint. Pick the mannequin Skeleton. Name it ABP_First."
+      - "Open it. Find the Toolbar, Viewport, My Blueprint, Graph, Details and Anim Preview Editor panels."
+      - "In the AnimGraph, drag an idle Animation Sequence from the Asset Browser into the graph. Connect the Sequence Player to Output Pose. Click Compile."
+      - "Watch the pulsing pose link. Change the sequence to a run animation and compile again."
+      - "Open the Event Graph. Note the events already there. Do not add logic yet."
+      - "Place a Skeletal Mesh Actor in the level. Set Animation Mode to Use Animation Blueprint and Anim Class to ABP_First. Press Play."
+    done_when: "A screenshot of the AnimGraph with the Sequence Player connected to Output Pose and the compile icon green, plus a screenshot in Play mode showing the actor animated by ABP_First."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which two ways can you create an Animation Blueprint?"
+        choices: ["Only from the Level Blueprint", "Add (+) > Animation > Animation Blueprint, or right-click a Skeletal Mesh > Create > Anim Blueprint", "Only by importing an FBX", "From the Physics Asset Editor"]
+        answer_index: 1
+        explain: "Both paths work. In both cases the Animation Blueprint targets a Skeleton."
+      - q: "An Animation Blueprint is created but the character does not use it. What is missing?"
+        choices: ["Set Animation Mode to Use Animation Blueprint and Anim Class to the ABP on the Skeletal Mesh", "A Physics Asset", "A Level Sequence", "Enable Root Motion"]
+        answer_index: 0
+        explain: "An Animation Blueprint does nothing until it is assigned. Set Animation Mode to Use Animation Blueprint and Anim Class to your asset."
+      - q: "What happens when you connect a Sequence Player to Output Pose and compile?"
+        choices: ["The animation plays once and stops", "Nothing until you press Play in the level", "The animation plays indefinitely in the preview", "The Blueprint fails to compile"]
+        answer_index: 2
+        explain: "The Sequence Player continuously plays the animation. After Compile you see it loop in the viewport."
+      - q: "How is the AnimGraph different from a normal Event Graph?"
+        choices: ["It cannot use variables", "It is evaluated every frame and shows its execution flow at all times, it is not event-based", "It only runs in the editor", "It runs once at start"]
+        answer_index: 1
+        explain: "The AnimGraph is evaluated each frame and passes poses between nodes. Its flow is shown at all times because it is not driven by events."
+      - q: "Which graph runs on the game thread, and why does the doc say to use it as little as possible?"
+        choices: ["The AnimGraph, because it blends poses", "The State Machine, because it is slow", "The Anim Preview Editor, because it is a tool", "The Event Graph, because it shares the game thread with most other Blueprint logic"]
+        answer_index: 3
+        explain: "By default the AnimGraph runs on a worker thread. The Event Graph runs on the game thread with all other Blueprints, so heavy logic there costs performance."
+      - q: "What are the three main graph types in an Animation Blueprint?"
+        choices: ["Event Graph, Anim Graph, State Machines", "Construction Script, Event Graph, Functions", "Material Graph, Anim Graph, Level Graph", "Input Graph, Output Graph, Debug Graph"]
+        answer_index: 0
+        explain: "The editor has the Event Graph for Blueprint logic, the Anim Graph for pose logic, and State Machines for state-based logic such as locomotion."
+    flavors:
+      _default: {why: "The Animation Blueprint is where animation logic lives. Every character in a game has one."}
+      animation: {why: "State machines, blend spaces and layers all sit inside this asset. This first one is your base for the rest of the major.", do: "Open Class Defaults and read the Root Motion Mode options. Write one line on when you would pick Root Motion from Montages Only."}
+      programming: {why: "Gameplay code feeds variables into the Animation Blueprint. Knowing the graph types helps you talk to animators."}
+      gameplay_design: {why: "Feel and responsiveness come from how animation logic reacts to input."}
+
+  - id: AQ15
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [animation-blueprint, state-machine, transitions, locomotion]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [programming, gameplay_design]
+    required_spine: false
+    elective: false
+    title: "State machine: idle to walk"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/state-machines-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/transition-rules-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-get-animation-variables-in-animation-blueprints-in-unreal-engine"
+    checklist:
+      - "Open ABP_First (from AQ14) or make a new Animation Blueprint for the mannequin Skeleton, named ABP_Locomotion."
+      - "In the AnimGraph right-click > State Machines > Add New State Machine. Name it Locomotion. Connect it to Output Pose."
+      - "Open the state machine. Drag from Entry and Add State named Idle. Put the idle animation inside and connect it to the state's Output Pose."
+      - "Add a second state named Walk with a walk or run animation. Create one transition Idle to Walk and one transition Walk to Idle."
+      - "In the Event Graph, on Event Blueprint Update Animation, get the owning actor, cast to your character, get Character Movement, get Velocity, then Vector Length XY. Promote the result to a variable named Speed."
+      - "Transition rule Idle to Walk: Speed > 10. Transition rule Walk to Idle: Speed <= 10. Compile."
+      - "Assign the ABP to BP_ThirdPersonCharacter's Mesh (Anim Class). Press Play and walk. Set the Idle to Walk transition Duration to 0.2 and compare."
+    done_when: "A screenshot of the state machine graph with Idle and Walk and both transitions, a screenshot of one transition rule using Speed, and a short clip or two screenshots of the character idle and walking in Play."
+    xp: 125
+    verify_type: screenshot
+    quiz:
+      - q: "How do you add a State Machine to an Animation Blueprint?"
+        choices: ["Add (+) > Animation > State Machine in the Content Browser", "Right-click in the Anim Graph, choose State Machines > Add New State Machine, connect it to Output Pose", "Drag a Skeleton into the Event Graph", "Enable it in Class Settings"]
+        answer_index: 1
+        explain: "State Machines are created inside the Anim Graph from the right-click menu. Then connect the node to Output Pose."
+      - q: "What is the Entry point used for?"
+        choices: ["Defining the default state, usually idle in a locomotion setup", "Stopping the animation", "Importing animations", "Connecting to the Event Graph"]
+        answer_index: 0
+        explain: "Every State Machine starts with an entry point. The state connected to it is active by default. For locomotion this is usually idle."
+      - q: "You made one transition from Idle to Walk. The character walks but never returns to idle. Why?"
+        choices: ["The Skeleton is wrong", "Transitions are one direction only; you also need a Walk to Idle transition", "The animation is not looping", "State Machines allow only one transition"]
+        answer_index: 1
+        explain: "Transitions are single-direction. To go back and forth you need one transition for each direction."
+      - q: "What must a transition rule output?"
+        choices: ["A pose", "A float speed", "A boolean; true lets the state change", "A Montage"]
+        answer_index: 2
+        explain: "Transition rule logic ends with a boolean. When it is true, the state machine can transition to the next state."
+      - q: "How do the docs get a Speed value for locomotion?"
+        choices: ["From the mesh bounds", "From the animation's Rate Scale", "From the camera distance", "Get Velocity from the Character Movement component, then Vector Length XY"]
+        answer_index: 3
+        explain: "Speed comes from the movement component's velocity. Vector Length XY isolates forward and lateral speed."
+      - q: "What does the state property Always Reset on Entry do?"
+        choices: ["Deletes the state's animation", "Blocks all transitions into the state", "Makes the animations in the state restart from the beginning each time the state is entered", "Resets the whole Animation Blueprint"]
+        answer_index: 2
+        explain: "With Always Reset on Entry the state's sequence players restart at the start time. If disabled, they continue where they left off."
+    flavors:
+      _default: {why: "Idle to walk is the smallest real locomotion system. Everything larger is built the same way."}
+      animation: {why: "States, transitions and rules are the daily language of gameplay animation. Master the small case first.", do: "Add a Conduit or a State Alias and write one line on when it helps."}
+      programming: {why: "You will expose variables like Speed and IsFalling for animators. See how they are consumed."}
+      gameplay_design: {why: "Transition duration and thresholds change how the character feels. Try a few values."}
+
+  - id: AQ16
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [skeleton, sockets, attachment, blueprint]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, cinematics]
+    required_spine: false
+    elective: false
+    title: "Sockets on a skeleton: hold a prop"
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-sockets-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-editor-in-unreal-engine"
+    extra_urls: []
+    checklist:
+      - "Open the mannequin Skeleton. In the Skeleton Tree right-click hand_r and choose Add Socket. Name it hand_rSocket."
+      - "In the Viewport menu go to Character > Bones and enable Sockets so you can see it. Move and rotate the socket into the palm. Save the Skeleton."
+      - "Right-click the socket > Add Preview Asset and pick a simple prop mesh (a cube or a Starter Content prop). Adjust the socket until it looks held."
+      - "In BP_ThirdPersonCharacter add a Static Mesh component with the same prop. Drag it onto the Mesh component to parent it. Set Parent Socket to hand_rSocket."
+      - "In the Event Graph, on a key press, call Attach Component To Component (or Detach From Component) with the socket name and Snap to Target rules. Test in Play."
+      - "Copy the socket and use Paste Sockets To Selected Bone on hand_l. Compare the two."
+    done_when: "A screenshot of the Skeleton Tree with hand_rSocket under hand_r, a screenshot of the Blueprint component with Parent Socket set, and a screenshot in Play mode with the prop held in the hand."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "How do you create a Socket?"
+        choices: ["Right-click a Bone in the Skeleton Tree and select Add Socket", "Add (+) > Animation > Socket", "Drag a mesh into the Skeleton Tree", "Click Add Socket in the Level Details panel"]
+        answer_index: 0
+        explain: "Sockets are created from the Skeleton Tree by right-clicking a Bone and selecting Add Socket. The socket is parented to that Bone."
+      - q: "You add a Socket but do not see it in the viewport. What do you enable?"
+        choices: ["Show Collision", "Character > Bones > Sockets in the Viewport menu", "Wireframe view", "Enable Socket Snapping in the Level editor"]
+        answer_index: 1
+        explain: "Sockets are hidden by default in the Animation Editor viewport. Enable them under Character > Bones > Sockets."
+      - q: "By default, which asset changes when you add or move a Socket?"
+        choices: ["The Skeletal Mesh", "The Animation Sequence", "The Level", "The Skeleton asset"]
+        answer_index: 3
+        explain: "Sockets edit the Skeleton asset by default, so you must save it. A Mesh Socket instead lives on one Skeletal Mesh."
+      - q: "When would you convert a Socket into a Mesh Socket?"
+        choices: ["When the socket must rotate", "When you want the socket only on one of several meshes that share a Skeleton", "When the socket is on the root bone", "When you attach a Niagara system"]
+        answer_index: 1
+        explain: "Mesh Sockets exist on the Skeletal Mesh, not the Skeleton. Use them when only one mesh sharing the Skeleton needs the socket."
+      - q: "In a Blueprint, how do you make a child component sit on a socket by default?"
+        choices: ["Set its Skeleton property", "Add a Physics Constraint", "Parent it under the Skeletal Mesh component and set Parent Socket in the Details panel", "Set Animation Mode to Use Animation Asset"]
+        answer_index: 2
+        explain: "Drag the component onto the Skeletal Mesh component to parent it, then choose the socket in the Parent Socket property."
+      - q: "Which attach rule teleports the target exactly onto the Socket's transform?"
+        choices: ["Keep Relative", "Keep World", "Weld Simulated Bodies", "Snap to Target"]
+        answer_index: 3
+        explain: "Snap to Target moves the target to the coordinates of the parent or socket. Keep World keeps the visual transform; Keep Relative keeps the numeric values."
+    flavors:
+      _default: {why: "Weapons, tools, hats and effects all attach through sockets. This is the standard way to put a thing in a hand."}
+      animation: {why: "Sockets are where animation meets gameplay props. Bad socket placement makes every hold look wrong.", do: "Add a second socket for a two-handed pose and note how the prop needs a different offset."}
+      gameplay_design: {why: "Equip and drop systems are built on attach and detach with sockets."}
+      cinematics: {why: "Attaching a prop or a camera to a socket keeps it locked to the character in a shot."}
+
+  - id: AQ17
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [capstone, skeletal-mesh, level, lighting, metrics]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [cinematics, gameplay_design]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Stage for motion
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-actors-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
+    checklist:
+      - "Make a new level L_MotionStage. Build a flat floor about 20 by 20 meters and one long wall from simple geometry or Level Prototyping meshes."
+      - "Add metrics marks: a step (about 20 cm), a ledge (about 1 m), and a gap (about 2 m). Label each with a Text Render actor showing its size."
+      - "Light the stage: one Directional Light, a Sky Light, and one extra light that makes the mannequin readable from the front."
+      - "Place a Skeletal Mesh Actor (Quinn or Manny). Set Animation Mode to Use Animation Asset, choose a run or walk sequence, and enable Looping."
+      - "Place a second mannequin using ABP_Manny or ABP_Quinn as Anim Class so the mentor can compare a looping asset with an Animation Blueprint."
+      - "Add a Camera Actor framing the stage. Record a 10 to 20 second clip (window capture is fine) of the looping mannequin and the marks."
+      - "Write 5 lines: which sequence loops, how the mesh was scaled against the marks, and one thing you would change."
+    done_when: "A short clip of the stage with the looping mannequin, two screenshots (the marks with labels, the lighting from the front), and your 5 lines. A mentor reviews it."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A test stage with known sizes is the tool every animator uses to judge motion at real scale."}
+      animation: {why: "You will test every locomotion set, jump and vault on this stage. Build it once, use it forever.", do: "Save the level as a reusable asset in your own folder so later quests can open it."}
+      cinematics: {why: "A lit stage with a camera is also a simple shot. Framing and light on a character start here."}
+      gameplay_design: {why: "Step, ledge and gap sizes are the same metrics you use to tune character movement."}
+
+  - id: AQ18
+    rank: 1
+    difficulty: apprentice
+    track: animation
+    subjects: [physics-asset, ragdoll, collision]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Physics Asset basics
+    time_min: 45
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-asset-editor-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-a-new-physics-asset-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/testing-physics-assets-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-bodies-in-unreal-engine"
+    checklist:
+      - "In the Content Browser find the mannequin Physics Asset (PA_) next to SKM_Manny. Double-click it to open the Physics Asset Editor."
+      - "Look at the bodies and constraints on the mannequin. Select the shoulder body and count the bodies below it in the hierarchy."
+      - "Use the Simulation dropdown under the toolbar arrow. Try Simulation, then No Gravity and Ctrl+click to poke bodies. Then try Selected Simulation with the shoulder selected."
+      - "Right-click SKM_Manny in the Content Browser > Create > Physics Asset > Create. Accept the defaults and compare the new asset with the original."
+      - "In BP_ThirdPersonCharacter, on a key press: on the Mesh component call Set Simulate Physics (true) and set its Collision Enabled to Physics Only or Collision Enabled. Set the Capsule collision to No Collision."
+      - "Press Play, press the key, and watch the character fall as a ragdoll. Take a screenshot mid-fall."
+    done_when: "A screenshot of the Physics Asset Editor with the mannequin bodies visible, a screenshot of the Blueprint nodes that start the ragdoll, and a screenshot in Play mode of the ragdoll on the floor."
+    xp: 55
+    verify_type: screenshot
+    quiz:
+      - q: "What is a Physics Asset made of?"
+        choices: ["Animation keyframes", "A set of rigid bodies and constraints that form a ragdoll", "Materials and textures", "A list of sockets"]
+        answer_index: 1
+        explain: "A Physics Asset defines the physics and collision of a Skeletal Mesh. It contains rigid bodies and constraints that make up one ragdoll."
+      - q: "How many Physics Assets can a Skeletal Mesh have?"
+        choices: ["One", "One per bone", "Unlimited", "Two, one for collision and one for ragdoll"]
+        answer_index: 0
+        explain: "Only a single Physics Asset is allowed for a Skeletal Mesh. It can be turned on or off on many Skeletal Mesh components."
+      - q: "Which is a valid way to create a Physics Asset for an already imported mesh?"
+        choices: ["Add (+) > Animation > Physics Asset", "Right-click the Skeletal Mesh > Create > Physics Asset > Create", "Open the Skeleton and press Key", "Drag the mesh into the Level"]
+        answer_index: 1
+        explain: "After import, right-click the Skeletal Mesh in the Content Drawer and select Create > Physics Asset > Create. The other way is Create Physics Asset during import."
+      - q: "In the Physics Asset Editor, what is the No Gravity simulation option useful for?"
+        choices: ["Making the ragdoll fall faster", "Baking the ragdoll to an animation", "Finding interpenetrating bodies or constraints already outside their limits by poking them with Ctrl+click", "Deleting all constraints"]
+        answer_index: 2
+        explain: "No Gravity simulates the whole asset without gravity. You can Ctrl+click to poke bodies and see problems such as overlapping bodies."
+      - q: "You enable Selected Simulation with the shoulder body selected. What simulates?"
+        choices: ["Only the shoulder", "The whole body", "The shoulder and every body below it in the hierarchy, so the whole arm", "Nothing until you press Play"]
+        answer_index: 2
+        explain: "Selected Simulation simulates the selected bodies and those down the hierarchy. Selecting the shoulder simulates the entire arm."
+      - q: "Which shapes can a Physics Body use?"
+        choices: ["Boxes, spheres, capsules or convex hulls", "Only the full triangle mesh", "Only spheres", "Only boxes"]
+        answer_index: 0
+        explain: "Physics Bodies are simplified shapes: boxes, spheres, capsules, or convex hulls. They are used instead of the detailed render mesh for simulation."
+    flavors:
+      _default: {why: "Ragdolls, hit reactions and character collision all depend on the Physics Asset."}
+      animation: {why: "You need to know what the bodies are before you blend physics with animation.", do: "Open the Physics Asset of SKM_Quinn too and check whether both mannequins share a Physics Asset or have their own."}
+      gameplay_design: {why: "Death and knockdown moments are often a ragdoll switch. Know what it costs and how it looks."}
+      tech_art: {why: "Body count and shape choice affect simulation cost and collision quality."}
+
+  - id: AQ19
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, montage, slots, blueprint]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: "Montages: sections and slots"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-editor-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Animation/Montage/MontageJumptoSection"
+    checklist:
+      - "In the Content Browser, right-click an attack or interact Animation Sequence and choose Create > Create AnimMontage. Name it AM_Attack."
+      - "Drag two more Animation Sequences from the Asset Browser into the same Slot track so they play one after the other."
+      - "Right-click the Montage track and create three Montage Sections: Start, Loop, End. Place one header at the start of each animation."
+      - "In the Montage Sections panel, click Clear, then link Start -> Loop and Loop -> Loop so the middle part repeats."
+      - "Open Window > Anim Slot Manager. Add a Slot named FullBody and set the montage Slot track to DefaultGroup.FullBody. Save the Skeleton."
+      - "In your Animation Blueprint AnimGraph, add a Slot node after the locomotion state machine and set its Slot Name to FullBody."
+      - "In the Character Blueprint, play AM_Attack with Play Montage on a key press. On a second key, call Montage Jump to Section with Section Name End."
+    done_when: "Two screenshots: the Montage Sections panel showing the Start -> Loop -> Loop links, and the Blueprint graph with Play Montage and Montage Jump to Section. Add one sentence saying what happens when you press the second key."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "Where do you set the default order in which Montage Sections play?"
+        choices: ["In the Montage Sections panel", "In the Anim Slot Manager", "In the Timing track", "In the Character Blueprint Class Defaults"]
+        answer_index: 0
+        explain: "The Montage Sections panel is where you link each section to the next one. Clear unlinks them first."
+      - q: "You put two Animation Sequences in the same Slot track and they overlap in time. What does the documentation say?"
+        choices: ["The later one gets a lower blend weight", "They will interfere with each other, so do not overlap them", "The editor merges them into one sequence", "The first one is muted automatically"]
+        answer_index: 1
+        explain: "Sequences on the same Slot that play at the same time interfere with one another. Keep them in order without overlap."
+      - q: "A reload montage is playing. You play an attack montage that uses a Slot in the same Slot Group. What happens?"
+        choices: ["Both play together on the same bones", "The attack waits until the reload finishes", "The reload montage is stopped and the attack plays", "The engine logs an error and plays nothing"]
+        answer_index: 2
+        explain: "Playing a montage on a Slot in the same group as a running montage stops the active one. This is how montages interrupt each other."
+      - q: "You add a new Slot in the Anim Slot Manager. Which asset changes and must be saved?"
+        choices: ["The Animation Montage", "The Animation Blueprint", "The Skeletal Mesh", "The Skeleton asset"]
+        answer_index: 3
+        explain: "Slots are stored on the Skeleton asset. Creating or changing Slots edits the Skeleton, no matter which editor you are in."
+      - q: "Which Play Montage output pin fires when the montage finishes playing and is fully blended out?"
+        choices: ["On Blend Out", "On Completed", "On Interrupted", "On Notify End"]
+        answer_index: 1
+        explain: "On Completed fires after the montage ends and the blend out is finished. On Blend Out fires when the blend out starts."
+      - q: "You call Montage Jump to Section but leave the Montage input empty (NULL). What does the node do?"
+        choices: ["It jumps every active montage to that section", "It does nothing", "It jumps only the last played montage", "It stops all montages"]
+        answer_index: 0
+        explain: "The Blueprint reference says that with a NULL Montage reference, the jump is applied to all active montages."
+      - q: "Play Montage fires but the character keeps playing locomotion and never shows the montage. What is the most likely missing piece?"
+        choices: ["A Sync Group name on the montage", "A Slot node with the matching Slot Name in the AnimGraph", "A Child Montage", "A Timing track in the montage"]
+        answer_index: 1
+        explain: "Montages only play through Slots. The AnimGraph needs a Slot node that uses the same Slot as the montage."
+      - q: "You create a Child Montage and open it. What is true about it?"
+        choices: ["It can be the parent of more child montages", "You must copy the sections again by hand", "Its elements are read only, but you can override each animation segment in the Slot track", "It ignores the parent's Slot Group"]
+        answer_index: 2
+        explain: "A Child Montage inherits everything and is read only. You can right-click a segment and override it with a new animation. Child montages cannot be parents."
+    flavors:
+      _default: {why: "Montages are how gameplay plays one-off actions in order, with sections you can jump to at runtime."}
+      animation: {why: "Sections and slots turn a pile of clips into one asset that gameplay can drive.", do: "Add a fourth section and make it start from Blueprint with the Starting Section input on Play Montage."}
+      gameplay_design: {why: "Interrupt rules and section jumps are what make attacks and reloads feel responsive.", do: "Write down which of your montages should be able to interrupt each other and why."}
+
+  - id: AQ20
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, animation-blueprint, blending, montage]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: false
+    title: "Upper body layer: Layered Blend per Bone"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-layered-animations-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-masks-and-blend-profiles-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
+    checklist:
+      - "In the Anim Slot Manager, add a Slot named UpperBody. Set your attack or wave montage (AM_UpperWave) to use DefaultGroup.UpperBody."
+      - "In the AnimGraph, drag off your locomotion state machine and add New Save cached pose. Name it LocomotionCache."
+      - "Add a Layered blend per bone node. Feed Use cached pose LocomotionCache into Base Pose."
+      - "Add a second Use cached pose LocomotionCache, then a Slot node set to DefaultGroup.UpperBody. Connect it to Blend Poses 0."
+      - "In the node Details, expand Layer Setup, add one entry: Bone Name spine_01, Blend Depth 1, and check Mesh Space Rotation Blend."
+      - "In the Character Blueprint, on a key press, check Montage Is Playing first, then Montage Play AM_UpperWave only if it is not playing."
+      - "Play in editor: walk and press the key. The legs keep walking while the upper body plays the montage."
+    done_when: "A screenshot of the AnimGraph showing the cached pose, Slot node, and Layered blend per bone with its Layer Setup visible, plus a short clip or GIF of the character walking while the upper body plays the montage."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "Which two blend modes can you pick on a Layered blend per bone node?"
+        choices: ["Additive or Override", "Branch Filter or Blend Mask", "Local or Mesh", "Sync Group or Graph"]
+        answer_index: 1
+        explain: "The node's Details panel lets you choose Branch Filter (a list of bones and depths) or Blend Mask (a mask stored on the Skeleton)."
+      - q: "In a Branch Filter you set Bone Name to spine_01 and Blend Depth to 0. What weight do the bones get?"
+        choices: ["Weight 1 on spine_01 and all of its child bones", "Weight 0.5 on spine_01, weight 1 on its children", "Weight 1 only on spine_01, 0 on children", "The blend is disabled"]
+        answer_index: 0
+        explain: "A Blend Depth of 0 applies a blend weight of 1 to the named bone and all connected child bones."
+      - q: "What does a negative Blend Depth do?"
+        choices: ["It blends the parent bones instead", "It doubles the blend speed", "It disables the Blend Poses on those bones and favors the Base Pose", "It is not allowed and shows an error"]
+        answer_index: 2
+        explain: "Negative values disable the Blend Poses and favor the Base Pose, tapering through the chain for values below -1."
+      - q: "Why did the Epic guide check Mesh Space Rotation Blend for the shooting layer?"
+        choices: ["To make the montage loop", "To blend rotation in Mesh Space instead of Local Space", "To reduce the number of bones", "To let the lower body follow the upper body"]
+        answer_index: 1
+        explain: "Mesh Space Rotation Blend and Mesh Space Scale Blend control whether rotation and scale blending happens in Mesh Space or Local Space."
+      - q: "Why does the guide save the locomotion state machine into a cached pose?"
+        choices: ["So the same locomotion pose can be used in two places: as Base Pose and as the source for the Slot", "Because state machines cannot connect to blend nodes", "To make the animation run on the worker thread", "To store the pose to disk"]
+        answer_index: 0
+        explain: "Save cached pose lets you reuse one result in several places. The guide feeds it to both the Base Pose and the Slot."
+      - q: "In the guide, what check is done before calling Montage Play on the fire button?"
+        choices: ["Is Falling", "Is the Slot empty", "Montage Is Playing, so the montage is not restarted while it plays", "Is the Blend Depth greater than 0"]
+        answer_index: 2
+        explain: "The graph checks Montage Is Playing and only plays the montage if it is not already playing."
+      - q: "You want the same upper-body bone weights on several Layered blend per bone nodes. What does the documentation suggest?"
+        choices: ["Copy the Branch Filter list into each node", "Use a Blend Mask, which is stored on the Skeleton and can be reused", "Use a Sync Group", "Use a Child Montage"]
+        answer_index: 1
+        explain: "Blend Masks are stored on the Skeleton. The docs say they let you reuse these blend amounts more easily than a Branch Filter."
+      - q: "In a Blend Mask, a bone has the value 0. What does that mean?"
+        choices: ["The bone plays the animation at full strength", "No animation from the blend plays on that bone", "The bone is deleted from the LOD", "The bone blends at double speed"]
+        answer_index: 1
+        explain: "Blend Mask values go from 0 to 1. A value of 0 means no animation plays on that bone, 1 means 100 percent."
+    flavors:
+      _default: {why: "Layered blending is how a character walks and shoots, or runs and waves, at the same time."}
+      animation: {why: "This is the standard upper body layer pattern used in most action games.", do: "Try Blend Depth 2 and 0 on spine_01 and describe the difference at the hips."}
+      tech_art: {why: "Bone-based blending affects how you author rigs and which bone starts the chest chain.", do: "Create a Blend Mask on the Skeleton and switch the node to Blend Mask mode."}
+
+  - id: AQ21
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, root-motion, character-movement]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: "Root motion vs in-place"
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/root-motion-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
+    checklist:
+      - "Open an Animation Sequence that moves the character forward (a roll, vault or walk with root movement). Name it or note its name."
+      - "In the viewport, open Character > Bones > Bone Drawing and choose All Hierarchy. Watch the red root bone and its red line while the animation plays."
+      - "In Character > Animation > Root Motion, try Ignore, Loop, and Loop and Reset. Note what each does to the preview."
+      - "In Asset Details, check Enable Root Motion on the sequence. Create a montage from it (AM_Roll)."
+      - "Open the Animation Blueprint, click Class Defaults and set Root Motion Mode to Root Motion from Montages Only."
+      - "Play AM_Roll from the Character Blueprint on a key press. Play in editor and press the key while standing still."
+      - "Type show collision in the console (backtick key) to see the capsule move with the mesh."
+    done_when: "A screenshot of the Animation Sequence with All Hierarchy bone drawing and the red root line, a screenshot of the AnimBP Class Defaults showing Root Motion Mode, and one sentence describing what changed in game after Enable Root Motion was turned on."
+    xp: 110
+    verify_type: screenshot
+    quiz:
+      - q: "An animation has movement on the root bone, but Enable Root Motion is off. What do you see in game?"
+        choices: ["The character moves with the animation", "The mesh moves away from the capsule and then snaps back at the end", "The animation does not play", "The capsule moves but the mesh stays"]
+        answer_index: 1
+        explain: "Without root motion, the mesh animates away from the character capsule and snaps back to the start when the cycle ends."
+      - q: "Where do you turn on Enable Root Motion?"
+        choices: ["In the Project Settings", "In the Skeleton asset", "In the Asset Details of each Animation Sequence or Montage", "In the Character Movement component"]
+        answer_index: 2
+        explain: "Each Animation Sequence or Montage has its own Enable Root Motion property in the Asset Details panel of the Animation Sequence Editor."
+      - q: "Where is Root Motion Mode set?"
+        choices: ["In the Animation Blueprint Class Defaults", "In the Animation Sequence Asset Details", "In the Skeletal Mesh Actor", "In the Game Mode"]
+        answer_index: 0
+        explain: "Click Class Defaults in the Animation Blueprint Editor toolbar. The Root Motion Mode drop-down is there."
+      - q: "Which Root Motion Mode extracts root motion and removes it from the root bone, but does not move the character?"
+        choices: ["No Root Motion Extraction", "Root Motion from everything", "Root Motion from Montages Only", "Ignore Root Motion"]
+        answer_index: 3
+        explain: "Ignore Root Motion extracts the motion (so the root bone stays in place) but does not apply it to the character."
+      - q: "You choose Root Motion from everything. What is the performance cost the documentation warns about?"
+        choices: ["Textures are streamed twice", "The Animation Graph updates on the Game Thread instead of a Worker Thread", "All montages become read only", "Physics is disabled on the character"]
+        answer_index: 1
+        explain: "With Root Motion from everything or from Montages, the AnimGraph runs on the Game Thread, which can cause performance issues."
+      - q: "A walking character plays a root motion jump with movement on Z. What does the movement component do?"
+        choices: ["It applies full root motion including Z", "It ignores the Z axis of root motion and applies gravity", "It switches the character to Flying", "It stops the animation"]
+        answer_index: 1
+        explain: "When Walking or Falling, the Z axis of root motion is ignored and gravity is applied. Only in Flying is the full root motion used."
+      - q: "In the Animation Sequence Editor preview, what does Loop and Reset do?"
+        choices: ["Plays with root motion and starts every loop from the root origin", "Plays with root motion and continues from where the last loop ended", "Ignores root motion", "Resets the Skeleton to the reference pose"]
+        answer_index: 0
+        explain: "Loop continues from the previous end point. Loop and Reset starts each loop again from the root bone origin."
+      - q: "In a network game you want root motion from a montage to replicate. What does the documentation say you must do?"
+        choices: ["Nothing, Play Montage replicates itself", "Set Root Motion Mode to Ignore Root Motion", "Replicate the Play Montage call yourself with an RPC", "Enable Force Root Lock"]
+        answer_index: 2
+        explain: "Root motion replication happens by default, but you first need to replicate the Play Montage node manually with an RPC."
+    flavors:
+      _default: {why: "Choosing root motion or in-place decides who moves the character: the animation or the movement code."}
+      animation: {why: "Rolls, vaults and attacks feel grounded when the animation owns the movement.", do: "Try Root Motion Root Lock set to Anim First Frame and describe the difference in the preview."}
+      programming: {why: "Root motion changes where movement is computed and which thread the AnimGraph runs on.", do: "Note in your writeup when you would pick Root Motion from Montages Only over from everything."}
+
+  - id: AQ22
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, ik, ik-rig, retargeting]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: false
+    title: "IK Rig: define a rig for retargeting"
+    time_min: 60
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-bipeds-with-ik-rig-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-solvers-in-unreal-engine"
+    checklist:
+      - "In the Content Browser click Add (+) > Animation > IK Rig. Pick your character's Skeletal Mesh. Name it IK_MyCharacter."
+      - "In the Hierarchy panel, right-click the pelvis bone and set it as the pelvis (retarget root)."
+      - "Create retarget chains for Spine, Neck, Head, Left Arm, Right Arm, Left Leg, Right Leg. Select the bones from first to last, right-click, New Retarget Chain, and check the auto-filled Chain Name."
+      - "Select both foot bones, click Add (+) in the Hierarchy and choose New IK Goal. Pick Limb IK when asked for a Solver."
+      - "For each Limb IK solver, select the solver and the thigh bone, right-click, Set Root Bone on Selected Solver."
+      - "In the viewport, drag a foot goal up and watch the leg bend. Click Reset."
+      - "Check the IK Retargeting panel: every chain has a name, a Start Bone and an End Bone."
+    done_when: "A screenshot of the IK Rig editor showing the IK Retargeting panel with all seven chains and the pelvis set, and a second screenshot with a foot goal moved and the leg bending in the viewport."
+    xp: 115
+    verify_type: screenshot
+    quiz:
+      - q: "How do you create an IK Rig asset?"
+        choices: ["Right-click an Animation Sequence > Create IK Rig", "Add (+) > Animation > IK Rig, then pick a Skeletal Mesh", "Open the Skeleton editor and click Add Rig", "Drag a Control Rig onto the mesh"]
+        answer_index: 1
+        explain: "The IK Rig is created from the Content Browser Add menu under Animation. A dialog asks for the Skeletal Mesh to rig."
+      - q: "When you make an IK Goal for a leg, which bone do you select first?"
+        choices: ["The pelvis", "The thigh (the start of the chain)", "The foot (the end bone of the chain)", "The root bone"]
+        answer_index: 2
+        explain: "IK Goals are made from the ending bones of the chain, typically the hand or foot. The goal is the effector at the end."
+      - q: "You have a Set Transform solver on the hips and two Limb IK solvers. Why does their order in the Solver Stack matter?"
+        choices: ["It does not matter, they run in parallel", "Solvers run in sequence by their number, so Limb IK should run after the hips move", "Only the first solver ever runs", "Lower numbers get more blend weight"]
+        answer_index: 1
+        explain: "Solvers evaluate in order by the number next to their name. The legs must solve after the hips have moved so they can compensate."
+      - q: "A Limb IK solver has a goal but does nothing. What is probably missing?"
+        choices: ["A root bone set on the solver, for example the thigh", "A Blend Mask", "A Sync Group", "A second goal on the knee"]
+        answer_index: 0
+        explain: "Limb IK needs both a goal and a root. You set the root by selecting the solver and the bone, then Set Root Bone on Selected Solver."
+      - q: "For an arm retarget chain, what are typical Start Bone and End Bone values?"
+        choices: ["Hand and finger tip", "Clavicle and pelvis", "Upper arm and hand", "Spine and head"]
+        answer_index: 2
+        explain: "The chain runs from the start of the limb to its end. For an arm, the docs give the upper arm as Start Bone and the hand as End Bone."
+      - q: "Your source rig has a chain named ArmLeft and the target has left_arm. Will they map?"
+        choices: ["No, names must be exactly equal", "Yes, chain names are matched with a fuzzy string match, but you should still try to match them", "Only if both have IK Goals", "Only if the bones have the same names"]
+        answer_index: 1
+        explain: "Chain matching uses a fuzzy string match. ArmLeft can match left_arm, but matching names is still recommended."
+      - q: "Why must the pelvis (retarget root) be defined in both IK Rigs?"
+        choices: ["So the character's root motion can be transferred proportionally", "So the IK Goals can be drawn", "So the skeleton can be merged", "So the Control Rig can find the mesh"]
+        answer_index: 0
+        explain: "The pelvis is set so the character's root motion is defined and transferred in a proportional way between the two characters."
+      - q: "The target character has more arm bones than the source. What does the documentation say about retargeting the arm?"
+        choices: ["You must add the same number of bones to the source", "It still works because you define the whole chain, not individual bones", "You must retarget with the old Compatible Skeleton system", "It works only with IK Goals on every bone"]
+        answer_index: 1
+        explain: "Chains are defined by joint chains, not single bones, so different bone counts between source and target still retarget correctly."
+    flavors:
+      _default: {why: "An IK Rig is the bridge that lets one skeleton borrow animation from another, and a base for foot placement."}
+      animation: {why: "Every retarget starts with two IK Rigs. Bad chains mean bad animation on the target.", do: "Also add single-bone chains for the clavicles and note why a one-bone chain is valid."}
+      tech_art: {why: "Chain and pelvis rules affect how you name and build bones in your DCC tool.", do: "Rename one bone chain in the rig and check what auto-naming picked, and why."}
+
+  - id: AQ23
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, montage, notifies, blueprint, capstone]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Triggered montage
+    time_min: 120
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-editor-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-notifies-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
+    checklist:
+      - "Build an interactable actor (BP_Lever or BP_Chest) with a trigger volume and a prompt. When the player presses the interact key inside it, the actor tells the character to interact."
+      - "Create a montage AM_Interact with at least two sections (Reach, Pull) and a named Slot (FullBody or UpperBody) that exists in the character AnimGraph."
+      - "Play AM_Interact with the Play Montage node. Use On Completed to unlock the player and On Interrupted to cancel the interaction cleanly."
+      - "Add a Notify to the montage at the moment of contact. On that notify, spawn a Niagara effect or play a sound at a socket on the hand."
+      - "Add a second notify that fires On Notify Begin in the Play Montage node and changes the lever or chest state (open, pulled)."
+      - "Make the montage interruptible: a hit or jump during the montage stops it, and the actor resets."
+      - "Record a 20 to 40 second clip that shows: approach, interact, effect at the right frame, actor state change, and one interrupted attempt."
+    done_when: "A mentor review: the clip above, plus screenshots of the montage timeline (sections and notifies visible) and the Blueprint graph with Play Montage, On Completed, On Interrupted and On Notify Begin wired. A short note explains which Slot is used and why."
+    xp: 250
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "This is the smallest full loop of gameplay animation: trigger, montage, event, effect, recovery."}
+      animation: {why: "It proves you can sync animation timing with gameplay events.", do: "Put the effect notify on the exact contact frame and show a frame-by-frame view in your clip."}
+      gameplay_design: {why: "Interactions live or die on timing and interruption rules.", do: "Write three lines on what should and should not interrupt the interaction."}
+
+  - id: AQ24
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, curves, animation-blueprint, materials]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Animation curves
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-curves-in-unreal-engine"
+    backup_url: null
+    extra_urls: []
+    checklist:
+      - "Open an Animation Sequence. In the Curves track drop-down choose Add Curve... > Create Curve and name it Glow."
+      - "Click the curve's drop-down, choose Edit Curve, and add keys with Enter so Glow goes 0 -> 1 -> 0 during the clip."
+      - "Open Window > Anim Curves. Turn on the Material type for Glow. Save the Skeleton when asked."
+      - "In the character material, add a scalar parameter named Glow and multiply it into Emissive. Watch the mesh glow as the clip plays."
+      - "In the Animation Blueprint Event Graph, call Get Curve Value with Curve Name Glow and Print String the result each tick."
+      - "Add a second curve, right-click it and Convert To Metadata. Note what value it outputs now."
+    done_when: "A screenshot of the Curve Editor with the Glow keys, a screenshot of the Anim Curves panel showing Glow with the Material type on, and a screenshot or clip of the mesh glowing during playback."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "You create a new curve in an Animation Sequence. Which asset also changes?"
+        choices: ["The Skeletal Mesh", "The Skeleton asset, because curves are stored on it", "The Animation Blueprint", "The Physics Asset"]
+        answer_index: 1
+        explain: "Animation Curves are stored on the Skeleton. Creating a curve edits the Skeleton and you must save it."
+      - q: "You want a Maya custom attribute to import as a curve. What must be true?"
+        choices: ["It must be an integer attribute", "It must be a float attribute and it must be keyframed", "It must be on the root bone only", "It must be named Curve_ something"]
+        answer_index: 1
+        explain: "Only float attributes work as curves, and the attribute must be keyframed or the curve data will not import."
+      - q: "Which FBX import option must be enabled to bring in those attributes as curves?"
+        choices: ["Import Morph Targets", "Use T0 As Ref Pose", "Import Custom Attribute", "Preserve Local Transform"]
+        answer_index: 2
+        explain: "The docs say to enable Import Custom Attribute when importing the FBX so the attributes appear as curves."
+      - q: "What two things make a curve drive a scalar Material Parameter automatically?"
+        choices: ["Curve name matches the parameter name, and the Material type is enabled in Anim Curves", "The curve is a Metadata Curve, and the material is unlit", "The curve is on the root bone, and Max LOD is 0", "The curve has Auto off, and the material is an instance"]
+        answer_index: 0
+        explain: "Match the curve name to the Material Parameter name and enable the Material curve type. Then the value drives the parameter."
+      - q: "Your mesh has three materials that share a parent with a parameter named Glow. A Glow material curve plays. What happens?"
+        choices: ["Only the first material changes", "The engine asks which material to use", "All three materials get the parameter change", "Nothing, curves cannot drive instances"]
+        answer_index: 2
+        explain: "Material curves affect all Materials and their parameters assigned to the Skeletal Mesh, so shared names change everywhere."
+      - q: "In the Animation Blueprint, which node returns the current value of a named curve?"
+        choices: ["Get All Curve Names", "Get Curve Value", "Get Active Curve Names", "Montage Get Position"]
+        answer_index: 1
+        explain: "Get Curve Value targets the Anim Instance and returns the value of the curve name you give it."
+      - q: "A Metadata Curve is added to a sequence. What value does it output?"
+        choices: ["A constant 0.0", "The last keyed value", "A constant 1.0", "Whatever the Weight field says"]
+        answer_index: 2
+        explain: "Metadata Curves output a static value of 1.0 and are read only. A normal curve with no keys outputs 0.0."
+      - q: "You set a curve's Max LOD to 1. On which LODs does it evaluate?"
+        choices: ["LOD 1 only", "LOD 0 and LOD 1", "LOD 1 and higher", "All LODs"]
+        answer_index: 1
+        explain: "Max LOD is the last LOD where the curve still evaluates. With 1, LODs 0 and 1 evaluate it, 2 and beyond do not."
+    flavors:
+      _default: {why: "Curves carry extra data inside an animation, so materials, morphs and gameplay can follow the motion."}
+      animation: {why: "Curves are your channel from the animation to everything else in the engine.", do: "Drive a morph target by naming a curve the same as the morph and enabling the Morph Target type."}
+      tech_art: {why: "Curve-driven material parameters let animation control shader effects without Blueprint glue.", do: "Explain in one line why a shared parent material can make a curve change more than you wanted."}
+
+  - id: AQ25
+    rank: 2
+    difficulty: adept
+    track: animation
+    subjects: [animation, sync-groups, sync-markers, locomotion]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: true
+    title: Sync markers
+    time_min: 50
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sync-groups-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
+    checklist:
+      - "In the AnimGraph, add a walk and a run sequence player into a Blend node. Set the Blend Alpha to 0.5 and watch the feet slide out of sync."
+      - "Select both sequence players. In Details > Sync, set Method to Sync Group and Group Name to Locomotion. Watch again."
+      - "Open the walk sequence. Right-click the notify timeline, Add Sync Marker... > New Sync Marker... and name it LeftFootDown at the left foot plant. Add RightFootDown too."
+      - "Open the run sequence. Use Add Sync Marker... > Existing Sync Markers to add the same two names at the run's foot plants."
+      - "Play the blend again at Alpha 0.5. The feet now plant together even though the clips are different lengths."
+      - "Set the run player's Group Role to Always Leader and note how the walk speeds up."
+    done_when: "A screenshot of the walk sequence timeline showing the two Sync Markers, a screenshot of the sequence player Details with Method and Group Name set, and one sentence on what changed after adding markers."
+    xp: 60
+    verify_type: screenshot
+    quiz:
+      - q: "In a Sync Group, what does the leader provide to the followers?"
+        choices: ["The blend weight", "The animation length used by all followers, and priority for notifies", "The Skeleton", "The root motion"]
+        answer_index: 1
+        explain: "Leaders give the master animation length. Followers match their length to it and have their notifies suppressed."
+      - q: "By default, which animation becomes the leader during a blend?"
+        choices: ["The first one you added", "The longest one", "The one with the highest blend weight", "The one with the most notifies"]
+        answer_index: 2
+        explain: "With the default Can be Leader role, the animation with the highest blend influence is the leader. This can change during the blend."
+      - q: "What is the default Method setting on a sequence player?"
+        choices: ["Do Not Sync", "Sync Group", "Graph", "Marker"]
+        answer_index: 0
+        explain: "Method defaults to Do Not Sync. You set it to Sync Group for name-based syncing or Graph for graph-based syncing."
+      - q: "Where do you add a Sync Marker to an Animation Sequence?"
+        choices: ["In the Anim Slot Manager", "In the Skeleton Tree Options menu", "By right-clicking the notify timeline and choosing Add Sync Marker...", "In the Curve Editor"]
+        answer_index: 2
+        explain: "Right-click in the notify timeline and pick Add Sync Marker... > New Sync Marker... The marker is then saved to the Skeleton."
+      - q: "Two clips have matching markers but different Sync Group names. Do the markers sync?"
+        choices: ["Yes, markers work on their own", "No, markers only sync when the clips are in the same Sync Group", "Only if both are Always Leader", "Only for looping clips"]
+        answer_index: 1
+        explain: "Sync Markers only synchronize with markers in the same Sync Group, so both the marker names and the group names must match."
+      - q: "The walk clip has RightFootDown markers but the run clip does not. What happens to that marker?"
+        choices: ["The run clip gets the marker copied", "It is ignored for all animations in the group", "The engine shows an error", "Only the walk clip uses it"]
+        answer_index: 1
+        explain: "Only markers common to all animations in a group are synced. A marker missing from one clip is ignored for the whole group."
+      - q: "You blend a non-looping run start into the run loop. Which Group Role does the documentation recommend for the start clip?"
+        choices: ["Always Follower", "Can be Leader", "Always Leader", "Transition Follower"]
+        answer_index: 2
+        explain: "For non-looping start and stop animations, the docs say those clips should be set to Always Leader."
+      - q: "What does the Sync node from the Misc category do?"
+        choices: ["Renames all Sync Groups", "Propagates sync behavior to incoming pose nodes whose Method is set to Graph", "Adds markers to every clip", "Forces all clips to Always Leader"]
+        answer_index: 1
+        explain: "Graph-Based Syncing uses the Sync node to push one sync group into all child nodes that use the Graph method."
+    flavors:
+      _default: {why: "Sync groups and markers stop foot sliding when clips of different lengths blend."}
+      animation: {why: "Clean locomotion blends depend on foot plants lining up.", do: "Add a third clip (sprint) with the same markers and blend all three."}
+      tech_art: {why: "Marker names are stored on the Skeleton, so they are part of the rig standard.", do: "Write the marker naming rule your team should follow in one line."}
+
+  - id: AQ26
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [control-rig, ik, full-body-ik]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: false
+    title: Full Body IK in Control Rig
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-full-body-ik-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
+    checklist:
+      - "Enable the FullBodyIK plugin (Edit > Plugins) and restart the editor."
+      - "Create CR_Manny_FBIK for the mannequin skeletal mesh. Add controls for the head, both hands and both feet."
+      - "In the rig graph add Hierarchy > Full Body IK. Connect it to Forwards Solve. Set Root to the pelvis bone."
+      - "Add one Effector per control. Set its Bone and connect a Get Transform node of the matching control."
+      - "Move a hand control in the viewport. Then add a Bone Setting for the pelvis with Rotation and Position Stiffness 0.8."
+      - "Add a Bone Setting for one knee: enable Use Preferred Angles and set a preferred angle so the knee bends the correct way."
+      - "Add a Limit on one ankle axis (Limited, Min -70, Max 70) and compare the pose before and after."
+    done_when: "Two screenshots: (1) the rig graph with the Full Body IK node, its effectors and at least two Bone Settings visible; (2) the viewport with a hand control pulled far away and the body following in a natural pose."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "Which plugin must be enabled before the Full Body IK node is available?"
+        choices: ["FullBodyIK", "IKRig", "MotionWarping", "ControlRigSolvers"]
+        answer_index: 0
+        explain: "The page says to enable the FullBodyIK plugin in Edit > Plugins and restart the editor."
+      - q: "Where do you find the Full Body IK node in the Control Rig graph context menu?"
+        choices: ["Solvers > Full Body IK", "Animation > IK", "Hierarchy > Full Body IK", "Constraints > FBIK"]
+        answer_index: 2
+        explain: "You right-click the graph and select Hierarchy > Full Body IK, then connect it to Forwards Solve."
+      - q: "For a typical full-body setup, which bone is the Root of the FBIK node?"
+        choices: ["The head bone", "The hips or pelvis bone", "The skeleton root bone at the feet", "The spine top bone"]
+        answer_index: 1
+        explain: "The page says the Root will likely be the hips or pelvis bone in typical full-body setups."
+      - q: "What is an Effector in the FBIK node?"
+        choices: ["A bone excluded from the solve", "A debug drawing helper", "A global stiffness value for the whole chain", "An endpoint bone of a chain, driven by a control's transform"]
+        answer_index: 3
+        explain: "Each Effector has a Bone (an endpoint of the IK chain) and a Transform, usually from a Get Transform node of the matching control."
+      - q: "A Bone Setting has Rotation Stiffness set to 1. What happens to that bone?"
+        choices: ["It is completely locked from rotating", "It rotates freely", "It stretches to reach the effector", "It is removed from the solve"]
+        answer_index: 0
+        explain: "Stiffness 0 means free movement, and 1 completely locks the bone."
+      - q: "The knees look stiff and do not bend enough. Which setting does the page recommend first?"
+        choices: ["Increase Mass Multiplier", "Enable Use Preferred Angles and set a preferred angle on the knee", "Set Root Behavior to Free", "Disable Allow Stretch"]
+        answer_index: 1
+        explain: "Preferred Angles prioritize joints rotating along a specific axis; the example sets 45 on Z for the mannequin knee."
+      - q: "Which Limit setting lets a bone axis move only inside a Min/Max range?"
+        choices: ["Free", "Locked", "Limited", "Clamped"]
+        answer_index: 2
+        explain: "Free allows free movement, Locked disables the axis, and Limited uses the Min/Max properties for a range."
+      - q: "You want some bones to have no influence at all from FBIK. What does the page recommend?"
+        choices: ["Set Position Alpha to 0 on every effector", "Set all their stiffness values to 1", "Delete the bones from the skeleton", "Add them to Excluded Bones instead of making them fully stiff or locked"]
+        answer_index: 3
+        explain: "The page says excluding bones is recommended rather than using Bone Settings to make bones fully stiff or locked."
+      - q: "What is the trade-off when you increase Iterations on the FBIK node?"
+        choices: ["Effectors converge better, but CPU cost goes up", "Bones stretch more", "The root bone becomes locked", "Debug lines become larger"]
+        answer_index: 0
+        explain: "Increasing Iterations helps effectors converge on their goals, but also increases the CPU cost of the FBIK chain."
+      - q: "Which Root Behavior locks the root bone to the input pose and suits low-distance, partial-body setups?"
+        choices: ["Free", "Pre Pull", "Pin to Input", "Start Solve from Input Pose"]
+        answer_index: 2
+        explain: "Pin to Input locks the root translation and rotation to the input pose; Pre Pull translates root and children to help long reaches."
+    flavors:
+      _default: {why: "FBIK is how a rig reaches a target with the whole body, not one limb at a time."}
+      animation: {why: "Ground alignment, reaching and holding props all start with a good FBIK setup.", do: "Add a foot Bone Setting with limits so the ankle stays natural when the foot control is raised."}
+      tech_art: {why: "Bone Settings and iterations are the knobs that decide rig cost and stability.", do: "Test Mass Multiplier 0 and 5 and note how many Iterations each needs to converge."}
+
+  - id: AQ27
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [motion-warping, root-motion, montage, blueprint]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: "Motion Warping: reach the target"
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-warping-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/root-motion-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-plugins-in-unreal-engine"
+    checklist:
+      - "Enable the Motion Warping plugin. Pick a root-motion animation (vault, mantle or punch) and turn on EnableRootMotion in the asset."
+      - "Create AM_Vault from the animation (right-click > Create > Create AnimMontage)."
+      - "In the montage, right-click the Notifies track > Add Notify State... > Motion Warping. Set the window to cover the reach part of the move."
+      - "In the notify Details, set Root Motion Modifier to Skew Warp and Warp Target Name to VaultTarget."
+      - "Place a Target Point in the level. In BP_ThirdPersonCharacter add a Motion Warping component."
+      - "On an input action: get the Target Point location, call Add or Update Warp Target from Transform with Name VaultTarget, then Play Montage AM_Vault."
+      - "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare."
+    done_when: "A short clip or two screenshots showing the character warping to the Target Point from two different start positions, plus a screenshot of the Motion Warping notify Details panel."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What does Motion Warping change during a montage?"
+        choices: ["The mesh scale", "The character's root motion, so it aligns to a target", "The animation blend time", "The skeleton reference pose"]
+        answer_index: 1
+        explain: "Motion Warping dynamically adjusts a character's root motion to align to targets."
+      - q: "How do you create a Motion Warping window inside a montage?"
+        choices: ["Add a Section named Warp", "Add a Curve named Warp", "Right-click the Notifies track > Add Notify State... > Motion Warping", "Enable Warp in the Asset Details"]
+        answer_index: 2
+        explain: "Motion Warping windows are Anim Notify States with a start and end time on the Notifies track."
+      - q: "What must be true about the animation before Motion Warping can work?"
+        choices: ["It must be additive", "It must have Root Motion enabled", "It must be a Blend Space", "It must have sync markers"]
+        answer_index: 1
+        explain: "The example says to open the Animation Asset and enable EnableRootMotion before starting."
+      - q: "Which Root Motion Modifier matches the animation's location and rotation at the end of the warping window?"
+        choices: ["Scale", "Skew Warp", "Facing", "Static"]
+        answer_index: 1
+        explain: "Skew Warp warps root motion so it matches the target location and rotation at the end of the window; Scale only scales the motion uniformly."
+      - q: "The Blueprint sets a warp target but nothing happens. Which mismatch is the most likely cause?"
+        choices: ["The Warp Target Name in the montage does not match the Name on Add or Update Warp Target", "The montage has no sections", "The Target Point is not rotated", "The component is not under the Movement category"]
+        answer_index: 0
+        explain: "The name on the node must match the Warp Target Name you defined in the montage notify."
+      - q: "Where is the Motion Warping component found when you click (+) Add in the Components panel?"
+        choices: ["Under Animation", "Under Physics", "Under Rendering", "Under Movement"]
+        answer_index: 3
+        explain: "The page says to locate Motion Warping under the Movement category."
+      - q: "Rotation Type is set to Facing. What does the character do?"
+        choices: ["Matches the rotation of the warp target", "Rotates to face the warp target", "Ignores rotation", "Rotates twice as fast"]
+        answer_index: 1
+        explain: "Default matches the target's rotation; Facing rotates the character to face the target."
+      - q: "A warping window lasts 2 seconds and Warp Rotation Time Multiplier is 0.5. When is the final rotation reached?"
+        choices: ["After 4 seconds", "After 2 seconds", "After 1 second", "Immediately"]
+        answer_index: 2
+        explain: "The page gives exactly this example: with 0.5, the final rotation is reached in one second."
+      - q: "You want to create a warping window from Blueprint instead of a notify in the montage. Which node do you use?"
+        choices: ["Add Root Motion Modifier Skew Warp", "Remove Warp Target", "Play Montage", "Split Struct Pin"]
+        answer_index: 0
+        explain: "Add Root Motion Modifier Skew Warp generates a warping window with Start Time, End Time and Warp Target Name from Blueprint."
+      - q: "Which Warp Point Anim Provider defines the warp point from a bone in the animation?"
+        choices: ["None", "Static", "Transform", "Bone"]
+        answer_index: 3
+        explain: "Static uses a user-defined transform on the notify; Bone uses the bone named in Warp Point Anim Bone Name."
+    flavors:
+      _default: {why: "Vaults, mantles and finishers only look right when the character lands exactly on the target."}
+      animation: {why: "One montage can fit many ledge heights and distances when the warp window is placed well.", do: "Try a second warp window in the same montage and give it a different Warp Target Name."}
+      gameplay_design: {why: "Interaction design depends on the player reaching the exact spot every time.", do: "Set Ignore ZAxis on and off and note which feels better for a ground target."}
+
+  - id: AQ28
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [animation-blueprint, linked-anim-layers, architecture]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: false
+    title: Linked Anim Layers
+    time_min: 90
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-linking-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
+    checklist:
+      - "Create an Animation Layer Interface ALI_Character (Add > Animation > Animation Interface). Add layers FullBody, UpperBody and IK."
+      - "Give UpperBody and IK a pose input. Put all three layers in one non-default Group name."
+      - "Open ABP_Base (your character AnimBP). In Class Settings add ALI_Character under Interfaces."
+      - "Drag the three layers into the AnimGraph in the order FullBody > UpperBody > IK and connect them to Output Pose."
+      - "Create ABP_Rifle, also implementing ALI_Character. In its UpperBody layer put a different animation or an aim offset."
+      - "In BP_ThirdPersonCharacter, on a key press call Link Anim Class Layers with the Mesh as Target and ABP_Rifle as In Class."
+      - "Play, press the key, and confirm the upper body changes while the base locomotion keeps running."
+    done_when: "Screenshots of: the ALI_Character layers list, the ABP_Base AnimGraph with the three layer nodes, and the game view before and after Link Anim Class Layers."
+    xp: 180
+    verify_type: screenshot
+    quiz:
+      - q: "What is the main difference between a Linked Anim Graph and a Linked Anim Layer?"
+        choices: ["Linked Anim Graph links a specific AnimBP; Linked Anim Layer uses a shared Animation Layer Interface", "Linked Anim Layer cannot have pose inputs", "Linked Anim Graph only works with templates", "There is no difference"]
+        answer_index: 0
+        explain: "Linked Anim Graphs reference one Animation Blueprint. Linked Anim Layers require an Animation Layer Interface that defines preset layers."
+      - q: "Where do you create an Animation Layer Interface asset?"
+        choices: ["Add > Blueprint > Interface", "Add > Animation > Animation Interface", "Inside the AnimBP Class Settings", "Add > Animation > Anim Layer"]
+        answer_index: 1
+        explain: "In the Content Browser, click Add (+) then Animation > Animation Interface."
+      - q: "Layers share the same non-default Group name in the interface. What does that mean?"
+        choices: ["They cannot be linked", "They are read-only", "They share the same Animation Instance", "They play at the same time"]
+        answer_index: 2
+        explain: "The page says layers under the same non-default Group name share the same Animation Instance, and recommends a new shared name."
+      - q: "How do you bind the interface to an Animation Blueprint?"
+        choices: ["Drag the interface into the AnimGraph", "Set it as the parent class", "Assign it in the Skeleton asset", "Class Settings > Interfaces > Add, then select the interface"]
+        answer_index: 3
+        explain: "You select Class Settings and use the Add dropdown in the Interfaces section."
+      - q: "What is the role of the Base Animation Blueprint in this system?"
+        choices: ["It holds every weapon's logic", "It is assigned to the character and holds the overall layer structure, not necessarily the layer logic", "It replaces the Skeleton", "It stores the montages"]
+        answer_index: 1
+        explain: "The base contains the general structure of the linked layers; the true logic can come from other linked AnimBPs."
+      - q: "Which Blueprint node swaps in a specific AnimBP's layer logic at runtime?"
+        choices: ["Set Anim Instance Class", "Play Montage", "Link Anim Class Layers", "Linked Anim Graph"]
+        answer_index: 2
+        explain: "Link Anim Class Layers takes the Skeletal Mesh as Target and the specific AnimBP as In Class."
+      - q: "Why does the page recommend Linked Anim Layers for a live-service project?"
+        choices: ["They render faster", "New animation logic can be added or removed as separate AnimBPs, with multi-user work and memory savings", "They do not need a Skeleton", "They remove the need for state machines"]
+        answer_index: 1
+        explain: "Separating logic into layers enables collaboration and only loads the AnimBPs that are linked and used."
+      - q: "A weapon AnimBP does not need to override a certain layer. What should you do in that layer?"
+        choices: ["Connect nothing to its output pose", "Delete the layer from the interface", "Copy the base graph into it", "Set its group to default"]
+        answer_index: 0
+        explain: "The Fortnite example says: if a weapon does not need to override some states, do not connect anything to the output pose in that Layer."
+      - q: "How do you expose a variable from a linked AnimBP as a pin on the Linked Anim Graph node?"
+        choices: ["Make it a local variable", "Enable Instance Editable on the variable", "Add it to the Event Graph", "Rename it with an underscore"]
+        answer_index: 1
+        explain: "Like making a Blueprint variable public: select the variable and enable Instance Editable."
+      - q: "What is special about an Animation Blueprint Template?"
+        choices: ["It can only contain one node", "It runs on the server only", "It always uses the UE5 mannequin skeleton", "It references no specific Skeleton, so it cannot directly reference animations and must use exposed variables"]
+        answer_index: 3
+        explain: "Templates are created by clicking Template instead of picking a Skeleton; you expose properties like the Sequence Player's Sequence as variables."
+    flavors:
+      _default: {why: "Big projects split animation logic into layers so many people can work without breaking one giant AnimBP."}
+      animation: {why: "Weapons, vehicles and states each get their own AnimBP that plugs into the base graph.", do: "Add a third AnimBP (ABP_Pistol) and switch between Rifle and Pistol with two keys."}
+      programming: {why: "Layer linking is the animation side of modular, loadable gameplay code.", do: "Store the AnimBP class on the weapon actor and pass it to Link Anim Class Layers on equip."}
+
+  - id: AQ29
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [animation-blueprint, state-machine, blend-space, linked-anim-layers, capstone]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, tech_art]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Locomotion set
+    time_min: 240
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/state-machines-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-spaces-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-linking-in-unreal-engine"
+    checklist:
+      - "Create BS_Locomotion: a blend space with idle, walk and run driven by Speed (and Direction if you have strafe clips)."
+      - "Create ABP_Locomotion with a state machine: Locomotion (BS_Locomotion), JumpStart, JumpLoop, JumpEnd. Transition rules read IsFalling and Speed from the character."
+      - "Add an Animation Layer Interface with an UpperBody layer that takes a pose input. Bind it to ABP_Locomotion and place the layer after the state machine."
+      - "Create ABP_Locomotion_Upper that implements the interface and blends an upper-body animation over the input pose with Layered Blend per Bone from the spine."
+      - "In the character Blueprint, link the upper-body AnimBP with Link Anim Class Layers on a key."
+      - "Test all transitions: stand, walk, run, jump from a run, land into a run, and the upper-body layer while running."
+      - "Record a 30-60 second clip and write 5-10 lines on the transition rules and what you would fix next."
+    done_when: "A video clip showing idle to walk to run, a jump from a run with landing, and the upper-body layer active while moving, plus screenshots of the state machine and the layer graph, plus the short writeup."
+    xp: 300
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A complete locomotion set is the core portfolio piece for any game animator."}
+      animation: {why: "This is the AnimBP you will be asked to build in a studio test.", do: "Add a Stop state with a foot-plant animation chosen by which foot is forward."}
+      gameplay_design: {why: "Feel starts with locomotion; every mechanic sits on top of it.", do: "Tune blend times on the transitions and note how responsiveness changes."}
+
+  - id: AQ30
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [pose-asset, animation-curves, facial-animation]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: true
+    title: Pose Assets and facial curves
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-pose-assets-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-curves-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pose-blender-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pose-driver-in-unreal-engine"
+    checklist:
+      - "Right-click a short animation sequence in the Content Browser > Create > Create PoseAsset. Name it PA_Test and give a few frames names in the Pose Names field."
+      - "Open PA_Test and inspect the curve list (one curve per pose)."
+      - "In an AnimBP, drag PA_Test into the AnimGraph to create a Pose Blender node. Feed it a sequence player or a Custom Curve."
+      - "Right-click the Pose Blender > Create Pose by Name Node. Pick one pose name and drive Alpha with a variable 0 to 1."
+      - "Duplicate PA_Test, enable Additive and click Convert to Additive Pose. Use it after an Apply Additive node over a base sequence."
+      - "Optional: add a Pose Driver node, assign the pose asset, use Copy Poses from Pose Asset and set a Source Bone."
+    done_when: "Screenshots of the Pose Asset with its named curves and the AnimGraph with a Pose by Name node driven by Alpha, showing the pose applied in the preview."
+    xp: 85
+    verify_type: screenshot
+    quiz:
+      - q: "What does a Pose Asset store?"
+        choices: ["Only bone rotations of the reference pose", "Skeletal mesh poses saved as animation curves, one pose or many", "A Blend Space of poses", "A Control Rig setup"]
+        answer_index: 1
+        explain: "Pose assets are stored skeletal mesh poses; many poses are saved as animation curves within the asset."
+      - q: "You create a Pose Asset from a whole animation sequence. What does Unreal generate?"
+        choices: ["A pose for each frame, each accessible as a curve", "One average pose", "A montage with one section per frame", "A Blend Space"]
+        answer_index: 0
+        explain: "When generating from an entire sequence, UE creates a pose for each frame, accessible through the pose asset's curves."
+      - q: "How is a Pose Blender node created in the AnimGraph?"
+        choices: ["Right-click > Blend > Pose", "By dragging the pose asset into the AnimGraph", "From the Skeleton Editor", "By enabling Additive"]
+        answer_index: 1
+        explain: "Pose Blender nodes are created automatically by dragging a pose asset into the AnimGraph."
+      - q: "A Pose Blender node shows no output pose. What is missing?"
+        choices: ["A Slot node", "A sync group", "Something that drives the pose asset's curves, like a sequence with curves or a Custom Curve", "Root motion"]
+        answer_index: 2
+        explain: "The page says Pose Blender nodes will not display an output pose without a method of driving the contained animation curves."
+      - q: "How do you get a Pose by Name node?"
+        choices: ["Right-click a Pose Blender node > Create Pose by Name Node", "Search Pose by Name in the palette", "Right-click the pose asset in the Content Browser", "Enable Additive on the pose asset"]
+        answer_index: 0
+        explain: "You must right-click a Pose Blender node in the AnimGraph and select Create Pose by Name Node."
+      - q: "Which property controls the weight of the selected pose on a Pose by Name node?"
+        choices: ["Scale", "Alpha", "Radius", "Blend In Time"]
+        answer_index: 1
+        explain: "The page shows a wave value adjusting Alpha to drive the weight of the pose."
+      - q: "A Pose Asset is marked Additive. Which node must you use to show it correctly?"
+        choices: ["Layered Blend per Bone", "Slot", "Apply Additive", "Blend Poses by Bool"]
+        answer_index: 2
+        explain: "If the Pose Asset has been enabled as Additive, you need the Apply Additive node to display the pose."
+      - q: "What is the difference between Pose Blender and Pose Driver?"
+        choices: ["Pose Driver is for montages only", "Pose Blender drives poses from bone motion; Pose Driver blends with curves", "Pose Blender blends pose assets with curve values; Pose Driver uses a Source Bone's motion to drive the poses", "They are the same node"]
+        answer_index: 2
+        explain: "Pose Blender and Pose by Name blend pose assets using curves; Pose Driver uses bone motion (Source Bones) to drive the pose asset at runtime."
+      - q: "In Pose Driver, which Tool option fills the Pose Targets from the assigned Pose Asset?"
+        choices: ["Auto Scale", "Copy All from PoseAsset", "Solo", "Eval from Ref Pose"]
+        answer_index: 1
+        explain: "Copy All from PoseAsset creates Pose Targets from the poses in the set Pose Asset, overwriting existing targets."
+      - q: "Pose Driver Solver Type: which statement matches the page?"
+        choices: ["Additive is smoother but slower", "Interpolative needs normalization", "Both solvers are identical in cost", "Interpolative is smoother with fewer targets but costs more; Additive is faster but needs more targets and normalization"]
+        answer_index: 3
+        explain: "The page says Interpolative gives smoother results with fewer targets at a higher cost; Additive is faster but needs more targets and normalization."
+    flavors:
+      _default: {why: "Faces and corrective shapes are driven by curves, and pose assets turn curves into poses."}
+      animation: {why: "Facial rigs and correctives both use pose assets under the hood.", do: "Drive two pose curves at once from one sequence and blend between them."}
+      cinematics: {why: "Named poses let you hit expressions from Sequencer with a curve.", do: "Key the Alpha variable from Sequencer to fade a pose in during a shot."}
+
+  - id: AQ31
+    rank: 3
+    difficulty: expert
+    track: animation
+    subjects: [animation-modifiers, blueprint, sync-markers, tools]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, programming]
+    required_spine: false
+    elective: true
+    title: "Animation Modifiers: notifies by script"
+    time_min: 75
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-modifiers-in-unreal-engine"
+    backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-notifies-in-unreal-engine"
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-editor-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequence-editor-in-unreal-engine"
+    checklist:
+      - "Create a Blueprint Class with parent Animation Modifier. Name it AM_FootSync."
+      - "Add an Instance Editable variable for the foot bone name (for example foot_l)."
+      - "Implement OnApply: add a Notify track named FootSync, then loop frames with Get Bone Pose for Frame and add a sync marker at the frame where the foot is lowest."
+      - "Implement OnRevert: remove the FootSync notify track."
+      - "Open a walk animation, go to Window > Animation Data Modifiers, Add Modifier > AM_FootSync, set the bone name, then Apply Modifier."
+      - "Check the new track and markers in the Notifies area. Then Revert Modifier and confirm the track is gone."
+      - "Apply the modifier on the Skeleton instead and check that another animation also gets the track."
+    done_when: "Screenshots of the AM_FootSync graph (OnApply and OnRevert) and a walk sequence showing the generated FootSync track with markers in the Animation Data Modifiers tab."
+    xp: 85
+    verify_type: screenshot
+    quiz:
+      - q: "What is an Animation Modifier?"
+        choices: ["A curve type", "A native or Blueprint class that applies a sequence of actions to an Animation Sequence or Skeleton", "A montage slot", "A retargeting profile"]
+        answer_index: 1
+        explain: "Anim Modifiers apply actions to animation data, for example creating foot sync markers automatically."
+      - q: "Which parent class do you pick when creating the Blueprint?"
+        choices: ["Anim Notify", "Animation Blueprint", "Animation Modifier", "Anim Instance"]
+        answer_index: 2
+        explain: "In the Pick Parent Class window, expand All Classes and select Animation Modifier."
+      - q: "What does the OnRevert event do?"
+        choices: ["Removes previously applied changes, returning the sequence to its original state", "Re-applies the modifier", "Deletes the animation", "Saves the modifier as a preset"]
+        answer_index: 0
+        explain: "OnApply changes, adds or removes data; OnRevert removes the user changes that were applied."
+      - q: "You apply a modifier to a Skeleton asset. What happens?"
+        choices: ["Only the current sequence changes", "Nothing until you also apply it per sequence", "It is applied to all Animation Sequences based on that Skeleton", "The skeleton bones are renamed"]
+        answer_index: 2
+        explain: "Applying to a Skeleton applies it to every sequence based on that Skeleton; applying to a sequence affects only that sequence."
+      - q: "Where in the editor do you add and apply modifiers?"
+        choices: ["Window > Animation Data Modifiers tab", "Asset Details > Modifiers", "The Notifies track context menu", "Project Settings > Animation"]
+        answer_index: 0
+        explain: "In the Skeleton Editor or Animation Editor, use Window > Animation Data Modifiers, then Add Modifier and Apply Modifier."
+      - q: "How do you make a modifier property editable in the Animation Data Modifiers tab?"
+        choices: ["Make it a local variable", "Set it as Instance Editable", "Name it with a capital letter", "Add it to OnRevert"]
+        answer_index: 1
+        explain: "Any properties set as Instance Editable are available to edit in the Animation Data Modifiers tab."
+      - q: "A modifier is listed as Out of Date. What does that mean?"
+        choices: ["The animation was deleted", "The plugin is disabled", "The Blueprint has a compile error", "It has not been applied yet"]
+        answer_index: 3
+        explain: "The page says your Anim Modifier is listed as Out of Date until you apply it."
+      - q: "Which library holds the functions used inside a modifier, such as adding notify tracks or reading bone poses?"
+        choices: ["Kismet Math Library", "Animation Blueprint Library", "Gameplay Statics", "Skeletal Mesh Library"]
+        answer_index: 1
+        explain: "The Animation Blueprint Library provides nodes like Add Notify Track, Add Animation Sync Markers and Get Bone Pose for Frame."
+      - q: "Get Bone Pose for Frame returns a transform in which space?"
+        choices: ["World space", "Component space", "Local space", "Screen space"]
+        answer_index: 2
+        explain: "The page notes bone transforms are returned in local space; you must convert manually if you need component space."
+      - q: "Which helper node returns the chain of bone names from a bone up to the root?"
+        choices: ["Get Frame at Time", "Find Bone Path to Root", "Get Time at Frame", "Get Bone Poses for Time"]
+        answer_index: 1
+        explain: "Find Bone Path to Root takes a sequence and a bone name and outputs the list of bone names in the chain."
+    flavors:
+      _default: {why: "Hand-placing markers on 200 clips is slow; a modifier does it in one click."}
+      animation: {why: "Sync markers and curves stay consistent across the whole set when they are generated.", do: "Add a second Instance Editable for a height offset and use it to tune the marker frame."}
+      tech_art: {why: "Modifiers are the animation pipeline's batch tools.", do: "Add a float curve track in OnApply and write the foot height into it every frame."}
+
+  - id: AQ32
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [motion-matching, pose-search, animation-blueprint, locomotion]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [gameplay_design, programming]
+    required_spine: false
+    elective: false
+    title: Motion Matching locomotion
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-matching-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-matching-debugging-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-animation-sample-project-in-unreal-engine"
+    checklist:
+      - "Enable the Pose Search plugin (Edit > Plugins > Animation) and restart. Get a set of root-motion locomotion clips, for example from the Game Animation Sample."
+      - "Create PSS_Locomotion (Animation > Motion Matching > Pose Search Schema) for your skeleton. Check that the Pose channel uses your left and right foot bones."
+      - "Create PSD_Locomotion (Pose Search Database) with PSS_Locomotion as Schema. Add loops, starts, stops and pivots. Confirm each sequence has Root Motion enabled."
+      - "In ABP_MMCharacter, add Motion Matching (Database = PSD_Locomotion) into Pose History into Output Pose. On Pose History enable Generate Trajectory and add the collected bones."
+      - "Play in editor. Enable Should Filter Notifies and set Notify Recency Time Out. Tune Continuing Pose Cost Bias until the character does not switch clips too often."
+      - "Record 10 seconds with the Rewind Debugger (Tools > Debug). Open the Pose Search track and the Selection Table. Find one pose that was rejected and read why."
+      - "Change the Trajectory channel Weight (for example 3.0 to 1.0) and record again. Note what changed."
+    done_when: "A short clip of the character moving with Motion Matching, a screenshot of the Rewind Debugger selection table with Channel Breakdown on, and 5 lines: your schema channels, which database bias you changed and why, and one case where a state machine would still be the better choice."
+    xp: 250
+    verify_type: writeup
+    quiz:
+      - q: "What does the Motion Matching node replace, according to the source?"
+        choices: ["The Skeletal Mesh Component", "State Machines and Blend Spaces as the way to pick the next pose", "Root motion extraction", "Animation Montages and slots"]
+        answer_index: 1
+        explain: "The page calls Motion Matching a dynamic alternative to State Machines or Blendspaces. It selects poses from a database instead of using transition logic."
+      - q: "Which asset stores the channels (for example Trajectory and Pose) and the query settings?"
+        choices: ["Pose Search Schema", "Pose Search Database", "Pose History", "Mirror Data Table"]
+        answer_index: 0
+        explain: "A Pose Search Schema asset stores the motion matching configuration and query settings. The Database links to a Schema and holds the animations."
+      - q: "A new Pose Search Schema is set up for a locomotion system by default. Which bones does its Pose channel use?"
+        choices: ["hand_l and hand_r", "pelvis and head", "root and ik_foot_root", "foot_l and foot_r from the Mannequin skeleton"]
+        answer_index: 3
+        explain: "The default asset comes pre-configured with bone definitions for the Mannequin foot bones foot_l and foot_r. Replace them if you use another skeleton."
+      - q: "You want a climbing system with Motion Matching. What does the source suggest for the Pose channel?"
+        choices: ["Use the same foot bones as locomotion", "Remove the Pose channel completely", "Add every bone in the skeleton", "Use bones that hold useful data for that motion, such as the hand bones"]
+        answer_index: 3
+        explain: "The Pose channel can use any bone. For climbing you would pick bones with valuable data, like the hands. More channels and samples cost more performance."
+      - q: "Your locomotion clips do not move the character in Motion Matching. What is the most likely problem?"
+        choices: ["The Animation Sequences do not have Root Motion enabled", "The Schema Sample Rate is too high", "The Database uses Brute Force search", "The Pose History node has Generate Trajectory enabled"]
+        answer_index: 0
+        explain: "Animations used in a Motion Matching locomotion setup must contain root motion, and the sequences must have the Root Motion property enabled."
+      - q: "Which asset type can NOT be added to a Pose Search Database for the AnimGraph node?"
+        choices: ["Animation Sequence", "Animation Composite", "Animation Montage", "Blend Space"]
+        answer_index: 2
+        explain: "Databases support Sequences, Composites and Blendspaces. Montages are not supported in Animation Blueprints, so they cannot be used with the Motion Matching node."
+      - q: "The character leaves a start animation too early. Which database setting makes the system hold the current clip longer?"
+        choices: ["A positive Looping Cost Bias", "A negative Continuing Pose Cost Bias", "A higher Search Throttle Time on the Schema", "Set Pose Search Mode to VPTree"]
+        answer_index: 1
+        explain: "Negative Continuing Pose Cost Bias values make the current animation more likely to be selected again, so it plays longer. Positive values shorten it."
+      - q: "What is the simplest AnimGraph that runs Motion Matching?"
+        choices: ["Motion Matching into a State Machine into Output Pose", "Motion Matching node into Pose History node into Output Pose", "Pose History into Blend Space into Output Pose", "Motion Matching node alone into Output Pose"]
+        answer_index: 1
+        explain: "The page builds a Motion Matching node, then a Pose History node from its output, then connects Pose History to Output Pose and enables Generate Trajectory."
+      - q: "Footstep sounds fire twice on adjacent frames after a pose switch. What is the documented fix?"
+        choices: ["Convert the notifies to Anim Notify States", "Lower the Schema Sample Rate", "Enable Should Filter Notifies and set Notify Recency Time Out", "Increase Pose Jump Threshold Time"]
+        answer_index: 2
+        explain: "Anim Notify Filtering drops repeat instances of the same notify inside Notify Recency Time Out. The default 0.2 s is a baseline for biped locomotion. It only works on Anim Notifies, not Notify States."
+      - q: "Pose channel weight is 1.0 and Trajectory weight is 3.0. What does this mean?"
+        choices: ["Trajectory differences count three times as much as pose differences", "The pose is searched three times per frame", "Only the trajectory channel is used", "Trajectory samples are taken 3 seconds ahead"]
+        answer_index: 0
+        explain: "The system is influenced three times as much by differences in trajectory as by differences in pose. Weights are normalized unless Data Preprocessor is None."
+      - q: "The movement model runs at 5 m/s but the data averages 4 m/s, so the system always picks the fastest poses. Why is changing weights the wrong fix?"
+        choices: ["Weights cannot be edited after indexing", "Weights only affect the debug colors", "Devaluing those poses can make the system ignore some channel criteria and leave gaps; better to split data into databases and pick them with a chooser", "Weights are ignored when the Trajectory channel is present"]
+        answer_index: 2
+        explain: "The page warns that adjusting weights changes how poses are selected, not the data mismatch, and can leave gaps. It suggests Database sets and a chooser to swap the active database."
+      - q: "In the Rewind Debugger selection table, a pose shows the flag PoseReselectHistory. What does that tell you?"
+        choices: ["The pose is mirrored", "The pose was used recently, so the system ignores it until more poses have been selected", "The pose is from a looping asset", "The pose has the lowest cost and will play next"]
+        answer_index: 1
+        explain: "PoseReselectHistory means the pose was selected recently and is ignored for now. Gray values in the table mark selections that are ignored completely."
+    flavors:
+      _default: {why: "Motion Matching is how modern locomotion is built. You must know when to use it and how to read its choices."}
+      animation: {why: "Adding data instead of adding transitions changes how you plan a whole animation set.", do: "Add a Pose Search: Block Transition notify state to one idle clip and prove in the debugger that the system never jumps into that range."}
+      gameplay_design: {why: "Choosers and databases are where gameplay state meets animation selection."}
+      programming: {why: "You will wire the update functions and choosers that feed databases into the node."}
+
+  - id: AQ33
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [retargeting, ik-rig, ik-retargeter, pipeline]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: false
+    title: Retargeting at scale
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-operation-stack-in-unreal-engine"
+    checklist:
+      - "Pick a source character (for example the UE5 Mannequin) and a target character with a different skeleton. Create IK rigs IKR_Source and IKR_Target."
+      - "In each IK Rig, run Auto Create Retarget Chains and Set Pelvis. Read the notification and fix any chain the tool got wrong by hand."
+      - "Create RTG_SourceToTarget (Animation > IK Rig > IK Retargeter). Click Add Default Ops. Check the mapping with Map All (Fuzzy) and fix any wrong chain."
+      - "If the reference poses differ (A-pose vs T-pose), create a new retarget pose and use Auto Align. Do not edit the Default Pose."
+      - "Preview 3 clips in the Asset Browser. Fix one visible problem with an op setting, for example FK Chains Rotation Mode on the fingers or a Pin Bones op for a weapon bone."
+      - "Batch: right-click 10 or more source Animation Sequences in the Content Browser, choose Retarget Animation Assets, turn off Auto Generate Retargeter, pick RTG_SourceToTarget, use Add Suffix and export."
+      - "Create one Override Set (for example IsHoldingWeapon) that changes one op property. Show it on the Retarget Pose From Mesh node."
+    done_when: "Screenshots of the chain mapping, the op stack, and the batch export options, plus the exported folder in the Content Browser. Add 5 lines: which chain the auto tool got wrong, which op fixed your worst problem, and what the override set changes."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "Why does IK Rig retargeting work when the target arm has more joints than the source arm?"
+        choices: ["Extra joints are deleted during export", "You define whole chains, not individual bones, so the chain adapts to any bone count", "The source skeleton is copied onto the target", "Only the hand bone is retargeted"]
+        answer_index: 1
+        explain: "Chains are defined from a start bone to an end bone. Defining the whole arm chain keeps retargeting correct no matter how many bones it has."
+      - q: "Source chain is named ArmLeft, target chain is named left_arm. What happens?"
+        choices: ["Retargeting fails until the names are identical", "Only exact matches are allowed on limbs", "The chain is mapped to Root", "They match, because chain matching uses a fuzzy string match"]
+        answer_index: 3
+        explain: "The page says chain matching uses a fuzzy string match. ArmLeft can match left_arm as long as no other name is more accurate."
+      - q: "Why must you also Set Pelvis in each IK Rig?"
+        choices: ["So root motion can be defined and transferred proportionally", "So the fingers retarget in One to One mode", "The IK Retargeter cannot open without it", "It sets the preview mesh"]
+        answer_index: 0
+        explain: "The pelvis bone is defined so the character's root motion can be transferred in a proportional way between the two characters."
+      - q: "The source is in an A-pose and the target is in a T-pose. What is the documented approach?"
+        choices: ["Re-import the target in an A-pose", "Increase Rotation Alpha on the FK Chains op", "Create a new retarget pose, then match it with Edit Mode or Auto Align", "Set Translation Mode to Absolute"]
+        answer_index: 2
+        explain: "Different reference poses need a matching Retarget Pose. Epic recommends creating a new pose instead of editing the Default Pose, then aligning it."
+      - q: "What does the Retarget Pose Blend slider do at 0 and at 1?"
+        choices: ["0 is the source pose, 1 is the target pose", "0 blends to the first animation frame, 1 to the last", "0 shows the mesh reference pose, 1 shows the current retarget pose", "0 disables IK, 1 enables it"]
+        answer_index: 2
+        explain: "Setting it to 0 returns to the Skeletal Mesh default reference pose. Setting it to 1 shows the current Retarget Pose. It helps you see what you changed."
+      - q: "Which ops appear when you click Add Default Ops?"
+        choices: ["Pelvis Motion, FK Chains, Root Motion and Remap Curves", "Pin Bones, Filter Bones and Scale Source", "Only Run IK Rig", "Stride Warp and Speed Plant"]
+        answer_index: 0
+        explain: "The op stack page marks Pelvis Motion, FK Chains, Root Motion and Remap Curves as default operations added by Add Default Ops."
+      - q: "The finger chains look wrong with the default FK Chains Rotation Mode. Which mode is usually best for fingers?"
+        choices: ["Interpolated", "None", "One to One, when the bone counts match", "One to One Reversed for all chains"]
+        answer_index: 2
+        explain: "Interpolated is best for chains with different bone counts. One to One copies each bone in order and is typically the best choice for finger chains."
+      - q: "A weapon bone ik_hand_weapon floats away from the hand after retargeting. Which op is made for this?"
+        choices: ["Pin Bones, to lock ik_hand_weapon to hand_r", "Filter Bones", "Scale Source", "Remap Curves"]
+        answer_index: 0
+        explain: "Pin Bones is a post-processing op that locks a specific bone, such as ik_hand_weapon, to another bone like hand_r so it follows the animated character."
+      - q: "You add a Retarget Pose op in the middle of the op stack and it does nothing. Why?"
+        choices: ["It only works in Sequencer", "Retarget Pose must be the first op in the stack", "It needs an IK goal", "It is disabled on LOD 0"]
+        answer_index: 1
+        explain: "The page states that Retarget Pose must be the first op in the stack for it to work as expected, and only one copy of the op can be used."
+      - q: "When you retarget from the Content Browser with Retarget Animation Assets, what does Auto Generate Retargeter do by default?"
+        choices: ["It is off, so you must pick an IK Retargeter", "It only works for Mannequin to MetaHuman", "It renames the exported assets", "It creates IK Rigs and an IK Retargeter for the two meshes automatically"]
+        answer_index: 3
+        explain: "Auto Generate Retargeter is enabled by default. It creates IK Rig assets and an IK Retargeter for the source and target. Turn it off to use your own retargeter."
+      - q: "You batch-retarget an Animation Blueprint. Which export option also retargets the sequences it references?"
+        choices: ["Overwrite Existing Files", "Include Referenced Assets", "Export Retarget Assets", "Add Prefix"]
+        answer_index: 1
+        explain: "Include Referenced Assets duplicates and retargets animation assets referenced by the input, for example sequences in an animation blueprint or blendspace."
+      - q: "What replaced Retarget Profiles for state-driven changes (for example IsHoldingWeapon) inside one retarget asset?"
+        choices: ["Override Sets, applied on the Retarget Pose From Mesh node", "A second IK Retargeter per state", "Anim Notifies", "Bone Filters"]
+        answer_index: 0
+        explain: "Override Sets define state-driven variations in a single retarget asset. They are assigned at runtime on the Retarget Pose From Mesh node and replace the former Retarget Profiles workflow."
+    flavors:
+      _default: {why: "Retargeting one clip is easy. Retargeting a whole library for many characters without hand fixes is the real skill."}
+      animation: {why: "You will own the retargeter for every character in the project. It must be repeatable.", do: "Set a per-op LOD threshold so an expensive op is skipped at LOD 2 or higher, and show it."}
+      tech_art: {why: "Batch export and override sets are pipeline tools. You will script them."}
+      cinematics: {why: "Mocap on new characters goes through this retargeter before it reaches Sequencer."}
+
+  - id: AQ34
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [performance, animation-budget-allocator, uro, skeletal-mesh-lods, optimization]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [programming, tech_art]
+    required_spine: false
+    elective: false
+    title: Animation budget for a crowd
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-budget-allocator-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-optimization-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-lods-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-modular-characters-in-unreal-engine"
+    checklist:
+      - "Spawn 50 or more copies of BP_CrowdCharacter with an Animation Blueprint. Show stat unit and note the game thread time."
+      - "In ABP_Crowd, enable Warn About Blueprint Usage (Class Settings > Optimization). Move Event Graph logic into a Thread Safe function with Property Access until the AnimGraph nodes show the Fast Path lightning icon."
+      - "Enable the Animation Budget Allocator plugin. Set the Mesh Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play."
+      - "Run with a.Budget.Debug.Enabled 1 and Stat > Advanced > AnimationBudgetAllocator. Screenshot the graph and the per-mesh overlay numbers."
+      - "Add a.Budget.BudgetMs per quality level in Config/DefaultScalability.ini under [ViewDistanceQuality@0..3]. Test two levels."
+      - "Open SK_CrowdCharacter, set Number of LODs to 4 and Apply Changes. Add Bones to Prioritize on the face or hands with a high Weight of Prioritization and Regenerate LOD."
+      - "Compare stat unit before and after. Write the numbers down."
+    done_when: "Screenshots of the budget graph with overlay, the Compiler Results with no Blueprint usage warnings, the LOD settings, and a before/after stat unit table. Add 5 lines on what gave the biggest win and one thing you would not do on a hero character."
+    xp: 250
+    verify_type: writeup
+    quiz:
+      - q: "Which three optimizations does the Animation Budget Allocator apply when it is over budget?"
+        choices: ["Stops ticking some components in favor of a Leader Pose Component, lowers update rate, and chooses whether to interpolate", "Reduces LOD, lowers texture quality, and disables notifies", "Disables root motion, physics and morph targets", "Removes bones, merges meshes and lowers frame rate"]
+        answer_index: 0
+        explain: "The page lists these three targeted areas: stop ticking components (favoring a Leader Pose Component), update at a lower rate, and choose whether or not to interpolate."
+      - q: "What must the character's mesh component be for the budget allocator to manage it?"
+        choices: ["A Static Mesh Component", "A SkeletalMeshComponentBudgeted component class", "A Poseable Mesh Component", "Any component with Tick disabled"]
+        answer_index: 1
+        explain: "You must set the mesh's Component Class to SkeletalMeshComponentBudgeted, or set it in C++ with SetDefaultSubobjectClass, then enable Auto Register with Budget Allocator."
+      - q: "A mesh overlay shows the number 5 and the letter I. What does that mean?"
+        choices: ["LOD 5 and inactive", "5 ms of work and idle", "5 bones and invisible", "It ticks every 5 frames and is interpolating between frames"]
+        answer_index: 3
+        explain: "The number is the update rate: 5 means the mesh ticks every five frames. I means interpolating between frames; Hi and Lo show whether expensive logic is running."
+      - q: "What is the default value of a.Budget.BudgetMs?"
+        choices: ["0.1", "2.5", "1.0", "16.6"]
+        answer_index: 2
+        explain: "a.Budget.BudgetMs defaults to 1.0 millisecond of skeletal mesh work. The example scalability ini scales it from 1.0 at quality 0 to 2.5 at quality 3."
+      - q: "Where does Epic recommend setting the budget for each platform?"
+        choices: ["In the Animation Blueprint Class Settings", "In scalability settings, for example DefaultScalability.ini under [ViewDistanceQuality@N]", "In the Skeletal Mesh asset LOD Info", "Hard-coded in BeginPlay"]
+        answer_index: 1
+        explain: "The page recommends driving the cvars from the platform scalability settings, with an example DefaultScalability.ini that sets a.Budget.BudgetMs per ViewDistanceQuality level."
+      - q: "You set a.Budget.MinQuality to 0.5. What is the trade-off?"
+        choices: ["No trade-off, it only affects the debug graph", "Interpolation is disabled", "The system may go over its time budget to keep enough components ticking", "All meshes drop to LOD 1"]
+        answer_index: 2
+        explain: "MinQuality is NumComponentsTickingThisFrame divided by NumComponentsThatWeNeedToTick. If it is not 0.0, the allocator can potentially go over the time budget."
+      - q: "What happens to Update Rate Optimization (URO) when a component registers with the budget allocator?"
+        choices: ["URO is disabled and the budgeter controls the tick rate", "URO runs at double speed", "URO must be enabled first", "Nothing changes"]
+        answer_index: 0
+        explain: "RegisterComponent disables the default tick function and disables URO, and re-routes the parallel anim tasks to the budgeter."
+      - q: "Per the Animation Optimization page, what is generally the most expensive part of an Animation Blueprint?"
+        choices: ["The Output Pose node", "Blend Space evaluation", "Anim notify states", "The Event Graph logic, which runs each tick on the Game Thread"]
+        answer_index: 3
+        explain: "The Event Graph is evaluated every Tick sequentially on the Game Thread. Moving that logic into Thread Safe functions lets it run on worker threads."
+      - q: "A Blend Space node lost its lightning icon after you added a Multiply on the input float. Why?"
+        choices: ["The Blend Space asset is corrupt", "Any Blueprint logic on the pin stops Fast Path, so the node now calls into the Blueprint VM", "Multiply is not thread safe", "The lightning icon only shows in Debug builds"]
+        answer_index: 1
+        explain: "Fast Path copies member variables directly. If any calculation is added, the node can no longer use Fast Path and the icon is removed after compile."
+      - q: "Why can a character with root motion driving movement not use parallel animation updates?"
+        choices: ["Character movement is not multi-threaded, so the update must run on the game thread", "Root motion is always on the render thread", "Root motion needs a Leader Pose Component", "Parallel updates only work with URO"]
+        answer_index: 0
+        explain: "The page says that if root motion is required for character movement, the parallel update cannot be performed because character movement is not multi-threaded."
+      - q: "The LOD generator removed the detail on the hands. What is the documented fix?"
+        choices: ["Add the hand bones to Bones to Prioritize with a high Weight of Prioritization, then Regenerate LOD", "Enable Volumetric Correction", "Import LOD 0 again", "Lower the Termination Criterion to 0"]
+        answer_index: 0
+        explain: "Bones to Prioritize keeps geometry skinned to those bones from being optimized. The page uses a high weight like 5,000 and then Regenerate LOD."
+      - q: "The team wants the cheapest modular crowd character on the game thread and accepts no physics. Which method does the modular characters page rank lowest on game thread cost?"
+        choices: ["Copy Pose from Mesh", "Skeletal Mesh Merge", "Leader Pose Component", "Separate Animation Blueprints per part"]
+        answer_index: 2
+        explain: "The chart shows Leader Pose Component with minimum setup and game thread cost, but high render thread cost and no physics. Skeletal Mesh Merge has low render cost but more setup."
+    flavors:
+      _default: {why: "Fifty animated characters can eat a frame. A master knows how to spend milliseconds on purpose."}
+      animation: {why: "You must ship crowds that still look alive. The budget allocator decides who gets the frames.", do: "Set bNeverSkip or Always Tick on the player mesh and prove in the overlay that it stays at rate 1 under load."}
+      programming: {why: "Thread safe updates and the budgeter API are your side of the deal."}
+      tech_art: {why: "LOD settings and scalability ini files are tools you will maintain."}
+
+  - id: AQ35
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [control-rig, modular-rigging, rigging]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: false
+    title: Modular Control Rig
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modular-control-rigs-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
+    checklist:
+      - "Enable the Control Rig Modules plugin (Edit > Plugins > Animation) and restart."
+      - "Create CR_Modular_Hero (Animation > Control Rig > Control Rig, choose ModularRig). Set the Preview Mesh to your character."
+      - "Drag the Spine module onto the unresolved socket. Then add Neck, both Legs, both Feet, Shoulders and Arms. Select all finger sockets at once and drop one Finger module."
+      - "Delete the left arm modules. Rebuild them by selecting the right arm modules and using Mirror in the Module Hierarchy."
+      - "Force one unresolved connector (rename a bone or remove a socket), then fix it with Use Selected or the hierarchy dropdown. Screenshot the red none before and the fix after."
+      - "Create your own module: a new Control Rig, Switch to Rig Module, set Name, Icon and Description, and add one Secondary connector with a Type Rule. Add it to CR_Modular_Hero."
+      - "Drag CR_Modular_Hero into a level, key 3 poses in Sequencer, and record a short clip."
+    done_when: "Screenshots of the finished Module Hierarchy, the unresolved connector before and after the fix, your custom module Class Settings, plus the Sequencer clip. Add 4 lines on what your module does and how its connectors resolve."
+    xp: 250
+    verify_type: screenshot
+    quiz:
+      - q: "What is a Module in the Modular Control Rig framework?"
+        choices: ["A Control Rig component for a body part, such as an Arm or Spine, that rigs that part and creates its controls", "A Skeletal Mesh section", "A Sequencer track", "A Physics Asset body"]
+        answer_index: 0
+        explain: "A Module is a pre-built Control Rig component that represents a part of the body. Modules connect together to form a complete rig."
+      - q: "Is the Control Rig Modules plugin required to build a Modular Control Rig?"
+        choices: ["Yes, the ModularRig option does not appear without it", "Yes, it contains the Control Rig editor", "No, it only adds icons", "No, but it contains the pre-configured Modules used in the example workflow"]
+        answer_index: 3
+        explain: "The page says the plugin is not required, but it holds the pre-configured example Modules and is recommended for getting started. It can be loaded and unloaded as needed."
+      - q: "Which hierarchy element types can a socket resolve to?"
+        choices: ["Bones, Controls and Nulls", "Only Bones", "Materials and Sockets", "Curves and Bones"]
+        answer_index: 0
+        explain: "A socket can resolve to Bones, Controls or Nulls. Connectors can carry rules that limit which of these types they accept."
+      - q: "In the viewport you see a circle with a small gray dot inside. What is it?"
+        choices: ["A resolved connector", "A mirrored module", "An unresolved socket", "A socket with multiple connectors"]
+        answer_index: 2
+        explain: "A large gray circle inside means resolved. A small gray dot means unresolved. A number means several connectors resolved to the same socket."
+      - q: "How do you add a Finger module to all fingers in one step?"
+        choices: ["Drop the module on the Spine socket", "Select all finger sockets, then drop one Finger module on one of them", "Use Duplicate five times", "Set Type to Finger in Class Settings"]
+        answer_index: 1
+        explain: "The workflow selects each finger socket, then drags one Finger module onto one of the selected sockets to create multiple modules at the same time."
+      - q: "You mirror the right leg modules but the new connectors do not resolve. What is the likely cause?"
+        choices: ["Mirroring only works on arms", "Mirror Axis must be Z", "The plugin is disabled", "The sockets for the left side do not exist on the mesh"]
+        answer_index: 3
+        explain: "The page notes that sockets need to exist for the mirrored module connectors to resolve properly."
+      - q: "Which is a valid way to resolve a connector that shows a red none?"
+        choices: ["Recompile the Skeletal Mesh", "Select the element in the viewport and press Use Selected, or pick it from the hierarchy dropdown, or run Auto Resolve", "Rename the module", "Delete the Primary connector"]
+        answer_index: 1
+        explain: "Unresolved connectors can be fixed with the Use Selected arrow, the hierarchy dropdown (filtered by rules), or Auto Resolve which re-runs the Connector Event."
+      - q: "How many Primary connectors can one module have, and what should it resolve to?"
+        choices: ["One, and it should resolve to a socket on the Skeletal Mesh", "As many as needed, resolving to Bones", "Two, one per side", "None, only Secondary connectors exist"]
+        answer_index: 0
+        explain: "A module has exactly one Primary connector, created automatically when the rig is converted to a module. It resolves first and should target a socket with the Socket Type Rule."
+      - q: "A Secondary connector is marked Optional. What does that mean?"
+        choices: ["It resolves to a random bone", "It is deleted on save", "The module works even if the connector never resolves", "It only resolves in Sequencer"]
+        answer_index: 2
+        explain: "If a Secondary Connector is Optional, it does not have to resolve for the module to work properly."
+      - q: "A Foot module needs to change the Leg module's logic to add a foot roll. Which feature is made for this?"
+        choices: ["Pre and Post Forwards Solve", "Module Metadata at Root scope", "Mirroring", "The Connector Event"]
+        answer_index: 0
+        explain: "Pre and Post Forwards Solve let a module run logic before or after the forwards solve, for example a Foot module editing a Leg module to create a foot roll setup."
+      - q: "In which order do modules execute?"
+        choices: ["Alphabetically by name", "In parallel on several threads", "In module tree order from root to leaf, such as Spine, Leg, Foot, on one thread", "Leaf to root"]
+        answer_index: 2
+        explain: "Modules run in the order they appear in the module tree, root to leaf, all on the same thread sequentially. The graph cannot be multithreaded."
+      - q: "Your studio wants a different Root module for all new modular rigs. What does the page recommend?"
+        choices: ["Edit the Root module inside the Control Rig plugin folder", "Create a new Root module in your project and set it as Default Root Module in Project Settings > Control Rig", "Rename the plugin module", "Set the root in each rig's Preview Mesh"]
+        answer_index: 1
+        explain: "The Default Root Module setting lives in Project Settings under Control Rig. Epic recommends creating a new Root Module in your project instead of editing the plugin asset."
+    flavors:
+      _default: {why: "Building a full rig from modules takes minutes instead of days. A master also knows how to author the modules."}
+      animation: {why: "You will rig new characters and fix rigs that others built. Connectors and rules are the language.", do: "Add Get Module Metadata to your custom module to read a global control size from the Root scope."}
+      cinematics: {why: "Modular rigs work in Sequencer like any Control Rig. You can animate a new character the same day it arrives."}
+      tech_art: {why: "Module authoring is a rigging pipeline. Rules and metadata keep it consistent across characters."}
+
+  - id: AQ36
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [control-rig, retargeting, documentation, capstone]
+    required_for_majors: [animation]
+    taster_for_majors: []
+    adjacent_for: [cinematics, tech_art]
+    required_spine: false
+    elective: false
+    capstone: true
+    title: Control Rig kit
+    time_min: 480
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modular-control-rigs-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
+    checklist:
+      - "Pick a non-Mannequin character (your own or a free one). Build CR_Kit_Character as a Modular Control Rig, with at least one custom module you authored."
+      - "Build IKR_Kit_Character and RTG_MannequinToKit. Batch-retarget at least 12 Mannequin animations (idle, walk, run, jump, two montages) with a clear suffix."
+      - "Fix the worst three retarget problems with ops (retarget pose, Pin Bones, FK Chains modes) and record before/after clips."
+      - "Put everything in one folder Content/Kits/<CharacterName> with the mesh, skeleton, rigs, retargeter and animations. Nothing in the folder may reference assets outside it except the engine."
+      - "Write README_Kit.md inside the folder: how to open the rig, how to retarget more clips with the retargeter, known limits, and one screenshot per step."
+      - "Give the folder to another member. They must play one retargeted animation and key one pose on the rig in Sequencer without asking you a question. Collect their feedback."
+      - "Record a 60 second clip: the rig posed in Sequencer, then two retargeted animations playing in a level."
+    done_when: "A mentor review with the kit folder (or a migrated zip), README_Kit.md, the 60 second clip, before/after clips of the three fixes, and the tester's written feedback."
+    xp: 400
+    verify_type: mentor
+    quiz: []
+    flavors:
+      _default: {why: "A rig and an animation set that another person can use without you is the proof of a master animator."}
+      animation: {why: "This is your portfolio piece. It shows rigging, retargeting and communication in one folder.", do: "Include one Override Set in the retargeter and document when the user should turn it on."}
+      cinematics: {why: "Cinematic teams live off kits like this. Your README is what they read at 2 AM."}
+      tech_art: {why: "Folder discipline and zero outside references are what make a kit shippable."}
+
+  - id: AQ37
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [ml-deformer, deformation, morph-targets, machine-learning]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: ML Deformer
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/ml-deformer-framework-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-use-the-machine-learning-deformer-in-unreal-engine"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ml-deformer-sample-in-unreal-engine"
+    checklist:
+      - "Enable the ML Deformer Framework and ML Deformer Neural Morph Model plugins. Restart."
+      - "Get training data: an Animation Sequence of random poses and a matching Geometry Cache (.abc). Use the ML Deformer Sample from Fab if you have no Maya data."
+      - "If you import an Alembic file: Import Type Geometry Cache, Flatten Tracks off, Compressed Position Precision 0.001, Store Imported Vertex Numbers on."
+      - "Create MLD_Character (Animation > Deformers > ML Deformer) with the Neural Morph Model. Assign Skeletal Mesh, Anim Sequence and Geometry Cache. Enable Draw Deltas and scrub 10 frames to check alignment."
+      - "In Network Inputs, Add All Animated Bones, then remove twist, roll and helper bones. Set Mode to Local. Train with a small Num Iterations first (1000 to 3000)."
+      - "Switch to Testing mode. Compare Weight 0 and 1 and show the Activations heat map. Then raise Delta Zero Threshold until GPU Memory (Morph Targets) drops with no visible loss."
+      - "In BP_MLCharacter add an MLDeformer component with MLD_Character and set the mesh's Mesh Deformer to DefaultMLDeformerGraph (enable Show Engine and Plugin Content)."
+    done_when: "Screenshots of the deltas debug view, the Testing heat map, the Statistics section before and after your Delta Zero Threshold change, and the Blueprint components. Add 5 lines: which bones you removed and why, and one case where you would NOT use the ML Deformer."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which three inputs does ML Deformer training need?"
+        choices: ["A Skeletal Mesh, an Animation Sequence of varied poses, and a Geometry Cache with the target deformations", "A Static Mesh, a Material and a Texture", "A Control Rig, a Physics Asset and a Blend Space", "Two Skeletal Meshes and a Pose Asset"]
+        answer_index: 0
+        explain: "Training uses a Skeletal Mesh, an Animation Sequence covering a wide range of motion, and a Geometry Cache (from an Alembic file) that holds the desired deformations."
+      - q: "What does the trained ML Deformer produce at runtime with the Neural Morph Model?"
+        choices: ["A new Skeleton", "Morph Targets that approximate the high quality deformation on top of linear skinning", "Cloth simulation", "A physics ragdoll"]
+        answer_index: 1
+        explain: "The framework trains a model to make Morph Target selections that approximate the offline deformation. Linear skinning still runs, and the deltas are added by the deformer."
+      - q: "Which model does Epic recommend by default for skin and muscle deformation on characters?"
+        choices: ["Vertex Delta Model", "Nearest Neighbor Model", "Neural Morph Model", "Geometry Cache Model"]
+        answer_index: 2
+        explain: "The Neural Morph Model is the general model for character deformation and is recommended by default. Nearest Neighbor targets cloth and is experimental. Vertex Delta is an example only."
+      - q: "The Vertex Delta Model is listed in the editor. When should you use it?"
+        choices: ["For production cloth", "For mobile only", "When you have fewer than 1000 frames", "Never in production; it is a GPU example model with no compression"]
+        answer_index: 3
+        explain: "Vertex Delta is a simplified GPU-only example of the Neural Morph global mode without engine morph targets or compression. It should only be a reference for custom models."
+      - q: "Neural Morph Mode Local versus Global: which statement is correct per the source?"
+        choices: ["Global needs the least training data", "Local trains one network per bone, needs less data, and gives sparser morph targets; Global considers all bones together and needs more data", "Local is slower on the GPU", "Global is the default mode"]
+        answer_index: 1
+        explain: "Local is the default, learns around individual joints and produces sparse morph targets that run faster. Global learns coordinated movement but needs more data, best with randomized poses."
+      - q: "Your training Animation Sequence and Geometry Cache have different frame counts. What happens?"
+        choices: ["The editor fixes it automatically", "Only the first frame is used", "Training results will be wrong; both must match in frame rate, frame count, poses per frame and vertex count", "The Geometry Cache is ignored"]
+        answer_index: 2
+        explain: "Each training pair must run at the same frame rate, have the same number of frames with the same pose on each frame, and matching vertex counts. Mismatches are listed as a troubleshooting cause."
+      - q: "Why should you remove twist and helper bones from the Network Inputs?"
+        choices: ["They crash the trainer", "Only bone rotations are used, and fewer well-chosen bones give better results; helper bones do not add useful deformation signal", "They are not skinned", "The GPU cannot store them"]
+        answer_index: 1
+        explain: "Training only uses the rotation of the listed bones. Epic recommends the minimum set of bones the deformation depends on and excluding twist, roll and helper bones."
+      - q: "Which setting has one of the most significant effects on runtime memory and performance?"
+        choices: ["Delta Zero Threshold", "Learning Rate", "Label Height", "Mesh Spacing"]
+        answer_index: 0
+        explain: "Delta Zero Threshold drops small deltas from the morph targets. The page says setting a functional value has one of the most significant effects on runtime memory and performance. Tune it before Compression Level."
+      - q: "What minimum amount of training data does the troubleshooting table suggest for an average character?"
+        choices: ["100 frames", "At least 3000 frames, with 7500 or more for good results", "Exactly 10 poses", "One frame per bone"]
+        answer_index: 1
+        explain: "The Neural Morph troubleshooting says to use at minimum 3000 frames for average characters, and at least 7500 for good results."
+      - q: "In the Blueprint, you added the MLDeformer component but nothing deforms in game. What else is required?"
+        choices: ["A Physics Asset", "Enable root motion", "A second Skeletal Mesh", "Set a Deformer Graph in the Skeletal Mesh Component's Mesh Deformer property, for example DefaultMLDeformerGraph"]
+        answer_index: 3
+        explain: "The setup adds the MLDeformer component with the asset, then sets the mesh component's Mesh Deformer to a Deformer Graph. Setting the graph in the ML Deformer asset alone does not add it to the component."
+      - q: "While debugging a PIE actor from the ML Deformer editor, which heat map mode works?"
+        choices: ["Ground Truth only", "Activations only, because there is no live ground truth in the game", "Both modes", "Neither, heat maps are training only"]
+        answer_index: 1
+        explain: "When debugging a live PIE actor, only the Activations heat map mode works because there is no ground truth Geometry Cache for the game pose."
+      - q: "Where do you check the GPU cost of the ML Deformer at runtime?"
+        choices: ["Stat Unit", "The Rewind Debugger", "Unreal Insights, Morph Target item in the GPU section, and the GPU Memory (Morph Targets) statistic in the asset", "Shader Complexity view"]
+        answer_index: 2
+        explain: "The page points to Unreal Insights' Morph Target GPU item and the MLDeformerComponent CPU section. In the asset, GPU Memory (Morph Targets) is called the most consequential statistic."
+    flavors:
+      _default: {why: "Film-quality muscle and skin at game frame rates is now possible. Know what it costs and what data it needs."}
+      animation: {why: "The ML Deformer sits after your animation. Bad range of motion in training shows up as broken shoulders in game.", do: "Add one Bone Group (for example left and right clavicle) and show the difference on the upper back."}
+      tech_art: {why: "You will own the Maya or Houdini data generation and the Alembic import settings."}
+      cinematics: {why: "Close-up hero shots are where the ML Deformer pays off. Know which characters deserve it."}
+
+  - id: AQ38
+    rank: 4
+    difficulty: master
+    track: animation
+    subjects: [chaos-cloth, clothing, simulation, physics]
+    required_for_majors: []
+    taster_for_majors: []
+    adjacent_for: [tech_art, cinematics]
+    required_spine: false
+    elective: true
+    title: Chaos Cloth on a character
+    time_min: 150
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/clothing-tool-in-unreal-engine"
+    backup_url: null
+    extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/clothing-tool-in-unreal-engine---properties-reference"
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/panel-cloth-editor-overview"
+    checklist:
+      - "Use a character whose cape, skirt or coat is its own material section. If none, add a simple cape mesh to SK_ClothCharacter and import it."
+      - "In the Skeletal Mesh Editor, click Section Selection, select the cape section, right-click and Create Cloth Asset from Selection. Name it CA_Cape and set the character's Physics Asset for collision."
+      - "Right-click the section again and Apply Clothing Asset > CA_Cape. Open Window > Clothing and click Activate Cloth Paint."
+      - "Create a Max Distance mask. Paint 0 along the shoulders and a Gradient down to a large value at the hem. Hold H to preview."
+      - "Add a Backstop Distance mask so the cape cannot pass into the back. Tune Config: Damping, Gravity Scale, Collision Thickness, and set Wind Method to Accurate."
+      - "Play the character with a run animation and a turn. Record a 20 second clip. Fix one clipping problem by changing a mask, not the mesh."
+      - "Read the Panel Cloth Editor overview and write 3 lines on when you would use the Dataflow-based cloth asset instead of this legacy tool."
+    done_when: "Screenshots of the Clothing panel with your masks, the Config values you changed, and the 20 second clip. Add 5 lines: what each mask does, the clipping fix, and your Panel Cloth Editor note."
+    xp: 120
+    verify_type: screenshot
+    quiz:
+      - q: "Which solver runs clothing in Unreal Engine, and what is its advantage per the page?"
+        choices: ["PhysX APEX; it needs a DCC plugin", "Chaos Cloth; a low-level particle solver with direct access to the simulation data", "Niagara; it runs on the GPU", "Havok Cloth; it is precomputed"]
+        answer_index: 1
+        explain: "Unreal uses the Chaos Cloth solver, a low-level clothing solver for the particle simulation. Direct access to simulation data keeps integrations lightweight and extensible."
+      - q: "Where do you start when creating a cloth asset from part of a Skeletal Mesh?"
+        choices: ["In the Content Browser, Add > Physics > Cloth", "In the Animation Blueprint", "In Project Settings > Physics", "In the Skeletal Mesh Editor, click Section Selection, select the material section, right-click and choose Create Cloth Asset from Selection"]
+        answer_index: 3
+        explain: "Section Selection lets you pick the material section. The right-click context menu then offers Create Cloth Asset from Selection, and later Apply Clothing Asset."
+      - q: "What is the Remove from Mesh option for when creating a cloth asset?"
+        choices: ["It deletes the Skeletal Mesh", "Use it when a separate low-poly section drives a high-poly render mesh, so the driver section is not rendered", "It removes the Physics Asset", "It disables collision"]
+        answer_index: 1
+        explain: "Remove from Mesh controls whether the selected section is left behind. Enable it when driving a high-poly mesh with a low-poly one."
+      - q: "What does the Physics Asset field do when creating a cloth asset?"
+        choices: ["It provides collision for the cloth simulation", "It sets the cloth material", "It bakes the cloth to bones", "It sets the wind direction"]
+        answer_index: 0
+        explain: "The Physics Asset is used to extract collisions. The reference notes it exports spheres and sphylls and supports up to 32 convex faces or 5 boxes."
+      - q: "What are the paint controls in the cloth paint tool?"
+        choices: ["Left mouse paints, Shift plus left mouse erases, H previews the cloth", "Right mouse paints, Ctrl erases, P previews", "Space paints, Backspace erases", "Left mouse paints, Delete erases, F previews"]
+        answer_index: 0
+        explain: "The page lists Paint as Left Mouse Button, Erase as Shift plus Left Mouse Button, and Cloth Preview as H."
+      - q: "A Paint Value of 100 on a Max Distance mask means what?"
+        choices: ["The vertex is locked", "The vertex can move one meter from its animated position", "100 percent stiffness", "The vertex is removed from the simulation"]
+        answer_index: 1
+        explain: "A value of 0 means the skinned vertex cannot move. A value of 100 allows it to move one meter from its original position."
+      - q: "How do you paint a gradient from the shoulders to the hem?"
+        choices: ["Paint with the Brush twice", "Use Fill with a Threshold", "Left-click the start value (green), Ctrl plus left-click the end value (red), then press Enter", "Hold H and drag"]
+        answer_index: 2
+        explain: "The Gradient tool marks the start value with a green dot on left-click, the end value with a red dot on Ctrl plus left-click, and applies the gradient when you press Enter."
+      - q: "What does Backstop Distance do?"
+        choices: ["It sets the cloth thickness", "It offsets from Max Distance to limit movement, so cloth cannot push inward past a point", "It is the spring to the animated pose", "It controls wind lift"]
+        answer_index: 1
+        explain: "Backstop Distance is the offset used from any point on the cloth to limit movement within the Max Distance. Backstop Radius adds a sphere region the cloth cannot enter."
+      - q: "An animator wants cloth to follow the keyed animation more closely in a cutscene, controlled at runtime. Which mask target and mechanism?"
+        choices: ["Max Distance, set to 0", "Backstop Radius, set high", "Self Collision Radius", "Anim Drive Multiplier, which drives springs toward the animated position and can be scaled at runtime through the interactor on the Skeletal Mesh Component"]
+        answer_index: 3
+        explain: "Anim Drive Multiplier drives springs that pull cloth to its animated position. Blueprints can set it at runtime through the interactor; the runtime value multiplies the painted values."
+      - q: "You have two Max Distance masks. Can both be active?"
+        choices: ["Yes, they add together", "No, you can keep several masks but only one per Target can be assigned at a time", "Yes, if they have different names", "No, the second is deleted"]
+        answer_index: 1
+        explain: "You can have multiples of each Target but only one of each can be assigned at a time. This lets you test setups non-destructively."
+      - q: "Which Config change makes cloth stretchier and bouncier, per the reference?"
+        choices: ["Lower Solver Frequency", "Higher Gravity Scale", "Higher Collision Thickness", "Wind Method set to Legacy"]
+        answer_index: 0
+        explain: "Solver Frequency is the frequency of the position solver, where lower values lead to stretchier, bouncier cloth."
+      - q: "The Panel Cloth Editor (Chaos Cloth Panel node editor) differs from the legacy tool in which way?"
+        choices: ["The cloth asset is separate from the Skeletal Mesh, built with a Dataflow graph, used through a Chaos Cloth component, at a slightly higher rendering cost", "It uses a different physics solver", "It cannot use a Physics Asset", "It bakes cloth into the draped pose"]
+        answer_index: 0
+        explain: "Both use the same Chaos solver. The panel editor builds a separate, non-destructive cloth asset via Dataflow, reusable across characters through a Chaos Cloth component, but rendering it as its own component adds draw-call overhead."
+    flavors:
+      _default: {why: "Cloth sells a character in motion. Masks and collision decide if it looks alive or breaks through the body."}
+      animation: {why: "You will paint masks and tune configs so cloth reads with the animation, not against it.", do: "Set Anim Drive Multiplier from a Blueprint at runtime and show the cape stiffening during a montage."}
+      tech_art: {why: "Cloth cost and collision setup are yours to budget. Know both the legacy tool and the panel editor."}
+      cinematics: {why: "Anim Drive is your friend when the director wants the cape to hit a mark."}
