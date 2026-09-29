@@ -342,12 +342,12 @@ class SetupServer(commands.Cog):
         floor = await self._voice(g, training, hub_name)
         chans.update(studio_floor_voice=floor.id)
 
-        # 02 QUEST BOARD (was WORKSHOP): #quests + #starter-quests + one forum per major --------------
+        # 02 QUEST BOARD (was WORKSHOP): #quest-log + #starter-quests + one forum per major --------------
         # Quests live on the board; /submit posts turn-ins into #starter-quests or the member's major forum.
         await self._rename_category(g, "03 · WORKSHOP", "02 · QUEST BOARD")
         workshop = await self._category(g, "02 · QUEST BOARD", {everyone: P(view_channel=False), me: bot_ow})
         cats["workshop"] = workshop.id
-        qb = await self._move_or_text(g, workshop, "quests", old_names=("quest-board",), topic="How quests work and the weekly raid.")
+        qb = await self._move_or_text(g, workshop, "quest-log", old_names=("quests", "quest-board"), topic="How quests work and the weekly raid.")
         # send_messages on so slash commands work here; plain chat is removed by the bot (commands-only)
         board_ow = P(view_channel=True, send_messages=True, create_public_threads=False, add_reactions=True,
                      read_message_history=True, use_application_commands=True)
@@ -582,7 +582,7 @@ class SetupServer(commands.Cog):
                 act("welcome", "Start Questing", "Press the green button. It is a short rules quiz.", "🚪"),
 
                 act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
-                act("quest_board", "Find #quests", "Press Continue your quest on the pinned post.", "🗺️"),
+                act("quest_board", "Find #quest-log", "Press Continue your quest on the pinned post.", "🗺️"),
                 act("help_desk", "Ask for help the right way", "Use the New help post button.", "🛠️"),
             ) if a],
             "resource_channels": [r for r in (
@@ -607,7 +607,7 @@ class SetupServer(commands.Cog):
         "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
                       "rank-ups"],
         "01 · GUILD HUB": ["general", "introductions", "showcase", "help-desk", "suggestions"],
-        "02 · QUEST BOARD": ["quests", "starter-quests", "level-design", "environment-art", "tech-art",
+        "02 · QUEST BOARD": ["quest-log", "starter-quests", "level-design", "environment-art", "tech-art",
                           "gameplay-design", "animation", "programming", "cinematics"],
     }
 
@@ -693,7 +693,7 @@ class SetupServer(commands.Cog):
             E("🚀 Start here: 3 steps",
               "**1.** Press the green button below. Your first quest is a short quiz about the rules.\n"
               "**2.** Then do the other small steps. There is always a button for the next one.\n"
-              "**3.** When you finish, go to **#quests**. After Orientation, quests only work there.", "#3D7DD8"),
+              "**3.** When you finish, go to **#quest-log**. After Orientation, quests only work there.", "#3D7DD8"),
             E("⌨️ 5 commands",
               "`/quest` : your next task\n"
               "`/quiz` : answer questions about a quest\n"
@@ -704,7 +704,7 @@ class SetupServer(commands.Cog):
             E("🗺️ What opens when",
               "You only see channels you have unlocked.\n"
               "**Everyone:** GATE and Guild Hub channels.\n"
-              "**After Orientation:** #quests, #starter-quests and the major forums (read all, post in "
+              "**After Orientation:** #quest-log, #starter-quests and the major forums (read all, post in "
               "your major's), plus Town Hall (voice).\n" + rank_lines, "#8E6CCF"),
             E("🆘 Need help?",
               "Go to #help-desk.\n"
@@ -717,7 +717,7 @@ class SetupServer(commands.Cog):
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
                  view=view(StartButton())),
             dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), embeds=[
-                E("📋 Quests", "**This is your home for quests.**\n"
+                E("📋 Quest log", "**This is your home for quests.**\n"
                   "After Orientation, quests only work in this channel."),
                 E("▶️ How to quest", "1. Press **Continue your quest** (or type `/quest`).\n"
                   "2. Read the guides the quest links to.\n"

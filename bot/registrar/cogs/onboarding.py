@@ -124,7 +124,7 @@ class Onboarding(commands.Cog):
         if nxt:
             desc += "\n\nThe bot checks each step for you. This page updates by itself."
         else:
-            desc += ("\n\n🎉 **All done!** From now on, **quests only work in #quests**. "
+            desc += ("\n\n🎉 **All done!** From now on, **quests only work in #quest-log**. "
                      "Go there and press **Continue your quest**.")
         return discord.Embed(title=f"🧭 Orientation: {len(steps)} small steps", description=desc,
                              color=discord.Color.from_str("#7A8C7E"))
@@ -133,18 +133,18 @@ class Onboarding(commands.Cog):
         cid = self.bot.unlocks.channel(key)
         return f"https://discord.com/channels/{self.bot.settings.guild_id}/{cid}" if cid else None
 
-    def board_button(self, label: str = "Go to #quests") -> discord.ui.Button | None:
+    def board_button(self, label: str = "Go to #quest-log") -> discord.ui.Button | None:
         url = self.channel_url("quest_board")
         return discord.ui.Button(style=discord.ButtonStyle.link, label=label, emoji="🗺️", url=url) if url else None
 
     def orientation_view(self, done: set[str], facts: set[str] | None = None) -> discord.ui.View:
-        """Always a button to the next thing: the current step's action, or #quests when all done."""
+        """Always a button to the next thing: the current step's action, or #quest-log when all done."""
         from .quiz import QuizButton
         facts = facts or set()
         v = discord.ui.View(timeout=None)
         nxt = next((q for q in self.cat.orientation() if q.id not in done), None)
         if nxt is None:
-            if (b := self.board_button("Go to #quests: your quests")):
+            if (b := self.board_button("Go to #quest-log: your quests")):
                 v.add_item(b)
             return v
         step = nxt.id
@@ -157,7 +157,7 @@ class Onboarding(commands.Cog):
                 if f"cmd.{key}" not in facts:
                     v.add_item(CommandStepButton(key, label))
         elif step == "O4":
-            if (b := self.board_button("Next: open #quests")):
+            if (b := self.board_button("Next: open #quest-log")):
                 v.add_item(b)
         elif step == "O5":
             v.add_item(PracticeSendButton())
@@ -197,12 +197,12 @@ class Onboarding(commands.Cog):
             await self.bot.get_cog("Quiz").start(itx, "O1")          # the first quest IS the rules quiz
             return
         oriented = all(q.id in done for q in self.cat.orientation())
-        if oriented and not show_steps:                              # after Orientation, quests live in #quests
+        if oriented and not show_steps:                              # after Orientation, quests live in #quest-log
             v = discord.ui.View(timeout=None)
             if (b := self.board_button()):
                 v.add_item(b)
             await itx.response.send_message(
-                "🎉 Orientation is done.\n**From now on, quests only work in #quests.** "
+                "🎉 Orientation is done.\n**From now on, quests only work in #quest-log.** "
                 "Go there and press **Continue your quest**.", view=v, ephemeral=True)
             return
         facts = await self.bot.db.facts(itx.user.id)
@@ -416,7 +416,7 @@ class Onboarding(commands.Cog):
 
 # ---------------------------------------------------------------- persistent views
 class ClockInButton(discord.ui.DynamicItem[discord.ui.Button], template=r"uu:clockin"):
-    """Posted once on the #quests pin by the owner (Phase 2 /admin post-pins)."""
+    """Posted once on the #quest-log pin by the owner (Phase 2 /admin post-pins)."""
 
     def __init__(self):
         super().__init__(discord.ui.Button(label="I found it", emoji="✅", style=discord.ButtonStyle.success,

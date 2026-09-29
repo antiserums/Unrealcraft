@@ -144,7 +144,7 @@ class Ranks(commands.Cog):
         lines = {
             0: ["You're Greenlit. You have a desk but no badge yet.",
                 "You owe the Starter Quests: 11 short quests, each one sitting.",
-                f"Next: {nxt}. From now on, quests only work in #quests: press Continue your quest there.",
+                f"Next: {nxt}. From now on, quests only work in #quest-log: press Continue your quest there.",
                 "Stuck? #help-desk with the template. Mentors answer formatted posts first.",
                 "New power: #starter-quests and the major forums are open (post in your major's)."],
             1: ["Blockout Artist. You can build a space and light it without getting lost.",

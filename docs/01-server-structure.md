@@ -16,7 +16,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 |---|---|---|
 | 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Questing + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
-| 02 · QUEST BOARD | #quests (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
+| 02 · QUEST BOARD | #quest-log (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
 | 03 · TOWN HALL | ➕ Join to create [V]: joining it makes your own room (rename / user limit; deleted after 5 min empty), Lecture Hall [S] (speak: Architect+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 04 · STAFF | #mod-log (also gets 🐞 bug-report alerts), #curriculum-wip, #mentor-queue | staff (+ Architect read queue, Lead) |
 

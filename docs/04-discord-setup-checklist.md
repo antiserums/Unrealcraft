@@ -30,7 +30,7 @@ Pinned guides are created and updated in place by the bot (`/setup sync-pins`). 
 ## F2. Old checklist (kept for reference)
 - [x] Pins are posted by bootstrap. Only the Server Guide is manual.
 - [ ] #welcome: 5 posts. (1) The loop. (2) Ranks and what they unlock. (3) Majors and tasters. (4) The five commands. (5) Help-desk format.
-- [ ] #quests: "How quests work" pin. Its **Clocked in** button is posted by `/admin post-pins` (Phase 2).
+- [ ] #quest-log: "How quests work" pin. Its **Clocked in** button is posted by `/admin post-pins` (Phase 2).
 - [ ] #help-desk: pin the **New help post** button (also `/admin post-pins`) and one "bad vs good" example (used by R0-META-03).
 - [ ] #showcase: pin "How to give WIP feedback: one thing that works, one specific issue, one next step."
 - [ ] #epic-games-resources: Epic Get Started, Your First Hour, Level Designer Quick Start, Programming Quick Start, Materials, Blueprints.
