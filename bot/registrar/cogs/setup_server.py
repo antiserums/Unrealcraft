@@ -709,61 +709,81 @@ class SetupServer(commands.Cog):
         specs = [
             dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
                  view=view(StartButton())),
-            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), content=(
-                "**📋 Quest board**\n"
-                "Type `/quest` to get your next task. Each quest has:\n"
-                "• a link to the official Epic docs\n• a short checklist\n• a quiz\n• then `/submit` to send your work\n\n"
-                "**This is your home for quests.** After Orientation, quests only work in this channel.\n"
-                "Press **Continue your quest** any time to get your next task.\n"
-                "New quests and weekly events are posted here.")),
+            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), embeds=[
+                E("📋 Quest board", "**This is your home for quests.**\n"
+                  "After Orientation, quests only work in this channel."),
+                E("▶️ How to quest", "1. Press **Continue your quest** (or type `/quest`).\n"
+                  "2. Read the Epic docs the quest links to.\n"
+                  "3. Do the work in Unreal.\n"
+                  "4. Take the quiz.\n"
+                  "5. Press **Send my work** (or type `/submit`).", "#3D7DD8"),
+                E("📣 Also here", "New quests and weekly events are posted in this channel.", "#8E6CCF"),
+            ]),
             dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag="Discord-help",
-                 view=view(HelpPostButton(), BugReportButton()), content=(
-                     "**Two kinds of help, one desk**\n"
-                     "🛠️ **Unreal help**: stuck on a quest or in the editor. The form asks for your engine version, "
-                     "what you tried and expected vs actual.\n"
-                     "🐞 **Server / bot problem**: a command failed, a channel or role looks wrong, a quest won't tick, "
-                     "or something broke after an update. The form asks what you did, what happened and when. "
-                     "Staff get notified and compare it with #patch-notes.\n\n"
-                     "❌ \"lighting broken help\"\n✅ \"5.8 · Level Design · Tried raising Sky Light intensity · "
-                     "[screenshot] · Expected a lit interior, got black walls\"")),
-            dict(key="wip-feedback", channel=ch("showcase"), title="How to give WIP feedback", tag="WIP", content=(
-                "**How to give WIP feedback**\nOne thing that works · one specific issue · one next step.\n"
-                "Want critique? Tag your post **Critique-wanted**.\n"
-                "React 🔥 👀 or 🧱 on anything you looked at. Five 🔥 on your post earns +25 XP (once a week).")),
-            dict(key="mentor-queue-guide", channel=ch("mentor_queue"), content=(
-                "**📋 Mentor queue: what this is**\n"
-                "Members' turn-ins that need a person to review them show up here as cards, newest at the bottom.\n\n"
-                "**Review cards** (Rank 2 and up) have three buttons:\n"
-                "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
-                "• **Changes**: close, but something is missing. Write exactly what to fix. They can send it again right away.\n"
-                "• **Fail**: not an honest attempt, or the wrong quest. They can send it again in 2 hours.\n\n"
-                "**🔎 Spot checks** (grey cards) are Rank 0–1 turn-ins that were already accepted on trust. "
-                "Press **Looks good**, or **Flag** to send the member a kind note. Flagging does not take their XP away.\n\n"
-                "**How to judge:** compare the work with the *Done when* line on the card. Review the work, not the person. "
-                "Every result, with your note, is posted in the member's turn-in thread and sent to them by DM.\n"
-                "**Aim to review within 48 hours.** Who can review: Mentors, Studio Leads and server admins.")),
-            dict(key="resources", channel=ch("resources"), content=(
-                "**Epic Games resources**: the official docs and free courses every quest links to.\n"
-                "• Get Started: https://dev.epicgames.com/documentation/en-us/unreal-engine/get-started\n"
-                "• Your First Hour: https://dev.epicgames.com/documentation/en-us/unreal-engine/first-hour-in-unreal-engine\n"
-                "• Level Designer Quick Start: https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine\n"
-                "• Programming Quick Start: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-cpp-quick-start\n"
-                "• Materials: https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials\n"
-                "• Blueprints: https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprints-visual-scripting-in-unreal-engine")),
+                 view=view(HelpPostButton(), BugReportButton()), embeds=[
+                E("🆘 Need help?", "Two kinds of help, one desk. Press a button below."),
+                E("🛠️ Unreal help", "Stuck on a quest or in the editor.\n"
+                  "The form asks for your engine version, what you tried, and what you expected vs what happened.",
+                  "#3D7DD8"),
+                E("🐞 Server / bot problem", "A command failed, a channel or role looks wrong, a quest won't tick, "
+                  "or something broke after an update.\n"
+                  "The form asks what you did, what happened and when. Staff get notified and check #patch-notes.",
+                  "#D9824A"),
+                E("✍️ A good question", "❌ \"lighting broken help\"\n"
+                  "✅ \"5.8 · Level Design · Tried raising Sky Light intensity · [screenshot] · "
+                  "Expected a lit interior, got black walls\"", "#D4AF37"),
+            ]),
+            dict(key="wip-feedback", channel=ch("showcase"), title="How to give WIP feedback", tag="WIP", embeds=[
+                E("🔥 Showcase", "Share what you're building. Finished or not."),
+                E("💬 Giving feedback", "One thing that works.\nOne specific issue.\nOne next step.", "#3D7DD8"),
+                E("⭐ Want critique?", "Tag your post **Critique-wanted**.\n"
+                  "React 🔥 👀 or 🧱 on anything you looked at. Five 🔥 on your post earns +25 XP (once a week).",
+                  "#D4AF37"),
+            ]),
+            dict(key="mentor-queue-guide", channel=ch("mentor_queue"), embeds=[
+                E("📋 Mentor queue", "Turn-ins that need a person to review them show up here as cards, "
+                  "newest at the bottom.\n**Aim to review within 48 hours.**\n"
+                  "Who can review: Mentors, Studio Leads and server admins."),
+                E("✅ Review cards", "Rank 2 and up. Three buttons:\n"
+                  "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
+                  "• **Changes**: close, but something is missing. Write exactly what to fix. "
+                  "They can send it again right away.\n"
+                  "• **Fail**: not an honest attempt, or the wrong quest. They can send it again in 2 hours.",
+                  "#3D7DD8"),
+                E("🔎 Spot checks", "Grey cards. Rank 0–1 turn-ins that were already accepted on trust.\n"
+                  "Press **Looks good**, or **Flag** to send the member a kind note. "
+                  "Flagging does not take their XP away.", "#8E6CCF"),
+                E("⚖️ How to judge", "Compare the work with the *Done when* line on the card.\n"
+                  "Review the work, not the person.\n"
+                  "Every result, with your note, is posted in the member's turn-in thread and sent to them by DM.",
+                  "#D4AF37"),
+            ]),
+            dict(key="resources", channel=ch("resources"), embeds=[
+                E("📚 Epic Games resources", "The official docs and free courses every quest links to.\n\n"
+                  "• [Get Started](https://dev.epicgames.com/documentation/en-us/unreal-engine/get-started)\n"
+                  "• [Your First Hour](https://dev.epicgames.com/documentation/en-us/unreal-engine/first-hour-in-unreal-engine)\n"
+                  "• [Level Designer Quick Start](https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine)\n"
+                  "• [Programming Quick Start](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-cpp-quick-start)\n"
+                  "• [Materials](https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials)\n"
+                  "• [Blueprints](https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprints-visual-scripting-in-unreal-engine)",
+                  "#3D7DD8"),
+            ]),
         ]
         from .workshop import STARTER, major_slug
-        abouts = [(STARTER, "**#starter-quests** is for the 11 Starter Quests (Q1–Q11) everyone does after Orientation.\n"
+        abouts = [(STARTER, "For the 11 Starter Quests (Q1–Q11) everyone does after Orientation.\n"
                             "Everyone can post here.")]
-        abouts += [(major_slug(cat, k), f"**#{major_slug(cat, k)}** is the {cfg['title']} Workshop.\n"
+        abouts += [(major_slug(cat, k), f"The {cfg['title']} Workshop.\n"
                                        f"Everyone can read it. Members who picked **{cfg['title']}** can post.")
                    for k, cfg in cat.majors.items() if k != "undecided"]
         for slug, head in abouts:
             specs.append(dict(key=f"about-{slug}", channel=ch("tracks", slug), title=f"About #{slug}", tag="Help",
-                              view=view(NewPostButton(slug)), content=(
-                head + "\n**Post here:** press **New post** below (or type `/post`): one thread per thing you're "
-                "building (tag WIP), or a question (tag Help).\n"
-                "**Turn-ins:** when you send your work, the Quartermaster posts it here (tag Turn-in) so people "
-                "can see it and cheer it on.")))
+                              view=view(NewPostButton(slug)), embeds=[
+                E(f"🛠️ #{slug}", head),
+                E("📝 Post here", "Press **New post** below (or type `/post`).\n"
+                  "• One thread per thing you're building (tag WIP)\n• or a question (tag Help)", "#3D7DD8"),
+                E("📤 Turn-ins", "When you send your work, the Quartermaster posts it here (tag Turn-in) "
+                  "so people can see it and cheer it on.", "#D4AF37"),
+            ]))
         return [s for s in specs if s["channel"]]
 
     @staticmethod
