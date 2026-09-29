@@ -14,6 +14,13 @@ Versions follow [Semantic Versioning](https://semver.org):
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
+## v0.8.0 · 2026-09-29
+- Your public Turn-in post now shows the result: passed, changes requested or not passed.
+- Review results and mentor notes are posted in your turn-in thread (with a **Send my work again** button) as well as by DM.
+- Every 5th Rank 0–1 turn-in gets a quick spot check from a mentor. A flag only sends you a kind note; you keep your XP.
+- #mentor-queue cards close once they are reviewed, and a pinned guide explains how the queue works.
+- Pinned messages in #quest-board, #help-desk, #showcase, #mentor-queue, #epic-games-resources and every Workshop forum now use short colored cards, like #welcome.
+
 ## v0.7.0 · 2026-09-29
 - Starter Quests are numbered **Q1–Q11** (were S1–S11). Your progress carried over.
 - Workshop forums are named for the majors: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics.
