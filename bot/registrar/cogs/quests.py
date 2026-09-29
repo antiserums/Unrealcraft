@@ -198,7 +198,8 @@ class Quests(commands.Cog):
         await db.touch_streak(uid)
         if q.rank >= 0:
             await db.grant_medal(uid, "first_blood")     # idempotent: first Unreal quest done
-        if all(s.id in await db.done_set(uid) for s in self.cat.spine()):
+        done = await db.done_set(uid)
+        if all(s.id in done for s in self.cat.spine()):
             await db.set_user(uid, spine_done=1)
         onboarding = self.bot.get_cog("Onboarding")
         if q.rank < 0 and onboarding:
