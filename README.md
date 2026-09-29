@@ -43,7 +43,7 @@ docs/
   02-promotion-dms.md      6-line briefings for every rank jump + #rank-ups card
   03-commands.md           command list, submit routing, schema notes
   04-discord-setup-checklist.md
-  05-path-mocks.md         /path for a Level Design vs Programming Initiate
+  05-path-mocks.md         /path for a Level Design vs Programming Novice
   06-community-rules.md
 bot/
   registrar/               discord.py 2.x package (cogs: onboarding, majors, quests, quiz, ranks)

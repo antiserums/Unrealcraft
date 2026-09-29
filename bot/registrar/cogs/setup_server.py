@@ -26,16 +26,16 @@ ROLES = [
     ("Curriculum", "#B0A48A", False, True, ("staff", "curriculum")),
     ("Mentor", "#6FB3A0", False, True, ("staff", "mentor")),
     ("Mentor-in-Training", "#8FC4B5", False, False, ("staff", "mentor_in_training")),
-    ("Guildmaster", "#D4AF37", True, True, ("rank", 6)),
-    ("Grandmaster", "#8E6CCF", True, True, ("rank", 5)),
-    ("Master Artisan", "#8A9BA8", True, True, ("rank", 4)),
-    ("Artisan · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
-    ("Artisan · Design", "#4FA36C", False, True, ("specialist", "design")),
-    ("Artisan · Anim", "#C85C8E", False, True, ("specialist", "anim")),
-    ("Artisan · Code", "#4AA3B5", False, True, ("specialist", "code")),
-    ("Craftsman", "#3D7DD8", False, False, ("rank", 2)),
-    ("Journeyman", "#B5714B", False, False, ("rank", 1)),
-    ("Initiate", "#7A8C7E", False, False, ("rank", 0)),
+    ("Lead", "#D4AF37", True, True, ("rank", 6)),
+    ("Senior", "#8E6CCF", True, True, ("rank", 5)),
+    ("Master", "#8A9BA8", True, True, ("rank", 4)),
+    ("Expert · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
+    ("Expert · Design", "#4FA36C", False, True, ("specialist", "design")),
+    ("Expert · Anim", "#C85C8E", False, True, ("specialist", "anim")),
+    ("Expert · Code", "#4AA3B5", False, True, ("specialist", "code")),
+    ("Adept", "#3D7DD8", False, False, ("rank", 2)),
+    ("Apprentice", "#B5714B", False, False, ("rank", 1)),
+    ("Novice", "#7A8C7E", False, False, ("rank", 0)),
     ("Oriented", None, False, False, ("oriented",)),
     ("Recruit", None, False, False, ("recruit",)),
     ("Major · Level Design", None, False, False, ("major", "level_design")),
@@ -88,11 +88,11 @@ class SetupServer(commands.Cog):
     # ------------------------------------------------------------------ helpers
     RENAMED_ROLES: dict[str, str] = {}                   # new prefix -> old prefix (for future renames)
     RENAMED_EXACT = {"Major · Environment Art": "Major · Lookdev",          # new name -> old name
-                     # guild ranks (were studio job titles)
-                     "Initiate": "Greenlit", "Journeyman": "Blockout Artist", "Craftsman": "Gameplay Prototyper",
-                     "Master Artisan": "Engineer", "Grandmaster": "Systems Architect", "Guildmaster": "Studio Lead",
-                     "Artisan · Environment Art": "Specialist · Environment Art", "Artisan · Design": "Specialist · Design",
-                     "Artisan · Anim": "Specialist · Anim", "Artisan · Code": "Specialist · Code"}
+                     # rank titles now match the quest tiers (were guild ranks, before that studio job titles)
+                     "Novice": "Initiate", "Apprentice": "Journeyman", "Adept": "Craftsman", "Master": "Master Artisan",
+                     "Expert · Environment Art": "Artisan · Environment Art", "Expert · Design": "Artisan · Design",
+                     "Expert · Anim": "Artisan · Anim", "Expert · Code": "Artisan · Code",
+                     "Senior": "Grandmaster", "Lead": "Guildmaster"}
 
     async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None) -> discord.Role:
         r = discord.utils.get(g.roles, name=name)
@@ -242,8 +242,8 @@ class SetupServer(commands.Cog):
         report.append(f"roles: {len(ROLES)} ready")
 
         R = roles
-        rank_roles = {n: R[x] for n, x in ((0, "Initiate"), (1, "Journeyman"), (2, "Craftsman"),
-                                           (4, "Master Artisan"), (5, "Grandmaster"), (6, "Guildmaster"))}
+        rank_roles = {n: R[x] for n, x in ((0, "Novice"), (1, "Apprentice"), (2, "Adept"),
+                                           (4, "Master"), (5, "Senior"), (6, "Lead"))}
         spec = [R[name] for name, *_rest, key in ROLES if key and key[0] == "specialist"]   # by key, not by name
         staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
         cat = self.bot.catalog
@@ -416,11 +416,11 @@ class SetupServer(commands.Cog):
         st = await self._category(g, "04 · STAFF", {everyone: P(view_channel=False), me: bot_ow,
                                                     **{r: P(view_channel=True) for r in staff}})
         modlog = await self._text(g, st, "mod-log")
-        wip = await self._text(g, st, "curriculum-wip", overwrites={R["Guildmaster"]: P(view_channel=True)})
+        wip = await self._text(g, st, "curriculum-wip", overwrites={R["Lead"]: P(view_channel=True)})
         mq = await self._text(g, st, "mentor-queue", overwrites={
             R["Mentor-in-Training"]: P(view_channel=True, send_messages=False),
-            R["Grandmaster"]: P(view_channel=True, send_messages=False),
-            R["Guildmaster"]: P(view_channel=True)})
+            R["Senior"]: P(view_channel=True, send_messages=False),
+            R["Lead"]: P(view_channel=True)})
         chans.update(mod_log=modlog.id, curriculum_wip=wip.id, mentor_queue=mq.id)
 
         if "COMMUNITY" in g.features:
@@ -430,7 +430,7 @@ class SetupServer(commands.Cog):
                                              overwrites={**training.overwrites,
                                                          R["Recruit"]: P(view_channel=False),
                                                          **{r: P(request_to_speak=True, speak=True) for r in speakers}})
-                report.append("Lecture Hall stage created (Grandmaster+ speak)")
+                report.append("Lecture Hall stage created (Senior+ speak)")
             report += await self._community(g, welcome, welcome, qb, helpdesk, showcase, modlog)
             report += await self.onboarding(g)
             # Discord's community-updates channel can't be an announcement channel; _community moved it to #mod-log.
@@ -754,7 +754,7 @@ class SetupServer(commands.Cog):
             dict(key="mentor-queue-guide", channel=ch("mentor_queue"), embeds=[
                 E("📋 Mentor queue", "Turn-ins that need a person to review them show up here as cards, "
                   "newest at the bottom.\n**Aim to review within 48 hours.**\n"
-                  "Who can review: Mentors, Guildmasters and server admins."),
+                  "Who can review: Mentors, Leads and server admins."),
                 E("✅ Review cards", "Rank 2 and up. Three buttons:\n"
                   "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
                   "• **Changes**: close, but something is missing. Write exactly what to fix. "

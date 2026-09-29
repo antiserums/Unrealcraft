@@ -1,9 +1,9 @@
-# 05 — /path mocks: Level Design Initiate vs Programming Initiate
+# 05 — /path mocks: Level Design Novice vs Programming Novice
 
 Both members joined the same day, finished Orientation, and have done SQ1–SQ6 of the Starter Quests.
 The output below was worked out by hand from `Catalog.path_lines()` against the current YAML. Orientation is hidden once it's complete.
 
-## Level Design · Initiate
+## Level Design · Novice
 ```
 STARTER QUESTS (everyone)
   ✔ SQ1         Install the engine
@@ -34,7 +34,7 @@ STARTER QUESTS (everyone)
 Nothing in this member's required path involves C++. They see C++ only as SQ11 (a 15-minute read), one Rank 2 taster
 (`PQ17` or `PQ18`, their choice), and the Programming entry on the optional shelf.
 
-## Programming · Initiate
+## Programming · Novice
 ```
 STARTER QUESTS (everyone)
   ✔ SQ1         Install the engine

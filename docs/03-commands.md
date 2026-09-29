@@ -34,13 +34,13 @@ Slash commands only. No prefix commands and no message-content intent except for
 |---|---|---|
 | /grant-xp `member` `amount` `reason` | Mod | Logged to #mod-log and xp_log. Never auto. |
 | /curriculum-add `yaml_attachment` | Curriculum | Validate and upsert quests. Dry-run by default. |
-| /curriculum-propose-publish `proposal_id` | Curriculum | Promote an Grandmaster's proposal. |
+| /curriculum-propose-publish `proposal_id` | Curriculum | Promote an Senior's proposal. |
 | /commend `member` `note` | Lead+ | +medal Teacher progress / a public note. No XP. |
-| /raid `start/end` `quest_id` | Grandmaster+, Staff | Weekly raid. |
+| /raid `start/end` `quest_id` | Senior+, Staff | Weekly raid. |
 | /admin bootstrap · sync-perms · reload-curriculum | Owner | Phase 2 setup helpers. |
 
-## Grandmaster+
-| /curriculum-propose `yaml_attachment` | Grandmaster+ | Drafts to #curriculum-wip. |
+## Senior+
+| /curriculum-propose `yaml_attachment` | Senior+ | Drafts to #curriculum-wip. |
 
 ## How checklists are verified
 Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/checks.py`). `/quest` and `/start` show:
@@ -73,7 +73,7 @@ Reading can't be observed by Discord, so reading is proven by the quiz.
 | 0–1 | screenshot/writeup | honor system: auto-Pass, logged, spot-checkable |
 | 2 | any | peer (R2+, cap 3/day) **or** mentor in #mentor-queue |
 | 3–4 | any | mentor **or** two peer Approves (peers of rank ≥ quest rank) |
-| 5–6 | any | human mentor only. Grandmaster/Guildmaster promotions also need staff sign-off, plus 2 vouchers for Lead. |
+| 5–6 | any | human mentor only. Senior/Lead promotions also need staff sign-off, plus 2 vouchers for Lead. |
 
 A capstone Pass triggers `check_promotion()`, which promotes only if XP ≥ threshold **and** every required quest and taster for the rank is done.
 

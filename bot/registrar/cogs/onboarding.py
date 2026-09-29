@@ -102,7 +102,7 @@ class Onboarding(commands.Cog):
         if all(q.id in done for q in self.cat.orientation()):
             guild = guild or self.bot.get_guild(self.bot.settings.guild_id or 0)
             if guild:
-                await self.bot.get_cog("Ranks").promote(guild, uid, 0)   # Oriented + Initiate + SQ1 in DM
+                await self.bot.get_cog("Ranks").promote(guild, uid, 0)   # Oriented + Novice + SQ1 in DM
 
     def orientation_embed(self, done: set[str], facts: set[str]) -> discord.Embed:
         """Simple-English checklist: progress bar, one 'Next' line, one short line per step."""
@@ -381,7 +381,7 @@ class Onboarding(commands.Cog):
     # ------------------------------------------------------------ first week DMs
     @tasks.loop(hours=6)
     async def first_week(self):
-        """Day 0 map (sent by promote to Initiate), day 1 nudge, day 3 sample submit. Stops after SQ1."""
+        """Day 0 map (sent by promote to Novice), day 1 nudge, day 3 sample submit. Stops after SQ1."""
         db = self.bot.db
         cur = await db.conn.execute(
             "SELECT discord_id, onboarding_day, created_at, on_leave FROM users WHERE rank <= 0 AND onboarding_day < 3")
