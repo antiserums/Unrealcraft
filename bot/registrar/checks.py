@@ -43,6 +43,7 @@ SUBMIT_DEFAULTS = {             # applied when a quest's checklist has no submit
 class Item:
     text: str
     check: dict | None
+    needs_others: bool = False
 
     @property
     def kind(self) -> str:
@@ -62,17 +63,19 @@ def items(q) -> list[Item]:
     out = []
     for raw in q.raw.get("checklist") or []:
         if isinstance(raw, dict):
-            out.append(Item(raw.get("text", ""), raw.get("check")))
+            out.append(Item(raw.get("text", ""), raw.get("check"), bool(raw.get("needs_others"))))
         else:
             out.append(Item(str(raw), None))
     return out
 
 
-def status_lines(q, facts: set[str]) -> list[str]:
+def status_lines(q, facts: set[str], community_ready: bool = True) -> list[str]:
     """✅ seen by the bot · ☐ not yet · 📎 checked when you submit · ▫ on your honor."""
     lines = []
     for it in items(q):
-        if it.kind == "fact":
+        if it.needs_others and not community_ready:
+            lines.append("⏳ (optional for now: needs more members) " + it.text)
+        elif it.kind == "fact":
             lines.append(("✅ " if it.fact_ok(facts) else "☐ ") + it.text)
         elif it.kind == "submit":
             lines.append("📎 " + it.text)

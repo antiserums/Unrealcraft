@@ -55,11 +55,12 @@ def quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
         links.append(f"🎞 [Backup video]({r['backup_url']})")
     if links:
         e.add_field(name="Sources", value=" · ".join(links), inline=False)
-    checklist = checks.status_lines(q, facts or set())
+    checklist = checks.status_lines(q, facts or set(), cat.community_ready)
     if checklist:
         e.add_field(name="Checklist  (✅ seen by the bot · ☐ not yet · 📎 checked on submit · ▫ honor)",
                     value="\n".join(checklist)[:1024], inline=False)
-    e.add_field(name="Done when", value=r.get("done_when", "—")[:1024], inline=False)
+    done_when = r.get("done_when_solo") if (not cat.community_ready and r.get("done_when_solo")) else r.get("done_when")
+    e.add_field(name="Done when", value=(done_when or "—")[:1024], inline=False)
     vt = r.get("verify_type")
     if vt == "quiz":
         how = f"Pass `/quiz {q.id}`. That's all."

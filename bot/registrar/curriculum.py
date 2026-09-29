@@ -86,6 +86,12 @@ class Catalog:
         self.majors = meta.get("majors", {})
         self.seals = meta.get("seals", {})
         self.xp_rules = meta.get("xp_rules", {})
+        self.min_members = int((meta.get("community") or {}).get("min_members", 20))
+        self.community_ready = True        # set by the bot from the live member count
+
+    def available(self, q: "Quest") -> bool:
+        """Quests that need other members are hidden while the server is too small."""
+        return self.community_ready or not q.raw.get("needs_others")
 
     # ---------------- loading ----------------
     @classmethod
@@ -154,7 +160,7 @@ class Catalog:
     def required(self, major: str, rank: int) -> list[Quest]:
         """Major-required quests at exactly this rank (excluding spine and orientation)."""
         return self.sorted(q for q in self.quests.values()
-                           if q.rank == rank and q.rank >= 1 and q.required_for_major(major))
+                           if q.rank == rank and q.rank >= 1 and q.required_for_major(major) and self.available(q))
 
     def taster_groups(self, major: str, rank: int) -> list[list[str]]:
         cfg = self.majors.get(major, {})
@@ -212,7 +218,7 @@ class Catalog:
         reason = ("Capstone" if main and main.capstone else "Major required") if main else "Rank complete. Electives only."
         # 5. Offer 2 major electives + 1 adjacent
         pool = [q for q in self.sorted(self.quests.values())
-                if q.elective and 0 <= q.rank <= u.rank and todo(q)]
+                if q.elective and 0 <= q.rank <= u.rank and todo(q) and self.available(q)]
         score = lambda q: -prof_mod.elective_score(q, u.profile, u.major)      # stable sort keeps catalog order on ties
         majors = sorted([q for q in pool if self.affinity(q, u.major) == "major"], key=score)[:2]
         adj_pool = [q for q in self.sorted(self.quests.values())

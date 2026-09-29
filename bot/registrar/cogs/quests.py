@@ -267,7 +267,8 @@ class Quests(commands.Cog):
             return "You can't review your own work."
         q = self.cat.quests[s["quest_id"]]
         member = itx.guild.get_member(itx.user.id)
-        is_mentor = any(r.id in (unl.role("staff", "mentor"), unl.role("rank", 6)) for r in member.roles)
+        is_mentor = member.guild_permissions.administrator or \
+            any(r.id in (unl.role("staff", "mentor"), unl.role("rank", 6)) for r in member.roles)
         rv = await db.user(itx.user.id)
         # peer-approve ranges: R2 → 0–1, R3 → 0–2, R4 → 0–3, R5 → 0–4, R6 → all
         peer_ok = rv["rank"] >= 2 and q.rank <= rv["rank"] - 1

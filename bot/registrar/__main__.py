@@ -76,6 +76,7 @@ class Quartermaster(commands.Bot):
     async def on_ready(self) -> None:
         log.info("Online as %s in %d guild(s) · %s", self.user, len(self.guilds),
                  self.release.get("version", "no CHANGELOG"))
+        self.update_community()
         g = self.get_guild(self.settings.guild_id or 0)
         for err in self.changelog_errors:
             log.error("CHANGELOG: %s (patch notes not posted until fixed)", err)
@@ -104,6 +105,23 @@ class Quartermaster(commands.Bot):
                 log.info("bootstrap: %s", line)
             log.info("bootstrap: pins %s", await cog.sync_pins(g))
             log.info("bootstrap: %s", await cog.cleanup_bot_posts(g))
+
+    def update_community(self) -> None:
+        """Quests that need other people unlock once the server has enough real members."""
+        g = self.get_guild(self.settings.guild_id or 0)
+        if not g:
+            return
+        humans = sum(1 for m in g.members if not m.bot)
+        ready = humans >= self.catalog.min_members
+        if ready != self.catalog.community_ready:
+            log.info("community: %d members -> needs-others quests %s", humans, "ON" if ready else "hidden")
+        self.catalog.community_ready = ready
+
+    async def on_member_join(self, member: discord.Member) -> None:
+        self.update_community()
+
+    async def on_member_remove(self, member: discord.Member) -> None:
+        self.update_community()
 
     async def close(self) -> None:
         await self.db.close()
