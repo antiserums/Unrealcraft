@@ -2,13 +2,13 @@
 
 **Unrealcraft: studio rules**
 
-1. **Help-desk has a format.** Engine version · Major · What I tried · Screenshot · Expected vs actual. Posts that skip it get a nudge from the Quartermaster, not a ban.
-2. **No "watch this 8-hour video" answers.** Point to the exact page, setting or node.
-3. **Showcase is for your own map.** WIP is welcome and encouraged.
-4. **Mentors review artifacts, not vibes.** Submit the thing: a screenshot, a clip, a graph.
-5. **State your engine version on every turn-in.** We teach the current UE5.x.
-6. **Chat doesn't earn rank.** Quests do. Talk as much as you like.
-7. **Good sources only.** Quests link Epic's docs and hand-picked free guides from the community. No pirated or re-hosted paid courses, ever.
-8. Be decent. Critique the work, not the person.
+1. **Be kind.** Talk about the work, not the person. No insults, hate or harassment.
+2. **Stuck? Use #help-desk.** Press **Unreal help** and fill in the form: your Unreal version, what you tried, and a screenshot.
+3. **Give short, exact help.** Point to the right page, setting or node. Don't just say "watch this 8-hour video" or "Google it".
+4. **#showcase is for your own work.** Unfinished work is welcome.
+5. **Show your work.** When you send a quest, add a screenshot, clip or file so it can be checked.
+6. **Write your Unreal version** when you send work (for example 5.8). Things change between versions.
+7. **Quests give XP. Chat does not.** Talk as much as you like, but only finished quests rank you up.
+8. **Share free, legal sources.** Epic's docs and good free guides are great. No pirated or stolen paid courses.
 
-Run `/start` to begin.
+Press **Start Questing** in #welcome to begin.
