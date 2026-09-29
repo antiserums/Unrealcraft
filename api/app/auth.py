@@ -23,7 +23,7 @@ async def start(request: Request, next: str = "/"):
         raise HTTPException(500, "DISCORD_CLIENT_ID is not set in api/.env")
     state = secrets.token_urlsafe(24)
     q = urlencode({"client_id": settings.client_id, "redirect_uri": settings.redirect_uri, "response_type": "code",
-                   "scope": SCOPES, "state": state, "prompt": "none"})
+                   "scope": SCOPES, "state": state})
     resp = RedirectResponse(f"https://discord.com/oauth2/authorize?{q}", status_code=302)
     resp.set_cookie(STATE_COOKIE, f"{state}|{next[:200]}", max_age=600, httponly=True, samesite="lax", path="/")
     return resp
