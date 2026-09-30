@@ -116,7 +116,7 @@ an image hangs off that class, so without the pack the site looks as it did befo
 | `header-*-narrow`, `<arena>-4x` | Header crops below 600 px; the 1920 x 1080 arenas as the fight's large background |
 | `identity` emblem | Beside the site name and as the browser tab icon |
 
-| `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*`, `scrollbar-parts` | Inputs and selects, the sub-navigation tabs, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars, scrollbars |
+| `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*` | Inputs and selects, the sub-navigation tabs, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars. The scrollbar parts are not used; the artist is redesigning them |
 | `icons/utility`, `rewards`, `navigation` | Buttons and links: Filter, Edit profile, View as others, Public/Private, external reading links, the language picker; reward lines in the fight result and on achievements; the sub-navigation tabs. `components/Ico.tsx` renders these by path, so client components can use them |
 
 Not used yet: the leather and parchment panels, the section title plate (v1 and v2), the tooltip plate, the 16 px

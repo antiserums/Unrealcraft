@@ -8,7 +8,22 @@ the 4x arenas as the fight's large background, checkbox and radio art, answer pl
 and the picked answer turns correct or incorrect for the moment before the next turn), statistics icons on the home
 and admin dashboards, and the scrollbar paths moved to `interface/`.
 
-Still open:
+Please fix next:
+
+1. **Scrollbar (`scrollbar-parts/track`, `thumb`, 8 x 32 each).** It looks bad on the site and needs a redesign.
+   The thumb reads as a flat grey bar and the track pattern repeats every 32 px, which shows as stripes on a
+   full-page scrollbar. Ask: a 12 px wide set, drawn for a dark page: a plain, quiet track (a single 1 px
+   repeatable row is fine, no pattern) and a thumb with a 9-slice contract (top cap, 1 px repeatable middle,
+   bottom cap, e.g. 12 x 36 with `slice: 12`) in stone with a thin gold edge, plus a hover state. Put them in
+   `interface/scrollbar/` with `track.png`, `thumb.png`, `thumb-hover.png` and slice metadata in the manifest.
+   Until then the site keeps the browser's own scrollbar.
+2. **Button plate text room.** The tall plates work, but at the site's 13 px button text the words sit a little
+   low inside the plate. If you revise them, move the visual centre of the plate 1 px up (the bottom rim is one
+   pixel heavier than the top). Small thing.
+3. **Statistics icons at 16 px** are hard to read against the dark tiles (the members bust and the hourglass in
+   particular). A touch more contrast, or a 1 px dark outline, would help. Optional.
+
+Still open on the site's side (nothing for you to do):
 
 - **Navigation icons in the top bar.** Even at 16 px the four links plus the emblem do not fit on one line inside
   the 1040 px bar, so the top bar still has no icons. `navigation-16` is unused; `utility-16` is used for the
