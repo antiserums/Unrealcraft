@@ -1,7 +1,7 @@
 """Support tickets: a member writes to staff from /support, staff answer from the admin panel.
 
-Members: list and open their own tickets, reply, close. Staff (admins, developers and mentors): every ticket,
-reply (which marks it answered), change status. Nothing here touches XP, ranks or entitlements."""
+Members: list and open their own tickets and reply. Staff (admins, developers and mentors): every ticket, reply
+(which marks it answered) and close or reopen; only staff close. Nothing here touches XP, ranks or entitlements."""
 from __future__ import annotations
 
 import json
@@ -144,8 +144,7 @@ async def my_reply(tid: int, request: Request, body: str = Form(""), files: list
 @router.post("/me/tickets/{tid}/close")
 async def my_close(tid: int, request: Request, member=Depends(current_member)):
     await _mine(request, tid, member)
-    await request.app.state.rpg.ticket_status(tid, "closed")
-    return {"ok": True}
+    raise HTTPException(403, "Only staff close tickets. Reply if you still need something, or leave it and staff will close it.")
 
 
 # ---------------------------------------------------------------- staff

@@ -831,22 +831,26 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 .ticket-form { display: flex; flex-direction: column; gap: 6px; }
 .ticket-form select, .ticket-form input, .ticket-form textarea { width: 100%; box-sizing: border-box; }
 .ticket-form .row { margin-top: 8px; }
-/* a ticket thread reads like a chat: avatar column, then who and when, then the words */
-.ticket-msgs { display: flex; flex-direction: column; gap: 14px; margin-bottom: 18px; }
-.ticket-msg { display: grid; grid-template-columns: 36px minmax(0, 1fr); gap: 12px; align-items: start; padding: 12px 14px; border: 1px solid rgba(212, 175, 90, .18); background: rgba(0, 0, 0, .18); max-width: 82ch; }
-.ticket-msg.staff { border-left: 3px solid var(--gold); background: rgba(212, 175, 90, .06); }
-.ticket-av .avatar, .ticket-av .mail-seal { width: 36px; height: 36px; font-size: 15px; }
+/* a ticket thread reads like a chat: avatar column, then who and when, then the words. No boxes inside boxes:
+   messages are separated by space and a hairline; staff replies carry a gold rule. */
+.ticket-msgs { display: flex; flex-direction: column; margin-bottom: 20px; }
+.ticket-msg { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 18px 12px; border-bottom: 1px solid rgba(212, 175, 90, .14); max-width: 84ch; }
+.ticket-msg:last-child { border-bottom: 0; }
+.ticket-msg.staff { border-left: 3px solid var(--gold); background: linear-gradient(90deg, rgba(212, 175, 90, .08), transparent 60%); padding-left: 14px; }
+.ticket-av .avatar, .ticket-av .mail-seal { width: 40px; height: 40px; font-size: 16px; }
 .ticket-av .avatar { border-width: 1px; box-shadow: 0 0 0 1px #000; }
 .ticket-msg-body { min-width: 0; }
-.ticket-msg p { margin: 6px 0 0; white-space: pre-wrap; font-size: 15px; line-height: 1.65; color: var(--ink); }
-.ticket-who { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ticket-msg p { margin: 8px 0 0; white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: #f0e9d8; max-width: 68ch; }
+.ticket-who { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
 .ticket-who .who { display: inline-flex; align-items: center; gap: 6px; }
 .ticket-who .who .avatar { display: none; }
-.ticket-who .who b { font-size: 14px; }
+.ticket-who .who b { font-size: 15px; color: #fff3d6; }
+.ticket-who .who .pill { font-size: 11px; padding: 4px 8px; line-height: 10px; }
 .ticket-staff-tag { color: var(--gold-2); border-color: var(--gold-3); }
-.ticket-when { margin-left: auto; }
-.ticket-reply { padding-top: 14px; border-top: 1px solid rgba(212, 175, 90, .15); }
-.ticket-reply textarea { width: 100%; box-sizing: border-box; margin-bottom: 8px; font-size: 15px; line-height: 1.5; }
+.ticket-when { margin-left: auto; font-size: 12px; }
+.ticket-shots { margin-top: 12px; }
+.ticket-reply { padding-top: 16px; border-top: 1px solid rgba(212, 175, 90, .18); }
+.ticket-reply textarea { width: 100%; box-sizing: border-box; margin-bottom: 8px; font-size: 15px; line-height: 1.55; }
 .ticket-row .ticket-last { color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pill.ticket-open { color: var(--gold-2); } .pill.ticket-answered { color: var(--ok); } .pill.ticket-closed { color: var(--muted); }
 .donate .row { flex-wrap: wrap; }
@@ -905,9 +909,9 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 html.site-art .mail-read { padding: 20px 24px 24px; }
 .mail-read-top { display: flex; align-items: center; gap: 10px; }
 .mail-read-top .spacer { flex: 1; }
-.mail-read-title { margin: 12px 0 8px; font-size: 24px; line-height: 1.25; }
+.mail-read-title { margin: 12px 0 8px; font-size: 26px; line-height: 1.25; }
 .mail-read-meta { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid rgba(212, 175, 90, .15); }
 .mail-empty { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 280px; gap: 10px; }
 .mail-glyph.big { width: 60px; height: 42px; background-size: 60px 42px; opacity: .5; }
-.letter-text { white-space: pre-wrap; max-width: 72ch; font-size: 15.5px; line-height: 1.7; color: var(--ink); margin: 0 0 18px; }
+.letter-text { white-space: pre-wrap; max-width: 68ch; font-size: 16px; line-height: 1.75; color: #f0e9d8; margin: 0 0 20px; }
 

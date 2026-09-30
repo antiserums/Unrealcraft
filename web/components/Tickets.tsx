@@ -110,19 +110,18 @@ export function TicketThread({ ticket, staff = false, onChanged }: { ticket: Tic
       {ticket.status !== "closed" || staff ? (
         <form className="ticket-reply" onSubmit={(e) => { e.preventDefault(); const fd = new FormData(); fd.set("body", body); files.forEach((f) => fd.append("files", f)); act(`${base}/reply`, fd); }}>
           <div className="eyebrow small" style={{ marginBottom: 6 }}>{staff ? t("Reply to the member") : t("Your reply")}</div>
+          {staff && <p className="small muted" style={{ margin: "0 0 8px" }}>{t("A reply marks the ticket answered. Close it when it is done; members cannot close their own.")}</p>}
           <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} maxLength={4000} required placeholder={staff ? t("Write to the member…") : t("Write a reply…")} />
           <ScreenshotPicker files={files} onChange={setFiles} id={`reply-files-${ticket.id}`} />
           {err && <div className="note small" data-tone="error">{err}</div>}
           <div className="row">
-            <button type="submit" className="btn primary" disabled={busy || !body.trim()}>{staff ? t("Reply and mark answered") : t("Reply")}</button>
+            <button type="submit" className="btn primary" disabled={busy || !body.trim()}>{t("Reply")}</button>
             {staff ? (
               <>
                 {ticket.status !== "closed" && <button type="button" className="btn" disabled={busy} onClick={() => act(`${base}/status`, { status: "closed" })}>{t("Close ticket")}</button>}
                 {ticket.status !== "open" && <button type="button" className="btn" disabled={busy} onClick={() => act(`${base}/status`, { status: "open" })}>{t("Reopen")}</button>}
               </>
-            ) : (
-              <button type="button" className="btn" disabled={busy} onClick={() => act(`${base}/close`)}>{t("Close ticket")}</button>
-            )}
+            ) : null}
           </div>
         </form>
       ) : (
