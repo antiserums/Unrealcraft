@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { Character, ItemIcon } from "./Figure";
+import { useMemo, useState } from "react";
+import { Character, RARITY_COLOR } from "./Figure";
 
 export type Outfit = { id: string; name: string; flavour: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
@@ -9,93 +9,120 @@ export type Char = {
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string };
   nameplate_colors: string[]; slots: string[]; major: string;
 };
-export type ArtProps = { layers: string[] | null; icons: Record<string, string>; appearance: Record<string, string[]> };
+/** layersBy: art id -> layer URLs for every set the pack has art for, so the closet can try sets on. */
+export type ArtProps = { layersBy: Record<string, string[]>; icons: Record<string, string>; appearance: Record<string, string[]> };
+
 const APPEARANCE_LABEL: Record<string, string> = { body: "Body", skin: "Skin", face: "Face", hair: "Hair", hair_color: "Hair color", eye_color: "Eyes", facial_hair: "Facial hair", markings: "Markings" };
 const TIER_NAME: Record<string, string> = { novice: "Novice", apprentice: "Apprentice", adept: "Adept", expert: "Expert", master: "Master" };
 const RARITY_OF_TIER: Record<string, string> = { novice: "common", apprentice: "uncommon", adept: "rare", expert: "epic", master: "legendary" };
+type Kind = "all" | "rank" | "capstone" | "achievement";
+const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", capstone: "Capstone", achievement: "Achievement" };
+const TIER_ORDER = ["novice", "apprentice", "adept", "expert", "master"];
+
+function kindOf(o: Outfit): Exclude<Kind, "all"> | "starter" {
+  if (o.id === "wayfarer") return "starter";
+  if (/_r\d$/.test(o.id)) return "rank";
+  if (/_cap\d$/.test(o.id)) return "capstone";
+  return "achievement";
+}
 
 export default function CharacterSheet({ initial, fallbackColor, art }: { initial: Char; fallbackColor: string; art: ArtProps }) {
   const router = useRouter();
   const [c, setC] = useState<Char>(initial);
   const [busy, setBusy] = useState(false);
+  const [kind, setKind] = useState<Kind>("all");
+  const [showLocked, setShowLocked] = useState(true);
+  const [selectedId, setSelectedId] = useState<string>(initial.worn.id);
   const color = c.cosmetics.nameplate ?? fallbackColor;
-  const owned = c.outfits.filter((o) => o.owned);
-  const locked = c.outfits.filter((o) => !o.owned);
+  const selected = c.outfits.find((o) => o.id === selectedId) ?? c.worn;
+  const owned = c.outfits.filter((o) => o.owned).length;
+
+  const shown = useMemo(() => c.outfits
+    .filter((o) => kind === "all" || kindOf(o) === kind || (kind === "achievement" && kindOf(o) === "starter"))
+    .filter((o) => showLocked || o.owned)
+    .sort((a, b) => Number(b.owned) - Number(a.owned) || TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || a.name.localeCompare(b.name)),
+  [c.outfits, kind, showLocked]);
 
   async function patch(body: Record<string, unknown>) {
     setBusy(true);
     const r = await fetch("/api/me/character", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-    if (r.ok) { setC(await r.json()); router.refresh(); }   // the layered figure is rendered on the server
+    if (r.ok) { setC(await r.json()); router.refresh(); }   // the figure on the player card is rendered on the server
     setBusy(false);
   }
   const appearanceKeys = Object.keys(art.appearance ?? {});
+  const trying = selected.id !== c.worn.id;
 
   return (
-    <div>
-      <div>
-        <div className="card" style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
-          <Character outfit={c.worn.id} layers={art.layers} color={color} size={170} />
-          <div style={{ flex: 1, minWidth: 220 }}>
-            <div className="eyebrow">Wearing</div>
-            <div style={{ margin: "4px 0 2px" }}><b style={{ color: c.worn.color, fontSize: 16 }}>{c.worn.name}</b></div>
-            <div className="small muted"><i>{c.worn.flavour}</i></div>
-            {appearanceKeys.length > 0 ? (
-              <>
-                <div className="eyebrow" style={{ marginTop: 12 }}>Appearance</div>
-                <div className="row" style={{ gap: 8, marginTop: 6 }}>
-                  {appearanceKeys.map((k) => (
-                    <label key={k} className="small" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                      <span className="muted">{APPEARANCE_LABEL[k] ?? k}</span>
-                      <select value={c.cosmetics.appearance?.[k] ?? art.appearance[k][0]} disabled={busy} onChange={(e) => patch({ appearance: { [k]: e.target.value } })}>
-                        {art.appearance[k].map((v) => <option key={v} value={v}>{v.replace(/[-_]/g, " ")}</option>)}
-                      </select>
-                    </label>
-                  ))}
-                </div>
-              </>
-            ) : (
-              <p className="small muted" style={{ marginTop: 10 }}>Appearance options (body, skin, hair, face) arrive with the art pack.</p>
-            )}
+    <div className="closet">
+      {/* left: the mirror */}
+      <div className="card mirror">
+        <div className="eyebrow">{trying ? "Trying on" : "Wearing"}</div>
+        <div className="mirror-stage">
+          <Character outfit={selected.id} layers={art.layersBy[selected.art_id] ?? null} color={color} size={190} />
+        </div>
+        <div className="mirror-detail">
+          <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
+            <b style={{ color: selected.color, fontSize: 17 }}>{selected.name}</b>
+            <span className="small muted">{TIER_NAME[selected.tier]} · {kindOf(selected) === "starter" ? "starter" : kindOf(selected)} set</span>
           </div>
-        </div>
-
-        <div className="section-h"><h2>Wardrobe</h2><span className="muted small">{owned.length} outfit{owned.length === 1 ? "" : "s"} earned · outfits are looks only, no stats</span></div>
-        <div className="grid">
-          {owned.map((o) => (
-            <div key={o.id} className="card qcard" style={{ borderColor: o.worn ? "var(--gold)" : undefined }}>
-              <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
-                <div className="row" style={{ gap: 10 }}>
-                  <ItemIcon icon={art.icons[o.art_id]} rarity={RARITY_OF_TIER[o.tier]} />
-                  <div>
-                    <div className="title">{o.name}</div>
-                    <div className="small muted" style={{ color: o.color }}>{TIER_NAME[o.tier]} set{o.earned_at ? ` · earned ${o.earned_at.slice(0, 10)}` : ""}</div>
-                  </div>
-                </div>
-                {o.worn ? <span className="status now">Wearing</span> : <button onClick={() => patch({ wear: o.id })} disabled={busy}>Wear</button>}
-              </div>
-              <div className="small muted"><i>{o.flavour}</i></div>
+          <div className="small" style={{ margin: "4px 0 10px" }}><i>{selected.flavour}</i></div>
+          {selected.owned ? (
+            <div className="row">
+              {selected.worn ? <span className="status now">✔ Wearing this</span> : <button className="primary" onClick={() => patch({ wear: selected.id })} disabled={busy}>Wear it</button>}
+              {selected.earned_at && <span className="small muted">earned {selected.earned_at.slice(0, 10)}</span>}
             </div>
-          ))}
+          ) : (
+            <div className="note small">🔒 {selected.hint ?? "Not yet earned."}</div>
+          )}
         </div>
-        {locked.length > 0 && (
-          <>
-            <div className="section-h"><h2>Not yet earned</h2><span className="muted small">{locked.length} to find</span></div>
-            <div className="grid lock">
-              {locked.map((o) => (
-                <div key={o.id} className="card qcard">
-                  <div className="row" style={{ gap: 10 }}>
-                    <ItemIcon icon={null} rarity={RARITY_OF_TIER[o.tier]} />
-                    <div>
-                      <div className="title">🔒 {o.name}</div>
-                      <div className="small muted" style={{ color: o.color }}>{TIER_NAME[o.tier]} set</div>
-                    </div>
-                  </div>
-                  <div className="small">{o.hint}</div>
-                </div>
+        {appearanceKeys.length > 0 && (
+          <details className="appearance">
+            <summary className="eyebrow" style={{ cursor: "pointer" }}>Appearance</summary>
+            <div className="row" style={{ gap: 8, marginTop: 8 }}>
+              {appearanceKeys.map((k) => (
+                <label key={k} className="small" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
+                  <span className="muted">{APPEARANCE_LABEL[k] ?? k}</span>
+                  <select value={c.cosmetics.appearance?.[k] ?? art.appearance[k][0]} disabled={busy} onChange={(e) => patch({ appearance: { [k]: e.target.value } })}>
+                    {art.appearance[k].map((v) => <option key={v} value={v}>{v.replace(/[-_]/g, " ")}</option>)}
+                  </select>
+                </label>
               ))}
             </div>
-          </>
+          </details>
         )}
+      </div>
+
+      {/* right: the closet */}
+      <div className="card rack">
+        <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
+          <div className="eyebrow">Outfits <span className="muted" style={{ letterSpacing: 0, textTransform: "none" }}>· {owned} of {c.outfits.length} earned</span></div>
+          <label className="row small muted" style={{ gap: 6, cursor: "pointer" }}>
+            <input type="checkbox" checked={showLocked} onChange={(e) => setShowLocked(e.target.checked)} /> show unearned
+          </label>
+        </div>
+        <div className="subnav" style={{ marginBottom: 12 }}>
+          {(Object.keys(KIND_LABEL) as Kind[]).map((k) => (
+            <a key={k} href="#" className={kind === k ? "on" : ""} onClick={(e) => { e.preventDefault(); setKind(k); }}>{KIND_LABEL[k]}</a>
+          ))}
+        </div>
+        <div className="tiles" role="listbox" aria-label="Outfits">
+          {shown.map((o) => {
+            const rc = RARITY_COLOR[RARITY_OF_TIER[o.tier]] ?? "#888";
+            const icon = art.icons[o.art_id];
+            return (
+              <button key={o.id} type="button" role="option" aria-selected={o.id === selected.id} title={`${o.name} · ${TIER_NAME[o.tier]}`}
+                className={`tile ${o.owned ? "" : "locked"} ${o.worn ? "worn" : ""} ${o.id === selected.id ? "selected" : ""}`}
+                style={{ "--rc": rc } as React.CSSProperties} onClick={() => setSelectedId(o.id)}>
+                {icon ? <img src={icon} alt="" /> : <span className="tile-swatch" />}
+                {o.worn && <span className="tile-mark">✔</span>}
+                {!o.owned && <span className="tile-lock">🔒</span>}
+                {c.new_outfits.includes(o.id) && <span className="tile-new">new</span>}
+              </button>
+            );
+          })}
+          {shown.length === 0 && <div className="small muted">Nothing here yet.</div>}
+        </div>
+        <div className="small muted" style={{ marginTop: 12 }}>Click a set to try it on in the mirror. Outfits change your look only, never a fight.</div>
       </div>
     </div>
   );

@@ -11,8 +11,9 @@ export default async function Wardrobe() {
   if (!me) redirect("/api/auth/discord?next=/me/wardrobe");
   const [ch, manifest] = await Promise.all([api<Char>("/me/character"), loadManifest()]);
   if (!ch) redirect("/me");
+  const body = ch.cosmetics.appearance?.body ?? "body-a";
   const art: ArtProps = {
-    layers: characterLayers(manifest, ch.cosmetics.appearance?.body ?? "body-a", [ch.worn.art_id]),
+    layersBy: Object.fromEntries(ch.outfits.map((o) => [o.art_id, characterLayers(manifest, body, [o.art_id])]).filter(([, v]) => v) as [string, string[]][]),
     icons: Object.fromEntries(ch.outfits.map((o) => [o.art_id, iconImage(manifest, o.art_id)]).filter(([, v]) => v) as [string, string][]),
     appearance: manifest?.appearance ?? {},
   };
@@ -21,7 +22,6 @@ export default async function Wardrobe() {
       <div className="eyebrow">Profile</div>
       <h1>Wardrobe</h1>
       <MeNav active="/me/wardrobe" />
-      <p className="muted">Your look and your outfits. Outfits are rewards for quests, ranks and achievements. They change nothing but how you look.</p>
       <CharacterSheet initial={ch} fallbackColor={ch.cosmetics.nameplate ?? me.rank_color} art={art} />
     </>
   );
