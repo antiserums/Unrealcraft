@@ -1,6 +1,7 @@
 import Link from "next/link";
 import HowItWorks from "@/components/HowItWorks";
 import Ico from "@/components/Ico";
+import StatsBoard, { type Tile } from "@/components/StatsBoard";
 import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
@@ -31,6 +32,16 @@ export default async function Home() {
   const bossSheet = boss ? creatureSheet(manifest, boss.creature) : null;
   const crest = me ? rankCrest(manifest, me.rank) : null;
   const nextCrest = me?.next_rank ? rankCrest(manifest, me.next_rank.n) : null;
+  // the tiles' corner icons (logged-in only: the guest board has none) and the guild's tiles, shared by both boards
+  const ico = (id: string) => <Ico group="statistics" id={id} size={16} className="stat-ico" />;
+  const guildTiles = (g: GuildStats, ic: (id: string) => React.ReactNode): Tile[] => [
+    { key: "members", icon: ic("members"), n: g.members, label: t("players"), mode: "total" },
+    { key: "quests", icon: ic("quests"), n: g.quests_done_week, label: t("dungeons cleared this week") },
+    { key: "fights", icon: ic("fights"), n: g.fights_week, label: t("boss fights fought") },
+    { key: "xp", icon: ic("xp"), n: g.xp_week, label: t("XP earned by players") },
+    { key: "quests", id: "quests_all", icon: ic("all-time"), n: g.quests_done, label: t("dungeons cleared all time"), mode: "total" },
+    { key: "masters", icon: ic("masters"), n: g.masters, label: t("players at Master or above"), mode: "total" },
+  ];
   const hero = (
     <>
         {me ? (
@@ -115,27 +126,20 @@ export default async function Home() {
         <>
           <section>
             <div className="section-h"><h2>{t("Your statistics")}</h2><Link href="/me" className="small">{t("Player card →")}</Link></div>
-            <div className="stats-grid">
-              <Stat icon="quests" n={me.done_count} label={t("quests done")} />
-              <Stat icon="streak" n={me.streak_days} label={t("day streak")} />
-              <Stat icon="xp" n={stats.me.xp_week} label={t("XP this week")} />
-              <Stat icon="fights" n={`${stats.me.fights_won}/${stats.me.fights}`} label={t("bosses beaten")} />
-              <Stat icon="flawless" n={stats.me.bosses_first_try} label={t("beaten first try")} />
-              <Stat icon="critical" n={stats.me.crit_xp} label={t("XP from crits")} />
-              <Stat icon="reading" n={stats.me.reads} label={t("guides opened")} />
-              <Stat icon={stats.me.turnins_pending ? "pending" : "accepted"} n={`${stats.me.turnins_passed}/${stats.me.turnins}`} label={stats.me.turnins_pending ? t("work accepted · {n} waiting", { n: stats.me.turnins_pending }) : t("work accepted")} />
-            </div>
+            <StatsBoard scope="me" endpoint="/me/stats/series" tiles={[
+              { key: "quests", icon: ico("quests"), n: me.done_count, label: t("quests done"), mode: "total" },
+              { key: "streak", icon: ico("streak"), n: me.streak_days, label: t("day streak") },
+              { key: "xp", icon: ico("xp"), n: stats.me.xp_week, label: t("XP this week") },
+              { key: "fights_won", icon: ico("fights"), n: `${stats.me.fights_won}/${stats.me.fights}`, label: t("bosses beaten"), mode: "total" },
+              { key: "first_try", icon: ico("flawless"), n: stats.me.bosses_first_try, label: t("beaten first try"), mode: "total" },
+              { key: "crit_xp", icon: ico("critical"), n: stats.me.crit_xp, label: t("XP from crits") },
+              { key: "reads", icon: ico("reading"), n: stats.me.reads, label: t("guides opened"), mode: "total" },
+              { key: "turnins_passed", icon: ico(stats.me.turnins_pending ? "pending" : "accepted"), n: `${stats.me.turnins_passed}/${stats.me.turnins}`, label: stats.me.turnins_pending ? t("work accepted · {n} waiting", { n: stats.me.turnins_pending }) : t("work accepted"), mode: "total" },
+            ]} />
           </section>
           <section>
             <div className="section-h"><h2>{t("Player statistics")}</h2><span className="muted small">{t("everyone, this week")}</span><Link href="/leaderboard" className="small" style={{ marginLeft: "auto" }}>{t("Leaderboard →")}</Link></div>
-            <div className="stats-grid">
-              <Stat icon="members" n={stats.guild.members} label={t("players")} />
-              <Stat icon="quests" n={stats.guild.quests_done_week} label={t("dungeons cleared this week")} />
-              <Stat icon="fights" n={stats.guild.fights_week} label={t("boss fights fought")} />
-              <Stat icon="xp" n={stats.guild.xp_week} label={t("XP earned by players")} />
-              <Stat icon="all-time" n={stats.guild.quests_done} label={t("dungeons cleared all time")} />
-              <Stat icon="masters" n={stats.guild.masters} label={t("players at Master or above")} />
-            </div>
+            <StatsBoard scope="guild" endpoint="/me/stats/series" tiles={guildTiles(stats.guild, ico)} />
           </section>
         </>
       ) : (
@@ -144,22 +148,11 @@ export default async function Home() {
           {guild && (
             <section>
               <div className="section-h"><h2>{t("Player statistics")}</h2><span className="muted small">{t("everyone, this week")}</span></div>
-              <div className="stats-grid">
-                <Stat n={guild.members} label={t("players")} />
-                <Stat n={guild.quests_done_week} label={t("dungeons cleared this week")} />
-                <Stat n={guild.fights_week} label={t("boss fights fought")} />
-                <Stat n={guild.xp_week} label={t("XP earned by players")} />
-                <Stat n={guild.quests_done} label={t("dungeons cleared all time")} />
-                <Stat n={guild.masters} label={t("players at Master or above")} />
-              </div>
+              <StatsBoard scope="guild" endpoint="/catalog/stats/series" tiles={guildTiles(guild, () => null)} />
             </section>
           )}
         </>
       )}
     </>
   );
-}
-
-function Stat({ n, label, icon }: { n: number | string; label: string; icon?: string }) {
-  return <div className="card stat">{icon && <Ico group="statistics" id={icon} size={16} className="stat-ico" />}<b>{n}</b><span className="muted small">{label}</span></div>;
 }

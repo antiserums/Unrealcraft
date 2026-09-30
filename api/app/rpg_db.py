@@ -576,6 +576,84 @@ class RpgDB:
             "turnins_pending": await one("SELECT COUNT(*) FROM submissions WHERE user_id=? AND status='pending'", uid),
         }
 
+    async def stats_series(self, uid: int | None, days: int) -> dict:
+        """The home statistics as one value per day for the last `days` days (today last), for the member and
+        the guild. Each count series comes with `base`, its total before the window, so a running total can be
+        drawn as well as the per-day bars. `streak` is the member's streak length on each day."""
+        days = max(7, min(365, days))
+        start = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days - 1)).strftime("%Y-%m-%d")
+        dates = [(dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days - 1 - i)).strftime("%Y-%m-%d") for i in range(days)]
+        idx = {d: i for i, d in enumerate(dates)}
+
+        async def series(sql_day: str, sql_base: str, *a) -> dict:
+            """sql_day groups by day (day, value) inside the window; sql_base gives the total before it."""
+            cur = await self.conn.execute(sql_day, (*a, start))
+            vals = [0] * days
+            for day, v in await cur.fetchall():
+                if day in idx:
+                    vals[idx[day]] = v or 0
+            cur = await self.conn.execute(sql_base, (*a, start))
+            base = (await cur.fetchone())[0] or 0
+            return {"base": base, "values": vals}
+
+        guild = {
+            "members": await series("SELECT date(created_at), COUNT(*) FROM users WHERE date(created_at)>=? GROUP BY 1",
+                                    "SELECT COUNT(*) FROM users WHERE date(created_at)<?"),
+            "quests": await series("SELECT date(completed_at), COUNT(*) FROM quest_progress WHERE status='done' AND date(completed_at)>=? GROUP BY 1",
+                                   "SELECT COUNT(*) FROM quest_progress WHERE status='done' AND date(completed_at)<?"),
+            "fights": await series("SELECT date(started_at), COUNT(*) FROM fights WHERE date(started_at)>=? GROUP BY 1",
+                                   "SELECT COUNT(*) FROM fights WHERE date(started_at)<?"),
+            "xp": await series("SELECT date(created_at), SUM(amount) FROM xp_log WHERE date(created_at)>=? GROUP BY 1",
+                               "SELECT SUM(amount) FROM xp_log WHERE date(created_at)<?"),
+            "masters": await series("SELECT date(rank_since), COUNT(*) FROM users WHERE rank>=4 AND date(rank_since)>=? GROUP BY 1",
+                                    "SELECT COUNT(*) FROM users WHERE rank>=4 AND date(rank_since)<?"),
+        }
+        out = {"days": dates, "guild": guild}
+        if uid is None:
+            return out
+        me = {
+            "quests": await series("SELECT date(completed_at), COUNT(*) FROM quest_progress WHERE user_id=? AND status='done' AND date(completed_at)>=? GROUP BY 1",
+                                   "SELECT COUNT(*) FROM quest_progress WHERE user_id=? AND status='done' AND date(completed_at)<?", uid),
+            "xp": await series("SELECT date(created_at), SUM(amount) FROM xp_log WHERE user_id=? AND date(created_at)>=? GROUP BY 1",
+                               "SELECT SUM(amount) FROM xp_log WHERE user_id=? AND date(created_at)<?", uid),
+            "fights": await series("SELECT date(started_at), COUNT(*) FROM fights WHERE member_id=? AND result IS NOT NULL AND date(started_at)>=? GROUP BY 1",
+                                   "SELECT COUNT(*) FROM fights WHERE member_id=? AND result IS NOT NULL AND date(started_at)<?", uid),
+            "fights_won": await series("SELECT date(started_at), COUNT(*) FROM fights WHERE member_id=? AND result='win' AND date(started_at)>=? GROUP BY 1",
+                                       "SELECT COUNT(*) FROM fights WHERE member_id=? AND result='win' AND date(started_at)<?", uid),
+            "first_try": await series(
+                "SELECT date(created_at), COUNT(*) FROM quiz_attempts a WHERE user_id=? AND passed=1 AND NOT EXISTS "
+                "(SELECT 1 FROM quiz_attempts b WHERE b.user_id=a.user_id AND b.quest_id=a.quest_id AND b.id<a.id) AND date(created_at)>=? GROUP BY 1",
+                "SELECT COUNT(*) FROM quiz_attempts a WHERE user_id=? AND passed=1 AND NOT EXISTS "
+                "(SELECT 1 FROM quiz_attempts b WHERE b.user_id=a.user_id AND b.quest_id=a.quest_id AND b.id<a.id) AND date(created_at)<?", uid),
+            "crit_xp": await series("SELECT date(created_at), SUM(amount) FROM xp_log WHERE user_id=? AND reason LIKE 'crit:%' AND date(created_at)>=? GROUP BY 1",
+                                    "SELECT SUM(amount) FROM xp_log WHERE user_id=? AND reason LIKE 'crit:%' AND date(created_at)<?", uid),
+            "reads": await series("SELECT date(v), COUNT(*) FROM kv WHERE user_id=? AND k LIKE 'read:%' AND date(v)>=? GROUP BY 1",
+                                  "SELECT COUNT(*) FROM kv WHERE user_id=? AND k LIKE 'read:%' AND date(v)<?", uid),
+            "turnins": await series("SELECT date(created_at), COUNT(*) FROM submissions WHERE user_id=? AND date(created_at)>=? GROUP BY 1",
+                                    "SELECT COUNT(*) FROM submissions WHERE user_id=? AND date(created_at)<?", uid),
+            "turnins_passed": await series("SELECT date(COALESCE(decided_at, created_at)), COUNT(*) FROM submissions WHERE user_id=? AND status='pass' AND date(COALESCE(decided_at, created_at))>=? GROUP BY 1",
+                                           "SELECT COUNT(*) FROM submissions WHERE user_id=? AND status='pass' AND date(COALESCE(decided_at, created_at))<?", uid),
+        }
+        # the streak on each day: count back over the days the member did anything (earned XP, fought, read, or cleared a quest)
+        cur = await self.conn.execute(
+            "SELECT DISTINCT day FROM ("
+            "SELECT date(created_at) AS day FROM xp_log WHERE user_id=? UNION SELECT date(started_at) FROM fights WHERE member_id=? "
+            "UNION SELECT date(v) FROM kv WHERE user_id=? AND k LIKE 'read:%' UNION SELECT date(completed_at) FROM quest_progress WHERE user_id=? AND completed_at IS NOT NULL"
+            ") WHERE day IS NOT NULL", (uid, uid, uid, uid))
+        active = {r[0] for r in await cur.fetchall()}
+        streak, run, day = [], 0, dt.datetime.strptime(dates[0], "%Y-%m-%d")
+        # the run before the window
+        back = day - dt.timedelta(days=1)
+        while back.strftime("%Y-%m-%d") in active:
+            run += 1
+            back -= dt.timedelta(days=1)
+        for d in dates:
+            run = run + 1 if d in active else 0
+            streak.append(run)
+        me["streak"] = {"base": 0, "values": streak, "level": True}
+        out["me"] = me
+        return out
+
     async def guild_stats(self) -> dict:
         async def one(sql):
             cur = await self.conn.execute(sql)

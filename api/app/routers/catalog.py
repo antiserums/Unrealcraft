@@ -79,3 +79,9 @@ async def subjects(request: Request):
 async def guild_stats(request: Request):
     """Guild-wide numbers for the guest home page (no login needed, nothing personal)."""
     return await request.app.state.rpg.guild_stats()
+
+
+@router.get("/stats/series")
+async def guild_series(request: Request, days: int = 30):
+    """Guild-wide numbers day by day, for the graphs on the guest home page."""
+    return await request.app.state.rpg.stats_series(None, days)

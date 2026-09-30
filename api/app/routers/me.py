@@ -212,3 +212,9 @@ async def stats(request: Request, member=Depends(current_member)):
     """Numbers for the home page: the member's own, plus the guild's this week."""
     rdb = request.app.state.rpg
     return {"me": await rdb.member_stats(member["id"]), "guild": await rdb.guild_stats()}
+
+
+@router.get("/stats/series")
+async def stats_series(request: Request, days: int = 30, member=Depends(current_member)):
+    """The same numbers day by day, for the graphs under the tiles."""
+    return await request.app.state.rpg.stats_series(member["id"], days)
