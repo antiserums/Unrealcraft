@@ -53,6 +53,7 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
   const router = useRouter();
   const [readIds, setReadIds] = useState<Set<number>>(new Set(letters.filter((l) => l.read).map((l) => l.id)));
   const [folder, setFolder] = useState(openTicket ? "ticket" : "inbox");
+  const [seen, setSeen] = useState<"all" | "unread" | "read">("all");     // the read filter, in every folder
   const [openId, setOpenId] = useState<number | null>(openMail);
   const [ticketId, setTicketId] = useState<number | null>(openTicket);
   const [asStaff, setAsStaff] = useState(false);            // reading a ticket another member opened (staff only)
@@ -60,10 +61,13 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
   const isRead = (l: Letter) => readIds.has(l.id);
   const from = (l: Letter) => l.sender ?? (l.kind === "announcement" || l.kind === "letter" ? t("Staff") : "Unrealcraft");
   const current = FOLDERS.find((f) => f.key === folder) ?? FOLDERS[0];
-  const shown = useMemo(() => letters.filter((l) => current.match(l, isRead(l))), [letters, current, readIds]);   // eslint-disable-line react-hooks/exhaustive-deps
+  const shown = useMemo(() => letters.filter((l) => current.match(l, isRead(l)) && (seen === "all" || (seen === "unread") === !isRead(l))), [letters, current, readIds, seen]);   // eslint-disable-line react-hooks/exhaustive-deps
   const open = letters.find((l) => l.id === openId) ?? null;
   const unread = letters.filter((l) => !isRead(l)).length;
+  const ticketUnread = (k: Ticket, theirs: boolean) => (theirs ? k.status === "open" : k.status === "answered");
   const openTickets = tickets.filter((k) => k.status !== "closed").length + staffTickets.filter((k) => k.status === "open").length;
+  const shownMine = tickets.filter((k) => seen === "all" || (seen === "unread") === ticketUnread(k, false));
+  const shownTheirs = staffTickets.filter((k) => seen === "all" || (seen === "unread") === ticketUnread(k, true));
 
   // the ticket being read: fetched fresh each time it opens or changes
   useEffect(() => {
@@ -115,6 +119,16 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
       {l.sender_avatar ? <img className="avatar" src={l.sender_avatar} alt="" /> : <span className="mail-seal" aria-hidden="true">{l.sender ? l.sender.slice(0, 1) : "U"}</span>}
       <span>{from(l)}</span>
     </span>
+  );
+
+  const filter = (
+    <div className="mail-filter" role="group" aria-label={t("Show")}>
+      {(["all", "unread", "read"] as const).map((k) => (
+        <button key={k} type="button" className={`bare mail-filter-btn ${seen === k ? "on" : ""}`} aria-pressed={seen === k} onClick={() => setSeen(k)}>
+          {k === "all" ? t("All") : k === "unread" ? t("Unread") : t("Read")}
+        </button>
+      ))}
+    </div>
   );
 
   const side = (
@@ -199,14 +213,15 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
         <div className="mail-main">
           <div className="mail-tools">
             <b className="mail-folder-title">{t("Tickets")}</b>
-            <span className="small muted">{t("{n} in all", { n: tickets.length })}</span>
+            <span className="small muted">{t("{n} in all", { n: shownMine.length + shownTheirs.length })}</span>
+            {filter}
             <span className="spacer" />
             <Link className="btn" href="/support">{t("Open a ticket")}</Link>
           </div>
           <section className="card mail-list" aria-label={t("Tickets")}>
-            {tickets.length === 0 && staffTickets.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("No tickets yet. When you open one, it shows here with its answers.")}</div>}
-            {staffTickets.length > 0 && <div className="mail-list-head">{t("Waiting for staff")}</div>}
-            {staffTickets.map((k) => (
+            {shownMine.length === 0 && shownTheirs.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{tickets.length + staffTickets.length === 0 ? t("No tickets yet. When you open one, it shows here with its answers.") : t("Nothing here.")}</div>}
+            {shownTheirs.length > 0 && <div className="mail-list-head">{t("Waiting for staff")}</div>}
+            {shownTheirs.map((k) => (
               <button key={`s${k.id}`} type="button" className={`bare mail-row ${k.status === "open" ? "unread" : ""}`} onClick={() => { setAsStaff(true); setTicketId(k.id); }}>
                 <span className="mail-dot" aria-hidden="true" />
                 <span className="mail-row-main">
@@ -216,8 +231,8 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
                 </span>
               </button>
             ))}
-            {staffTickets.length > 0 && tickets.length > 0 && <div className="mail-list-head">{t("Your tickets")}</div>}
-            {tickets.map((k) => (
+            {shownTheirs.length > 0 && shownMine.length > 0 && <div className="mail-list-head">{t("Your tickets")}</div>}
+            {shownMine.map((k) => (
               <button key={k.id} type="button" className={`bare mail-row ${k.status === "answered" ? "unread" : ""}`} onClick={() => { setAsStaff(false); setTicketId(k.id); }}>
                 <span className="mail-dot" aria-hidden="true" />
                 <span className="mail-row-main">
@@ -240,6 +255,7 @@ export default function Letters({ letters, tickets = [], staffTickets = [], open
       <div className="mail-tools">
         <b className="mail-folder-title">{t(current.label)}</b>
         <span className="small muted">{t("{n} messages", { n: shown.length })}</span>
+        {filter}
       </div>
       <section className="card mail-list" aria-label={t(current.label)}>
         {shown.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("Nothing here.")}</div>}
