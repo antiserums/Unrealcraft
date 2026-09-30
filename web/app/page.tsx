@@ -49,8 +49,8 @@ export default async function Home() {
           <div className="ribbon guest">
             <div>
               <div className="eyebrow">An RPG learning experience for Unreal Engine</div>
-              <h1>Learn Unreal Engine the way you would play it.</h1>
-              <p className="lead">Read the guides, build it in Unreal, beat the bosses, claim your rewards. Whether you are here to learn the basics or to prove yourself against the hardest of challenges, Unrealcraft is a home for you.</p>
+              <h1>Our mission statement</h1>
+              <p className="lead">Learn Unreal Engine the way you would play it. Read the guides, build it in Unreal, beat the bosses, claim your rewards. Whether you are here to learn the basics or to prove yourself against the hardest of challenges, Unrealcraft is a home for you.</p>
             </div>
             <div className="ribbon-actions">
               <a className="btn primary" href="/api/auth/discord">Enter with Discord</a>
