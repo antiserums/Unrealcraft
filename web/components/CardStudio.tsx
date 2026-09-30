@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Card, CosmeticOption } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
+import { CardDeco } from "./DecoAnim";
 import CharacterSheet, { type ArtProps, type Char, type TryOn } from "./CharacterSheet";
 import PlayerCard from "./PlayerCard";
 
@@ -40,6 +41,13 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
     featured: draft.featured.map((k) => c.earned_achievements.find((a) => a.key === k)).filter(Boolean) as Card["featured"],
   };
   const wearing = mode === "wardrobe" && tryOn ? { ...c, worn: { ...c.worn, id: tryOn.outfit.id, name: tryOn.outfit.name, color: tryOn.outfit.color, art_id: tryOn.outfit.art_id }, style: tryOn.style, body: tryOn.body } : null;
+  const wardrobeDirty = !!tryOn && (tryOn.outfit.id !== c.worn.id || tryOn.style !== c.style || tryOn.body !== c.body);
+  const wardrobeBlocked = !!tryOn && !tryOn.outfit.owned;
+  async function saveWardrobe() {
+    if (!tryOn) return;
+    if (await patch({ wear: tryOn.outfit.id, style: tryOn.style, appearance: { body: tryOn.body } })) { setMode("view"); setTryOn(null); }
+  }
+  function cancelWardrobe() { setMode("view"); setTryOn(null); setErr(null); }
   const shown = mode === "profile" ? preview : wearing ?? c;
   const shownSheet = mode === "wardrobe" && tryOn ? tryOn.sheet : sheet;
   const cardArt = deco.card[shown.card_frame] ?? null;
@@ -48,10 +56,9 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   async function patch(body: Record<string, unknown>) {
     setBusy(true); setErr(null);
     const r = await fetch("/api/me/character", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-    const j = await r.json();
-    setBusy(false);
-    if (r.ok) { setC(j); setDraft(fromCard(j)); router.refresh(); return true; }
-    setErr(j.detail ?? "Could not save that."); return false;
+    if (!r.ok) { setBusy(false); setErr((await r.json()).detail ?? "Could not save that."); return false; }
+    const j: Card = await fetch("/api/me/card").then((x) => x.json());   // the card shape, whatever the patch returned
+    setBusy(false); setC(j); setDraft(fromCard(j)); router.refresh(); return true;
   }
   async function save() {
     if (await patch({ banner: draft.motto, nameplate: draft.nameplate, avatar_frame: draft.avatar_frame, card_frame: draft.card_frame, featured: draft.featured, public: draft.public })) setMode("view");
@@ -80,8 +87,8 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   return (
     <div className="studio">
       <div className={`studio-card ${cardArt ? "framed" : ""}`}>
-        <div className={`px pcard-deco ${cardArt ? "on" : ""}`} style={cardArt ? { borderImageSource: `url("${cardArt}")` } : undefined} aria-hidden="true" />
-        <PlayerCard c={shown} sheet={shownSheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
+        <CardDeco src={cardArt} theme={shown.card_frame} />
+        <PlayerCard c={shown} sheet={shownSheet} badges={badges} deco={{ avatar: avatarArt, card: null, avatarTheme: shown.avatar_frame }} />
       </div>
 
       {mode === "view" && (
@@ -95,10 +102,14 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
       {mode === "wardrobe" && wardrobe && (
         <div className="studio-panel">
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
-            <div><div className="eyebrow">Wardrobe</div><div className="small muted">Click a set to try it on the card. Wear, weapons and build save as you pick.</div></div>
-            <button className="primary" onClick={() => { setMode("view"); setTryOn(null); }}>Done</button>
+            <div><div className="eyebrow">Editing your wardrobe</div><div className="small muted">Pick a set, weapons and build; the card shows them. Nothing is kept until you press Save.</div></div>
+            <div className="row" style={{ gap: 6 }}>
+              <button onClick={cancelWardrobe} disabled={busy}>Cancel</button>
+              <button className="primary" onClick={saveWardrobe} disabled={busy || !wardrobeDirty || wardrobeBlocked} title={wardrobeBlocked ? "That set is not earned yet" : undefined}>{busy ? "Saving…" : "Save"}</button>
+            </div>
           </div>
-          <CharacterSheet initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} mirror={false} onPreview={setTryOn} />
+          <CharacterSheet key={`${c.worn.id}-${c.style}-${c.body}`} initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} mirror={false} deferred onPreview={setTryOn} />
+          {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
         </div>
       )}
 

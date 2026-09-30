@@ -28,7 +28,7 @@ export default async function Home() {
               <div>
                 <div className="eyebrow">Welcome back</div>
                 <h1>{me.name}</h1>
-                <div className="small"><span style={{ color: me.rank_color, fontWeight: 600 }}>{me.rank_title}</span><span className="muted"> · {me.major_title} · {me.xp} XP</span></div>
+                <div className="small"><span className={me.staff ? "staff-title" : ""} style={{ color: me.rank_color, fontWeight: 600 }}>{me.rank_title}</span><span className="muted"> · {me.major_title} · {me.xp} XP</span></div>
               </div>
             </div>
             {next?.main ? (

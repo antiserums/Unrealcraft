@@ -302,20 +302,22 @@ DECORATIONS = [
     ("frostbound", "Frostbound", "Pale silver and ice crystals.", {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
     ("celestial", "Celestial", "Midnight blue, gold stars, a crescent moon.", {"type": "achievement", "key": "lore_10", "hint": "Open the reading on ten quests"}),
     ("dragonheart", "Dragonheart", "Crimson scales and dragon horns.", {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
+    ("developer", "Developer", "Circuit-blue trim with a living pulse.", {"type": "staff", "role": "developer", "hint": "Developers only"}),
 ]
 AVATAR_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
 CARD_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
 DECO_DESC = {i: d for i, _n, d, _u in DECORATIONS}
 
 
-def _owned(unlock: dict, rank: int, earned: set[str]) -> bool:
+def _owned(unlock: dict, rank: int, earned: set[str], role: str | None = None) -> bool:
     return unlock["type"] == "starter" or (unlock["type"] == "rank" and rank >= unlock["n"]) or \
-        (unlock["type"] == "achievement" and unlock["key"] in earned)
+        (unlock["type"] == "achievement" and unlock["key"] in earned) or \
+        (unlock["type"] == "staff" and role == unlock["role"])
 
 
-def cosmetic_catalog(rank: int, earned: set[str], unlock_all: bool = False) -> dict:
+def cosmetic_catalog(rank: int, earned: set[str], unlock_all: bool = False, role: str | None = None) -> dict:
     """Every card cosmetic with its owned flag and unlock hint, grouped by kind. Admins testing get everything."""
-    own = (lambda u: True) if unlock_all else (lambda u: _owned(u, rank, earned))
+    own = (lambda u: True) if unlock_all else (lambda u: _owned(u, rank, earned, role))
     return {
         "nameplate": [{"id": i, "value": v, "name": n, "owned": own(u), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
         "avatar_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": own(u), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],

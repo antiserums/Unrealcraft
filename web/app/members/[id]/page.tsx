@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PlayerCard from "@/components/PlayerCard";
 import { badgeImage, decorationImage, loadManifest, presetSheet } from "@/lib/art";
+import { CardDeco } from "@/components/DecoAnim";
 import { api, type Card } from "@/lib/api";
 
 export default async function Member({ params }: PageProps<"/members/[id]">) {
@@ -17,8 +18,8 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
       <h1>{c.name ?? "A guild member"}</h1>
       <div className="studio">
         <div className={`studio-card ${deco.card ? "framed" : ""}`}>
-          <div className={`px pcard-deco ${deco.card ? "on" : ""}`} style={deco.card ? { borderImageSource: `url("${deco.card}")` } : undefined} aria-hidden="true" />
-          <PlayerCard c={c} sheet={sheet} badges={badges} deco={{ avatar: deco.avatar, card: null }} />
+          <CardDeco src={deco.card} theme={c.card_frame} />
+          <PlayerCard c={c} sheet={sheet} badges={badges} deco={{ avatar: deco.avatar, card: null, avatarTheme: c.avatar_frame }} />
         </div>
         <div className="studio-panel">
           {c.mine ? (

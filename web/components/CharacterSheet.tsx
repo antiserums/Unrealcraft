@@ -24,9 +24,10 @@ const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", reward: "Re
 const TIER_ORDER = ["novice", "apprentice", "adept", "expert", "master"];
 
 /** The closet. With `mirror` (default) it draws its own figure on the left; with `mirror={false}` the parent shows
- *  the preview (the player card) and gets every selection through `onPreview`. Wear, weapons and build save as picked. */
-export default function CharacterSheet({ initial, fallbackColor, art, mirror = true, onPreview }:
-  { initial: Char; fallbackColor: string; art: ArtProps; mirror?: boolean; onPreview?: (t: TryOn) => void }) {
+ *  the preview (the player card) and gets every selection through `onPreview`. With `deferred` nothing is saved
+ *  here: outfit, weapons and build are only chosen, and the parent saves them (Edit wardrobe -> Save). */
+export default function CharacterSheet({ initial, fallbackColor, art, mirror = true, deferred = false, onPreview }:
+  { initial: Char; fallbackColor: string; art: ArtProps; mirror?: boolean; deferred?: boolean; onPreview?: (t: TryOn) => void }) {
   const router = useRouter();
   const [c, setC] = useState<Char>(initial);
   const [busy, setBusy] = useState(false);
@@ -48,6 +49,10 @@ export default function CharacterSheet({ initial, fallbackColor, art, mirror = t
   [c.outfits, kind, showLocked]);
 
   async function patch(body: Record<string, unknown>) {
+    if (deferred) {                       // choose only; the parent saves the whole draft
+      setC((x) => ({ ...x, style: (body.style as string) ?? x.style, body: (body.appearance as { body?: string } | undefined)?.body ?? x.body }));
+      return;
+    }
     setBusy(true);
     const r = await fetch("/api/me/character", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
     if (r.ok) { setC(await r.json()); router.refresh(); }   // the figure on the player card is rendered on the server
@@ -64,7 +69,8 @@ export default function CharacterSheet({ initial, fallbackColor, art, mirror = t
       <div className="small" style={{ margin: "4px 0 10px" }}><i>{selected.flavour}</i></div>
       {selected.owned ? (
         <div className="row">
-          {selected.worn ? <span className="status now">✔ Wearing this</span> : <button className="primary" onClick={() => patch({ wear: selected.id })} disabled={busy}>Wear it</button>}
+          {deferred ? <span className="status now">{selected.worn ? "✔ Wearing this" : "Selected · press Save to wear it"}</span>
+            : selected.worn ? <span className="status now">✔ Wearing this</span> : <button className="primary" onClick={() => patch({ wear: selected.id })} disabled={busy}>Wear it</button>}
           {selected.earned_at && <span className="small muted">earned {selected.earned_at.slice(0, 10)}</span>}
         </div>
       ) : (

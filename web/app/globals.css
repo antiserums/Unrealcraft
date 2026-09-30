@@ -484,3 +484,19 @@ table.adm code { font-size: 12px; }
 /* the card clips to its rounded corners again (overlays live outside it now) and its content fits 440 px */
 .pcard { overflow: hidden; }
 .pcard-body { gap: 10px 18px; padding: 14px 18px; }
+
+/* one glow for everything staff-related: fixed colour, dim, breathing on the same rhythm */
+.staff-title { text-shadow: 0 0 3px currentColor, 0 0 8px currentColor; animation: staffglow 2.6s ease-in-out infinite; }
+.pill.staff-title, .pcard-rank.staff-title { box-shadow: 0 0 0 1px currentColor, 0 0 8px currentColor; }
+@keyframes staffglow { 0%, 100% { text-shadow: 0 0 3px currentColor, 0 0 8px currentColor; } 50% { text-shadow: 0 0 4px currentColor, 0 0 12px currentColor; } }
+@media (prefers-reduced-motion: reduce) { .staff-title { animation: none; } }
+
+/* the staff member's character: the same dim glow as the title */
+.pcard-figure.staff-glow .px { filter: drop-shadow(0 0 3px var(--glow)) drop-shadow(0 0 8px var(--glow)); animation: figglow 2.6s ease-in-out infinite; }
+@keyframes figglow { 0%, 100% { filter: drop-shadow(0 0 3px var(--glow)) drop-shadow(0 0 8px var(--glow)); } 50% { filter: drop-shadow(0 0 4px var(--glow)) drop-shadow(0 0 12px var(--glow)); } }
+@media (prefers-reduced-motion: reduce) { .pcard-figure.staff-glow .px { animation: none; } }
+
+/* special decorations (ring and border): the title's glow, softened, because the trim art is already bright */
+.pcard-deco.glow, .deco-avatar.glow { --soft: color-mix(in srgb, var(--deco-glow) 60%, transparent); filter: drop-shadow(0 0 3px var(--soft)) drop-shadow(0 0 8px var(--soft)); animation: decoglow 2.6s ease-in-out infinite; }
+@keyframes decoglow { 0%, 100% { filter: drop-shadow(0 0 3px var(--soft)) drop-shadow(0 0 8px var(--soft)); } 50% { filter: drop-shadow(0 0 4px var(--soft)) drop-shadow(0 0 12px var(--soft)); } }
+@media (prefers-reduced-motion: reduce) { .pcard-deco.glow, .deco-avatar.glow { animation: none; } }

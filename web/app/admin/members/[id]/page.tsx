@@ -5,7 +5,7 @@ import { api, type Me, type QuestSummary } from "@/lib/api";
 
 export type AdminMember = {
   user: Record<string, string | number | null>;
-  card: { name: string | null; avatar: string | null; rank_title: string; rank_color: string; major_title: string; worn: { name: string }; achievements_earned: number; achievements_total: number; cosmetics: Record<string, unknown> };
+  card: { name: string | null; avatar: string | null; rank_title: string; rank_color: string; staff?: string | null; major_title: string; worn: { name: string }; achievements_earned: number; achievements_total: number; cosmetics: Record<string, unknown> };
   progress: { quest_id: string; status: string; quiz_passed: number; completed_at: string | null; quest: QuestSummary | null }[];
   medals: { medal_key: string; earned_at: string }[];
   xp_recent: { amount: number; reason: string; created_at: string }[];
@@ -25,7 +25,7 @@ export default async function AdminMember({ params }: PageProps<"/admin/members/
       <div className="eyebrow"><Link href="/admin">← Admin panel</Link></div>
       <h1>{m.card.name ?? `Member ${id}`}</h1>
       <p className="muted small">
-        <code>{id}</code> · <span style={{ color: m.card.rank_color }}>{m.card.rank_title}</span> (rank {u.rank}) · {m.card.major_title} · {u.xp} XP · streak {u.streak_days} · wearing {m.card.worn.name} · {m.card.achievements_earned}/{m.card.achievements_total} achievements · <Link href={`/members/${id}`}>player card</Link>
+        <code>{id}</code> · <span className={m.card.staff ? "staff-title" : ""} style={{ color: m.card.rank_color }}>{m.card.rank_title}</span> (rank {u.rank}) · {m.card.major_title} · {u.xp} XP · streak {u.streak_days} · wearing {m.card.worn.name} · {m.card.achievements_earned}/{m.card.achievements_total} achievements · <Link href={`/members/${id}`}>player card</Link>
       </p>
       <div className="two">
         <div>

@@ -91,13 +91,25 @@ def main() -> None:
             m["banners"][key] = rel
     # Card borders follow docs/09-playercard-art-spec.md: 352 x 252 with the card in the centre 320 x 220, so the
     # band's inner edge is 16 source px from the canvas edge on every side and every theme.
-    m["decorations"] = {"avatar": {}, "card": {}, "inset": 16}
+    m["decorations"] = {"avatar": {}, "card": {}, "inset": 16, "anim": {"avatar": {}, "card": {}}}
     for kind in ("avatar", "card"):
         for f in sorted((PACK / "profile-decorations" / kind).glob("*.png")):
             key = re.sub(r"^\d+-", "", f.stem)                      # 06-thornwood.png -> thornwood
             rel = put(f.relative_to(PACK).as_posix())
             if rel:
                 m["decorations"][kind][key] = rel
+    # Animated decorations: the pack lists per-frame PNGs next to a sheet (profile-decorations/manifest.json).
+    deco_meta = PACK / "profile-decorations" / "manifest.json"
+    if deco_meta.is_file():
+        for a in json.loads(deco_meta.read_text(encoding="utf-8")).get("assets", []):
+            anim = a.get("animation")
+            if not anim or a.get("type") not in ("avatar", "card"):
+                continue
+            folder = Path(anim["sheet"]).parent.as_posix()          # animations/<theme>
+            frames = [put(f"profile-decorations/{folder}/{a['type']}_{i}.png") for i in range(int(anim.get("frames", 0)))]
+            frames = [f for f in frames if f]
+            if frames:
+                m["decorations"]["anim"][a["type"]][a["theme"]] = {"frames": frames, "fps": int(anim.get("fps", 8))}
     (OUT / "manifest.json").write_text(json.dumps(m, indent=1), encoding="utf-8")
     print(f"pack: {PACK}\ncopied {copied} files; {sum(len(v) for b in m['presets'].values() for v in b.values())} preset sheets, "
           f"{len(m['creatures'])} creatures, {len(m['icons'])} set icons, {len(m['badges'])} badges -> {OUT / 'manifest.json'}")

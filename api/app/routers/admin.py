@@ -50,7 +50,7 @@ async def member(uid: int, request: Request, admin=Depends(admin_only)):
     card = await card_payload(request, uid, admin)
     prog = await rdb.progress_rows(uid)
     return {
-        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "major_title", "worn", "achievements_earned", "achievements_total", "cosmetics")},
+        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "staff", "major_title", "worn", "achievements_earned", "achievements_total", "cosmetics")},
         "progress": [{**p, "quest": quest_summary(cat, cat.quests[p["quest_id"]]) if p["quest_id"] in cat.quests else None} for p in prog],
         "medals": await db.medals(uid), "xp_recent": await db.xp_recent(uid, 30), "submissions": await db.submissions(uid),
         "ranks": [{"n": n, "title": r["title"], "xp": r["xp"]} for n, r in sorted(cat.ranks.items())],

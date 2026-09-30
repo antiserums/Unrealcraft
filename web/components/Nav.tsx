@@ -18,7 +18,7 @@ export default async function Nav() {
               <Link href="/me" className="who">
                 {me.avatar && <img className="avatar" src={me.avatar} alt="" />}
                 <span>{me.name}</span>
-                <span className="pill" style={{ borderColor: me.rank_color, color: me.rank_color }}>{me.rank_title}</span>
+                <span className={`pill ${me.staff ? "staff-title" : ""}`} style={{ borderColor: me.rank_color, color: me.rank_color }}>{me.rank_title}</span>
               </Link>
               <form action="/api/auth/logout" method="post"><button type="submit">Log out</button></form>
             </>

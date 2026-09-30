@@ -97,7 +97,7 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
     featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
-    options = rpg.cosmetic_catalog(int(u.get("rank", -1)), {a["key"] for a in earned}, unlock_all)
+    options = rpg.cosmetic_catalog(int(u.get("rank", -1)), {a["key"] for a in earned}, unlock_all, role_of(who) if who else role_of_id(uid))
     plate = rpg.pick_owned(options["nameplate"], cos.get("nameplate"))
     return {**p, "worn": char["worn"], "style": char["style"], "body": char["body"], "cosmetics": cos,
             "nameplate": plate["value"], "nameplate_id": plate["id"],
@@ -139,7 +139,8 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     u0, state0, _ = await request.app.state.db.user_state(member["id"])
     earned0 = {a["key"] for a in rpg.achievements_for(request.app.state.catalog, await rdb.stat_inputs(member["id"]), state0.done,
                                                        await request.app.state.db.medals(member["id"])) if a["earned"]}
-    options = rpg.cosmetic_catalog(int(u0.get("rank", -1)), earned0, unlock_all)
+    from ..staff import role_of
+    options = rpg.cosmetic_catalog(int(u0.get("rank", -1)), earned0, unlock_all, role_of(member))
     for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame")):
         want = getattr(body, field)
         if want is None:

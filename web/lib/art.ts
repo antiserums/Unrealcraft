@@ -24,8 +24,9 @@ export type Manifest = {
   environments: Record<string, { path: string; large?: string | null; width: number; height: number; groundY: number }>;
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
-  decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: number };
+  decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: number; anim?: Record<"avatar" | "card", Record<string, { frames: string[]; fps: number }>> };
 };
+export type DecoAnim = { frames: string[]; fps: number };
 
 let cache: { at: number; m: Manifest | null } | null = null;
 
@@ -101,4 +102,10 @@ export function decorationImages(m: Manifest | null): { avatar: Record<string, s
   const out = { avatar: {} as Record<string, string>, card: {} as Record<string, string> };
   for (const kind of ["avatar", "card"] as const) for (const [k, v] of Object.entries(m?.decorations?.[kind] ?? {})) out[kind][k] = art(v);
   return out;
+}
+
+/** The animation (if any) for a decoration theme. */
+export function decorationAnim(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): DecoAnim | null {
+  const a = id ? m?.decorations?.anim?.[kind]?.[id] : null;
+  return a ? { frames: a.frames.map(art), fps: a.fps } : null;
 }
