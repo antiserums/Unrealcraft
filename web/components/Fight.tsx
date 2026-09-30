@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { SheetSpec } from "@/lib/art";
 import { rich } from "@/lib/i18n-config";
@@ -13,7 +14,7 @@ type Fight = {
   boss: { name: string; short: string; look: string; color: string; hits_to_win: number; questions: number; wounds_allowed: number; verb: string; intro: string; tier: string };
   you: { vitality: number; wounds: number; wounds_allowed: number; steady_available: boolean; craft: number; focus: number; crit_pct: number; outfit: string; style?: string };
   hits: number; hits_to_win: number; turn: number; total: number; first_try: boolean; log: Ev[]; question: Q | null;
-  result: string | null; events?: Ev[];
+  result: string | null; events?: Ev[]; resumed?: boolean;
   outcome?: { passed: boolean; score: number; total: number; first_try_bonus?: number; crit_xp?: number; completed?: boolean; quest_xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string; id: string } | null; tested_out?: boolean; next?: string } | null;
 };
 
@@ -24,6 +25,7 @@ const STAGE_W = 960, STAGE_H = 540, GROUND = 464;
 export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background }:
   { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null }) {
   const t = useT();
+  const router = useRouter();
   const [f, setF] = useState<Fight | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -81,6 +83,15 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
     }, 700);
   }
 
+  // Leaving by the Retreat link ends the fight. Leaving any other way (reload, closing the tab) keeps it, and the
+  // next visit picks it up at the same question.
+  async function retreat() {
+    if (!f || busy) return;
+    setBusy(true);
+    await fetch(`/api/fights/${f.fight_id}/retreat`, { method: "POST" }).catch(() => null);
+    router.push(`/quests/${questId}`);
+  }
+
   if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← {t("Back to the dungeon")}</Link></p></div>;
   if (!f) return <div className="card muted">{t("Entering the dungeon…")}</div>;
 
@@ -121,6 +132,10 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
         </div>
       </div>
 
+      {f.resumed && last.length === 0 && !f.result && (
+        <div className="log card"><div className="ev"><b>{t("You are back in the fight, right where you left it.")}</b></div></div>
+      )}
+
       {last.length > 0 && (
         <div className="log card">
           {last.map((e, i) => (
@@ -148,7 +163,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
           <div className="row small muted" style={{ marginTop: 8 }}>
             <span>{t("Answer fast for a better crit chance.")}</span>
             <span className="spacer" />
-            <Link href={`/quests/${questId}`} className="muted">{t("Retreat (nothing is recorded)")}</Link>
+            <button type="button" className="linklike muted" onClick={retreat} disabled={busy}>{t("Retreat (nothing is recorded)")}</button>
           </div>
         </div>
       )}

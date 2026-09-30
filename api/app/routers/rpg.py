@@ -269,8 +269,13 @@ def _public(state: dict, q: Quest, boss: dict, char: dict, question: dict | None
     }
 
 
+RESUME_HOURS = 24        # an unfinished fight older than this is dropped and a new one starts
+
+
 @router.post("/me/quests/{qid}/fight")
-async def start_fight(qid: str, request: Request, member=Depends(current_member)):
+async def start_fight(qid: str, request: Request, fresh: bool = False, member=Depends(current_member)):
+    """Enter the boss room. An unfinished fight on this quest is picked up where it stopped (a reload, or leaving
+    the page and coming back), unless `fresh` is set or the player retreated."""
     cat, db, rdb = request.app.state.catalog, request.app.state.db, request.app.state.rpg
     q = cat.quests.get(qid)
     if not q or not q.quiz:
@@ -280,9 +285,21 @@ async def start_fight(qid: str, request: Request, member=Depends(current_member)
         raise HTTPException(403, "This dungeon is locked until you rank up.")
     # No cooldown after a loss: the reading is right there, try again when ready.
     char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=_role(member))
+    boss = rpg.boss_for(q)
+    if not fresh:
+        import json
+        old = await rdb.open_fight(member["id"], qid, RESUME_HOURS)
+        state = json.loads(old["state"]) if old else None
+        # Only resume a fight that still fits the quiz (an admin may have edited the questions since).
+        if state and state.get("i", 0) < len(q.quiz) and [len(o) for o in state.get("orders", [])] == [len(it["choices"]) for it in q.quiz]:
+            state["fight_id"] = old["id"]
+            state["slow_turn"] = state["i"]        # the clock was lost with the page: no speed bonus on this question
+            await rdb.save_fight(old["id"], state)
+            out = _public(state, q, boss, char, _question_view(q, state))
+            out["resumed"] = state["i"] > 0 or state["wounds"] > 0
+            return out
     attempts = await db.quiz_attempts(member["id"], qid)
     rng = random.Random()
-    boss = rpg.boss_for(q)
     state = {
         "orders": [rng.sample(range(len(it["choices"])), len(it["choices"])) for it in q.quiz],
         "i": 0, "right": 0, "wounds": 0, "debuff": None, "log": [], "first_try": len(attempts) == 0,
@@ -344,7 +361,7 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
     state["debuff"] = None
     if right:
         state["right"] += 1
-        crit_pct = rpg.crit_chance(char["stats"]["focus"], body.seconds)
+        crit_pct = rpg.crit_chance(char["stats"]["focus"], None if state.get("slow_turn") == i else body.seconds)
         crit = rng.randint(1, 100) <= crit_pct
         dmg = 10 + 2 * char["stats"]["craft"]
         if debuff == "weakened":

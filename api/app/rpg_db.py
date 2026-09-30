@@ -138,9 +138,10 @@ class RpgDB:
         return (await cur.fetchone())[0]
 
     # ---------- fights ----------
-    async def open_fight(self, uid: int, qid: str) -> dict | None:
+    async def open_fight(self, uid: int, qid: str, max_hours: int = 24) -> dict | None:
         cur = await self.conn.execute(
-            "SELECT * FROM fights WHERE member_id=? AND quest_id=? AND result IS NULL ORDER BY id DESC LIMIT 1", (uid, qid))
+            "SELECT * FROM fights WHERE member_id=? AND quest_id=? AND result IS NULL AND started_at >= datetime('now', ?) "
+            "ORDER BY id DESC LIMIT 1", (uid, qid, f"-{int(max_hours)} hours"))
         row = await cur.fetchone()
         return dict(row) if row else None
 
