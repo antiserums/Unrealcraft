@@ -11,7 +11,8 @@ from registrar.curriculum import Catalog  # noqa: E402  (bot package, path set i
 from . import auth
 from .config import settings
 from .db import DB
-from .routers import catalog, changelog, me, members
+from .routers import catalog, changelog, me, members, rpg
+from .rpg_db import RpgDB
 
 log = logging.getLogger("unrealcraft.api")
 
@@ -31,6 +32,8 @@ async def lifespan(app: FastAPI):
     app.state.catalog = load_catalog()
     app.state.db = DB(settings.db_path)
     await app.state.db.open()
+    app.state.rpg = RpgDB(app.state.db)
+    await app.state.rpg.migrate()
     log.info("Database: %s", settings.db_path)
     yield
     await app.state.db.close()
@@ -42,6 +45,7 @@ app.include_router(catalog.router)
 app.include_router(me.router)
 app.include_router(members.router)
 app.include_router(changelog.router)
+app.include_router(rpg.router)
 
 
 @app.get("/health")

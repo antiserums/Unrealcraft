@@ -7,9 +7,9 @@ export default async function Nav() {
     <header className="nav">
       <div className="nav-in">
         <Link href="/" className="brand">Unrealcraft</Link>
-        <Link href="/quests" className="link">Quests</Link>
-        {me && <Link href="/path" className="link">My path</Link>}
-        {me && <Link href="/leaderboard" className="link">Leaderboard</Link>}
+        <Link href="/quests" className="link">Quest Board</Link>
+        {me && <Link href="/path" className="link">My Path</Link>}
+        {me && <Link href="/leaderboard" className="link">Hall of Fame</Link>}
         <Link href="/changelog" className="link">Changelog</Link>
         <span className="spacer" />
         {me ? (
@@ -22,7 +22,7 @@ export default async function Nav() {
             <form action="/api/auth/logout" method="post"><button type="submit">Log out</button></form>
           </>
         ) : (
-          <a className="btn primary" href="/api/auth/discord">Log in with Discord</a>
+          <a className="btn primary" href="/api/auth/discord">Enter with Discord</a>
         )}
       </div>
     </header>

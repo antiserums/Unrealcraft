@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { IBM_Plex_Sans, Sora } from "next/font/google";
+import { Cinzel, IBM_Plex_Sans } from "next/font/google";
 import Nav from "@/components/Nav";
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({ variable: "--font-plex", subsets: ["latin"], weight: ["400", "500", "600"] });
-const sora = Sora({ variable: "--font-sora", subsets: ["latin"], weight: ["600", "700"] });
+const cinzel = Cinzel({ variable: "--font-cinzel", subsets: ["latin"], weight: ["600", "700"] });
 
 export const metadata: Metadata = {
   title: { default: "Unrealcraft", template: "%s · Unrealcraft" },
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${plex.variable} ${sora.variable}`}>
+    <html lang="en" className={`${plex.variable} ${cinzel.variable}`}>
       <body>
         <Nav />
         <main className="wrap">{children}</main>

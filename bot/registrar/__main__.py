@@ -22,6 +22,7 @@ COGS = [
     "registrar.cogs.setup_server",
     "registrar.cogs.workshop",
     "registrar.cogs.voice",
+    "registrar.cogs.sync",
 ]
 
 log = logging.getLogger("quartermaster")

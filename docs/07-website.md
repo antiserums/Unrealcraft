@@ -34,7 +34,14 @@ the server, then sets a signed cookie. No Discord tokens are stored.
 
 - **Phase 1 (done):** read-only site. Login, home with "Continue questing", quest browser, quest pages, path, profile,
   leaderboard, changelog. The bot is unchanged.
-- **Phase 2:** quizzes and submissions on the site; the API becomes the only writer; the bot reads from the API.
+- **RPG phase A (done):** the quiz is a turn-based boss fight on the site (`/quests/{id}/fight`). Right answer = hit,
+  wrong answer = wound (+ a one-turn debuff), pass rules unchanged. Gear may afford one dodge per fight. Crits give a
+  little bonus XP (25/day cap). Bosses are generated from quest data (`api/app/rpg.py`). Winning writes the same rows
+  the Discord quiz wrote (quiz_attempts, quest_progress, xp_log, kv fact) and an `events` row that the bot's `sync`
+  cog picks up every 20 s to run promotion checks and orientation steps.
+- **RPG phase B (done):** character sheet on `/me`: five computed stats, six gear slots with major-flavoured items,
+  starter kit on first visit, loot rolled when a quest completes on the site, nameplate color.
+- **Phase 2 (next):** the submission form ("claim the chest") on the site with image uploads; retire the Discord quiz.
 - **Phase 3:** reviews and promotions on the site; event outbox for the bot (roles, DMs, #rank-ups).
 - **Phase 4:** slim the bot to link cards; orientation events reported to the API; staff panel.
 - **Phase 5:** customization, leaderboard by major, helper karma, daily quest.
@@ -48,6 +55,10 @@ GET  /catalog/majors          GET /catalog/quests?major=&tier=&subject=&q=     G
 GET  /catalog/subjects        GET /changelog
 GET  /me                      GET /me/next                    GET /me/path
 GET  /members/{id}            GET /leaderboard?period=week|month|all
+GET  /me/character            PATCH /me/character {equip, nameplate}       POST /me/quests/{id}/read
+POST /me/quests/{id}/fight    GET /fights/{id}   POST /fights/{id}/turn {answer, seconds}   POST /fights/{id}/retreat
+GET  /catalog/quests/{id}/boss
+GET  /auth/dev-login          local testing only, when DEV_LOGIN_ID is set in api/.env
 ```
 
 Quiz answers are never sent to the browser; `/catalog/quests/{id}` returns questions and choices only.

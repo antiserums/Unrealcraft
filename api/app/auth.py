@@ -71,3 +71,15 @@ async def logout():
     resp = RedirectResponse(f"{settings.web_origin}/", status_code=303)
     clear_session(resp)
     return resp
+
+
+@router.get("/dev-login")
+async def dev_login(request: Request):
+    """Local testing only: logs in as the Discord id in DEV_LOGIN_ID (api/.env). Off unless that variable is set."""
+    import os
+    uid = os.getenv("DEV_LOGIN_ID", "").strip()
+    if not uid or not settings.web_origin.startswith("http://localhost"):
+        raise HTTPException(404, "Not found.")
+    resp = RedirectResponse(f"{settings.web_origin}/", status_code=302)
+    set_session(resp, {"id": int(uid), "name": "Dev Tester", "username": "dev", "avatar": None, "roles": []})
+    return resp

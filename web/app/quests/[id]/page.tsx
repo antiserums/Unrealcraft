@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import BossCard, { type BossInfo } from "@/components/BossCard";
 import { TierBadge } from "@/components/QuestCard";
+import ReadingList from "@/components/ReadingList";
 import { api, type Me, type Progress, type QuestFull } from "@/lib/api";
 
 const MARK: Record<string, string> = { done: "✅", todo: "☐", on_submit: "📎", honor: "▫", optional: "⏳" };
@@ -16,7 +18,7 @@ export async function generateMetadata({ params }: PageProps<"/quests/[id]">) {
 
 export default async function Quest({ params }: PageProps<"/quests/[id]">) {
   const { id } = await params;
-  const [data, me] = await Promise.all([api<{ quest: QuestFull; progress: Progress }>(`/catalog/quests/${id}`), api<Me>("/me")]);
+  const [data, me, boss] = await Promise.all([api<{ quest: QuestFull; progress: Progress }>(`/catalog/quests/${id}`), api<Me>("/me"), api<BossInfo>(`/catalog/quests/${id}/boss`)]);
   if (!data) notFound();
   const { quest: q, progress: p } = data;
   const kind = q.kind === "capstone" ? "★ Capstone" : q.kind === "elective" ? "Elective" : "Required";
@@ -45,12 +47,8 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
           {q.reading.length > 0 && (
             <section className="card" style={{ marginBottom: 14 }}>
               <h3>📖 Step {next()}: Read this first</h3>
-              <ol className="steps">
-                {q.reading.map((r) => (
-                  <li key={r.url}><a href={r.url} target="_blank" rel="noreferrer">{r.label}</a>{r.kind === "community" && <span className="tag"> · community</span>}</li>
-                ))}
-              </ol>
-              {q.has_quiz && <p className="muted small" style={{ margin: 0 }}>The quiz asks about these pages.</p>}
+              <ReadingList questId={q.id} reading={q.reading} loggedIn={!!me} />
+              {q.has_quiz && <p className="muted small" style={{ margin: 0 }}>The boss asks about these pages. Opening them raises your Lore.</p>}
             </section>
           )}
           {q.checklist.length > 0 && (
@@ -64,15 +62,24 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
               {q.do && <p className="small" style={{ marginTop: 10 }}><b>Your version:</b> {q.do}</p>}
             </section>
           )}
-          <section className="card">
-            <h3>✅ Step {next()}: How to finish</h3>
+          {q.has_quiz && boss && (
+            <section style={{ marginBottom: 14 }}>
+              <h3>⚔️ Step {next()}: Fight the boss (the quiz)</h3>
+              <BossCard boss={boss} questId={q.id} canFight={!!me && !!p?.unlocked && !p?.quiz_passed}
+                reason={!me ? "Log in to fight." : !p?.unlocked ? "Locked until you rank up." : p?.quiz_passed ? "Beaten. The boss stays down." : undefined} />
+            </section>
+          )}
+          <section className="card" id="claim">
+            <h3>{q.verify_type === "quiz" ? "✅" : "🎁"} Step {next()}: {q.verify_type === "quiz" ? "That's the room" : "Claim the chest"}</h3>
             <p><b>Done when:</b> {q.done_when ?? "—"}</p>
             {q.verify_type === "action" ? (
               <p className="muted">Nothing to send. The Quartermaster ticks this when it sees you do it.</p>
+            ) : q.verify_type === "quiz" ? (
+              <p className="muted">Beating the boss completes this quest.</p>
             ) : (
               <p className="muted">
-                {q.has_quiz ? "Pass the quiz" : "Send your work"}{q.has_quiz && q.verify_type !== "quiz" ? ", then send your work" : ""}.
-                Quizzes and submissions move to this page in the next update; for now use <code>/quiz {q.id}</code>{q.verify_type !== "quiz" && <> and <code>/submit {q.id}</code></>} in Discord.
+                {q.has_quiz ? "After the boss falls, send your work to open the chest. " : "Send your work to open the chest. "}
+                The chest form moves to this page next; for now use <code>/submit {q.id}</code> in Discord.
               </p>
             )}
           </section>
