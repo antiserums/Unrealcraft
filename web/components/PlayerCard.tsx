@@ -5,12 +5,11 @@ import { Character } from "./Figure";
 export type Deco = { avatar: string | null; card: string | null };
 
 /** The shareable player card. Pure display: the owner edits it with CardEditor next to it.
- *  Decorations are the pack's transparent overlays: a ring around the avatar, a border around the card. */
+ *  The avatar ring is drawn here; the card border is drawn by the page around the card (see .studio-card). */
 export default function PlayerCard({ c, sheet, badges, deco }: { c: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco?: Deco }) {
   const pct = c.xp_next ? Math.min(100, Math.round(((c.xp - c.xp_floor) / (c.xp_next - c.xp_floor)) * 100)) : 100;
   return (
-    <article className={`pcard ${deco?.card ? "decorated" : ""}`} style={{ "--plate": c.nameplate } as React.CSSProperties}>
-      {deco?.card && <div className="px pcard-deco" style={{ borderImageSource: `url("${deco.card}")` }} aria-hidden="true" />}
+    <article className="pcard" style={{ "--plate": c.nameplate } as React.CSSProperties}>
       <div className="pcard-banner">
         <span className="pcard-rank" style={{ color: c.rank_color, borderColor: c.rank_color }}>{c.rank_title}</span>
         <span className="pcard-major">{c.major_title}</span>

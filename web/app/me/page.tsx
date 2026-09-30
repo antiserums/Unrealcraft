@@ -19,21 +19,17 @@ export default async function Profile() {
       <MeNav active="/me" />
       {c.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
       <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} />
-      <div style={{ marginTop: 12 }}>
-        <div>
-          {c.next_rank && (
-            <div className="card" style={{ marginTop: 12 }}>
-              <div className="eyebrow">Next rank: {c.next_rank.title}</div>
-              <ul className="plain small" style={{ marginTop: 6 }}>
-                <li>{c.next_rank.xp_to_go} XP to go</li>
-                <li>{c.next_rank.required_left > 0 ? `${c.next_rank.required_left} required quests left` : "Core path done"}</li>
-                {c.tier_progress && <li>{c.tier_progress.emoji} {c.tier_progress.name} quests: {c.tier_progress.done}/{c.tier_progress.need}</li>}
-                {c.next_rank.human_review && <li>Staff approval needed for this rank</li>}
-              </ul>
-            </div>
-          )}
+      {c.next_rank && (
+        <div className="card" style={{ marginTop: 14 }}>
+          <div className="eyebrow">Next rank: {c.next_rank.title}</div>
+          <ul className="plain small" style={{ marginTop: 6 }}>
+            <li>{c.next_rank.xp_to_go} XP to go</li>
+            <li>{c.next_rank.required_left > 0 ? `${c.next_rank.required_left} required quests left` : "Core path done"}</li>
+            {c.tier_progress && <li>{c.tier_progress.emoji} {c.tier_progress.name} quests: {c.tier_progress.done}/{c.tier_progress.need}</li>}
+            {c.next_rank.human_review && <li>Staff approval needed for this rank</li>}
+          </ul>
         </div>
-      </div>
+      )}
     </>
   );
 }

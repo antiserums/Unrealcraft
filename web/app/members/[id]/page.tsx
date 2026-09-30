@@ -15,9 +15,12 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
     <>
       <div className="eyebrow">Player card</div>
       <h1>{c.name ?? "A guild member"}</h1>
-      <div className="two">
-        <PlayerCard c={c} sheet={sheet} badges={badges} deco={deco} />
-        <div>
+      <div className="studio">
+        <div className="studio-card">
+          {deco.card && <div className="px pcard-deco" style={{ borderImageSource: `url("${deco.card}")` }} aria-hidden="true" />}
+          <PlayerCard c={c} sheet={sheet} badges={badges} deco={{ avatar: deco.avatar, card: null }} />
+        </div>
+        <div className="studio-panel">
           {c.mine ? (
             <div className="card"><p className="small muted" style={{ margin: 0 }}>This is how others see your card.</p><Link className="btn" href="/me" style={{ marginTop: 10 }}>Edit it</Link></div>
           ) : (
