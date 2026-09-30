@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useT } from "./I18n";
 import Ico from "./Ico";
 
@@ -19,6 +19,16 @@ const KIND: Record<string, { label: string; color: string; group: "quest-state" 
   rank: { label: "Rank", color: "var(--gold-2)", group: "rewards", icon: "rank-up", action: "Open the wardrobe" },
   donation: { label: "Thank you", color: "#e07b8a", group: "rewards", icon: "outfit", action: "Open the wardrobe" },
 };
+/** The folders in the sidebar. */
+const FOLDERS: { key: string; label: string; group: "utility" | "statistics" | "quest-state" | "rewards"; icon: string; match: (l: Letter, read: boolean) => boolean }[] = [
+  { key: "inbox", label: "Inbox", group: "utility", icon: "link", match: () => true },
+  { key: "unread", label: "Unread", group: "quest-state", icon: "now", match: (_, read) => !read },
+  { key: "announcement", label: "Announcements", group: "statistics", icon: "members", match: (l) => l.kind === "announcement" || l.kind === "letter" },
+  { key: "ticket", label: "Tickets", group: "quest-state", icon: "pending", match: (l) => l.kind === "ticket" },
+  { key: "review", label: "Reviews", group: "quest-state", icon: "done", match: (l) => l.kind === "review" },
+  { key: "rewards", label: "Ranks and rewards", group: "rewards", icon: "rank-up", match: (l) => l.kind === "rank" || l.kind === "donation" },
+];
+
 async function post(path: string) {
   await fetch(`/api${path}`, { method: "POST" }).catch(() => null);
 }
@@ -32,17 +42,19 @@ function when(iso: string, long = false): string {
     : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
 }
 
-/** The inbox: one list of everything, newest first, with Mark all read above it. Each row says what it is with a
- *  coloured type tag. Clicking a row opens that mail in place of the list, with Back and newer/older buttons. Every row says what it is (a coloured type tag),
+/** The inbox: folders down the left, the message list beside them. Each row says what it is with a coloured type
+ *  tag. Clicking a row opens that mail in place of the list (the folders stay), with Back and newer/older. Every row says what it is (a coloured type tag),
  *  who it is from, the subject and a preview. */
 export default function Letters({ letters }: { letters: Letter[] }) {
   const t = useT();
   const router = useRouter();
   const [readIds, setReadIds] = useState<Set<number>>(new Set(letters.filter((l) => l.read).map((l) => l.id)));
+  const [folder, setFolder] = useState("inbox");
   const [openId, setOpenId] = useState<number | null>(null);
   const isRead = (l: Letter) => readIds.has(l.id);
   const from = (l: Letter) => l.sender ?? (l.kind === "announcement" || l.kind === "letter" ? t("Staff") : "Unrealcraft");
-  const shown = letters;
+  const current = FOLDERS.find((f) => f.key === folder) ?? FOLDERS[0];
+  const shown = useMemo(() => letters.filter((l) => current.match(l, isRead(l))), [letters, current, readIds]);   // eslint-disable-line react-hooks/exhaustive-deps
   const open = letters.find((l) => l.id === openId) ?? null;
   const unread = letters.filter((l) => !isRead(l)).length;
 
@@ -81,10 +93,28 @@ export default function Letters({ letters }: { letters: Letter[] }) {
     </span>
   );
 
+  const side = (
+    <aside className="mail-side">
+      {FOLDERS.map((f) => {
+        const n = letters.filter((l) => f.match(l, isRead(l)) && !isRead(l)).length;
+        return (
+          <button key={f.key} type="button" className={`bare mail-folder ${folder === f.key ? "on" : ""}`} onClick={() => { setFolder(f.key); setOpenId(null); }} aria-current={folder === f.key ? "true" : undefined}>
+            <Ico group={f.group} id={f.icon} className="mail-folder-ico" />
+            <span className="mail-folder-name">{t(f.label)}</span>
+            {n > 0 && <span className="count">{n}</span>}
+          </button>
+        );
+      })}
+      {unread > 0 && <button type="button" className="btn mail-readall" onClick={readAll}>{t("Mark all read")}</button>}
+    </aside>
+  );
+
   if (open) {
     const i = shown.findIndex((l) => l.id === open.id);
     return (
       <div className="mailbox-page">
+        {side}
+        <div className="mail-main">
         <div className="mail-tools">
           <button type="button" className="btn" onClick={() => setOpenId(null)}>← {t("Back to the inbox")}</button>
           <span className="spacer" />
@@ -106,18 +136,20 @@ export default function Letters({ letters }: { letters: Letter[] }) {
           <p className="letter-text">{open.body}</p>
           {open.link && <Link className="btn primary" href={open.link}>{t((KIND[open.kind] ?? KIND.letter).action)}</Link>}
         </article>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="mailbox-page">
+      {side}
+      <div className="mail-main">
       <div className="mail-tools">
-        <span className="small muted">{unread ? t("{n} unread", { n: unread }) : t("All read")} · {t("{n} messages", { n: shown.length })}</span>
-        <span className="spacer" />
-        {unread > 0 && <button type="button" className="btn mail-readall" onClick={readAll}>{t("Mark all read")}</button>}
+        <b className="mail-folder-title">{t(current.label)}</b>
+        <span className="small muted">{t("{n} messages", { n: shown.length })}</span>
       </div>
-      <section className="card mail-list" aria-label={t("Inbox")}>
+      <section className="card mail-list" aria-label={t(current.label)}>
         {shown.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("Nothing here.")}</div>}
         {shown.map((l) => (
           <button key={l.id} type="button" className={`bare mail-row ${isRead(l) ? "" : "unread"}`} onClick={() => show(l)}>
@@ -130,6 +162,7 @@ export default function Letters({ letters }: { letters: Letter[] }) {
           </button>
         ))}
       </section>
+      </div>
     </div>
   );
 }

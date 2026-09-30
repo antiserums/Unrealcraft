@@ -854,7 +854,10 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 .mailbox .count { position: absolute; top: -3px; right: -5px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--gold); color: var(--accent-ink); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; box-shadow: 0 0 0 2px #0a0c12; }
 
 /* the inbox: folders | message list | reading pane */
-.mailbox-page { display: flex; flex-direction: column; gap: 12px; }
+.mailbox-page { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; align-items: start; }
+.mail-main { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.mail-folder-title { font-family: var(--display); font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-2); }
+@media (max-width: 760px) { .mailbox-page { grid-template-columns: 1fr; } .mail-side { flex-direction: row; flex-wrap: wrap; } .mail-folder { width: auto; border-left: 0; border-bottom: 2px solid transparent; } .mail-folder.on { border-bottom-color: var(--gold); } .mail-readall { margin-left: auto; } }
 .mail-tools { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .mail-tools .spacer { flex: 1; }
 .mail-side { display: flex; flex-direction: column; gap: 2px; }
@@ -864,7 +867,7 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 .mail-folder-ico { margin: -8px 0; opacity: .85; }
 .mail-folder-name { flex: 1; }
 .mail-folder .count, .mail-tab .count, .mailbox .count { min-width: 16px; height: 16px; padding: 0 5px; border-radius: 8px; background: var(--gold); color: var(--accent-ink); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; letter-spacing: 0; }
-.mail-readall { margin: 0; }
+.mail-readall { margin-top: 12px; }
 
 .mail-list, html.site-art .mail-list { padding: 0; }
 .mail-list-head { display: flex; justify-content: space-between; align-items: baseline; padding: 10px 14px; border-bottom: 1px solid rgba(212, 175, 90, .18); font-family: var(--display); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold-2); }
