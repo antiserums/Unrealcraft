@@ -11,6 +11,7 @@ export default async function Nav() {
           <Link href="/quests" className="link">Quest Board</Link>
           <Link href="/how-it-works" className="link">How it works</Link>
           <Link href="/leaderboard" className="link">Leaderboard</Link>
+          <Link href="/mission" className="link">Mission statement</Link>
         </nav>
         <div className="nav-user">
           {me ? (

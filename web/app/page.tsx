@@ -4,6 +4,7 @@ import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
 import { bannerSet, loadManifest } from "@/lib/art";
+import { MISSION } from "@/lib/mission";
 
 type MemberStats = { fights: number; fights_won: number; bosses_first_try: number; crit_xp: number; xp_week: number; reads: number; turnins: number; turnins_passed: number; turnins_pending: number };
 type GuildStats = { members: number; quests_done: number; quests_done_week: number; fights_week: number; xp_week: number; masters: number };
@@ -48,7 +49,7 @@ export default async function Home() {
           <div className="ribbon guest">
             <div>
               <h1>Our mission statement</h1>
-              <p className="lead">Unrealcraft is an RPG learning experience for Unreal Engine so you can learn the way you would play it. Read the guides, build it in Unreal, beat the bosses, claim your rewards. Whether you are here to learn the basics or to prove yourself against the hardest of challenges, Unrealcraft is a home for you.</p>
+              <p className="lead">{MISSION}</p>
             </div>
             <div className="ribbon-actions">
               <a className="btn primary" href="/api/auth/discord">Enter with Discord</a>
