@@ -25,7 +25,16 @@ def rank_color(cat: Catalog, rank: int) -> str:
     return cat.ranks.get(rank, {}).get("color") or "#7A8C7E"
 
 
-def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict]) -> dict:
+ADMIN_TITLE, ADMIN_COLOR = "Admin", "#D4AF37"
+
+
+def is_admin_id(uid: int) -> bool:
+    """Staff by Discord id (ADMIN_IDS). Their nameplate reads Admin instead of a player rank."""
+    from ..config import settings
+    return int(uid) in settings.admin_ids
+
+
+def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict], admin: bool = False) -> dict:
     rank, major = u["rank"], u["major"]
     target = rank + 1
     nxt = cat.ranks.get(target)
@@ -42,7 +51,8 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
     return {
         "id": u["discord_id"], "name": member["name"] if member else None, "avatar": member["avatar"] if member else None,
         "major": major, "major_title": cat.majors.get(major, {}).get("title", major), "minor": u.get("minor"),
-        "rank": rank, "rank_title": nameplate(cat, rank, major), "rank_color": rank_color(cat, max(rank, 0)),
+        "rank": rank, "rank_title": ADMIN_TITLE if admin else nameplate(cat, rank, major),
+        "rank_color": ADMIN_COLOR if admin else rank_color(cat, max(rank, 0)), "staff": admin,
         "xp": u["xp"], "xp_floor": lo, "xp_next": hi,
         "streak_days": u.get("streak_days", 0), "ue_version": u.get("ue_version"),
         "rank_since": u.get("rank_since"), "member_since": u.get("created_at"),
@@ -61,7 +71,8 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
 async def me(request: Request, member=Depends(current_member)):
     db, cat = request.app.state.db, request.app.state.catalog
     u, state, _ = await db.user_state(member["id"])
-    payload = profile_payload(cat, member, u, state, await db.medals(member["id"]))
+    from .admin import is_admin
+    payload = profile_payload(cat, member, u, state, await db.medals(member["id"]), admin=is_admin(member))
     payload["recent_xp"] = await db.xp_recent(member["id"], 15)
     payload["known"] = await db.user(member["id"]) is not None
     from .review import access_for
