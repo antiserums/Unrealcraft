@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS users (
     major             TEXT    NOT NULL DEFAULT 'undecided',
     minor             TEXT,
     xp                INTEGER NOT NULL DEFAULT 0,          -- quest/review/showcase XP only; chat never lands here
-    rank              INTEGER NOT NULL DEFAULT -1,         -- -1 = in Orientation
+    rank              INTEGER NOT NULL DEFAULT 0,          -- 0 = Novice, where everyone starts
     seal              TEXT,                                -- lookdev|design|anim|code (R3+)
     current_quest_id  TEXT,
     spine_done        INTEGER NOT NULL DEFAULT 0,          -- 0/1 cached

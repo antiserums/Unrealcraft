@@ -30,7 +30,7 @@ bot version and alerts #mod-log.
 CHANGELOG.md           patch notes (top entry is posted to #patch-notes)
 curriculum/            source of truth for quests (YAML)
   specializations.yaml ranks, XP thresholds, specializations, tasters, capstones
-  orientation.yaml     O1–O8 + 4 electives (Discord literacy)
+  orientation.yaml     O1–O5 first steps (Novice, `first_steps: true`): learn the site before Unreal
   spine.yaml           SQ1–SQ11 Starter Quests + Rank 0 meta electives
   level_design_r1.yaml Rank 1 world/lighting + Level Design (full quizzes)
   level_design_r2.yaml Rank 2 shared Blueprint + Level Design (full quizzes)
@@ -73,7 +73,7 @@ Then follow `docs/04-discord-setup-checklist.md` sections E–G.
 ## Design rules the code enforces
 - Rank-up = XP threshold **and** every required quest, taster and capstone for the current rank passed. Chat XP is 0.
 - One visible rank role at a time. From Rank 3 the primary specialization joins the nameplate (Expert · Level Design).
-- The `/quest` picker order is: Orientation → Starter Quests → missing required taster → required in the primary specialization at the current rank → 2 electives from your specializations + 1 taster.
+- The `/quest` picker order is: first steps (O1–O5) → Starter Quests → missing required taster → required in the primary specialization at the current rank → 2 electives from your specializations + 1 taster.
 - Level designers are never gated on C++, and programmers are never gated on a hero lighting reel.
 - Verification: R0–1 use quiz + honor system, R2 needs a peer or mentor, R3–4 a mentor or two peers, R5–6 a human mentor only.
 - Leaving a rank needs the core path plus a tier count: 30 Apprentice, 60 Adept, 120 Expert, 220 Master quests (quests of the primary specialization, member's choice). Set per rank as `quests_to_leave` in `curriculum/specializations.yaml`.

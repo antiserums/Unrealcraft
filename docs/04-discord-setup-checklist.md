@@ -36,7 +36,7 @@ Do these steps in order. They take about 20 minutes.
 
 ## F. Smoke test
 - [ ] Fresh alt account: join the server, accept the rules, follow the #welcome button, log in on the site.
-- [ ] Do Orientation on the site (O1–O5). The alt becomes Novice and gets the **Novice** role in Discord within 20 seconds.
+- [ ] The alt is Novice at once and gets the **Novice** role in Discord within 20 seconds. Do the first steps on the site (O1–O5).
 - [ ] Pick a primary specialization and one extra on the player card page. Both roles appear in Discord.
 - [ ] In the admin panel set the alt to Apprentice. The role swaps, not stacks.
 - [ ] `/card` on the alt shows the same rank and specializations as the site.

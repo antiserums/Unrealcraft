@@ -24,7 +24,7 @@ VERDICTS = ("pass", "changes", "fail")
 async def access_for(request: Request, member: dict) -> dict:
     """Whether this member may review: any staff role (mentor, admin, developer). See app/staff.py."""
     u = await request.app.state.db.user(member["id"])
-    rank = int(u["rank"]) if u else -1
+    rank = int(u["rank"]) if u else 0
     role = staff.role_of(member)
     return {"mentor": role is not None, "role": role, "rank": rank, "can_review": role is not None}
 
@@ -127,7 +127,7 @@ async def review(sid: int, body: Verdict, request: Request, member=Depends(curre
     xp = 0
     if final == "pass":
         u = await db.user(s["user_id"])
-        xp, _ = await complete_quest(request, s["user_id"], q, u or {"rank": -1})
+        xp, _ = await complete_quest(request, s["user_id"], q, u or {"rank": 0})
     from .letters import send_letter
     word = {"pass": "passed", "changes": "needs changes", "fail": "did not pass"}.get(final, final)
     await send_letter(request, s["user_id"], "review", f"{q.id} {word}: {q.raw.get('title', q.id)}", (notes or "")[:300] or "The reviewer left no note.", f"/quests/{q.id}")

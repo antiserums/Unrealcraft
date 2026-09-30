@@ -27,9 +27,7 @@ LEGACY_ROLE_KEYS = [("oriented",), ("recruit",), ("major", "undecided")]     # g
 
 def nameplate(cat, rank: int, primary: str) -> str:
     """Rank title; from Expert up the primary specialization joins it: 'Expert · Level Design'."""
-    if rank < 0:
-        return "Orientation"
-    title = cat.ranks.get(rank, {}).get("title", f"Rank {rank}")
+    title = cat.ranks.get(max(rank, 0), {}).get("title", f"Rank {rank}")
     if 3 <= rank < 6 and primary and primary != "undecided":
         return f"{title} · {cat.title_of(primary)}"
     return title
@@ -120,7 +118,7 @@ class Roles(commands.Cog):
         ch = guild.get_channel(self.bot.unlocks.channel("rank_ups"))
         member = guild.get_member(uid)
         st = await self.member_state(uid)
-        if not ch or not member or not st or new < 1:        # reaching Novice (end of Orientation) is not announced
+        if not ch or not member or not st or new < 1:        # everyone starts as Novice; only real rank-ups are announced
             return
         cat = self.bot.catalog
         color = discord.Color.from_str(cat.ranks.get(new, {}).get("color") or "#7A8C7E")

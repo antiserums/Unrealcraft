@@ -2,8 +2,8 @@
 
 > **Superseded (2026-09-30).** This describes the older design where the game was played in Discord. The website now runs quests, reviews and ranks; the Discord server is a guild hall. See `03-commands.md`, `04-discord-setup-checklist.md` and `07-website.md`. Kept for history.
 
-Both members joined the same day, finished Orientation, and have done SQ1–SQ6 of the Starter Quests.
-The output below was worked out by hand from `Catalog.path_lines()` against the current YAML. Orientation is hidden once it's complete.
+Both members joined the same day, finished the first steps (O1–O5), and have done SQ1–SQ6 of the Starter Quests.
+The output below was worked out by hand from `Catalog.path_lines()` against the current YAML. The first steps are hidden once they are complete.
 
 ## Level Design · Novice
 ```

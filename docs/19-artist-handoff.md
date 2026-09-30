@@ -34,6 +34,8 @@ Every group in the current pack manifest is placed, except the two listed under 
 - `avatar-ring/plain-64`: both avatar spots use the 48 px ring contract at 2x, like the profile decorations.
 - `panel-leather`, `panel-parchment`: no place for them yet. The chest's "opened" state may use parchment later.
 - `staff-crests/senior`, `staff-crests/lead`: waiting for those ranks to exist in the catalog.
+- `rank-crests/orientation`: the Orientation rank is gone (2026-09-30). Everyone now starts as Novice, so the
+  first crest on the site is `rank-crests/novice`. You can retire the orientation crest from the pack.
 
 ## Wanted next
 

@@ -21,7 +21,7 @@ export default async function PathView({ p }: { p: PathData }) {
   return (
     <>
       <p className="muted">
-        <span className="eyebrow" style={{ marginRight: 8 }}>{specTitle}{extras ? ` (+ ${extras})` : ""} · {p.rank < 0 ? t("Orientation") : t("Rank {n}", { n: p.rank })}</span>
+        <span className="eyebrow" style={{ marginRight: 8 }}>{specTitle}{extras ? ` (+ ${extras})` : ""} · {t("Rank {n}", { n: p.rank })}</span>
         {t("Why this next: {reason}", { reason: p.reason })}
       </p>
       {p.sections.map((s) => (

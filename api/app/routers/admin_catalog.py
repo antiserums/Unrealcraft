@@ -23,7 +23,7 @@ from .admin import admin_only
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-QUEST_KEYS = ["id", "rank", "difficulty", "specializations", "subjects", "required_spine", "required", "taster", "taster_for",
+QUEST_KEYS = ["id", "rank", "difficulty", "specializations", "subjects", "required_spine", "first_steps", "required", "taster", "taster_for",
               "capstone", "title", "time_min", "needs_others", "official_url", "backup_url",
               "extra_urls", "community_urls", "checklist", "done_when", "xp", "verify_type", "action_key", "next_hint", "quiz", "flavors"]
 FILE_RE = re.compile(r"^[a-z0-9_]+\.yaml$")
@@ -110,7 +110,7 @@ def _parse(body: QuestSave) -> dict:
         v = raw.get(k)
         if isinstance(v, str):
             raw[k] = [s.strip() for s in re.split(r"[\n,]" if k != "checklist" else r"\n", v) if s.strip()]
-    for k in ("required_spine", "required", "taster", "capstone", "needs_others"):
+    for k in ("required_spine", "first_steps", "required", "taster", "capstone", "needs_others"):
         if k in raw:
             raw[k] = bool(raw[k])
     for k in ("elective", "track", "required_for_majors", "taster_for_majors", "adjacent_for"):

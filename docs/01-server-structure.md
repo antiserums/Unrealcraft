@@ -18,7 +18,7 @@ Everything a member can't see yet is listed in **#welcome → "Map: what opens w
 |---|---|---|
 | 00 · GATE | #welcome (the one start page: how it works, commands, what opens when, help, rules, Start Questing + Rules quiz buttons), #announcements [A], #patch-notes [A], #epic-games-resources (ro), #rank-ups (ro) | everyone |
 | 01 · GUILD HUB | #general, #introductions, #showcase [F], #help-desk [F] (Unreal help + server/bot problems), #suggestions [F] | everyone who accepted the rules |
-| 02 · QUEST BOARD | #quest-log (ro, from Orientation), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
+| 02 · QUEST BOARD | #quest-log (ro, from Novice), #starter-quests, then one forum per major: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics (everyone reads all; you post in your major's) | quest board from Orientation; each forum at its rank |
 | 03 · TOWN HALL | ➕ Join to create [V]: joining it makes your own room (rename / user limit; deleted after 5 min empty), Lecture Hall [S] (speak: Senior+, Mentor, Mod) | anyone who started Orientation (Recruit) |
 | 04 · STAFF | #mod-log (also gets 🐞 bug-report alerts), #curriculum-wip, #mentor-queue | staff (+ Senior read queue, Lead) |
 
@@ -55,7 +55,7 @@ Welcome Screen, AutoMod (mention spam, flagged words, spam → #mod-log), Server
 | 11 | Adept | `#3D7DD8` blueprint blue | ✖ | ✖ | R2 |
 | 15 | Apprentice | `#B5714B` clay | ✖ | ✖ | R1 |
 | 16 | Novice | `#7A8C7E` gray-green | ✖ | ✖ | R0 |
-| 17 | Oriented / Recruit | no color | ✖ | ✖ | Recruit = in Orientation (sees Training). Oriented = finished it, kept for life. |
+| 17 | Oriented / Recruit | no color | ✖ | ✖ | Legacy, removed by the bot. Everyone starts as Novice now. |
 | 19 | Major · Level Design … Major · Undecided (8) | no color | ✖ | ✖ | Used for filtering and pings only. |
 | 20 | Medal roles | — | — | — | **None.** Medals live in the DB and on the /rank card, not in the role list. |
 | 21 | Alumni / Visiting Mentor / Founding Crew | `#A0A0A0` | ✖ | ✖ | Honorary, not XP. |

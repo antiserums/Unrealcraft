@@ -17,9 +17,7 @@ MAX_EXTRAS = 6
 
 def nameplate(cat: Catalog, rank: int, major: str) -> str:
     """Rank title; from Expert up the primary specialization joins the plate: 'Expert · Level Design'."""
-    if rank < 0:
-        return "Orientation"
-    title = cat.ranks[rank]["title"]
+    title = cat.ranks[max(rank, 0)]["title"]
     if 3 <= rank < 6 and major and major != "undecided":
         return f"{title} · {cat.title_of(major)}"
     return title
@@ -41,10 +39,10 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
     plate = nameplate_for(role)
     target = rank + 1
     nxt = cat.ranks.get(target)
-    ok, missing = cat.rank_requirements_met(state, target) if (target in cat.ranks or target == 0) else (False, [])
+    ok, missing = cat.rank_requirements_met(state, target) if target in cat.ranks else (False, [])
     ids = [m for m in missing if not m.startswith("tier:")]
     tier_left = [m for m in missing if m.startswith("tier:")]
-    lo = cat.ranks.get(rank, {}).get("xp", 0) if rank >= 0 else 0
+    lo = cat.ranks.get(rank, {}).get("xp", 0)
     hi = nxt["xp"] if nxt else None
     tier_prog = None
     if rank >= 1:
@@ -89,7 +87,7 @@ async def me_payload(request: Request, member: dict) -> dict:
     from .. import rpg as rpg_rules
     from .rpg import _unlock_all, entitlement_options, member_ctx
     cos = await request.app.state.rpg.cosmetics(member["id"])
-    opts = entitlement_options(request, await member_ctx(request, member["id"]), int(u.get("rank", -1)), role_of(member), _unlock_all(member))
+    opts = entitlement_options(request, await member_ctx(request, member["id"]), int(u.get("rank", 0)), role_of(member), _unlock_all(member))
     frame = rpg_rules.pick_owned(opts["avatar_frame"], cos.get("avatar_frame"))
     title = rpg_rules.pick_owned(opts["title"], cos.get("title"))
     payload["avatar_frame"], payload["avatar_frame_art"] = frame["id"], frame.get("art")
@@ -173,8 +171,8 @@ async def path(request: Request, member=Depends(current_member)):
         return d
 
     sections = []
-    if state.rank < 0 or any(q.id not in state.done for q in cat.orientation()):
-        sections.append({"key": "orientation", "title": "Orientation", "quests": [row(q) for q in cat.orientation()]})
+    if any(q.id not in state.done for q in cat.first_steps()):
+        sections.append({"key": "first_steps", "title": "First steps", "quests": [row(q) for q in cat.first_steps()]})
     sections.append({"key": "spine", "title": "Starter Quests (everyone)", "quests": [row(q) for q in cat.spine()]})
     for r in range(1, max(state.rank, 0) + 1):
         title = cat.ranks.get(r, {}).get("title", f"Rank {r}")

@@ -52,7 +52,6 @@ export default function AdminActions({ uid, ranks, specializations, current, ent
       <h3 style={{ marginTop: 16 }}>Rank and primary specialization</h3>
       <div className="adm-form">
         <select value={rank} onChange={(e) => setRank(e.target.value)}>
-          <option value="-1">-1 · Orientation</option>
           {ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title} ({r.xp} XP)</option>)}
         </select>
         <select value={spec} onChange={(e) => setSpec(e.target.value)}>

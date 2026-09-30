@@ -6,7 +6,7 @@ import type { Curriculum } from "./QuestList";
 type Quiz = { q: string; choices: string[]; answer_index: number; explain: string };
 type Form = {
   id: string; title: string; rank: string; difficulty: string; specializations: string[]; subjects: string; taster: boolean; taster_for: string;
-  required_spine: boolean; required: boolean; capstone: boolean; needs_others: boolean; time_min: string; xp: string; verify_type: string;
+  required_spine: boolean; first_steps: boolean; required: boolean; capstone: boolean; needs_others: boolean; time_min: string; xp: string; verify_type: string;
   official_url: string; backup_url: string; extra_urls: string; community_urls: string; checklist: string; done_when: string; action_key: string; next_hint: string;
   quiz: Quiz[]; flavors: string;
 };
@@ -17,6 +17,7 @@ difficulty: apprentice
 specializations: [level_design]
 subjects: [blockout]
 required_spine: false
+first_steps: false
 required: false
 title: A short imperative title
 time_min: 30
@@ -54,7 +55,7 @@ function fromRaw(raw: Record<string, unknown> | null, cur: Curriculum): Form {
     id: str(r.id), title: str(r.title), rank: str(r.rank ?? 1), difficulty: str(r.difficulty ?? "apprentice"),
     specializations: (r.specializations as string[] | undefined) ?? (cur.specializations[0] ? [cur.specializations[0].key] : []),
     subjects: (r.subjects as string[] | undefined)?.join(", ") ?? "", taster: !!r.taster, taster_for: (r.taster_for as string[] | undefined)?.join(", ") ?? "",
-    required_spine: !!r.required_spine, required: raw ? !!r.required : false, capstone: !!r.capstone, needs_others: !!r.needs_others,
+    required_spine: !!r.required_spine, first_steps: !!r.first_steps, required: raw ? !!r.required : false, capstone: !!r.capstone, needs_others: !!r.needs_others,
     time_min: str(r.time_min ?? 30), xp: str(r.xp ?? 40), verify_type: str(r.verify_type ?? "screenshot"),
     official_url: str(r.official_url), backup_url: str(r.backup_url), extra_urls: lines(r.extra_urls), community_urls: lines(r.community_urls),
     checklist: lines(r.checklist), done_when: str(r.done_when), action_key: str(r.action_key), next_hint: str(r.next_hint),
@@ -68,7 +69,7 @@ function toRaw(f: Form): Record<string, unknown> {
   const nl = (s: string) => s.split("\n").map((x) => x.trim()).filter(Boolean);
   return {
     id: f.id.trim().toUpperCase(), rank: Number(f.rank), difficulty: f.difficulty, specializations: f.specializations, subjects: list(f.subjects),
-    required_spine: f.required_spine, required: f.required, ...(f.taster ? { taster: true } : {}), ...(list(f.taster_for).length ? { taster_for: list(f.taster_for) } : {}),
+    required_spine: f.required_spine, ...(f.first_steps ? { first_steps: true } : {}), required: f.required, ...(f.taster ? { taster: true } : {}), ...(list(f.taster_for).length ? { taster_for: list(f.taster_for) } : {}),
     capstone: f.capstone, ...(f.needs_others ? { needs_others: true } : {}),
     title: f.title.trim(), time_min: f.time_min ? Number(f.time_min) : null, official_url: f.official_url.trim() || "TODO_URL", backup_url: f.backup_url.trim() || null,
     extra_urls: nl(f.extra_urls), community_urls: nl(f.community_urls), checklist: nl(f.checklist), done_when: f.done_when.trim(), xp: Number(f.xp),
@@ -140,7 +141,7 @@ export default function QuestEditor({ cur, initial, file: file0, yamlText }: { c
           <div className="adm-grid">
             <div><label>Id</label><input value={f.id} onChange={(e) => set("id", e.target.value)} placeholder="LDQ41" disabled={!isNew && false} /></div>
             <div className="wide" style={{ marginTop: 0 }}><label>Title</label><input value={f.title} onChange={(e) => set("title", e.target.value)} placeholder="Snap every block to the grid" /></div>
-            <div><label>Rank</label><select value={f.rank} onChange={(e) => set("rank", e.target.value)}><option value="-1">-1 · Orientation</option>{cur.ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title}</option>)}</select></div>
+            <div><label>Rank</label><select value={f.rank} onChange={(e) => set("rank", e.target.value)}>{cur.ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title}</option>)}</select></div>
             <div><label>Difficulty</label><select value={f.difficulty} onChange={(e) => set("difficulty", e.target.value)}>{Object.entries(cur.tiers).map(([k, t]) => <option key={k} value={k}>{t.name} · {t.quiz_len} questions</option>)}</select></div>
             <div className="wide" style={{ marginTop: 0 }}>
               <label>Specializations (where the quest lives; "all" = everyone)</label>
@@ -161,6 +162,7 @@ export default function QuestEditor({ cur, initial, file: file0, yamlText }: { c
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.required} onChange={(e) => set("required", e.target.checked)} /> required in its specializations</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.taster} onChange={(e) => set("taster", e.target.checked)} /> taster</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.required_spine} onChange={(e) => set("required_spine", e.target.checked)} /> on the spine</label>
+              <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.first_steps} onChange={(e) => set("first_steps", e.target.checked)} /> a first step</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.capstone} onChange={(e) => set("capstone", e.target.checked)} /> capstone</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.needs_others} onChange={(e) => set("needs_others", e.target.checked)} /> needs other members</label>
             </div>

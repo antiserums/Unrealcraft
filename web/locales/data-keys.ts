@@ -3,7 +3,7 @@
  *  extractor can only see literal `t("…")` calls. Outfit names are proper nouns and stay as they are. */
 export const DATA_KEYS = [
   // ranks, staff titles and tiers
-  "Orientation", "Novice", "Apprentice", "Adept", "Expert", "Master", "Senior", "Lead", "Admin", "Developer", "Mentor",
+  "Novice", "Apprentice", "Adept", "Expert", "Master", "Senior", "Lead", "Admin", "Developer", "Mentor",
   // specializations
   "Level Design", "Programming", "Environment Art", "Tech Art", "Gameplay Design", "Animation", "Cinematics", "Undecided", "Everyone", "Tasters",
   // specialization blurbs shown on How it works

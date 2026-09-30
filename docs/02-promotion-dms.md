@@ -14,7 +14,7 @@ A DM has six lines, always in this order: **what you are · what you owe · next
 
 ---
 
-### Oriented → Novice (Rank −1 → 0)
+### Welcome as Novice (rank 0, where everyone starts; no longer a promotion)
 ```
 You're Novice. You have a desk but no badge yet.
 You owe the Starter Quests: 11 short quests, each one sitting.

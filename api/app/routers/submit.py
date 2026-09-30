@@ -23,7 +23,7 @@ DISCORD_LINK = re.compile(r"https://(?:ptb\.|canary\.)?discord(?:app)?\.com/chan
 
 
 def route_for(quest_rank: int, verify_type: str) -> str:
-    if quest_rank < 0 or verify_type == "action":
+    if verify_type == "action":
         return "auto"
     if quest_rank <= 1:
         return "auto" if verify_type == "quiz" else "honor"

@@ -52,7 +52,7 @@ def quest_summary(cat: Catalog, q: Quest, who: UserState | str | None = None) ->
         "specializations": q.specializations, "required": q.required, "taster_for": q.taster_for,
         "subjects": r.get("subjects") or [], "xp": q.xp, "time_min": r.get("time_min"),
         "kind": "capstone" if q.capstone else ("required" if q.required else "elective"),
-        "spine": q.spine, "verify_type": r.get("verify_type"), "has_quiz": bool(q.quiz), "quiz_len": len(q.quiz),
+        "spine": q.spine, "first_steps": q.first_steps, "verify_type": r.get("verify_type"), "has_quiz": bool(q.quiz), "quiz_len": len(q.quiz),
         "owner": cat.owner_label(q),
         "affinity": cat.affinity(q, major, extras) if major else None,
     }

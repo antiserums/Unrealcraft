@@ -18,7 +18,7 @@ export async function api<T>(path: string): Promise<T | null> {
 export type Tier = { name: string; emoji: string; color: string };
 export type QuestSummary = {
   id: string; title: string; rank: number; difficulty: string; tier: Tier; specializations: string[]; required: boolean; taster_for: string[];
-  subjects: string[]; xp: number; time_min: number | null; kind: "required" | "elective" | "capstone"; spine: boolean;
+  subjects: string[]; xp: number; time_min: number | null; kind: "required" | "elective" | "capstone"; spine: boolean; first_steps: boolean;
   verify_type: string; has_quiz: boolean; quiz_len: number; owner: string;
   affinity: "major" | "adjacent" | "other" | null; status?: string; tag?: string | null;
 };

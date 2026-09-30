@@ -88,7 +88,7 @@ class DB:
 
     async def user_state(self, uid: int) -> tuple[dict, UserState, dict[str, dict]]:
         """(users row or a blank one, UserState for the rules engine, progress rows)."""
-        u = await self.user(uid) or {"discord_id": uid, "major": "undecided", "rank": -1, "xp": 0,
+        u = await self.user(uid) or {"discord_id": uid, "major": "undecided", "rank": 0, "xp": 0,
                                      "streak_days": 0, "ue_version": None, "tasters_json": "[]", "minor": None,
                                      "rank_since": None, "created_at": None}
         prog = await self.progress(uid)

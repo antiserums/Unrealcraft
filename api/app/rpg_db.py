@@ -129,6 +129,8 @@ class RpgDB:
         cur = await self.conn.execute("PRAGMA table_info(ticket_messages)")
         if "attachments" not in {r[1] for r in await cur.fetchall()}:
             await self.conn.execute("ALTER TABLE ticket_messages ADD COLUMN attachments TEXT NOT NULL DEFAULT '[]'")
+        # Orientation (rank -1) folded into Novice (2026-09-30): everyone starts at rank 0
+        await self.conn.execute("UPDATE users SET rank=0 WHERE rank<0")
         await self.conn.commit()
 
     # ---------- character / gear ----------
@@ -489,7 +491,7 @@ class RpgDB:
         await self.conn.commit()
 
     async def reset_member(self, uid: int, keep_user: bool = True) -> dict:
-        """Wipe everything a member did. With keep_user the users row stays (rank -1, 0 XP) so the bot's roles still map."""
+        """Wipe everything a member did. With keep_user the users row stays (Novice, 0 XP) so the bot's roles still map."""
         counts = {}
         for table, col in (("quest_progress", "user_id"), ("quiz_attempts", "user_id"), ("xp_log", "user_id"), ("medals", "user_id"),
                            ("submissions", "user_id"), ("outfits", "member_id"), ("fights", "member_id"), ("characters", "member_id"),
@@ -498,7 +500,7 @@ class RpgDB:
             counts[table] = cur.rowcount
         await self.conn.execute("DELETE FROM review_actions WHERE reviewer_id=? OR submission_id NOT IN (SELECT id FROM submissions)", (uid,))
         if keep_user:
-            await self.conn.execute("UPDATE users SET xp=0, rank=-1, current_quest_id=NULL, spine_done=0, streak_days=0, "
+            await self.conn.execute("UPDATE users SET xp=0, rank=0, current_quest_id=NULL, spine_done=0, streak_days=0, "
                                     "last_active_day=NULL, rank_since=datetime('now') WHERE discord_id=?", (uid,))
         else:
             cur = await self.conn.execute("DELETE FROM users WHERE discord_id=?", (uid,))

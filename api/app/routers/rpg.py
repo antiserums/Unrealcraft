@@ -59,10 +59,10 @@ async def character_payload(request: Request, uid: int, u: dict, unlock_all: boo
     new_sets = []
     owned = await rdb.outfits(uid)
     from ..staff import role_of_id
-    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned, role=role or role_of_id(uid), medals=m.medal_keys, grants=m.grants):
+    for st in rpg.unlocked_now(sets, rank=u.get("rank", 0), earned=earned, role=role or role_of_id(uid), medals=m.medal_keys, grants=m.grants):
         if st["id"] not in owned:
             from ..entitlements import owned as by_rule
-            if not by_rule(st["unlock"], rank=u.get("rank", -1), earned=earned, medals=m.medal_keys, role=role or role_of_id(uid)):
+            if not by_rule(st["unlock"], rank=u.get("rank", 0), earned=earned, medals=m.medal_keys, role=role or role_of_id(uid)):
                 src = "granted"
             else:
                 src = st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else st["unlock"].get("type", "starter"))
@@ -128,7 +128,7 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
     featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
-    options = entitlement_options(request, m, int(u.get("rank", -1)), role, unlock_all)
+    options = entitlement_options(request, m, int(u.get("rank", 0)), role, unlock_all)
     plate = rpg.pick_owned(options["nameplate"], cos.get("nameplate"))
     av, cf = rpg.pick_owned(options["avatar_frame"], cos.get("avatar_frame")), rpg.pick_owned(options["card_frame"], cos.get("card_frame"))
     title = rpg.pick_owned(options["title"], cos.get("title"))
@@ -156,7 +156,7 @@ async def title_of(request: Request, uid: int) -> str | None:
         return None
     u = await request.app.state.db.user(uid)
     m = await member_ctx(request, uid)
-    options = entitlement_options(request, m, int((u or {}).get("rank", -1)), role_of_id(uid), False)
+    options = entitlement_options(request, m, int((u or {}).get("rank", 0)), role_of_id(uid), False)
     t = rpg.pick_owned(options["title"], cos.get("title"))
     return None if t["id"] == rpg.DEFAULT_TITLE else t["name"]
 
@@ -194,7 +194,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         cos["outfit"] = body.wear
     u0, _, _ = await request.app.state.db.user_state(member["id"])
     from ..staff import role_of
-    options = entitlement_options(request, await member_ctx(request, member["id"]), int(u0.get("rank", -1)), role_of(member), unlock_all)
+    options = entitlement_options(request, await member_ctx(request, member["id"]), int(u0.get("rank", 0)), role_of(member), unlock_all)
     for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame"), ("title", "title")):
         want = getattr(body, field)
         if want is None:
@@ -281,7 +281,7 @@ async def start_fight(qid: str, request: Request, fresh: bool = False, member=De
     if not q or not q.quiz:
         raise HTTPException(404, "No boss here. This quest has no quiz.")
     u, state_u, prog = await db.user_state(member["id"])
-    if q.rank > max(state_u.rank, 0) and q.rank >= 0 and not _unlock_all(member):
+    if q.rank > max(state_u.rank, 0) and not _unlock_all(member):
         raise HTTPException(403, "This dungeon is locked until you rank up.")
     # No cooldown after a loss: the reading is right there, try again when ready.
     char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=_role(member))
@@ -458,12 +458,12 @@ async def complete_quest(request: Request, uid: int, q: Quest, u: dict) -> tuple
         return 0, None
     xp = q.xp
     _, state, _ = await db.user_state(uid)
-    if u.get("rank", -1) >= 3 and cat.affinity(q, state.major, state.extras) == "major":
+    if u.get("rank", 0) >= 3 and cat.affinity(q, state.major, state.extras) == "major":
         xp = round(xp * cat.xp_rules.get("in_specialization_multiplier_rank3plus", 1.25))
     await rdb.set_progress(uid, q.id, "done")
     await rdb.add_xp(uid, xp, f"quest:{q.id}")
     await rdb.touch_streak(uid)
-    if q.rank >= 0:
+    if not q.first_steps:                      # the first steps teach the site, not the engine
         await rdb.grant_medal(uid, "first_blood")
     loot = await new_outfits(request, uid)
     await rdb.emit("quest_completed", uid, {"quest": q.id, "xp": xp, "outfit": loot["name"] if loot else None})

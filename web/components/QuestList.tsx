@@ -36,7 +36,7 @@ export default function QuestList({ cur }: { cur: Curriculum }) {
       <div className="adm-form" style={{ marginBottom: 10 }}>
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="id, title or specialization" style={{ width: 220 }} />
         <select value={file} onChange={(e) => setFile(e.target.value)}><option value="">every file</option>{cur.files.map((f) => <option key={f} value={f}>{f}</option>)}</select>
-        <select value={rank} onChange={(e) => setRank(e.target.value)}><option value="">every rank</option><option value="-1">-1 · Orientation</option>{cur.ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title}</option>)}</select>
+        <select value={rank} onChange={(e) => setRank(e.target.value)}><option value="">every rank</option>{cur.ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title}</option>)}</select>
         <Link className="btn primary" href="/admin/quests/new">New quest</Link>
         <button onClick={reload} disabled={busy}>Reload from disk</button>
         {msg && <span className="small muted">{msg}</span>}

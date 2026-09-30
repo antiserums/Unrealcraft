@@ -20,7 +20,7 @@ export default async function Faq() {
         { q: t("What is Unrealcraft?"), a: rich(t("A free community where you learn Unreal Engine by playing an RPG. Every quest is a dungeon: read the guide, build it in the engine, beat the boss, open the chest. See {link}."), { link: <Link href="/how-it-works">{t("How it works")}</Link> }) },
         { q: t("How do I join?"), a: rich(t("Join the {discord}, press Start Questing there, then log in here with Discord."), { discord: <a href={DISCORD_INVITE}>{t("Unrealcraft Discord server")}</a> }) },
         { q: t("Does it cost anything?"), a: t("No. Unrealcraft is free. Entitlements are earned, never bought.") },
-        { q: t("Do I need to know Unreal Engine already?"), a: t("No. Orientation and the Starter Quests begin at installing the engine and opening your first project.") },
+        { q: t("Do I need to know Unreal Engine already?"), a: t("No. The first steps and the Starter Quests begin at installing the engine and opening your first project.") },
         { q: t("Which engine version do I need?"), a: t("Unreal Engine 5. Each quest links to the guide it was written against. State your engine version when you turn work in, so reviewers know what they are looking at.") },
       ],
     },

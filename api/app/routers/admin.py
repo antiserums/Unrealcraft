@@ -102,15 +102,15 @@ async def rank(uid: int, body: RankAction, request: Request, admin=Depends(admin
     db, rdb, cat = request.app.state.db, request.app.state.rpg, request.app.state.catalog
     if not await db.user(uid):
         raise HTTPException(404, "No such member.")
-    if body.rank < -1 or body.rank > 6:
-        raise HTTPException(400, "Rank is -1 (Orientation) to 6.")
+    if body.rank < 0 or body.rank > 6:
+        raise HTTPException(400, "Rank is 0 (Novice) to 6.")
     fields: dict = {"rank": body.rank}
     if body.specialization is not None:
         if body.specialization not in cat.specializations:
             raise HTTPException(400, "No such specialization.")
         fields["major"] = body.specialization
     u = await db.user(uid)
-    xp_floor = cat.ranks.get(body.rank, {}).get("xp", 0) if body.rank >= 0 else 0
+    xp_floor = cat.ranks.get(body.rank, {}).get("xp", 0)
     if u["xp"] < xp_floor:
         fields["xp"] = xp_floor           # a rank below its XP floor would demote itself on the next check
     await rdb.set_user(uid, **fields)
@@ -171,7 +171,7 @@ async def reset(uid: int, body: ResetAction, request: Request, admin=Depends(adm
     counts = await request.app.state.rpg.reset_member(uid, keep_user=not body.delete_user)
     await request.app.state.rpg.admin_log(admin["id"], "reset", uid, {"deleted": counts, "user_deleted": body.delete_user})
     if not body.delete_user:
-        await request.app.state.rpg.emit("rank_set", uid, {"rank": -1, "admin": True})
+        await request.app.state.rpg.emit("rank_set", uid, {"rank": 0, "admin": True})
     return {"ok": True, "message": "Reset. " + ", ".join(f"{k} {v}" for k, v in counts.items() if v), "deleted": counts}
 
 

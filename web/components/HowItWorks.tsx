@@ -57,7 +57,7 @@ export default async function HowItWorks({ specs }: { specs: Specializations | n
                 <div>
                   <b style={{ color: r.color ?? "inherit" }}>{t(r.title)}</b>
                   <div className="small muted">{r.n === 0
-                    ? t("Where everyone starts. Orientation, then the Starter Quests.")
+                    ? t("Where everyone starts: five first steps on the site, then the Starter Quests.")
                     : r.n >= 3
                       ? t("{xp} XP and {n} {tier} quests to move on · your primary specialization joins your title", { xp: r.xp, n: r.quests_to_leave ?? "", tier: specs.tiers[r.tier]?.name ? t(specs.tiers[r.tier].name) : "" })
                       : t("{xp} XP and {n} {tier} quests to move on", { xp: r.xp, n: r.quests_to_leave ?? "", tier: specs.tiers[r.tier]?.name ? t(specs.tiers[r.tier].name) : "" })}</div>

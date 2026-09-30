@@ -131,15 +131,14 @@ export function difficultyArt(m: Manifest | null, tierName: string): string | nu
   const i = TIER_ORDER.indexOf(tierName.toLowerCase());
   return i < 0 ? null : siteArt(m, `difficulty/difficulty-${i + 1}`);
 }
-/** Rank crest for a rank number: -1 Orientation, 0 Novice … 4 Master. Staff ranks beyond that use the Master crest. */
+/** Rank crest for a rank number: 0 Novice … 4 Master. Senior and Lead use the Master crest. */
 /** The rarity frame (an SVG from the pack's ui/rarity) for a wardrobe tier. */
 export function rarityFrame(m: Manifest | null, rarity: string): string | null {
   const r = m?.rarity[rarity] ?? m?.rarity.epic;
   return r?.frame ? art(r.frame) : null;
 }
 export function rankCrest(m: Manifest | null, n: number): string | null {
-  const ids = ["orientation", ...TIER_ORDER];
-  return siteArt(m, `rank-crests/${ids[Math.max(0, Math.min(n + 1, ids.length - 1))]}`);
+  return siteArt(m, `rank-crests/${TIER_ORDER[Math.max(0, Math.min(n, TIER_ORDER.length - 1))]}`);
 }
 
 /** Sheets for every set (for the wardrobe's try-on mirror), keyed by set id. */

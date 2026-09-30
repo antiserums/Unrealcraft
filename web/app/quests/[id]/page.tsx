@@ -28,7 +28,7 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
   if (!data) notFound();
   const { quest: q, progress: p } = data;
   const kind = q.kind === "capstone" ? `★ ${t("Capstone")}` : q.kind === "elective" ? t("Elective") : t("Required");
-  const rankLabel = q.rank < 0 ? t("Orientation") : t("Rank {n}", { n: q.rank });
+  const rankLabel = q.first_steps ? t("First steps") : t("Rank {n}", { n: q.rank });
   // Step headings: the pack's icon when it is there, the old emoji when it is not.
   const ico = (id: string, fallback: string) => { const src = siteArt(manifest, id); return src ? <Px src={src} className="h-ico" /> : <>{fallback} </>; };
   const step = { n: 1 };
@@ -62,7 +62,7 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
           )}
           {q.checklist.length > 0 && (
             <section className="card" style={{ marginBottom: 14 }}>
-              <h3>{ico("quest-steps/build", "🛠️")}{q.rank >= 0 ? t("Step {n}: Do this in Unreal", { n: next() }) : t("Step {n}: Do this", { n: next() })}</h3>
+              <h3>{ico("quest-steps/build", "🛠️")}{q.first_steps ? t("Step {n}: Do this", { n: next() }) : t("Step {n}: Do this in Unreal", { n: next() })}</h3>
               <ul className="check">
                 {q.checklist.map((c, i) => (
                   <li key={i}><span className="mark" title={HINT[c.state] ? t(HINT[c.state]) : undefined}>{MARK[c.state]}</span><span>{c.text}</span></li>

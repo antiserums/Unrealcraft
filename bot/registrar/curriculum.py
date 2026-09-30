@@ -16,7 +16,6 @@ from . import profile as prof_mod
 
 ALL = "all"
 META_FILES = {"specializations.yaml", "majors.yaml"}
-ORIENTATION_RANK = -1
 VERIFY_TYPES = {"action", "quiz", "screenshot", "writeup", "package", "mentor"}
 QUIZ_PASS_RATIO = 0.8          # 4/5
 
@@ -65,6 +64,8 @@ class Quest:
     def capstone(self) -> bool: return bool(self.raw.get("capstone"))
     @property
     def spine(self) -> bool: return bool(self.raw.get("required_spine"))
+    @property
+    def first_steps(self) -> bool: return bool(self.raw.get("first_steps"))
     @property
     def xp(self) -> int: return int(self.raw.get("xp", 0))
     @property
@@ -168,7 +169,7 @@ class Catalog:
                     errs.append(f"{where}: unknown specialization {s!r}")
             if r.get("verify_type") not in VERIFY_TYPES:
                 errs.append(f"{where}: bad verify_type {r.get('verify_type')!r}")
-            required_somewhere = not q.elective and q.rank >= 0 and bool(q.required_for)
+            required_somewhere = not q.elective and bool(q.required_for)
             if r.get("difficulty") not in TIERS:
                 errs.append(f"{where}: difficulty must be one of {', '.join(TIERS)} (got {r.get('difficulty')!r})")
             want = q.tier["quiz_len"]
@@ -205,14 +206,15 @@ class Catalog:
     def sorted(self, qs) -> list[Quest]:
         return sorted(qs, key=lambda q: (q.rank, q.capstone, natural_key(q.id)))
 
-    def orientation(self) -> list[Quest]:
-        return self.sorted(q for q in self.quests.values() if q.rank == ORIENTATION_RANK and not q.elective)
+    def first_steps(self) -> list[Quest]:
+        """The five site steps every Novice does first (curriculum/orientation.yaml)."""
+        return self.sorted(q for q in self.quests.values() if q.first_steps and not q.elective)
 
     def spine(self) -> list[Quest]:
         return self.sorted(q for q in self.quests.values() if q.spine)
 
     def required(self, major: str, rank: int) -> list[Quest]:
-        """Major-required quests at exactly this rank (excluding spine and orientation)."""
+        """Major-required quests at exactly this rank (excluding spine and first steps)."""
         return self.sorted(q for q in self.quests.values()
                            if q.rank == rank and q.rank >= 1 and q.required_for_major(major) and self.available(q))
 
@@ -249,10 +251,10 @@ class Catalog:
     def pick(self, u: UserState) -> Pick:
         todo = lambda q: q.id not in u.done and q.id not in u.skipped
 
-        # 1. Orientation
-        for q in self.orientation():
+        # 1. First steps
+        for q in self.first_steps():
             if todo(q):
-                return Pick(q, "Orientation")
+                return Pick(q, "First steps")
         # 2. Starter Quests
         for q in self.spine():
             if q.id not in u.done:
@@ -301,7 +303,7 @@ class Catalog:
 
     def remaining_minutes(self, u: UserState) -> int:
         """Minutes of required work left before the next promotion (spine, required, tasters, capstone)."""
-        target = max(u.rank, -1) + 1
+        target = max(u.rank, 0) + 1
         _, missing = self.rank_requirements_met(u, target)
         total = 0
         for m in missing:
@@ -314,10 +316,8 @@ class Catalog:
         """What's missing to be promoted INTO target_rank (from target_rank-1)."""
         cur = target_rank - 1
         missing: list[str] = []
-        if cur == ORIENTATION_RANK:
-            missing = [q.id for q in self.orientation() if q.id not in u.done]
-        elif cur == 0:
-            missing = [q.id for q in self.spine() if q.id not in u.done]
+        if cur <= 0:                          # Novice: the first steps and the Starter Quests
+            missing = [q.id for q in self.first_steps() + self.spine() if q.id not in u.done]
         else:
             missing = [q.id for q in self.required(u.major, cur) if q.id not in u.done]
             for g in self.taster_groups(u.major, cur):
@@ -341,14 +341,14 @@ class Catalog:
         """(done, needed, available, tier) for leaving `rank`. `needed` is capped at what exists so far."""
         cfg = self.ranks.get(rank, {})
         tier = cfg.get("tier", TIER_BY_RANK.get(rank, "master"))
-        pool = [q for q in self.quests.values() if q.difficulty == tier and q.rank >= 0 and self.counts_for(q, u.major)
+        pool = [q for q in self.quests.values() if q.difficulty == tier and not q.first_steps and self.counts_for(q, u.major)
                 and self.available(q)]
         done = sum(q.id in u.done for q in pool)
         need = min(int(cfg.get("quests_to_leave") or 0), len(pool))
         return done, need, len(pool), tier
 
     def xp_needed(self, target_rank: int) -> int:
-        return int(self.ranks.get(target_rank, {}).get("xp", 0)) if target_rank >= 0 else 0
+        return int(self.ranks.get(target_rank, {}).get("xp", 0))
 
     # ---------------- /path ----------------
     def path_lines(self, u: UserState, max_optional: int = 6) -> list[str]:
@@ -363,9 +363,9 @@ class Catalog:
             cap = " ★" if q.capstone else ""
             return f"  {mark} {q.tier['emoji']} {q.id:<7} {q.raw['title']}{cap}{extra}"
 
-        if u.rank == ORIENTATION_RANK or any(q.id not in u.done for q in self.orientation()):
-            lines.append("ORIENTATION")
-            lines += [row(q) for q in self.orientation()]
+        if any(q.id not in u.done for q in self.first_steps()):
+            lines.append("FIRST STEPS")
+            lines += [row(q) for q in self.first_steps()]
         lines.append("STARTER QUESTS (everyone)")
         lines += [row(q) for q in self.spine()]
 
