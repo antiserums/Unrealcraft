@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MISSION } from "@/lib/mission";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 export async function generateMetadata() {
@@ -11,8 +12,7 @@ export default async function Mission() {
   const t = await getT();
   return (
     <>
-      <div className="eyebrow">Unrealcraft</div>
-      <h1>{t("Our mission statement")}</h1>
+      <PageHeader art="header-guild" eyebrow="Unrealcraft" title={t("Our mission statement")} />
       <div className="card">
         <p className="lead" style={{ margin: 0, maxWidth: "none", fontSize: 17 }}>{t(MISSION)}</p>
       </div>

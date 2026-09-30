@@ -5,7 +5,7 @@ import { loadManifest, siteArt } from "@/lib/art";
  *  missing, so the site still reads the same without the pack. */
 
 /** A page title on its 960 x 160 header strip. The strip's centre is kept dark for the words. */
-export async function PageHeader({ art, title, eyebrow }: { art: string; title: string; eyebrow?: string }) {
+export async function PageHeader({ art, title, eyebrow }: { art: string; title: ReactNode; eyebrow?: ReactNode }) {
   const src = siteArt(await loadManifest(), art);
   if (!src) return <>{eyebrow && <div className="eyebrow">{eyebrow}</div>}<h1>{title}</h1></>;
   return (

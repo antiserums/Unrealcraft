@@ -98,17 +98,23 @@ an image hangs off that class, so without the pack the site looks as it did befo
 
 | Art | Where it shows |
 |---|---|
-| `headers/*` (960 x 160) | Quest board (board and path), leaderboard, wardrobe, achievements |
+| `headers/*` (960 x 160) | Quest board (board and path), leaderboard, wardrobe, achievements, player card (own and others'), mission (guild), how it works, FAQ and changelog (library), review inbox, admin pages |
 | `icons/specializations`, `quest-steps`, `rank-crests` | How it works: the seven fields, the four steps, the ladder |
 | `icons/difficulty` | The tier badge on every quest card |
-| `icons/achievement-badges` | Achievements by key (`NAMED_BADGE` in `art.ts`); the older eight stay index-based |
+| `icons/achievement-badges`, `achievement-foundations` | All seventeen seeded achievements by key (`NAMED_BADGE` in `art.ts`); rank medals and admin-made achievements use the older index badges |
+| `icons/quest-state` | Done, up next and skipped on quest cards; done and locked step headings on the quest page |
+| `icons/combat-status` | In a fight: the debuff pill, the hint line, the vitality box, crits and victory in the result |
+| `icons/staff-crests`, `rank-crests` | Leaderboard: a staff crest for developers, admins and mentors, else the rank crest |
+| `icons/banner-controls` | The home banner's season and time-of-day menu |
 | `arenas/*` | Boss fights. The room is picked from the quest id, so a quest always has the same room |
-| `spots/*` | No quests match, review inbox empty, page not found, the locked rank on the path, a won fight |
+| `spots/*` | No quests match, review inbox empty, page not found, the locked rank on the path, a won fight, a lost fight (rest), work sent for review (chest pending), the login page (guild entry), a page that failed to load (connection lost, `app/error.tsx`) |
 | `textures/stone-tile` | Page background |
 | `interface/divider-gem` | The rule under section headings |
 | `interface/panel-stone-gold` | Frame of step cards, spot cards and the fight result (9-slice, 20 px) |
 | `interface/buttons/*` | `.btn`, primary buttons and Log out (ends 18 px, trims 10 px, middle stretches) |
 | `identity` emblem | Beside the site name and as the browser tab icon |
 
-Not used yet: the navigation icons, the leather and parchment panels, the section title plate and the progress
-track and fill.
+Not used yet: the navigation icons, the leather and parchment panels, the section title plate, the progress track
+and fill, the utility icons, the rewards icons, the Senior and Lead crests (the catalog has no such ranks yet) and
+the theme skin (form fields, tabs, message panels, inventory slots, tooltip, scrollbar). The artist's route-by-route
+plan is in `docs/11-website-theme-audit.md`.

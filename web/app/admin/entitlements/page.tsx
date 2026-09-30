@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/SiteArt";
 import { redirect } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
 import EntitlementManager, { type EntitlementData } from "@/components/EntitlementManager";
@@ -18,8 +19,7 @@ export default async function AdminEntitlements() {
   };
   return (
     <>
-      <div className="eyebrow">Staff</div>
-      <h1>Entitlements</h1>
+      <PageHeader art="header-admin" eyebrow="Staff" title="Entitlements" />
       <AdminNav active="/admin/entitlements" />
       <p className="muted small">Every unlock an account can hold: outfits, nameplate colours, avatar and player card frames, titles and achievements. Built-in rows come from the art pack; you can edit or switch them off, and add your own. The art itself comes only from the synced art pack.</p>
       <EntitlementManager data={data} art={art} />

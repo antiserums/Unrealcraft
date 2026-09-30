@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { QuestSummary } from "@/lib/api";
-import { difficultyArt, loadManifest } from "@/lib/art";
+import { difficultyArt, loadManifest, siteArt } from "@/lib/art";
+import { Px } from "./SiteArt";
 import { getT } from "@/lib/i18n";
 
 export async function TierBadge({ tier }: { tier: QuestSummary["tier"] }) {
@@ -10,7 +11,8 @@ export async function TierBadge({ tier }: { tier: QuestSummary["tier"] }) {
 }
 
 export default async function QuestCard({ q, showStatus = false }: { q: QuestSummary; showStatus?: boolean }) {
-  const t = await getT();
+  const [t, m] = await Promise.all([getT(), loadManifest()]);
+  const mark = q.status && ["done", "now", "skipped"].includes(q.status) ? siteArt(m, `quest-state/${q.status}`) : null;
   const cls = ["card", "qcard", q.status ?? ""].join(" ");
   const kind = q.kind === "capstone" ? `★ ${t("Capstone")}` : q.kind === "elective" ? t("Elective") : t("Required");
   return (
@@ -19,7 +21,8 @@ export default async function QuestCard({ q, showStatus = false }: { q: QuestSum
         <TierBadge tier={q.tier} />
         {showStatus && q.status && (
           <span className={`status ${q.status}`}>
-            {q.status === "done" ? `✔ ${t("Done")}` : q.status === "now" ? `▶ ${t("Up next")}` : q.status === "skipped" ? t("Skipped") : ""}
+            {mark ? <Px src={mark} /> : q.status === "done" ? "✔ " : q.status === "now" ? "▶ " : ""}
+            {q.status === "done" ? t("Done") : q.status === "now" ? t("Up next") : q.status === "skipped" ? t("Skipped") : ""}
           </span>
         )}
       </div>

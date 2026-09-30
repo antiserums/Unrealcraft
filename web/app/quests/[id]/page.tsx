@@ -5,7 +5,8 @@ import Chest from "@/components/Chest";
 import { TierBadge } from "@/components/QuestCard";
 import ReadingList from "@/components/ReadingList";
 import { api, type Me, type Progress, type QuestFull } from "@/lib/api";
-import { creatureSheet, loadManifest } from "@/lib/art";
+import { creatureSheet, loadManifest, siteArt } from "@/lib/art";
+import { Px } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 import { rich } from "@/lib/i18n-config";
 
@@ -28,6 +29,8 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
   const { quest: q, progress: p } = data;
   const kind = q.kind === "capstone" ? `★ ${t("Capstone")}` : q.kind === "elective" ? t("Elective") : t("Required");
   const rankLabel = q.rank < 0 ? t("Orientation") : t("Rank {n}", { n: q.rank });
+  // Step headings: the pack's icon when it is there, the old emoji when it is not.
+  const ico = (id: string, fallback: string) => { const src = siteArt(manifest, id); return src ? <Px src={src} className="h-ico" /> : <>{fallback} </>; };
   const step = { n: 1 };
   const next = () => step.n++;
   const login = <a href={`/api/auth/discord?next=/quests/${q.id}`}>{t("Log in")}</a>;
@@ -52,14 +55,14 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
         <div>
           {q.reading.length > 0 && (
             <section className="card" style={{ marginBottom: 14 }}>
-              <h3>📖 {t("Step {n}: Read this first", { n: next() })}</h3>
+              <h3>{ico("quest-steps/read", "📖")}{t("Step {n}: Read this first", { n: next() })}</h3>
               <ReadingList questId={q.id} reading={q.reading} loggedIn={!!me} />
               {q.has_quiz && <p className="muted small" style={{ margin: 0 }}>{t("The boss asks about these pages. Opening them raises your Lore.")}</p>}
             </section>
           )}
           {q.checklist.length > 0 && (
             <section className="card" style={{ marginBottom: 14 }}>
-              <h3>🛠️ {q.rank >= 0 ? t("Step {n}: Do this in Unreal", { n: next() }) : t("Step {n}: Do this", { n: next() })}</h3>
+              <h3>{ico("quest-steps/build", "🛠️")}{q.rank >= 0 ? t("Step {n}: Do this in Unreal", { n: next() }) : t("Step {n}: Do this", { n: next() })}</h3>
               <ul className="check">
                 {q.checklist.map((c, i) => (
                   <li key={i}><span className="mark" title={HINT[c.state] ? t(HINT[c.state]) : undefined}>{MARK[c.state]}</span><span>{c.text}</span></li>
@@ -70,7 +73,7 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
           )}
           {q.has_quiz && boss && (
             <section style={{ marginBottom: 14 }}>
-              <h3>⚔️ {t("Step {n}: Fight the boss (the quiz)", { n: next() })}</h3>
+              <h3>{ico("quest-steps/boss", "⚔️")}{t("Step {n}: Fight the boss (the quiz)", { n: next() })}</h3>
               <BossCard boss={boss} questId={q.id} sheet={creatureSheet(manifest, boss.creature)} canFight={!!me && !!p?.unlocked && !p?.quiz_passed}
                 reason={!me ? t("Log in to fight.") : !p?.unlocked ? t("Locked until you rank up.") : p?.quiz_passed ? t("Beaten. The boss stays down.") : undefined} />
             </section>
@@ -79,21 +82,21 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
             const bossDown = !q.has_quiz || !!p?.quiz_passed;
             const done = p?.status === "done";
             if (q.verify_type === "action" && q.id !== "O5") return (
-              <section className="card" id="claim"><h3>✅ {t("Step {n}: Done when", { n: next() })}</h3><p>{q.done_when ?? "—"}</p><p className="muted">{t("Nothing to send. This ticks itself when you do it on the site.")}</p></section>);
+              <section className="card" id="claim"><h3>{ico("quest-state/done", "✅")}{t("Step {n}: Done when", { n: next() })}</h3><p>{q.done_when ?? "—"}</p><p className="muted">{t("Nothing to send. This ticks itself when you do it on the site.")}</p></section>);
             if (q.verify_type === "quiz") return (
-              <section className="card" id="claim"><h3>{done ? "✅" : "🎁"} {done ? t("Step {n}: Dungeon cleared", { n: next() }) : t("Step {n}: Beat the boss to clear the dungeon", { n: next() })}</h3><p className="muted">{q.done_when ?? t("Beating the boss completes this quest.")}</p></section>);
+              <section className="card" id="claim"><h3>{done ? ico("quest-state/done", "✅") : ico("quest-steps/turn-in", "🎁")}{done ? t("Step {n}: Dungeon cleared", { n: next() }) : t("Step {n}: Beat the boss to clear the dungeon", { n: next() })}</h3><p className="muted">{q.done_when ?? t("Beating the boss completes this quest.")}</p></section>);
             if (!me) return (
-              <section className="card" id="claim"><h3>🎁 {t("Step {n}: Claim the chest", { n: next() })}</h3><p><b>{t("Done when:")}</b> {q.done_when ?? "—"}</p><p className="muted">{rich(t("{login} to send your work."), { login })}</p></section>);
+              <section className="card" id="claim"><h3>{ico("quest-steps/turn-in", "🎁")}{t("Step {n}: Claim the chest", { n: next() })}</h3><p><b>{t("Done when:")}</b> {q.done_when ?? "—"}</p><p className="muted">{rich(t("{login} to send your work."), { login })}</p></section>);
             if (!p?.unlocked) return null;
             if (done) return (
-              <section className="card" id="claim"><h3>✅ {t("Step {n}: Chest opened", { n: next() })}</h3><p className="muted">{p?.completed_at ? t("You cleared this dungeon on {date}.", { date: p.completed_at.slice(0, 10) }) : t("You cleared this dungeon.")}</p></section>);
+              <section className="card" id="claim"><h3>{ico("quest-state/done", "✅")}{t("Step {n}: Chest opened", { n: next() })}</h3><p className="muted">{p?.completed_at ? t("You cleared this dungeon on {date}.", { date: p.completed_at.slice(0, 10) }) : t("You cleared this dungeon.")}</p></section>);
             if (!bossDown) return (
-              <section className="card lock" id="claim"><h3>🔒 {t("Step {n}: The chest", { n: next() })}</h3><p className="muted">{t("Locked. Beat the boss first, then send your work here.")}</p></section>);
+              <section className="card lock" id="claim"><h3>{ico("quest-state/locked", "🔒")}{t("Step {n}: The chest", { n: next() })}</h3><p className="muted">{t("Locked. Beat the boss first, then send your work here.")}</p></section>);
             return (
               <section className="card" id="claim">
-                <h3>🎁 {t("Step {n}: Claim the chest", { n: next() })}</h3>
+                <h3>{ico("quest-steps/turn-in", "🎁")}{t("Step {n}: Claim the chest", { n: next() })}</h3>
                 <p><b>{t("Done when:")}</b> {q.done_when ?? "—"}</p>
-                <Chest questId={q.id} verifyType={q.verify_type} ueVersion={me.ue_version} previous={p.submissions} isO5={q.id === "O5"} />
+                <Chest pendingArt={siteArt(manifest, "chest-pending")} questId={q.id} verifyType={q.verify_type} ueVersion={me.ue_version} previous={p.submissions} isO5={q.id === "O5"} />
               </section>);
           })()}
         </div>

@@ -1,5 +1,6 @@
 import Markdown from "@/components/Markdown";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 import { rich } from "@/lib/i18n-config";
 
@@ -14,7 +15,7 @@ export default async function Changelog() {
   const data = await api<{ current: string | null; entries: Entry[] }>("/changelog");
   return (
     <>
-      <h1>{t("Changelog")}</h1>
+      <PageHeader art="header-library" title={t("Changelog")} />
       <p className="muted">{rich(t("Current version: {version}. Only pushed releases are posted to #patch-notes on Discord."), { version: <b>{data?.current ?? "—"}</b> })}</p>
       {data?.entries.map((e) => (
         <section key={e.version} className="card" style={{ marginBottom: 12 }}>

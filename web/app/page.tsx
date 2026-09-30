@@ -4,7 +4,7 @@ import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
 import { AvatarDeco } from "@/components/DecoAnim";
-import { bannerSet, decorationImage, loadManifest } from "@/lib/art";
+import { bannerSet, decorationImage, loadManifest, siteArtGroup } from "@/lib/art";
 import { MISSION } from "@/lib/mission";
 import { getT } from "@/lib/i18n";
 
@@ -77,7 +77,7 @@ export default async function Home() {
 
   return (
     <>
-      {banner ? <HeroBanner animated={banner.animated} still={banner.still} living={banner.living}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
+      {banner ? <HeroBanner icons={siteArtGroup(manifest, "banner-controls")} animated={banner.animated} still={banner.still} living={banner.living}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
 
       {me && stats ? (
         <>

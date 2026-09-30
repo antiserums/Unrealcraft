@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
-import { PageHeader } from "@/components/SiteArt";
+import { PageHeader, Px } from "@/components/SiteArt";
+import { loadManifest, rankCrest, staffCrest } from "@/lib/art";
 import { getT } from "@/lib/i18n";
 
 type Row = { id: number | string; xp: number; rank: number; rank_title: string; rank_color: string; specialization_title: string; name: string | null; avatar: string | null; staff?: string | null; title?: string | null };
@@ -14,6 +15,7 @@ export default async function Leaderboard({ searchParams }: PageProps<"/leaderbo
   const { period } = await searchParams;
   const p = typeof period === "string" && ["week", "month", "all"].includes(period) ? period : "week";
   const data = (await api<{ period: string; rows: Row[] }>(`/leaderboard?period=${p}`)) ?? { period: p, rows: [] };
+  const m = await loadManifest();
   return (
     <>
       <PageHeader art="header-leaderboard" title={t("Leaderboard")} />
@@ -30,7 +32,7 @@ export default async function Leaderboard({ searchParams }: PageProps<"/leaderbo
               <tr key={r.id}>
                 <td>{i + 1}</td>
                 <td><Link href={`/members/${r.id}`} className="row" style={{ gap: 8, display: "inline-flex" }}>{r.avatar && <img className="avatar" src={r.avatar} alt="" />}{r.name ?? t("Member {id}", { id: String(r.id).slice(-4) })}{r.title && <span className="muted">, {t(r.title)}</span>}</Link></td>
-                <td><span className={r.staff ? "staff-title" : ""} style={{ color: r.rank_color, fontWeight: 600 }}>{t(r.rank_title)}</span></td>
+                <td><Px src={staffCrest(m, r.staff) ?? rankCrest(m, r.rank)} className="lb-crest" /><span className={r.staff ? "staff-title" : ""} style={{ color: r.rank_color, fontWeight: 600 }}>{t(r.rank_title)}</span></td>
                 <td className="muted">{t(r.specialization_title)}</td>
                 <td><b>{r.xp}</b></td>
               </tr>

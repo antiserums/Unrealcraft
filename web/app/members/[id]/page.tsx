@@ -4,6 +4,7 @@ import PlayerCard from "@/components/PlayerCard";
 import { achievementBadge, decorationImage, loadManifest, presetSheet } from "@/lib/art";
 import { CardDeco } from "@/components/DecoAnim";
 import { api, type Card } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 export default async function Member({ params }: PageProps<"/members/[id]">) {
@@ -16,8 +17,7 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
   const deco = { avatar: decorationImage(manifest, "avatar", c.avatar_frame_art ?? undefined), card: decorationImage(manifest, "card", c.card_frame_art ?? undefined) };
   return (
     <>
-      <div className="eyebrow">{t("Player card")}</div>
-      <h1>{c.name ?? t("A guild member")}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</h1>
+      <PageHeader art="header-player" eyebrow={t("Player card")} title={<>{c.name ?? t("A guild member")}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</>} />
       <div className="studio">
         <div className={`studio-card ${deco.card ? "framed" : ""}`}>
           <CardDeco src={deco.card} theme={c.card_frame} />

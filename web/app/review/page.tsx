@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { Spot } from "@/components/SiteArt";
+import { PageHeader, Spot } from "@/components/SiteArt";
 import { api, type Me, type ReviewAccess, type ReviewItem } from "@/lib/api";
 
 export const metadata = { title: "Review inbox" };
@@ -24,8 +24,7 @@ export default async function ReviewInbox() {
   const rest = pending.filter((s) => s.blocked || s.reviewed_by_me);
   return (
     <>
-      <div className="eyebrow">Mentor</div>
-      <h1>Review inbox</h1>
+      <PageHeader art="header-review" eyebrow="Mentor" title="Review inbox" />
       <p className="muted">{pending.length} waiting. Pass gives the member their XP and opens their chest. Changes sends it back with your note. Fail is for work that is not an honest attempt; they can try again in two hours. Honor-route work (rank 0 and 1) was accepted on trust and needs nothing from you.</p>
 
       <div className="section-h"><h2>For you</h2><span className="muted small">{mine.length} you can act on</span></div>

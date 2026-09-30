@@ -5,6 +5,7 @@ import MeNav from "@/components/MeNav";
 import SpecializationPicker from "@/components/SpecializationPicker";
 import { achievementBadge, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 export async function generateMetadata() { const t = await getT(); return { title: t("Player card") }; }
@@ -25,8 +26,7 @@ export default async function Profile() {
   }
   return (
     <>
-      <div className="eyebrow">{t("Profile")}</div>
-      <h1>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</h1>
+      <PageHeader art="header-player" eyebrow={t("Profile")} title={<>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</>} />
       <MeNav active="/me" />
       <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} wardrobe={wardrobe} />
       <SpecializationPicker mine={c.specializations} options={c.specialization_options ?? []} />

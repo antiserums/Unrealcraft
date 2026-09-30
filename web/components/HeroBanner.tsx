@@ -23,7 +23,7 @@ function savePrefs(p: Prefs) { try { localStorage.setItem(KEY, JSON.stringify(p)
 
 /** The home hero. With the living-town pack: a canvas that follows the visitor's clock, with a small ⚙ that opens
  *  season and time-of-day choices and a pause. Otherwise the looping WebP with a pause, or the still. */
-export default function HeroBanner({ animated, still, living, children }: { animated: string | null; still: string; living: LivingTownArt | null; children: ReactNode }) {
+export default function HeroBanner({ animated, still, living, children, icons = {} }: { icons?: Record<string, string>; animated: string | null; still: string; living: LivingTownArt | null; children: ReactNode }) {
   const t = useT();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const townRef = useRef<LivingTown | null>(null);
@@ -81,12 +81,12 @@ export default function HeroBanner({ animated, still, living, children }: { anim
           {living && open && (
             <div className="banner-menu">
               <div className="row" style={{ gap: 4 }}>
-                {living.seasons.map((s) => <button key={s} type="button" className={prefs.season === s ? "on" : ""} onClick={() => apply({ ...prefs, season: s })}>{SEASON_LABEL[s] ? t(SEASON_LABEL[s]) : s}</button>)}
+                {living.seasons.map((s) => <button key={s} type="button" className={prefs.season === s ? "on" : ""} onClick={() => apply({ ...prefs, season: s })}>{icons[s] && <img className="px pxi" src={icons[s]} width={32} height={32} alt="" />}{SEASON_LABEL[s] ? t(SEASON_LABEL[s]) : s}</button>)}
               </div>
               <div className="row" style={{ gap: 4 }}>
                 {TIMES.map((tm) => {
                   const on = tm.mode === "local" ? prefs.timeMode === "local" : prefs.timeMode === "manual" && prefs.hour === tm.hour;
-                  return <button key={tm.label} type="button" className={on ? "on" : ""} onClick={() => apply({ ...prefs, timeMode: tm.mode, hour: tm.hour ?? prefs.hour })}>{t(tm.label)}</button>;
+                  return <button key={tm.label} type="button" className={on ? "on" : ""} onClick={() => apply({ ...prefs, timeMode: tm.mode, hour: tm.hour ?? prefs.hour })}>{icons[tm.mode === "local" ? "local-time" : tm.label.toLowerCase()] && <img className="px pxi" src={icons[tm.mode === "local" ? "local-time" : tm.label.toLowerCase()]} width={32} height={32} alt="" />}{t(tm.label)}</button>;
                 })}
               </div>
             </div>

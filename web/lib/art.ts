@@ -102,13 +102,25 @@ export function siteArtGroup(m: Manifest | null, group: string): Record<string, 
 
 /** Achievement keys that have their own named badge in website-art (the older badges are picked by index). */
 const NAMED_BADGE: Record<string, string> = {
-  rooms_50: "dungeons-50", rooms_150: "dungeons-150", focus_50: "first-try-wins-50", craft_10: "works-accepted-10", lore_50: "readings-50",
-  streak_30: "streak-30", capstone_4: "capstones-4", specs_7: "all-specializations", cross_25: "outside-field-25",
+  first_blood: "achievement-foundations/first-blood", rooms_10: "achievement-foundations/dungeons-10",
+  focus_10: "achievement-foundations/first-try-wins-10", craft_1: "achievement-foundations/work-accepted-1",
+  lore_10: "achievement-foundations/readings-10", streak_7: "achievement-foundations/streak-7",
+  capstone_1: "achievement-foundations/capstone-1", specs_3: "achievement-foundations/specializations-3",
+  rooms_50: "achievement-badges/dungeons-50", rooms_150: "achievement-badges/dungeons-150",
+  focus_50: "achievement-badges/first-try-wins-50", craft_10: "achievement-badges/works-accepted-10",
+  lore_50: "achievement-badges/readings-50", streak_30: "achievement-badges/streak-30",
+  capstone_4: "achievement-badges/capstones-4", specs_7: "achievement-badges/all-specializations",
+  cross_25: "achievement-badges/outside-field-25",
 };
 /** The badge for an achievement: its named website-art badge when there is one, else the pack badge by index. */
 export function achievementBadge(m: Manifest | null, a: { key: string; badge?: number }): string | null {
-  const named = NAMED_BADGE[a.key] ? siteArt(m, `achievement-badges/${NAMED_BADGE[a.key]}`) : null;
+  const named = NAMED_BADGE[a.key] ? siteArt(m, NAMED_BADGE[a.key]) : null;
   return named ?? badgeImage(m, a.badge);
+}
+
+/** Crest for a staff role from the API ("developer", "admin", "mentor"). Looks only: it grants nothing. */
+export function staffCrest(m: Manifest | null, role: string | null | undefined): string | null {
+  return role && ["developer", "admin", "mentor"].includes(role) ? siteArt(m, `staff-crests/${role}`) : null;
 }
 
 /** Art ids use hyphens and the older "lookdev" key is Environment Art. */

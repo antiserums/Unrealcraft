@@ -1,3 +1,4 @@
+import { PageHeader } from "@/components/SiteArt";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import AdminNav from "@/components/AdminNav";
@@ -24,8 +25,7 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
   if (!o) return <><h1>Admin</h1><div className="card">Admins and developers only. Add your Discord id to <code>ADMIN_IDS</code> or <code>DEVELOPER_IDS</code> in <code>api/.env</code> and restart the API.</div></>;
   return (
     <>
-      <div className="eyebrow">Staff</div>
-      <h1>Admin panel</h1>
+      <PageHeader art="header-admin" eyebrow="Staff" title="Admin panel" />
       <AdminNav active="/admin" />
       <p className="muted small">Database: <code>{o.db_path}</code> · curriculum: <code>{o.curriculum_dir}</code> · admins: {o.admin_ids.length ? o.admin_ids.join(", ") : "none"} · developers: {o.developer_ids.length ? o.developer_ids.join(", ") : "none"} · mentors by id: {o.mentor_ids.length ? o.mentor_ids.join(", ") : "none (Discord mentor role still counts)"}</p>
 

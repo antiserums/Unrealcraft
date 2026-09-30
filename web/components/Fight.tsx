@@ -22,8 +22,8 @@ const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled
 /** The pack's scene: 480 x 270 logical pixels, drawn at 2x. Feet land on the ground line (y = 232). */
 const STAGE_W = 960, STAGE_H = 540, GROUND = 464;
 
-export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background, winArt }:
-  { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null; winArt?: string | null }) {
+export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background, winArt, loseArt, icons = {} }:
+  { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null; winArt?: string | null; loseArt?: string | null; icons?: Record<string, string> }) {
   const t = useT();
   const router = useRouter();
   const [f, setF] = useState<Fight | null>(null);
@@ -107,7 +107,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
       <div ref={box} className="arena-box" style={{ height: STAGE_H * k }}>
         <div className={`arena-stage ${bg ? "dungeon" : ""}`} style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${k})`, backgroundImage: bg ? `url("${bg}")` : undefined }}>
           <div className="hpbox you">
-            <div className="eyebrow">{t("You")}</div>
+            <div className="eyebrow">{icons.vitality && <img className="px pxi pill-ico" src={icons.vitality} width={32} height={32} alt="" />}{t("You")}</div>
             <div className="bar big"><span style={{ width: `${youHp * 100}%`, background: "#4FA36C" }} /></div>
             <div className="small">{f.you.steady_available
               ? t("Wounds: {wounds} · {more} more before you fall · steady ready", { wounds: f.you.wounds, more: Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds)) })
@@ -150,8 +150,8 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
 
       {q && !f.result && (
         <div className="card question">
-          <div className="eyebrow">{t("Turn {turn} of {total}", { turn: f.turn, total: f.total })}{q.debuff && <span className="pill" style={{ marginLeft: 8, color: "var(--bad)", borderColor: "var(--bad)" }}>{DEBUFF[q.debuff] ? t(DEBUFF[q.debuff]) : q.debuff}</span>}</div>
-          {q.hint && <p className="muted small" style={{ margin: "6px 0 0" }}>{q.hint}</p>}
+          <div className="eyebrow">{t("Turn {turn} of {total}", { turn: f.turn, total: f.total })}{q.debuff && <span className="pill" style={{ marginLeft: 8, color: "var(--bad)", borderColor: "var(--bad)" }}>{icons[q.debuff] && <img className="px pxi pill-ico" src={icons[q.debuff]} width={32} height={32} alt="" />}{DEBUFF[q.debuff] ? t(DEBUFF[q.debuff]) : q.debuff}</span>}</div>
+          {q.hint && <p className="muted small" style={{ margin: "6px 0 0" }}>{icons.hint && <img className="px pxi pill-ico" src={icons.hint} width={32} height={32} alt="" />}{q.hint}</p>}
           <h2 style={{ marginTop: 8 }}>{q.q}</h2>
           <div className="choices">
             {q.choices.map((c, i) => (
@@ -173,10 +173,10 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
           {f.result === "win" ? (
             <>
               {winArt && <img className="px result-art" src={winArt} width={160} height={120} alt="" />}
-              <h2 style={{ marginTop: 0 }}>🏆 {t("{boss} is beaten · {score}/{total}", { boss: f.boss.short, score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
+              <h2 style={{ marginTop: 0 }}>{icons.victory ? <img className="px pxi h-ico" src={icons.victory} width={32} height={32} alt="" /> : "🏆 "}{t("{boss} is beaten · {score}/{total}", { boss: f.boss.short, score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
               <ul className="plain">
                 {f.outcome?.first_try_bonus ? <li>⭐ {t("Flawless first try: +{xp} XP", { xp: f.outcome.first_try_bonus })}</li> : null}
-                {f.outcome?.crit_xp ? <li>{t("Crits: +{xp} XP", { xp: f.outcome.crit_xp })}</li> : null}
+                {f.outcome?.crit_xp ? <li>{icons.critical && <img className="px pxi pill-ico" src={icons.critical} width={32} height={32} alt="" />}{t("Crits: +{xp} XP", { xp: f.outcome.crit_xp })}</li> : null}
                 {f.outcome?.completed ? <li>✅ {f.outcome.tested_out ? t("Quest complete: +{xp} XP (tested out, no turn-in needed)", { xp: f.outcome.quest_xp ?? 0 }) : t("Quest complete: +{xp} XP", { xp: f.outcome.quest_xp ?? 0 })}</li> : null}
                 {f.outcome?.loot ? <li>🎁 {rich(t("New outfit: {name}. {flavour}"), { name: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>, flavour: <i>{f.outcome.loot.flavour}</i> })}</li> : null}
               </ul>
@@ -189,6 +189,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
             </>
           ) : (
             <>
+              {loseArt && <img className="px result-art" src={loseArt} width={160} height={120} alt="" />}
               <h2 style={{ marginTop: 0 }}>{t("You are knocked down · {score}/{total}", { score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
               <p>{t("You need {n} right. Read the guide again and come back whenever you are ready.", { n: f.hits_to_win })}</p>
               <div className="row">

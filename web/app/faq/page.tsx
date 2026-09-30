@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { DISCORD_INVITE } from "@/lib/mission";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 import { rich } from "@/lib/i18n-config";
 
@@ -67,8 +68,7 @@ export default async function Faq() {
 
   return (
     <>
-      <div className="eyebrow">Unrealcraft</div>
-      <h1>{t("Frequently asked questions")}</h1>
+      <PageHeader art="header-library" eyebrow="Unrealcraft" title={t("Frequently asked questions")} />
       {groups.map((g) => (
         <section key={g.title}>
           <div className="section-h"><h2>{g.title}</h2></div>
