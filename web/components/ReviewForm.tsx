@@ -31,7 +31,7 @@ export default function ReviewForm({ s }: { s: ReviewItem }) {
       <div className="card chest open">
         <div className="eyebrow">Recorded</div>
         <p style={{ margin: "6px 0 10px" }}>{res.message}{res.final === "pass" && res.quest_xp ? ` The member gets +${res.quest_xp} XP and their chest opens.` : ""}</p>
-        <Link className="btn primary" href="/review">Back to the inbox</Link>
+        <Link className="btn primary" href="/admin/review">Back to the inbox</Link>
       </div>
     );
   }

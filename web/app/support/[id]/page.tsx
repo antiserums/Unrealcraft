@@ -22,7 +22,7 @@ export default async function TicketPage({ params }: PageProps<"/support/[id]">)
     <>
       <div className="eyebrow"><Link href="/support">← {t("Support")}</Link></div>
       <h1>#{tk.id} · {tk.subject}</h1>
-      <p className="muted small">{t(CATEGORY[tk.category] ?? tk.category)} · {t(STATUS[tk.status])} · {t("opened {date}", { date: tk.created_at.slice(0, 10) })}</p>
+      <p className="muted small">{t(CATEGORY[tk.category] ?? tk.category)} · {t(STATUS[tk.status])} · {t("opened {date}", { date: tk.created_at.slice(0, 10) })}{tk.author ? <> · {tk.author.name}, <span style={{ color: tk.author.rank_color }}>{t(tk.author.rank_title)}</span></> : null}</p>
       <TicketThread ticket={tk} />
     </>
   );

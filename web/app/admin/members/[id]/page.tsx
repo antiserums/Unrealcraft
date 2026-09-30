@@ -52,7 +52,7 @@ export default async function AdminMember({ params }: PageProps<"/admin/members/
           </div>
           <div className="card" style={{ marginTop: 12 }}>
             <div className="eyebrow">Turn-ins</div>
-            <table className="adm" style={{ marginTop: 6 }}><tbody>{m.submissions.map((s) => <tr key={s.id}><td><Link href={`/review/${s.id}`}>#{s.id}</Link></td><td>{s.quest_id}</td><td>{s.status}</td><td className="muted">{s.route}</td><td className="muted">{s.created_at.slice(0, 10)}</td></tr>)}{m.submissions.length === 0 && <tr><td className="muted">None.</td></tr>}</tbody></table>
+            <table className="adm" style={{ marginTop: 6 }}><tbody>{m.submissions.map((s) => <tr key={s.id}><td><Link href={`/admin/review/${s.id}`}>#{s.id}</Link></td><td>{s.quest_id}</td><td>{s.status}</td><td className="muted">{s.route}</td><td className="muted">{s.created_at.slice(0, 10)}</td></tr>)}{m.submissions.length === 0 && <tr><td className="muted">None.</td></tr>}</tbody></table>
           </div>
           <div className="card" style={{ marginTop: 12 }}>
             <div className="eyebrow">Raw user row</div>

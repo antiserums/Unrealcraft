@@ -17,8 +17,7 @@ export default async function Foot() {
         <Link href="/changelog">{t("Changelog")}</Link>
         <Link href="/privacy">{t("Privacy policy")}</Link>
         <Link href="/terms">{t("Terms of service")}</Link>
-        {me?.review?.can && <Link href="/review">{t("Review")}{me.review.pending > 0 ? ` (${me.review.pending})` : ""}</Link>}
-        {me?.admin && <Link href="/admin">{t("Admin")}</Link>}
+        {(me?.admin || me?.review?.can) && <Link href="/admin">{t("Admin")}{me.review && me.review.pending > 0 ? ` (${me.review.pending})` : ""}</Link>}
         <LanguagePicker />
       </nav>
       <div className="small muted">{t("Unrealcraft · an RPG learning experience for Unreal Engine")}</div>

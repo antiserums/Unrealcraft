@@ -19,7 +19,7 @@ export default async function AdminTicket({ params }: PageProps<"/admin/tickets/
       <h1>#{tk.id} · {tk.subject}</h1>
       <p className="muted small">
         {CATEGORY[tk.category] ?? tk.category} · {STATUS[tk.status]} · opened {tk.created_at.slice(0, 10)} · from{" "}
-        <Link href={`/admin/members/${tk.member_id}`}>{tk.name ?? `member ${tk.member_id}`}</Link>
+        <Link href={`/admin/members/${tk.member_id}`}>{tk.author?.name ?? tk.name ?? `member ${tk.member_id}`}</Link>{tk.author && <>, <span style={{ color: tk.author.rank_color }}>{tk.author.rank_title}</span></>}
       </p>
       <TicketThread ticket={tk} staff />
     </>

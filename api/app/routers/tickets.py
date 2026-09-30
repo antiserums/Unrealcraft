@@ -12,7 +12,8 @@ from pydantic import BaseModel
 
 from ..config import settings
 from ..session import current_member
-from ..staff import can_review, is_admin
+from ..staff import can_review, is_admin, nameplate_for, role_of_id
+from .me import nameplate, rank_color
 from .submit import IMAGE_TYPES, MAX_BYTES, MAX_FILES
 
 router = APIRouter(tags=["tickets"])
@@ -62,13 +63,29 @@ def _text(body: str, lo: int, hi: int, what: str) -> str:
     return body
 
 
-def _public(t: dict) -> dict:
+async def _author(request: Request, uid: int, cache: dict) -> dict:
+    """Name, avatar and nameplate (staff role or rank title, with its colour) of whoever wrote a message."""
+    if uid in cache:
+        return cache[uid]
+    rdb, db, cat = request.app.state.rpg, request.app.state.db, request.app.state.catalog
+    u, _, _ = await db.user_state(uid)
+    role = role_of_id(uid)
+    plate = nameplate_for(role) or (nameplate(cat, u.get("rank", 0), u.get("major") or "undecided"), rank_color(cat, max(u.get("rank", 0), 0)))
+    cache[uid] = {"id": uid, "name": await rdb.kv_get(uid, "web.name") or f"Member {str(uid)[-4:]}", "avatar": await rdb.kv_get(uid, "web.avatar"),
+                  "rank_title": plate[0], "rank_color": plate[1], "staff": role}
+    return cache[uid]
+
+
+async def _public(t: dict, request: Request | None = None) -> dict:
     out = {k: t[k] for k in ("id", "category", "subject", "status", "created_at", "updated_at", "member_id")}
     out["name"] = t.get("name")
     out["avatar"] = t.get("avatar")
     if isinstance(t.get("messages"), list):
+        cache: dict = {}
         out["messages"] = [{"id": m["id"], "staff": bool(m["staff"]), "body": m["body"], "created_at": m["created_at"],
-                            "attachments": json.loads(m.get("attachments") or "[]")} for m in t["messages"]]
+                            "attachments": json.loads(m.get("attachments") or "[]"),
+                            "author": await _author(request, m["author_id"], cache) if request else None} for m in t["messages"]]
+        out["author"] = await _author(request, t["member_id"], cache) if request else None
     else:
         out["messages"] = t.get("messages", 0)
         out["last"] = t.get("last")
@@ -79,7 +96,7 @@ def _public(t: dict) -> dict:
 @router.get("/me/tickets")
 async def my_tickets(request: Request, member=Depends(current_member)):
     rdb = request.app.state.rpg
-    return {"tickets": [_public(t) for t in await rdb.tickets(uid=member["id"])], "categories": CATEGORIES}
+    return {"tickets": [await _public(t) for t in await rdb.tickets(uid=member["id"])], "categories": CATEGORIES}
 
 
 @router.post("/me/tickets")
@@ -95,7 +112,7 @@ async def open_ticket(request: Request, category: str = Form("other"), subject: 
     urls = await _store(member["id"], files)
     tid = await rdb.create_ticket(member["id"], category, subject, body, urls)
     await rdb.emit("ticket_opened", member["id"], {"ticket": tid, "category": category})
-    return _public(await rdb.ticket(tid))
+    return await _public(await rdb.ticket(tid), request)
 
 
 async def _mine(request: Request, tid: int, member: dict) -> dict:
@@ -107,7 +124,7 @@ async def _mine(request: Request, tid: int, member: dict) -> dict:
 
 @router.get("/me/tickets/{tid}")
 async def my_ticket(tid: int, request: Request, member=Depends(current_member)):
-    return _public(await _mine(request, tid, member))
+    return await _public(await _mine(request, tid, member), request)
 
 
 @router.post("/me/tickets/{tid}/reply")
@@ -118,7 +135,7 @@ async def my_reply(tid: int, request: Request, body: str = Form(""), files: list
     body = _text(body, 1, 4000, "The message")
     rdb = request.app.state.rpg
     await rdb.ticket_reply(tid, member["id"], False, body, "open", await _store(member["id"], files))
-    return _public(await rdb.ticket(tid))
+    return await _public(await rdb.ticket(tid), request)
 
 
 @router.post("/me/tickets/{tid}/close")
@@ -134,7 +151,7 @@ async def all_tickets(request: Request, status: str | None = None, _=Depends(sta
     rdb = request.app.state.rpg
     if status and status not in STATUSES:
         raise HTTPException(400, "Unknown status.")
-    return {"tickets": [_public(t) for t in await rdb.tickets(status=status)], "open": await rdb.open_ticket_count()}
+    return {"tickets": [await _public(t) for t in await rdb.tickets(status=status)], "open": await rdb.open_ticket_count()}
 
 
 @router.get("/admin/tickets/{tid}")
@@ -142,7 +159,7 @@ async def staff_ticket(tid: int, request: Request, _=Depends(staff_only)):
     t = await request.app.state.rpg.ticket(tid)
     if not t:
         raise HTTPException(404, "No such ticket.")
-    return _public(t)
+    return await _public(t, request)
 
 
 @router.post("/admin/tickets/{tid}/reply")
@@ -154,7 +171,7 @@ async def staff_reply(tid: int, request: Request, body: str = Form(""), files: l
     body = _text(body, 1, 4000, "The message")
     await rdb.ticket_reply(tid, member["id"], True, body, "answered", await _store(member["id"], files))
     await rdb.admin_log(member["id"], "ticket_reply", t["member_id"], {"ticket": tid})
-    return _public(await rdb.ticket(tid))
+    return await _public(await rdb.ticket(tid), request)
 
 
 @router.post("/admin/tickets/{tid}/status")

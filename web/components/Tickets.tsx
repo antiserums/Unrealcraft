@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useT } from "./I18n";
 import Ico from "./Ico";
-import { CATEGORY, STATUS, type Ticket } from "@/lib/tickets";
+import { type Author, CATEGORY, STATUS, type Ticket } from "@/lib/tickets";
 
 
 /** POST to the API. Plain objects go as JSON; a FormData (text plus screenshots) goes as it is. */
@@ -89,7 +89,10 @@ export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?
       <div className="ticket-msgs">
         {messages.map((m) => (
           <div key={m.id} className={`ticket-msg ${m.staff ? "staff" : "member"}`}>
-            <div className="small muted">{m.staff ? t("Staff") : (ticket.name ?? t("Member"))} · {m.created_at.slice(0, 16).replace("T", " ")}</div>
+            <div className="ticket-who">
+              {m.author ? <Who a={m.author} /> : <b>{m.staff ? t("Staff") : (ticket.name ?? t("Member"))}</b>}
+              <span className="small muted">{m.created_at.slice(0, 16).replace("T", " ")}</span>
+            </div>
             <p>{m.body}</p>
             {m.attachments && m.attachments.length > 0 && (
               <div className="ticket-shots">{m.attachments.map((u) => <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" loading="lazy" /></a>)}</div>
@@ -133,6 +136,18 @@ export function TicketRow({ tk, href }: { tk: Ticket; href: string }) {
       <div className="small muted">{t(CATEGORY[tk.category] ?? tk.category)}{tk.name ? ` · ${tk.name}` : ""} · {tk.updated_at.slice(0, 10)}{typeof tk.messages === "number" ? ` · ${t("{n} messages", { n: tk.messages })}` : ""}</div>
       {tk.last && <div className="small ticket-last">{tk.last.length > 140 ? tk.last.slice(0, 140) + "…" : tk.last}</div>}
     </Link>
+  );
+}
+
+/** Name, avatar and nameplate of whoever wrote a message: the staff role for staff, else the rank title. */
+function Who({ a }: { a: Author }) {
+  const t = useT();
+  return (
+    <span className="who" style={{ gap: 6 }}>
+      {a.avatar && <img className="avatar" src={a.avatar} alt="" />}
+      <b>{a.name}</b>
+      <span className={`pill ${a.staff ? "staff-title" : ""}`} data-role={a.staff ?? undefined} style={{ borderColor: a.rank_color, color: a.rank_color }}>{t(a.rank_title)}</span>
+    </span>
   );
 }
 

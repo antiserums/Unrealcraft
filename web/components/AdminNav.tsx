@@ -1,12 +1,17 @@
 import Link from "next/link";
+import { api, type Me } from "@/lib/api";
 
-const TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"], ["/admin/tickets", "Tickets"], ["/review", "Review inbox"]] as const;
+/** The admin panel's sections. Admins and developers see everything; mentors see only the review inbox and
+ *  the tickets. The API enforces the same split, this only hides the tabs. */
+const ADMIN_TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"]] as const;
+const STAFF_TABS = [["/admin/review", "Review inbox"], ["/admin/tickets", "Tickets"]] as const;
 
-/** The admin panel's sections. */
-export default function AdminNav({ active }: { active: string }) {
+export default async function AdminNav({ active }: { active: string }) {
+  const me = await api<Me>("/me");
+  const tabs = me?.admin ? [...ADMIN_TABS, ...STAFF_TABS] : [...STAFF_TABS];
   return (
     <nav className="subnav" aria-label="Admin sections">
-      {TABS.map(([href, label]) => <Link key={href} href={href} className={href === active ? "on" : ""}>{label}</Link>)}
+      {tabs.map(([href, label]) => <Link key={href} href={href} className={href === active ? "on" : ""}>{label}{href === "/admin/review" && me?.review?.pending ? ` (${me.review.pending})` : ""}</Link>)}
     </nav>
   );
 }

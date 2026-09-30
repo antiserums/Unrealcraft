@@ -21,6 +21,7 @@ const LABEL: Record<string, string> = { members: "members", members_logged_in: "
 export default async function Admin({ searchParams }: PageProps<"/admin">) {
   const me = await api<Me>("/me");
   if (!me) redirect("/api/auth/discord?next=/admin");
+  if (!me.admin && me.review?.can) redirect("/admin/review");            // mentors: the review inbox and tickets only
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q : "";
   const [o, m] = await Promise.all([api<Overview>("/admin"), api<{ members: MemberRow[] }>(`/admin/members?q=${encodeURIComponent(q)}`)]);
@@ -77,7 +78,7 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
               </tbody>
             </table>
           </div>
-          {o.pending.length > 0 && <p className="small" style={{ marginTop: 10 }}>{o.pending.length} turn-in{o.pending.length === 1 ? "" : "s"} waiting in the <Link href="/review">review inbox</Link>.</p>}
+          {o.pending.length > 0 && <p className="small" style={{ marginTop: 10 }}>{o.pending.length} turn-in{o.pending.length === 1 ? "" : "s"} waiting in the <Link href="/admin/review">review inbox</Link>.</p>}
         </div>
       </div>
     </>
