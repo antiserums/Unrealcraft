@@ -422,3 +422,15 @@ table.adm code { font-size: 12px; }
 .nav-user { display: flex; align-items: center; gap: 10px; flex: 0 0 auto; margin-left: auto; white-space: nowrap; }
 .nav .spacer { display: none; }
 @media (max-width: 640px) { .nav-in { flex-wrap: wrap; } .nav-user { margin-left: 0; } }
+
+/* nav grid: [brand | links | member] on one row; on narrow screens the links drop to a second row */
+.nav-in { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "brand links user"; align-items: center; gap: 10px 22px; padding: 10px 20px; }
+.brand { grid-area: brand; white-space: nowrap; }
+.nav-links { grid-area: links; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; min-width: 0; }
+.nav-user { grid-area: user; display: flex; align-items: center; gap: 10px; margin-left: 0; white-space: nowrap; justify-self: end; }
+.nav a.link { white-space: nowrap; }
+@media (max-width: 980px) {
+  .nav-in { grid-template-columns: auto auto; grid-template-areas: "brand user" "links links"; gap: 6px 12px; padding: 8px 16px; }
+  .nav-links { gap: 14px; padding-bottom: 4px; }
+}
+@media (max-width: 520px) { .nav-user .who span:not(.pill) { display: none; } }
