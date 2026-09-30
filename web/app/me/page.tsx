@@ -2,7 +2,7 @@ import { redirect } from "next/navigation";
 import CardEditor from "@/components/CardEditor";
 import MeNav from "@/components/MeNav";
 import PlayerCard from "@/components/PlayerCard";
-import { characterLayers, loadManifest } from "@/lib/art";
+import { badgeImage, loadManifest, presetSheet } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
 
 export const metadata = { title: "Player card" };
@@ -10,7 +10,8 @@ export const metadata = { title: "Player card" };
 export default async function Profile() {
   const [c, manifest] = await Promise.all([api<Card>("/me/card"), loadManifest()]);
   if (!c) redirect("/api/auth/discord?next=/me");
-  const layers = characterLayers(manifest, c.cosmetics.appearance?.body ?? "body-a", [c.worn.art_id]);
+  const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
+  const badges = Object.fromEntries(c.featured.map((a) => [a.key, badgeImage(manifest, a.badge)]));
   const shareUrl = `${process.env.WEB_ORIGIN ?? "http://localhost:3000"}/members/${c.id}`;
   return (
     <>
@@ -19,7 +20,7 @@ export default async function Profile() {
       <MeNav active="/me" />
       {c.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
       <div className="two">
-        <PlayerCard c={c} layers={layers} />
+        <PlayerCard c={c} sheet={sheet} badges={badges} />
         <div>
           <CardEditor initial={c} shareUrl={shareUrl} />
           {c.next_rank && (

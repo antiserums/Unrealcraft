@@ -1,66 +1,66 @@
-# Art pack integration (UCSourceArt)
+# Art pack integration (UCSourceArt / pixel-v3)
 
-The art lives in a separate repo, `UCSourceArt`, produced by another AI. The website consumes it; it never
+The art lives in a separate folder, `UCSourceArt`, produced by another AI. The website consumes it; it never
 generates art. This page is the contract between the two: what the site expects, where it looks, and which IDs it
-needs. The pack's own rules (canvas, draw order, occlusion, naming) are in `UCSourceArt/art-and-overlay-spec.txt`
-and are followed as written.
+needs. The pack's own rules are in `UCSourceArt/pixel-v3/INTEGRATION.txt` and `environments/AI-HANDOFF.txt` and
+are followed as written: nearest-neighbour sampling, integer scales, the 480 x 270 arena drawn at 2x.
 
 ## How art reaches the site
 
 ```bash
-py -3 tools/sync_art.py            # pack assumed at ../UCSourceArt; or pass a path
+py -3 tools/sync_art.py            # pack assumed at ../UCSourceArt (its pixel-v3 folder); or pass a path
 ```
 
-The script copies finished PNG exports into `web/public/art/` (git-ignored) and writes `web/public/art/manifest.json`.
-Newest `_v###` wins. The site reads the manifest on each request (cached 10 s). Any ID with no export falls back to
-the built-in flat SVG silhouette, so nothing breaks while the pack is incomplete. Re-run the script after every drop.
+The script copies the exports into `web/public/art/` (git-ignored, about 5 MB) and writes
+`web/public/art/manifest.json`. The site reads the manifest on each request (cached 10 s). With no manifest every
+figure falls back to the built-in flat SVG silhouettes, so nothing breaks. Re-run the script after every drop.
 
-## Style the site already follows
+## What the pack ships and how the site uses it
 
-From the concept board (`concepts/art-direction-v001.png`): hand-painted stylized fantasy, teal cloth and runes,
-warm gold trim, brown leather, friendly hero, imposing non-gory creatures. The site's theme uses the same pair:
-gold (`--gold`) for frames, titles and buttons; teal (`--teal`) for health bars and highlights; dark plates behind.
-Rarity is shown as a colored frame around icons and a dot next to names, never baked into the art.
+**Characters.** 32 pre-rendered sprite sheets: 2 bodies x 8 sets x 2 equipment styles. Each sheet is 4 x 6
+frames of 128 px: idle, attack, cast, hit, victory, defeat. The site picks the sheet from the member's body,
+worn set and style (`GET /api/me/character` -> `body`, `worn.art_id`, `style`) and plays rows with
+`components/Sprite.tsx`. The body occupies 64 x 96 px at (32, 12) of the frame, so cards and the wardrobe crop
+to a tighter window (`HERO_CROP` in `Figure.tsx`); the fight draws the full frame so swings stay in view.
 
-## IDs the site uses
+**Outfit sets.** The pack's eight sets are the whole catalog (`api/app/rpg.py`, `build_sets`):
+`novice` (starter), `apprentice`, `adept`, `expert`, `master` (rank 1 to 4, shared by every major), and three
+reward sets: `warrior` Ironwarden (first capstone cleared), `ranger` Thornwatch (fifty quests), `spellcaster`
+Runekeeper (ten bosses beaten first try). Set ids are the art ids. The wardrobe tile icon is the set's chest
+piece (`gear/icons/set_<set>_chest.png`, 32 px).
 
-**Outfits.** Gear is cosmetic: a set is a whole outfit unlocked by a quest, a rank or an achievement, and the
-member wears one set at a time. One art id per set: `set_<id>`. The ids are listed by `GET /api/me/character`
-(`outfits[].art_id`) and defined in `api/app/rpg.py` (`build_sets`): `set_wayfarer` (starter), four achievement
-sets (`set_first_blood`, `set_flawless_10`, `set_streak_30`, `set_reader_50`), four rank sets per major
-(`set_<major>_r1` … `_r4`) and four capstone sets per major (`set_<major>_cap1` … `_cap4`). That is 61 sets; each
-needs an icon and fitted overlays for every slot it covers. Rank sets of one major may share a base design with
-different trim; the site does not care how they are made, only that the ids match.
+**Equipment style.** `melee` (sword + shield) or `caster` (staff + orb), chosen in the wardrobe and saved as
+`cosmetics.style`. In a fight a right answer plays `attack` for melee and `cast` for caster.
 
-**Creatures.** Ordinary quest rooms use the six enemies, capstones use the three bosses:
-`enemy_crystal_slime`, `enemy_crystal_crawler`, `enemy_moss_imp`, `enemy_thorn_sentinel`, `enemy_rune_wisp`,
-`enemy_broken_construct`, `boss_compiler_golem`, `boss_blueprint_hydra`, `boss_optimization_wyrm`.
-The site picks the creature from the quest's subject (lighting → rune wisp, AI → thorn sentinel, and so on; see
-`ENEMY_FOR_LOOK` in `api/app/rpg.py`) and names it with the pack's boss title for capstones.
+**Appearance.** Only the body (`body_a` Athletic, `body_b` Curved) is selectable. The exported sheets have a fixed
+face, skin and hair; skin tones, hairstyles, faces and markings need the pack's compositing renderer
+(`previews/renderer.js`) ported to the site, which is a later step.
 
-**Character bases and appearance.** `characters/bases/<body>_<part>_v###.png` for `body-a` and `body-b`.
-Appearance options (skin, face, hair, hair color, eyes, facial hair, markings) are read from
-`metadata/*.json` files that carry an `appearance` object, e.g. `{"appearance": {"skin": ["skin-1", ...]}}`.
-The character sheet shows a selector per option that exists; the member's choices are saved as
-`cosmetics.appearance` and never affect learning or stats.
+**Creatures.** Six enemies (4 x 4 frames of 64 px: idle, attack, hit, defeat) drawn at 3x, three bosses (4 x 6
+frames of 128 px: idle, attack, special, hit, taunt, defeat) drawn at 2x. Ordinary rooms use enemies, capstones
+use bosses; the pick comes from the quest's subject (`ENEMY_FOR_LOOK`, `capstone_creature` in `rpg.py`).
 
-## File names the sync script understands
+**Arena.** `environments/dungeon-training-chamber-480x270.png` (and the 1920 x 1080 version) is the fight
+background. The stage is a fixed 960 x 540 scene scaled down to fit its column: hero at (96, 256), boss on the
+right, feet on the ground line y = 464 (232 x 2), health boxes in the top 15 percent, as the handoff suggests.
+
+**Badges and rarity.** Eight badges in `ui/badges/` are mapped to achievements by the `badge` index in
+`ACHIEVEMENTS` (`rpg.py`); they show on the achievements page and the player card. Rarity frames in `ui/rarity/`
+are copied but the site still draws rarity as a coloured frame.
+
+## Manifest shape (version 3)
 
 ```
-gear/icons/set_<id>_icon_v001.png
-gear/overlays/set_<id>_body-a_<part>_v001.png      part = head | chest | hands | legs | feet | weapon | offhand |
-                                                       back | straps | shoulders | hair-rear | hair-front | fx
-characters/bases/body-a_body_v001.png, body-a_face_v001.png, ...
-enemies/<id>_full_v001.png   enemies/<id>_portrait_v001.png
-bosses/<id>_full_v001.png    bosses/<id>_portrait_v001.png
-metadata/<id>.json           optional: {"id": ..., "layersOverride": [{"z": 60, "file": "gear/overlays/..png", "body": "body-a"}]}
+presets[body][set][style] = { sheet, frame: 128, columns: 4, animations: [{id,row,frames,fps,loop}] }
+creatures[id]             = { sheet, kind, frame: 64|128, columns: 4, animations: [...] }
+icons[set]                = "gear/icons/set_<set>_chest.png"
+badges[]                  = { id, name, file }
+environments[id]          = { path, large, width, height, groundY }
+appearance                = { body: [...], style: [...] }
 ```
-
-Draw order (z) comes from the spec: back 10, body 20, face 30, legs 40, feet 50, chest 60, face-front 70,
-hair-rear 80, shoulders 90, hair-front 100, head 110, hands 120, weapon/offhand 130, straps 140, fx 150.
-A `layersOverride` in metadata replaces the filename-derived layers when an item needs a custom split.
 
 ## Sizes on the site
 
-Character: 170 px tall on the sheet, 150 px in the fight. Boss: 170 px in the fight, 92 px on the room card.
-Icons: 44 px in the wardrobe. Review exports at those sizes.
+Character: 176 x 232 px (2x, cropped) on the card and in the wardrobe mirror, 256 px full frame in the fight.
+Enemies 192 px and bosses 256 px in the fight; 128 px on the room card. Icons 60 px tiles (2x of 32).
+Always integer scales with `image-rendering: pixelated`.

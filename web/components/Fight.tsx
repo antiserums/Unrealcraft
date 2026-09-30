@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import type { SheetSpec } from "@/lib/art";
 import { Boss, Character } from "./Figure";
 
 type Ev = { kind: string; text: string; damage?: number; bonus_xp?: number; explain?: string; correct?: number; debuff?: string };
@@ -8,15 +9,18 @@ type Q = { index: number; total: number; q: string; choices: string[]; hint: str
 type Fight = {
   fight_id: number; quest: { id: string; title: string; xp: number; verify_type: string };
   boss: { name: string; short: string; look: string; color: string; hits_to_win: number; questions: number; wounds_allowed: number; verb: string; intro: string; tier: string };
-  you: { vitality: number; wounds: number; wounds_allowed: number; steady_available: boolean; craft: number; focus: number; crit_pct: number; outfit: string };
+  you: { vitality: number; wounds: number; wounds_allowed: number; steady_available: boolean; craft: number; focus: number; crit_pct: number; outfit: string; style?: string };
   hits: number; hits_to_win: number; turn: number; total: number; first_try: boolean; log: Ev[]; question: Q | null;
   result: string | null; events?: Ev[];
   outcome?: { passed: boolean; score: number; total: number; first_try_bonus?: number; crit_xp?: number; completed?: boolean; quest_xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string; id: string } | null; tested_out?: boolean; next?: string } | null;
 };
 
 const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled.", weakened: "Weakened: your next hit does half damage.", blinded: "Blinded: no hint this turn." };
+/** The pack's scene: 480 x 270 logical pixels, drawn at 2x. Feet land on the ground line (y = 232). */
+const STAGE_W = 960, STAGE_H = 540, GROUND = 464;
 
-export default function FightScreen({ questId, outfit, color, layers, bossImage }: { questId: string; outfit: string; color: string; layers?: string[] | null; bossImage?: string | null }) {
+export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background }:
+  { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null }) {
   const [f, setF] = useState<Fight | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -24,8 +28,10 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
   const [youPose, setYouPose] = useState<"idle" | "strike" | "hurt" | "down" | "win">("idle");
   const [float, setFloat] = useState<{ text: string; side: "boss" | "you"; kind: string } | null>(null);
   const [last, setLast] = useState<Ev[]>([]);
+  const [k, setK] = useState(1);
   const asked = useRef<number>(Date.now());
   const started = useRef(false);
+  const box = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (started.current) return;            // React dev mode runs effects twice; one fight is enough
@@ -38,10 +44,18 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
     })();
   }, [questId]);
 
+  // The stage is a fixed 960 x 540 scene scaled down to the column it sits in, so sprites stay at integer scales.
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setK(Math.min(1, el.clientWidth / STAGE_W)));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [f]);
+
   async function answer(pos: number) {
     if (!f || busy) return;
     setBusy(true);
-    setBossPose("attack");
     const seconds = (Date.now() - asked.current) / 1000;
     const r = await fetch(`/api/fights/${f.fight_id}/turn`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ answer: pos, seconds }) });
     const j: Fight = await r.json();
@@ -61,7 +75,7 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
       if (j.result === "win") { setBossPose("dead"); setYouPose("win"); }
       else if (j.result === "lose") { setYouPose("down"); setBossPose("idle"); }
       else { setYouPose("idle"); setBossPose("idle"); }
-    }, 650);
+    }, 700);
   }
 
   if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← Back to the room</Link></p></div>;
@@ -70,27 +84,33 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
   const bossHp = Math.max(0, f.hits_to_win - f.hits) / f.hits_to_win;
   const youHp = Math.max(0, (f.you.wounds_allowed + 1 - f.you.wounds)) / (f.you.wounds_allowed + 1);
   const q = f.question;
+  const bossScale = bossSheet ? (bossSheet.frame <= 64 ? 3 : 2) : 2;
+  const bossSize = bossSheet ? bossSheet.frame * bossScale : 240;
+  const bg = background?.large ?? background?.small;
 
   return (
     <div className="fight">
-      <div className="arena">
-        <div className="side you">
-          <div className="hpbox">
+      <div ref={box} className="arena-box" style={{ height: STAGE_H * k }}>
+        <div className={`arena-stage ${bg ? "dungeon" : ""}`} style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${k})`, backgroundImage: bg ? `url("${bg}")` : undefined }}>
+          <div className="hpbox you">
             <div className="eyebrow">You</div>
             <div className="bar big"><span style={{ width: `${youHp * 100}%`, background: "#4FA36C" }} /></div>
-            <div className="small muted">{f.you.wounds} wound{f.you.wounds === 1 ? "" : "s"} · {Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds))} more before you fall
-              {f.you.steady_available && <> · steady ready</>}
-            </div>
+            <div className="small">{f.you.wounds} wound{f.you.wounds === 1 ? "" : "s"} · {Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds))} more before you fall{f.you.steady_available && <> · steady ready</>}</div>
           </div>
-          <div className="stage">{float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}<Character outfit={outfit} layers={layers} color={color} pose={youPose} size={150} /></div>
-        </div>
-        <div className="side boss">
-          <div className="hpbox">
+          <div className="hpbox boss">
             <div className="eyebrow" style={{ color: f.boss.color }}>{f.boss.name}</div>
             <div className="bar big"><span style={{ width: `${bossHp * 100}%`, background: f.boss.color }} /></div>
-            <div className="small muted">{Math.min(f.hits, f.hits_to_win)}/{f.hits_to_win} hits{f.hits > f.hits_to_win ? " · victory lap" : ""} · {f.boss.questions} questions in the room</div>
+            <div className="small">{Math.min(f.hits, f.hits_to_win)}/{f.hits_to_win} hits{f.hits > f.hits_to_win ? " · victory lap" : ""} · {f.boss.questions} questions</div>
           </div>
-          <div className="stage">{float?.side === "boss" && <span className={`float ${float.kind}`}>{float.text}</span>}<Boss look={f.boss.look} image={bossImage} color={f.boss.color} pose={bossPose} size={170} /></div>
+
+          <div className="fighter" style={{ left: 96, top: GROUND - 208 - 8 }}>
+            {float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}
+            {heroSheet ? <Character sheet={heroSheet} weapon={weaponStyle} pose={youPose} scale={2} crop={null} /> : <Character outfit={outfit} color={color} pose={youPose} size={170} />}
+          </div>
+          <div className="fighter" style={{ left: STAGE_W - 96 - bossSize, top: GROUND - bossSize + (bossSheet ? (bossSheet.frame <= 64 ? 16 : 20) : 0) }}>
+            {float?.side === "boss" && <span className={`float ${float.kind}`}>{float.text}</span>}
+            <Boss look={f.boss.look} sheet={bossSheet} color={f.boss.color} pose={bossPose} size={200} />
+          </div>
         </div>
       </div>
 
@@ -119,7 +139,7 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
             ))}
           </div>
           <div className="row small muted" style={{ marginTop: 8 }}>
-            <span>Answer fast for a better crit chance ({f.you.crit_pct}% base).</span>
+            <span>Answer fast for a better crit chance.</span>
             <span className="spacer" />
             <Link href={`/quests/${questId}`} className="muted">Retreat (nothing is recorded)</Link>
           </div>
@@ -141,7 +161,7 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
                 {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>Claim the chest: send your work</Link>}
                 {f.outcome?.next === "next" && <Link className="btn primary" href="/">Next room</Link>}
                 {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>Back to the room</Link>}
-                <Link className="btn" href="/me">{f.outcome?.loot ? "Wear it" : "Character sheet"}</Link>
+                <Link className="btn" href="/me/wardrobe">{f.outcome?.loot ? "Wear it" : "Wardrobe"}</Link>
               </div>
             </>
           ) : (

@@ -52,80 +52,57 @@ STAT_BLURB = {
 
 
 # ------------------------------------------------------------------ outfits (cosmetic only)
-# Gear is a visual reward. A set is a whole outfit (every slot at once) unlocked by a quest, a rank or an
-# achievement. Members wear one set at a time and can switch between the ones they own. No stats, ever.
-SLOTS = ["head", "chest", "hands", "legs", "feet", "weapon", "offhand", "cape", "shoulders"]   # = UCSourceArt slots
-MAJOR_TITLE = {"level_design": "Level Design", "programming": "Programming", "lookdev": "Environment Art",
-               "tech_art": "Tech Art", "gameplay_design": "Gameplay Design", "animation": "Animation",
-               "cinematics": "Cinematics", "undecided": "Undecided"}
-
-# Per major: the four rank outfits (Apprentice, Adept, Expert, Master) and four capstone regalia (rank 1-4).
-RANK_SETS = {
-    "level_design":    ["Surveyor's Garb", "Architect's Vestments", "Warden of Halls", "Worldshaper's Regalia"],
-    "programming":     ["Scribe's Garb", "Compiler's Vestments", "Warden of Systems", "Kernelbinder's Regalia"],
-    "lookdev":         ["Painter's Garb", "Lightweaver's Vestments", "Warden of Surfaces", "Sunforger's Regalia"],
-    "tech_art":        ["Tinker's Garb", "Nodewright's Vestments", "Warden of Sparks", "Machinist's Regalia"],
-    "gameplay_design": ["Playtester's Garb", "Rulewright's Vestments", "Warden of Loops", "Gamemaster's Regalia"],
-    "animation":       ["Puppeteer's Garb", "Rigwright's Vestments", "Warden of Motion", "Lifegiver's Regalia"],
-    "cinematics":      ["Framer's Garb", "Director's Vestments", "Warden of Light", "Showrunner's Regalia"],
+# Gear is a visual reward. A set is a whole outfit unlocked by a rank or an achievement. Members wear one set at a
+# time, switch between the ones they own, and choose sword-and-shield or staff-and-orb. No stats, ever.
+# The eight sets are the ones the art pack (UCSourceArt/pixel-v3) ships; ids match its metadata/pack.json.
+SLOTS = ["head", "chest", "legs", "feet", "hands", "shoulders", "back", "weapon", "offhand"]   # = pack slots
+STYLES = ["melee", "caster"]                                       # sword+shield | staff+orb
+TIER_OF_RANK = {0: "novice", 1: "apprentice", 2: "adept", 3: "expert", 4: "master"}
+RANK_FLAVOUR = {
+    0: "Hood, tunic and a wooden shield. Everyone starts here.",
+    1: "Leather and brass. You have cleared the first tier.",
+    2: "Blued steel and rune-etched cloth. The middle of the road.",
+    3: "Crimson plate and gold filigree. Few get this far.",
+    4: "Ivory and gold, set with emerald. Worn by masters of the guild.",
 }
-CAPSTONE_SETS = {
-    "level_design":    ["Courtyard Pilgrim", "Beatkeeper", "Encounter Marshal", "Kitsmith of the Modular Hall"],
-    "programming":     ["Debug Room Squire", "Loopbinder", "Bridgewright of Two Languages", "Portmaster"],
-    "lookdev":         ["Diorama Keeper", "Walker of the Lit Path", "Reference Bearer", "Librarian of Functions"],
-    "tech_art":        ["Test Bed Warden", "Masterweaver", "Toolsmith", "Pipeline Marshal"],
-    "gameplay_design": ["Toybox Keeper", "Loopmaster", "Systems Marshal", "Feature Marshal"],
-    "animation":       ["First Mover", "Statekeeper", "Retarget Marshal", "Rigmaster"],
-    "cinematics":      ["Shotkeeper", "Sequence Marshal", "Render Marshal", "Cutmaster"],
-}
-TIER_OF_RANK = {1: "apprentice", 2: "adept", 3: "expert", 4: "master"}
+REWARD_SETS = [
+    # id (pack), name (pack), flavour, tier colour, unlock (achievement key from ACHIEVEMENTS)
+    ("warrior", "Ironwarden", "Dark iron and a tower shield. Your first capstone dungeon, cleared.", "adept",
+     {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
+    ("ranger", "Thornwatch", "Green leather and a long cloak. Fifty rooms behind you.", "expert",
+     {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
+    ("spellcaster", "Runekeeper", "Violet silk and a rune-bound staff. Ten bosses beaten without a scratch.", "expert",
+     {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
+]
 
 
-def _set(sid: str, name: str, flavour: str, major: str, tier: str, unlock: dict) -> dict:
-    return {"id": sid, "name": name, "flavour": flavour, "major": major, "tier": tier, "color": TIERS[tier]["color"],
-            "art_id": f"set_{sid}", "unlock": unlock}
+def _set(sid: str, name: str, flavour: str, kind: str, tier: str, unlock: dict) -> dict:
+    return {"id": sid, "name": name, "flavour": flavour, "kind": kind, "major": "undecided", "tier": tier,
+            "color": TIERS[tier]["color"], "art_id": sid, "unlock": unlock}
 
 
-def build_sets(cat) -> list[dict]:
-    """The full outfit catalog. Unlock rules: starter | rank(n, major) | quest(id) | achievement(key)."""
-    out = [_set("wayfarer", "Wayfarer's Set", "Teal cloth and brown leather. Everyone starts here.", "undecided", "novice", {"type": "starter"}),
-           _set("first_blood", "First Blood Tabard", "You finished your first quest in the engine.", "undecided", "novice",
-                {"type": "achievement", "key": "first_blood", "hint": "Finish your first Unreal quest"}),
-           _set("flawless_10", "Flawless Mantle", "Ten bosses beaten on the first try. Nothing wasted.", "undecided", "adept",
-                {"type": "achievement", "key": "focus_10", "hint": "Beat 10 bosses on the first try"}),
-           _set("streak_30", "Ember of Thirty Days", "A month of showing up.", "undecided", "expert",
-                {"type": "achievement", "key": "streak_30", "hint": "Reach a 30-day streak"}),
-           _set("reader_50", "Loremaster's Robe", "Fifty guides opened before the fight.", "undecided", "expert",
-                {"type": "achievement", "key": "lore_50", "hint": "Open the reading on 50 quests"})]
-    for major, names in RANK_SETS.items():
-        for i, name in enumerate(names, start=1):
-            out.append(_set(f"{major}_r{i}", name, f"Worn by every {TIERS[TIER_OF_RANK[i]]['name']} of {MAJOR_TITLE[major]}.",
-                            major, TIER_OF_RANK[i], {"type": "rank", "n": i, "major": major,
-                                                     "hint": f"Reach {TIERS[TIER_OF_RANK[i]]['name']} in {MAJOR_TITLE[major]}"}))
-    for major, names in CAPSTONE_SETS.items():
-        caps = (cat.majors.get(major, {}).get("capstones") or {}) if cat else {}
-        for i, name in enumerate(names, start=1):
-            cap = caps.get(i) or {}
-            out.append(_set(f"{major}_cap{i}", name, cap.get("brief") or f"The rank {i} capstone of {MAJOR_TITLE[major]}.",
-                            major, TIER_OF_RANK[i], {"type": "quest", "id": cap.get("id"), "hint": f"Clear the {MAJOR_TITLE[major]} rank {i} capstone: {cap.get('title', '')}".strip()}))
+def build_sets(cat=None) -> list[dict]:
+    """The full outfit catalog. Unlock rules: starter | rank(n) | achievement(key)."""
+    out = []
+    for n, tier in TIER_OF_RANK.items():
+        name = TIERS[tier]["name"]
+        unlock = {"type": "starter"} if n == 0 else {"type": "rank", "n": n, "hint": f"Reach {name}"}
+        out.append(_set(tier, f"{name}'s Set", RANK_FLAVOUR[n], "rank", tier, unlock))
+    for sid, name, flavour, tier, unlock in REWARD_SETS:
+        out.append(_set(sid, name, flavour, "reward", tier, unlock))
     return out
 
 
-def unlocked_now(sets: list[dict], *, rank: int, major: str, done: set[str], medals: set[str], stats: dict) -> list[dict]:
-    """Which sets this member has earned, from facts we already store. Idempotent, so it can run on every visit."""
+STARTER_SET = "novice"
+
+
+def unlocked_now(sets: list[dict], *, rank: int, earned: set[str]) -> list[dict]:
+    """Which sets this member has earned. Idempotent, so it can run on every visit."""
     won = []
     for st in sets:
         u = st["unlock"]
-        if u["type"] == "starter":
-            ok = True
-        elif u["type"] == "rank":
-            ok = major == u["major"] and rank >= u["n"]
-        elif u["type"] == "quest":
-            ok = bool(u.get("id")) and u["id"] in done
-        else:
-            key = u["key"]
-            ok = (key in medals) or (key == "focus_10" and stats["focus"] >= 10) or \
-                 (key == "streak_30" and stats["resolve"] >= 30) or (key == "lore_50" and stats["lore"] >= 50)
+        ok = u["type"] == "starter" or (u["type"] == "rank" and rank >= u["n"]) or \
+             (u["type"] == "achievement" and u["key"] in earned)
         if ok:
             won.append(st)
     return won
@@ -257,22 +234,22 @@ def crit_chance(focus: int, seconds: float | None) -> int:
 
 # ------------------------------------------------------------------ achievements
 # Facts we already store decide these; nothing is written when one is earned except the medals the bot grants.
-# Keys reused by the outfit unlocks above (first_blood, focus_10, streak_30, lore_50) must keep their thresholds.
+# Keys named in REWARD_SETS (capstone_1, rooms_50, focus_10) unlock outfits; `badge` is the pack's ui/badges index.
 ACHIEVEMENTS = [
-    {"key": "first_blood", "name": "First Blood", "desc": "Finish your first quest in the engine.", "icon": "⚔️", "need": 1, "of": "medal", "outfit": "first_blood"},
-    {"key": "rooms_10", "name": "Ten Rooms Cleared", "desc": "Finish ten quests.", "icon": "🚪", "need": 10, "of": "done"},
-    {"key": "rooms_50", "name": "Fifty Rooms Cleared", "desc": "Finish fifty quests.", "icon": "🏰", "need": 50, "of": "done"},
-    {"key": "rooms_150", "name": "Dungeon Delver", "desc": "Finish one hundred and fifty quests.", "icon": "🗝️", "need": 150, "of": "done"},
-    {"key": "focus_10", "name": "Flawless", "desc": "Beat ten bosses on the first try.", "icon": "🎯", "need": 10, "of": "first", "outfit": "flawless_10"},
-    {"key": "focus_50", "name": "Unerring", "desc": "Beat fifty bosses on the first try.", "icon": "💎", "need": 50, "of": "first"},
-    {"key": "craft_1", "name": "Reviewed", "desc": "Have a piece of your work accepted by a reviewer.", "icon": "🛠️", "need": 1, "of": "approved"},
-    {"key": "craft_10", "name": "Journeyman's Hands", "desc": "Have ten pieces of work accepted.", "icon": "🔨", "need": 10, "of": "approved"},
-    {"key": "lore_10", "name": "Well Read", "desc": "Open the reading on ten quests before the fight.", "icon": "📖", "need": 10, "of": "reads"},
-    {"key": "lore_50", "name": "Loremaster", "desc": "Open the reading on fifty quests before the fight.", "icon": "📚", "need": 50, "of": "reads", "outfit": "reader_50"},
-    {"key": "streak_7", "name": "A Week of Showing Up", "desc": "Keep a seven-day streak.", "icon": "🔥", "need": 7, "of": "streak"},
-    {"key": "streak_30", "name": "Ember of Thirty Days", "desc": "Keep a thirty-day streak.", "icon": "🌋", "need": 30, "of": "streak", "outfit": "streak_30"},
-    {"key": "capstone_1", "name": "Capstone Bearer", "desc": "Clear a capstone dungeon.", "icon": "🐉", "need": 1, "of": "capstones"},
-    {"key": "capstone_4", "name": "Dragonslayer", "desc": "Clear four capstone dungeons.", "icon": "👑", "need": 4, "of": "capstones"},
+    {"key": "first_blood", "name": "First Blood", "desc": "Finish your first quest in the engine.", "icon": "⚔️", "need": 1, "of": "medal", "badge": 1},
+    {"key": "rooms_10", "name": "Ten Rooms Cleared", "desc": "Finish ten quests.", "icon": "🚪", "need": 10, "of": "done", "badge": 3},
+    {"key": "rooms_50", "name": "Fifty Rooms Cleared", "desc": "Finish fifty quests.", "icon": "🏰", "need": 50, "of": "done", "outfit": "ranger", "badge": 3},
+    {"key": "rooms_150", "name": "Dungeon Delver", "desc": "Finish one hundred and fifty quests.", "icon": "🗝️", "need": 150, "of": "done", "badge": 8},
+    {"key": "focus_10", "name": "Flawless", "desc": "Beat ten bosses on the first try.", "icon": "🎯", "need": 10, "of": "first", "outfit": "spellcaster", "badge": 6},
+    {"key": "focus_50", "name": "Unerring", "desc": "Beat fifty bosses on the first try.", "icon": "💎", "need": 50, "of": "first", "badge": 6},
+    {"key": "craft_1", "name": "Reviewed", "desc": "Have a piece of your work accepted by a reviewer.", "icon": "🛠️", "need": 1, "of": "approved", "badge": 4},
+    {"key": "craft_10", "name": "Journeyman's Hands", "desc": "Have ten pieces of work accepted.", "icon": "🔨", "need": 10, "of": "approved", "badge": 4},
+    {"key": "lore_10", "name": "Well Read", "desc": "Open the reading on ten quests before the fight.", "icon": "📖", "need": 10, "of": "reads", "badge": 7},
+    {"key": "lore_50", "name": "Loremaster", "desc": "Open the reading on fifty quests before the fight.", "icon": "📚", "need": 50, "of": "reads", "badge": 7},
+    {"key": "streak_7", "name": "A Week of Showing Up", "desc": "Keep a seven-day streak.", "icon": "🔥", "need": 7, "of": "streak", "badge": 5},
+    {"key": "streak_30", "name": "Ember of Thirty Days", "desc": "Keep a thirty-day streak.", "icon": "🌋", "need": 30, "of": "streak", "badge": 5},
+    {"key": "capstone_1", "name": "Capstone Bearer", "desc": "Clear a capstone dungeon.", "icon": "🐉", "need": 1, "of": "capstones", "outfit": "warrior", "badge": 6},
+    {"key": "capstone_4", "name": "Dragonslayer", "desc": "Clear four capstone dungeons.", "icon": "👑", "need": 4, "of": "capstones", "badge": 8},
 ]
 RANK_UP_NAMES = {1: "Apprentice", 2: "Adept", 3: "Expert", 4: "Master"}
 
@@ -292,5 +269,5 @@ def achievements_for(cat, inputs: dict, done: set[str], medals: list[dict]) -> l
         if key.startswith("jump_"):
             to = int(key.split("_")[-1])
             out.append({"key": key, "name": f"Rose to {RANK_UP_NAMES.get(to, f'rank {to}')}", "desc": "Promoted by the guild.",
-                        "icon": "🏅", "need": 1, "of": "medal", "have": 1, "earned": True, "earned_at": at})
+                        "icon": "🏅", "need": 1, "of": "medal", "have": 1, "earned": True, "earned_at": at, "badge": 2})
     return out

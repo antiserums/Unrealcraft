@@ -1,59 +1,42 @@
-"""Copy the art pack's finished exports into the website and write web/public/art/manifest.json.
+"""Copy the pixel art pack (UCSourceArt/pixel-v3) into the website and write web/public/art/manifest.json.
 
 Usage (from the repo root):  py -3 tools/sync_art.py [path-to-UCSourceArt]
-Default pack path: ../UCSourceArt next to this repo.
+Default pack path: ../UCSourceArt next to this repo. The pixel-v3 folder inside it is what gets read.
 
-What it reads (see UCSourceArt/art-and-overlay-spec.txt):
-  gear/icons/<id>_icon_v###.png            inventory icons (512x512)
-  gear/overlays/<id>_<body>_<part>_v###.png  fitted overlays on the 1024x1024 canvas; <part> names a draw-order layer
-  characters/bases/<body>_<part>_v###.png  body base layers
-  enemies/<id>_full_v###.png, enemies/<id>_portrait_v###.png
-  bosses/<id>_full_v###.png,  bosses/<id>_portrait_v###.png
-  metadata/<id>.json                       optional; `layers` there override the filename-derived draw order
-The newest version number wins. Only PNGs are copied; nothing in the pack is modified.
+What it copies (see pixel-v3/INTEGRATION.txt):
+  characters/presets/<body>/<set>_<style>/sheet.png   24-frame character sheets, 4 x 6 frames of 128 px
+  atlases/<creature>.png                               enemies 4 x 4 frames of 64 px; bosses 4 x 6 frames of 128 px
+  gear/icons/set_<set>_<slot>.png                      32 px inventory icons
+  ui/badges/badge_<n>.png, ui/rarity/<r>.svg           achievement badges, rarity frames
+  environments/dungeon-training-chamber-*.png          the arena background (480 x 270, and the 4x version)
+  metadata/pack.json, metadata/character-presets.json  frame rectangles, animation rows, fps
+Nothing in the pack is modified. Only PNG/SVG/JSON files are copied.
 """
 from __future__ import annotations
 
 import json
-import re
 import shutil
 import sys
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-PACK = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else REPO.parent / "UCSourceArt"
+ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else REPO.parent / "UCSourceArt"
+PACK = ROOT / "pixel-v3" if (ROOT / "pixel-v3").is_dir() else ROOT
 OUT = REPO / "web" / "public" / "art"
-
-# Draw order from the spec (art-and-overlay-spec.txt). Overlay filenames name the part after the body id.
-Z = {"back": 10, "body": 20, "face": 30, "legs": 40, "feet": 50, "chest": 60, "face-front": 70, "hair-rear": 80,
-     "shoulders": 90, "hair-front": 100, "head": 110, "hands": 120, "weapon": 130, "offhand": 130, "straps": 140, "fx": 150}
-NAME = re.compile(r"^(?P<id>[a-z0-9_-]+?)_(?P<rest>.+?)_v(?P<v>\d{3})\.png$")
-
-
-def newest(files: list[Path]) -> dict[str, Path]:
-    """key -> newest file, where key is the filename without the version suffix."""
-    best: dict[str, tuple[int, Path]] = {}
-    for f in files:
-        m = NAME.match(f.name)
-        if not m:
-            continue
-        key = f"{m['id']}_{m['rest']}"
-        v = int(m["v"])
-        if key not in best or v > best[key][0]:
-            best[key] = (v, f)
-    return {k: p for k, (v, p) in best.items()}
+SET_ICON_SLOT = "chest"          # the one icon that stands for a whole set in the wardrobe
 
 
 def main() -> None:
-    if not PACK.is_dir():
-        sys.exit(f"art pack not found at {PACK}")
+    if not (PACK / "metadata" / "pack.json").is_file():
+        sys.exit(f"pixel pack not found at {PACK} (no metadata/pack.json)")
     OUT.mkdir(parents=True, exist_ok=True)
-    manifest = {"version": 1, "canvas": {"width": 1024, "height": 1024}, "assets": {}, "bodies": {}, "appearance": {}}
     copied = 0
 
-    def put(src: Path) -> str:
+    def put(rel: str) -> str | None:
         nonlocal copied
-        rel = src.relative_to(PACK).as_posix()
+        src = PACK / rel
+        if not src.is_file():
+            return None
         dst = OUT / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         if not dst.exists() or dst.stat().st_mtime < src.stat().st_mtime:
@@ -61,39 +44,43 @@ def main() -> None:
             copied += 1
         return rel
 
-    assets = manifest["assets"]
-    for f in newest(list((PACK / "gear" / "icons").glob("*.png"))).values():
-        m = NAME.match(f.name)
-        assets.setdefault(m["id"], {})["icon"] = put(f)
-    for f in newest(list((PACK / "gear" / "overlays").glob("*.png"))).values():
-        m = NAME.match(f.name)
-        parts = m["rest"].split("_")                     # <body>_<part>
-        body, part = (parts[0], "_".join(parts[1:])) if len(parts) > 1 else (None, parts[0])
-        z = Z.get(part, Z.get(m["id"].split("_")[-1], 60))
-        assets.setdefault(m["id"], {}).setdefault("layers", []).append({"z": z, "file": put(f), "body": body})
-    for f in newest(list((PACK / "characters" / "bases").glob("*.png"))).values():
-        m = NAME.match(f.name)
-        manifest["bodies"].setdefault(m["id"], []).append({"z": Z.get(m["rest"], 20), "file": put(f)})
-    for folder in ("enemies", "bosses"):
-        for f in newest(list((PACK / folder).glob("*.png"))).values():
-            m = NAME.match(f.name)
-            kind = "portrait" if m["rest"].startswith("portrait") else "full"
-            assets.setdefault(m["id"], {})[kind] = put(f)
-    for f in (PACK / "metadata").glob("*.json"):
-        try:
-            meta = json.loads(f.read_text(encoding="utf-8"))
-        except ValueError:
-            continue
-        if isinstance(meta, dict) and meta.get("id") in assets and meta.get("layersOverride"):
-            assets[meta["id"]]["layers"] = meta["layersOverride"]
-        if isinstance(meta, dict) and meta.get("appearance"):
-            manifest["appearance"].update(meta["appearance"])
-    for body in manifest["bodies"]:
-        manifest["appearance"].setdefault("body", [])
-        if body not in manifest["appearance"]["body"]:
-            manifest["appearance"]["body"].append(body)
-    (OUT / "manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
-    print(f"pack: {PACK}\ncopied {copied} files; {len(assets)} assets, {len(manifest['bodies'])} bodies -> {OUT / 'manifest.json'}")
+    pack = json.loads((PACK / "metadata" / "pack.json").read_text(encoding="utf-8"))
+    presets = json.loads((PACK / pack["presetManifest"]).read_text(encoding="utf-8"))
+    put("metadata/pack.json")
+    put(pack["presetManifest"])
+
+    m: dict = {"version": 3, "frame": 128, "pixelated": True,
+               "characterAnimations": pack["characterAnimations"], "styles": pack["equipmentStyles"],
+               "presets": {}, "creatures": {}, "sets": {}, "icons": {}, "badges": [], "rarity": {}, "environments": {},
+               "appearance": {"body": [b["id"] for b in pack["bodies"]], "style": list(pack["equipmentStyles"].keys())}}
+    for p in presets:
+        if put(p["sheet"]):
+            m["presets"].setdefault(p["body"], {}).setdefault(p["set"], {})[p["style"]] = {
+                "sheet": p["sheet"], "frame": p["frameWidth"], "columns": p["columns"], "animations": p["animations"]}
+    for c in pack["creatures"]:
+        if put(c["atlas"]):
+            m["creatures"][c["id"]] = {"sheet": c["atlas"], "kind": c["kind"], "frame": c["frameSize"], "columns": 4,
+                                       "animations": c["animations"], "name": c["name"]}
+    for s in pack["sets"]:
+        m["sets"][s["id"]] = {"name": s["name"], "kind": s["kind"]}
+    for it in pack["items"]:
+        put(it["icon"])
+        if it["slot"] == SET_ICON_SLOT:
+            m["icons"][it["theme"]] = it["icon"]
+    for b in pack["badges"]:
+        if put(b["file"]):
+            m["badges"].append({"id": b["id"], "name": b["name"], "file": b["file"]})
+    for r in pack["rarity"]:
+        f = put(f"ui/rarity/{r['id']}.svg")
+        m["rarity"][r["id"]] = {"color": r["color"], "label": r["label"], "frame": f}
+    for e in pack.get("environments", []):
+        if put(e["path"]):
+            big = e["path"].replace("480x270", "1920x1080")
+            m["environments"][e["id"]] = {**{k: e[k] for k in ("path", "width", "height", "groundY", "hero", "enemy") if k in e},
+                                          "large": put(big)}
+    (OUT / "manifest.json").write_text(json.dumps(m, indent=1), encoding="utf-8")
+    print(f"pack: {PACK}\ncopied {copied} files; {sum(len(v) for b in m['presets'].values() for v in b.values())} preset sheets, "
+          f"{len(m['creatures'])} creatures, {len(m['icons'])} set icons, {len(m['badges'])} badges -> {OUT / 'manifest.json'}")
 
 
 if __name__ == "__main__":

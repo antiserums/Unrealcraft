@@ -1,7 +1,9 @@
 /** Character and creature figures. Outfits are looks only.
- *  With art-pack exports (see lib/art.ts) a figure is a stack of PNG layers on the pack's 1024x1024 canvas.
- *  Without them, the flat SVG silhouettes below stand in, so the site works while the art is produced. */
+ *  With the pixel pack (see lib/art.ts) a figure is an animated sprite sheet drawn by Sprite.tsx.
+ *  Without it, the flat SVG silhouettes below stand in, so the site works while art is missing. */
 import type { CSSProperties } from "react";
+import type { SheetSpec } from "@/lib/art";
+import Sprite from "./Sprite";
 
 const RAR: Record<string, string> = { common: "#4FA36C", uncommon: "#3D7DD8", rare: "#8E6CCF", epic: "#D9824A", legendary: "#D9534F" };
 export const RARITY_COLOR = RAR;
@@ -9,26 +11,22 @@ export const RARITY_COLOR = RAR;
 type CharPose = "idle" | "strike" | "hurt" | "down" | "win";
 type BossPose = "idle" | "attack" | "hit" | "dead";
 
-function Layered({ layers, size, cls, style, label }: { layers: string[]; size: number; cls: string; style?: CSSProperties; label: string }) {
-  return (
-    <div className={cls} role="img" aria-label={label} style={{ position: "relative", width: size, height: size, ...style }}>
-      {layers.map((src, i) => <img key={i} src={src} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />)}
-    </div>
-  );
-}
+/** The body occupies x 32..96, y 12..108 of the 128 px frame; this window keeps swings and the shield in view. */
+export const HERO_CROP = { x: 20, y: 4, w: 88, h: 116 };
+const CHAR_ANIM: Record<CharPose, string> = { idle: "idle", strike: "attack", hurt: "hit", down: "defeat", win: "victory" };
+const BOSS_ANIM: Record<BossPose, string> = { idle: "idle", attack: "attack", hit: "hit", dead: "defeat" };
 
-const OUTFIT_TINT: Record<string, string> = { wayfarer: "#3fb6b0", first_blood: "#c0553f", flawless_10: "#8E6CCF", streak_30: "#e0842e", reader_50: "#d4af5a" };
-function outfitTint(id: string): string {
-  if (OUTFIT_TINT[id]) return OUTFIT_TINT[id];
-  const m = /_(r|cap)(\d)$/.exec(id);
-  return m ? ["#4FA36C", "#3D7DD8", "#8E6CCF", "#D9824A", "#D9534F"][Number(m[2])] ?? "#3fb6b0" : "#3fb6b0";
-}
+const OUTFIT_TINT: Record<string, string> = { novice: "#3fb6b0", apprentice: "#4FA36C", adept: "#3D7DD8", expert: "#D9824A", master: "#e6c35a", warrior: "#6f7a86", ranger: "#4e8a4a", spellcaster: "#8E6CCF" };
 
-/** The member's figure: layered art when the pack has the worn set, otherwise a silhouette tinted by the set. */
-export function Character({ outfit = "wayfarer", layers, color = "#556270", size = 160, pose = "idle", style }:
-  { outfit?: string; layers?: string[] | null; color?: string; size?: number; pose?: CharPose; style?: CSSProperties }) {
-  if (layers && layers.length) return <Layered layers={layers} size={size * 1.2} cls={`figure art pose-${pose}`} style={style} label="Your character" />;
-  const cloth = outfitTint(outfit);
+/** The member's figure: the pack's sheet when there is one, otherwise a silhouette tinted by the set.
+ *  `size` is the silhouette height; sheets draw at an integer `scale` (2 = 256 px frame) and can be cropped. */
+export function Character({ outfit = "novice", sheet, weapon = "melee", color = "#556270", size = 160, pose = "idle", scale = 2, crop = HERO_CROP, style }:
+  { outfit?: string; sheet?: SheetSpec | null; weapon?: string; color?: string; size?: number; pose?: CharPose; scale?: number; crop?: { x: number; y: number; w: number; h: number } | null; style?: CSSProperties }) {
+  if (sheet) {
+    const anim = pose === "strike" && weapon === "caster" ? "cast" : CHAR_ANIM[pose];
+    return <Sprite spec={sheet} anim={anim} scale={scale} crop={crop ?? undefined} className={`figure pose-${pose}`} style={style} label="Your character" />;
+  }
+  const cloth = OUTFIT_TINT[outfit] ?? "#3fb6b0";
   const tf = pose === "strike" ? "translate(14 0) rotate(-6 50 80)" : pose === "hurt" ? "translate(-8 0) rotate(5 50 80)"
     : pose === "down" ? "rotate(80 50 110) translate(0 10)" : pose === "win" ? "translate(0 -6)" : "";
   return (
@@ -51,9 +49,13 @@ export function Character({ outfit = "wayfarer", layers, color = "#556270", size
   );
 }
 
-export function Boss({ look, image, color = "#8E6CCF", size = 200, pose = "idle", style }:
-  { look: string; image?: string | null; color?: string; size?: number; pose?: BossPose; style?: CSSProperties }) {
-  if (image) return <Layered layers={[image]} size={size * 1.2} cls={`figure boss art pose-${pose}`} style={{ opacity: pose === "dead" ? .35 : 1, transition: "opacity .6s ease", ...style }} label="The boss" />;
+/** A creature: enemy sheets are 64 px frames (draw at 3x), boss sheets 128 px (draw at 2x). */
+export function Boss({ look, sheet, color = "#8E6CCF", size = 200, pose = "idle", scale, style }:
+  { look: string; sheet?: SheetSpec | null; color?: string; size?: number; pose?: BossPose; scale?: number; style?: CSSProperties }) {
+  if (sheet) {
+    const k = scale ?? (sheet.frame <= 64 ? 3 : 2);
+    return <Sprite spec={sheet} anim={BOSS_ANIM[pose]} scale={k} className={`figure boss pose-${pose}`} style={style} label="The boss" />;
+  }
   const tf = pose === "attack" ? "translate(-12 0) scale(1.04)" : pose === "hit" ? "translate(8 0)" : pose === "dead" ? "translate(0 30) scale(1 .3)" : "";
   const op = pose === "dead" ? 0.35 : 1;
   const body = BOSS_SHAPES[look] ?? BOSS_SHAPES.knight;
@@ -92,7 +94,7 @@ export function ItemIcon({ icon, rarity, size = 44 }: { icon?: string | null; ra
   const c = RAR[rarity] ?? "#888";
   return (
     <span className="item-icon" style={{ width: size, height: size, borderColor: c, boxShadow: `inset 0 0 0 1px ${c}55, 0 0 8px ${c}33` }}>
-      {icon ? <img src={icon} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ background: c, opacity: .35, position: "absolute", inset: 6, borderRadius: 3 }} />}
+      {icon ? <img className="px" src={icon} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ background: c, opacity: .35, position: "absolute", inset: 6, borderRadius: 3 }} />}
     </span>
   );
 }

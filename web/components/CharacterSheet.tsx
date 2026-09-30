@@ -1,30 +1,25 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
+import type { SheetSpec } from "@/lib/art";
 import { Character, RARITY_COLOR } from "./Figure";
 
-export type Outfit = { id: string; name: string; flavour: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
+export type Outfit = { id: string; name: string; flavour: string; kind: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
-  worn: Outfit; outfits: Outfit[]; new_outfits: string[];
-  cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string };
+  worn: Outfit; outfits: Outfit[]; new_outfits: string[]; style: string; body: string; styles: string[];
+  cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string; style?: string };
   nameplate_colors: string[]; slots: string[]; major: string;
 };
-/** layersBy: art id -> layer URLs for every set the pack has art for, so the closet can try sets on. */
-export type ArtProps = { layersBy: Record<string, string[]>; icons: Record<string, string>; appearance: Record<string, string[]> };
+/** sheets: body -> style -> set -> sheet, so the mirror can try any set in any style without a round trip. */
+export type ArtProps = { sheets: Record<string, Record<string, Record<string, SheetSpec>>>; icons: Record<string, string>; bodies: string[] };
 
-const APPEARANCE_LABEL: Record<string, string> = { body: "Body", skin: "Skin", face: "Face", hair: "Hair", hair_color: "Hair color", eye_color: "Eyes", facial_hair: "Facial hair", markings: "Markings" };
 const TIER_NAME: Record<string, string> = { novice: "Novice", apprentice: "Apprentice", adept: "Adept", expert: "Expert", master: "Master" };
 const RARITY_OF_TIER: Record<string, string> = { novice: "common", apprentice: "uncommon", adept: "rare", expert: "epic", master: "legendary" };
-type Kind = "all" | "rank" | "capstone" | "achievement";
-const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", capstone: "Capstone", achievement: "Achievement" };
+const STYLE_LABEL: Record<string, string> = { melee: "Sword & shield", caster: "Staff & orb" };
+const BODY_LABEL: Record<string, string> = { body_a: "Athletic", body_b: "Curved" };
+type Kind = "all" | "rank" | "reward";
+const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", reward: "Reward" };
 const TIER_ORDER = ["novice", "apprentice", "adept", "expert", "master"];
-
-function kindOf(o: Outfit): Exclude<Kind, "all"> | "starter" {
-  if (o.id === "wayfarer") return "starter";
-  if (/_r\d$/.test(o.id)) return "rank";
-  if (/_cap\d$/.test(o.id)) return "capstone";
-  return "achievement";
-}
 
 export default function CharacterSheet({ initial, fallbackColor, art }: { initial: Char; fallbackColor: string; art: ArtProps }) {
   const router = useRouter();
@@ -36,9 +31,11 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
   const color = c.cosmetics.nameplate ?? fallbackColor;
   const selected = c.outfits.find((o) => o.id === selectedId) ?? c.worn;
   const owned = c.outfits.filter((o) => o.owned).length;
+  const sheet = art.sheets[c.body]?.[c.style]?.[selected.art_id] ?? null;
+  const hasArt = Object.keys(art.sheets).length > 0;
 
   const shown = useMemo(() => c.outfits
-    .filter((o) => kind === "all" || kindOf(o) === kind || (kind === "achievement" && kindOf(o) === "starter"))
+    .filter((o) => kind === "all" || o.kind === kind)
     .filter((o) => showLocked || o.owned)
     .sort((a, b) => Number(b.owned) - Number(a.owned) || TIER_ORDER.indexOf(a.tier) - TIER_ORDER.indexOf(b.tier) || a.name.localeCompare(b.name)),
   [c.outfits, kind, showLocked]);
@@ -49,7 +46,6 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
     if (r.ok) { setC(await r.json()); router.refresh(); }   // the figure on the player card is rendered on the server
     setBusy(false);
   }
-  const appearanceKeys = Object.keys(art.appearance ?? {});
   const trying = selected.id !== c.worn.id;
 
   return (
@@ -58,12 +54,12 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
       <div className="card mirror">
         <div className="eyebrow">{trying ? "Trying on" : "Wearing"}</div>
         <div className="mirror-stage">
-          <Character outfit={selected.id} layers={art.layersBy[selected.art_id] ?? null} color={color} size={190} />
+          <Character outfit={selected.id} sheet={sheet} weapon={c.style} color={color} size={190} scale={2} />
         </div>
         <div className="mirror-detail">
           <div className="row" style={{ justifyContent: "space-between", alignItems: "baseline" }}>
             <b style={{ color: selected.color, fontSize: 17 }}>{selected.name}</b>
-            <span className="small muted">{TIER_NAME[selected.tier]} · {kindOf(selected) === "starter" ? "starter" : kindOf(selected)} set</span>
+            <span className="small muted">{TIER_NAME[selected.tier]} · {selected.kind} set</span>
           </div>
           <div className="small" style={{ margin: "4px 0 10px" }}><i>{selected.flavour}</i></div>
           {selected.owned ? (
@@ -75,21 +71,21 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
             <div className="note small">🔒 {selected.hint ?? "Not yet earned."}</div>
           )}
         </div>
-        {appearanceKeys.length > 0 && (
-          <details className="appearance">
-            <summary className="eyebrow" style={{ cursor: "pointer" }}>Appearance</summary>
-            <div className="row" style={{ gap: 8, marginTop: 8 }}>
-              {appearanceKeys.map((k) => (
-                <label key={k} className="small" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
-                  <span className="muted">{APPEARANCE_LABEL[k] ?? k}</span>
-                  <select value={c.cosmetics.appearance?.[k] ?? art.appearance[k][0]} disabled={busy} onChange={(e) => patch({ appearance: { [k]: e.target.value } })}>
-                    {art.appearance[k].map((v) => <option key={v} value={v}>{v.replace(/[-_]/g, " ")}</option>)}
-                  </select>
-                </label>
-              ))}
-            </div>
-          </details>
-        )}
+        <div className="mirror-detail">
+          <div className="small muted">Weapons</div>
+          <div className="subnav" style={{ margin: "6px 0 10px" }}>
+            {c.styles.map((s) => <a key={s} href="#" className={c.style === s ? "on" : ""} onClick={(e) => { e.preventDefault(); if (!busy && s !== c.style) patch({ style: s }); }}>{STYLE_LABEL[s] ?? s}</a>)}
+          </div>
+          {art.bodies.length > 1 && (
+            <>
+              <div className="small muted">Build</div>
+              <div className="subnav" style={{ margin: "6px 0 0" }}>
+                {art.bodies.map((b) => <a key={b} href="#" className={c.body === b ? "on" : ""} onClick={(e) => { e.preventDefault(); if (!busy && b !== c.body) patch({ appearance: { body: b } }); }}>{BODY_LABEL[b] ?? b}</a>)}
+              </div>
+            </>
+          )}
+          {!hasArt && <p className="small muted" style={{ margin: "8px 0 0" }}>Character art arrives with the art pack.</p>}
+        </div>
       </div>
 
       {/* right: the closet */}
@@ -113,7 +109,7 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
               <button key={o.id} type="button" role="option" aria-selected={o.id === selected.id} title={`${o.name} · ${TIER_NAME[o.tier]}`}
                 className={`tile ${o.owned ? "" : "locked"} ${o.worn ? "worn" : ""} ${o.id === selected.id ? "selected" : ""}`}
                 style={{ "--rc": rc } as React.CSSProperties} onClick={() => setSelectedId(o.id)}>
-                {icon ? <img src={icon} alt="" /> : <span className="tile-swatch" />}
+                {icon ? <img className="px" src={icon} alt="" /> : <span className="tile-swatch" />}
                 {o.worn && <span className="tile-mark">✔</span>}
                 {!o.owned && <span className="tile-lock">🔒</span>}
                 {c.new_outfits.includes(o.id) && <span className="tile-new">new</span>}

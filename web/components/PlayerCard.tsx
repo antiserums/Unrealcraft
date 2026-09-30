@@ -1,8 +1,9 @@
 import type { Card } from "@/lib/api";
+import type { SheetSpec } from "@/lib/art";
 import { Character } from "./Figure";
 
 /** The shareable player card. Pure display: the owner edits it with CardEditor next to it. */
-export default function PlayerCard({ c, layers }: { c: Card; layers: string[] | null }) {
+export default function PlayerCard({ c, sheet, badges }: { c: Card; sheet: SheetSpec | null; badges: Record<string, string | null> }) {
   const pct = c.xp_next ? Math.min(100, Math.round(((c.xp - c.xp_floor) / (c.xp_next - c.xp_floor)) * 100)) : 100;
   return (
     <article className="pcard" style={{ "--plate": c.nameplate } as React.CSSProperties}>
@@ -31,12 +32,15 @@ export default function PlayerCard({ c, layers }: { c: Card; layers: string[] | 
           <div className="stat"><b>{c.achievements_earned}<span className="muted" style={{ fontSize: 13 }}>/{c.achievements_total}</span></b><span className="muted small">achievements</span></div>
         </div>
         <div className="pcard-figure">
-          <Character outfit={c.worn.id} layers={layers} color={c.nameplate} size={150} />
+          <Character outfit={c.worn.id} sheet={sheet} weapon={c.style} color={c.nameplate} size={150} scale={2} />
           <div className="small" style={{ textAlign: "center" }}><span className="muted">Wearing</span> <b style={{ color: c.worn.color }}>{c.worn.name}</b></div>
         </div>
         <div className="pcard-feats">
           {c.featured.length ? c.featured.map((a) => (
-            <div key={a.key} className="feat" title={a.desc}><span className="feat-icon">{a.icon}</span><span>{a.name}</span></div>
+            <div key={a.key} className="feat" title={a.desc}>
+              {badges[a.key] ? <img className="px feat-badge" src={badges[a.key]!} alt="" /> : <span className="feat-icon">{a.icon}</span>}
+              <span>{a.name}</span>
+            </div>
           )) : <div className="small muted">No achievements to show yet. The first one comes with the first finished quest.</div>}
         </div>
       </div>

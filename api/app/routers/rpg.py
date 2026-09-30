@@ -19,37 +19,39 @@ NAMEPLATE_COLORS = ["#7A8C7E", "#B5714B", "#3D7DD8", "#8E6CCF", "#D9824A", "#D95
 
 
 async def character_payload(request: Request, uid: int, u: dict) -> dict:
-    """Stats (computed), the outfits this member owns (granted idempotently from progress), and the one worn."""
-    rdb, cat = request.app.state.rpg, request.app.state.catalog
+    """Stats (computed, hidden), the outfits this member owns (granted idempotently from progress), and the one worn."""
+    rdb, cat, db = request.app.state.rpg, request.app.state.catalog, request.app.state.db
     await rdb.ensure_character(uid)
     major = u.get("major", "undecided")
     inputs = await rdb.stat_inputs(uid)
     stats = rpg.stats_from(inputs["done"], inputs["first"], inputs["approved"], inputs["reads"], inputs["streak"])
     sets = rpg.build_sets(cat)
-    _, state, _ = await request.app.state.db.user_state(uid)
+    _, state, _ = await db.user_state(uid)
+    earned = {a["key"] for a in rpg.achievements_for(cat, inputs, state.done, await db.medals(uid)) if a["earned"]}
     new_sets = []
     owned = await rdb.outfits(uid)
-    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), major=major, done=state.done, medals=inputs["medals"], stats=stats):
+    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned):
         if st["id"] not in owned:
-            src = st["unlock"].get("id") or st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else "starter")
+            src = st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else "starter")
             if await rdb.grant_outfit(uid, st["id"], str(src)):
                 new_sets.append(st["id"])
     owned = await rdb.outfits(uid)
     cos = await rdb.cosmetics(uid)
-    worn = cos.get("outfit") if cos.get("outfit") in owned else "wayfarer"
+    ids = {st["id"] for st in sets}
+    worn = cos.get("outfit") if cos.get("outfit") in owned and cos.get("outfit") in ids else rpg.STARTER_SET
     catalog = []
     for st in sets:
-        if st["major"] not in ("undecided", major) and st["id"] not in owned:
-            continue                                   # other majors' locked sets stay out of the wardrobe
         d = {k: v for k, v in st.items() if k != "unlock"}
         d["owned"] = st["id"] in owned
         d["earned_at"] = owned[st["id"]]["earned_at"] if d["owned"] else None
         d["hint"] = st["unlock"].get("hint")
         d["worn"] = st["id"] == worn
         catalog.append(d)
-    return {"stats": stats, "stat_blurb": rpg.STAT_BLURB, "worn": next((c for c in catalog if c["worn"]), catalog[0]),
+    style = cos.get("style") if cos.get("style") in rpg.STYLES else "melee"
+    body = (cos.get("appearance") or {}).get("body") or "body_a"
+    return {"stats": stats, "worn": next(c for c in catalog if c["worn"]), "style": style, "body": body,
             "outfits": catalog, "new_outfits": new_sets, "cosmetics": cos, "nameplate_colors": NAMEPLATE_COLORS,
-            "slots": rpg.SLOTS, "major": major}
+            "slots": rpg.SLOTS, "styles": rpg.STYLES, "major": major}
 
 
 @router.get("/me/character")
@@ -87,7 +89,8 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
     featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
-    return {**p, "worn": char["worn"], "cosmetics": cos, "nameplate": cos.get("nameplate") or p["rank_color"],
+    return {**p, "worn": char["worn"], "style": char["style"], "body": char["body"], "cosmetics": cos,
+            "nameplate": cos.get("nameplate") or p["rank_color"],
             "motto": cos.get("banner") or "", "public": bool(cos.get("public")),
             "achievements_earned": len(earned), "achievements_total": len(ach), "featured": featured,
             "nameplate_colors": NAMEPLATE_COLORS, "earned_achievements": earned}
@@ -104,7 +107,8 @@ class CharacterPatch(BaseModel):
     banner: str | None = None                      # the motto on the player card
     featured: list[str] | None = None              # up to three achievement keys shown on the card
     public: bool | None = None                     # card visible without logging in
-    appearance: dict[str, str] | None = None      # body, skin, face, hair, hair_color... (art pack ids)
+    style: str | None = None                       # melee (sword + shield) | caster (staff + orb)
+    appearance: dict[str, str] | None = None      # body (body_a | body_b); more once the pack's renderer is ported
 
 
 @router.patch("/me/character")
@@ -126,6 +130,10 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         cos["featured"] = [k[:40] for k in body.featured[:3]]
     if body.public is not None:
         cos["public"] = body.public
+    if body.style is not None:
+        if body.style not in rpg.STYLES:
+            raise HTTPException(400, "Pick sword and shield, or staff and orb.")
+        cos["style"] = body.style
     if body.appearance is not None:
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
@@ -168,7 +176,7 @@ def _public(state: dict, q: Quest, boss: dict, char: dict, question: dict | None
         "boss": boss,
         "you": {"vitality": char["stats"]["vitality"], "wounds": state["wounds"], "wounds_allowed": boss["wounds_allowed"],
                 "steady_available": state["steady_available"], "craft": char["stats"]["craft"], "focus": char["stats"]["focus"],
-                "crit_pct": rpg.crit_chance(char["stats"]["focus"], None), "outfit": char["worn"]["art_id"]},
+                "crit_pct": rpg.crit_chance(char["stats"]["focus"], None), "outfit": char["worn"]["art_id"], "style": char["style"]},
         "hits": state["right"], "hits_to_win": boss["hits_to_win"], "turn": state["i"] + 1, "total": total,
         "first_try": state["first_try"], "log": state["log"][-6:], "question": question, "result": state.get("result"),
         "outcome": state.get("outcome"),

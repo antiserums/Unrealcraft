@@ -2,6 +2,7 @@ import Link from "next/link";
 import QuestCard from "@/components/QuestCard";
 import { Boss, Character } from "@/components/Figure";
 import { api, type Majors, type Me, type Next } from "@/lib/api";
+import { creatureSheet, loadManifest, presetSheet } from "@/lib/art";
 
 const MAJOR_BLURB: Record<string, string> = {
   level_design: "Spaces, flow and encounters. Build places people want to move through.",
@@ -15,7 +16,7 @@ const MAJOR_BLURB: Record<string, string> = {
 const MAJOR_GLYPH: Record<string, string> = { level_design: "🗺️", programming: "⚙️", lookdev: "🎨", tech_art: "🔮", gameplay_design: "🎲", animation: "🏃", cinematics: "🎬" };
 
 export default async function Home() {
-  const [me, majors] = await Promise.all([api<Me>("/me"), api<Majors>("/catalog/majors")]);
+  const [me, majors, manifest] = await Promise.all([api<Me>("/me"), api<Majors>("/catalog/majors"), loadManifest()]);
   const next = me ? await api<Next>("/me/next") : null;
   const list = majors ? Object.values(majors.majors).filter((m) => m.key !== "undecided") : [];
   return (
@@ -48,9 +49,9 @@ export default async function Home() {
           )}
         </div>
         <div className="hero-art" aria-hidden="true">
-          <Character outfit="wayfarer" color="#3fb6b0" size={150} pose="strike" />
+          <Character outfit="novice" sheet={presetSheet(manifest, "body_a", "novice", "melee")} color="#3fb6b0" size={150} pose="idle" scale={2} />
           <span className="hero-vs">⚔</span>
-          <Boss look="golem" color="#8E6CCF" size={180} pose="hit" />
+          <Boss look="golem" sheet={creatureSheet(manifest, "boss_compiler_golem")} color="#8E6CCF" size={180} pose="idle" />
         </div>
       </section>
 

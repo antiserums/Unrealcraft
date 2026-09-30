@@ -55,10 +55,10 @@ export type PathData = {
   locked: { n: number; title: string; xp: number; opens: string | null; gate_tier: { need: number; name: string } | null; quests: QuestSummary[]; tasters: { id: string; title: string }[][]; capstone: { id: string; title: string; brief: string } | null } | null;
 };
 export type Next = { main: QuestSummary | null; reason: string; electives: QuestSummary[]; adjacent: QuestSummary | null; remaining_minutes: number };
-export type Achievement = { key: string; name: string; desc: string; icon: string; need: number; of: string; have: number; earned: boolean; earned_at: string | null; outfit?: string };
+export type Achievement = { key: string; name: string; desc: string; icon: string; need: number; of: string; have: number; earned: boolean; earned_at: string | null; outfit?: string; badge?: number };
 export type Card = Me & {
   worn: { id: string; name: string; flavour: string; tier: string; color: string; art_id: string };
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string; featured?: string[]; public?: boolean };
-  nameplate: string; motto: string; public: boolean; achievements_earned: number; achievements_total: number;
+  style: string; body: string; nameplate: string; motto: string; public: boolean; achievements_earned: number; achievements_total: number;
   featured: Achievement[]; nameplate_colors: string[]; earned_achievements: Achievement[]; mine?: boolean;
 };

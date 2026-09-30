@@ -1,12 +1,13 @@
 import Link from "next/link";
+import type { SheetSpec } from "@/lib/art";
 import { Boss } from "./Figure";
 
 export type BossInfo = { name: string; short: string; look: string; color: string; hits_to_win: number; questions: number; wounds_allowed: number; intro: string; tier: string; hint_topics: string[]; creature: string; kind: "enemy" | "boss" };
 
-export default function BossCard({ boss, questId, canFight, reason, image }: { boss: BossInfo; questId: string; canFight: boolean; reason?: string; image?: string | null }) {
+export default function BossCard({ boss, questId, canFight, reason, sheet }: { boss: BossInfo; questId: string; canFight: boolean; reason?: string; sheet?: SheetSpec | null }) {
   return (
     <div className="card" style={{ display: "flex", gap: 14, alignItems: "center", borderColor: boss.color }}>
-      <Boss look={boss.look} image={image} color={boss.color} size={92} />
+      <Boss look={boss.look} sheet={sheet} color={boss.color} size={92} scale={sheet && sheet.frame <= 64 ? 2 : 1} />
       <div style={{ flex: 1, minWidth: 180 }}>
         <div className="eyebrow" style={{ color: boss.color }}>{boss.kind === "boss" ? "Boss of this dungeon" : "Guardian of this room"}</div>
         <b style={{ fontSize: 16 }}>{boss.name}</b>
