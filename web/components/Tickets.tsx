@@ -35,7 +35,7 @@ export function TicketForm({ categories }: { categories: string[] }) {
       fd.set("category", category); fd.set("subject", subject); fd.set("body", body);
       files.forEach((f) => fd.append("files", f));
       const j = await call("/me/tickets", fd);
-      router.push(`/support/${j.id}`);
+      router.push(`/inbox?ticket=${j.id}`);
     } catch (x) {
       setErr((x as Error).message); setBusy(false);
     }
@@ -62,7 +62,7 @@ export function TicketForm({ categories }: { categories: string[] }) {
 }
 
 /** One ticket's messages with a reply box. Members reply and close; staff reply (marks it answered) and set the status. */
-export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?: boolean }) {
+export function TicketThread({ ticket, staff = false, onChanged }: { ticket: Ticket; staff?: boolean; onChanged?: () => void }) {
   const t = useT();
   const router = useRouter();
   const [body, setBody] = useState("");
@@ -78,6 +78,7 @@ export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?
       await call(path, payload);
       setBody(""); setFiles([]);
       router.refresh();
+      onChanged?.();
     } catch (x) {
       setErr((x as Error).message);
     }

@@ -2,8 +2,10 @@
 
 ## Support tickets
 
-- Members open tickets on `/support` (category, subject, text), see their own list and each thread, reply and
-  close. Five open tickets at most per member. Guests see the help text and a login button.
+- Members open tickets on `/support` (category, subject, text, screenshots). They read and answer them in the
+  inbox: the Tickets folder lists their tickets, a row opens the thread with a reply box, and `/inbox?ticket=ID`
+  opens one straight away (the support page's ticket rows and the "answered" mail link there; `/support/ID`
+  redirects). Five open tickets at most per member. Guests see the help text and a login button.
 - Staff (admins, developers and mentors) answer in the admin panel: `/admin/tickets` (filter by open, answered,
   closed) and `/admin/tickets/<id>`. A staff reply marks the ticket answered; a member reply reopens it; either
   side can close it, staff can reopen. Replies and status changes are written to the admin log.

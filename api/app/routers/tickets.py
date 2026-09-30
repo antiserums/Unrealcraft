@@ -173,7 +173,7 @@ async def staff_reply(tid: int, request: Request, body: str = Form(""), files: l
         raise HTTPException(404, "No such ticket.")
     body = _text(body, 1, 4000, "The message")
     await rdb.ticket_reply(tid, member["id"], True, body, "answered", await _store(member["id"], files))
-    await send_letter(request, t["member_id"], "ticket", f"Your ticket #{tid} was answered", body[:300], f"/support/{tid}")
+    await send_letter(request, t["member_id"], "ticket", f"Your ticket #{tid} was answered", body[:300], f"/inbox?ticket={tid}")
     await rdb.admin_log(member["id"], "ticket_reply", t["member_id"], {"ticket": tid})
     return await _public(await rdb.ticket(tid), request)
 

@@ -32,7 +32,7 @@ export default async function Support() {
         </div>
         <div className="card">
           <div className="eyebrow">{t("Write to staff")}</div>
-          <p className="small" style={{ margin: "6px 0 0" }}>{t("For anything about your account, a review, a broken quest or a donation, open a ticket below. Staff answer here, and you get the reply on this page.")}</p>
+          <p className="small" style={{ margin: "6px 0 0" }}>{t("For anything about your account, a review, a broken quest or a donation, open a ticket below. Staff answer in your inbox, where you can reply.")}</p>
         </div>
       </div>
 
@@ -51,7 +51,7 @@ export default async function Support() {
           <div className="section-h"><h2>{t("Your tickets")}</h2><span className="muted small">{t("{n} in all", { n: tickets.length })}</span></div>
           {tickets.length === 0
             ? <Spot art="sleeping-dragon">{t("No tickets yet. When you open one, it shows here with its answers.")}</Spot>
-            : <div className="grid">{tickets.map((tk) => <TicketRow key={tk.id} tk={tk} href={`/support/${tk.id}`} />)}</div>}
+            : <div className="grid">{tickets.map((tk) => <TicketRow key={tk.id} tk={tk} href={`/inbox?ticket=${tk.id}`} />)}</div>}
         </>
       )}
     </>
