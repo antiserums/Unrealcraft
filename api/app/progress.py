@@ -80,3 +80,6 @@ async def promote(request: Request, uid: int, old: int, new: int, by_admin: bool
     if new > old:
         await rdb.grant_medal(uid, JUMP_MEDAL.format(old, new))
     await rdb.emit("rank_up" if new > old and not by_admin else "rank_set", uid, {"old": old, "rank": new, "admin": by_admin})
+    if new > old:
+        title = request.app.state.catalog.ranks.get(new, {}).get("title", f"rank {new}")
+        await rdb.send_letter(uid, "rank", f"You reached {title}", "A new tier of dungeons is open, and a new set is waiting in your wardrobe.", "/me/wardrobe", None)

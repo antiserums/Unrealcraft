@@ -46,3 +46,18 @@ the `supporter` outfit, avatar frame and card frame, all opened by the `supporte
 
 The `/api/...` prefix is the website's proxy to the API (`web/next.config.ts`). If the API is exposed directly,
 point the webhook at `/stripe/webhook` on it instead.
+
+## Letters (notifications)
+
+The mailbox at `/letters` (also a tab on the profile pages and the envelope in the top bar with an unread count).
+Three panes: folders (Inbox, Unread, Announcements, Letters, Tickets, Reviews, Ranks and rewards), the list, and
+the open letter. Opening a letter marks it read; "Mark all read" clears the folder.
+
+- A letter goes to one member, to everyone (`member_id` 0, an announcement) or to staff (`member_id` -1). Reads
+  are per member (`letter_reads`). Announcements written before a member joined are not shown to them.
+- The site writes letters itself: a new ticket or a member's reply (to staff), a staff answer (to the member), a
+  review decision (to the member, with the reviewer's note), a rank-up, and a donation thank-you.
+- Admins write announcements and personal letters at `/admin/letters` (to everyone, staff, or a Discord id, with
+  an optional link), see what was sent and how many opened it, and can unsend a letter.
+- API: `GET /me/letters`, `GET /me/letters/unread`, `POST /me/letters/{id}/read`, `POST /me/letters/read-all`;
+  admin: `GET/POST /admin/letters`, `DELETE /admin/letters/{id}`. `letters_unread` rides on `/me`.

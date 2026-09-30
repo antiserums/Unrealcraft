@@ -82,6 +82,7 @@ async def me_payload(request: Request, member: dict) -> dict:
     payload["admin"] = is_admin(member)
     payload["review"] = {"can": a["can_review"], "mentor": a["mentor"],
                          "pending": len(await request.app.state.rpg.pending_submissions()) if a["can_review"] else 0}
+    payload["letters_unread"] = await request.app.state.rpg.unread_letters(member["id"], staff=payload["admin"] or a["can_review"])
     payload["specialization_options"] = [{"key": k, "title": v.get("title", k), "blurb": v.get("blurb", "")}
                                          for k, v in cat.specializations.items() if k != "undecided"]
     # what the member chose to wear on their card, for the home page and the top bar (no card fetch needed)

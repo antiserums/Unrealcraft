@@ -13,7 +13,7 @@ from . import auth
 from .config import settings
 from .db import DB
 from .entitlements import Entitlements
-from .routers import admin, admin_catalog, catalog, changelog, me, members, review, rpg, submit, tickets, donate
+from .routers import admin, admin_catalog, catalog, changelog, donate, letters, me, members, review, rpg, submit, tickets
 from .rpg_db import RpgDB
 
 log = logging.getLogger("unrealcraft.api")
@@ -77,6 +77,7 @@ app.include_router(admin.router)
 app.include_router(admin_catalog.router)
 app.include_router(tickets.router)
 app.include_router(donate.router)
+app.include_router(letters.router)
 
 
 @app.get("/health")

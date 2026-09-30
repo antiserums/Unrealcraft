@@ -107,5 +107,6 @@ async def webhook(request: Request):
         await rdb.ensure_character(uid)
         if await rdb.grant_medal(uid, "supporter"):
             await rdb.emit("supporter", uid, {"amount": amount, "currency": s.get("currency")})
+            await rdb.send_letter(uid, "donation", "Thank you for supporting Unrealcraft", "The Patron set is yours: the outfit, the avatar frame and the card frame are in your wardrobe and in Edit profile.", "/me/wardrobe", None)
             log.info("supporter medal granted to %s", uid)
     return {"ok": True}

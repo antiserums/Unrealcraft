@@ -2,6 +2,7 @@ import Link from "next/link";
 import { api, type Me } from "@/lib/api";
 import { loadManifest, siteArt } from "@/lib/art";
 import { getT } from "@/lib/i18n";
+import Ico from "./Ico";
 import { Px } from "./SiteArt";
 
 export default async function Nav() {
@@ -20,6 +21,10 @@ export default async function Nav() {
         <div className="nav-user">
           {me ? (
             <>
+              <Link href="/letters" className={`mailbox ${me.letters_unread ? "has-new" : ""}`} title={t("Letters")} aria-label={me.letters_unread ? t("{n} unread letters", { n: me.letters_unread }) : t("Letters")}>
+                <Ico group="utility" id="edit" size={16} /><span className="mail-glyph" aria-hidden="true">✉</span>
+                {me.letters_unread ? <span className="count">{me.letters_unread}</span> : null}
+              </Link>
               <Link href="/me" className="who">
                 {me.avatar && <img className="avatar" src={me.avatar} alt="" />}
                 <span>{me.name}</span>

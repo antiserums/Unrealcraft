@@ -128,6 +128,9 @@ async def review(sid: int, body: Verdict, request: Request, member=Depends(curre
     if final == "pass":
         u = await db.user(s["user_id"])
         xp, _ = await complete_quest(request, s["user_id"], q, u or {"rank": -1})
+    from .letters import send_letter
+    word = {"pass": "passed", "changes": "needs changes", "fail": "did not pass"}.get(final, final)
+    await send_letter(request, s["user_id"], "review", f"{q.id} {word}: {q.raw.get('title', q.id)}", (notes or "")[:300] or "The reviewer left no note.", f"/quests/{q.id}")
     await rdb.emit("submission_decided", s["user_id"], {"submission": sid, "verdict": final, "reviewer": uid,
                                                        "reviewer_name": member.get("name"), "notes": notes, "quest": q.id})
     return {"final": final, "quest_xp": xp, "message": f"Recorded: {final}."}

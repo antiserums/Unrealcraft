@@ -14,6 +14,7 @@ from ..config import settings
 from ..session import current_member
 from ..staff import can_review, is_admin, nameplate_for, role_of_id
 from .me import nameplate, rank_color
+from .letters import STAFF, send_letter
 from .submit import IMAGE_TYPES, MAX_BYTES, MAX_FILES
 
 router = APIRouter(tags=["tickets"])
@@ -112,6 +113,7 @@ async def open_ticket(request: Request, category: str = Form("other"), subject: 
     urls = await _store(member["id"], files)
     tid = await rdb.create_ticket(member["id"], category, subject, body, urls)
     await rdb.emit("ticket_opened", member["id"], {"ticket": tid, "category": category})
+    await send_letter(request, STAFF, "ticket", f"New ticket #{tid}: {subject}", body[:300], f"/admin/tickets/{tid}")
     return await _public(await rdb.ticket(tid), request)
 
 
@@ -135,6 +137,7 @@ async def my_reply(tid: int, request: Request, body: str = Form(""), files: list
     body = _text(body, 1, 4000, "The message")
     rdb = request.app.state.rpg
     await rdb.ticket_reply(tid, member["id"], False, body, "open", await _store(member["id"], files))
+    await send_letter(request, STAFF, "ticket", f"Reply on ticket #{tid}: {t['subject']}", body[:300], f"/admin/tickets/{tid}")
     return await _public(await rdb.ticket(tid), request)
 
 
@@ -170,6 +173,7 @@ async def staff_reply(tid: int, request: Request, body: str = Form(""), files: l
         raise HTTPException(404, "No such ticket.")
     body = _text(body, 1, 4000, "The message")
     await rdb.ticket_reply(tid, member["id"], True, body, "answered", await _store(member["id"], files))
+    await send_letter(request, t["member_id"], "ticket", f"Your ticket #{tid} was answered", body[:300], f"/support/{tid}")
     await rdb.admin_log(member["id"], "ticket_reply", t["member_id"], {"ticket": tid})
     return await _public(await rdb.ticket(tid), request)
 

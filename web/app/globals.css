@@ -620,10 +620,10 @@ html.site-art :is(.step, .spot, .result) {
 html.site-art :is(.step, .spot, .result) > * { image-rendering: auto; }
 html.site-art :is(.step, .spot, .result) .px { image-rendering: pixelated; }
 
-/* buttons: the tall plates, 96 x 48 with 4 px of clear space around them. Ends 14 px and trims 12 px keep their size,
+/* buttons: the tall plates, 96 x 48 with 4 px of clear space around them. Ends 14 px and trims 11 px top, 13 px bottom keep their size,
    the middle stretches; the image is painted over the button's own box. Compact 96 x 32 plates for the top bar. */
 html.site-art :is(.btn, button.primary, .nav form button) {
-  border: 0; border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 12 14 fill / 12px 14px stretch;
+  border: 0; border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 11 14 13 14 fill / 11px 14px 13px 14px stretch;
   background: none; box-shadow: none; border-radius: 0; padding: 12px 22px; color: var(--ink); text-shadow: 0 1px 0 #000; image-rendering: pixelated;
 }
 html.site-art :is(.btn, button.primary, .nav form button):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/stone-hover.png"); filter: none; color: #fff; }
@@ -667,7 +667,7 @@ html.site-art .lang-picker select { padding: 8px 24px 8px 12px; }
 html.site-art .subnav { border: 0; background: none; padding: 0; gap: 6px; }
 html.site-art .subnav a {
   display: inline-flex; align-items: center; gap: 4px; padding: 12px 20px; border-radius: 0; color: var(--ink); text-shadow: 0 1px 0 #000;
-  border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 12 14 fill / 12px 14px stretch; image-rendering: pixelated;
+  border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 11 14 13 14 fill / 11px 14px 13px 14px stretch; image-rendering: pixelated;
 }
 html.site-art .subnav a:hover { border-image-source: url("/art/website-art/interface/buttons-tall/stone-hover.png"); color: #fff; }
 html.site-art .subnav a:active { border-image-source: url("/art/website-art/interface/buttons-tall/stone-pressed.png"); }
@@ -778,7 +778,7 @@ html.site-art .pill.staff-title[data-role="developer"] { border-image-source: ur
 html.site-art .pill.staff-title[data-role="admin"] { border-image-source: url("/art/website-art/interface/chips/staff-admin.png"); }
 html.site-art .pill.staff-title[data-role="mentor"] { border-image-source: url("/art/website-art/interface/chips/staff-mentor.png"); }
 
-/* tier badge: 64 x 28 plate, slice 8; the 32 px mark sits in a 32 px line box and the plate stretches to it */
+/* tier badge: 64 x 32 plate, slice 8; the 32 px mark sits in a 32 px line box */
 html.site-art .tier { background: none !important; box-shadow: none; border-radius: 0; text-shadow: 0 1px 0 #000; padding: 4px 12px 4px 8px; min-height: 32px; box-sizing: border-box; image-rendering: pixelated;
   border: 0; border-image: url("/art/website-art/interface/tier-plates/novice.png") 8 fill / 8px repeat; }
 html.site-art .tier.has-mark { padding: 0 12px 0 2px; }
@@ -845,3 +845,30 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 .ticket-upload input[type="file"] { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
 .ticket-who { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
 .ticket-who .who { display: inline-flex; align-items: center; }
+
+/* letters (notifications) */
+.mailbox { position: relative; display: inline-flex; align-items: center; padding: 6px; color: var(--muted); }
+.mailbox:hover { color: var(--gold-2); text-decoration: none; }
+.mailbox .count { position: absolute; top: -2px; right: -4px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 8px; background: var(--gold); color: var(--accent-ink); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; }
+.mailbox .ico { margin: 0; }
+html.site-art .mail-glyph { display: none; }
+html:not(.site-art) .mailbox .mail-glyph { font-size: 16px; }
+/* the inbox: folders | list | reading pane */
+.inbox { display: grid; grid-template-columns: 170px minmax(240px, 1fr) minmax(0, 1.4fr); gap: 12px; align-items: start; }
+.inbox-folders { display: flex; flex-direction: column; gap: 2px; }
+.inbox-folder { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 8px 10px; background: none; border: 0; color: var(--muted); font: inherit; font-family: var(--display); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; border-left: 2px solid transparent; }
+.inbox-folder:hover { color: var(--gold-2); }
+.inbox-folder.on { color: var(--gold-2); border-left-color: var(--gold); background: rgba(212, 175, 90, .06); }
+.inbox-folder .count, .mailbox .count { min-width: 16px; height: 16px; padding: 0 5px; border-radius: 8px; background: var(--gold); color: var(--accent-ink); font-size: 10px; font-weight: 700; line-height: 16px; text-align: center; letter-spacing: 0; }
+.inbox-readall { margin-top: 10px; }
+.inbox-list { padding: 6px; max-height: 70vh; overflow: auto; }
+.inbox-row { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 10px 8px; background: none; border: 0; border-bottom: 1px solid rgba(212, 175, 90, .12); color: inherit; font: inherit; cursor: pointer; }
+.inbox-row:last-child { border-bottom: 0; }
+.inbox-row:hover, .inbox-row.on { background: rgba(212, 175, 90, .08); }
+.inbox-row-text { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+.inbox-title { font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.inbox-row.unread .inbox-title { font-weight: 700; color: var(--gold-2); }
+.inbox-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px var(--gold); flex: none; }
+.inbox-read { min-height: 240px; }
+.letter-text { white-space: pre-wrap; max-width: 78ch; }
+@media (max-width: 860px) { .inbox { grid-template-columns: 1fr; } .inbox-folders { flex-direction: row; flex-wrap: wrap; } .inbox-folder { width: auto; border-left: 0; border-bottom: 2px solid transparent; } .inbox-folder.on { border-bottom-color: var(--gold); } .inbox-list { max-height: 40vh; } }

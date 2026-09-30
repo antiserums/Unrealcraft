@@ -1,5 +1,10 @@
 # Handoff for the artist — 30 September 2026 (evening)
 
+**Update, later that evening:** the polish pass (tall buttons one pixel up with slices 11 14 13 14, the 64 x 32
+tier plates, the brighter statistics icons) and the Patron set (four sheets, eleven icons, avatar ring and card
+border under `supporter`) are synced and live. Nothing is outstanding on the art side; the list under "Wanted
+next" below is done.
+
 This is the current, single handoff from the site to you. It replaces the running notes in `docs/12` and the
 request list in `docs/18`; both stay as records. Everything you have delivered so far is synced, wired and
 committed. Below: what is live, what is not used and why, and what is wanted next.

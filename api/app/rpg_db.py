@@ -87,6 +87,23 @@ CREATE TABLE IF NOT EXISTS ticket_messages (
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_ticket_messages ON ticket_messages(ticket_id, id);
+CREATE TABLE IF NOT EXISTS letters (               -- notifications: to one member, everyone (0) or staff (-1)
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    member_id   INTEGER NOT NULL,
+    kind        TEXT NOT NULL DEFAULT 'letter',    -- letter | announcement | ticket | review | rank | donation
+    title       TEXT NOT NULL,
+    body        TEXT NOT NULL DEFAULT '',
+    link        TEXT,
+    sender_id   INTEGER,                           -- the admin who wrote it; NULL when the site did
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_letters_member ON letters(member_id, id);
+CREATE TABLE IF NOT EXISTS letter_reads (
+    member_id   INTEGER NOT NULL,
+    letter_id   INTEGER NOT NULL,
+    read_at     TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (member_id, letter_id)
+);
 CREATE TABLE IF NOT EXISTS donations (             -- Stripe Checkout payments that opened the Patron set
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     member_id   INTEGER NOT NULL,
@@ -297,6 +314,54 @@ class RpgDB:
     async def open_ticket_count(self) -> int:
         cur = await self.conn.execute("SELECT COUNT(*) FROM tickets WHERE status='open'")
         return int((await cur.fetchone())[0])
+
+    # ---------- letters ----------
+    def _letter_where(self, uid: int, staff: bool) -> tuple[str, list]:
+        aud = "(l.member_id=? OR l.member_id=0" + (" OR l.member_id=-1)" if staff else ")")
+        return aud, [uid]
+
+    async def send_letter(self, to: int, kind: str, title: str, body: str, link: str | None, sender: int | None) -> int:
+        cur = await self.conn.execute("INSERT INTO letters(member_id, kind, title, body, link, sender_id) VALUES (?,?,?,?,?,?)",
+                                      (to, kind, title, body, link, sender))
+        await self.conn.commit()
+        return int(cur.lastrowid)
+
+    async def letters_for(self, uid: int, staff: bool, limit: int = 100) -> list[dict]:
+        """A member's letters, newest first, each with a `read` flag. Announcements written before the member joined
+        are left out, so a new account does not open to a pile of old news."""
+        aud, args = self._letter_where(uid, staff)
+        cur = await self.conn.execute(
+            f"SELECT l.*, (SELECT 1 FROM letter_reads r WHERE r.member_id=? AND r.letter_id=l.id) AS read FROM letters l "
+            f"WHERE {aud} AND (l.member_id>0 OR l.created_at >= COALESCE((SELECT created_at FROM users WHERE discord_id=?), '')) "
+            f"ORDER BY l.id DESC LIMIT ?", (uid, *args, uid, limit))
+        return [{**dict(r), "read": bool(r["read"])} for r in await cur.fetchall()]
+
+    async def unread_letters(self, uid: int, staff: bool) -> int:
+        aud, args = self._letter_where(uid, staff)
+        cur = await self.conn.execute(
+            f"SELECT COUNT(*) FROM letters l WHERE {aud} AND (l.member_id>0 OR l.created_at >= COALESCE((SELECT created_at FROM users WHERE discord_id=?), '')) "
+            f"AND NOT EXISTS (SELECT 1 FROM letter_reads r WHERE r.member_id=? AND r.letter_id=l.id)", (*args, uid, uid))
+        return int((await cur.fetchone())[0])
+
+    async def letter_visible(self, lid: int, uid: int, staff: bool) -> bool:
+        aud, args = self._letter_where(uid, staff)
+        cur = await self.conn.execute(f"SELECT 1 FROM letters l WHERE l.id=? AND {aud}", (lid, *args))
+        return await cur.fetchone() is not None
+
+    async def mark_letter(self, uid: int, lid: int) -> None:
+        await self.conn.execute("INSERT OR IGNORE INTO letter_reads(member_id, letter_id) VALUES (?,?)", (uid, lid))
+        await self.conn.commit()
+
+    async def letters_sent(self, limit: int = 100) -> list[dict]:
+        cur = await self.conn.execute(
+            "SELECT l.*, (SELECT COUNT(*) FROM letter_reads r WHERE r.letter_id=l.id) AS reads, "
+            "(SELECT v FROM kv k WHERE k.user_id=l.member_id AND k.k='web.name') AS name FROM letters l ORDER BY l.id DESC LIMIT ?", (limit,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def delete_letter(self, lid: int) -> None:
+        await self.conn.execute("DELETE FROM letters WHERE id=?", (lid,))
+        await self.conn.execute("DELETE FROM letter_reads WHERE letter_id=?", (lid,))
+        await self.conn.commit()
 
     # ---------- donations ----------
     async def record_donation(self, uid: int, session_id: str, amount: int, currency: str) -> bool:
