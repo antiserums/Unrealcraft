@@ -1,10 +1,8 @@
-/** Client-safe helpers for the card decorations (no filesystem imports). */
+/** Client-safe helpers for the card decorations (no filesystem imports).
+ *  The card is 640 x 440 and border art is 352 x 252 at 2x with the card in its centre 320 x 220, so the gutter
+ *  around the card is a constant 32 px on every side, decoration or not. That constancy is what keeps the card
+ *  from moving when a decoration is switched on or off. */
 import type { CSSProperties } from "react";
 
-export type Inset = { top: number; right: number; bottom: number; left: number };
-
-/** Gutter padding (CSS px) so a card border's band hugs the card: the band's inner edge at 2x, plus a hair. */
-export function gutterFor(inset: Inset | undefined): CSSProperties {
-  const i = inset ?? { top: 16, right: 10, bottom: 16, left: 10 };
-  return { paddingTop: i.top * 2 + 2, paddingRight: i.right * 2 + 2, paddingBottom: i.bottom * 2 + 2, paddingLeft: i.left * 2 + 2 };
-}
+export const GUTTER = 32;
+export const gutter: CSSProperties = { padding: GUTTER };

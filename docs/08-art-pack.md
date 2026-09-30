@@ -44,11 +44,12 @@ use bosses; the pick comes from the quest's subject (`ENEMY_FOR_LOOK`, `capstone
 background. The stage is a fixed 960 x 540 scene scaled down to fit its column: hero at (96, 256), boss on the
 right, feet on the ground line y = 464 (232 x 2), health boxes in the top 15 percent, as the handoff suggests.
 
-**Profile decorations.** `profile-decorations/avatar/NN-<theme>.png` (96 px rings with a transparent centre) and
-`profile-decorations/card/NN-<theme>.png` (256 x 200 borders, transparent inside) for ten themes: novice, apprentice,
-adept, expert, master, thornwood, emberforge, frostbound, celestial, dragonheart. The site overlays them as images
-(`.deco-avatar`, `.pcard-deco`); the same unlock rule opens the avatar ring and the card border of a theme
-(`DECORATIONS` in `rpg.py`). Theme ids are the file stems without the number prefix.
+**Profile decorations.** `profile-decorations/avatar/NN-<theme>.png` (48 px rings, transparent centre) and
+`profile-decorations/card/NN-<theme>.png` (352 x 252 borders with the card in the centre 320 x 220) for ten
+themes: novice, apprentice, adept, expert, master, thornwood, emberforge, frostbound, celestial, dragonheart.
+Exact rules are in `docs/09-playercard-art-spec.md`. The card sits in a constant 32 px gutter; the border is a
+CSS 9-slice (`.pcard-deco`, corners 44 px) that fades in, and the ring overlays the avatar (`.deco-avatar`). The
+same unlock rule opens a theme's ring and border (`DECORATIONS` in `rpg.py`).
 
 **Badges and rarity.** Eight badges in `ui/badges/` are mapped to achievements by the `badge` index in
 `ACHIEVEMENTS` (`rpg.py`); they show on the achievements page and the player card. Rarity frames in `ui/rarity/`

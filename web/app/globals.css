@@ -438,7 +438,7 @@ table.adm code { font-size: 12px; }
 /* ---- card cosmetics: the pack's decorations as overlays, and compact pickers ---- */
 .pcard { overflow: visible; }
 .pcard-avatar-wrap { position: relative; width: 64px; height: 64px; flex: 0 0 64px; }
-.deco-avatar { position: absolute; left: -18%; top: -18%; width: 136%; height: 136%; pointer-events: none; z-index: 2; }
+.deco-avatar { position: absolute; left: -16px; top: -16px; width: 96px; height: 96px; pointer-events: none; z-index: 2; }
 .pick-head { display: flex; justify-content: space-between; margin: 14px 0 6px; }
 .pick-grid { display: flex; flex-wrap: wrap; gap: 6px; }
 .pick { position: relative; padding: 0; overflow: hidden; border: 1px solid var(--bronze); background: linear-gradient(180deg, #151924, #0b0e14); box-shadow: inset 0 1px 0 rgba(255,255,255,.05); text-transform: none; letter-spacing: 0; display: inline-grid; place-items: center; }
@@ -456,16 +456,17 @@ table.adm code { font-size: 12px; }
 /* ---- player card studio: the card sits in a fixed gutter (same size with or without a decoration); the border
    art is a 9-slice drawn in that gutter, corners intact, band 2x, overlapping only the card's edge ---- */
 .studio { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.studio-card { position: relative; width: min(100%, 680px); padding: 34px 20px; }   /* per-theme padding comes inline */
+.studio-card { position: relative; width: min(100%, 704px); padding: 32px; }   /* 640 card + a constant 32 px gutter, decoration or not */
 .studio-card .pcard { width: 100%; position: relative; z-index: 1; }
-.studio-card.framed .pcard-banner, .studio-card.framed .pcard-foot { padding-left: 64px; padding-right: 64px; }
-.pcard-deco { position: absolute; inset: 0; pointer-events: none; z-index: 3; border: 72px solid transparent; border-image-slice: 36; border-image-width: 72px; border-image-repeat: round; image-rendering: pixelated; }
+.studio-card .pcard-banner, .studio-card .pcard-foot { padding-left: 44px; padding-right: 44px; }
+.pcard-deco { position: absolute; inset: 0; pointer-events: none; z-index: 3; border: 44px solid transparent; border-image-slice: 22; border-image-width: 44px; border-image-repeat: round; image-rendering: pixelated; opacity: 0; transition: opacity .3s ease; }
+.pcard-deco.on { opacity: 1; }
 .studio-panel { width: 100%; }
 .studio-summary { display: flex; flex-wrap: wrap; gap: 8px 18px; align-items: center; }
 .studio-summary .item { font-size: 13px; }
 .studio-summary .item span:first-child { color: var(--muted); }
 .edit-grid { display: grid; gap: 4px 28px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
-@media (max-width: 520px) { .studio-card { padding: 30px 10px; } }
+@media (max-width: 520px) { .studio-card { padding: 32px 10px; } }
 
 /* the player card is a fixed 640 x 440 canvas so border art can be drawn to it exactly */
 .pcard { width: 640px; max-width: 100%; height: 440px; display: flex; flex-direction: column; }

@@ -4,11 +4,10 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Card, CosmeticOption } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
-import { gutterFor, type Inset } from "@/lib/deco";
 import CharacterSheet, { type ArtProps, type Char } from "./CharacterSheet";
 import PlayerCard from "./PlayerCard";
 
-type DecoImages = { avatar: Record<string, string>; card: Record<string, string>; inset: Record<string, Inset> };
+type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
 type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; featured: string[]; public: boolean };
 type Kind = "nameplate" | "avatar_frame" | "card_frame";
 type Mode = "view" | "profile" | "wardrobe";
@@ -77,8 +76,8 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
 
   return (
     <div className="studio">
-      <div className={`studio-card ${cardArt ? "framed" : ""}`} style={cardArt ? gutterFor(deco.inset[shown.card_frame]) : undefined}>
-        {cardArt && <div className="px pcard-deco" style={{ borderImageSource: `url("${cardArt}")` }} aria-hidden="true" />}
+      <div className={`studio-card ${cardArt ? "framed" : ""}`}>
+        <div className={`px pcard-deco ${cardArt ? "on" : ""}`} style={cardArt ? { borderImageSource: `url("${cardArt}")` } : undefined} aria-hidden="true" />
         <PlayerCard c={shown} sheet={sheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
       </div>
 
