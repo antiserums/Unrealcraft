@@ -50,10 +50,10 @@ point the webhook at `/stripe/webhook` on it instead.
 ## Inbox (mail and notifications)
 
 The inbox at `/inbox` (the envelope in the top bar shows the unread count; `/mail` and `/letters` redirect).
-Laid out like a desktop mail client: folders on the left (Inbox, Unread, Announcements, Tickets, Reviews, Ranks
-and rewards, with unread counts), the message list in the middle (sender, subject, a coloured type tag and a
-preview; unread in bold with a dot), and the open mail in a reading pane on the right, with a Mark read/unread
-button and an action button that names where it goes. Opening marks it read; "Mark all read" clears the lot.
+One list of everything, newest first: sender, subject, a coloured type tag (ticket, review, announcement, letter,
+rank, thank-you) and a preview; unread rows are bold with a gold dot. Clicking a row opens that mail in place of
+the list, with Back, newer/older, a Mark read/unread button and an action button that names where it goes
+(the ticket, the quest, the wardrobe). Opening marks it read; "Mark all read" above the list clears the lot.
 
 - A letter goes to one member, to everyone (`member_id` 0, an announcement) or to staff (`member_id` -1). Reads
   are per member (`letter_reads`). Announcements written before a member joined are not shown to them.
