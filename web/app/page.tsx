@@ -5,7 +5,10 @@ import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
 import { AvatarDeco } from "@/components/DecoAnim";
-import { bannerSet, decorationImage, loadManifest, siteArtGroup } from "@/lib/art";
+import { arenaBackground, bannerSet, creatureSheet, decorationImage, loadManifest, rankCrest, siteArtGroup } from "@/lib/art";
+import type { BossInfo } from "@/components/BossCard";
+import { Boss } from "@/components/Figure";
+import { Px } from "@/components/SiteArt";
 import { MISSION } from "@/lib/mission";
 import { getT } from "@/lib/i18n";
 
@@ -21,8 +24,13 @@ export default async function Home() {
     me ? null : api<GuildStats>("/catalog/stats"),
     me ? null : api<Specializations>("/catalog/specializations"),
   ]);
+  const boss = next?.main?.has_quiz ? await api<BossInfo>(`/catalog/quests/${next.main.id}/boss`) : null;   // the ribbon shows who waits inside
   const banner = bannerSet(manifest);
   const pct = me?.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;
+  const arena = next?.main ? arenaBackground(manifest, next.main.id) : null;
+  const bossSheet = boss ? creatureSheet(manifest, boss.creature) : null;
+  const crest = me ? rankCrest(manifest, me.rank) : null;
+  const nextCrest = me?.next_rank ? rankCrest(manifest, me.next_rank.n) : null;
   const hero = (
     <>
         {me ? (
@@ -38,11 +46,17 @@ export default async function Home() {
                   <span className={`pill ${me.staff ? "staff-title" : ""}`} data-role={me.staff ?? undefined} style={{ borderColor: me.rank_color, color: me.rank_color }}>{t(me.rank_title)}</span>
                 </div>
                 {me.title && <div className="ribbon-title">{t(me.title)}</div>}
+                {/* the road to the next rank: this crest, the bar, the next crest */}
                 <div className="ribbon-xp">
-                  <div className="bar"><span style={{ width: `${pct}%` }} /></div>
-                  <div className="small muted">
-                    {me.next_rank ? t("{xp} XP · {n} to {rank}", { xp: me.xp, n: me.next_rank.xp_to_go, rank: t(me.next_rank.title) }) : t("{xp} XP", { xp: me.xp })}
-                    {me.tier_progress ? ` · ${t("{tier} quests {done}/{need}", { tier: t(me.tier_progress.name), done: me.tier_progress.done, need: me.tier_progress.need })}` : ""}
+                  <div className="ribbon-xp-row">
+                    {crest ? <Px src={crest} className="ribbon-crest" /> : null}
+                    <div className="bar" title={`${pct}%`}><span style={{ width: `${pct}%` }} /></div>
+                    {nextCrest ? <Px src={nextCrest} className="ribbon-crest next" /> : null}
+                  </div>
+                  <div className="ribbon-xp-line small">
+                    <b>{t("{xp} XP", { xp: me.xp })}</b>
+                    {me.next_rank && <span className="muted"> · {t("{n} to {rank}", { n: me.next_rank.xp_to_go, rank: t(me.next_rank.title) })}</span>}
+                    {me.tier_progress && <span className="muted"> · {t("{tier} quests {done}/{need}", { tier: t(me.tier_progress.name), done: me.tier_progress.done, need: me.tier_progress.need })}</span>}
                   </div>
                 </div>
                 {me.specializations.length > 0 && (
@@ -53,14 +67,29 @@ export default async function Home() {
               </div>
             </Link>
             {next?.main ? (
-              <Link href={`/quests/${next.main.id}`} className="ribbon-next">
-                <div className="eyebrow">{t("Next dungeon")}</div>
-                <div className="ribbon-next-title"><TierBadge tier={next.main.tier} /><b>{next.main.id} · {next.main.title}</b></div>
-                <div className="small muted">{[t("{xp} XP", { xp: next.main.xp }), next.main.time_min ? t("~{n} min", { n: next.main.time_min }) : null, next.main.has_quiz ? t("boss with {n} questions", { n: next.main.quiz_len }) : null].filter(Boolean).join(" · ")}</div>
-                <span className="btn primary ribbon-enter">{t("Enter the dungeon")}</span>
+              <Link href={`/quests/${next.main.id}`} className="ribbon-next" title={t("Open this dungeon")}>
+                {/* a window into the dungeon: its arena, with the boss waiting in it */}
+                <div className="ribbon-boss" style={arena ? ({ "--arena": `url("${arena.small}")` } as React.CSSProperties) : undefined}>
+                  {boss && <Boss look={boss.look} sheet={bossSheet} color={boss.color} size={70} scale={bossSheet && bossSheet.frame <= 64 ? 2 : 1} />}
+                </div>
+                <div className="ribbon-next-text">
+                  <div className="eyebrow">{t("Next dungeon")}</div>
+                  <div className="ribbon-next-title"><TierBadge tier={next.main.tier} /><b>{next.main.id} · {next.main.title}</b></div>
+                  {boss && <div className="ribbon-boss-name" style={{ color: boss.color }}>{boss.kind === "boss" ? t("Boss: {name}", { name: boss.name }) : t("Guardian: {name}", { name: boss.name })}</div>}
+                  <div className="small muted">{[t("{xp} XP", { xp: next.main.xp }), next.main.time_min ? t("~{n} min", { n: next.main.time_min }) : null, boss ? t("{n} questions", { n: boss.questions }) : next.main.has_quiz ? t("{n} questions", { n: next.main.quiz_len }) : t("no boss"), boss ? t("{n} hits to win", { n: boss.hits_to_win }) : null].filter(Boolean).join(" · ")}</div>
+                </div>
+                <span className="ribbon-go" aria-hidden="true">→</span>
               </Link>
             ) : (
-              <div className="ribbon-next"><div className="eyebrow">{t("Next dungeon")}</div><div className="small muted">{next?.reason ?? t("Nothing is required right now. Pick any quest you like.")}</div><Link className="btn primary ribbon-enter" href="/quests">{t("Quest board")}</Link></div>
+              <Link href="/quests" className="ribbon-next" title={t("Quest board")}>
+                <div className="ribbon-boss" />
+                <div className="ribbon-next-text">
+                  <div className="eyebrow">{t("Next dungeon")}</div>
+                  <b>{t("Nothing is required right now")}</b>
+                  <div className="small muted">{next?.reason ?? t("Pick any quest you like from the board.")}</div>
+                </div>
+                <span className="ribbon-go" aria-hidden="true">→</span>
+              </Link>
             )}
           </div>
         ) : (
