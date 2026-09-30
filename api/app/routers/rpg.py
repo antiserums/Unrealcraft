@@ -18,13 +18,18 @@ router = APIRouter(tags=["rpg"])
 NAMEPLATE_COLORS = ["#7A8C7E", "#B5714B", "#3D7DD8", "#8E6CCF", "#D9824A", "#D9534F", "#4FA36C", "#C85C8E", "#4AA3B5", "#D4AF37"]
 
 
+def _role(member: dict | None) -> str | None:
+    from ..staff import role_of
+    return role_of(member)
+
+
 def _unlock_all(member: dict | None) -> bool:
     """Admins and developers see everything unlocked so they can test looks and locked dungeons. Mentors do not."""
     from ..staff import unlock_all
     return unlock_all(member)
 
 
-async def character_payload(request: Request, uid: int, u: dict, unlock_all: bool = False) -> dict:
+async def character_payload(request: Request, uid: int, u: dict, unlock_all: bool = False, role: str | None = None) -> dict:
     """Stats (computed, hidden), the outfits this member owns (granted idempotently from progress), and the one worn."""
     rdb, cat, db = request.app.state.rpg, request.app.state.catalog, request.app.state.db
     await rdb.ensure_character(uid)
@@ -36,7 +41,8 @@ async def character_payload(request: Request, uid: int, u: dict, unlock_all: boo
     earned = {a["key"] for a in rpg.achievements_for(cat, inputs, state.done, await db.medals(uid)) if a["earned"]}
     new_sets = []
     owned = await rdb.outfits(uid)
-    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned):
+    from ..staff import role_of_id
+    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned, role=role or role_of_id(uid)):
         if st["id"] not in owned:
             src = st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else "starter")
             if await rdb.grant_outfit(uid, st["id"], str(src)):
@@ -63,7 +69,8 @@ async def character_payload(request: Request, uid: int, u: dict, unlock_all: boo
 @router.get("/me/character")
 async def character(request: Request, member=Depends(current_member)):
     u, _, _ = await request.app.state.db.user_state(member["id"])
-    return await character_payload(request, member["id"], u, unlock_all=_unlock_all(member))
+    from ..staff import role_of
+    return await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=role_of(member))
 
 
 async def achievements_payload(request: Request, uid: int) -> list[dict]:
@@ -92,7 +99,7 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
         p["name"] = await rdb.kv_get(uid, "web.name")
         p["avatar"] = await rdb.kv_get(uid, "web.avatar")
     unlock_all = bool(who) and _unlock_all(who)
-    char = await character_payload(request, uid, u, unlock_all=unlock_all)
+    char = await character_payload(request, uid, u, unlock_all=unlock_all, role=role_of(who) if who else role_of_id(uid))
     ach = rpg.achievements_for(cat, await rdb.stat_inputs(uid), state.done, medals)
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
@@ -168,7 +175,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame)):
         return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
-    return await character_payload(request, member["id"], u, unlock_all=unlock_all)
+    return await character_payload(request, member["id"], u, unlock_all=unlock_all, role=role_of(member))
 
 
 @router.post("/me/quests/{qid}/read")
@@ -220,7 +227,7 @@ async def start_fight(qid: str, request: Request, member=Depends(current_member)
     if q.rank > max(state_u.rank, 0) and q.rank >= 0 and not _unlock_all(member):
         raise HTTPException(403, "This dungeon is locked until you rank up.")
     # No cooldown after a loss: the reading is right there, try again when ready.
-    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member))
+    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=_role(member))
     attempts = await db.quiz_attempts(member["id"], qid)
     rng = random.Random()
     boss = rpg.boss_for(q)
@@ -251,7 +258,7 @@ async def get_fight(fid: int, request: Request, member=Depends(current_member)):
     state = json.loads(f["state"]); state["fight_id"] = fid
     q = cat.quests[f["quest_id"]]
     u, _, _ = await db.user_state(member["id"])
-    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member))
+    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=_role(member))
     boss = rpg.boss_for(q)
     question = _question_view(q, state) if f["result"] is None and state["i"] < len(q.quiz) else None
     state["result"] = f["result"]
@@ -270,7 +277,7 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
     state = json.loads(f["state"]); state["fight_id"] = fid
     q = cat.quests[f["quest_id"]]
     u, _, _ = await db.user_state(member["id"])
-    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member))
+    char = await character_payload(request, member["id"], u, unlock_all=_unlock_all(member), role=_role(member))
     boss = rpg.boss_for(q)
     rng = random.Random()
     i = state["i"]

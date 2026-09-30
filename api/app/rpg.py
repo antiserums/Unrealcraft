@@ -74,6 +74,11 @@ REWARD_SETS = [
     ("spellcaster", "Runekeeper", "Violet silk and a rune-bound staff. Ten bosses beaten without a scratch.", "expert",
      {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
 ]
+# Exclusive sets: never earned by playing; they belong to a staff role (the art pack's "exclusive" kind).
+EXCLUSIVE_SETS = [
+    ("developer", "Sourceforged Sovereign", "Circuit-blue plate forged from the source itself. Worn by those who build the guild.", "master",
+     {"type": "staff", "role": "developer", "hint": "Developers only"}),
+]
 
 
 def _set(sid: str, name: str, flavour: str, kind: str, tier: str, unlock: dict) -> dict:
@@ -90,19 +95,22 @@ def build_sets(cat=None) -> list[dict]:
         out.append(_set(tier, f"{name}'s Set", RANK_FLAVOUR[n], "rank", tier, unlock))
     for sid, name, flavour, tier, unlock in REWARD_SETS:
         out.append(_set(sid, name, flavour, "reward", tier, unlock))
+    for sid, name, flavour, tier, unlock in EXCLUSIVE_SETS:
+        out.append(_set(sid, name, flavour, "exclusive", tier, unlock))
     return out
 
 
 STARTER_SET = "novice"
 
 
-def unlocked_now(sets: list[dict], *, rank: int, earned: set[str]) -> list[dict]:
-    """Which sets this member has earned. Idempotent, so it can run on every visit."""
+def unlocked_now(sets: list[dict], *, rank: int, earned: set[str], role: str | None = None) -> list[dict]:
+    """Which sets this member has earned. Idempotent, so it can run on every visit. `role` is a staff role."""
     won = []
     for st in sets:
         u = st["unlock"]
         ok = u["type"] == "starter" or (u["type"] == "rank" and rank >= u["n"]) or \
-             (u["type"] == "achievement" and u["key"] in earned)
+             (u["type"] == "achievement" and u["key"] in earned) or \
+             (u["type"] == "staff" and role == u["role"])
         if ok:
             won.append(st)
     return won

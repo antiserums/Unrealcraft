@@ -19,8 +19,8 @@ const TIER_NAME: Record<string, string> = { novice: "Novice", apprentice: "Appre
 const RARITY_OF_TIER: Record<string, string> = { novice: "common", apprentice: "uncommon", adept: "rare", expert: "epic", master: "legendary" };
 const STYLE_LABEL: Record<string, string> = { melee: "Sword & shield", caster: "Staff & orb" };
 const BODY_LABEL: Record<string, string> = { body_a: "Athletic", body_b: "Curved" };
-type Kind = "all" | "rank" | "reward";
-const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", reward: "Reward" };
+type Kind = "all" | "rank" | "reward" | "exclusive";
+const KIND_LABEL: Record<Kind, string> = { all: "All", rank: "Rank", reward: "Reward", exclusive: "Exclusive" };
 const TIER_ORDER = ["novice", "apprentice", "adept", "expert", "master"];
 
 /** The closet. With `mirror` (default) it draws its own figure on the left; with `mirror={false}` the parent shows
