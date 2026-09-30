@@ -54,7 +54,11 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   shows the turn-in with screenshots, earlier attempts and the quest's checklist, and records Pass / Changes / Fail.
   Only mentors review (staff mentor role, rank 6, `ADMIN_IDS`, or the dev login); one verdict decides. The bot's
   buttons enforce the same rule. A decision emits `submission_decided`, which the bot mirrors into Discord.
-- **Admin panel (done):** `/admin` for `ADMIN_IDS` (and dev login): stats, member search, the events queue and an
+- **Staff roles:** `app/staff.py`. `ADMIN_IDS` and `DEVELOPER_IDS` get everything unlocked (outfits, cosmetics,
+  locked dungeons), the admin panel and the review inbox, with an Admin / Developer nameplate. `MENTOR_IDS` (or the
+  Discord mentor role / rank 6) get the review inbox only and a Mentor nameplate. The local dev login counts as
+  a developer.
+- **Admin panel (done):** `/admin` for admins and developers: stats, member search, the events queue and an
   admin log; `/admin/members/{id}` grants or clears quests, sets rank/major (emits `rank_set` so the bot swaps
   roles), gives XP or medals, and resets an account. Every action lands in `admin_log`.
 - **Card cosmetics (done):** nameplate colours, avatar frames and card frames are unlocks (`rpg.py`

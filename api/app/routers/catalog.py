@@ -48,8 +48,8 @@ async def quests(request: Request, major: str | None = None, tier: str | None = 
 
 
 def _admin(member: dict | None) -> bool:
-    from .admin import is_admin
-    return bool(member) and is_admin(member)
+    from ..staff import unlock_all
+    return unlock_all(member)
 
 
 @router.get("/quests/{qid}")

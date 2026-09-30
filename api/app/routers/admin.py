@@ -18,13 +18,12 @@ from .rpg import card_payload
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 
-def is_admin(member: dict) -> bool:
-    return member["id"] in settings.admin_ids or bool(member.get("dev"))
+from ..staff import is_admin  # noqa: E402  (admins and developers)
 
 
 def admin_only(member=Depends(current_member)) -> dict:
     if not is_admin(member):
-        raise HTTPException(403, "Admins only. Add your Discord id to ADMIN_IDS in api/.env.")
+        raise HTTPException(403, "Admins and developers only. Add your Discord id to ADMIN_IDS or DEVELOPER_IDS in api/.env.")
     return member
 
 
@@ -33,7 +32,7 @@ async def overview(request: Request, _=Depends(admin_only)):
     rdb, cat = request.app.state.rpg, request.app.state.catalog
     return {"stats": {**await rdb.stats(), "quests_in_catalog": len(cat.quests)},
             "db_path": str(settings.db_path), "curriculum_dir": str(settings.curriculum_dir),
-            "admin_ids": sorted(settings.admin_ids), "events": await rdb.events_tail(30), "log": await rdb.admin_log_tail(30),
+            "admin_ids": sorted(settings.admin_ids), "developer_ids": sorted(settings.developer_ids), "mentor_ids": sorted(settings.mentor_ids), "events": await rdb.events_tail(30), "log": await rdb.admin_log_tail(30),
             "pending": await rdb.pending_submissions(20)}
 
 

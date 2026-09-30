@@ -1,20 +1,18 @@
 """The mentor inbox: pending turn-ins, their details, and verdicts.
 
-Only mentors review: the staff mentor role, rank 6, ADMIN_IDS, or a local dev login. One verdict decides:
+Only staff review: mentors (MENTOR_IDS, the Discord mentor role or rank 6), admins and developers. One verdict decides:
 pass | changes | fail. Nobody reviews their own work. The bot's Quests.review enforces the same rule on Discord.
 The bot picks up `submission_decided` events to update the Discord turn-in post and queue card."""
 from __future__ import annotations
 
 import json
-from pathlib import Path
 
-import yaml
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
 from registrar import checks  # noqa: E402
 
-from ..config import settings
+from .. import staff
 from ..serializers import quest_summary
 from ..session import current_member
 from .rpg import complete_quest
@@ -23,25 +21,12 @@ router = APIRouter(prefix="/review", tags=["review"])
 VERDICTS = ("pass", "changes", "fail")
 
 
-def _roles() -> dict:
-    """Role ids the bot uses, read from its unlocks.yaml. Missing file or ids -> 0, which never matches."""
-    try:
-        data = yaml.safe_load(Path(settings.unlocks_path).read_text(encoding="utf-8")) or {}
-    except OSError:
-        data = {}
-    roles = data.get("roles") or {}
-    return {"mentor": int(((roles.get("staff") or {}).get("mentor")) or 0), "rank6": int(((roles.get("rank") or {}).get(6)) or 0)}
-
-
 async def access_for(request: Request, member: dict) -> dict:
-    """Whether this member may review. Mentors only: staff mentor role, rank 6, ADMIN_IDS or a dev login."""
+    """Whether this member may review: any staff role (mentor, admin, developer). See app/staff.py."""
     u = await request.app.state.db.user(member["id"])
     rank = int(u["rank"]) if u else -1
-    ids = _roles()
-    session_roles = {int(r) for r in member.get("roles", []) if str(r).isdigit()}
-    mentor = member["id"] in settings.admin_ids or bool(member.get("dev")) or \
-        bool(session_roles & {i for i in (ids["mentor"], ids["rank6"]) if i})
-    return {"mentor": mentor, "rank": rank, "can_review": mentor}
+    role = staff.role_of(member)
+    return {"mentor": role is not None, "role": role, "rank": rank, "can_review": role is not None}
 
 
 def _eligible(access: dict, s: dict, q, uid: int) -> str | None:

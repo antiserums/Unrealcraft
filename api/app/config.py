@@ -31,12 +31,18 @@ class Settings:
     bot_service_token: str
     log_level: str
     unlocks_path: Path            # the bot's config/unlocks.yaml: role ids for mentor and rank checks
-    admin_ids: frozenset[int]     # Discord ids that can always review (ADMIN_IDS, comma-separated)
+    admin_ids: frozenset[int]     # ADMIN_IDS: everything unlocked, admin panel, reviews
+    developer_ids: frozenset[int] # DEVELOPER_IDS: same powers as admins, 'Developer' nameplate
+    mentor_ids: frozenset[int]    # MENTOR_IDS: the review inbox only
 
 
 def _p(name: str, default: str) -> Path:
     p = Path(os.getenv(name, default))
     return p if p.is_absolute() else (API_ROOT / p).resolve()
+
+
+def _ids(name: str) -> frozenset[int]:
+    return frozenset(int(x) for x in os.getenv(name, "").replace(";", ",").split(",") if x.strip().isdigit())
 
 
 def load_settings() -> Settings:
@@ -56,7 +62,7 @@ def load_settings() -> Settings:
         bot_service_token=os.getenv("BOT_SERVICE_TOKEN", ""),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
         unlocks_path=_p("UNLOCKS_PATH", "../bot/config/unlocks.yaml"),
-        admin_ids=frozenset(int(x) for x in os.getenv("ADMIN_IDS", "").replace(";", ",").split(",") if x.strip().isdigit()),
+        admin_ids=_ids("ADMIN_IDS"), developer_ids=_ids("DEVELOPER_IDS"), mentor_ids=_ids("MENTOR_IDS"),
     )
 
 

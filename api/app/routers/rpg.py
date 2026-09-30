@@ -19,9 +19,9 @@ NAMEPLATE_COLORS = ["#7A8C7E", "#B5714B", "#3D7DD8", "#8E6CCF", "#D9824A", "#D95
 
 
 def _unlock_all(member: dict | None) -> bool:
-    """Admins (ADMIN_IDS or the dev login) see everything unlocked so they can test looks and locked dungeons."""
-    from .admin import is_admin
-    return bool(member) and is_admin(member)
+    """Admins and developers see everything unlocked so they can test looks and locked dungeons. Mentors do not."""
+    from ..staff import unlock_all
+    return unlock_all(member)
 
 
 async def character_payload(request: Request, uid: int, u: dict, unlock_all: bool = False) -> dict:
@@ -81,12 +81,13 @@ async def my_achievements(request: Request, member=Depends(current_member)):
 
 async def card_payload(request: Request, uid: int, session: dict | None) -> dict:
     """The player card: who they are, what they wear, what they chose to show. Shared by /me/card and /members/{id}."""
-    from .me import is_admin_id, profile_payload
+    from ..staff import role_of, role_of_id
+    from .me import profile_payload
     db, cat, rdb = request.app.state.db, request.app.state.catalog, request.app.state.rpg
     u, state, _ = await db.user_state(uid)
     medals = await db.medals(uid)
     who = session if session and session["id"] == uid else None
-    p = profile_payload(cat, who, u, state, medals, admin=is_admin_id(uid) or bool(who and who.get("dev")))
+    p = profile_payload(cat, who, u, state, medals, role=role_of(who) if who else role_of_id(uid))
     if not who:
         p["name"] = await rdb.kv_get(uid, "web.name")
         p["avatar"] = await rdb.kv_get(uid, "web.avatar")

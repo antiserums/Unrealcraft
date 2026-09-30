@@ -5,7 +5,7 @@ import { api, type Me } from "@/lib/api";
 export const metadata = { title: "Admin" };
 
 type Overview = {
-  stats: Record<string, number>; db_path: string; curriculum_dir: string; admin_ids: number[];
+  stats: Record<string, number>; db_path: string; curriculum_dir: string; admin_ids: (number | string)[]; developer_ids: (number | string)[]; mentor_ids: (number | string)[];
   events: { id: number; type: string; member_id: number | string; payload: string; created_at: string; delivered: number }[];
   log: { id: number; admin_id: number | string; action: string; target_id: number | string | null; detail: string; created_at: string }[];
   pending: { id: number; user_id: number | string; quest_id: string; route: string; created_at: string }[];
@@ -20,12 +20,12 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
   const sp = await searchParams;
   const q = typeof sp.q === "string" ? sp.q : "";
   const [o, m] = await Promise.all([api<Overview>("/admin"), api<{ members: MemberRow[] }>(`/admin/members?q=${encodeURIComponent(q)}`)]);
-  if (!o) return <><h1>Admin</h1><div className="card">Admins only. Add your Discord id to <code>ADMIN_IDS</code> in <code>api/.env</code> and restart the API.</div></>;
+  if (!o) return <><h1>Admin</h1><div className="card">Admins and developers only. Add your Discord id to <code>ADMIN_IDS</code> or <code>DEVELOPER_IDS</code> in <code>api/.env</code> and restart the API.</div></>;
   return (
     <>
       <div className="eyebrow">Staff</div>
       <h1>Admin panel</h1>
-      <p className="muted small">Database: <code>{o.db_path}</code> · curriculum: <code>{o.curriculum_dir}</code> · admins: {o.admin_ids.length ? o.admin_ids.join(", ") : "none set (dev login only)"}</p>
+      <p className="muted small">Database: <code>{o.db_path}</code> · curriculum: <code>{o.curriculum_dir}</code> · admins: {o.admin_ids.length ? o.admin_ids.join(", ") : "none"} · developers: {o.developer_ids.length ? o.developer_ids.join(", ") : "none"} · mentors by id: {o.mentor_ids.length ? o.mentor_ids.join(", ") : "none (Discord mentor role still counts)"}</p>
 
       <div className="stats-grid">
         {Object.entries(o.stats).map(([k, v]) => <div key={k} className="card stat"><b>{v}</b><span className="muted small">{LABEL[k] ?? k}</span></div>)}

@@ -4,7 +4,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from ..session import current_member_or_none
-from .me import ADMIN_COLOR, ADMIN_TITLE, is_admin_id, nameplate, rank_color
+from ..staff import nameplate_for, role_of_id
+from .me import nameplate, rank_color
 from .rpg import card_payload
 
 router = APIRouter(tags=["members"])
@@ -30,8 +31,8 @@ async def leaderboard(request: Request, period: str = "week"):
     rdb = request.app.state.rpg
     return {"period": period, "rows": [
         {"id": r["discord_id"], "xp": r["xp"], "rank": r["rank"],
-         "rank_title": ADMIN_TITLE if is_admin_id(r["discord_id"]) else nameplate(cat, r["rank"], r["major"]),
-         "rank_color": ADMIN_COLOR if is_admin_id(r["discord_id"]) else rank_color(cat, max(r["rank"], 0)),
+         "rank_title": (nameplate_for(role_of_id(r["discord_id"])) or (nameplate(cat, r["rank"], r["major"]), None))[0],
+         "rank_color": (nameplate_for(role_of_id(r["discord_id"])) or (None, rank_color(cat, max(r["rank"], 0))))[1],
          "name": await rdb.kv_get(r["discord_id"], "web.name"),
          "avatar": await rdb.kv_get(r["discord_id"], "web.avatar"),
          "major_title": cat.majors.get(r["major"], {}).get("title", r["major"])} for r in rows]}

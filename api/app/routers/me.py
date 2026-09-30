@@ -25,17 +25,11 @@ def rank_color(cat: Catalog, rank: int) -> str:
     return cat.ranks.get(rank, {}).get("color") or "#7A8C7E"
 
 
-ADMIN_TITLE, ADMIN_COLOR = "Admin", "#D4AF37"
-
-
-def is_admin_id(uid: int) -> bool:
-    """Staff by Discord id (ADMIN_IDS). Their nameplate reads Admin instead of a player rank."""
-    from ..config import settings
-    return int(uid) in settings.admin_ids
-
-
-def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict], admin: bool = False) -> dict:
+def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict], role: str | None = None) -> dict:
+    """`role` is a staff role (admin, developer, mentor) or None; staff get their title in place of the player rank."""
+    from ..staff import nameplate_for
     rank, major = u["rank"], u["major"]
+    plate = nameplate_for(role)
     target = rank + 1
     nxt = cat.ranks.get(target)
     ok, missing = cat.rank_requirements_met(state, target) if (target in cat.ranks or target == 0) else (False, [])
@@ -51,8 +45,8 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
     return {
         "id": u["discord_id"], "name": member["name"] if member else None, "avatar": member["avatar"] if member else None,
         "major": major, "major_title": cat.majors.get(major, {}).get("title", major), "minor": u.get("minor"),
-        "rank": rank, "rank_title": ADMIN_TITLE if admin else nameplate(cat, rank, major),
-        "rank_color": ADMIN_COLOR if admin else rank_color(cat, max(rank, 0)), "staff": admin,
+        "rank": rank, "rank_title": plate[0] if plate else nameplate(cat, rank, major),
+        "rank_color": plate[1] if plate else rank_color(cat, max(rank, 0)), "staff": role,
         "xp": u["xp"], "xp_floor": lo, "xp_next": hi,
         "streak_days": u.get("streak_days", 0), "ue_version": u.get("ue_version"),
         "rank_since": u.get("rank_since"), "member_since": u.get("created_at"),
@@ -71,13 +65,13 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
 async def me(request: Request, member=Depends(current_member)):
     db, cat = request.app.state.db, request.app.state.catalog
     u, state, _ = await db.user_state(member["id"])
-    from .admin import is_admin
-    payload = profile_payload(cat, member, u, state, await db.medals(member["id"]), admin=is_admin(member))
+    from ..staff import role_of
+    payload = profile_payload(cat, member, u, state, await db.medals(member["id"]), role=role_of(member))
     payload["recent_xp"] = await db.xp_recent(member["id"], 15)
     payload["known"] = await db.user(member["id"]) is not None
     from .review import access_for
     a = await access_for(request, member)
-    from .admin import is_admin
+    from ..staff import is_admin
     payload["admin"] = is_admin(member)
     payload["review"] = {"can": a["can_review"], "mentor": a["mentor"],
                          "pending": len(await request.app.state.rpg.pending_submissions()) if a["can_review"] else 0}
