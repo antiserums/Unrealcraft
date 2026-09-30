@@ -154,8 +154,11 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
           ) : (
             <>
               <h2 style={{ marginTop: 0 }}>You are knocked down · {f.outcome?.score}/{f.outcome?.total}</h2>
-              <p>You need {f.hits_to_win} right. Read the guide again; the boss room reopens in a few minutes.</p>
-              <div className="row"><Link className="btn primary" href={`/quests/${questId}`}>Back to the room and the reading</Link></div>
+              <p>You need {f.hits_to_win} right. Read the guide again and come back whenever you are ready.</p>
+              <div className="row">
+                <a className="btn primary" href={`/quests/${questId}/fight`}>Fight again</a>
+                <Link className="btn" href={`/quests/${questId}`}>Back to the reading</Link>
+              </div>
             </>
           )}
         </div>

@@ -120,11 +120,7 @@ async def start_fight(qid: str, request: Request, member=Depends(current_member)
     u, state_u, prog = await db.user_state(member["id"])
     if q.rank > max(state_u.rank, 0) and q.rank >= 0:
         raise HTTPException(403, "This room is locked until you rank up.")
-    lost = await rdb.last_lost_fight_at(member["id"], qid)
-    cooldown = int(cat.xp_rules.get("quiz_cooldown_after_fail_min", 5))
-    if lost and dt.datetime.utcnow() - lost < dt.timedelta(minutes=cooldown):
-        left = int((lost + dt.timedelta(minutes=cooldown) - dt.datetime.utcnow()).total_seconds() // 60) + 1
-        raise HTTPException(429, f"Regroup: the boss room reopens in {left} min.")
+    # No cooldown after a loss: the reading is right there, try again when ready.
     char = await character_payload(request, member["id"], u["major"])
     attempts = await db.quiz_attempts(member["id"], qid)
     rng = random.Random()

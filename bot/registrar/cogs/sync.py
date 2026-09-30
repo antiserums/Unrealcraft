@@ -44,7 +44,7 @@ class Sync(commands.Cog):
             await conn.commit()
 
     async def handle(self, guild, type_: str, uid: int, payload: dict) -> None:
-        onboarding, ranks = self.bot.get_cog("Onboarding"), self.bot.get_cog("Ranks")
+        onboarding, ranks, quests = self.bot.get_cog("Onboarding"), self.bot.get_cog("Ranks"), self.bot.get_cog("Quests")
         if type_ == "quiz_passed":
             await onboarding._auto_complete(guild, uid)         # action quests whose checklist is now verified
         elif type_ == "quest_completed":
@@ -52,6 +52,17 @@ class Sync(commands.Cog):
             await onboarding.refresh_page(uid)
             if guild:
                 await ranks.check_promotion(guild, uid)
+        elif type_ in ("submission_created", "submission_accepted") and guild:
+            # Mirror a website turn-in: public post in the major forum, and the review/spot-check card for mentors.
+            s = await self.bot.db.submission(int(payload["submission"]))
+            member = guild.get_member(uid) or await guild.fetch_member(uid)
+            if s and member:
+                q = self.bot.catalog.quests[s["quest_id"]]
+                await quests.post_turnin(guild, member, q, json.loads(s["payload"]), s["route"], s["id"])
+                if type_ == "submission_created":
+                    await quests.post_to_queue(guild, s["id"])
+                elif s["route"] == "honor" and await quests.spot_check_due():
+                    await quests.post_to_queue(guild, s["id"], spot=True)
         log.info("website event %s for %s: %s", type_, uid, payload)
 
     @poll.before_loop

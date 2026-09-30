@@ -41,7 +41,12 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   cog picks up every 20 s to run promotion checks and orientation steps.
 - **RPG phase B (done):** character sheet on `/me`: five computed stats, six gear slots with major-flavoured items,
   starter kit on first visit, loot rolled when a quest completes on the site, nameplate color.
-- **Phase 2 (next):** the submission form ("claim the chest") on the site with image uploads; retire the Discord quiz.
+- **Phase 2 (done):** the chest. `POST /me/quests/{id}/submit` (multipart: text, ue_version, up to 4 images) with the
+  bot's routing rules (auto/honor accept at once and complete the quest; peer/mentor/human wait for a review). The chest
+  only shows once the boss is beaten. Images live in `api/data/uploads/<member>/` and are served to logged-in members
+  at `/api/uploads/...`. The bot mirrors website turn-ins (forum post, review or spot-check card) from `events`.
+  No cooldown on retrying a boss; the 120-minute cooldown after a reviewer's Fail still applies to the chest.
+- **Next:** reviews on the site (mentor inbox), then retire the Discord quiz and submit commands; dungeon map.
 - **Phase 3:** reviews and promotions on the site; event outbox for the bot (roles, DMs, #rank-ups).
 - **Phase 4:** slim the bot to link cards; orientation events reported to the API; staff panel.
 - **Phase 5:** customization, leaderboard by major, helper karma, daily quest.
@@ -58,6 +63,7 @@ GET  /members/{id}            GET /leaderboard?period=week|month|all
 GET  /me/character            PATCH /me/character {equip, nameplate}       POST /me/quests/{id}/read
 POST /me/quests/{id}/fight    GET /fights/{id}   POST /fights/{id}/turn {answer, seconds}   POST /fights/{id}/retreat
 GET  /catalog/quests/{id}/boss
+POST /me/quests/{id}/submit   multipart text, ue_version, files[]     GET /uploads/{member}/{file}
 GET  /auth/dev-login          local testing only, when DEV_LOGIN_ID is set in api/.env
 ```
 
