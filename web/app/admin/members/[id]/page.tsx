@@ -10,7 +10,7 @@ export type AdminMember = {
   medals: { medal_key: string; earned_at: string }[];
   xp_recent: { amount: number; reason: string; created_at: string }[];
   submissions: { id: number; quest_id: string; status: string; route: string; notes: string | null; created_at: string }[];
-  ranks: { n: number; title: string; xp: number }[]; seals: string[]; majors: string[];
+  ranks: { n: number; title: string; xp: number }[]; majors: string[];
 };
 
 export default async function AdminMember({ params }: PageProps<"/admin/members/[id]">) {
@@ -25,11 +25,11 @@ export default async function AdminMember({ params }: PageProps<"/admin/members/
       <div className="eyebrow"><Link href="/admin">← Admin panel</Link></div>
       <h1>{m.card.name ?? `Member ${id}`}</h1>
       <p className="muted small">
-        <code>{id}</code> · <span style={{ color: m.card.rank_color }}>{m.card.rank_title}</span> (rank {u.rank}) · {m.card.major_title}{u.seal ? ` · seal ${u.seal}` : ""} · {u.xp} XP · streak {u.streak_days} · wearing {m.card.worn.name} · {m.card.achievements_earned}/{m.card.achievements_total} achievements · <Link href={`/members/${id}`}>player card</Link>
+        <code>{id}</code> · <span style={{ color: m.card.rank_color }}>{m.card.rank_title}</span> (rank {u.rank}) · {m.card.major_title} · {u.xp} XP · streak {u.streak_days} · wearing {m.card.worn.name} · {m.card.achievements_earned}/{m.card.achievements_total} achievements · <Link href={`/members/${id}`}>player card</Link>
       </p>
       <div className="two">
         <div>
-          <AdminActions uid={Number(id)} ranks={m.ranks} seals={m.seals} majors={m.majors} current={{ rank: Number(u.rank), seal: (u.seal as string | null) ?? "", major: String(u.major) }} />
+          <AdminActions uid={Number(id)} ranks={m.ranks} majors={m.majors} current={{ rank: Number(u.rank), major: String(u.major) }} />
         </div>
         <div>
           <div className="card">

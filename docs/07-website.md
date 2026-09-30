@@ -55,7 +55,7 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   Only mentors review (staff mentor role, rank 6, `ADMIN_IDS`, or the dev login); one verdict decides. The bot's
   buttons enforce the same rule. A decision emits `submission_decided`, which the bot mirrors into Discord.
 - **Admin panel (done):** `/admin` for `ADMIN_IDS` (and dev login): stats, member search, the events queue and an
-  admin log; `/admin/members/{id}` grants or clears quests, sets rank/seal/major (emits `rank_set` so the bot swaps
+  admin log; `/admin/members/{id}` grants or clears quests, sets rank/major (emits `rank_set` so the bot swaps
   roles), gives XP or medals, and resets an account. Every action lands in `admin_log`.
 - **Card cosmetics (done):** nameplate colours, avatar frames and card frames are unlocks (`rpg.py`
   `NAMEPLATES`, `AVATAR_FRAMES`, `CARD_FRAMES`).

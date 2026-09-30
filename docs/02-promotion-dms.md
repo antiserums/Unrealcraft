@@ -43,20 +43,20 @@ New power: you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each.
 ```
 (If the major is still Undecided: add a line before the sign-off: `Pick a major now: /major. Undecided ends at this rank.`)
 
-### Adept → Expert · {Specialty} (2 → 3)
+### Adept → Expert · {Major} (2 → 3)
 ```
-Expert · {seal_title}. People can @ you for {seal_title} work now.
-You owe your {seal_title} Specialty quests + the shared character basics, ending in: {capstone_title}.
+Expert · {major_title}. People can @ you for {major_title} work now.
+You owe your {major_title} quests + the shared character basics, ending in: {capstone_title}.
 Next: {next_quest_id} · {next_quest_title}.
 For feedback, post in #showcase with the Critique-wanted tag.
-New power: 1.25× XP on {seal_title} quests, /critique, and you can apply for Mentor-in-Training.
+New power: 1.25× XP on {major_title} quests, /critique, and you can apply for Mentor-in-Training.
 — Quartermaster · Unrealcraft
 ```
-(The Specialty is picked before this DM is sent. Promotion opens a Specialty picker that only offers the Specialties allowed for the member's major, listed in `majors.yaml → seals`.)
+(From Expert up, the member's major is their specialty; it joins the nameplate. There is no separate pick.)
 
 ### Expert → Master (3 → 4)
 ```
-Master · {seal_title}. You own a system now, not just a scene.
+Master · {major_title}. You own a system now, not just a scene.
 You owe one capstone: {capstone_title}. {capstone_brief}
 Next: {next_quest_id} · {next_quest_title}. Your 30-day workshop thread is open: {workshop_thread}.
 Your mentor from here on is whoever reviewed your R3 capstone ({last_reviewer}). Ping them there.
@@ -91,7 +91,7 @@ New power: full mentor buttons, /commend, /title from the approved list, and the
 
 ```
 ┌───────────────────────────────────────────────┐
-│  {avatar}  {display_name}                      │  accent = new rank or Specialty color
+│  {avatar}  {display_name}                      │  accent = new rank color
 │  Apprentice  →  Adept       │  old title struck through in gray
 │  Major · Level Design                          │
 │  Capstone: Three-route courtyard  [thumbnail]  │  image = capstone submission's first attachment
@@ -111,7 +111,7 @@ Nothing is posted when someone just has a lot of XP. A card only appears when a 
 ```
 Major changed: {old_major} → {new_major}.
 {if rank < 3: "Free respec used. {n} missing taster(s) were added to /quest."}
-{if rank >= 3: "Finish 4 required {new_major} quests at your current rank to move your Specialty. Your old {old_seal} Specialty is now a medal."}
+{if rank >= 3: "Finish 4 required {new_major} quests at your current rank. Your nameplate follows your new major."}
 Next: {next_quest_id} · {next_quest_title}.
 — Quartermaster · Unrealcraft
 ```

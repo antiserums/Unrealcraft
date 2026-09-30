@@ -29,7 +29,7 @@ bot version and alerts #mod-log.
 ```
 CHANGELOG.md           patch notes (top entry is posted to #patch-notes)
 curriculum/            source of truth for quests (YAML)
-  majors.yaml          ranks, XP thresholds, seals, majors, tasters, capstones
+  majors.yaml          ranks, XP thresholds, majors, tasters, capstones
   orientation.yaml     O1–O8 + 4 electives (Discord literacy)
   spine.yaml           SQ1–SQ11 Starter Quests + Rank 0 meta electives
   level_design_r1.yaml Rank 1 world/lighting + Level Design (full quizzes)
@@ -72,7 +72,7 @@ Then follow `docs/04-discord-setup-checklist.md` sections E–G.
 
 ## Design rules the code enforces
 - Rank-up = XP threshold **and** every required quest, taster and capstone for the current rank passed. Chat XP is 0.
-- One visible rank role at a time. Specialty roles are separate permission-only roles that stay with the member after Rank 3.
+- One visible rank role at a time. From Rank 3 the major is the specialty and joins the nameplate (Expert · Level Design).
 - The `/quest` picker order is: Orientation → Starter Quests → missing required taster → major-required at the current rank → 2 major electives + 1 adjacent.
 - Level designers are never gated on C++, and programmers are never gated on a hero lighting reel.
 - Verification: R0–1 use quiz + honor system, R2 needs a peer or mentor, R3–4 a mentor or two peers, R5–6 a human mentor only.

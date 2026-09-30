@@ -100,7 +100,6 @@ class Catalog:
         self.meta = meta
         self.ranks = {r["n"]: r for r in meta.get("ranks", [])}
         self.majors = meta.get("majors", {})
-        self.seals = meta.get("seals", {})
         self.xp_rules = meta.get("xp_rules", {})
         self.min_members = int((meta.get("community") or {}).get("min_members", 20))
         self.community_ready = True        # set by the bot from the live member count

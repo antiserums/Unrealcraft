@@ -270,7 +270,7 @@ class RpgDB:
 
     async def search_members(self, q: str, limit: int = 40) -> list[dict]:
         """Members by id prefix or by the display name saved at login. Empty query -> most recently created."""
-        sql = ("SELECT u.discord_id, u.major, u.rank, u.xp, u.seal, u.streak_days, u.created_at, u.rank_since, "
+        sql = ("SELECT u.discord_id, u.major, u.rank, u.xp, u.streak_days, u.created_at, u.rank_since, "
                "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.name') AS name, "
                "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.avatar') AS avatar, "
                "(SELECT COUNT(*) FROM quest_progress p WHERE p.user_id=u.discord_id AND p.status='done') AS done "
@@ -311,7 +311,7 @@ class RpgDB:
             counts[table] = cur.rowcount
         await self.conn.execute("DELETE FROM review_actions WHERE reviewer_id=? OR submission_id NOT IN (SELECT id FROM submissions)", (uid,))
         if keep_user:
-            await self.conn.execute("UPDATE users SET xp=0, rank=-1, seal=NULL, current_quest_id=NULL, spine_done=0, streak_days=0, "
+            await self.conn.execute("UPDATE users SET xp=0, rank=-1, current_quest_id=NULL, spine_done=0, streak_days=0, "
                                     "last_active_day=NULL, rank_since=datetime('now') WHERE discord_id=?", (uid,))
         else:
             cur = await self.conn.execute("DELETE FROM users WHERE discord_id=?", (uid,))

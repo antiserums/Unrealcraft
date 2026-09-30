@@ -65,12 +65,9 @@ class Unlocks:
         cats = self.data.get("categories", {}) or {}
         return [int(cats.get(n, 0) or 0) for n in names if cats.get(n)]
 
-    def rank_role(self, rank: int, seal: str | None) -> int:
-        if rank == 3:
-            return self.role("specialist", seal) if seal else 0
+    def rank_role(self, rank: int) -> int:
         return self.role("rank", rank)
 
     def all_rank_roles(self) -> list[int]:
         ids = [int(v or 0) for v in (self.data.get("roles", {}).get("rank") or {}).values()]
-        ids += [int(v or 0) for v in (self.data.get("roles", {}).get("specialist") or {}).values()]
         return [i for i in ids if i]

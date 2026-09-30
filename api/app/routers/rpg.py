@@ -371,8 +371,8 @@ async def complete_quest(request: Request, uid: int, q: Quest, u: dict) -> tuple
     if q.id in done:
         return 0, None
     xp = q.xp
-    if u["rank"] >= 3 and u.get("seal") and q.raw.get("seal") == u["seal"]:
-        xp = round(xp * cat.xp_rules.get("in_seal_multiplier_rank3plus", 1.25))
+    if u.get("rank", -1) >= 3 and cat.affinity(q, u.get("major", "undecided")) == "major":
+        xp = round(xp * cat.xp_rules.get("in_major_multiplier_rank3plus", 1.25))
     await rdb.set_progress(uid, q.id, "done")
     await rdb.add_xp(uid, xp, f"quest:{q.id}")
     await rdb.touch_streak(uid)

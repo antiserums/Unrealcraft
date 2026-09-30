@@ -5,7 +5,7 @@ import { useState } from "react";
 type Rank = { n: number; title: string; xp: number };
 
 /** Admin actions on one member. Every call goes to /api/admin/members/{id}/... and is written to the admin log. */
-export default function AdminActions({ uid, ranks, seals, majors, current }: { uid: number; ranks: Rank[]; seals: string[]; majors: string[]; current: { rank: number; seal: string; major: string } }) {
+export default function AdminActions({ uid, ranks, majors, current }: { uid: number; ranks: Rank[]; majors: string[]; current: { rank: number; major: string } }) {
   const router = useRouter();
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -13,7 +13,6 @@ export default function AdminActions({ uid, ranks, seals, majors, current }: { u
   const [quest, setQuest] = useState("");
   const [withXp, setWithXp] = useState(true);
   const [rank, setRank] = useState(String(current.rank));
-  const [seal, setSeal] = useState(current.seal);
   const [major, setMajor] = useState(current.major);
   const [xp, setXp] = useState("");
   const [reason, setReason] = useState("testing");
@@ -50,16 +49,12 @@ export default function AdminActions({ uid, ranks, seals, majors, current }: { u
           <option value="-1">-1 · Orientation</option>
           {ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title} ({r.xp} XP)</option>)}
         </select>
-        <select value={seal} onChange={(e) => setSeal(e.target.value)}>
-          <option value="">no seal</option>
-          {seals.map((s) => <option key={s} value={s}>{s}</option>)}
-        </select>
         <select value={major} onChange={(e) => setMajor(e.target.value)}>
           {majors.map((m) => <option key={m} value={m}>{m}</option>)}
         </select>
-        <button className="primary" disabled={busy} onClick={() => post("rank", { rank: Number(rank), seal, major })}>Set</button>
+        <button className="primary" disabled={busy} onClick={() => post("rank", { rank: Number(rank), major })}>Set</button>
       </div>
-      <div className="small muted" style={{ marginTop: 4 }}>XP is raised to the rank's floor if it is below it. The bot swaps Discord roles within a minute.</div>
+      <div className="small muted" style={{ marginTop: 4 }}>From Expert up the major is the specialty on the nameplate. XP is raised to the rank's floor if it is below it. The bot swaps Discord roles within a minute.</div>
 
       <h3 style={{ marginTop: 16 }}>XP</h3>
       <div className="adm-form">

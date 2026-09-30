@@ -11,23 +11,22 @@ from ..session import current_member
 router = APIRouter(prefix="/me", tags=["me"])
 
 
-def nameplate(cat: Catalog, rank: int, seal: str | None, major: str) -> str:
+def nameplate(cat: Catalog, rank: int, major: str) -> str:
+    """Rank title; from Expert up the major is the specialty and joins the plate: 'Expert · Level Design'."""
     if rank < 0:
         return "Orientation"
     title = cat.ranks[rank]["title"]
-    if rank >= 3 and seal and rank < 6 and seal in cat.seals:
-        return f"{title} · {cat.seals[seal]['title']}"
+    if 3 <= rank < 6 and major and major != "undecided":
+        return f"{title} · {cat.majors.get(major, {}).get('title', major)}"
     return title
 
 
-def rank_color(cat: Catalog, rank: int, seal: str | None) -> str:
-    if rank == 3 and seal and seal in cat.seals:
-        return cat.seals[seal]["color"]
+def rank_color(cat: Catalog, rank: int) -> str:
     return cat.ranks.get(rank, {}).get("color") or "#7A8C7E"
 
 
 def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict]) -> dict:
-    rank, seal, major = u["rank"], u.get("seal"), u["major"]
+    rank, major = u["rank"], u["major"]
     target = rank + 1
     nxt = cat.ranks.get(target)
     ok, missing = cat.rank_requirements_met(state, target) if (target in cat.ranks or target == 0) else (False, [])
@@ -43,8 +42,8 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
     return {
         "id": u["discord_id"], "name": member["name"] if member else None, "avatar": member["avatar"] if member else None,
         "major": major, "major_title": cat.majors.get(major, {}).get("title", major), "minor": u.get("minor"),
-        "rank": rank, "rank_title": nameplate(cat, rank, seal, major), "rank_color": rank_color(cat, max(rank, 0), seal),
-        "seal": seal, "xp": u["xp"], "xp_floor": lo, "xp_next": hi,
+        "rank": rank, "rank_title": nameplate(cat, rank, major), "rank_color": rank_color(cat, max(rank, 0)),
+        "xp": u["xp"], "xp_floor": lo, "xp_next": hi,
         "streak_days": u.get("streak_days", 0), "ue_version": u.get("ue_version"),
         "rank_since": u.get("rank_since"), "member_since": u.get("created_at"),
         "next_rank": ({"n": target, "title": nxt["title"], "xp": nxt["xp"], "opens": nxt.get("opens"),

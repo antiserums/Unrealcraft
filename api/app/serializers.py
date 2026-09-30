@@ -69,8 +69,7 @@ def majors_meta(cat: Catalog) -> dict:
     return {
         "tiers": TIERS,
         "ranks": [{k: v for k, v in r.items()} for r in cat.meta.get("ranks", [])],
-        "seals": cat.seals,
-        "majors": {k: {"key": k, "title": v.get("title", k), "prefix": v.get("prefix"), "seals": v.get("seals") or [],
+        "majors": {k: {"key": k, "title": v.get("title", k), "prefix": v.get("prefix"),
                        "capstones": v.get("capstones") or {}} for k, v in cat.majors.items()},
         "xp_rules": cat.xp_rules,
         "quest_count": len(cat.quests),

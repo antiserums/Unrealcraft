@@ -53,7 +53,7 @@ class Majors(commands.Cog):
         else:
             await db.set_user(itx.user.id, respec_target=new)
             note = (f"Respec started. Finish {RESPEC_QUESTS_AFTER_R3} required {name} quests at Rank "
-                    f"{u['rank']} to move your Specialty. Your current Specialty becomes a medal when it does.")
+                    f"{u['rank']}. Your nameplate follows your new major when it does.")
 
         member = itx.guild.get_member(itx.user.id)
         old_r, new_r = itx.guild.get_role(unl.role("major", old)), itx.guild.get_role(unl.role("major", new))

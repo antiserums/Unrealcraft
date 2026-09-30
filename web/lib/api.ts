@@ -35,7 +35,7 @@ export type Progress = {
 } | null;
 export type Me = {
   id: number; name: string | null; avatar: string | null; major: string; major_title: string; minor: string | null;
-  rank: number; rank_title: string; rank_color: string; seal: string | null; xp: number; xp_floor: number; xp_next: number | null;
+  rank: number; rank_title: string; rank_color: string; xp: number; xp_floor: number; xp_next: number | null;
   streak_days: number; ue_version: string | null; rank_since: string | null; member_since: string | null;
   next_rank: { n: number; title: string; xp: number; opens: string | null; xp_to_go: number; required_left: number; tier_left: number; requirements_met: boolean; human_review: boolean } | null;
   tier_progress: { done: number; need: number; available: number; tier: string; name: string; emoji: string; color: string } | null;
@@ -57,8 +57,7 @@ export type ReviewAccess = { mentor: boolean; rank: number; can_review: boolean 
 export type Majors = {
   tiers: Record<string, { name: string; emoji: string; color: string; quiz_len: number }>;
   ranks: { n: number; key: string; title: string; tier: string; xp: number; color: string | null; opens?: string; quests_to_leave?: number }[];
-  seals: Record<string, { title: string; color: string }>;
-  majors: Record<string, { key: string; title: string; prefix: string | null; seals: string[]; capstones: Record<string, { id: string; title: string; brief: string }> }>;
+  majors: Record<string, { key: string; title: string; prefix: string | null; capstones: Record<string, { id: string; title: string; brief: string }> }>;
   quest_count: number;
 };
 export type PathData = {

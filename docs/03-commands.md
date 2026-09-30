@@ -14,7 +14,7 @@ Slash commands only. No prefix commands and no message-content intent except for
 | /quest `[id]` | any | No arg: the picker's next quest + 2 electives + 1 adjacent. With id: that quest's embed. |
 | /quiz `id` | any | Ephemeral quiz, one question per step, with buttons. |
 | /submit `id` `proof` `[attachment]` | any | Creates a submission and routes it by verify_type/rank. 2h cooldown per quest after a Fail. |
-| /rank `[member]` | any | Rank card: major, seal, XP bar, streak, next unlock, medals. |
+| /rank `[member]` | any | Rank card: major, XP bar, streak, next unlock, medals. |
 | /tree | any | The full catalog as ranks × tracks. Same for everyone, no personalization. |
 | /leaderboard `[scope]` | any | Weekly XP (quests only), by major or server-wide. |
 | /profile `[ue_version]` | any | Show or set profile fields. |
@@ -22,7 +22,7 @@ Slash commands only. No prefix commands and no message-content intent except for
 | /skip-voice | Orientation | Completes O7 without voice. |
 | /room rename `name` · /room limit `n` | owner of a voice room | Rename your join-to-create voice room or cap how many can join (0 = no limit). Same as the buttons in the room's chat. |
 | /skip-elective `id` | any | Hides an elective from /quest suggestions. |
-| /critique `link` `question` | R3+ | Opens a #showcase post tagged Critique-wanted and pings people with the same Specialty. |
+| /critique `link` `question` | R3+ | Opens a #showcase post tagged Critique-wanted and pings people in the same major. |
 
 ## Mentor / reviewer
 | Command | Who | Does |

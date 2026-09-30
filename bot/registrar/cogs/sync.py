@@ -72,8 +72,7 @@ class Sync(commands.Cog):
             try:
                 user = await self.bot.fetch_user(uid)
                 await user.send(f"{payload.get('quest', '')}: **{verdict.upper()}** from {getattr(reviewer, 'display_name', 'a reviewer')}."
-                                + (f"
-> {notes}" if notes else ""))
+                                + (f"\n> {notes}" if notes else ""))
             except Exception:
                 pass
             if verdict == "pass":
@@ -83,7 +82,7 @@ class Sync(commands.Cog):
         elif type_ == "rank_set" and guild:
             # An admin set a rank on the website: apply the Discord roles for it (promote handles demotion too).
             try:
-                await ranks.promote(guild, uid, int(payload["rank"]), payload.get("seal"))
+                await ranks.promote(guild, uid, int(payload["rank"]))
             except Exception:
                 log.exception("rank_set role sync failed for %s", uid)
         log.info("website event %s for %s: %s", type_, uid, payload)

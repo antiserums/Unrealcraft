@@ -1,4 +1,4 @@
-# Unrealcraft — ranks, majors, seals, tasters, capstones.
+# Unrealcraft — ranks, majors, tasters, capstones.
 # The quest picker reads this file. Quest files hold the quests themselves.
 
 ranks:
@@ -15,16 +15,11 @@ ranks:
   - {n: 0, key: novice,       title: "Novice",       tier: novice,     xp: 0,     color: "#7A8C7E", hoist: false, opens: "🟢 Novice quests: #quest-log, #starter-quests and the major forums (read all, post in your major's)"}
   - {n: 1, key: apprentice,     title: "Apprentice",     tier: apprentice, quests_to_leave: 30, xp: 650,   color: "#B5714B", hoist: false, opens: "🔵 Apprentice quests and the Blockout tag in #showcase"}
   - {n: 2, key: adept,      title: "Adept",      tier: adept, quests_to_leave: 60,      xp: 1500,  color: "#3D7DD8", hoist: false, opens: "🟣 Adept quests and peer reviews: you can approve Rank 0–1 turn-ins"}
-  - {n: 3, key: expert,        title: "Expert",        tier: expert, quests_to_leave: 120,     xp: 2500,  color: null,      hoist: false, opens: "🟠 Expert quests, your Specialty title (e.g. Expert · Design) and /critique"}   # role color comes from the Specialty
+  - {n: 3, key: expert,        title: "Expert",        tier: expert, quests_to_leave: 120,     xp: 2500,  color: "#D9824A", hoist: false, opens: "🟠 Expert quests, your major on the nameplate (e.g. Expert · Level Design) and /critique"}
   - {n: 4, key: master, title: "Master", tier: master, quests_to_leave: 220,     xp: 3700,  color: "#8A9BA8", hoist: true, opens: "🔴 Master quests and reviewing Rank 2 work"}
   - {n: 5, key: senior,    title: "Senior",    tier: master,     xp: 6500,  color: "#8E6CCF", hoist: true, human_review: true, opens: "the Lecture Hall stage and writing quests"}
   - {n: 6, key: lead,    title: "Lead",    tier: master,     xp: 9500,  color: "#D4AF37", hoist: true, human_review: true, vouchers: 2, opens: "#curriculum-wip and full mentor tools"}
 
-seals:
-  lookdev: {title: "Environment Art", color: "#D9824A"}
-  design:  {title: "Design",  color: "#4FA36C"}
-  anim:    {title: "Anim",    color: "#C85C8E"}
-  code:    {title: "Code",    color: "#4AA3B5"}
 
 community:
   # Quests and checklist lines marked needs_others (playtests, critique, reviewing others) stay hidden and
@@ -38,7 +33,7 @@ xp_rules:
   chat_xp: 0                       # OFF. Never counts toward ranks.
   submit_cooldown_after_fail_min: 120
   spot_check_every: 5                # every Nth Rank 0-1 turn-in (accepted on trust) is also shown to mentors
-  in_seal_multiplier_rank3plus: 1.25
+  in_major_multiplier_rank3plus: 1.25   # Expert+ earn more on quests in their own major
   post_spine_mix: {major: 70, adjacent: 15, opposite: 10, social: 5}
 
 majors:
@@ -46,7 +41,6 @@ majors:
     title: "Level Design"
     prefix: LDQ
     blurb: "Spaces, flow, encounters. You make the player go where you need them to."
-    seals: [design]
     adjacent: [lighting, bp-interact, foliage]
     opposite: [cpp-hello, gas-video]      # one of
     required_tasters:                     # rank -> list of any_of groups; each group needs one quest
@@ -65,7 +59,6 @@ majors:
     title: "Programming"
     prefix: PQ
     blurb: "Systems, C++, the code everyone else's work runs on."
-    seals: [code]
     adjacent: [cpp, bp-interop, logging]
     opposite: [lighting-pass]
     required_tasters:
@@ -84,7 +77,6 @@ majors:
     title: "Environment Art"
     prefix: EAQ
     blurb: "Materials, light and mood. You set how the world looks."
-    seals: [lookdev]
     adjacent: [lighting, landscape-material, decals]
     opposite: [pickup-game]
     required_tasters:
@@ -104,7 +96,6 @@ majors:
     title: "Tech Art"
     prefix: TAQ
     blurb: "Tools, shaders and VFX that make artists faster."
-    seals: [code, lookdev]
     adjacent: [materials, niagara, cpp-utility]
     opposite: [full-net]
     required_tasters: {1: [], 2: [], 3: []}
@@ -120,7 +111,6 @@ majors:
     title: "Gameplay Design"
     prefix: GDQ
     blurb: "Rules, loops and feel. You make a thing fun."
-    seals: [design]
     adjacent: [blueprint, umg, ld-graybox]
     opposite: [master-material-from-scratch]
     required_tasters: {1: [[EAQ11]], 2: [[EAQ23]], 3: []}
@@ -136,7 +126,6 @@ majors:
     title: "Animation"
     prefix: AQ
     blurb: "Characters that move and react believably."
-    seals: [anim]
     adjacent: [animbp, mannequin-in-space]
     opposite: [world-partition]
     required_tasters: {1: [], 2: [[GDQ5]], 3: []}
@@ -152,7 +141,6 @@ majors:
     title: "Cinematics"
     prefix: CQ
     blurb: "Cameras, Sequencer and shots."
-    seals: [lookdev, anim]
     adjacent: [sequencer, cameras, lookdev-still]
     opposite: [gas]
     required_tasters: {1: [], 2: [[GDQ5]], 3: []}
@@ -167,7 +155,6 @@ majors:
   undecided:
     title: "Undecided"
     blurb: "Try things. Must pick by Rank 2."
-    seals: []
     adjacent: []
     opposite: []
     required_tasters: {1: [], 2: [], 3: []}

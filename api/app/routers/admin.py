@@ -55,7 +55,6 @@ async def member(uid: int, request: Request, admin=Depends(admin_only)):
         "progress": [{**p, "quest": quest_summary(cat, cat.quests[p["quest_id"]]) if p["quest_id"] in cat.quests else None} for p in prog],
         "medals": await db.medals(uid), "xp_recent": await db.xp_recent(uid, 30), "submissions": await db.submissions(uid),
         "ranks": [{"n": n, "title": r["title"], "xp": r["xp"]} for n, r in sorted(cat.ranks.items())],
-        "seals": sorted(cat.seals.keys()) if hasattr(cat, "seals") else [],
         "majors": sorted(k for k in cat.majors.keys()),
     }
 
@@ -89,7 +88,6 @@ async def quest(uid: int, body: QuestAction, request: Request, admin=Depends(adm
 
 class RankAction(BaseModel):
     rank: int
-    seal: str | None = None
     major: str | None = None
 
 
@@ -101,8 +99,6 @@ async def rank(uid: int, body: RankAction, request: Request, admin=Depends(admin
     if body.rank < -1 or body.rank > 6:
         raise HTTPException(400, "Rank is -1 (Orientation) to 6.")
     fields: dict = {"rank": body.rank}
-    if body.seal is not None:
-        fields["seal"] = body.seal or None
     if body.major is not None:
         if body.major not in cat.majors:
             raise HTTPException(400, "No such major.")
@@ -114,7 +110,7 @@ async def rank(uid: int, body: RankAction, request: Request, admin=Depends(admin
     await rdb.set_user(uid, **fields)
     await rdb.conn.execute("UPDATE users SET rank_since=datetime('now') WHERE discord_id=?", (uid,))
     await rdb.conn.commit()
-    await rdb.emit("rank_set", uid, {"rank": body.rank, "seal": fields.get("seal", u.get("seal")), "admin": True})
+    await rdb.emit("rank_set", uid, {"rank": body.rank, "admin": True})
     await rdb.admin_log(admin["id"], "set_rank", uid, fields)
     return {"ok": True, "message": f"Rank set to {body.rank}. The bot will swap the Discord roles within a minute."}
 
@@ -166,7 +162,7 @@ async def reset(uid: int, body: ResetAction, request: Request, admin=Depends(adm
     counts = await request.app.state.rpg.reset_member(uid, keep_user=not body.delete_user)
     await request.app.state.rpg.admin_log(admin["id"], "reset", uid, {"deleted": counts, "user_deleted": body.delete_user})
     if not body.delete_user:
-        await request.app.state.rpg.emit("rank_set", uid, {"rank": -1, "seal": None, "admin": True})
+        await request.app.state.rpg.emit("rank_set", uid, {"rank": -1, "admin": True})
     return {"ok": True, "message": "Reset. " + ", ".join(f"{k} {v}" for k, v in counts.items() if v), "deleted": counts}
 
 

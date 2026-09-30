@@ -73,17 +73,13 @@ class Ranks(commands.Cog):
         ok, _ = self.cat.rank_requirements_met(st, target)
         if not ok or u["xp"] < self.cat.xp_needed(target):
             return False
-        if target == 3 and not u["seal"]:
-            await self._ask_seal(guild, uid)
-            return False  # the Specialty picker calls promote() when a Specialty is chosen
         await self.promote(guild, uid, target)
         return True
 
-    async def promote(self, guild: discord.Guild, uid: int, new_rank: int, seal: str | None = None) -> None:
+    async def promote(self, guild: discord.Guild, uid: int, new_rank: int) -> None:
         db, unl = self.bot.db, self.bot.unlocks
         u = await db.user(uid)
         old_rank = u["rank"]
-        seal = seal or u["seal"]
         member = guild.get_member(uid) or await guild.fetch_member(uid)
 
         # 1. swap visible rank role (never stack)
@@ -92,13 +88,11 @@ class Ranks(commands.Cog):
             remove.append(guild.get_role(unl.role("recruit")))
         remove = [r for r in remove if r and r in member.roles]
         add = []
-        new_role = guild.get_role(unl.rank_role(new_rank, seal))
+        new_role = guild.get_role(unl.rank_role(new_rank))
         if new_role:
             add.append(new_role)
         if new_rank == 0 and (o := guild.get_role(unl.role("oriented"))):
             add.append(o)
-        if new_rank == 3 and seal and (s := guild.get_role(unl.role("seal", seal))):
-            add.append(s)  # permission twin, kept for life
         try:
             if remove:
                 await member.remove_roles(*remove, reason=f"Promotion to rank {new_rank}")
@@ -108,7 +102,7 @@ class Ranks(commands.Cog):
             log.error("Missing permissions to edit roles. Is the Quartermaster role above all rank roles?")
 
         # 2. category unlocks are role-based (overwrites set by /admin sync-perms), so nothing per-member here
-        await db.set_user(uid, rank=new_rank, seal=seal, rank_since=discord.utils.utcnow().isoformat())
+        await db.set_user(uid, rank=new_rank, rank_since=discord.utils.utcnow().isoformat())
 
         # 5. jump medal (granted before the card so the card can show it)
         medal = JUMP_MEDAL.format(old_rank, new_rank)
@@ -123,9 +117,9 @@ class Ranks(commands.Cog):
         # 4. #rank-ups card
         ch = guild.get_channel(unl.channel("rank_ups"))
         if ch and new_rank >= 1:
-            old_t = nameplate(self.cat, old_rank, u["seal"], u["major"])
-            new_t = nameplate(self.cat, new_rank, seal, u["major"])
-            e = discord.Embed(description=f"~~{old_t}~~ → **{new_t}**", color=rank_color(self.cat, new_rank, seal))
+            old_t = nameplate(self.cat, old_rank, u["major"])
+            new_t = nameplate(self.cat, new_rank, u["major"])
+            e = discord.Embed(description=f"~~{old_t}~~ → **{new_t}**", color=rank_color(self.cat, new_rank))
             e.set_author(name=member.display_name, icon_url=member.display_avatar.url)
             e.add_field(name="Major", value=self.cat.majors.get(u["major"], {}).get("title", u["major"]))
             cap = self.cat.capstone(u["major"], old_rank)
@@ -145,7 +139,7 @@ class Ranks(commands.Cog):
         nq = pick.main
         nxt = f"{nq.id} · {nq.raw['title']}" if nq else "run /quest"
         cap = self.cat.capstone(u["major"], rank) or {}
-        seal_t = self.cat.seals.get(u["seal"] or "", {}).get("title", "")
+        major_t = self.cat.majors.get(u["major"], {}).get("title", "your major")   # the major is the specialty
         lines = {
             0: ["You're a Novice now. Welcome in.",
                 "You owe the Starter Quests (SQ1–SQ11): short 🟢 Novice quests, each one sitting.",
@@ -162,17 +156,17 @@ class Ranks(commands.Cog):
                 f"Next: {nxt}.",
                 "Want a partner? Join ➕ Join to create and invite someone. Post graphs in your major's forum for reviews.",
                 "New power: 🟣 Adept quests, and you can peer-approve Rank 0–1 turn-ins (3 a day) for +15 XP each."],
-            3: [f"Expert · {seal_t}. People can @ you for {seal_t} work now.",
-                f"🟠 Expert quests are open. Your {seal_t} Specialty path ends in: {cap.get('title', '—')}.",
+            3: [f"Expert · {major_t}. People can @ you for {major_t} work now.",
+                f"🟠 Expert quests are open. Your {major_t} path ends in: {cap.get('title', '—')}.",
                 f"Next: {nxt}.",
                 "For feedback, post in #showcase with the Critique-wanted tag.",
-                f"New power: 🟠 Expert quests, 1.25× XP on {seal_t} quests, /critique, and you can apply for Mentor-in-Training."],
-            4: [f"Master · {seal_t}. You own a system now, not just a scene.",
+                f"New power: 🟠 Expert quests, 1.25× XP on {major_t} quests, /critique, and you can apply for Mentor-in-Training."],
+            4: [f"Master · {major_t}. You own a system now, not just a scene.",
                 f"🔴 Master quests are open. You owe one capstone: {cap.get('title', '—')}. {cap.get('brief', '')}",
                 f"Next: {nxt}.",
                 "Your mentor from here on is whoever reviewed your Rank 3 capstone. Ping them in your major's forum.",
                 "New power: 🔴 Master quests, you can review Rank 2 turn-ins, and your name is shown higher in the member list."],
-            5: [f"Senior · {seal_t}. Your work holds up when other people touch it.",
+            5: [f"Senior · {major_t}. Your work holds up when other people touch it.",
                 f"You owe one capstone: {cap.get('title', '—')}. {cap.get('brief', '')}",
                 f"Next: {nxt}.",
                 "Staff signed off on this rank. Other members will look to you.",
@@ -195,18 +189,6 @@ class Ranks(commands.Cog):
         atts = json.loads(row["payload"]).get("attachments") or []
         return atts[0] if atts else None
 
-    async def _ask_seal(self, guild: discord.Guild, uid: int) -> None:
-        u = await self.bot.db.user(uid)
-        allowed = self.cat.majors.get(u["major"], {}).get("seals") or list(self.cat.seals)
-        member = guild.get_member(uid)
-        if not member:
-            return
-        view = SealPicker(self, guild, uid, allowed)
-        try:
-            await member.send("Rank 3 is ready. Pick your Specialty. It becomes your job title.", view=view)
-        except discord.Forbidden:
-            pass
-
     # --------------------------------------------------------------- staff
     @app_commands.command(name="grant-xp", description="[Mod] Grant or remove XP. Logged.")
     @app_commands.default_permissions(moderate_members=True)
@@ -227,8 +209,7 @@ class Ranks(commands.Cog):
         unl, g = self.bot.unlocks, itx.guild
         changed = 0
         for rank in range(0, 7):
-            roles_at_or_above = [g.get_role(unl.rank_role(r, None)) for r in range(rank, 7) if r != 3]
-            roles_at_or_above += [g.get_role(unl.role("specialist", s)) for s in self.cat.seals] if rank <= 3 else []
+            roles_at_or_above = [g.get_role(unl.rank_role(r)) for r in range(rank, 7)]
             roles_at_or_above = [r for r in roles_at_or_above if r]
             for cat_id in unl.categories_for_rank(rank):
                 cat = g.get_channel(cat_id)
@@ -253,22 +234,6 @@ class Ranks(commands.Cog):
             return
         self.bot.catalog = new
         await itx.response.send_message(f"Reloaded {len(new.quests)} quests ({len(warns)} warnings).", ephemeral=True)
-
-
-class SealPicker(discord.ui.View):
-    def __init__(self, cog: Ranks, guild: discord.Guild, uid: int, allowed: list[str]):
-        super().__init__(timeout=None)
-        self.cog, self.guild, self.uid = cog, guild, uid
-        for s in allowed:
-            b = discord.ui.Button(label=cog.cat.seals[s]["title"], style=discord.ButtonStyle.secondary)
-            b.callback = self._make(s)
-            self.add_item(b)
-
-    def _make(self, seal: str):
-        async def cb(itx: discord.Interaction):
-            await self.cog.promote(self.guild, self.uid, 3, seal=seal)
-            await itx.response.edit_message(content=f"Specialty chosen: {self.cog.cat.seals[seal]['title']}.", view=None)
-        return cb
 
 
 async def setup(bot):

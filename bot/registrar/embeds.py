@@ -1,4 +1,4 @@
-"""Embed builders. Dark UI with the rank or Specialty color as the accent."""
+"""Embed builders. Dark UI with the rank color as the accent."""
 from __future__ import annotations
 
 import re
@@ -12,24 +12,18 @@ DARK = discord.Color.from_str("#1E1F22")
 GOLD = discord.Color.from_str("#D4AF37")
 
 
-def rank_color(cat: Catalog, rank: int, seal: str | None) -> discord.Color:
-    if rank == 3 and seal and seal in cat.seals:
-        return discord.Color.from_str(cat.seals[seal]["color"])
+def rank_color(cat: Catalog, rank: int) -> discord.Color:
     c = cat.ranks.get(rank, {}).get("color")
     return discord.Color.from_str(c) if c else DARK
 
 
-def nameplate(cat: Catalog, rank: int, seal: str | None, major: str) -> str:
+def nameplate(cat: Catalog, rank: int, major: str) -> str:
+    """Rank title; from Expert up the major is the specialty and joins the plate: 'Expert · Level Design'."""
     if rank < 0:
         return "Orientation"
     title = cat.ranks[rank]["title"]
-    if rank >= 3 and seal and rank < 6:
-        return f"{title} · {cat.seals[seal]['title']}"
-    if rank == 0 and major != "undecided":
-        m = cat.majors.get(major, {})
-        seal_hint = (m.get("seals") or [None])[0]
-        if seal_hint:
-            return f"{title} · {cat.seals[seal_hint]['title']}"
+    if 3 <= rank < 6 and major and major != "undecided":
+        return f"{title} · {cat.majors.get(major, {}).get('title', major)}"
     return title
 
 
@@ -131,8 +125,8 @@ def _quest_embed(cat: Catalog, q: Quest, major: str, reason: str | None = None,
 
 
 def rank_card(cat: Catalog, member: discord.abc.User, u, medals: list[str], next_line: str) -> discord.Embed:
-    rank, seal, major = u["rank"], u["seal"], u["major"]
-    e = discord.Embed(title=nameplate(cat, rank, seal, major), color=rank_color(cat, max(rank, 0), seal))
+    rank, major = u["rank"], u["major"]
+    e = discord.Embed(title=nameplate(cat, rank, major), color=rank_color(cat, max(rank, 0)))
     e.set_author(name=member.display_name, icon_url=member.display_avatar.url)
     nxt = cat.ranks.get(rank + 1)
     if nxt:

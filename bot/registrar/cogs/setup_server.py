@@ -29,10 +29,7 @@ ROLES = [
     ("Lead", "#D4AF37", True, True, ("rank", 6)),
     ("Senior", "#8E6CCF", True, True, ("rank", 5)),
     ("Master", "#8A9BA8", True, True, ("rank", 4)),
-    ("Expert · Environment Art", "#D9824A", False, True, ("specialist", "lookdev")),
-    ("Expert · Design", "#4FA36C", False, True, ("specialist", "design")),
-    ("Expert · Anim", "#C85C8E", False, True, ("specialist", "anim")),
-    ("Expert · Code", "#4AA3B5", False, True, ("specialist", "code")),
+    ("Expert", "#D9824A", False, True, ("rank", 3)),
     ("Adept", "#3D7DD8", False, False, ("rank", 2)),
     ("Apprentice", "#B5714B", False, False, ("rank", 1)),
     ("Novice", "#7A8C7E", False, False, ("rank", 0)),
@@ -72,7 +69,6 @@ TRACKS = [
     ("03 · BLUEPRINT", "blueprint", 2, "blueprint"),
     ("03 · CHARACTERS & ANIM", "characters_anim", 3, "characters-anim"),
 ]
-SEALS = ["lookdev", "design", "anim", "code"]
 
 
 def _set(d: dict, path: tuple, value: int) -> None:
@@ -242,9 +238,8 @@ class SetupServer(commands.Cog):
         report.append(f"roles: {len(ROLES)} ready")
 
         R = roles
-        rank_roles = {n: R[x] for n, x in ((0, "Novice"), (1, "Apprentice"), (2, "Adept"),
+        rank_roles = {n: R[x] for n, x in ((0, "Novice"), (1, "Apprentice"), (2, "Adept"), (3, "Expert"),
                                            (4, "Master"), (5, "Senior"), (6, "Lead"))}
-        spec = [R[name] for name, *_rest, key in ROLES if key and key[0] == "specialist"]   # by key, not by name
         staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
         cat = self.bot.catalog
         everyone = g.default_role
@@ -253,8 +248,6 @@ class SetupServer(commands.Cog):
 
         def allowed_from(rank: int) -> list[discord.Role]:
             rs = [r for n, r in rank_roles.items() if n >= rank]
-            if rank <= 3:
-                rs += spec
             return rs + staff
 
         def gated(rank: int, extra: dict | None = None) -> dict:
@@ -403,12 +396,13 @@ class SetupServer(commands.Cog):
         # Specialist Halls were removed: retire the category, its channels and the Specialty permission roles.
         for old_cat in ("03 · SPECIALIST HALLS", "03 · BAYS"):
             report += await self._retire(g, discord.utils.get(g.categories, name=old_cat), None, drop_category=True)
-        for r in [r for r in g.roles if r.name.startswith(("Specialty · ", "Seal · "))]:
-            await r.delete(reason="Unrealcraft: Specialist Halls removed")
+        for r in [r for r in g.roles if r.name.startswith(("Specialty · ", "Seal · ", "Expert · "))]:
+            await r.delete(reason="Unrealcraft: seals removed; the major is the specialty")
             report.append(f"removed role {r.name}")
         cats.pop("bays", None)
         chans.pop("bays", None)
         data.get("roles", {}).pop("seal", None)
+        data.get("roles", {}).pop("specialist", None)
         uar = data.get("unlock_at_rank") or {}
         uar[3] = [x for x in uar.get(3, []) if x != "bays"]
 

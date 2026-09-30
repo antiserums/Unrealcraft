@@ -77,18 +77,18 @@ class DB:
     async def leaderboard(self, days: int | None, limit: int = 50) -> list[dict]:
         if days:
             cur = await self.conn.execute(
-                "SELECT u.discord_id, u.major, u.rank, u.seal, COALESCE(SUM(x.amount),0) xp "
+                "SELECT u.discord_id, u.major, u.rank, COALESCE(SUM(x.amount),0) xp "
                 "FROM users u JOIN xp_log x ON x.user_id=u.discord_id "
                 "WHERE x.created_at >= datetime('now', ?) GROUP BY u.discord_id ORDER BY xp DESC LIMIT ?",
                 (f"-{days} days", limit))
         else:
             cur = await self.conn.execute(
-                "SELECT discord_id, major, rank, seal, xp FROM users ORDER BY xp DESC LIMIT ?", (limit,))
+                "SELECT discord_id, major, rank, xp FROM users ORDER BY xp DESC LIMIT ?", (limit,))
         return [dict(r) for r in await cur.fetchall()]
 
     async def user_state(self, uid: int) -> tuple[dict, UserState, dict[str, dict]]:
         """(users row or a blank one, UserState for the rules engine, progress rows)."""
-        u = await self.user(uid) or {"discord_id": uid, "major": "undecided", "rank": -1, "xp": 0, "seal": None,
+        u = await self.user(uid) or {"discord_id": uid, "major": "undecided", "rank": -1, "xp": 0,
                                      "streak_days": 0, "ue_version": None, "tasters_json": "[]", "minor": None,
                                      "rank_since": None, "created_at": None}
         prog = await self.progress(uid)
