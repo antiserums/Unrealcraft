@@ -2,18 +2,25 @@ import type { Card } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
 import { Character } from "./Figure";
 
-/** The shareable player card. Pure display: the owner edits it with CardEditor next to it. */
-export default function PlayerCard({ c, sheet, badges }: { c: Card; sheet: SheetSpec | null; badges: Record<string, string | null> }) {
+export type Deco = { avatar: string | null; card: string | null };
+
+/** The shareable player card. Pure display: the owner edits it with CardEditor next to it.
+ *  Decorations are the pack's transparent overlays: a ring around the avatar, a border around the card. */
+export default function PlayerCard({ c, sheet, badges, deco }: { c: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco?: Deco }) {
   const pct = c.xp_next ? Math.min(100, Math.round(((c.xp - c.xp_floor) / (c.xp_next - c.xp_floor)) * 100)) : 100;
   return (
-    <article className={`pcard frame-${c.card_frame ?? "stone"}`} style={{ "--plate": c.nameplate } as React.CSSProperties}>
+    <article className={`pcard ${deco?.card ? "decorated" : ""}`} style={{ "--plate": c.nameplate } as React.CSSProperties}>
+      {deco?.card && <img className="px pcard-deco" src={deco.card} alt="" aria-hidden="true" />}
       <div className="pcard-banner">
         <span className="pcard-rank" style={{ color: c.rank_color, borderColor: c.rank_color }}>{c.rank_title}</span>
         <span className="pcard-major">{c.major_title}</span>
       </div>
       <div className="pcard-body">
         <div className="pcard-id">
-          <div className={`pcard-avatar frame-${c.avatar_frame ?? "plain"}`}>{c.avatar ? <img src={c.avatar} alt="" /> : <span>{(c.name ?? "?").slice(0, 1)}</span>}</div>
+          <div className="pcard-avatar-wrap">
+            <div className="pcard-avatar">{c.avatar ? <img src={c.avatar} alt="" /> : <span>{(c.name ?? "?").slice(0, 1)}</span>}</div>
+            {deco?.avatar && <img className="px deco-avatar" src={deco.avatar} alt="" aria-hidden="true" />}
+          </div>
           <div>
             <div className="pcard-name">{c.name ?? "A guild member"}</div>
             {c.motto ? <div className="pcard-motto">“{c.motto}”</div> : <div className="pcard-motto muted">No motto yet.</div>}

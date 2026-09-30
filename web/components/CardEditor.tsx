@@ -1,17 +1,21 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import type { Card } from "@/lib/api";
+import type { Card, CosmeticOption } from "@/lib/api";
 
-/** The owner's controls for the player card: motto, nameplate colour, frames, featured achievements, sharing.
- *  Colours and frames are unlockables: locked ones show with their hint and cannot be picked. */
-export default function CardEditor({ initial, shareUrl }: { initial: Card; shareUrl: string }) {
+type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
+
+/** The owner's controls for the player card. Cosmetics are picked from compact tile grids (like a chat app's
+ *  profile shop): the card on the left is the live preview, so tiles stay small; hover or select a tile to read
+ *  its name and how to unlock it. Locked tiles are dimmed and cannot be picked. */
+export default function CardEditor({ initial, shareUrl, deco }: { initial: Card; shareUrl: string; deco: DecoImages }) {
   const router = useRouter();
   const [c, setC] = useState<Card>(initial);
   const [motto, setMotto] = useState(initial.motto);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
+  const [hover, setHover] = useState<{ kind: string; o: CosmeticOption } | null>(null);
   const featured = c.cosmetics.featured ?? c.featured.map((a) => a.key);
   const opts = c.cosmetic_options;
 
@@ -30,6 +34,18 @@ export default function CardEditor({ initial, shareUrl }: { initial: Card; share
     try { await navigator.clipboard.writeText(shareUrl); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch { /* the field below can be copied by hand */ }
   }
   const owned = (k: "nameplate" | "avatar_frame" | "card_frame") => opts[k].filter((o) => o.owned).length;
+  const current = (k: "nameplate" | "avatar_frame" | "card_frame") => k === "nameplate" ? c.nameplate_id : k === "avatar_frame" ? c.avatar_frame : c.card_frame;
+  const detail = (k: "nameplate" | "avatar_frame" | "card_frame") => {
+    const o = hover?.kind === k ? hover.o : opts[k].find((x) => x.id === current(k));
+    if (!o) return null;
+    return <div className="pick-detail"><b>{o.name}</b>{o.desc ? <span className="muted"> · {o.desc}</span> : null}{o.owned ? <span className="muted"> · {o.id === current(k) ? "in use" : "unlocked"}</span> : <span style={{ color: "var(--warn)" }}> · 🔒 {o.hint}</span>}</div>;
+  };
+  const tileProps = (k: "nameplate" | "avatar_frame" | "card_frame", o: CosmeticOption) => ({
+    type: "button" as const, disabled: busy || !o.owned, title: o.owned ? o.name : `${o.name} · ${o.hint}`,
+    className: `pick ${current(k) === o.id ? "on" : ""} ${o.owned ? "" : "locked"}`,
+    onMouseEnter: () => setHover({ kind: k, o }), onMouseLeave: () => setHover(null), onFocus: () => setHover({ kind: k, o }), onBlur: () => setHover(null),
+    onClick: () => o.owned && patch({ [k]: o.id }),
+  });
 
   return (
     <div className="card editor">
@@ -41,51 +57,53 @@ export default function CardEditor({ initial, shareUrl }: { initial: Card; share
         <button type="submit" disabled={busy || motto === c.motto}>Save</button>
       </form>
 
-      <div className="small muted" style={{ marginTop: 14 }}>Nameplate colour <span className="muted">· {owned("nameplate")}/{opts.nameplate.length} unlocked</span></div>
-      <div className="row" style={{ gap: 6, marginTop: 6 }}>
+      <div className="pick-head"><span className="small muted">Nameplate colour</span><span className="small muted">{owned("nameplate")}/{opts.nameplate.length}</span></div>
+      <div className="pick-grid">
         {opts.nameplate.map((o) => (
-          <button key={o.id} onClick={() => o.owned && patch({ nameplate: o.id })} disabled={busy || !o.owned} aria-label={o.name} title={o.owned ? o.name : `${o.name} · ${o.hint}`}
-            className={`swatch ${o.owned ? "" : "locked"}`}
-            style={{ background: o.value, borderColor: c.nameplate_id === o.id ? "#fff" : "transparent", boxShadow: c.nameplate_id === o.id ? `0 0 0 2px ${o.value}` : "none" }}>
-            {!o.owned && <span className="swatch-lock">🔒</span>}
+          <button key={o.id} {...tileProps("nameplate", o)} aria-label={o.name} style={{ width: 28, height: 28, borderRadius: "50%", background: o.value }}>
+            {!o.owned && <span className="pick-lock">🔒</span>}
           </button>
         ))}
       </div>
+      {detail("nameplate")}
 
-      <div className="small muted" style={{ marginTop: 14 }}>Avatar frame <span className="muted">· {owned("avatar_frame")}/{opts.avatar_frame.length} unlocked</span></div>
-      <div className="row" style={{ gap: 6, marginTop: 6 }}>
+      <div className="pick-head"><span className="small muted">Avatar decoration</span><span className="small muted">{owned("avatar_frame")}/{opts.avatar_frame.length}</span></div>
+      <div className="pick-grid">
         {opts.avatar_frame.map((o) => (
-          <button key={o.id} onClick={() => o.owned && patch({ avatar_frame: o.id })} disabled={busy || !o.owned} title={o.owned ? o.name : `${o.name} · ${o.hint}`}
-            className={`chip ${c.avatar_frame === o.id ? "on" : ""} ${o.owned ? "" : "locked"}`}>
-            <span className={`pcard-avatar mini frame-${o.id}`}><span>{(c.name ?? "?").slice(0, 1)}</span></span>{o.owned ? o.name : `🔒 ${o.name}`}
+          <button key={o.id} {...tileProps("avatar_frame", o)} aria-label={o.name} style={{ width: 52, height: 52, borderRadius: 8 }}>
+            <span className="pick-av" />
+            {deco.avatar[o.id] ? <img className="px" src={deco.avatar[o.id]} alt="" style={{ position: "absolute", inset: 2, width: 48, height: 48 }} /> : <span className="pick-swatch" />}
+            {!o.owned && <span className="pick-lock">🔒</span>}
           </button>
         ))}
       </div>
+      {detail("avatar_frame")}
 
-      <div className="small muted" style={{ marginTop: 14 }}>Card frame <span className="muted">· {owned("card_frame")}/{opts.card_frame.length} unlocked</span></div>
-      <div className="row" style={{ gap: 6, marginTop: 6 }}>
+      <div className="pick-head"><span className="small muted">Card decoration</span><span className="small muted">{owned("card_frame")}/{opts.card_frame.length}</span></div>
+      <div className="pick-grid">
         {opts.card_frame.map((o) => (
-          <button key={o.id} onClick={() => o.owned && patch({ card_frame: o.id })} disabled={busy || !o.owned} title={o.owned ? o.name : `${o.name} · ${o.hint}`}
-            className={`chip ${c.card_frame === o.id ? "on" : ""} ${o.owned ? "" : "locked"}`}>
-            <span className={`frame-swatch frame-${o.id}`} />{o.owned ? o.name : `🔒 ${o.name}`}
+          <button key={o.id} {...tileProps("card_frame", o)} aria-label={o.name} style={{ width: 72, height: 58, borderRadius: 6 }}>
+            {deco.card[o.id] ? <img className="px" src={deco.card[o.id]} alt="" style={{ position: "absolute", inset: 3, width: 66, height: 52 }} /> : <span className="pick-swatch" />}
+            {!o.owned && <span className="pick-lock">🔒</span>}
           </button>
         ))}
       </div>
+      {detail("card_frame")}
       {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
 
-      <div className="small muted" style={{ marginTop: 14 }}>Shown on the card (pick up to three)</div>
+      <div className="pick-head"><span className="small muted">Shown on the card</span><span className="small muted">up to three</span></div>
       {c.earned_achievements.length ? (
-        <div className="row" style={{ gap: 6, marginTop: 6 }}>
+        <div className="row" style={{ gap: 6 }}>
           {c.earned_achievements.map((a) => (
-            <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={featured.includes(a.key) ? "primary" : ""} title={a.desc} style={{ padding: "6px 10px", fontSize: 12 }}>
+            <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={featured.includes(a.key) ? "primary" : ""} title={a.desc} style={{ padding: "5px 9px", fontSize: 11 }}>
               {a.icon} {a.name}
             </button>
           ))}
         </div>
-      ) : <div className="small" style={{ marginTop: 6 }}>Nothing earned yet. Finish a quest.</div>}
+      ) : <div className="small">Nothing earned yet. Finish a quest.</div>}
 
-      <div className="small muted" style={{ marginTop: 14 }}>Sharing</div>
-      <label className="row small" style={{ gap: 8, marginTop: 6, cursor: "pointer" }}>
+      <div className="pick-head"><span className="small muted">Sharing</span></div>
+      <label className="row small" style={{ gap: 8, cursor: "pointer" }}>
         <input type="checkbox" checked={c.public} disabled={busy} onChange={(e) => patch({ public: e.target.checked })} />
         <span>Anyone with the link can see this card{c.public ? "" : " (guild members only right now)"}</span>
       </label>

@@ -84,7 +84,7 @@ export default async function Home() {
 
       {g && (
         <section>
-          <div className="section-h"><h2>Player statistics</h2><span className="muted small">everyone, this week</span><Link href="/leaderboard" className="small" style={{ marginLeft: "auto" }}>Hall of Fame →</Link></div>
+          <div className="section-h"><h2>Player statistics</h2><span className="muted small">everyone, this week</span><Link href="/leaderboard" className="small" style={{ marginLeft: "auto" }}>Leaderboard →</Link></div>
           <div className="stats-grid">
             <Stat n={g.members} label="players" />
             <Stat n={g.quests_done_week} label="rooms cleared this week" />

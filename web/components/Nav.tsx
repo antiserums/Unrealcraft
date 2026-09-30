@@ -10,7 +10,7 @@ export default async function Nav() {
         <nav className="nav-links" aria-label="Main">
           <Link href="/quests" className="link">Quest Board</Link>
           <Link href="/how-it-works" className="link">How it works</Link>
-          {me && <Link href="/leaderboard" className="link">Hall of Fame</Link>}
+          {me && <Link href="/leaderboard" className="link">Leaderboard</Link>}
           {me?.review?.can && <Link href="/review" className="link">Review{me.review.pending > 0 && <span className="count">{me.review.pending}</span>}</Link>}
           {me?.admin && <Link href="/admin" className="link">Admin</Link>}
           <Link href="/changelog" className="link">Changelog</Link>

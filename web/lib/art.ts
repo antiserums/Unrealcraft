@@ -24,6 +24,7 @@ export type Manifest = {
   environments: Record<string, { path: string; large?: string | null; width: number; height: number; groundY: number }>;
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
+  decorations?: { avatar: Record<string, string>; card: Record<string, string> };
 };
 
 let cache: { at: number; m: Manifest | null } | null = null;
@@ -87,4 +88,17 @@ export function presetSheets(m: Manifest | null, body: string, style: string): R
 export function bannerImage(m: Manifest | null, key = "town"): string | null {
   const f = m?.banners?.[key];
   return f ? art(f) : null;
+}
+
+/** Avatar ring or card border for a decoration theme id. */
+export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): string | null {
+  const f = id ? m?.decorations?.[kind]?.[id] : null;
+  return f ? art(f) : null;
+}
+
+/** Every decoration image by kind, for the pickers. */
+export function decorationImages(m: Manifest | null): { avatar: Record<string, string>; card: Record<string, string> } {
+  const out = { avatar: {} as Record<string, string>, card: {} as Record<string, string> };
+  for (const kind of ["avatar", "card"] as const) for (const [k, v] of Object.entries(m?.decorations?.[kind] ?? {})) out[kind][k] = art(v);
+  return out;
 }

@@ -288,23 +288,23 @@ NAMEPLATES = [
     ("rose", "#C85C8E", "Rose", {"type": "achievement", "key": "streak_7", "hint": "Keep a seven-day streak"}),
     ("gold", "#D4AF37", "Gold", {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
 ]
-AVATAR_FRAMES = [
-    ("plain", "Plain ring", {"type": "starter"}),
-    ("bronze", "Bronze ring", {"type": "achievement", "key": "first_blood", "hint": "Finish your first quest"}),
-    ("laurel", "Silver laurel", {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
-    ("rune", "Rune ring", {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
-    ("ember", "Ember ring", {"type": "achievement", "key": "streak_30", "hint": "Keep a thirty-day streak"}),
-    ("crown", "Gold crown", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+# Ten decoration themes from the art pack (profile-decorations/): each has a matching avatar ring and card border.
+# The same rule unlocks both, so a theme arrives as a pair.
+DECORATIONS = [
+    ("novice", "Novice", "Leather wraps and a bronze rim.", {"type": "starter"}),
+    ("apprentice", "Apprentice", "Teal ribbons on bronze.", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
+    ("adept", "Adept", "Polished silver with blue crystal.", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
+    ("expert", "Expert", "Dark steel, violet runes.", {"type": "rank", "n": 3, "hint": "Reach Expert"}),
+    ("master", "Master", "Ivory enamel, gold filigree, emerald.", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+    ("thornwood", "Thornwood", "Twisting vines and small leaves.", {"type": "achievement", "key": "rooms_10", "hint": "Finish ten quests"}),
+    ("emberforge", "Emberforge", "Charcoal iron with ember cracks.", {"type": "achievement", "key": "streak_7", "hint": "Keep a seven-day streak"}),
+    ("frostbound", "Frostbound", "Pale silver and ice crystals.", {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
+    ("celestial", "Celestial", "Midnight blue, gold stars, a crescent moon.", {"type": "achievement", "key": "lore_10", "hint": "Open the reading on ten quests"}),
+    ("dragonheart", "Dragonheart", "Crimson scales and dragon horns.", {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
 ]
-CARD_FRAMES = [
-    ("stone", "Stone", {"type": "starter"}),
-    ("leather", "Leather", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
-    ("steel", "Steel", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
-    ("gilded", "Gilded", {"type": "rank", "n": 3, "hint": "Reach Expert"}),
-    ("regalia", "Regalia", {"type": "rank", "n": 4, "hint": "Reach Master"}),
-    ("arcane", "Arcane", {"type": "achievement", "key": "lore_50", "hint": "Open the reading on fifty quests"}),
-    ("dragonbone", "Dragonbone", {"type": "achievement", "key": "capstone_4", "hint": "Clear four capstone dungeons"}),
-]
+AVATAR_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
+CARD_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
+DECO_DESC = {i: d for i, _n, d, _u in DECORATIONS}
 
 
 def _owned(unlock: dict, rank: int, earned: set[str]) -> bool:
@@ -316,8 +316,8 @@ def cosmetic_catalog(rank: int, earned: set[str]) -> dict:
     """Every card cosmetic with its owned flag and unlock hint, grouped by kind."""
     return {
         "nameplate": [{"id": i, "value": v, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
-        "avatar_frame": [{"id": i, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
-        "card_frame": [{"id": i, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
+        "avatar_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
+        "card_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
     }
 
 
