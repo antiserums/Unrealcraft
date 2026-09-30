@@ -382,12 +382,17 @@ main.wrap { flex: 1; width: 100%; }
 .verdicts button.changes { border-color: var(--warn); } .verdicts button.fail { border-color: var(--bad); }
 .route { font-family: var(--display); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border: 1px solid var(--bronze); border-radius: 2px; color: var(--muted); }
 
-/* ---- home hero on the pack's town banner (3:1, no text baked in; copy sits on a dark plate at the left) ---- */
-.hero.banner-hero { grid-template-columns: 1fr; min-height: 300px; padding: 28px; background-size: cover; background-position: center 30%; background-repeat: no-repeat; image-rendering: pixelated; align-items: end; }
-@media (min-width: 900px) { .hero.banner-hero { aspect-ratio: 3 / 1; min-height: 0; } }
-.hero.banner-hero .hero-copy { max-width: 560px; padding: 18px 22px; border-radius: 6px; background: rgba(8, 9, 13, .78); border: 1px solid var(--gold-3); box-shadow: 0 0 0 1px #000, inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.6); backdrop-filter: blur(2px); }
-.hero.banner-hero .lead { font-size: 16px; }
-
+/* ---- home hero on the pack's town banner (3:1, no text baked in): the copy sits on a plate, bottom left ---- */
+.hero.banner-hero { display: block; position: relative; padding: 0; min-height: 260px; background-size: cover; background-position: center 35%; background-repeat: no-repeat; image-rendering: pixelated; overflow: hidden; }
+@media (min-width: 720px) { .hero.banner-hero { aspect-ratio: 3 / 1; min-height: 0; } }
+.hero.banner-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(6,7,10,.55) 0%, rgba(6,7,10,.25) 45%, transparent 70%), linear-gradient(0deg, rgba(6,7,10,.7) 0%, transparent 45%); pointer-events: none; }
+.hero.banner-hero .hero-copy { position: absolute; left: 24px; bottom: 24px; z-index: 1; max-width: min(520px, calc(100% - 48px)); padding: 16px 20px 18px; border-radius: 6px; background: rgba(8, 9, 13, .82); border: 1px solid var(--gold-3); box-shadow: 0 0 0 1px #000, inset 0 1px 0 rgba(255,255,255,.06), 0 10px 30px rgba(0,0,0,.6); backdrop-filter: blur(3px); }
+.hero.banner-hero .hero-copy::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: linear-gradient(90deg, var(--gold), transparent); }
+.hero.banner-hero h1 { font-size: clamp(22px, 3vw, 32px); margin: 2px 0 6px; }
+.hero.banner-hero .lead { font-size: 15px; margin-bottom: 0; }
+.hero.banner-hero .row { margin-top: 12px !important; gap: 8px; }
+.hero.banner-hero .btn, .hero.banner-hero button { padding: 7px 13px; font-size: 12px; }
+@media (max-width: 719px) { .hero.banner-hero .hero-copy { position: static; max-width: none; margin: 110px 16px 16px; } }
 /* ---- admin panel ---- */
 .stats-grid { display: grid; gap: 10px; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
 .stats-grid .card { padding: 12px 14px; }

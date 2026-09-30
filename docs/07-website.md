@@ -52,8 +52,8 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   No cooldown on retrying a boss; the 120-minute cooldown after a reviewer's Fail still applies to the chest.
 - **Reviews on the site (done):** `/review` is the mentor inbox (pending, waiting on others, recent), `/review/{id}`
   shows the turn-in with screenshots, earlier attempts and the quest's checklist, and records Pass / Changes / Fail.
-  The API (`api/app/routers/review.py`) mirrors the bot's rules; mentors are the staff mentor role, rank 6, or
-  `ADMIN_IDS`. A decision emits `submission_decided`, which the bot mirrors into Discord.
+  Only mentors review (staff mentor role, rank 6, `ADMIN_IDS`, or the dev login); one verdict decides. The bot's
+  buttons enforce the same rule. A decision emits `submission_decided`, which the bot mirrors into Discord.
 - **Admin panel (done):** `/admin` for `ADMIN_IDS` (and dev login): stats, member search, the events queue and an
   admin log; `/admin/members/{id}` grants or clears quests, sets rank/seal/major (emits `rank_set` so the bot swaps
   roles), gives XP or medals, and resets an account. Every action lands in `admin_log`.

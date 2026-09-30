@@ -4,9 +4,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { ReviewItem } from "@/lib/api";
 
-type Result = { final: string | null; approvals?: number; needs?: number; quest_xp?: number; message: string };
+type Result = { final: string | null; quest_xp?: number; message: string };
 
-/** Pass / Changes / Fail with a note. Peers see "Approve" for pass; the API decides what is final. */
+/** Pass / Changes / Fail with a note. Mentors only; one verdict decides. */
 export default function ReviewForm({ s }: { s: ReviewItem }) {
   const router = useRouter();
   const [notes, setNotes] = useState("");
@@ -36,7 +36,7 @@ export default function ReviewForm({ s }: { s: ReviewItem }) {
     );
   }
   if (s.blocked) return <div className="card"><div className="eyebrow">Not yours to review</div><p style={{ margin: "6px 0 0" }}>{s.blocked}</p></div>;
-  if (s.reviewed_by_me) return <div className="card"><div className="eyebrow">Waiting</div><p style={{ margin: "6px 0 0" }}>You already reviewed this one. {s.approvals}/{s.needs} approvals so far.</p></div>;
+  if (s.reviewed_by_me) return <div className="card"><div className="eyebrow">Waiting</div><p style={{ margin: "6px 0 0" }}>You already reviewed this one.</p></div>;
 
   return (
     <div className="card">
@@ -45,12 +45,12 @@ export default function ReviewForm({ s }: { s: ReviewItem }) {
       <textarea id="rv-notes" rows={4} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="What is good, what to fix, where to look." style={{ width: "100%", marginTop: 4 }} />
       {err && <div className="note small" style={{ marginTop: 8, borderColor: "var(--bad)" }}>{err}</div>}
       <div className="verdicts" style={{ marginTop: 10 }}>
-        <button className="primary" disabled={busy} onClick={() => send("pass")}>{s.access?.mentor || s.route === "peer" ? "Pass" : "Approve"}</button>
+        <button className="primary" disabled={busy} onClick={() => send("pass")}>Pass</button>
         <button className="changes" disabled={busy} onClick={() => send("changes")}>Changes</button>
         <button className="fail" disabled={busy} onClick={() => send("fail")}>Fail</button>
       </div>
       <p className="small muted" style={{ margin: "10px 0 0" }}>
-        {s.access?.mentor ? "You decide alone. Pass gives XP and opens the chest." : s.route === "peer" ? "One approval passes rank 2 work." : s.route === "human" ? "Rank 5+ work: mentors only." : "Peers need two approvals to pass; one peer can send it back."}
+        Your verdict decides. Pass gives XP and opens the chest; Changes and Fail send your note to the member.
       </p>
     </div>
   );

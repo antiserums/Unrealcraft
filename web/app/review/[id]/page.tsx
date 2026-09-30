@@ -45,7 +45,7 @@ export default async function ReviewDetail({ params }: PageProps<"/review/[id]">
             <div className="card" style={{ marginTop: 12 }}>
               <div className="eyebrow">Reviews so far</div>
               <ul className="plain small" style={{ marginTop: 6 }}>
-                {s.actions.map((a, i) => <li key={i}><b>{a.verdict}</b> by {a.name ?? a.reviewer_id}{a.is_peer ? " (peer)" : " (mentor)"} · {a.created_at.slice(0, 16).replace("T", " ")}{a.notes ? ` · “${a.notes}”` : ""}</li>)}
+                {s.actions.map((a, i) => <li key={i}><b>{a.verdict}</b> by {a.name ?? a.reviewer_id} · {a.created_at.slice(0, 16).replace("T", " ")}{a.notes ? ` · “${a.notes}”` : ""}</li>)}
               </ul>
             </div>
           )}

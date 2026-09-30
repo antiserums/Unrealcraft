@@ -4,7 +4,7 @@ import { api, type Me, type ReviewAccess, type ReviewItem } from "@/lib/api";
 
 export const metadata = { title: "Review inbox" };
 
-const ROUTE: Record<string, string> = { peer: "peer · one approval", mentor: "mentor · two peers or a mentor", human: "mentor only", honor: "honor", auto: "auto" };
+const ROUTE: Record<string, string> = { peer: "rank 2", mentor: "rank 3–4", human: "rank 5+", honor: "honor · accepted on trust", auto: "auto" };
 
 export default async function ReviewInbox() {
   const me = await api<Me>("/me");
@@ -14,7 +14,7 @@ export default async function ReviewInbox() {
     return (
       <>
         <h1>Review inbox</h1>
-        <div className="card">Reviews open at rank 2 for quests below your own rank, and for mentors. Keep questing.</div>
+        <div className="card">Only mentors, admins and devs review work.</div>
       </>
     );
   }
@@ -23,9 +23,9 @@ export default async function ReviewInbox() {
   const rest = pending.filter((s) => s.blocked || s.reviewed_by_me);
   return (
     <>
-      <div className="eyebrow">{access.mentor ? "Mentor" : `Peer reviewer · quests up to rank ${access.peer_max_rank}`}</div>
+      <div className="eyebrow">Mentor</div>
       <h1>Review inbox</h1>
-      <p className="muted">{pending.length} waiting. Pass gives the member their XP and opens their chest. Changes sends it back with your note. Fail is for work that is not an honest attempt; they can try again in two hours.</p>
+      <p className="muted">{pending.length} waiting. Pass gives the member their XP and opens their chest. Changes sends it back with your note. Fail is for work that is not an honest attempt; they can try again in two hours. Honor-route work (rank 0 and 1) was accepted on trust and needs nothing from you.</p>
 
       <div className="section-h"><h2>For you</h2><span className="muted small">{mine.length} you can act on</span></div>
       {mine.length === 0 && <div className="card muted">Nothing waiting for you right now.</div>}
@@ -33,7 +33,7 @@ export default async function ReviewInbox() {
 
       {rest.length > 0 && (
         <>
-          <div className="section-h"><h2>Waiting on others</h2><span className="muted small">{rest.length}</span></div>
+          <div className="section-h"><h2>Not yours</h2><span className="muted small">{rest.length} · your own work, or already reviewed</span></div>
           <div className="grid lock">{rest.map((s) => <Row key={s.id} s={s} />)}</div>
         </>
       )}
@@ -50,7 +50,7 @@ export default async function ReviewInbox() {
 
 function Row({ s }: { s: ReviewItem }) {
   const age = Math.max(0, Math.round((Date.now() - new Date(s.created_at + "Z").getTime()) / 3600000));
-  const status = s.status === "pending" ? (s.reviewed_by_me ? `you approved · ${s.approvals}/${s.needs}` : s.blocked ?? `${s.approvals}/${s.needs} approvals`)
+  const status = s.status === "pending" ? (s.reviewed_by_me ? "you reviewed" : s.blocked ?? "waiting")
     : `${s.status}${s.decided_at ? ` · ${s.decided_at.slice(0, 10)}` : ""}`;
   return (
     <Link href={`/review/${s.id}`} className="card rv-row" style={{ color: "inherit" }}>

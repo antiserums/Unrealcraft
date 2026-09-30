@@ -391,7 +391,7 @@ class Quests(commands.Cog):
         await self.bot.db.set_queue_message(sid, msg.id)
 
     async def review(self, itx: discord.Interaction, sid: int, verdict: str, notes: str | None) -> str:
-        """Shared by buttons and /mentor-review. Enforces reviewer eligibility and peer caps."""
+        """Shared by buttons and /mentor-review. Mentors, admins and devs only; one verdict decides."""
         db, unl = self.bot.db, self.bot.unlocks
         s = await db.submission(sid)
         if not s or s["status"] != "pending":
@@ -402,33 +402,12 @@ class Quests(commands.Cog):
         member = itx.guild.get_member(itx.user.id)
         is_mentor = member.guild_permissions.administrator or \
             any(r.id in (unl.role("staff", "mentor"), unl.role("rank", 6)) for r in member.roles)
-        rv = await db.user(itx.user.id)
-        # peer-approve ranges: R2 → 0–1, R3 → 0–2, R4 → 0–3, R5 → 0–4, R6 → all
-        peer_ok = rv["rank"] >= 2 and q.rank <= rv["rank"] - 1
-        if s["route"] == "human" and not is_mentor:
-            return "Rank 5+ work needs a human mentor."
-        if not is_mentor and not peer_ok:
-            return "You can't review this rank yet."
         if not is_mentor:
-            cap = self.cat.xp_rules.get("peer_review", {}).get("daily_cap", 3)
-            if await db.xp_count_today(itx.user.id, "peer_review:") >= cap:
-                return f"Peer review cap reached ({cap}/day)."
-        is_peer = not is_mentor
-        pv = "approve" if (is_peer and verdict == "pass") else verdict
-        if not await db.add_review_action(sid, itx.user.id, pv, is_peer, notes):
+            return "Only mentors, admins and devs review work."
+        if not await db.add_review_action(sid, itx.user.id, verdict, False, notes):
             return "You already reviewed this one."
-        if is_peer:
-            await db.add_xp(itx.user.id, self.cat.xp_rules.get("peer_review", {}).get("xp", 15), f"peer_review:{sid}")
 
-        final = None
-        if is_mentor:
-            final = verdict
-        elif verdict in ("changes", "fail"):
-            final = verdict                      # one peer can bounce, two needed to pass at R3+
-        elif s["route"] == "peer":
-            final = "pass"
-        elif await db.peer_approvals(sid) >= 2:
-            final = "pass"
+        final = verdict
         if final:
             await db.decide(sid, final, itx.user.id, notes)
             try:

@@ -1,9 +1,7 @@
-"""The mentor inbox: pending turn-ins, their details, and verdicts. Mirrors the bot's Quests.review rules exactly:
+"""The mentor inbox: pending turn-ins, their details, and verdicts.
 
-  mentors (staff mentor role, rank 6, admins) decide alone: pass | changes | fail
-  peers (rank 2+) may review quests below their own rank; one peer can bounce (changes/fail), two approve to pass,
-  except the `peer` route (rank 2 quests) where one approval passes; peer reviews earn XP up to a daily cap;
-  `human` route (rank 5+) needs a mentor; nobody reviews their own work; one action per reviewer per submission.
+Only mentors review: the staff mentor role, rank 6, ADMIN_IDS, or a local dev login. One verdict decides:
+pass | changes | fail. Nobody reviews their own work. The bot's Quests.review enforces the same rule on Discord.
 The bot picks up `submission_decided` events to update the Discord turn-in post and queue card."""
 from __future__ import annotations
 
@@ -36,28 +34,21 @@ def _roles() -> dict:
 
 
 async def access_for(request: Request, member: dict) -> dict:
-    """What this member may review. `peer_max_rank` is the highest quest rank they can peer-review (-1 = none)."""
+    """Whether this member may review. Mentors only: staff mentor role, rank 6, ADMIN_IDS or a dev login."""
     u = await request.app.state.db.user(member["id"])
     rank = int(u["rank"]) if u else -1
     ids = _roles()
     session_roles = {int(r) for r in member.get("roles", []) if str(r).isdigit()}
     mentor = member["id"] in settings.admin_ids or bool(member.get("dev")) or \
         bool(session_roles & {i for i in (ids["mentor"], ids["rank6"]) if i})
-    peer_max = rank - 1 if rank >= 2 else -1
-    return {"mentor": mentor, "peer_max_rank": peer_max, "rank": rank, "can_review": mentor or peer_max >= 0}
+    return {"mentor": mentor, "rank": rank, "can_review": mentor}
 
 
 def _eligible(access: dict, s: dict, q, uid: int) -> str | None:
     """None if the member may act on this submission, else the reason they cannot (same wording as the bot)."""
     if s["user_id"] == uid:
         return "You can't review your own work."
-    if access["mentor"]:
-        return None
-    if s["route"] == "human":
-        return "Rank 5+ work needs a human mentor."
-    if q.rank > access["peer_max_rank"]:
-        return "You can't review this rank yet."
-    return None
+    return None if access["mentor"] else "Only mentors, admins and devs review work."
 
 
 async def _item(request: Request, s: dict, access: dict, uid: int) -> dict:
@@ -75,8 +66,6 @@ async def _item(request: Request, s: dict, access: dict, uid: int) -> dict:
                    "avatar": await rdb.kv_get(s["user_id"], "web.avatar"), "rank": s.get("member_rank"), "major": s.get("member_major")},
         "quest": quest_summary(cat, q) if q else {"id": s["quest_id"], "title": s["quest_id"]},
         "payload": payload,
-        "approvals": sum(1 for a in actions if a["is_peer"] and a["verdict"] == "approve"),
-        "needs": 1 if s["route"] == "peer" else 2,
         "reviewed_by_me": any(a["reviewer_id"] == uid for a in actions),
         "blocked": _eligible(access, s, q, uid) if q else "Unknown quest.",
     }
@@ -93,7 +82,7 @@ async def access(request: Request, member=Depends(current_member)):
 async def queue(request: Request, member=Depends(current_member)):
     access = await access_for(request, member)
     if not access["can_review"]:
-        raise HTTPException(403, "Reviews open at Apprentice rank 2 for quests below your own, and for mentors.")
+        raise HTTPException(403, "Only mentors, admins and devs review work.")
     rdb = request.app.state.rpg
     pending = [await _item(request, s, access, member["id"]) for s in await rdb.pending_submissions()]
     recent = [await _item(request, s, access, member["id"]) for s in await rdb.decided_submissions(20)]
@@ -104,7 +93,7 @@ async def queue(request: Request, member=Depends(current_member)):
 async def detail(sid: int, request: Request, member=Depends(current_member)):
     access = await access_for(request, member)
     if not access["can_review"]:
-        raise HTTPException(403, "Reviews open at Apprentice rank 2 for quests below your own, and for mentors.")
+        raise HTTPException(403, "Only mentors, admins and devs review work.")
     cat, db, rdb = request.app.state.catalog, request.app.state.db, request.app.state.rpg
     s = await rdb.submission(sid)
     if not s:
@@ -145,27 +134,9 @@ async def review(sid: int, body: Verdict, request: Request, member=Depends(curre
         raise HTTPException(404, "Unknown quest.")
     if (why := _eligible(access, s, q, uid)):
         raise HTTPException(403, why)
-    is_mentor = access["mentor"]
-    rules = cat.xp_rules.get("peer_review", {})
-    if not is_mentor:
-        cap = rules.get("daily_cap", 3)
-        if await rdb.xp_count_today(uid, "peer_review:") >= cap:
-            raise HTTPException(429, f"Peer review cap reached ({cap}/day).")
-    is_peer = not is_mentor
-    pv = "approve" if (is_peer and body.verdict == "pass") else body.verdict
-    if not await rdb.add_review_action(sid, uid, pv, is_peer, notes):
+    if not await rdb.add_review_action(sid, uid, body.verdict, False, notes):
         raise HTTPException(409, "You already reviewed this one.")
-    if is_peer:
-        await rdb.add_xp(uid, rules.get("xp", 15), f"peer_review:{sid}")
-
-    final = None
-    if is_mentor or body.verdict in ("changes", "fail") or s["route"] == "peer":
-        final = body.verdict
-    elif await rdb.peer_approvals(sid) >= 2:
-        final = "pass"
-    if not final:
-        return {"final": None, "approvals": await rdb.peer_approvals(sid), "needs": 2, "message": f"Approve recorded ({await rdb.peer_approvals(sid)}/2)."}
-
+    final = body.verdict
     await rdb.decide(sid, final, uid, notes)
     xp = 0
     if final == "pass":

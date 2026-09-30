@@ -47,13 +47,13 @@ export type ReviewItem = {
   id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;
   member: { id: number; name: string | null; avatar: string | null; rank: number | null; major: string | null };
   quest: QuestSummary; payload: { text?: string; ue_version?: string; attachments?: string[] };
-  approvals: number; needs: number; reviewed_by_me: boolean; blocked: string | null;
+  reviewed_by_me: boolean; blocked: string | null;
   quest_detail?: { done_when: string | null; do: string | null; checklist: { text: string; kind: string }[]; verify_type: string | null };
   actions?: { reviewer_id: number; verdict: string; is_peer: number; notes: string | null; created_at: string; name: string | null }[];
   previous?: { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> }[];
   access?: ReviewAccess;
 };
-export type ReviewAccess = { mentor: boolean; peer_max_rank: number; rank: number; can_review: boolean };
+export type ReviewAccess = { mentor: boolean; rank: number; can_review: boolean };
 export type Majors = {
   tiers: Record<string, { name: string; emoji: string; color: string; quiz_len: number }>;
   ranks: { n: number; key: string; title: string; tier: string; xp: number; color: string | null; opens?: string; quests_to_leave?: number }[];
