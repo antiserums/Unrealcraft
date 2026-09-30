@@ -89,6 +89,15 @@ def main() -> None:
         rel = put(f.relative_to(PACK).as_posix())
         if rel and (key not in m["banners"] or f.suffix == ".webp"):
             m["banners"][key] = rel
+    # banners/animated/: a looping animated WebP (48 frames, 8 fps, 6 s) plus a still for reduced motion / pause
+    anim = PACK / "banners" / "animated"
+    if anim.is_dir():
+        moving = anim / "fantasy-town-animated-960x320.webp"
+        still = anim / "fantasy-town-still.png"
+        if moving.exists() and (rel := put(moving.relative_to(PACK).as_posix())):
+            m["banners"]["town_animated"] = rel
+        if still.exists() and (rel := put(still.relative_to(PACK).as_posix())):
+            m["banners"]["town_still"] = rel
     # Card borders follow docs/09-playercard-art-spec.md: 352 x 252 with the card in the centre 320 x 220, so the
     # band's inner edge is 16 source px from the canvas edge on every side and every theme.
     m["decorations"] = {"avatar": {}, "card": {}, "inset": 16, "anim": {"avatar": {}, "card": {}}}

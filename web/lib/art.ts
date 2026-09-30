@@ -91,6 +91,14 @@ export function bannerImage(m: Manifest | null, key = "town"): string | null {
   return f ? art(f) : null;
 }
 
+/** The home banner as a pair: the looping animated version (when the pack has one) and a still for reduced
+ *  motion and the pause control. Without an animation both point at the still banner. */
+export function bannerSet(m: Manifest | null): { animated: string | null; still: string } | null {
+  const still = bannerImage(m, "town_still") ?? bannerImage(m, "town");
+  if (!still) return null;
+  return { animated: bannerImage(m, "town_animated"), still };
+}
+
 /** Avatar ring or card border for a decoration theme id. */
 export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): string | null {
   const f = id ? m?.decorations?.[kind]?.[id] : null;

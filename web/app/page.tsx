@@ -2,7 +2,8 @@ import Link from "next/link";
 import HowItWorks from "@/components/HowItWorks";
 import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
-import { bannerImage, loadManifest } from "@/lib/art";
+import HeroBanner from "@/components/HeroBanner";
+import { bannerSet, loadManifest } from "@/lib/art";
 
 type MemberStats = { fights: number; fights_won: number; bosses_first_try: number; crit_xp: number; xp_week: number; reads: number; turnins: number; turnins_passed: number; turnins_pending: number };
 type GuildStats = { members: number; quests_done: number; quests_done_week: number; fights_week: number; xp_week: number; masters: number };
@@ -15,12 +16,10 @@ export default async function Home() {
     me ? null : api<GuildStats>("/catalog/stats"),
     me ? null : api<Specializations>("/catalog/specializations"),
   ]);
-  const banner = bannerImage(manifest);
+  const banner = bannerSet(manifest);
   const pct = me?.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;
-
-  return (
+  const hero = (
     <>
-      <section className={`hero ${banner ? "px banner-hero" : ""}`} style={banner ? { backgroundImage: `url("${banner}")` } : undefined}>
         {me ? (
           <div className="ribbon">
             <div className="ribbon-who">
@@ -57,7 +56,12 @@ export default async function Home() {
             </div>
           </div>
         )}
-      </section>
+    </>
+  );
+
+  return (
+    <>
+      {banner ? <HeroBanner animated={banner.animated} still={banner.still}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
 
       {me && stats ? (
         <>
