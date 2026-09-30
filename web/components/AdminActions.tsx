@@ -38,7 +38,7 @@ export default function AdminActions({ uid, ranks, specializations, current, ent
     <div className="card">
       <div className="eyebrow">Actions</div>
       {msg && <div className="note small" style={{ marginTop: 8 }}>{msg}</div>}
-      {err && <div className="note small" style={{ marginTop: 8, borderColor: "var(--bad)" }}>{err}</div>}
+      {err && <div className="note small" data-tone="error" style={{ marginTop: 8, borderColor: "var(--bad)" }}>{err}</div>}
 
       <h3 style={{ marginTop: 14 }}>Quest</h3>
       <div className="adm-form">

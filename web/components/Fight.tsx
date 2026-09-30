@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import type { SheetSpec } from "@/lib/art";
 import { rich } from "@/lib/i18n-config";
 import { Boss, Character } from "./Figure";
+import Ico from "./Ico";
 import { useT } from "./I18n";
 
 type Ev = { kind: string; text: string; damage?: number; bonus_xp?: number; explain?: string; correct?: number; debuff?: string };
@@ -175,10 +176,10 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
               {winArt && <img className="px result-art" src={winArt} width={160} height={120} alt="" />}
               <h2 style={{ marginTop: 0 }}>{icons.victory ? <img className="px pxi h-ico" src={icons.victory} width={32} height={32} alt="" /> : "🏆 "}{t("{boss} is beaten · {score}/{total}", { boss: f.boss.short, score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
               <ul className="plain">
-                {f.outcome?.first_try_bonus ? <li>⭐ {t("Flawless first try: +{xp} XP", { xp: f.outcome.first_try_bonus })}</li> : null}
+                {f.outcome?.first_try_bonus ? <li><Ico group="rewards" id="xp" />{t("Flawless first try: +{xp} XP", { xp: f.outcome.first_try_bonus })}</li> : null}
                 {f.outcome?.crit_xp ? <li>{icons.critical && <img className="px pxi pill-ico" src={icons.critical} width={32} height={32} alt="" />}{t("Crits: +{xp} XP", { xp: f.outcome.crit_xp })}</li> : null}
-                {f.outcome?.completed ? <li>✅ {f.outcome.tested_out ? t("Quest complete: +{xp} XP (tested out, no turn-in needed)", { xp: f.outcome.quest_xp ?? 0 }) : t("Quest complete: +{xp} XP", { xp: f.outcome.quest_xp ?? 0 })}</li> : null}
-                {f.outcome?.loot ? <li>🎁 {rich(t("New outfit: {name}. {flavour}"), { name: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>, flavour: <i>{f.outcome.loot.flavour}</i> })}</li> : null}
+                {f.outcome?.completed ? <li><Ico group="rewards" id="xp" />{f.outcome.tested_out ? t("Quest complete: +{xp} XP (tested out, no turn-in needed)", { xp: f.outcome.quest_xp ?? 0 }) : t("Quest complete: +{xp} XP", { xp: f.outcome.quest_xp ?? 0 })}</li> : null}
+                {f.outcome?.loot ? <li><Ico group="rewards" id="outfit" />{rich(t("New outfit: {name}. {flavour}"), { name: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>, flavour: <i>{f.outcome.loot.flavour}</i> })}</li> : null}
               </ul>
               <div className="row">
                 {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>{t("Claim the chest: send your work")}</Link>}

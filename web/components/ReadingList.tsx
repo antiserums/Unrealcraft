@@ -1,4 +1,5 @@
 "use client";
+import Ico from "./Ico";
 import type { Reading } from "@/lib/api";
 import { useT } from "./I18n";
 
@@ -10,7 +11,7 @@ export default function ReadingList({ questId, reading, loggedIn }: { questId: s
     <ol className="steps">
       {reading.map((r) => (
         <li key={r.url}>
-          <a href={r.url} target="_blank" rel="noreferrer" onClick={ping}>{r.label}</a>
+          <a href={r.url} target="_blank" rel="noreferrer" onClick={ping}>{r.label}<Ico group="utility" id="external" className="ico-after" /></a>
           {r.kind === "community" && <span className="tag"> · {t("community")}</span>}
         </li>
       ))}

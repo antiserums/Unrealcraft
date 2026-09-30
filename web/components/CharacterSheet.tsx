@@ -124,6 +124,7 @@ export default function CharacterSheet({ initial, fallbackColor, art, mirror = t
           return (
             <button key={o.id} type="button" role="option" aria-selected={o.id === selected.id} title={`${o.name} · ${tierName(o.tier)}`}
               className={`tile ${o.owned ? "" : "locked"} ${o.worn ? "worn" : ""} ${o.id === selected.id ? "selected" : ""}`}
+              data-equipped={o.worn || undefined} data-locked={!o.owned || undefined}
               style={{ "--rc": rc } as React.CSSProperties} onClick={() => setSelectedId(o.id)}>
               {icon ? <img className="px" src={icon} alt="" /> : <span className="tile-swatch" />}
               {o.worn && <span className="tile-mark">✔</span>}

@@ -641,3 +641,66 @@ html.site-art .nav-links { flex-wrap: nowrap; gap: 11px; }
 .lb-crest { margin: -8px 6px -8px 0; }
 .banner-menu .pxi { margin: -8px 2px -8px -4px; }
 [dir="rtl"] :is(.h-ico, .pill-ico, .lb-crest) { margin-left: 4px; margin-right: 0; }
+
+/* ---- theme skin (form fields, tabs, message panels, inventory slots, progress bar). Same rule as above: only
+   with html.site-art. The frames are painted over each control's own box (border-image-width, not border-width),
+   so padding keeps the words clear of the 12 px trim. */
+html:not(.site-art) .ico { display: none; }
+.ico { margin: -8px 4px -8px -2px; }
+.ico-after { margin: -8px -2px -8px 4px; }
+html.site-art .lang-glyph { display: none; }
+html.site-art .lang-picker .ico { margin: -8px 0 -8px 0; }
+
+html.site-art :is(select, input[type="text"], input[type="search"], input:not([type]), textarea) {
+  border: 0; border-radius: 0; box-shadow: none; background: none; padding: 12px 16px;
+  border-image: url("/art/website-art/interface/form-fields/normal.png") 12 fill / 12px repeat; image-rendering: pixelated;
+}
+html.site-art :is(select, input[type="text"], input[type="search"], input:not([type]), textarea):focus { border-image-source: url("/art/website-art/interface/form-fields/focus.png"); box-shadow: none; }
+html.site-art :is(select, input[type="text"], input[type="search"], input:not([type]), textarea):disabled { border-image-source: url("/art/website-art/interface/form-fields/disabled.png"); color: var(--muted); }
+html.site-art :is(input, textarea)[aria-invalid="true"] { border-image-source: url("/art/website-art/interface/form-fields/invalid.png"); }
+html.site-art select { padding-right: 28px; }
+html.site-art .lang-picker select { padding: 8px 24px 8px 12px; }
+
+html.site-art .subnav { border: 0; background: none; padding: 0; gap: 6px; }
+html.site-art .subnav a {
+  display: inline-flex; align-items: center; gap: 4px; padding: 10px 18px; border-radius: 0; color: var(--muted);
+  border-image: url("/art/website-art/interface/tab-plates/normal.png") 12 fill / 12px repeat; image-rendering: pixelated;
+}
+html.site-art .subnav a:hover { border-image-source: url("/art/website-art/interface/tab-plates/hover.png"); color: var(--gold-2); }
+html.site-art .subnav a.on { border-image-source: url("/art/website-art/interface/tab-plates/active.png"); background: none; box-shadow: none; color: var(--gold-2); }
+
+html.site-art .note {
+  border: 0; border-radius: 0; background: none; box-shadow: none; padding: 14px 18px; min-height: 48px;
+  border-image: url("/art/website-art/interface/message-panels/info.png") 12 fill / 12px repeat; image-rendering: pixelated;
+}
+html.site-art .note[data-tone="success"] { border-image-source: url("/art/website-art/interface/message-panels/success.png"); }
+html.site-art .note[data-tone="warning"] { border-image-source: url("/art/website-art/interface/message-panels/warning.png"); }
+html.site-art .note[data-tone="error"] { border-image-source: url("/art/website-art/interface/message-panels/error.png"); }
+
+html.site-art .tiles { grid-template-columns: repeat(auto-fill, 48px); }
+html.site-art .tile {
+  width: 48px; height: 48px; padding: 8px; border: 0; border-radius: 0; overflow: visible;
+  background: transparent url("/art/website-art/interface/inventory-slots/normal.png") center / 48px 48px no-repeat; image-rendering: pixelated;
+}
+html.site-art .tile:hover:not(:disabled) { background-image: url("/art/website-art/interface/inventory-slots/hover.png"); filter: none; box-shadow: none; }
+html.site-art .tile[data-equipped] { background-image: url("/art/website-art/interface/inventory-slots/equipped.png"); }
+html.site-art .tile[data-locked] { background-image: url("/art/website-art/interface/inventory-slots/locked.png"); border: 0; }
+html.site-art .tile.selected { outline: 2px solid var(--gold-2); outline-offset: -2px; box-shadow: none; }
+html.site-art .tile img { width: 32px; height: 32px; }
+html.site-art .tile-swatch { inset: 12px; }
+html.site-art .tile-mark { display: none; }
+
+html.site-art .bar {
+  border: 0; border-radius: 0; background: none; box-shadow: none; padding: 5px; height: 16px; box-sizing: border-box;
+  border-image: url("/art/website-art/interface/progress-track.png") 5 fill / 5px repeat; image-rendering: pixelated;
+}
+html.site-art .bar.big { height: 24px; padding: 7px; }
+html.site-art .bar::after { content: none; }
+html.site-art .bar > span { background: url("/art/website-art/interface/progress-fill.png") 0 5px / 128px 16px repeat-x !important; box-shadow: none; border-radius: 0; }
+html.site-art .bar.big > span { background-size: 192px 24px !important; background-position: 0 7px !important; }
+
+
+/* scrollbars, where the browser allows */
+html.site-art ::-webkit-scrollbar { width: 12px; height: 12px; }
+html.site-art ::-webkit-scrollbar-track { background: #0a0c12 url("/art/website-art/icons/scrollbar-parts/track.png") center / 8px 32px repeat-y; }
+html.site-art ::-webkit-scrollbar-thumb { background: #0a0c12 url("/art/website-art/icons/scrollbar-parts/thumb.png") center / 8px 32px repeat-y; border: 2px solid #0a0c12; }

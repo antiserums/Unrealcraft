@@ -1,4 +1,5 @@
 "use client";
+import Ico from "./Ico";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -98,9 +99,9 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
 
       {mode === "view" && (
         <div className="studio-actions">
-          <button className="primary" onClick={() => setMode("profile")}>{t("Edit profile")}</button>
-          {wardrobe && <button onClick={() => setMode("wardrobe")}>{t("Edit wardrobe")}</button>}
-          <Link className="btn" href={`/members/${c.id}`}>{t("View as others")}</Link>
+          <button className="primary" onClick={() => setMode("profile")}><Ico group="utility" id="edit" />{t("Edit profile")}</button>
+          {wardrobe && <button onClick={() => setMode("wardrobe")}><Ico group="navigation" id="wardrobe" />{t("Edit wardrobe")}</button>}
+          <Link className="btn" href={`/members/${c.id}`}><Ico group="utility" id="public" />{t("View as others")}</Link>
         </div>
       )}
 
@@ -114,7 +115,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
             </div>
           </div>
           <CharacterSheet key={`${c.worn.id}-${c.style}-${c.body}`} initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} mirror={false} deferred onPreview={setTryOn} />
-          {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
+          {err && <div className="note small" data-tone="error" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
         </div>
       )}
 
@@ -169,8 +170,8 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
 
               <div className="pick-head"><span className="small muted">{t("Profile visibility")}</span></div>
               <div className="subnav" style={{ margin: 0 }}>
-                <a href="#" className={!draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: false })); }}>{t("Private")}</a>
-                <a href="#" className={draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: true })); }}>{t("Public")}</a>
+                <a href="#" className={!draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: false })); }}><Ico group="utility" id="private" />{t("Private")}</a>
+                <a href="#" className={draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: true })); }}><Ico group="utility" id="public" />{t("Public")}</a>
               </div>
               <div className="small muted" style={{ marginTop: 6 }}>{draft.public ? t("Anyone with the link can open your card.") : t("Only logged-in guild members can open your card.")}</div>
               <div className="row" style={{ gap: 8, marginTop: 8 }}>
@@ -204,7 +205,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               {detail("card_frame")}
             </div>
           </div>
-          {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
+          {err && <div className="note small" data-tone="error" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
         </div>
       )}
     </div>

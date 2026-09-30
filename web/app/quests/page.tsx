@@ -2,6 +2,7 @@ import Link from "next/link";
 import PathView from "@/components/PathView";
 import QuestCard from "@/components/QuestCard";
 import { api, type Me, type PathData, type QuestSummary, type Specializations } from "@/lib/api";
+import Ico from "@/components/Ico";
 import { PageHeader, Spot } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
@@ -22,8 +23,8 @@ export default async function Quests({ searchParams }: PageProps<"/quests">) {
     <>
       <PageHeader art={view === "path" ? "header-path" : "header-quests"} title={t("Quest board")} />
       <nav className="subnav" aria-label={t("Quest board views")}>
-        <Link href="/quests?view=path" className={view === "path" ? "on" : ""}>{t("My path")}</Link>
-        <Link href="/quests?view=all" className={view === "all" ? "on" : ""}>{t("All quests")}</Link>
+        <Link href="/quests?view=path" className={view === "path" ? "on" : ""}><Ico group="navigation" id="path" />{t("My path")}</Link>
+        <Link href="/quests?view=all" className={view === "all" ? "on" : ""}><Ico group="navigation" id="quest-board" />{t("All quests")}</Link>
       </nav>
       {view === "path" ? <Path me={me} /> : <All sp={sp} />}
     </>
@@ -87,7 +88,7 @@ async function All({ sp }: { sp: Record<string, string | string[] | undefined> }
           {subjects?.subjects.slice(0, 60).map(([s, n]) => <option key={s} value={s}>{s} ({n})</option>)}
         </select>
         <input name="q" placeholder={t("Search title or ID")} defaultValue={q} />
-        <button type="submit" className="primary">{t("Filter")}</button>
+        <button type="submit" className="primary"><Ico group="utility" id="filter" />{t("Filter")}</button>
       </form>
       {byTier.map(({ k, list }) => (
         <section key={k}>

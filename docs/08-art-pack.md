@@ -114,7 +114,9 @@ an image hangs off that class, so without the pack the site looks as it did befo
 | `interface/buttons/*` | `.btn`, primary buttons and Log out (ends 18 px, trims 10 px, middle stretches) |
 | `identity` emblem | Beside the site name and as the browser tab icon |
 
-Not used yet: the navigation icons, the leather and parchment panels, the section title plate, the progress track
-and fill, the utility icons, the rewards icons, the Senior and Lead crests (the catalog has no such ranks yet) and
-the theme skin (form fields, tabs, message panels, inventory slots, tooltip, scrollbar). The artist's route-by-route
-plan is in `docs/11-website-theme-audit.md`.
+| `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*`, `scrollbar-parts` | Inputs and selects, the sub-navigation tabs, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars, scrollbars |
+| `icons/utility`, `rewards`, `navigation` | Buttons and links: Filter, Edit profile, View as others, Public/Private, external reading links, the language picker; reward lines in the fight result and on achievements; the sub-navigation tabs. `components/Ico.tsx` renders these by path, so client components can use them |
+
+Not used yet: the leather and parchment panels, the section title plate, the tooltip plate and the Senior and Lead
+crests (the catalog has no such ranks yet). Notes on what the artist should fix are in
+`docs/12-notes-for-the-artist.md`; the artist's route-by-route plan is in `docs/11-website-theme-audit.md`.

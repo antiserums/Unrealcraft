@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import MeNav from "@/components/MeNav";
 import { achievementBadge, loadManifest } from "@/lib/art";
 import { api, type Achievement, type Me } from "@/lib/api";
+import Ico from "@/components/Ico";
 import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
@@ -43,7 +44,7 @@ async function Badge({ a, img }: { a: Achievement; img: string | null }) {
         <div style={{ flex: 1 }}>
           <div className="title" style={{ fontWeight: 600 }}>{t(a.name)}</div>
           <div className="small muted">{t(a.desc)}</div>
-          {a.outfit && <div className="small" style={{ color: "var(--gold-2)", marginTop: 2 }}>{t("Unlocks an outfit")}</div>}
+          {a.outfit && <div className="small" style={{ color: "var(--gold-2)", marginTop: 2 }}><Ico group="rewards" id="outfit" className="pill-ico" />{t("Unlocks an outfit")}</div>}
         </div>
       </div>
       {a.earned ? (

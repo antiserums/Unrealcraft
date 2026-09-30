@@ -13,7 +13,7 @@ export default async function Login({ searchParams }: PageProps<"/login">) {
   return (
     <>
       <h1>{t("Log in")}</h1>
-      {msg && <div className="note" style={{ marginBottom: 14 }}>{msg}</div>}
+      {msg && <div className="note" data-tone="warning" style={{ marginBottom: 14 }}>{msg}</div>}
       <Spot art="guild-entry">
         <p style={{ marginTop: 0 }}>{t("Unrealcraft uses your Discord account. Nothing else to remember.")}</p>
         <a className="btn primary" href="/api/auth/discord">{t("Log in with Discord")}</a>

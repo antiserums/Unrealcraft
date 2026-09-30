@@ -1,4 +1,5 @@
 "use client";
+import Ico from "./Ico";
 import { useRouter } from "next/navigation";
 import { LOCALES, LOCALE_COOKIE } from "@/lib/i18n-config";
 import { useLocale, useT } from "./I18n";
@@ -14,7 +15,7 @@ export default function LanguagePicker() {
   }
   return (
     <label className="lang-picker">
-      <span aria-hidden="true">🌐</span>
+      <span aria-hidden="true" className="lang-glyph">🌐</span><Ico group="utility" id="language" />
       <span className="sr-only">{t("Language")}</span>
       <select value={locale} onChange={(e) => pick(e.target.value)} aria-label={t("Language")}>
         {LOCALES.map((l) => <option key={l.code} value={l.code}>{l.name}</option>)}
