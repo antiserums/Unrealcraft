@@ -63,7 +63,7 @@ HELP_TAGS = ["Server / Bot issue", "Blueprint", "C++", "Materials", "Animation",
 # (category name, unlocks.categories key or None, min rank or special, channels)
 # channel: (name, kind, unlocks.channels key path or None, flags)
 TRACKS = [
-    ("03 · FOUNDATIONS", "foundations", 0, "foundations"),
+    ("03 · STARTER QUESTS", "foundations", 0, "foundations"),   # unlocks key kept for existing servers
     ("03 · WORLD & LIGHTING", "world_lighting", 1, "world-lighting"),
     ("03 · MATERIALS", "materials", 2, "materials"),
     ("03 · BLUEPRINT", "blueprint", 2, "blueprint"),
@@ -656,7 +656,7 @@ class SetupServer(commands.Cog):
     # kv(user 0) "pin:<key>" = "<channel_id>:<message_id>:<content hash>"
 
     TRACK_ABOUT = {
-        "foundations": (0, "the Starter Quests: install, editor basics, your first room, light, material and Blueprint."),
+        "foundations": (0, "the Starter Quests: install, editor basics, your first level, light, material and Blueprint."),
         "world-lighting": (1, "blockouts, landscapes, foliage and lighting that makes spaces readable."),
         "materials": (2, "the Material Editor, instances, PBR, landscape materials and decals."),
         "blueprint": (2, "Actor Blueprints, triggers, timelines, interfaces: making things play."),

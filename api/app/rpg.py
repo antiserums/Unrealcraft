@@ -69,7 +69,7 @@ REWARD_SETS = [
     # id (pack), name (pack), flavour, tier colour, unlock (achievement key from ACHIEVEMENTS)
     ("warrior", "Ironwarden", "Dark iron and a tower shield. Your first capstone dungeon, cleared.", "adept",
      {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
-    ("ranger", "Thornwatch", "Green leather and a long cloak. Fifty rooms behind you.", "expert",
+    ("ranger", "Thornwatch", "Green leather and a long cloak. Fifty dungeons behind you.", "expert",
      {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
     ("spellcaster", "Runekeeper", "Violet silk and a rune-bound staff. Ten bosses beaten without a scratch.", "expert",
      {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
@@ -150,7 +150,7 @@ LOOK = [  # (look key, subjects/tracks that pick it)
     ("treant", {"landscape", "foliage", "pcg", "water", "world-partition", "data-layers", "hlod", "level-instancing", "level-design"}),
     ("construct", {"editor", "editor-utility-widget", "editor-utility", "python", "tools", "umg", "modeling-mode", "geometry-script", "tech-art"}),
     ("wraith", {"profiling", "performance", "optimization", "testing"}),
-    ("knight", {"discord", "meta", "orientation", "viewport", "screenshots", "metrics", "foundations"}),
+    ("knight", {"discord", "meta", "orientation", "viewport", "screenshots", "metrics", "starter-quests"}),
     ("drake", {"capstone"}),
 ]
 MOVES = {
@@ -163,7 +163,7 @@ MOVES = {
 }
 
 
-# UCSourceArt creature ids. Ordinary rooms use the six enemies; capstones use the three bosses.
+# UCSourceArt creature ids. Ordinary dungeons use the six enemies; capstones use the three bosses.
 ENEMY_FOR_LOOK = {"wisp": "enemy_rune_wisp", "golem": "enemy_broken_construct", "serpent": "enemy_crystal_crawler",
                   "spectre": "enemy_rune_wisp", "beast": "enemy_moss_imp", "swarm": "enemy_crystal_slime",
                   "sentinel": "enemy_thorn_sentinel", "treant": "enemy_thorn_sentinel", "construct": "enemy_broken_construct",
@@ -204,11 +204,11 @@ def boss_line(boss: dict, kind: str, rng: random.Random) -> str:
     n = boss["short"]
     lines = {
         "hit": [f"{n} staggers.", f"Your strike lands. {n} reels.", f"{n} loses its footing.", "A clean hit."],
-        "crit": [f"A perfect strike. {n} howls.", "Critical hit. The room shakes.", f"{n} did not see that coming."],
+        "crit": [f"A perfect strike. {n} howls.", "Critical hit. The dungeon shakes.", f"{n} did not see that coming."],
         "wound": [f"{n} {boss['verb']}. You take the hit.", "It got through.", f"{n} finds the gap."],
         "steady": ["You brace. Half the blow lands.", "Resolve holds. It only grazes you."],
-        "win": [f"{n} falls. The room goes quiet.", f"{n} is beaten. The way forward is open."],
-        "lose": [f"{n} stands over you. Regroup and return.", "You are knocked down. The boss room closes for now."],
+        "win": [f"{n} falls. The dungeon goes quiet.", f"{n} is beaten. The way forward is open."],
+        "lose": [f"{n} stands over you. Regroup and return.", "You are knocked down. The dungeon closes for now."],
     }
     return rng.choice(lines[kind])
 
@@ -237,8 +237,8 @@ def crit_chance(focus: int, seconds: float | None) -> int:
 # Keys named in REWARD_SETS (capstone_1, rooms_50, focus_10) unlock outfits; `badge` is the pack's ui/badges index.
 ACHIEVEMENTS = [
     {"key": "first_blood", "name": "First Blood", "desc": "Finish your first quest in the engine.", "icon": "⚔️", "need": 1, "of": "medal", "badge": 1},
-    {"key": "rooms_10", "name": "Ten Rooms Cleared", "desc": "Finish ten quests.", "icon": "🚪", "need": 10, "of": "done", "badge": 3},
-    {"key": "rooms_50", "name": "Fifty Rooms Cleared", "desc": "Finish fifty quests.", "icon": "🏰", "need": 50, "of": "done", "outfit": "ranger", "badge": 3},
+    {"key": "rooms_10", "name": "Ten Dungeons Cleared", "desc": "Finish ten quests.", "icon": "🚪", "need": 10, "of": "done", "badge": 3},
+    {"key": "rooms_50", "name": "Fifty Dungeons Cleared", "desc": "Finish fifty quests.", "icon": "🏰", "need": 50, "of": "done", "outfit": "ranger", "badge": 3},
     {"key": "rooms_150", "name": "Dungeon Delver", "desc": "Finish one hundred and fifty quests.", "icon": "🗝️", "need": 150, "of": "done", "badge": 8},
     {"key": "focus_10", "name": "Flawless", "desc": "Beat ten bosses on the first try.", "icon": "🎯", "need": 10, "of": "first", "outfit": "spellcaster", "badge": 6},
     {"key": "focus_50", "name": "Unerring", "desc": "Beat fifty bosses on the first try.", "icon": "💎", "need": 50, "of": "first", "badge": 6},

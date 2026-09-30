@@ -79,7 +79,7 @@ The Quartermaster keeps these overwrites in sync from `config/unlocks.yaml`. Do 
 |---|---|---|---|---|---|---|---|---|
 | GATE | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | HUB, TRAINING | — | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
-| Foundations | — | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
+| Starter Quests | — | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | World & Lighting | — | — | ✔ | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Materials, Blueprint | — | — | — | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Characters & Anim | — | — | — | — | ✔ | ✔ | ✔ | ✔ |

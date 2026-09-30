@@ -197,7 +197,7 @@ class Catalog:
     def affinity(self, q: Quest, major: str) -> str:
         """major: the member's own path (or an elective in a home track). adjacent: flagged adjacent,
         a taster, or it has a flavor written for this major. other: everything else."""
-        shared_tracks = {"foundations", "orientation"}          # meta electives are for everyone
+        shared_tracks = {"starter-quests", "orientation"}          # meta electives are for everyone
         if major in q.required_for or ALL in q.required_for or \
                 (q.elective and (q.track in self.home_tracks(major) or q.track in shared_tracks)):
             return "major"

@@ -208,7 +208,7 @@ async def start_fight(qid: str, request: Request, member=Depends(current_member)
         raise HTTPException(404, "No boss here. This quest has no quiz.")
     u, state_u, prog = await db.user_state(member["id"])
     if q.rank > max(state_u.rank, 0) and q.rank >= 0:
-        raise HTTPException(403, "This room is locked until you rank up.")
+        raise HTTPException(403, "This dungeon is locked until you rank up.")
     # No cooldown after a loss: the reading is right there, try again when ready.
     char = await character_payload(request, member["id"], u)
     attempts = await db.quiz_attempts(member["id"], qid)

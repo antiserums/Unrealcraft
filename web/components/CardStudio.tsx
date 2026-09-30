@@ -1,31 +1,37 @@
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Card, CosmeticOption } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
 import { gutterFor, type Inset } from "@/lib/deco";
+import CharacterSheet, { type ArtProps, type Char } from "./CharacterSheet";
 import PlayerCard from "./PlayerCard";
 
 type DecoImages = { avatar: Record<string, string>; card: Record<string, string>; inset: Record<string, Inset> };
-type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; featured: string[] };
+type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; featured: string[]; public: boolean };
 type Kind = "nameplate" | "avatar_frame" | "card_frame";
+type Mode = "view" | "profile" | "wardrobe";
 
-/** The player card page: the card sits centred in a fixed gutter (the border art is drawn in that gutter, so the
- *  card itself never changes size), with a summary panel beneath it. Edit profile turns the panel into the editor:
- *  a draft previews on the card as you pick; Save sends it in one request; Cancel drops it. */
-export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
-  { initial: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco: DecoImages; shareUrl: string }) {
+/** The player card page. View mode: the card and two buttons. Edit profile: a draft (motto, colour, decorations,
+ *  featured achievements, sharing) previews on the card and is saved in one request. Edit wardrobe: the closet
+ *  (outfits, weapons, build) opens beneath the card; its changes save as you pick, like before. */
+export default function CardStudio({ initial, sheet, badges, deco, shareUrl, wardrobe }:
+  { initial: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco: DecoImages; shareUrl: string;
+    wardrobe: { char: Char; art: ArtProps } | null }) {
   const router = useRouter();
   const [c, setC] = useState<Card>(initial);
-  const fromCard = (x: Card): Draft => ({ motto: x.motto, nameplate: x.nameplate_id, avatar_frame: x.avatar_frame, card_frame: x.card_frame, featured: x.cosmetics.featured ?? x.featured.map((a) => a.key) });
+  const fromCard = (x: Card): Draft => ({ motto: x.motto, nameplate: x.nameplate_id, avatar_frame: x.avatar_frame, card_frame: x.card_frame, featured: x.cosmetics.featured ?? x.featured.map((a) => a.key), public: x.public });
   const [draft, setDraft] = useState<Draft>(fromCard(initial));
-  const [editing, setEditing] = useState(false);
+  const [mode, setMode] = useState<Mode>("view");
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [hover, setHover] = useState<{ kind: Kind; o: CosmeticOption } | null>(null);
   const opts = c.cosmetic_options;
+
+  // the server re-renders the page after wardrobe changes; take the fresh card unless a profile draft is open
+  useEffect(() => { if (mode !== "profile") { setC(initial); setDraft(fromCard(initial)); } }, [initial]);  // eslint-disable-line react-hooks/exhaustive-deps
 
   const plate = opts.nameplate.find((o) => o.id === draft.nameplate);
   const preview: Card = {
@@ -33,10 +39,9 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
     avatar_frame: draft.avatar_frame, card_frame: draft.card_frame,
     featured: draft.featured.map((k) => c.earned_achievements.find((a) => a.key === k)).filter(Boolean) as Card["featured"],
   };
-  const shown = editing ? preview : c;
+  const shown = mode === "profile" ? preview : c;
   const cardArt = deco.card[shown.card_frame] ?? null;
   const avatarArt = deco.avatar[shown.avatar_frame] ?? null;
-  const name = (k: Kind, id: string) => opts[k].find((o) => o.id === id)?.name ?? id;
 
   async function patch(body: Record<string, unknown>) {
     setBusy(true); setErr(null);
@@ -47,9 +52,9 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
     setErr(j.detail ?? "Could not save that."); return false;
   }
   async function save() {
-    if (await patch({ banner: draft.motto, nameplate: draft.nameplate, avatar_frame: draft.avatar_frame, card_frame: draft.card_frame, featured: draft.featured })) setEditing(false);
+    if (await patch({ banner: draft.motto, nameplate: draft.nameplate, avatar_frame: draft.avatar_frame, card_frame: draft.card_frame, featured: draft.featured, public: draft.public })) setMode("view");
   }
-  function cancel() { setDraft(fromCard(c)); setEditing(false); setErr(null); }
+  function cancel() { setDraft(fromCard(c)); setMode("view"); setErr(null); }
   function toggleFeat(key: string) {
     setDraft((d) => ({ ...d, featured: d.featured.includes(key) ? d.featured.filter((k) => k !== key) : [...d.featured, key].slice(-3) }));
   }
@@ -77,35 +82,29 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
         <PlayerCard c={shown} sheet={sheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
       </div>
 
-      {!editing ? (
-        <div className="card studio-panel">
-          <div className="row" style={{ justifyContent: "space-between", gap: 12 }}>
-            <div className="studio-summary">
-              <span className="item"><span>Motto </span>{c.motto ? <i>“{c.motto}”</i> : <span className="muted">none</span>}</span>
-              <span className="item"><span>Nameplate </span><b style={{ color: c.nameplate }}>{name("nameplate", c.nameplate_id)}</b></span>
-              <span className="item"><span>Avatar </span>{name("avatar_frame", c.avatar_frame)}</span>
-              <span className="item"><span>Card </span>{name("card_frame", c.card_frame)}</span>
-              <span className="item muted">{owned("nameplate")}/{opts.nameplate.length} colours · {owned("avatar_frame")}/{opts.avatar_frame.length} avatar · {owned("card_frame")}/{opts.card_frame.length} card unlocked</span>
-            </div>
-            <button className="primary" onClick={() => setEditing(true)}>Edit profile</button>
-          </div>
-          <div className="row" style={{ gap: 10, marginTop: 14, alignItems: "center" }}>
-            <label className="row small" style={{ gap: 8, cursor: "pointer" }}>
-              <input type="checkbox" checked={c.public} disabled={busy} onChange={(e) => patch({ public: e.target.checked })} />
-              <span>Anyone with the link can see this card{c.public ? "" : " (guild members only right now)"}</span>
-            </label>
-            <span className="spacer" style={{ flex: 1 }} />
-            <input type="text" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} style={{ minWidth: 220, fontFamily: "var(--mono)", fontSize: 12 }} />
-            <button type="button" onClick={copy}>{copied ? "Copied" : "Copy link"}</button>
-            <Link className="btn" href={`/members/${c.id}`}>View as others</Link>
-          </div>
-          {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
+      {mode === "view" && (
+        <div className="studio-actions">
+          <button className="primary" onClick={() => setMode("profile")}>Edit profile</button>
+          {wardrobe && <button onClick={() => setMode("wardrobe")}>Edit wardrobe</button>}
+          <Link className="btn" href={`/members/${c.id}`}>View as others</Link>
         </div>
-      ) : (
+      )}
+
+      {mode === "wardrobe" && wardrobe && (
+        <div className="studio-panel">
+          <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
+            <div><div className="eyebrow">Wardrobe</div><div className="small muted">Outfits, weapons and build save as you pick; the card above follows.</div></div>
+            <button className="primary" onClick={() => setMode("view")}>Done</button>
+          </div>
+          <CharacterSheet initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} />
+        </div>
+      )}
+
+      {mode === "profile" && (
         <div className="card studio-panel editor">
           <div className="row" style={{ justifyContent: "space-between" }}>
             <div>
-              <div className="eyebrow">Editing your card</div>
+              <div className="eyebrow">Editing your profile</div>
               <div className="small muted">Changes show on the card as you pick. Nothing is kept until you press Save.</div>
             </div>
             <div className="row" style={{ gap: 6 }}>
@@ -139,6 +138,16 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
                   ))}
                 </div>
               ) : <div className="small">Nothing earned yet. Finish a quest.</div>}
+
+              <div className="pick-head"><span className="small muted">Sharing</span></div>
+              <label className="row small" style={{ gap: 8, cursor: "pointer" }}>
+                <input type="checkbox" checked={draft.public} disabled={busy} onChange={(e) => setDraft((d) => ({ ...d, public: e.target.checked }))} />
+                <span>Anyone with the link can see this card{draft.public ? "" : " (guild members only)"}</span>
+              </label>
+              <div className="row" style={{ gap: 8, marginTop: 8 }}>
+                <input type="text" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} style={{ flex: 1, minWidth: 160, fontFamily: "var(--mono)", fontSize: 12 }} />
+                <button type="button" onClick={copy}>{copied ? "Copied" : "Copy link"}</button>
+              </div>
             </div>
 
             <div>

@@ -62,7 +62,7 @@ async def submit(qid: str, request: Request, member=Depends(current_member), tex
     await rdb.ensure_character(uid)
     u, state, prog = await db.user_state(uid)
     if q.rank > max(state.rank, 0):
-        raise HTTPException(403, "This room is locked until you rank up.")
+        raise HTTPException(403, "This dungeon is locked until you rank up.")
     if q.id in state.done:
         raise HTTPException(409, "Already done. The chest is empty.")
     if q.id == "O5":

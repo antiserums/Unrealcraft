@@ -1,9 +1,9 @@
-"""Other members' player cards (members only, unless the owner made theirs public) and the leaderboard."""
+"""Other members' player cards (members only, unless the owner made theirs public) and the public leaderboard."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from ..session import current_member, current_member_or_none
+from ..session import current_member_or_none
 from .me import nameplate, rank_color
 from .rpg import card_payload
 
@@ -23,11 +23,13 @@ async def member_card(uid: int, request: Request, viewer=Depends(current_member_
 
 
 @router.get("/leaderboard")
-async def leaderboard(request: Request, period: str = "week", _=Depends(current_member)):
+async def leaderboard(request: Request, period: str = "week"):
     db, cat = request.app.state.db, request.app.state.catalog
     days = {"week": 7, "month": 30, "all": None}.get(period, 7)
     rows = await db.leaderboard(days)
+    rdb = request.app.state.rpg
     return {"period": period, "rows": [
         {"id": r["discord_id"], "xp": r["xp"], "rank": r["rank"], "rank_title": nameplate(cat, r["rank"], r["major"]),
-         "rank_color": rank_color(cat, max(r["rank"], 0)),
+         "rank_color": rank_color(cat, max(r["rank"], 0)), "name": await rdb.kv_get(r["discord_id"], "web.name"),
+         "avatar": await rdb.kv_get(r["discord_id"], "web.avatar"),
          "major_title": cat.majors.get(r["major"], {}).get("title", r["major"])} for r in rows]}

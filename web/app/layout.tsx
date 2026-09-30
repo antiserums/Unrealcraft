@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Cinzel, Cinzel_Decorative, IBM_Plex_Sans } from "next/font/google";
+import Foot from "@/components/Foot";
 import Nav from "@/components/Nav";
 import "./globals.css";
 
@@ -9,7 +10,7 @@ const cinzelDeco = Cinzel_Decorative({ variable: "--font-cinzel-deco", subsets: 
 
 export const metadata: Metadata = {
   title: { default: "Unrealcraft", template: "%s · Unrealcraft" },
-  description: "Learn Unreal Engine 5 by doing quests. Read, build, pass the quiz, show your work.",
+  description: "An RPG learning experience for Unreal Engine. Every quest is a dungeon: read, build, beat the boss, open the chest.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -19,10 +20,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Nav />
         <div className="banner" aria-hidden="true"><span className="crest">❖</span></div>
         <main className="wrap tome">{children}</main>
-        <footer className="foot">
-          <span className="rule" /><span className="crest">❖</span><span className="rule" />
-          <div className="small muted">Unrealcraft · a learning guild for Unreal Engine 5 · ranks come only from quests</div>
-        </footer>
+        <Foot />
       </body>
     </html>
   );

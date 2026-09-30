@@ -77,12 +77,12 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
             if (q.verify_type === "action") return (
               <section className="card" id="claim"><h3>✅ Step {next()}: Done when</h3><p>{q.done_when ?? "—"}</p><p className="muted">Nothing to send. The Quartermaster ticks this when it sees you do it.</p></section>);
             if (q.verify_type === "quiz") return (
-              <section className="card" id="claim"><h3>{done ? "✅" : "🎁"} Step {next()}: {done ? "Room cleared" : "Beat the boss to clear the room"}</h3><p className="muted">{q.done_when ?? "Beating the boss completes this quest."}</p></section>);
+              <section className="card" id="claim"><h3>{done ? "✅" : "🎁"} Step {next()}: {done ? "Dungeon cleared" : "Beat the boss to clear the dungeon"}</h3><p className="muted">{q.done_when ?? "Beating the boss completes this quest."}</p></section>);
             if (!me) return (
               <section className="card" id="claim"><h3>🎁 Step {next()}: Claim the chest</h3><p><b>Done when:</b> {q.done_when ?? "—"}</p><p className="muted"><a href={`/api/auth/discord?next=/quests/${q.id}`}>Log in</a> to send your work.</p></section>);
             if (!p?.unlocked) return null;
             if (done) return (
-              <section className="card" id="claim"><h3>✅ Step {next()}: Chest opened</h3><p className="muted">You cleared this room{p?.completed_at ? ` on ${p.completed_at.slice(0, 10)}` : ""}.</p></section>);
+              <section className="card" id="claim"><h3>✅ Step {next()}: Chest opened</h3><p className="muted">You cleared this dungeon{p?.completed_at ? ` on ${p.completed_at.slice(0, 10)}` : ""}.</p></section>);
             if (!bossDown) return (
               <section className="card lock" id="claim"><h3>🔒 Step {next()}: The chest</h3><p className="muted">Locked. Beat the boss first, then send your work here.</p></section>);
             return (

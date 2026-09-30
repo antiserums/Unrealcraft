@@ -78,8 +78,8 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
     }, 700);
   }
 
-  if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← Back to the room</Link></p></div>;
-  if (!f) return <div className="card muted">Entering the boss room…</div>;
+  if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← Back to the dungeon</Link></p></div>;
+  if (!f) return <div className="card muted">Entering the dungeon…</div>;
 
   const bossHp = Math.max(0, f.hits_to_win - f.hits) / f.hits_to_win;
   const youHp = Math.max(0, (f.you.wounds_allowed + 1 - f.you.wounds)) / (f.you.wounds_allowed + 1);
@@ -159,8 +159,8 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
               </ul>
               <div className="row">
                 {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>Claim the chest: send your work</Link>}
-                {f.outcome?.next === "next" && <Link className="btn primary" href="/">Next room</Link>}
-                {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>Back to the room</Link>}
+                {f.outcome?.next === "next" && <Link className="btn primary" href="/">Next dungeon</Link>}
+                {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>Back to the dungeon</Link>}
                 <Link className="btn" href="/me/wardrobe">{f.outcome?.loot ? "Wear it" : "Wardrobe"}</Link>
               </div>
             </>

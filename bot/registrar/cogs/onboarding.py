@@ -518,7 +518,7 @@ class BugModal(discord.ui.Modal, title="Server / bot problem"):
     expected = discord.ui.TextInput(label="What did you expect?", style=discord.TextStyle.paragraph,
                                     max_length=500)
     where = discord.ui.TextInput(label="Where and when?", max_length=200, required=False,
-                                 placeholder="Channel, command, rough time (e.g. #foundations, 8pm)")
+                                 placeholder="Channel, command, rough time (e.g. #starter-quests, 8pm)")
 
     async def on_submit(self, itx: discord.Interaction):
         bot = itx.client

@@ -34,7 +34,7 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5 }
         <p>{res.message}</p>
         {res.loot && <p>New outfit: <b style={{ color: res.loot.color }}>{res.loot.name}</b> <i>{res.loot.flavour}</i></p>}
         <div className="row">
-          <Link className="btn primary" href="/">Next room</Link>
+          <Link className="btn primary" href="/">Next dungeon</Link>
           {res.loot && <Link className="btn" href="/me">Wear it</Link>}
         </div>
       </div>
