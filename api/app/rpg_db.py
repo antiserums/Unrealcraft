@@ -337,3 +337,35 @@ class RpgDB:
             "events_undelivered": await one("SELECT COUNT(*) FROM events WHERE delivered=0"),
             "xp_total": await one("SELECT COALESCE(SUM(amount),0) FROM xp_log"),
         }
+
+    # ---------- home page statistics ----------
+    async def member_stats(self, uid: int) -> dict:
+        async def one(sql, *a):
+            cur = await self.conn.execute(sql, a)
+            return (await cur.fetchone())[0] or 0
+        return {
+            "fights": await one("SELECT COUNT(*) FROM fights WHERE member_id=? AND result IS NOT NULL", uid),
+            "fights_won": await one("SELECT COUNT(*) FROM fights WHERE member_id=? AND result='win'", uid),
+            "bosses_first_try": await one(
+                "SELECT COUNT(*) FROM quiz_attempts a WHERE user_id=? AND passed=1 AND NOT EXISTS "
+                "(SELECT 1 FROM quiz_attempts b WHERE b.user_id=a.user_id AND b.quest_id=a.quest_id AND b.id<a.id)", uid),
+            "crit_xp": await one("SELECT SUM(amount) FROM xp_log WHERE user_id=? AND reason LIKE 'crit:%'", uid),
+            "xp_week": max(0, await one("SELECT SUM(amount) FROM xp_log WHERE user_id=? AND created_at >= datetime('now','-7 days')", uid)),
+            "reads": await one("SELECT COUNT(*) FROM kv WHERE user_id=? AND k LIKE 'read:%'", uid),
+            "turnins": await one("SELECT COUNT(*) FROM submissions WHERE user_id=?", uid),
+            "turnins_passed": await one("SELECT COUNT(*) FROM submissions WHERE user_id=? AND status='pass'", uid),
+            "turnins_pending": await one("SELECT COUNT(*) FROM submissions WHERE user_id=? AND status='pending'", uid),
+        }
+
+    async def guild_stats(self) -> dict:
+        async def one(sql):
+            cur = await self.conn.execute(sql)
+            return (await cur.fetchone())[0] or 0
+        return {
+            "members": await one("SELECT COUNT(*) FROM users"),
+            "quests_done": await one("SELECT COUNT(*) FROM quest_progress WHERE status='done'"),
+            "quests_done_week": await one("SELECT COUNT(*) FROM quest_progress WHERE status='done' AND completed_at >= datetime('now','-7 days')"),
+            "fights_week": await one("SELECT COUNT(*) FROM fights WHERE started_at >= datetime('now','-7 days')"),
+            "xp_week": max(0, await one("SELECT SUM(amount) FROM xp_log WHERE created_at >= datetime('now','-7 days')")),
+            "masters": await one("SELECT COUNT(*) FROM users WHERE rank >= 4"),
+        }

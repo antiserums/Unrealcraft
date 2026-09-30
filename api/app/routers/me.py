@@ -133,3 +133,10 @@ async def path(request: Request, member=Depends(current_member)):
                   "tasters": tasters, "capstone": cap}
     return {"major": major, "major_title": cat.majors.get(major, {}).get("title", major), "rank": state.rank,
             "sections": sections, "locked": locked, "now": now_id, "reason": pick.reason}
+
+
+@router.get("/stats")
+async def stats(request: Request, member=Depends(current_member)):
+    """Numbers for the home page: the member's own, plus the guild's this week."""
+    rdb = request.app.state.rpg
+    return {"me": await rdb.member_stats(member["id"]), "guild": await rdb.guild_stats()}

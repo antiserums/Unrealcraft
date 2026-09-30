@@ -75,3 +75,9 @@ async def subjects(request: Request):
         for s in q.raw.get("subjects") or []:
             counts[s] = counts.get(s, 0) + 1
     return {"subjects": sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))}
+
+
+@router.get("/stats")
+async def guild_stats(request: Request):
+    """Guild-wide numbers for the guest home page (no login needed, nothing personal)."""
+    return await request.app.state.rpg.guild_stats()
