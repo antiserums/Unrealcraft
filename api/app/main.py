@@ -11,7 +11,7 @@ from registrar.curriculum import Catalog  # noqa: E402  (bot package, path set i
 from . import auth
 from .config import settings
 from .db import DB
-from .routers import catalog, changelog, me, members, review, rpg, submit
+from .routers import admin, catalog, changelog, me, members, review, rpg, submit
 from .rpg_db import RpgDB
 
 log = logging.getLogger("unrealcraft.api")
@@ -48,6 +48,7 @@ app.include_router(changelog.router)
 app.include_router(rpg.router)
 app.include_router(submit.router)
 app.include_router(review.router)
+app.include_router(admin.router)
 
 
 @app.get("/health")

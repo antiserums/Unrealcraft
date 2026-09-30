@@ -21,6 +21,14 @@ CREATE TABLE IF NOT EXISTS outfits (
     earned_at   TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (member_id, set_id)
 );
+CREATE TABLE IF NOT EXISTS admin_log (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    admin_id    INTEGER NOT NULL,
+    action      TEXT NOT NULL,                 -- grant_quest | clear_quest | set_rank | add_xp | medal | reset ...
+    target_id   INTEGER,
+    detail      TEXT NOT NULL DEFAULT '{}',    -- json
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
 CREATE TABLE IF NOT EXISTS fights (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     member_id   INTEGER NOT NULL,
@@ -249,3 +257,83 @@ class RpgDB:
             "SELECT COUNT(*) c FROM xp_log WHERE user_id=? AND reason LIKE ? AND date(created_at)=date('now')",
             (uid, reason_prefix + "%"))
         return (await cur.fetchone())["c"]
+
+    # ---------- admin panel ----------
+    async def admin_log(self, admin_id: int, action: str, target_id: int | None, detail: dict) -> None:
+        await self.conn.execute("INSERT INTO admin_log(admin_id, action, target_id, detail) VALUES (?,?,?,?)",
+                                (admin_id, action, target_id, json.dumps(detail)))
+        await self.conn.commit()
+
+    async def admin_log_tail(self, limit: int = 50) -> list[dict]:
+        cur = await self.conn.execute("SELECT * FROM admin_log ORDER BY id DESC LIMIT ?", (limit,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def search_members(self, q: str, limit: int = 40) -> list[dict]:
+        """Members by id prefix or by the display name saved at login. Empty query -> most recently created."""
+        sql = ("SELECT u.discord_id, u.major, u.rank, u.xp, u.seal, u.streak_days, u.created_at, u.rank_since, "
+               "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.name') AS name, "
+               "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.avatar') AS avatar, "
+               "(SELECT COUNT(*) FROM quest_progress p WHERE p.user_id=u.discord_id AND p.status='done') AS done "
+               "FROM users u ")
+        args: list = []
+        if q.strip():
+            sql += "WHERE CAST(u.discord_id AS TEXT) LIKE ? OR name LIKE ? "
+            args += [q.strip() + "%", "%" + q.strip() + "%"]
+        cur = await self.conn.execute(sql + "ORDER BY u.created_at DESC LIMIT ?", (*args, limit))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def progress_rows(self, uid: int) -> list[dict]:
+        cur = await self.conn.execute("SELECT quest_id, status, quiz_passed, completed_at FROM quest_progress WHERE user_id=? ORDER BY completed_at DESC, quest_id", (uid,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def clear_progress(self, uid: int, qid: str) -> None:
+        await self.conn.execute("DELETE FROM quest_progress WHERE user_id=? AND quest_id=?", (uid, qid))
+        await self.conn.commit()
+
+    async def set_user(self, uid: int, **fields) -> None:
+        if not fields:
+            return
+        cols = ", ".join(f"{k} = ?" for k in fields)
+        await self.conn.execute(f"UPDATE users SET {cols} WHERE discord_id = ?", (*fields.values(), uid))
+        await self.conn.commit()
+
+    async def remove_medal(self, uid: int, key: str) -> None:
+        await self.conn.execute("DELETE FROM medals WHERE user_id=? AND medal_key=?", (uid, key))
+        await self.conn.commit()
+
+    async def reset_member(self, uid: int, keep_user: bool = True) -> dict:
+        """Wipe everything a member did. With keep_user the users row stays (rank -1, 0 XP) so the bot's roles still map."""
+        counts = {}
+        for table, col in (("quest_progress", "user_id"), ("quiz_attempts", "user_id"), ("xp_log", "user_id"), ("medals", "user_id"),
+                           ("submissions", "user_id"), ("outfits", "member_id"), ("fights", "member_id"), ("characters", "member_id"),
+                           ("events", "member_id"), ("kv", "user_id")):
+            cur = await self.conn.execute(f"DELETE FROM {table} WHERE {col}=?", (uid,))
+            counts[table] = cur.rowcount
+        await self.conn.execute("DELETE FROM review_actions WHERE reviewer_id=? OR submission_id NOT IN (SELECT id FROM submissions)", (uid,))
+        if keep_user:
+            await self.conn.execute("UPDATE users SET xp=0, rank=-1, seal=NULL, current_quest_id=NULL, spine_done=0, streak_days=0, "
+                                    "last_active_day=NULL, rank_since=datetime('now') WHERE discord_id=?", (uid,))
+        else:
+            cur = await self.conn.execute("DELETE FROM users WHERE discord_id=?", (uid,))
+            counts["users"] = cur.rowcount
+        await self.conn.commit()
+        return counts
+
+    async def events_tail(self, limit: int = 50) -> list[dict]:
+        cur = await self.conn.execute("SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def stats(self) -> dict:
+        async def one(sql):
+            cur = await self.conn.execute(sql)
+            return (await cur.fetchone())[0]
+        return {
+            "members": await one("SELECT COUNT(*) FROM users"),
+            "members_logged_in": await one("SELECT COUNT(*) FROM kv WHERE k='web.name'"),
+            "quests_done": await one("SELECT COUNT(*) FROM quest_progress WHERE status='done'"),
+            "pending_reviews": await one("SELECT COUNT(*) FROM submissions WHERE status='pending'"),
+            "fights_today": await one("SELECT COUNT(*) FROM fights WHERE date(started_at)=date('now')"),
+            "fights_total": await one("SELECT COUNT(*) FROM fights"),
+            "events_undelivered": await one("SELECT COUNT(*) FROM events WHERE delivered=0"),
+            "xp_total": await one("SELECT COALESCE(SUM(amount),0) FROM xp_log"),
+        }

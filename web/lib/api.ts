@@ -41,7 +41,7 @@ export type Me = {
   tier_progress: { done: number; need: number; available: number; tier: string; name: string; emoji: string; color: string } | null;
   medals: { medal_key: string; earned_at: string }[]; done_count: number;
   recent_xp?: { amount: number; reason: string; created_at: string }[]; known?: boolean;
-  review?: { can: boolean; mentor: boolean; pending: number };
+  review?: { can: boolean; mentor: boolean; pending: number }; admin?: boolean;
 };
 export type ReviewItem = {
   id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;

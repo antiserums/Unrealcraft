@@ -67,6 +67,8 @@ async def me(request: Request, member=Depends(current_member)):
     payload["known"] = await db.user(member["id"]) is not None
     from .review import access_for
     a = await access_for(request, member)
+    from .admin import is_admin
+    payload["admin"] = is_admin(member)
     payload["review"] = {"can": a["can_review"], "mentor": a["mentor"],
                          "pending": len(await request.app.state.rpg.pending_submissions()) if a["can_review"] else 0}
     return payload

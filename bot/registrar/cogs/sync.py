@@ -80,6 +80,12 @@ class Sync(commands.Cog):
                 await onboarding.maybe_finish_orientation(guild, uid)
                 await onboarding.refresh_page(uid)
                 await ranks.check_promotion(guild, uid)
+        elif type_ == "rank_set" and guild:
+            # An admin set a rank on the website: apply the Discord roles for it (promote handles demotion too).
+            try:
+                await ranks.promote(guild, uid, int(payload["rank"]), payload.get("seal"))
+            except Exception:
+                log.exception("rank_set role sync failed for %s", uid)
         log.info("website event %s for %s: %s", type_, uid, payload)
 
     @poll.before_loop

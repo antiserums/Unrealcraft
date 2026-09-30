@@ -50,7 +50,16 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   only shows once the boss is beaten. Images live in `api/data/uploads/<member>/` and are served to logged-in members
   at `/api/uploads/...`. The bot mirrors website turn-ins (forum post, review or spot-check card) from `events`.
   No cooldown on retrying a boss; the 120-minute cooldown after a reviewer's Fail still applies to the chest.
-- **Next:** reviews on the site (mentor inbox), then retire the Discord quiz and submit commands; dungeon map.
+- **Reviews on the site (done):** `/review` is the mentor inbox (pending, waiting on others, recent), `/review/{id}`
+  shows the turn-in with screenshots, earlier attempts and the quest's checklist, and records Pass / Changes / Fail.
+  The API (`api/app/routers/review.py`) mirrors the bot's rules; mentors are the staff mentor role, rank 6, or
+  `ADMIN_IDS`. A decision emits `submission_decided`, which the bot mirrors into Discord.
+- **Admin panel (done):** `/admin` for `ADMIN_IDS` (and dev login): stats, member search, the events queue and an
+  admin log; `/admin/members/{id}` grants or clears quests, sets rank/seal/major (emits `rank_set` so the bot swaps
+  roles), gives XP or medals, and resets an account. Every action lands in `admin_log`.
+- **Card cosmetics (done):** nameplate colours, avatar frames and card frames are unlocks (`rpg.py`
+  `NAMEPLATES`, `AVATAR_FRAMES`, `CARD_FRAMES`).
+- **Next:** retire the Discord quiz and submit commands; dungeon map; port the pack's renderer for appearance.
 - **Phase 3:** reviews and promotions on the site; event outbox for the bot (roles, DMs, #rank-ups).
 - **Phase 4:** slim the bot to link cards; orientation events reported to the API; staff panel.
 - **Phase 5:** customization, leaderboard by major, helper karma, daily quest.
