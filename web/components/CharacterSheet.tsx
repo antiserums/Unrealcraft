@@ -13,7 +13,7 @@ export type Char = {
   nameplate_colors: string[]; slots: string[]; specialization: string;
 };
 /** sheets: body -> style -> set -> sheet, so a try-on can show any set in any style without a round trip. */
-export type ArtProps = { sheets: Record<string, Record<string, Record<string, SheetSpec>>>; icons: Record<string, string>; bodies: string[] };
+export type ArtProps = { sheets: Record<string, Record<string, Record<string, SheetSpec>>>; icons: Record<string, string>; bodies: string[]; rarity?: Record<string, string | null> };
 /** What the closet is currently showing (worn or tried on), for a parent that draws the preview itself. */
 export type TryOn = { outfit: Outfit; style: string; body: string; sheet: SheetSpec | null };
 
@@ -128,6 +128,7 @@ export default function CharacterSheet({ initial, fallbackColor, art, mirror = t
               data-equipped={o.worn || undefined} data-locked={!o.owned || undefined}
               style={{ "--rc": rc } as React.CSSProperties} onClick={() => setSelectedId(o.id)}>
               {icon ? <img className="px" src={icon} alt="" /> : <span className="tile-swatch" />}
+              {art.rarity?.[RARITY_OF_TIER[o.tier]] && <img className="tile-rarity" src={art.rarity[RARITY_OF_TIER[o.tier]] ?? ""} alt="" />}
               {o.worn && <span className="tile-mark">✔</span>}
               {!o.owned && <span className="tile-lock">🔒</span>}
               {c.new_outfits.includes(o.id) && <span className="tile-new">{t("new")}</span>}

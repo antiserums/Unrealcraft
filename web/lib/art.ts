@@ -132,6 +132,11 @@ export function difficultyArt(m: Manifest | null, tierName: string): string | nu
   return i < 0 ? null : siteArt(m, `difficulty/difficulty-${i + 1}`);
 }
 /** Rank crest for a rank number: -1 Orientation, 0 Novice … 4 Master. Staff ranks beyond that use the Master crest. */
+/** The rarity frame (an SVG from the pack's ui/rarity) for a wardrobe tier. */
+export function rarityFrame(m: Manifest | null, rarity: string): string | null {
+  const r = m?.rarity[rarity] ?? m?.rarity.epic;
+  return r?.frame ? art(r.frame) : null;
+}
 export function rankCrest(m: Manifest | null, n: number): string | null {
   const ids = ["orientation", ...TIER_ORDER];
   return siteArt(m, `rank-crests/${ids[Math.max(0, Math.min(n + 1, ids.length - 1))]}`);
@@ -171,13 +176,22 @@ export type LivingTownArt = { script: string; stills: Record<string, string>; se
 /** Avatar ring or card border for a decoration theme id. */
 export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): string | null {
   const f = id ? m?.decorations?.[kind]?.[id] : null;
-  return f ? art(f) : null;
+  return f ? art(f) : plainDecoration(m, kind);
+}
+
+/** The quiet default ring or border from website-art, shown when no decoration is worn. */
+export function plainDecoration(m: Manifest | null, kind: "avatar" | "card"): string | null {
+  return siteArt(m, kind === "avatar" ? "avatar-ring/plain" : "card-frame/plain");
 }
 
 /** Every decoration image by kind, for the pickers. */
 export function decorationImages(m: Manifest | null): { avatar: Record<string, string>; card: Record<string, string> } {
   const out = { avatar: {} as Record<string, string>, card: {} as Record<string, string> };
-  for (const kind of ["avatar", "card"] as const) for (const [k, v] of Object.entries(m?.decorations?.[kind] ?? {})) out[kind][k] = art(v);
+  for (const kind of ["avatar", "card"] as const) {
+    for (const [k, v] of Object.entries(m?.decorations?.[kind] ?? {})) out[kind][k] = art(v);
+    const plain = plainDecoration(m, kind);
+    if (plain && !out[kind].none) out[kind].none = plain;
+  }
   return out;
 }
 

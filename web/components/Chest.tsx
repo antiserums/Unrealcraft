@@ -60,7 +60,7 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5, 
         placeholder={isO5 ? "READY" : t("What you built, what you changed, what you learned. Paste links here too.")} />
       {!isO5 && (
         <div className="row" style={{ marginTop: 10 }}>
-          <div style={{ flex: 1, minWidth: 200 }}>
+          <div className="upload" style={{ flex: 1, minWidth: 200 }}>
             <label className="small eyebrow" htmlFor="chest-files">{verifyType === "screenshot" ? t("Screenshots (required)") : t("Screenshots (optional)")}</label>
             <input id="chest-files" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple onChange={(e) => setFiles(Array.from(e.target.files ?? []).slice(0, 4))} />
             {files.length > 0 && <div className="small muted">{files.map((f) => f.name).join(", ")}</div>}

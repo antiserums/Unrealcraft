@@ -73,6 +73,7 @@ export default function AdminActions({ uid, ranks, specializations, current, ent
       <div className="adm-form">
         <input value={medal} onChange={(e) => setMedal(e.target.value)} placeholder="first_blood, jump_0_1 …" style={{ width: 200 }} />
         <button className="primary" disabled={busy || !medal} onClick={() => post("medal", { key: medal })}>Grant</button>
+        <button className="btn" disabled={busy} onClick={() => post("medal", { key: "supporter" })} title="Grants the supporter medal: the Patron outfit, avatar frame and card frame">Mark as supporter</button>
         <button disabled={busy || !medal} onClick={() => post("medal", { key: medal, remove: true })}>Remove</button>
       </div>
 

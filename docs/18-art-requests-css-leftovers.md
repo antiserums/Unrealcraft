@@ -93,3 +93,20 @@ icons, badges, crests, arenas and the spot illustrations are all done. The top b
 Same as before: add the groups to `website-art/manifest.json` with sizes and `slice` where it applies, canonical
 PNGs only, and a line in the handoff saying which group replaces which CSS. The site's sync picks them up; the
 CSS side is ours.
+
+## 12. The Patron set (new, needed for the Support page)
+
+Members who donate get one thank-you set, the same for everyone, looks only. It needs the same three pieces the
+staff sets have, in the same contracts:
+
+- **Outfit `supporter`, "Patron's Regalia"**: deep wine (#5a1e2a range) and gold, the guild emblem on the
+  shoulder. Character sheets like every other set: `characters/presets/<body>/supporter_<style>/sheet.png` for
+  both bodies and both styles (4 x 6 frames of 128 px), plus the wardrobe icon `gear/icons/set_supporter_chest.png`
+  and the other slot icons, and an entry in `metadata/character-presets.json` and `pack.json` `sets`.
+- **Avatar frame `profile-decorations/avatar/NN-supporter.png`** (48 px ring, transparent centre): wine-red
+  enamel and gold, a small heart at the top.
+- **Card frame `profile-decorations/card/NN-supporter.png`** (352 x 252, card in the centre 320 x 220): the same
+  enamel and gold. A gentle animated version is welcome but not required.
+
+The site already lists these under the ids `supporter` (outfit) and `supporter` (avatar and card decorations),
+so they show up as soon as the files are synced. Until then the outfit falls back to the plain figure.

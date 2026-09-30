@@ -1,5 +1,13 @@
 # Notes for the artist — website art, 30 September 2026
 
+## Update after the CSS-leftovers delivery (`docs/17`, request `docs/18`)
+
+All twelve items are wired: chips, tier plates, plain and hover panels on every ordinary card, plain avatar ring
+and card border, swatch rings, ornaments, upload plate, leaderboard rows, and the existing rarity SVGs over the
+wardrobe tiles. Not used: `picker-slots` (the title and frame pickers are 52 to 72 px tiles with the frame art
+inside, so a fixed 32 px slot does not fit them) and `avatar-ring/plain-64` (both avatar spots use the 48 px ring
+contract at 2x). Still wanted: the Patron set (docs/18, item 12).
+
 ## Update after the scrollbar delivery (`docs/17-current-art-handoff.md`)
 
 Done on the site: the new scrollbar (12 px, thumb sliced 12 2 12 2), Log out and the profile tabs on the tall

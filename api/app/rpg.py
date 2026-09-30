@@ -82,6 +82,10 @@ EXCLUSIVE_SETS = [
      {"type": "staff", "role": "admin", "hint": "Admins only"}),
     ("mentor", "Astral Guide", "Star-green robes for those who walk beside the newcomer. Worn by those who teach the guild.", "master",
      {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
+    # The thank-you set for anyone who donates on /support. Never required for anything; staff grant the
+    # `supporter` medal after a donation and the whole set (outfit, avatar frame, card frame) opens at once.
+    ("supporter", "Patron's Regalia", "Deep wine and gold, with the guild's mark on the shoulder. Worn by those who keep the lights on.", "master",
+     {"type": "medal", "key": "supporter", "hint": "Support Unrealcraft"}),
 ]
 
 
@@ -340,6 +344,7 @@ DECORATIONS = [
     ("developer", "Developer", "Circuit-blue trim with a living pulse.", {"type": "staff", "role": "developer", "hint": "Developers only"}),
     ("admin", "Admin", "Sunforged gold with a steady shine.", {"type": "staff", "role": "admin", "hint": "Admins only"}),
     ("mentor", "Mentor", "Astral green with a quiet glow.", {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
+    ("supporter", "Patron", "Wine-red enamel and gold, with a small heart at the top.", {"type": "medal", "key": "supporter", "hint": "Support Unrealcraft"}),
 ]
 # Titles, shown after the name like "Kai, the Learner". Earned, never bought; "none" hides it.
 TITLES = [

@@ -140,7 +140,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               <div className="pick-head"><span className="small muted">{t("Nameplate colour")}</span><span className="small muted">{owned("nameplate")}/{opts.nameplate.length}</span></div>
               <div className="pick-grid">
                 {opts.nameplate.map((o) => (
-                  <button key={o.id} {...tile("nameplate", o)} aria-label={t(o.name)} style={{ width: 28, height: 28, borderRadius: "50%", background: o.value }}>
+                  <button key={o.id} {...tile("nameplate", o)} className={`${tile("nameplate", o).className} swatch`} aria-label={t(o.name)} style={{ width: 28, height: 28, borderRadius: "50%", background: o.value }}>
                     {!o.owned && <span className="pick-lock">🔒</span>}
                   </button>
                 ))}

@@ -7,7 +7,7 @@ import { getT } from "@/lib/i18n";
 export async function TierBadge({ tier }: { tier: QuestSummary["tier"] }) {
   const [t, m] = await Promise.all([getT(), loadManifest()]);
   const mark = difficultyArt(m, tier.name);
-  return <span className={`tier ${mark ? "has-mark" : ""}`} style={{ background: tier.color }}>{mark ? <img className="px" src={mark} width={32} height={32} alt="" /> : tier.emoji} {t(tier.name)}</span>;
+  return <span className={`tier tier-${tier.name.toLowerCase()} ${mark ? "has-mark" : ""}`} style={{ background: tier.color }}>{mark ? <img className="px" src={mark} width={32} height={32} alt="" /> : tier.emoji} {t(tier.name)}</span>;
 }
 
 export default async function QuestCard({ q, showStatus = false }: { q: QuestSummary; showStatus?: boolean }) {
@@ -35,7 +35,7 @@ export default async function QuestCard({ q, showStatus = false }: { q: QuestSum
         {q.has_quiz && <><span>·</span><span>{t("quiz {n}", { n: q.quiz_len })}</span></>}
         {q.tag && <><span>·</span><span className="tag">{q.tag}</span></>}
       </div>
-      <div className="meta"><span className="pill">{t(q.owner)}</span>{q.subjects.slice(0, 3).map((s) => <span key={s} className="pill">{s}</span>)}</div>
+      <div className="meta"><span className="pill">{t(q.owner)}</span>{q.subjects.slice(0, 3).map((s) => <span key={s} className="pill muted-chip">{s}</span>)}</div>
     </Link>
   );
 }

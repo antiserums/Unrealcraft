@@ -1,110 +1,58 @@
-# Claude handoff: current website art and remaining fixes
+# Claude handoff: remaining CSS theme art
 
-2026-09-30. This is the single current handoff. It consolidates and supersedes handoffs 10, 13, 14, 15 and 16 for the current website-theme work. Earlier documents are historical records; their inventory counts and retained-file claims may be stale.
-
-## Current state and priority
+2026-09-30. This is the **single current handoff**, updated for `docs/18-art-requests-css-leftovers.md`. That request confirms earlier handoffs are integrated; do not redo those migrations. This delivery adds **27 canonical PNGs**. Current manifest: **94 entries, 268 canonical PNGs**. Individual states have direct IDs containing `/` rather than sheet wrappers.
 
 Source pack: `C:/Users/killt/Documents/GitHub/UCSourceArt/pixel-v3/website-art/`.
 
-**70 groups, 262 canonical PNGs.** The current manifest is authoritative. The latest artist notes confirm the previous refinement is integrated. Remaining work is to wire the new scrollbar, fix the inconsistent controls listed below, and cross-check deployed copies against the cleanup ledger. The artist has changed assets and documentation, not application components or CSS.
+Use `manifest.json` for exact paths/sizes/slices, `css-leftovers-assets.json` for this delivery only, and `css-leftovers-preview.html` for the assembled example. Generated masters in `source/` are not runtime assets. All labels remain HTML. Application code/CSS was left for Claude as requested.
 
-1. Fix logout and the circled profile controls using the existing revised button family.
-2. Integrate the new 12px scrollbar with its exact slice contract.
-3. Cross-check deleted source assets, remove obsolete deployed copies, and retire old button/tab art only after replacing active consumers.
-4. Validate signed-in screens at desktop and phone widths.
+## CSS-to-art mapping
 
-## Existing refined asset contracts
+Paths are relative to the pack; IDs resolve through `website_art.images` after sync.
 
-- `buttons-tall/{gold,stone}-{normal,hover,pressed,disabled}`: 96×48, slices top/bottom 12 and left/right 14, one-pixel repeatable middle. Prefer 48px controls and 12px vertical / 20px horizontal padding. Keep label alignment consistent across states.
-- `answer-plates/{normal,selected,correct,incorrect}`: same size/slices; allow multiline answers to grow.
-- `progress-track-v2`: 128×16, slice 5. `progress-fill-strip`: 1×6, repeat horizontally at position 0 0. Scope gold fill to XP; preserve health colours. No positive vertical fill offset or fractional 1.5× image scaling.
-- `divider-gem-v2`: 256×16. Native display needs a 16px-high container; 2× display needs 512×32 and a full 32px-high container. Earlier screenshot clipping came from a 32px image in a 16px box.
-- `utility-16`, `navigation-16`, `statistics`, `selection-controls`: 16px exports; render at integer sizes. Preserve semantic inputs and visible keyboard focus.
-- Ten `header-<name>-narrow` assets: 480×160 centre crops for narrow screens. Three `<arena-id>-4x` assets: 1920×1080; logical layout remains 480×270 with ground Y 232 (928 in the large export).
-- Section header plates and tooltip art are now retired. Keep headings on the divider treatment.
+| Replace | IDs → files | Contract |
+|---|---|---|
+| Specialization chips, owner/required/elective labels, subject tags | `chips/{stone,primary,muted}` → `interface/chips/<state>.png` | 48×24; slice6; 2px outer padding. Stone default, primary warm/gold, muted tags. |
+| Staff pill glow | `chips/staff-{developer,admin,mentor}` → same folder | 48×24; slice6. Teal, gold, violet. Use drawn borders instead of pulsing box glow. |
+| Quest tier colour block | `tier-plates/{novice,apprentice,adept,expert,master}` → `interface/tier-plates/<tier>.png` | 64×28; slice8; dark centre for HTML text/icon. |
+| General card gradient/corner ticks | `panel-stone-plain` → `interface/panel-stone-plain.png` | 96×96; slice20; transparent centre. Flat background may sit beneath. |
+| Quest-card hover edge | `panel-stone-hover` → `interface/panel-stone-hover.png` | Same size, slices and alpha silhouette; brighter material ramp. |
+| Default avatar outline / initial fallback | `avatar-ring/plain`, `avatar-ring/plain-64` → `interface/avatar-ring/<name>.png` | 48×48 and64×64; transparent circular apertures. Initial stays HTML. |
+| Bare player-card border | `card-frame/plain` → `interface/card-frame/plain.png` | 352×252; inset16; card rect320×220; slice44. Thin bronze/stone band with tiny top gold mark. Only when no decoration equipped. |
+| Title/frame picker boxes | `picker-slots/{normal,selected,locked}` → `interface/picker-slots/<state>.png` | Fixed32×32; content inset8; clear16×16 centre. Long title labels belong beside the small tile, not squeezed inside. |
+| Nameplate colour circle border | `swatch-ring` → `interface/swatch-ring.png` | Fixed28×28; clear18px-diameter centre. Place colour underneath. |
+| Decorative heading/footer/divider glyphs | `ornaments/{diamond-8,diamond-12,diamond-16,rule-end}` → `icons/ornaments/<name>.png` | 8×8,12×12,16×16,16×16. Decorative, empty alt/aria-hidden. |
+| Upload / turn-in gradient | `upload-plate` → `interface/upload-plate.png` | 160×64; slice12; transparent centre. Tiny chest mark in fixed top-left corner so repeating edges cannot duplicate it. Keep native input semantics and HTML filenames. Open state can reuse panel-parchment. |
+| Leaderboard stripes | `row-plate`, `row-plate-top` → `interface/<id>.png` | 96×32; slice4; quiet leather, header gold underline. Keep semantic table markup. |
 
-`refinement.css` is reference CSS, not an automatic application override. `index.html` is the current asset gallery. `refinement-preview.html` demonstrates the retained controls; `scrollbar-preview.png` shows the new thumb states enlarged 4×.
+All sliced pieces have a one-pixel repeatable middle. Slice values apply to all four sides unless stated otherwise.
 
-## New scrollbar assets
+## Decisions and sizing details
 
-In `UCSourceArt/pixel-v3/website-art/interface/scrollbar/`:
+**Tier colours follow the YAML named in the request.** The prose says purple/red for Expert/Master, but `curriculum/specializations.yaml` defines Novice `#7A8C7E`, Apprentice `#B5714B`, Adept `#3D7DD8`, Expert `#D9824A`, Master `#8A9BA8`. The art uses those values: orange Expert, steel Master. These five accents plus mentor violet `#8E6CCF` extend the palette. Keep code and art aligned to the YAML.
 
-| Manifest ID | File | Size | Contract |
-|---|---|---|---|
-| `scrollbar/track` | `track.png` | 12×1 | Plain dark row. Repeat vertically, no patterned bands. |
-| `scrollbar/thumb` | `thumb.png` | 12×36 | Dark stone, thin gold sides and restrained caps. |
-| `scrollbar/thumb-hover` | `thumb-hover.png` | 12×36 | Same size, brighter gold and stone. |
+**32px icon versus28px plate:** a32px mark cannot fit entirely inside a28px-high plate. Give the native32 icon a32px line box, centre the28px plate behind it, and allow2px overflow per edge. Reserve at least40px left content space and grow the plate horizontally for text. Do not clip or fractionally squash the icon. A separately designed smaller mark is not part of this delivery.
 
-Thumb slices are **top 12, right 2, bottom 12, left 2**. The vertical middle is an identical one-pixel repeatable row. Do not use `slice:12` on all four sides: this 12px-wide source needs 2px side slices. Minimum displayed thumb height 24px; 36px preferred. Preserve 12px width and integer pixel rendering. A preview enlarged 4× is `scrollbar-preview.png`.
+**Optional tintable `chips/rank` was skipped**, as the request permits. A whole-image filter or alpha mask would also tint/mask the dark fill. Explicit staff chips are supplied; regular ranks can use the neutral stone/primary plate and existing coloured HTML text. Do not request a nonexistent `chips/rank` ID or tint the entire plate.
 
-Sync the pack using the current website sync. Keep the native scrollbar fallback when a browser cannot render the custom thumb correctly. Test a long page and a short overflow panel, normal and hover states; do not stretch the entire image vertically or repeat complete capped thumbs. This delivery supplies assets and metadata, not an untested global scrollbar CSS override. The earlier 8×32 scrollbar-parts has been removed from the source pack; see the cleanup section below.
+**Rarity: use the existing `ui/rarity/*.svg`.** No duplicate PNG set was added. Wire existing frames over wardrobe tiles while preserving selected/locked states.
 
-## Logout — confirmed old override
+- Chip example: `border-image: url(...) 6 fill / 6px repeat`, border0, height24px, line-height12px, padding6px 10px. Preview uses12px text and a long primary-specialization label. Wrap chip rows. Check22/26px variants if the site uses them; preview uses24px.
+- Panel example: `border-image: url(...) 20 / 20px repeat`; centre is clear. Remove the old gradient and gold pseudo-corner ticks rather than layering both.
+- Avatar48: centre24,24; clear radius17.5; photo radius16 under the existing decoration contract. At2× it is a96px overlay around a64px photo.
+- Avatar64: centre32,32; clear radius24, i.e.48px opening. Keep the photo at44px diameter or less for a gap at native display. The64px dimension is the overlay canvas, not a64px photo aperture. If the home ribbon uses a64px photo, deliberately adjust overlay layout rather than covering the photo.
+- Swatch: centre14,14; clear radius9. Colour goes beneath; retain an accessible HTML name.
+- Plain card: logical card starts16,16 and ends336,236. Preserve the existing32-screen-pixel gutter at2×. Responsive corners are44 source pixels. Do not also draw CSS corner ticks. The tiny top accent can use the existing repeating-border treatment.
+- Picker slots are32px with a16px clear content region; they are not interchangeable with inventory48px slots.
+- Use native sizes or integer scaling and `image-rendering:pixelated`. Repeat slice edges; preserve corners. No global tint or soft glow over these borders.
 
-`web/app/globals.css:637` explicitly assigns `interface/buttons/stone-normal.png` to `.nav form button` and `.banner-btn`, overriding the new tall-button normal state. Hover/active rules above it still reference the new family, causing mixed families/slice geometry across states.
+## Integration and verification
 
-The user now explicitly wants logout updated, superseding the original note to retain the old small logout plate. Remove that old override for logout and apply the revised stone button consistently, with matching normal/hover/pressed/disabled geometry. If it must remain compact, crop the uniform vertical centre from the revised family or adjust the control layout; do not return to the old family or squash the whole image. Check the top bar width and translated label lengths. Keep the existing POST logout action in `components/Nav.tsx` unchanged.
+1. Run the existing art sync. Confirm every ID in `css-leftovers-assets.json` resolves in `website_art.images`. The current sync accepts direct IDs with `/`; no custom group parser is needed.
+2. Apply the mapping above. Remove duplicate gradients, pseudo-corners, outlines and pill glow only on migrated elements. Preserve event handlers, disabled/selected states, file input behaviour and keyboard focus.
+3. Check signed-in home/profile/quests/wardrobe/chest/leaderboard at desktop and390px width, including long/localized labels. Confirm rings and plain card borders do not overlap content; equipped frames must suppress plain defaults.
+4. Request18 says earlier migrations are complete. Do not restore retired art from historical handoffs. The cleanup ledger remains an audit record; this delivery deletes no additional art.
 
-## Player-card screenshot — confirmed selectors and components
+Artist checks:27 new PNGs pass dimensions, palette, binary alpha, repeatable slice middles, transparent ring apertures and card-content clearance. Full current pack:268 canonical PNGs, zero QA errors. Isolated sync preserves legacy sections, resolves all runtime paths and is idempotent. Assembled preview has no broken images or page overflow on desktop and390px width; chips/tier text/panel spacing inspected.
 
-1. **Edit wardrobe:** `web/components/CardStudio.tsx:103` is a plain `<button>` with no `.btn` or `.primary`. The refined skin selector in `globals.css:625` matches `.btn`, `button.primary`, and `.nav form button`, so this secondary action is skipped. Apply the shared revised secondary-button class. Check all CardStudio action rows, including Cancel, not only the circled button.
-2. **Change:** `web/components/SpecializationPicker.tsx` renders its closed-state Change button without a theme class; its Cancel button is also unclassified. Apply the same revised secondary-button style and all states. Save is already primary. Preserve event handlers and disabled behaviour.
-3. **Player Card / Achievements tabs:** `.subnav a` in `globals.css:668–673` still uses the earlier `interface/tab-plates/*` art. The user wants these brought into the revised family too. Use the revised stone plate for inactive tabs and gold for the active tab, with matching slices, readable text/icon spacing, hover and keyboard focus. Keep navigation links and current-page semantics; do not turn links into form buttons.
-4. **Specialization chips:** `SpecializationPicker` uses `.pill` with an inline primary border colour. `.pill` at `globals.css:143` still draws a gradient, rounded CSS border and inset shadow. Replace this scoped specialization-chip appearance with flat dark stone/leather, crisp one-pixel borders and a restrained gold primary accent, consistent with the new controls. These are informational labels, not buttons: do not add hover/click behaviour or bulky button frames. Allow the chip row to wrap on phones; preserve the primary label and full specialization names. Avoid globally changing staff-title pills or achievement badges.
-
-Use explicit shared control classes rather than theming every `button` indiscriminately: inventory slots, banner controls, quiz answers and icon-only buttons have their own contracts. Audit other plain secondary action buttons for the same omission.
-
-## Acceptance checks for Claude
-
-- Sign in and inspect logout, profile tabs, Edit profile / Edit wardrobe / View as others, Change, Save and Cancel.
-- Normal, hover, pressed, disabled and keyboard focus must use consistent plate geometry; no old art flashing between states.
-- Centre labels optically; the artist note about the one-pixel low text position remains a small alignment follow-up, not fixed by this scrollbar delivery.
-- Check desktop and 390px width, long/translated labels, specialization wrapping and no overlap with the player-card frame.
-- Inspect the real browser scrollbar on a long page for repeated stripes, clean caps and hover contrast; retain native fallback when unsupported.
-
-The application CSS/components were **not changed** by the artist in this delivery. These are verified integration findings for Claude to fix. The screenshot source is `codex-clipboard-02763ef4-0742-4399-bf86-708731744448.png`. New scrollbar files pass logical-size, palette and alpha validation; the 12-row middle is byte-identical throughout each thumb.
-
-## Removed from the source pack
-
-`retired-assets.json` is the exact deletion ledger: 28 paths with SHA-256 hashes, seven retired groups, replacements, and backup location. Nine were canonical runtime PNGs; the rest were compatibility aliases, retired generated masters/prompts and obsolete theme preview files. Current manifest entries and gallery were updated.
-
-| Removed group | Replacement / action |
-|---|---|
-| divider-gem | divider-gem-v2 |
-| progress-track | progress-track-v2 |
-| progress-fill | progress-fill-strip |
-| section-header | Use divider-gem-v2; headings do not need both treatments |
-| section-header-v2 | Same; confirmed unplaced in artist notes |
-| tooltip-plate | Native browser tooltip; no replacement image |
-| scrollbar-parts | scrollbar/track, scrollbar/thumb, scrollbar/thumb-hover; see scrollbar contract above |
-
-The old `theme.css` and `theme-preview.html/png` were retired because they reference obsolete artwork. Use `refinement.css`, `refinement-preview.html` and the current manifest. Earlier screenshots and historical handoffs may show retired art; they are records, not the active asset contract.
-
-## Kept deliberately
-
-- Old `button-plates` and `tab-plates`: still referenced in `globals.css:637` and `668–673`. Fix logout/banner overrides and profile tabs as described above, then retire these groups in a second pass. Do not delete active dependencies first.
-- `navigation-16`: despite the note saying unused in the top bar, `HeroBanner.tsx:95` uses its settings icon through `<Ico group="navigation" id="settings" size={16}>`. Keep this set unless that use is migrated.
-- 480px arenas: retained as logical layout/source assets for the 4× exports.
-- Character art, customization, profile frames, banner seasons/animation and rarity art: outside this confirmed website-theme retirement list. Rarity art has pending integration, so it is not classified as waste.
-
-## Website cross-check and removal order
-
-1. Read `retired-assets.json` from the current source pack. Search both literal `/art/website-art/` URLs and dynamic `Ico`/`siteArt` lookups; scanning filenames alone misses generated paths.
-2. Confirm old IDs have no active consumers. Switch any remaining uses to the replacement IDs above. Resolve the controls above before retiring old button/tab families.
-3. Run the existing website art sync. Verify its merged `website_art.assets` and `images` no longer retain removed groups/frame IDs. Sync copying does not imply obsolete files were deleted.
-4. Remove only the exact retired runtime paths under `web/public/art/website-art/` listed in the ledger after verifying they have no consumers. Skip source/prompts/preview paths if they were never deployed. Do not broadly delete the public art directory or touch unrelated art.
-5. Check CSS URLs, dynamic icon URLs and the merged manifest for missing files. Review authenticated logout/profile tabs/Edit wardrobe/Change/Cancel, the progress bars, headings and scrollbar. Check hover/active/disabled/focus states and phone width.
-6. After migrating old button/tab consumers, add their paths and replacements to the ledger and remove them from both source and public output.
-
-The artist cleaned the source pack only. Public website copies and application code were left for Claude's requested cross-check. Recoverable copies are outside UCSourceArt at `C:/Users/killt/Documents/Codex/2026-09-29/please/outputs/retired-website-art-2026-09-30/`. No broad legacy/character asset deletion was performed.
-
-## Verification and coverage
-
-- Current pack: all 262 canonical PNGs pass dimension, palette, binary-alpha and sheet/frame checks.
-- Cleanup: all 28 ledger files absent from UCSourceArt; no active manifest files missing.
-- Sync tested on an isolated copy of the current main manifest: 264 files copied, legacy sections preserved, all runtime paths resolve, repeated sync is idempotent. See `qa.json` and `sync-validation.json`.
-- Previous assembled refinement preview checked on desktop and at 390px: no broken images or horizontal overflow.
-- Browser session available to the artist was logged out. The user's profile screenshot and source were inspected, but authenticated member/staff screens were not comprehensively verified live. Claude must perform that final signed-in review.
-- Optional artist follow-up from notes/12: improve contrast of the 16px members/hourglass icons. This was not included in the scrollbar delivery.
-
-Line numbers describe the inspected source and may shift. Find the named selector/component before editing. Report which controls were updated, which obsolete public files were removed, and any remaining active reference that prevented a deletion.
+Reports: `qa.json`, `css-leftovers-validation.json`, `sync-validation.json`. The preview is an art integration example, not evidence the live signed-in website has already been changed. Update code/CSS and perform that final visual check before marking the site complete.

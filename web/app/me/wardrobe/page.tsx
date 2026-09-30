@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import CharacterSheet, { type ArtProps, type Char } from "@/components/CharacterSheet";
 import MeNav from "@/components/MeNav";
-import { iconImage, loadManifest, presetSheets } from "@/lib/art";
+import { iconImage, loadManifest, presetSheets, rarityFrame } from "@/lib/art";
 import { api, type Me } from "@/lib/api";
 import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
@@ -23,6 +23,7 @@ export default async function Wardrobe() {
   const art: ArtProps = {
     sheets, bodies,
     icons: Object.fromEntries(ch.outfits.map((o) => [o.art_id, iconImage(manifest, o.art_id)]).filter(([, v]) => v) as [string, string][]),
+    rarity: Object.fromEntries(["common", "uncommon", "rare", "epic", "legendary"].map((r) => [r, rarityFrame(manifest, r)])),
   };
   return (
     <>

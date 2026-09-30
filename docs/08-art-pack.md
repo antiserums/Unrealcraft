@@ -119,6 +119,9 @@ an image hangs off that class, so without the pack the site looks as it did befo
 | `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*`, `scrollbar/*` | Inputs and selects, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars, the page scrollbar (12 px track row and a 9-slice thumb; Firefox gets plain colours) |
 | `icons/utility`, `rewards`, `navigation` | Buttons and links: Filter, Edit profile, View as others, Public/Private, external reading links, the language picker; reward lines in the fight result and on achievements; the sub-navigation tabs. `components/Ico.tsx` renders these by path, so client components can use them |
 
+| `interface/chips/*`, `tier-plates/*`, `panel-stone-plain`, `panel-stone-hover`, `avatar-ring/plain`, `card-frame/plain`, `swatch-ring`, `upload-plate`, `row-plate*`, `icons/ornaments/*` | Pills and chips (stone, muted tags, primary specialization, staff roles), the tier badge, every ordinary card (hover on quest cards), the default avatar ring and card border when nothing is worn, nameplate swatches, the chest's file picker, leaderboard rows, the small diamonds |
+| `ui/rarity/*.svg` | Rarity frames over the wardrobe tiles |
+
 Retired (removed from the pack and from `web/public/art`, listed in the pack's `retired-assets.json`): the first
 button plates and tab plates, the 16 px navigation icons, the old divider, progress track and fill, both section
 title plates, the tooltip plate and the first scrollbar parts. Not used yet: the leather and parchment panels and
