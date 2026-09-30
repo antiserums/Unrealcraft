@@ -34,6 +34,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
   const [youPose, setYouPose] = useState<"idle" | "strike" | "hurt" | "down" | "win">("idle");
   const [float, setFloat] = useState<{ text: string; side: "boss" | "you"; kind: string } | null>(null);
   const [last, setLast] = useState<Ev[]>([]);
+  const [picked, setPicked] = useState<{ i: number; ok: boolean } | null>(null);   // the answer just given, until the next turn shows
   const [k, setK] = useState(1);
   const asked = useRef<number>(Date.now());
   const started = useRef(false);
@@ -76,8 +77,9 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
       setFloat({ text: main.kind === "steady" ? "-½" : "-1", side: "you", kind: main.kind });
     }
     setLast(evs);
+    setPicked({ i: pos, ok: !!main && (main.kind === "hit" || main.kind === "crit") });
     setTimeout(() => {
-      setF(j); asked.current = Date.now(); setBusy(false); setFloat(null);
+      setF(j); asked.current = Date.now(); setBusy(false); setFloat(null); setPicked(null);
       if (j.result === "win") { setBossPose("dead"); setYouPose("win"); }
       else if (j.result === "lose") { setYouPose("down"); setBossPose("idle"); }
       else { setYouPose("idle"); setBossPose("idle"); }
@@ -156,7 +158,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
           <h2 style={{ marginTop: 8 }}>{q.q}</h2>
           <div className="choices">
             {q.choices.map((c, i) => (
-              <button key={i} onClick={() => answer(i)} disabled={busy} className="choice">
+              <button key={i} onClick={() => answer(i)} disabled={busy} className={`choice ${picked?.i === i ? (picked.ok ? "correct" : "incorrect") : ""}`}>
                 <span className="letter">{"ABCD"[i]}</span> {c}
               </button>
             ))}

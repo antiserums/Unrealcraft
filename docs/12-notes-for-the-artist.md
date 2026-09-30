@@ -1,5 +1,24 @@
 # Notes for the artist — website art, 30 September 2026
 
+## Update after the refinement delivery (`docs/14-theme-refinement-handoff.md`)
+
+Everything from the refinement is wired: tall buttons (with disabled and focus states), progress track v2 with the
+fill strip at 0 0 (health bars keep their own colours), divider v2 at native size, narrow headers below 600 px,
+the 4x arenas as the fight's large background, checkbox and radio art, answer plates in the quiz (normal, hover,
+and the picked answer turns correct or incorrect for the moment before the next turn), statistics icons on the home
+and admin dashboards, and the scrollbar paths moved to `interface/`.
+
+Still open:
+
+- **Navigation icons in the top bar.** Even at 16 px the four links plus the emblem do not fit on one line inside
+  the 1040 px bar, so the top bar still has no icons. `navigation-16` is unused; `utility-16` is used for the
+  language picker and reading links. No new art needed unless we redesign the bar.
+- **Section header plate v2** is synced but not placed. The section headings use the divider; the plate would
+  double up. Nothing to do.
+- **Rarity frames** (`ui/rarity/*.svg`) still draw as CSS colours on the wardrobe tiles. That is site work, not art.
+
+Original notes follow, kept for the record.
+
 Everything from both deliveries is synced and on the site (see `docs/08-art-pack.md` for where each piece shows).
 These are the pieces that do not quite work as delivered, with what would fix them. Nothing here is urgent; the
 site falls back to its own CSS wherever a piece is left out.

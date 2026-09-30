@@ -1,5 +1,9 @@
-/** A 32 px icon from the pack's utility, rewards or navigation groups, by a fixed path, so client components can use
- *  it without the manifest. `html:not(.site-art) .ico` hides it when the pack is missing. */
-export default function Ico({ group, id, className = "" }: { group: "utility" | "rewards" | "navigation" | "quest-state"; id: string; className?: string }) {
-  return <img className={`px pxi ico ${className}`} src={`/art/website-art/icons/${group}/${id}.png`} width={32} height={32} alt="" />;
+/** A pixel icon from the pack by a fixed path, so client components can use it without the manifest.
+ *  `size` 16 picks the sets drawn on a 16 px grid (navigation-16, utility-16, statistics, selection-controls); 32 the
+ *  larger sets. `html:not(.site-art) .ico` hides it when the pack is missing. */
+type Group = "utility" | "rewards" | "navigation" | "quest-state" | "quest-steps" | "banner-controls" | "combat-status" | "statistics";
+
+export default function Ico({ group, id, size = 32, className = "" }: { group: Group; id: string; size?: 16 | 32; className?: string }) {
+  const dir = size === 16 && (group === "utility" || group === "navigation") ? `${group}-16` : group;
+  return <img className={`px pxi ico ico-${size} ${className}`} src={`/art/website-art/icons/${dir}/${id}.png`} width={size} height={size} alt="" />;
 }

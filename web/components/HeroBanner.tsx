@@ -2,6 +2,7 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { LivingTownArt } from "@/lib/art";
 import { useT } from "./I18n";
+import Ico from "./Ico";
 
 /** The artist's canvas component (art/banners/living-town/living-town.js), loaded as a browser module. */
 type LivingTown = {
@@ -91,8 +92,8 @@ export default function HeroBanner({ animated, still, living, children, icons = 
               </div>
             </div>
           )}
-          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={t("Season and time of day")}>⚙</button>}
-          <button type="button" className="banner-btn" onClick={togglePause} aria-pressed={paused} title={paused ? t("Play the banner") : t("Pause the banner")}>{paused ? "▶" : "❚❚"}</button>
+          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={t("Season and time of day")}>{icons.still ? <Ico group="navigation" id="settings" size={16} /> : "⚙"}</button>}
+          <button type="button" className="banner-btn" onClick={togglePause} aria-pressed={paused} title={paused ? t("Play the banner") : t("Pause the banner")}>{icons.play && icons.pause ? <img className="px pxi" src={paused ? icons.play : icons.pause} width={32} height={32} alt="" /> : paused ? "▶" : "❚❚"}</button>
         </div>
       )}
       {children}

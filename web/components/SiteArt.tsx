@@ -6,10 +6,12 @@ import { loadManifest, siteArt } from "@/lib/art";
 
 /** A page title on its 960 x 160 header strip. The strip's centre is kept dark for the words. */
 export async function PageHeader({ art, title, eyebrow }: { art: string; title: ReactNode; eyebrow?: ReactNode }) {
-  const src = siteArt(await loadManifest(), art);
+  const m = await loadManifest();
+  const src = siteArt(m, art);
   if (!src) return <>{eyebrow && <div className="eyebrow">{eyebrow}</div>}<h1>{title}</h1></>;
+  const narrow = siteArt(m, `${art}-narrow`) ?? src;           // a 480 x 160 centre crop for phones
   return (
-    <header className="page-header" style={{ backgroundImage: `url("${src}")` }}>
+    <header className="page-header" style={{ "--hdr": `url("${src}")`, "--hdr-narrow": `url("${narrow}")` } as React.CSSProperties}>
       {eyebrow && <div className="eyebrow">{eyebrow}</div>}
       <h1>{title}</h1>
     </header>

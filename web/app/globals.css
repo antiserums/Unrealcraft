@@ -580,11 +580,12 @@ html.site-art body::before { opacity: .25; }
 /* page header strips: 960 x 160, title in the quiet centre */
 .page-header {
   max-width: 960px; height: clamp(104px, 16vw, 160px); margin: 0 auto 16px; display: grid; place-content: center; text-align: center; gap: 2px;
-  background: #0a0c12 center / cover no-repeat; image-rendering: pixelated;
+  background: #0a0c12 var(--hdr) center / cover no-repeat; image-rendering: pixelated;
   border: 1px solid var(--gold-dim); box-shadow: 0 0 0 1px #000, 0 10px 30px rgba(0, 0, 0, .55);
 }
 .page-header h1 { margin: 0; padding: 0; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px #000); }
 .page-header .eyebrow { text-shadow: 0 1px 0 #000, 0 0 10px #000; }
+@media (max-width: 600px) { .page-header { background-image: var(--hdr-narrow); height: 160px; background-size: auto 160px; } }
 
 /* spot illustrations */
 .spot { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
@@ -606,8 +607,8 @@ html.site-art body::before { opacity: .25; }
 .tier.has-mark img { margin: -4px 0; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .8)); }
 
 /* section rule: the gem divider */
-html.site-art .section-h { padding-bottom: 14px; }
-html.site-art .section-h::after { height: 16px; bottom: -4px; right: auto; width: min(100%, 512px); background: url("/art/website-art/interface/divider-gem.png") left center / 512px 32px no-repeat; image-rendering: pixelated; }
+html.site-art .section-h { padding-bottom: 20px; }
+html.site-art .section-h::after { left: 0; right: auto; bottom: 0; width: 256px; max-width: 100%; height: 16px; background: url("/art/website-art/interface/divider-gem-v2.png") left center / 256px 16px no-repeat; image-rendering: pixelated; }
 html.site-art .section-h::before { content: none; }
 
 /* framed panels: a 9-slice (20 px corners, centre left to the panel's own fill) */
@@ -619,22 +620,24 @@ html.site-art :is(.step, .spot, .result) {
 html.site-art :is(.step, .spot, .result) > * { image-rendering: auto; }
 html.site-art :is(.step, .spot, .result) .px { image-rendering: pixelated; }
 
-/* buttons: plate art, 96 x 32 with 4 px of clear space around it. The ends (18 px) and trims (10 px) keep their
-   size and the middle stretches; the image is painted over the button's own box, so sizes stay as they were. */
+/* buttons: the tall plates, 96 x 48 with 4 px of clear space around them. Ends 14 px and trims 12 px keep their size,
+   the middle stretches; the image is painted over the button's own box. Compact 96 x 32 plates for the top bar. */
 html.site-art :is(.btn, button.primary, .nav form button) {
-  border: 0; border-image: url("/art/website-art/interface/buttons/stone-normal.png") 10 18 fill / 10px 18px stretch;
-  background: none; box-shadow: none; border-radius: 0; padding: 9px 22px; color: var(--ink); text-shadow: 0 1px 0 #000; image-rendering: pixelated;
+  border: 0; border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 12 14 fill / 12px 14px stretch;
+  background: none; box-shadow: none; border-radius: 0; padding: 12px 22px; color: var(--ink); text-shadow: 0 1px 0 #000; image-rendering: pixelated;
 }
-html.site-art :is(.btn, button.primary, .nav form button):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/stone-hover.png"); filter: none; color: #fff; }
-html.site-art :is(.btn, button.primary, .nav form button):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/stone-pressed.png"); }
-html.site-art :is(.btn.primary, button.primary) { border-image-source: url("/art/website-art/interface/buttons/gold-normal.png"); color: var(--gold-2); }
-html.site-art :is(.btn.primary, button.primary):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/gold-hover.png"); color: #fff2c8; }
-html.site-art :is(.btn.primary, button.primary):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/gold-pressed.png"); }
-html.site-art .nav form button { padding: 8px 20px; }
+html.site-art :is(.btn, button.primary, .nav form button):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/stone-hover.png"); filter: none; color: #fff; }
+html.site-art :is(.btn, button.primary, .nav form button):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/stone-pressed.png"); transform: none; }
+html.site-art :is(.btn, button.primary, .nav form button):disabled { border-image-source: url("/art/website-art/interface/buttons-tall/stone-disabled.png"); opacity: .8; }
+html.site-art :is(.btn.primary, button.primary) { border-image-source: url("/art/website-art/interface/buttons-tall/gold-normal.png"); color: var(--gold-2); }
+html.site-art :is(.btn.primary, button.primary):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/gold-hover.png"); color: #fff2c8; }
+html.site-art :is(.btn.primary, button.primary):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/gold-pressed.png"); }
+html.site-art :is(.btn.primary, button.primary):disabled { border-image-source: url("/art/website-art/interface/buttons-tall/gold-disabled.png"); }
+html.site-art :is(.btn, button):focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
+html.site-art .nav form button, html.site-art .banner-btn { border-image: url("/art/website-art/interface/buttons/stone-normal.png") 10 18 fill / 10px 18px stretch; padding: 8px 20px; }
+html.site-art .banner-btn { padding: 6px 12px; opacity: .8; }
+html.site-art .banner-btn .pxi { margin: -8px -4px; }
 .arena-box { max-width: 960px; margin-inline: auto; }
-html.site-art .nav-in { column-gap: 14px; }
-html.site-art .nav-links { flex-wrap: nowrap; gap: 11px; }
-@media (max-width: 900px) { html.site-art .nav-links { flex-wrap: wrap; } }
 /* small icons next to words */
 .h-ico { margin: -8px 4px -8px 0; }
 .pill-ico { margin: -10px 2px -10px 0; }
@@ -692,15 +695,49 @@ html.site-art .tile-mark { display: none; }
 
 html.site-art .bar {
   border: 0; border-radius: 0; background: none; box-shadow: none; padding: 5px; height: 16px; box-sizing: border-box;
-  border-image: url("/art/website-art/interface/progress-track.png") 5 fill / 5px repeat; image-rendering: pixelated;
+  border-image: url("/art/website-art/interface/progress-track-v2.png") 5 fill / 5px repeat; image-rendering: pixelated;
 }
-html.site-art .bar.big { height: 24px; padding: 7px; }
 html.site-art .bar::after { content: none; }
-html.site-art .bar > span { background: url("/art/website-art/interface/progress-fill.png") 0 5px / 128px 16px repeat-x !important; box-shadow: none; border-radius: 0; }
-html.site-art .bar.big > span { background-size: 192px 24px !important; background-position: 0 7px !important; }
+html.site-art .bar > span { box-shadow: none; border-radius: 0; }
+/* XP and achievement bars take the gold strip (1 x 6, repeated); the fight's health bars keep their green and red */
+html.site-art .bar:not(.big) > span { background: url("/art/website-art/interface/progress-fill-strip.png") 0 0 / 1px 6px repeat-x !important; }
+html.site-art .bar.big { height: 24px; padding: 7px 5px; }
 
+/* checkboxes and radios: the real input stays; the picture is decoration */
+html.site-art input[type="checkbox"], html.site-art input[type="radio"] {
+  appearance: none; -webkit-appearance: none; width: 16px; height: 16px; margin: 0 4px 0 0; vertical-align: -3px; cursor: pointer;
+  background: url("/art/website-art/icons/selection-controls/checkbox-off.png") center / 16px 16px no-repeat; image-rendering: pixelated;
+}
+html.site-art input[type="checkbox"]:checked { background-image: url("/art/website-art/icons/selection-controls/checkbox-on.png"); }
+html.site-art input[type="checkbox"]:indeterminate { background-image: url("/art/website-art/icons/selection-controls/checkbox-mixed.png"); }
+html.site-art input[type="checkbox"]:disabled { background-image: url("/art/website-art/icons/selection-controls/checkbox-disabled.png"); cursor: default; }
+html.site-art input[type="radio"] { background-image: url("/art/website-art/icons/selection-controls/radio-off.png"); }
+html.site-art input[type="radio"]:checked { background-image: url("/art/website-art/icons/selection-controls/radio-on.png"); }
+html.site-art input[type="radio"]:focus-visible { background-image: url("/art/website-art/icons/selection-controls/radio-focus.png"); outline: none; }
+html.site-art input[type="radio"]:disabled { background-image: url("/art/website-art/icons/selection-controls/radio-disabled.png"); cursor: default; }
+html.site-art input[type="checkbox"]:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
+
+/* quiz answers on the answer plates */
+html.site-art .choice {
+  border: 0; border-image: url("/art/website-art/interface/answer-plates/normal.png") 12 14 fill / 12px 14px stretch; background: none; box-shadow: none; border-radius: 0;
+  padding: 14px 22px; min-height: 48px; image-rendering: pixelated;
+}
+html.site-art .choice:hover:not(:disabled), html.site-art .choice:focus-visible { border-image-source: url("/art/website-art/interface/answer-plates/selected.png"); box-shadow: none; }
+html.site-art .choice.correct { border-image-source: url("/art/website-art/interface/answer-plates/correct.png"); }
+html.site-art .choice.incorrect { border-image-source: url("/art/website-art/interface/answer-plates/incorrect.png"); }
+html.site-art .choice > * { image-rendering: auto; }
+
+html.site-art .tile-lock { display: none; }          /* the locked slot art says it */
+.ico-16 { margin: -4px 4px -4px 0; }
+.stat-ico { position: absolute; right: 12px; top: 12px; margin: 0; opacity: .9; }
+html.site-art .lang-picker .ico-16 { margin: -4px 0; }
 
 /* scrollbars, where the browser allows */
 html.site-art ::-webkit-scrollbar { width: 12px; height: 12px; }
-html.site-art ::-webkit-scrollbar-track { background: #0a0c12 url("/art/website-art/icons/scrollbar-parts/track.png") center / 8px 32px repeat-y; }
-html.site-art ::-webkit-scrollbar-thumb { background: #0a0c12 url("/art/website-art/icons/scrollbar-parts/thumb.png") center / 8px 32px repeat-y; border: 2px solid #0a0c12; }
+html.site-art ::-webkit-scrollbar-track { background: #0a0c12 url("/art/website-art/interface/scrollbar-parts/track.png") center / 8px 32px repeat-y; }
+html.site-art ::-webkit-scrollbar-thumb { background: #0a0c12 url("/art/website-art/interface/scrollbar-parts/thumb.png") center / 8px 32px repeat-y; border: 2px solid #0a0c12; }
+/* the top bar holds the emblem and four links on one line */
+html.site-art .nav-in { column-gap: 14px; }
+html.site-art .nav-links { flex-wrap: nowrap; gap: 11px; }
+html.site-art .nav a.link { letter-spacing: .03em; font-size: 11px; }
+@media (max-width: 900px) { html.site-art .nav-links { flex-wrap: wrap; } }

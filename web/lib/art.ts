@@ -78,7 +78,7 @@ export function arenaBackground(m: Manifest | null, questId?: string): { small: 
   if (!m) return null;
   const rooms = [
     ...Object.values(m.environments).map((e) => ({ small: art(e.path), large: e.large ? art(e.large) : null, groundY: e.groundY })),
-    ...Object.values(m.website_art?.arenas ?? {}).map((e) => ({ small: art(e.path), large: null, groundY: e.groundY })),
+    ...Object.entries(m.website_art?.arenas ?? {}).map(([id, e]) => ({ small: art(e.path), large: siteArt(m, `${id}-4x`), groundY: e.groundY })),
   ];
   if (!rooms.length) return null;
   if (!questId) return rooms[0];

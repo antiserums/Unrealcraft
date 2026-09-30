@@ -1,5 +1,6 @@
 import Link from "next/link";
 import HowItWorks from "@/components/HowItWorks";
+import Ico from "@/components/Ico";
 import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
@@ -91,25 +92,25 @@ export default async function Home() {
               <div className="bar" style={{ marginTop: 8 }}><span style={{ width: `${pct}%`, background: me.rank_color }} /></div>
             </div>
             <div className="stats-grid">
-              <Stat n={me.done_count} label={t("quests done")} />
-              <Stat n={me.streak_days} label={t("day streak")} />
-              <Stat n={stats.me.xp_week} label={t("XP this week")} />
-              <Stat n={`${stats.me.fights_won}/${stats.me.fights}`} label={t("bosses beaten")} />
-              <Stat n={stats.me.bosses_first_try} label={t("beaten first try")} />
-              <Stat n={stats.me.crit_xp} label={t("XP from crits")} />
-              <Stat n={stats.me.reads} label={t("guides opened")} />
-              <Stat n={`${stats.me.turnins_passed}/${stats.me.turnins}`} label={stats.me.turnins_pending ? t("work accepted · {n} waiting", { n: stats.me.turnins_pending }) : t("work accepted")} />
+              <Stat icon="quests" n={me.done_count} label={t("quests done")} />
+              <Stat icon="streak" n={me.streak_days} label={t("day streak")} />
+              <Stat icon="xp" n={stats.me.xp_week} label={t("XP this week")} />
+              <Stat icon="fights" n={`${stats.me.fights_won}/${stats.me.fights}`} label={t("bosses beaten")} />
+              <Stat icon="flawless" n={stats.me.bosses_first_try} label={t("beaten first try")} />
+              <Stat icon="critical" n={stats.me.crit_xp} label={t("XP from crits")} />
+              <Stat icon="reading" n={stats.me.reads} label={t("guides opened")} />
+              <Stat icon={stats.me.turnins_pending ? "pending" : "accepted"} n={`${stats.me.turnins_passed}/${stats.me.turnins}`} label={stats.me.turnins_pending ? t("work accepted · {n} waiting", { n: stats.me.turnins_pending }) : t("work accepted")} />
             </div>
           </section>
           <section>
             <div className="section-h"><h2>{t("Player statistics")}</h2><span className="muted small">{t("everyone, this week")}</span><Link href="/leaderboard" className="small" style={{ marginLeft: "auto" }}>{t("Leaderboard →")}</Link></div>
             <div className="stats-grid">
-              <Stat n={stats.guild.members} label={t("players")} />
-              <Stat n={stats.guild.quests_done_week} label={t("dungeons cleared this week")} />
-              <Stat n={stats.guild.fights_week} label={t("boss fights fought")} />
-              <Stat n={stats.guild.xp_week} label={t("XP earned by players")} />
-              <Stat n={stats.guild.quests_done} label={t("dungeons cleared all time")} />
-              <Stat n={stats.guild.masters} label={t("players at Master or above")} />
+              <Stat icon="members" n={stats.guild.members} label={t("players")} />
+              <Stat icon="quests" n={stats.guild.quests_done_week} label={t("dungeons cleared this week")} />
+              <Stat icon="fights" n={stats.guild.fights_week} label={t("boss fights fought")} />
+              <Stat icon="xp" n={stats.guild.xp_week} label={t("XP earned by players")} />
+              <Stat icon="all-time" n={stats.guild.quests_done} label={t("dungeons cleared all time")} />
+              <Stat icon="masters" n={stats.guild.masters} label={t("players at Master or above")} />
             </div>
           </section>
         </>
@@ -135,6 +136,6 @@ export default async function Home() {
   );
 }
 
-function Stat({ n, label }: { n: number | string; label: string }) {
-  return <div className="card stat"><b>{n}</b><span className="muted small">{label}</span></div>;
+function Stat({ n, label, icon }: { n: number | string; label: string; icon?: string }) {
+  return <div className="card stat">{icon && <Ico group="statistics" id={icon} size={16} className="stat-ico" />}<b>{n}</b><span className="muted small">{label}</span></div>;
 }

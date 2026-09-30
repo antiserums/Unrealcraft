@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { rich } from "@/lib/i18n-config";
 import { useT } from "./I18n";
+import Ico from "./Ico";
 
 type Result = { status: "accepted" | "pending" | "practice"; message: string; xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string } | null; route?: string };
 type Prev = { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> };
@@ -34,7 +35,7 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5, 
     return (
       <div className="chest open">
         {res.status === "pending" && pendingArt && <img className="px result-art" src={pendingArt} width={160} height={120} alt="" />}
-        <h3 style={{ marginTop: 0 }}>{res.status === "accepted" ? `🎁 ${t("Chest opened")}` : res.status === "pending" ? `📥 ${t("Sent to the reviewers")}` : `✅ ${t("Practice done")}`}</h3>
+        <h3 style={{ marginTop: 0 }}>{res.status === "accepted" ? <><Ico group="quest-steps" id="turn-in" className="h-ico" />{t("Chest opened")}</> : res.status === "pending" ? <><Ico group="quest-state" id="pending" className="h-ico" />{t("Sent to the reviewers")}</> : <><Ico group="quest-state" id="done" className="h-ico" />{t("Practice done")}</>}</h3>
         <p>{res.message}</p>
         {res.loot && <p>{rich(t("New outfit: {name} {flavour}"), { name: <b style={{ color: res.loot.color }}>{res.loot.name}</b>, flavour: <i>{res.loot.flavour}</i> })}</p>}
         <div className="row">

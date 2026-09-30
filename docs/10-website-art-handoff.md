@@ -1,3 +1,7 @@
+# Latest refinement delivery — 2026-09-30
+
+Read [14-theme-refinement-handoff.md](14-theme-refinement-handoff.md) first. It answers docs/12-notes-for-the-artist.md and supersedes older counts and styling recommendations below.
+
 # Claude handoff: Unrealcraft website art
 
 ## Scope and current contract
@@ -145,3 +149,4 @@ index fallback for dynamic rank medals and custom admin achievements.
 Staff crests are separate from the earned rank ladder. Map developer/admin/mentor
 from the API role; Senior and Lead are reserved guild labels, not automatic
 privilege grants. Do not alter entitlement IDs or staff permissions.
+

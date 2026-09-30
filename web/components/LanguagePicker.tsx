@@ -15,7 +15,7 @@ export default function LanguagePicker() {
   }
   return (
     <label className="lang-picker">
-      <span aria-hidden="true" className="lang-glyph">🌐</span><Ico group="utility" id="language" />
+      <span aria-hidden="true" className="lang-glyph">🌐</span><Ico group="utility" id="language" size={16} />
       <span className="sr-only">{t("Language")}</span>
       <select value={locale} onChange={(e) => pick(e.target.value)} aria-label={t("Language")}>
         {LOCALES.map((l) => <option key={l.code} value={l.code}>{l.name}</option>)}

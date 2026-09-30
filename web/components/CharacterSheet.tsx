@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { SheetSpec } from "@/lib/art";
 import { Character, RARITY_COLOR } from "./Figure";
 import { useT } from "./I18n";
+import Ico from "./Ico";
 
 export type Outfit = { id: string; name: string; flavour: string; kind: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
@@ -78,7 +79,7 @@ export default function CharacterSheet({ initial, fallbackColor, art, mirror = t
           {selected.earned_at && <span className="small muted">{t("earned {date}", { date: selected.earned_at.slice(0, 10) })}</span>}
         </div>
       ) : (
-        <div className="note small">🔒 {selected.hint ? t(selected.hint) : t("Not yet earned.")}</div>
+        <div className="note small" data-tone="warning"><Ico group="quest-state" id="locked" className="pill-ico" />{selected.hint ? t(selected.hint) : t("Not yet earned.")}</div>
       )}
     </div>
   );

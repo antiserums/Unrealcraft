@@ -1,3 +1,4 @@
+import Ico from "@/components/Ico";
 import { PageHeader } from "@/components/SiteArt";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -14,6 +15,7 @@ type Overview = {
 };
 type MemberRow = { discord_id: number | string; name: string | null; avatar: string | null; specialization: string; rank: number; xp: number; done: number; streak_days: number; created_at: string };
 
+const ICON: Record<string, string> = { members: "members", members_logged_in: "members", quests_done: "quests", pending_reviews: "pending", fights_today: "fights", fights_total: "all-time", xp_total: "xp", quests_in_catalog: "reading" };
 const LABEL: Record<string, string> = { members: "members", members_logged_in: "logged in on the site", quests_done: "quests done", pending_reviews: "pending reviews", fights_today: "fights today", fights_total: "fights ever", events_undelivered: "events waiting for the bot", xp_total: "XP awarded", quests_in_catalog: "quests in catalog" };
 
 export default async function Admin({ searchParams }: PageProps<"/admin">) {
@@ -30,7 +32,7 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
       <p className="muted small">Database: <code>{o.db_path}</code> · curriculum: <code>{o.curriculum_dir}</code> · admins: {o.admin_ids.length ? o.admin_ids.join(", ") : "none"} · developers: {o.developer_ids.length ? o.developer_ids.join(", ") : "none"} · mentors by id: {o.mentor_ids.length ? o.mentor_ids.join(", ") : "none (Discord mentor role still counts)"}</p>
 
       <div className="stats-grid">
-        {Object.entries(o.stats).map(([k, v]) => <div key={k} className="card stat"><b>{v}</b><span className="muted small">{LABEL[k] ?? k}</span></div>)}
+        {Object.entries(o.stats).map(([k, v]) => <div key={k} className="card stat">{ICON[k] && <Ico group="statistics" id={ICON[k]} size={16} className="stat-ico" />}<b>{v}</b><span className="muted small">{LABEL[k] ?? k}</span></div>)}
       </div>
 
       <div className="section-h"><h2>Members</h2><span className="muted small">search by Discord id or display name</span></div>
