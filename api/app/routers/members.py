@@ -1,21 +1,25 @@
-"""Other members' profiles (members only) and the leaderboard."""
+"""Other members' player cards (members only, unless the owner made theirs public) and the leaderboard."""
 from __future__ import annotations
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 
-from ..session import current_member
-from .me import nameplate, profile_payload, rank_color
+from ..session import current_member, current_member_or_none
+from .me import nameplate, rank_color
+from .rpg import card_payload
 
 router = APIRouter(tags=["members"])
 
 
 @router.get("/members/{uid}")
-async def member_profile(uid: int, request: Request, _=Depends(current_member)):
-    db, cat = request.app.state.db, request.app.state.catalog
+async def member_card(uid: int, request: Request, viewer=Depends(current_member_or_none)):
+    db = request.app.state.db
     if await db.user(uid) is None:
         raise HTTPException(404, "No such member.")
-    u, state, _ = await db.user_state(uid)
-    return profile_payload(cat, None, u, state, await db.medals(uid))
+    card = await card_payload(request, uid, viewer)
+    if viewer is None and not card["public"]:
+        raise HTTPException(401, "Log in with Discord first.")
+    card["mine"] = bool(viewer and viewer["id"] == uid)
+    return card
 
 
 @router.get("/leaderboard")

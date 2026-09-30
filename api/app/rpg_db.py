@@ -187,3 +187,13 @@ class RpgDB:
     async def emit(self, type_: str, uid: int, payload: dict) -> None:
         await self.conn.execute("INSERT INTO events(type, member_id, payload) VALUES (?,?,?)", (type_, uid, json.dumps(payload)))
         await self.conn.commit()
+
+    # ---------- small per-member values (the bot's kv table) ----------
+    async def kv_set(self, uid: int, k: str, v: str) -> None:
+        await self.conn.execute("INSERT OR REPLACE INTO kv(user_id, k, v) VALUES (?,?,?)", (uid, k, v))
+        await self.conn.commit()
+
+    async def kv_get(self, uid: int, k: str) -> str | None:
+        cur = await self.conn.execute("SELECT v FROM kv WHERE user_id=? AND k=?", (uid, k))
+        row = await cur.fetchone()
+        return row["v"] if row else None

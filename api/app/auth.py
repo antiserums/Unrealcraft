@@ -63,6 +63,11 @@ async def callback(request: Request, code: str | None = None, state: str | None 
     resp = RedirectResponse(f"{settings.web_origin}{dest}", status_code=302)
     set_session(resp, data)
     resp.delete_cookie(STATE_COOKIE, path="/")
+    # Remember the display name and avatar so other members' player cards can show them.
+    rdb = request.app.state.rpg
+    await rdb.ensure_character(data["id"])
+    await rdb.kv_set(data["id"], "web.name", data["name"])
+    await rdb.kv_set(data["id"], "web.avatar", data["avatar"])
     return resp
 
 
@@ -82,4 +87,6 @@ async def dev_login(request: Request):
         raise HTTPException(404, "Not found.")
     resp = RedirectResponse(f"{settings.web_origin}/", status_code=302)
     set_session(resp, {"id": int(uid), "name": "Dev Tester", "username": "dev", "avatar": None, "roles": []})
+    await request.app.state.rpg.ensure_character(int(uid))
+    await request.app.state.rpg.kv_set(int(uid), "web.name", "Dev Tester")
     return resp

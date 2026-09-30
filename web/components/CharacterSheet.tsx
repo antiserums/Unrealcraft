@@ -5,7 +5,7 @@ import { Character, ItemIcon } from "./Figure";
 
 export type Outfit = { id: string; name: string; flavour: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
-  stats: Record<string, number>; stat_blurb: Record<string, string>; worn: Outfit; outfits: Outfit[]; new_outfits: string[];
+  worn: Outfit; outfits: Outfit[]; new_outfits: string[];
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string };
   nameplate_colors: string[]; slots: string[]; major: string;
 };
@@ -31,7 +31,7 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
   const appearanceKeys = Object.keys(art.appearance ?? {});
 
   return (
-    <div className="two">
+    <div>
       <div>
         <div className="card" style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
           <Character outfit={c.worn.id} layers={art.layers} color={color} size={170} />
@@ -39,16 +39,9 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
             <div className="eyebrow">Wearing</div>
             <div style={{ margin: "4px 0 2px" }}><b style={{ color: c.worn.color, fontSize: 16 }}>{c.worn.name}</b></div>
             <div className="small muted"><i>{c.worn.flavour}</i></div>
-            <div className="eyebrow" style={{ marginTop: 12 }}>Nameplate color</div>
-            <div className="row" style={{ gap: 6, marginTop: 6 }}>
-              {c.nameplate_colors.map((col) => (
-                <button key={col} onClick={() => patch({ nameplate: col })} disabled={busy} aria-label={col}
-                  style={{ width: 26, height: 26, padding: 0, borderRadius: "50%", background: col, borderColor: color === col ? "#fff" : "transparent", boxShadow: color === col ? `0 0 0 2px ${col}` : "none" }} />
-              ))}
-            </div>
             {appearanceKeys.length > 0 ? (
               <>
-                <div className="eyebrow" style={{ marginTop: 10 }}>Appearance</div>
+                <div className="eyebrow" style={{ marginTop: 12 }}>Appearance</div>
                 <div className="row" style={{ gap: 8, marginTop: 6 }}>
                   {appearanceKeys.map((k) => (
                     <label key={k} className="small" style={{ display: "flex", flexDirection: "column", gap: 2 }}>
@@ -104,18 +97,6 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
           </>
         )}
       </div>
-      <aside>
-        <div className="card">
-          <div className="eyebrow">Stats</div>
-          {Object.entries(c.stats).map(([k, v]) => (
-            <div key={k} style={{ padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
-              <div className="row" style={{ justifyContent: "space-between" }}><b style={{ textTransform: "capitalize" }}>{k}</b><b>{v}</b></div>
-              <div className="small muted">{c.stat_blurb[k]}</div>
-            </div>
-          ))}
-          <div className="small muted" style={{ marginTop: 8 }}>Stats grow from what you do. They change how fights look and how much bonus XP crits give, never whether you pass.</div>
-        </div>
-      </aside>
     </div>
   );
 }

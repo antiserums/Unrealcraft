@@ -1,24 +1,27 @@
-import { notFound, redirect } from "next/navigation";
-import { api, type Me } from "@/lib/api";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import PlayerCard from "@/components/PlayerCard";
+import { characterLayers, loadManifest } from "@/lib/art";
+import { api, type Card } from "@/lib/api";
 
 export default async function Member({ params }: PageProps<"/members/[id]">) {
   const { id } = await params;
-  const me = await api<Me>("/me");
-  if (!me) redirect(`/api/auth/discord?next=/members/${id}`);
-  const m = await api<Me>(`/members/${id}`);
-  if (!m) notFound();
+  const [c, manifest] = await Promise.all([api<Card>(`/members/${id}`), loadManifest()]);
+  if (!c) notFound();      // unknown member, or a private card seen while logged out
+  const layers = characterLayers(manifest, c.cosmetics.appearance?.body ?? "body-a", [c.worn.art_id]);
   return (
     <>
-      <div className="eyebrow">Member</div>
-      <h1><span style={{ color: m.rank_color }}>{m.rank_title}</span> · {m.major_title}</h1>
-      <div className="card">
-        <div className="row" style={{ gap: 24 }}>
-          <div className="stat"><b>{m.xp}</b><span className="muted small">XP</span></div>
-          <div className="stat"><b>{m.done_count}</b><span className="muted small">quests done</span></div>
-          <div className="stat"><b>{m.streak_days}</b><span className="muted small">day streak</span></div>
-          <div className="stat"><b>{m.medals.length}</b><span className="muted small">medals</span></div>
+      <div className="eyebrow">Player card</div>
+      <h1>{c.name ?? "A guild member"}</h1>
+      <div className="two">
+        <PlayerCard c={c} layers={layers} />
+        <div>
+          {c.mine ? (
+            <div className="card"><p className="small muted" style={{ margin: 0 }}>This is how others see your card.</p><Link className="btn" href="/me" style={{ marginTop: 10 }}>Edit it</Link></div>
+          ) : (
+            <div className="card"><p className="small muted" style={{ margin: 0 }}>{c.public ? "This member shares their card with anyone who has the link." : "Only guild members can see this card."}</p></div>
+          )}
         </div>
-        <p className="muted small" style={{ margin: "10px 0 0" }}>Display names and avatars show once members have logged in here.</p>
       </div>
     </>
   );

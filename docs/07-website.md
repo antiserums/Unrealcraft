@@ -39,9 +39,12 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   little bonus XP (25/day cap). Bosses are generated from quest data (`api/app/rpg.py`). Winning writes the same rows
   the Discord quiz wrote (quiz_attempts, quest_progress, xp_log, kv fact) and an `events` row that the bot's `sync`
   cog picks up every 20 s to run promotion checks and orientation steps.
-- **RPG phase B (done):** character sheet on `/me`: five computed stats and a wardrobe. Gear is cosmetic only:
-  whole outfit sets unlocked by quests (capstones), ranks and achievements, worn one at a time and switchable.
-  No stats from gear; nothing but the answers decides a fight.
+- **RPG phase B (done):** profile split in three. `/me` is a shareable player card (motto, nameplate colour,
+  up to three featured achievements, public toggle; `/members/{id}` shows the same card, without login when
+  public). `/me/wardrobe` is the look and the outfits. `/me/achievements` lists every achievement with progress
+  (`GET /me/achievements`, defined in `api/app/rpg.py` `ACHIEVEMENTS`). Stats are no longer shown anywhere;
+  the fight still uses the hidden values for crit chance and damage. Outfits are cosmetic only: whole sets
+  unlocked by capstones, ranks and achievements, worn one at a time and switchable.
 - **Phase 2 (done):** the chest. `POST /me/quests/{id}/submit` (multipart: text, ue_version, up to 4 images) with the
   bot's routing rules (auto/honor accept at once and complete the quest; peer/mentor/human wait for a review). The chest
   only shows once the boss is beaten. Images live in `api/data/uploads/<member>/` and are served to logged-in members
@@ -61,7 +64,7 @@ GET  /catalog/majors          GET /catalog/quests?major=&tier=&subject=&q=     G
 GET  /catalog/subjects        GET /changelog
 GET  /me                      GET /me/next                    GET /me/path
 GET  /members/{id}            GET /leaderboard?period=week|month|all
-GET  /me/character            PATCH /me/character {wear, nameplate, appearance}       POST /me/quests/{id}/read
+GET  /me/character            PATCH /me/character {wear, nameplate, banner (motto), featured, public, appearance}; GET /me/card; GET /me/achievements       POST /me/quests/{id}/read
 POST /me/quests/{id}/fight    GET /fights/{id}   POST /fights/{id}/turn {answer, seconds}   POST /fights/{id}/retreat
 GET  /catalog/quests/{id}/boss
 POST /me/quests/{id}/submit   multipart text, ue_version, files[]     GET /uploads/{member}/{file}

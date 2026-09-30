@@ -253,3 +253,44 @@ def crit_chance(focus: int, seconds: float | None) -> int:
     if seconds is not None and seconds <= SPEED_BONUS_SECONDS:
         speed = round(15 * (1 - seconds / SPEED_BONUS_SECONDS))
     return min(40, 5 + focus + speed)
+
+
+# ------------------------------------------------------------------ achievements
+# Facts we already store decide these; nothing is written when one is earned except the medals the bot grants.
+# Keys reused by the outfit unlocks above (first_blood, focus_10, streak_30, lore_50) must keep their thresholds.
+ACHIEVEMENTS = [
+    {"key": "first_blood", "name": "First Blood", "desc": "Finish your first quest in the engine.", "icon": "⚔️", "need": 1, "of": "medal", "outfit": "first_blood"},
+    {"key": "rooms_10", "name": "Ten Rooms Cleared", "desc": "Finish ten quests.", "icon": "🚪", "need": 10, "of": "done"},
+    {"key": "rooms_50", "name": "Fifty Rooms Cleared", "desc": "Finish fifty quests.", "icon": "🏰", "need": 50, "of": "done"},
+    {"key": "rooms_150", "name": "Dungeon Delver", "desc": "Finish one hundred and fifty quests.", "icon": "🗝️", "need": 150, "of": "done"},
+    {"key": "focus_10", "name": "Flawless", "desc": "Beat ten bosses on the first try.", "icon": "🎯", "need": 10, "of": "first", "outfit": "flawless_10"},
+    {"key": "focus_50", "name": "Unerring", "desc": "Beat fifty bosses on the first try.", "icon": "💎", "need": 50, "of": "first"},
+    {"key": "craft_1", "name": "Reviewed", "desc": "Have a piece of your work accepted by a reviewer.", "icon": "🛠️", "need": 1, "of": "approved"},
+    {"key": "craft_10", "name": "Journeyman's Hands", "desc": "Have ten pieces of work accepted.", "icon": "🔨", "need": 10, "of": "approved"},
+    {"key": "lore_10", "name": "Well Read", "desc": "Open the reading on ten quests before the fight.", "icon": "📖", "need": 10, "of": "reads"},
+    {"key": "lore_50", "name": "Loremaster", "desc": "Open the reading on fifty quests before the fight.", "icon": "📚", "need": 50, "of": "reads", "outfit": "reader_50"},
+    {"key": "streak_7", "name": "A Week of Showing Up", "desc": "Keep a seven-day streak.", "icon": "🔥", "need": 7, "of": "streak"},
+    {"key": "streak_30", "name": "Ember of Thirty Days", "desc": "Keep a thirty-day streak.", "icon": "🌋", "need": 30, "of": "streak", "outfit": "streak_30"},
+    {"key": "capstone_1", "name": "Capstone Bearer", "desc": "Clear a capstone dungeon.", "icon": "🐉", "need": 1, "of": "capstones"},
+    {"key": "capstone_4", "name": "Dragonslayer", "desc": "Clear four capstone dungeons.", "icon": "👑", "need": 4, "of": "capstones"},
+]
+RANK_UP_NAMES = {1: "Apprentice", 2: "Adept", 3: "Expert", 4: "Master"}
+
+
+def achievements_for(cat, inputs: dict, done: set[str], medals: list[dict]) -> list[dict]:
+    """Every achievement with progress, earned flag and the outfit it unlocks (if any). Rank-ups come from medals."""
+    earned_at = {m["medal_key"]: m["earned_at"] for m in medals}
+    caps = sum(1 for qid in done if (q := cat.quests.get(qid)) and q.capstone) if cat else 0
+    have = {"done": inputs["done"], "first": inputs["first"], "approved": inputs["approved"], "reads": inputs["reads"],
+            "streak": inputs["streak"], "capstones": caps}
+    out = []
+    for a in ACHIEVEMENTS:
+        n = 1 if (a["of"] == "medal" and a["key"] in earned_at) else (0 if a["of"] == "medal" else have[a["of"]])
+        ok = n >= a["need"]
+        out.append({**a, "have": min(n, a["need"]), "earned": ok, "earned_at": earned_at.get(a["key"]) if ok else None})
+    for key, at in earned_at.items():
+        if key.startswith("jump_"):
+            to = int(key.split("_")[-1])
+            out.append({"key": key, "name": f"Rose to {RANK_UP_NAMES.get(to, f'rank {to}')}", "desc": "Promoted by the guild.",
+                        "icon": "🏅", "need": 1, "of": "medal", "have": 1, "earned": True, "earned_at": at})
+    return out

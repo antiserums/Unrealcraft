@@ -58,11 +58,52 @@ async def character(request: Request, member=Depends(current_member)):
     return await character_payload(request, member["id"], u)
 
 
+async def achievements_payload(request: Request, uid: int) -> list[dict]:
+    rdb, cat, db = request.app.state.rpg, request.app.state.catalog, request.app.state.db
+    await rdb.ensure_character(uid)
+    inputs = await rdb.stat_inputs(uid)
+    _, state, _ = await db.user_state(uid)
+    return rpg.achievements_for(cat, inputs, state.done, await db.medals(uid))
+
+
+@router.get("/me/achievements")
+async def my_achievements(request: Request, member=Depends(current_member)):
+    return {"achievements": await achievements_payload(request, member["id"])}
+
+
+async def card_payload(request: Request, uid: int, session: dict | None) -> dict:
+    """The player card: who they are, what they wear, what they chose to show. Shared by /me/card and /members/{id}."""
+    from .me import profile_payload
+    db, cat, rdb = request.app.state.db, request.app.state.catalog, request.app.state.rpg
+    u, state, _ = await db.user_state(uid)
+    medals = await db.medals(uid)
+    who = session if session and session["id"] == uid else None
+    p = profile_payload(cat, who, u, state, medals)
+    if not who:
+        p["name"] = await rdb.kv_get(uid, "web.name")
+        p["avatar"] = await rdb.kv_get(uid, "web.avatar")
+    char = await character_payload(request, uid, u)
+    ach = rpg.achievements_for(cat, await rdb.stat_inputs(uid), state.done, medals)
+    earned = [a for a in ach if a["earned"]]
+    cos = char["cosmetics"]
+    featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
+    return {**p, "worn": char["worn"], "cosmetics": cos, "nameplate": cos.get("nameplate") or p["rank_color"],
+            "motto": cos.get("banner") or "", "public": bool(cos.get("public")),
+            "achievements_earned": len(earned), "achievements_total": len(ach), "featured": featured,
+            "nameplate_colors": NAMEPLATE_COLORS, "earned_achievements": earned}
+
+
+@router.get("/me/card")
+async def my_card(request: Request, member=Depends(current_member)):
+    return await card_payload(request, member["id"], member)
+
+
 class CharacterPatch(BaseModel):
     wear: str | None = None
     nameplate: str | None = None
-    banner: str | None = None
-    featured: list[int] | None = None
+    banner: str | None = None                      # the motto on the player card
+    featured: list[str] | None = None              # up to three achievement keys shown on the card
+    public: bool | None = None                     # card visible without logging in
     appearance: dict[str, str] | None = None      # body, skin, face, hair, hair_color... (art pack ids)
 
 
@@ -82,11 +123,15 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     if body.banner is not None:
         cos["banner"] = body.banner[:40]
     if body.featured is not None:
-        cos["featured"] = body.featured[:3]
+        cos["featured"] = [k[:40] for k in body.featured[:3]]
+    if body.public is not None:
+        cos["public"] = body.public
     if body.appearance is not None:
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
+    if body.banner is not None or body.featured is not None or body.public is not None or body.nameplate is not None:
+        return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
     return await character_payload(request, member["id"], u)
 

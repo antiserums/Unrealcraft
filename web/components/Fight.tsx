@@ -76,7 +76,7 @@ export default function FightScreen({ questId, outfit, color, layers, bossImage 
       <div className="arena">
         <div className="side you">
           <div className="hpbox">
-            <div className="eyebrow">You · Vitality {f.you.vitality}</div>
+            <div className="eyebrow">You</div>
             <div className="bar big"><span style={{ width: `${youHp * 100}%`, background: "#4FA36C" }} /></div>
             <div className="small muted">{f.you.wounds} wound{f.you.wounds === 1 ? "" : "s"} · {Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds))} more before you fall
               {f.you.steady_available && <> · steady ready</>}
