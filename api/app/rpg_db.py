@@ -67,6 +67,33 @@ CREATE TABLE IF NOT EXISTS entitlement_grants (    -- one member handed one enti
     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (member_id, kind, id)
 );
+CREATE TABLE IF NOT EXISTS tickets (               -- support tickets (the /support page and the admin panel)
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    member_id   INTEGER NOT NULL,
+    category    TEXT NOT NULL DEFAULT 'other',     -- account | quest | review | bug | donation | other
+    subject     TEXT NOT NULL,
+    status      TEXT NOT NULL DEFAULT 'open',      -- open | answered | closed
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    updated_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_tickets_member ON tickets(member_id, updated_at);
+CREATE TABLE IF NOT EXISTS ticket_messages (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticket_id   INTEGER NOT NULL,
+    author_id   INTEGER NOT NULL,
+    staff       INTEGER NOT NULL DEFAULT 0,        -- 1 when a staff member wrote it
+    body        TEXT NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
+CREATE INDEX IF NOT EXISTS idx_ticket_messages ON ticket_messages(ticket_id, id);
+CREATE TABLE IF NOT EXISTS donations (             -- Stripe Checkout payments that opened the Patron set
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    member_id   INTEGER NOT NULL,
+    session_id  TEXT NOT NULL UNIQUE,              -- Stripe checkout session id, so a webhook retry is harmless
+    amount      INTEGER NOT NULL,                  -- smallest currency unit (cents)
+    currency    TEXT NOT NULL,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+);
 """
 
 
@@ -214,6 +241,67 @@ class RpgDB:
         await self.conn.execute("UPDATE users SET streak_days=?, last_active_day=? WHERE discord_id=?", (streak, today.isoformat(), uid))
         await self.conn.commit()
         return streak
+
+    # ---------- support tickets ----------
+    async def create_ticket(self, uid: int, category: str, subject: str, body: str) -> int:
+        cur = await self.conn.execute("INSERT INTO tickets(member_id, category, subject) VALUES (?,?,?)", (uid, category, subject))
+        tid = cur.lastrowid
+        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body) VALUES (?,?,0,?)", (tid, uid, body))
+        await self.conn.commit()
+        return int(tid)
+
+    async def ticket(self, tid: int) -> dict | None:
+        cur = await self.conn.execute(
+            "SELECT t.*, (SELECT v FROM kv k WHERE k.user_id=t.member_id AND k.k='web.name') AS name, "
+            "(SELECT v FROM kv k WHERE k.user_id=t.member_id AND k.k='web.avatar') AS avatar FROM tickets t WHERE t.id=?", (tid,))
+        row = await cur.fetchone()
+        if not row:
+            return None
+        t = dict(row)
+        cur = await self.conn.execute("SELECT * FROM ticket_messages WHERE ticket_id=? ORDER BY id", (tid,))
+        t["messages"] = [dict(r) for r in await cur.fetchall()]
+        return t
+
+    async def tickets(self, uid: int | None = None, status: str | None = None, limit: int = 200) -> list[dict]:
+        """A member's tickets (uid) or, for staff, every ticket, newest activity first."""
+        where, args = [], []
+        if uid is not None:
+            where.append("t.member_id=?"); args.append(uid)
+        if status:
+            where.append("t.status=?"); args.append(status)
+        sql = ("SELECT t.*, (SELECT v FROM kv k WHERE k.user_id=t.member_id AND k.k='web.name') AS name, "
+               "(SELECT COUNT(*) FROM ticket_messages m WHERE m.ticket_id=t.id) AS messages, "
+               "(SELECT body FROM ticket_messages m WHERE m.ticket_id=t.id ORDER BY id DESC LIMIT 1) AS last FROM tickets t")
+        if where:
+            sql += " WHERE " + " AND ".join(where)
+        sql += " ORDER BY t.updated_at DESC LIMIT ?"
+        cur = await self.conn.execute(sql, (*args, limit))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def ticket_reply(self, tid: int, author: int, staff: bool, body: str, status: str) -> None:
+        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body) VALUES (?,?,?,?)", (tid, author, 1 if staff else 0, body))
+        await self.conn.execute("UPDATE tickets SET status=?, updated_at=datetime('now') WHERE id=?", (status, tid))
+        await self.conn.commit()
+
+    async def ticket_status(self, tid: int, status: str) -> None:
+        await self.conn.execute("UPDATE tickets SET status=?, updated_at=datetime('now') WHERE id=?", (status, tid))
+        await self.conn.commit()
+
+    async def open_ticket_count(self) -> int:
+        cur = await self.conn.execute("SELECT COUNT(*) FROM tickets WHERE status='open'")
+        return int((await cur.fetchone())[0])
+
+    # ---------- donations ----------
+    async def record_donation(self, uid: int, session_id: str, amount: int, currency: str) -> bool:
+        """True when this session was not seen before (webhooks may be delivered twice)."""
+        cur = await self.conn.execute("INSERT OR IGNORE INTO donations(member_id, session_id, amount, currency) VALUES (?,?,?,?)",
+                                      (uid, session_id, amount, currency))
+        await self.conn.commit()
+        return cur.rowcount > 0
+
+    async def donations(self, uid: int) -> list[dict]:
+        cur = await self.conn.execute("SELECT amount, currency, created_at FROM donations WHERE member_id=? ORDER BY id DESC", (uid,))
+        return [dict(r) for r in await cur.fetchall()]
 
     async def emit(self, type_: str, uid: int, payload: dict) -> None:
         await self.conn.execute("INSERT INTO events(type, member_id, payload) VALUES (?,?,?)", (type_, uid, json.dumps(payload)))

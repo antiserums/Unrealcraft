@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"], ["/review", "Review inbox"]] as const;
+const TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"], ["/admin/tickets", "Tickets"], ["/review", "Review inbox"]] as const;
 
 /** The admin panel's sections. */
 export default function AdminNav({ active }: { active: string }) {

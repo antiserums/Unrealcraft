@@ -12,6 +12,7 @@ export default async function Foot() {
       <span className="rule" /><span className="crest">❖</span><span className="rule" />
       <nav className="foot-links" aria-label={t("Site")}>
         <Link href="/support">{t("Support")}</Link>
+        <Link href="/donate">{t("Donate")}</Link>
         <Link href="/faq">{t("FAQ")}</Link>
         <Link href="/changelog">{t("Changelog")}</Link>
         <Link href="/privacy">{t("Privacy policy")}</Link>
