@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-type Result = { status: "accepted" | "pending" | "practice"; message: string; xp?: number; loot?: { name: string; rarity: string; flavour?: string; slot: string } | null; route?: string };
+type Result = { status: "accepted" | "pending" | "practice"; message: string; xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string } | null; route?: string };
 type Prev = { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> };
 
 export default function Chest({ questId, verifyType, ueVersion, previous, isO5 }:
@@ -32,10 +32,10 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5 }
       <div className="chest open">
         <h3 style={{ marginTop: 0 }}>{res.status === "accepted" ? "🎁 Chest opened" : res.status === "pending" ? "📥 Sent to the reviewers" : "✅ Practice done"}</h3>
         <p>{res.message}</p>
-        {res.loot && <p><b style={{ color: "var(--gold-2)" }}>{res.loot.name}</b> <span className="muted">({res.loot.rarity} {res.loot.slot})</span> <i>{res.loot.flavour}</i></p>}
+        {res.loot && <p>New outfit: <b style={{ color: res.loot.color }}>{res.loot.name}</b> <i>{res.loot.flavour}</i></p>}
         <div className="row">
           <Link className="btn primary" href="/">Next room</Link>
-          {res.loot && <Link className="btn" href="/me">Equip it</Link>}
+          {res.loot && <Link className="btn" href="/me">Wear it</Link>}
         </div>
       </div>
     );

@@ -9,10 +9,9 @@ export default async function Profile() {
   const me = await api<Me>("/me");
   if (!me) redirect("/api/auth/discord?next=/me");
   const [ch, manifest] = await Promise.all([api<Char>("/me/character"), loadManifest()]);
-  const artIdOf = (it: { art_id?: string; item_key: string; slot: string }) => it.art_id ?? `gear_${it.item_key.split(":")[0]}_${it.slot}`;
   const art: ArtProps = {
-    layers: ch ? characterLayers(manifest, ch.cosmetics.appearance?.body ?? "body-a", Object.values(ch.equipped).map(artIdOf)) : null,
-    icons: Object.fromEntries((ch?.inventory ?? []).map((it) => [artIdOf(it), iconImage(manifest, artIdOf(it))]).filter(([, v]) => v) as [string, string][]),
+    layers: ch ? characterLayers(manifest, ch.cosmetics.appearance?.body ?? "body-a", [ch.worn.art_id]) : null,
+    icons: Object.fromEntries((ch?.outfits ?? []).map((o) => [o.art_id, iconImage(manifest, o.art_id)]).filter(([, v]) => v) as [string, string][]),
     appearance: manifest?.appearance ?? {},
   };
   const pct = me.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;

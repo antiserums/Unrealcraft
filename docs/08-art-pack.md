@@ -24,12 +24,13 @@ Rarity is shown as a colored frame around icons and a dot next to names, never b
 
 ## IDs the site uses
 
-**Gear.** One art id per major and slot, rarity handled by the frame: `gear_<major>_<slot>`.
-Majors: `level_design`, `programming`, `lookdev` (Environment Art), `tech_art`, `gameplay_design`, `animation`,
-`cinematics`, `undecided`. Slots (same nine as the pack): `head`, `chest`, `hands`, `legs`, `feet`, `weapon`,
-`offhand`, `cape`, `shoulders`. That is 72 designs, each with an icon and fitted overlays. Until a major has its own
-set, the pack's warrior / ranger / spellcaster designs can stand in through `metadata/<id>.json` aliases (see below).
-Capstone set pieces reuse the major's slot art.
+**Outfits.** Gear is cosmetic: a set is a whole outfit unlocked by a quest, a rank or an achievement, and the
+member wears one set at a time. One art id per set: `set_<id>`. The ids are listed by `GET /api/me/character`
+(`outfits[].art_id`) and defined in `api/app/rpg.py` (`build_sets`): `set_wayfarer` (starter), four achievement
+sets (`set_first_blood`, `set_flawless_10`, `set_streak_30`, `set_reader_50`), four rank sets per major
+(`set_<major>_r1` … `_r4`) and four capstone sets per major (`set_<major>_cap1` … `_cap4`). That is 61 sets; each
+needs an icon and fitted overlays for every slot it covers. Rank sets of one major may share a base design with
+different trim; the site does not care how they are made, only that the ids match.
 
 **Creatures.** Ordinary quest rooms use the six enemies, capstones use the three bosses:
 `enemy_crystal_slime`, `enemy_crystal_crawler`, `enemy_moss_imp`, `enemy_thorn_sentinel`, `enemy_rune_wisp`,
@@ -46,8 +47,8 @@ The character sheet shows a selector per option that exists; the member's choice
 ## File names the sync script understands
 
 ```
-gear/icons/<id>_icon_v001.png
-gear/overlays/<id>_body-a_<part>_v001.png      part = head | chest | hands | legs | feet | weapon | offhand |
+gear/icons/set_<id>_icon_v001.png
+gear/overlays/set_<id>_body-a_<part>_v001.png      part = head | chest | hands | legs | feet | weapon | offhand |
                                                        back | straps | shoulders | hair-rear | hair-front | fx
 characters/bases/body-a_body_v001.png, body-a_face_v001.png, ...
 enemies/<id>_full_v001.png   enemies/<id>_portrait_v001.png
@@ -62,4 +63,4 @@ A `layersOverride` in metadata replaces the filename-derived layers when an item
 ## Sizes on the site
 
 Character: 170 px tall on the sheet, 150 px in the fight. Boss: 170 px in the fight, 92 px on the room card.
-Icons: 44 px in the inventory, 28 px in the equipped list. Review exports at those sizes.
+Icons: 44 px in the wardrobe. Review exports at those sizes.

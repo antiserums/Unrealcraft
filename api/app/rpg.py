@@ -1,8 +1,8 @@
 """The RPG layer: stats, gear, bosses and fight rules.
 
 The fight is how a quiz looks. Pass rules are unchanged (see QUIZ_PASS_RATIO): the boss is beaten when you have enough
-right answers; you are knocked down one wrong answer past what the pass mark allows. Gear may afford ONE dodge per
-fight (a wrong answer that does not count) and can cleanse a debuff; nothing else changes the outcome.
+right answers; you are knocked down one wrong answer past what the pass mark allows. Outfits are cosmetic only:
+nothing but the answers changes the outcome.
 """
 from __future__ import annotations
 
@@ -18,7 +18,6 @@ RARITY_COLOR = {"common": TIERS["novice"]["color"], "uncommon": TIERS["apprentic
                 "rare": TIERS["adept"]["color"], "epic": TIERS["expert"]["color"], "legendary": TIERS["master"]["color"]}
 RARITY_RANK = {r: i for i, r in enumerate(["common", "uncommon", "rare", "epic", "legendary"])}
 SLOTS = ["head", "chest", "hands", "legs", "feet", "weapon", "offhand", "cape", "shoulders"]   # = UCSourceArt slots
-MAX_DODGE_PCT = 25
 CRIT_XP_DAILY_CAP = 25
 SPEED_BONUS_SECONDS = 20          # answer within this many seconds for the full speed crit bonus
 
@@ -52,163 +51,84 @@ STAT_BLURB = {
 }
 
 
-# ------------------------------------------------------------------ gear
-# Per major: the six slots with a base name and a flavour line. Rarity adjectives wrap the base name.
-GEAR = {
-    "level_design": {
-        "head": ("Surveyor's Hood", "Stitched from blockout tarps. Sees the flow of a room before it is built."),
-        "chest": ("Greybox Mantle", "Plain armor of unlit cubes. Nothing fancy ever reached the player; this did."),
-        "hands": ("Metric Gauntlets", "Every finger knows the jump height. 180 units, always."),
-        "feet": ("Pathfinder Treads", "They only walk where the NavMesh is green."),
-        "weapon": ("Measuring Staff", "A staff marked in Unreal units. Struck once, it tells you what is too tall."),
-        "offhand": ("Compass of Sightlines", "It points at the thing the player should see next."),
-        "legs": ("Blockout Greaves", "Grey, square, and exactly the right height."),
-        "cape": ("Flow Cloak", "It always drifts toward the exit the player should take."),
-        "shoulders": ("Sightline Pauldrons", "Wide enough to frame a view."),
-    },
-    "programming": {
-        "head": ("Debugger's Visor", "Shows every value at the moment it went wrong."),
-        "chest": ("Header Plate", "Declared once, included everywhere."),
-        "hands": ("Pointer Gloves", "They never touch anything null."),
-        "feet": ("Tick Boots", "Each step arrives exactly one frame later."),
-        "weapon": ("Compiler Blade", "It cuts the code that does not build. Clean edge, no warnings."),
-        "offhand": ("Breakpoint Charm", "Time stops when you hold it."),
-        "legs": ("Stack Greaves", "Push, pop, never overflow."),
-        "cape": ("Delegate Cloak", "Bound to an event nobody has fired yet."),
-        "shoulders": ("Interface Pauldrons", "Any class can wear them."),
-    },
-    "lookdev": {
-        "head": ("Lumen Crown", "Bounced light gathers in it and stays."),
-        "chest": ("Master Material Cloak", "One cloak, a hundred instances."),
-        "hands": ("Painter's Wraps", "Vertex colors soak into the cloth."),
-        "feet": ("Landscape Walkers", "Grass grows back behind them."),
-        "weapon": ("Palette Shield", "Every surface it touches finds its roughness."),
-        "offhand": ("Reflection Sphere", "A small captured sky."),
-        "legs": ("Roughness Leggings", "Matte on the left leg, glossy on the right, for comparison."),
-        "cape": ("Skylight Cape", "Blue on top, bounce on the hem."),
-        "shoulders": ("Decal Pauldrons", "Projected on, never modelled."),
-    },
-    "tech_art": {
-        "head": ("Node Circlet", "Wires run where the hair should be."),
-        "chest": ("Shader Harness", "Written once, compiled a thousand times."),
-        "hands": ("Niagara Gloves", "Sparks leave the fingertips on their own."),
-        "feet": ("Profiler's Soles", "They know how many milliseconds a step costs."),
-        "weapon": ("Node Wand", "Points at a graph and the graph explains itself."),
-        "offhand": ("Scratch Pad Rune", "A module that exists nowhere else."),
-        "legs": ("Instance Greaves", "One draw call for both legs."),
-        "cape": ("Emitter Cape", "Sparks trail behind it at 60 frames a second."),
-        "shoulders": ("LOD Pauldrons", "They get simpler when you stand far away."),
-    },
-    "gameplay_design": {
-        "head": ("Playtester's Cap", "It has seen the game break in every way."),
-        "chest": ("Tuning Vest", "Pockets full of variables, all exposed."),
-        "hands": ("Feel Gloves", "They know when a jump is 80 milliseconds late."),
-        "feet": ("Loop Runners", "Start, play, win, lose, again."),
-        "weapon": ("Dice Mace", "Rolls a number nobody expected. Balanced, somehow."),
-        "offhand": ("Data Table Token", "One row changes the whole game."),
-        "legs": ("Iteration Leggings", "Patched twelve times. Still fun."),
-        "cape": ("Playtest Cape", "Someone new always trips on it, so it was shortened."),
-        "shoulders": ("Balance Pauldrons", "Exactly the same weight on each side."),
-    },
-    "animation": {
-        "head": ("Keyframe Helm", "Poses hold still under it."),
-        "chest": ("Rigger's Coat", "Every joint has a control."),
-        "hands": ("Blend Gloves", "Two motions become one between the fingers."),
-        "feet": ("Root Motion Boots", "The capsule follows the feet, not the other way."),
-        "weapon": ("Rig Hook", "Pulls a bone into place from across the graph."),
-        "offhand": ("Retarget Chain", "Fits any skeleton that has a spine."),
-        "legs": ("IK Greaves", "The feet land where the ground is."),
-        "cape": ("Cloth Sim Cape", "It settles a frame after you stop."),
-        "shoulders": ("Twist Pauldrons", "They roll with the arm, not against it."),
-    },
-    "cinematics": {
-        "head": ("Director's Cowl", "Sees the frame before the camera does."),
-        "chest": ("Sequencer Robe", "Tracks stitched in rows down the front."),
-        "hands": ("Focus Puller's Gloves", "Depth of field obeys them."),
-        "feet": ("Dolly Shoes", "They move on rails only."),
-        "weapon": ("The Slate", "Clapped once, the take begins."),
-        "offhand": ("Render Lens", "A whole shot fits inside it."),
-        "legs": ("Dolly Leggings", "Smooth movement only."),
-        "cape": ("Letterbox Cape", "2.39 to 1."),
-        "shoulders": ("Key Light Pauldrons", "Always lit from the upper left."),
-    },
+# ------------------------------------------------------------------ outfits (cosmetic only)
+# Gear is a visual reward. A set is a whole outfit (every slot at once) unlocked by a quest, a rank or an
+# achievement. Members wear one set at a time and can switch between the ones they own. No stats, ever.
+SLOTS = ["head", "chest", "hands", "legs", "feet", "weapon", "offhand", "cape", "shoulders"]   # = UCSourceArt slots
+MAJOR_TITLE = {"level_design": "Level Design", "programming": "Programming", "lookdev": "Environment Art",
+               "tech_art": "Tech Art", "gameplay_design": "Gameplay Design", "animation": "Animation",
+               "cinematics": "Cinematics", "undecided": "Undecided"}
+
+# Per major: the four rank outfits (Apprentice, Adept, Expert, Master) and four capstone regalia (rank 1-4).
+RANK_SETS = {
+    "level_design":    ["Surveyor's Garb", "Architect's Vestments", "Warden of Halls", "Worldshaper's Regalia"],
+    "programming":     ["Scribe's Garb", "Compiler's Vestments", "Warden of Systems", "Kernelbinder's Regalia"],
+    "lookdev":         ["Painter's Garb", "Lightweaver's Vestments", "Warden of Surfaces", "Sunforger's Regalia"],
+    "tech_art":        ["Tinker's Garb", "Nodewright's Vestments", "Warden of Sparks", "Machinist's Regalia"],
+    "gameplay_design": ["Playtester's Garb", "Rulewright's Vestments", "Warden of Loops", "Gamemaster's Regalia"],
+    "animation":       ["Puppeteer's Garb", "Rigwright's Vestments", "Warden of Motion", "Lifegiver's Regalia"],
+    "cinematics":      ["Framer's Garb", "Director's Vestments", "Warden of Light", "Showrunner's Regalia"],
 }
-GEAR["undecided"] = {
-    "head": ("Wayfarer's Hood", "For those still choosing a road."),
-    "chest": ("Traveler's Mantle", "Warm enough for any major."),
-    "hands": ("Curious Gloves", "They have tried a bit of everything."),
-    "feet": ("Crossroad Boots", "Seven roads, one pair of boots."),
-    "weapon": ("Walking Staff", "Plain wood. It will become something."),
-    "offhand": ("Unset Compass", "It spins until you decide."),
-    "legs": ("Wayfarer's Leggings", "Good for any road."),
-    "cape": ("Undyed Cape", "It will take the color of your major."),
-    "shoulders": ("Plain Pauldrons", "Nothing on them yet."),
+CAPSTONE_SETS = {
+    "level_design":    ["Courtyard Pilgrim", "Beatkeeper", "Encounter Marshal", "Kitsmith of the Modular Hall"],
+    "programming":     ["Debug Room Squire", "Loopbinder", "Bridgewright of Two Languages", "Portmaster"],
+    "lookdev":         ["Diorama Keeper", "Walker of the Lit Path", "Reference Bearer", "Librarian of Functions"],
+    "tech_art":        ["Test Bed Warden", "Masterweaver", "Toolsmith", "Pipeline Marshal"],
+    "gameplay_design": ["Toybox Keeper", "Loopmaster", "Systems Marshal", "Feature Marshal"],
+    "animation":       ["First Mover", "Statekeeper", "Retarget Marshal", "Rigmaster"],
+    "cinematics":      ["Shotkeeper", "Sequence Marshal", "Render Marshal", "Cutmaster"],
 }
-RARITY_ADJ = {"common": "Worn", "uncommon": "Tempered", "rare": "Runed", "epic": "Sunforged", "legendary": "Mythic"}
-# What each slot does, by rarity index 0..4
-SLOT_EFFECT = {
-    "head":      ("lore",    [1, 1, 2, 2, 3]),
-    "chest":     ("dodge",   [3, 5, 8, 12, 15]),     # percent chance to dodge one attack per fight (total capped)
-    "hands":     ("craft",   [1, 1, 2, 2, 3]),
-    "legs":      ("dodge",   [1, 2, 3, 4, 5]),
-    "feet":      ("dodge",   [2, 3, 4, 6, 8]),
-    "weapon":    ("craft",   [1, 2, 3, 4, 5]),
-    "offhand":   ("cleanse", [0, 0, 1, 1, 1]),       # 1 = removes a debuff at the start of your next turn
-    "cape":      ("focus",   [0, 1, 1, 2, 3]),
-    "shoulders": ("craft",   [0, 1, 1, 2, 2]),
-}
-CAPSTONE_GEAR = {   # unique set pieces: (slot, name, flavour)
-    1: ("offhand", "Seal of the First Room", "You built a whole thing and someone else could walk it."),
-    2: ("cape", "Mantle of the Second Gate", "Two dungeons behind you. The armor remembers both."),
-    3: ("head", "Crown of the Specialty", "Your title is carved on the inside, where only you can read it."),
-    4: ("weapon", "Masterwork", "The weapon a Master carries. It is the work itself."),
-}
+TIER_OF_RANK = {1: "apprentice", 2: "adept", 3: "expert", 4: "master"}
 
 
-def item_key(major: str, slot: str, rarity: str) -> str:
-    return f"{major}:{slot}:{rarity}"
+def _set(sid: str, name: str, flavour: str, major: str, tier: str, unlock: dict) -> dict:
+    return {"id": sid, "name": name, "flavour": flavour, "major": major, "tier": tier, "color": TIERS[tier]["color"],
+            "art_id": f"set_{sid}", "unlock": unlock}
 
 
-def describe_item(major: str, slot: str, rarity: str, name_override: str | None = None,
-                  flavour_override: str | None = None) -> dict:
-    base, flav = GEAR.get(major, GEAR["undecided"]).get(slot, ("Relic", ""))
-    stat, table = SLOT_EFFECT[slot]
-    bonus = table[RARITY_RANK[rarity]]
-    return {"key": item_key(major, slot, rarity), "slot": slot, "rarity": rarity, "color": RARITY_COLOR[rarity],
-            "name": name_override or f"{RARITY_ADJ[rarity]} {base}", "flavour": flavour_override or flav,
-            "stat": stat, "bonus": bonus, "major": major, "art_id": f"gear_{major}_{slot}"}
+def build_sets(cat) -> list[dict]:
+    """The full outfit catalog. Unlock rules: starter | rank(n, major) | quest(id) | achievement(key)."""
+    out = [_set("wayfarer", "Wayfarer's Set", "Teal cloth and brown leather. Everyone starts here.", "undecided", "novice", {"type": "starter"}),
+           _set("first_blood", "First Blood Tabard", "You finished your first quest in the engine.", "undecided", "novice",
+                {"type": "achievement", "key": "first_blood", "hint": "Finish your first Unreal quest"}),
+           _set("flawless_10", "Flawless Mantle", "Ten bosses beaten on the first try. Nothing wasted.", "undecided", "adept",
+                {"type": "achievement", "key": "focus_10", "hint": "Beat 10 bosses on the first try"}),
+           _set("streak_30", "Ember of Thirty Days", "A month of showing up.", "undecided", "expert",
+                {"type": "achievement", "key": "streak_30", "hint": "Reach a 30-day streak"}),
+           _set("reader_50", "Loremaster's Robe", "Fifty guides opened before the fight.", "undecided", "expert",
+                {"type": "achievement", "key": "lore_50", "hint": "Open the reading on 50 quests"})]
+    for major, names in RANK_SETS.items():
+        for i, name in enumerate(names, start=1):
+            out.append(_set(f"{major}_r{i}", name, f"Worn by every {TIERS[TIER_OF_RANK[i]]['name']} of {MAJOR_TITLE[major]}.",
+                            major, TIER_OF_RANK[i], {"type": "rank", "n": i, "major": major,
+                                                     "hint": f"Reach {TIERS[TIER_OF_RANK[i]]['name']} in {MAJOR_TITLE[major]}"}))
+    for major, names in CAPSTONE_SETS.items():
+        caps = (cat.majors.get(major, {}).get("capstones") or {}) if cat else {}
+        for i, name in enumerate(names, start=1):
+            cap = caps.get(i) or {}
+            out.append(_set(f"{major}_cap{i}", name, cap.get("brief") or f"The rank {i} capstone of {MAJOR_TITLE[major]}.",
+                            major, TIER_OF_RANK[i], {"type": "quest", "id": cap.get("id"), "hint": f"Clear the {MAJOR_TITLE[major]} rank {i} capstone: {cap.get('title', '')}".strip()}))
+    return out
 
 
-def starter_kit(major: str) -> list[dict]:
-    return [describe_item(major, s, "common") for s in SLOTS]
-
-
-def roll_loot(q: Quest, member_major: str, rng: random.Random) -> dict | None:
-    """Rolled when a quest completes. Capstones drop their set piece; others drop with 60% chance."""
-    if q.capstone and q.rank in CAPSTONE_GEAR:
-        slot, name, flav = CAPSTONE_GEAR[q.rank]
-        rarity = RARITY[q.difficulty]
-        d = describe_item(member_major, slot, rarity, name, flav)
-        d["key"] = f"capstone:{q.rank}:{member_major}"
-        d["set_piece"] = True
-        return d
-    if rng.random() > 0.6:
-        return None
-    rarity = RARITY[q.difficulty]
-    if rng.random() < 0.1 and RARITY_RANK[rarity] < 4:
-        rarity = list(RARITY_RANK)[RARITY_RANK[rarity] + 1]
-    owners = [m for m in q.required_for if m != "all"]
-    major = member_major if (member_major in GEAR and (not owners or member_major in owners or q.elective)) else (owners[0] if owners and owners[0] in GEAR else member_major)
-    return describe_item(major, rng.choice(SLOTS), rarity)
-
-
-def gear_totals(equipped: list[dict]) -> dict:
-    t = {"lore": 0, "craft": 0, "dodge": 0, "cleanse": 0, "focus": 0}
-    for g in equipped:
-        t[g["stat"]] = t.get(g["stat"], 0) + g["bonus"]
-    t["dodge"] = min(MAX_DODGE_PCT, t["dodge"])
-    t["cleanse"] = min(1, t["cleanse"])
-    return t
+def unlocked_now(sets: list[dict], *, rank: int, major: str, done: set[str], medals: set[str], stats: dict) -> list[dict]:
+    """Which sets this member has earned, from facts we already store. Idempotent, so it can run on every visit."""
+    won = []
+    for st in sets:
+        u = st["unlock"]
+        if u["type"] == "starter":
+            ok = True
+        elif u["type"] == "rank":
+            ok = major == u["major"] and rank >= u["n"]
+        elif u["type"] == "quest":
+            ok = bool(u.get("id")) and u["id"] in done
+        else:
+            key = u["key"]
+            ok = (key in medals) or (key == "focus_10" and stats["focus"] >= 10) or \
+                 (key == "streak_30" and stats["resolve"] >= 30) or (key == "lore_50" and stats["lore"] >= 50)
+        if ok:
+            won.append(st)
+    return won
 
 
 # ------------------------------------------------------------------ bosses
@@ -309,9 +229,7 @@ def boss_line(boss: dict, kind: str, rng: random.Random) -> str:
         "hit": [f"{n} staggers.", f"Your strike lands. {n} reels.", f"{n} loses its footing.", "A clean hit."],
         "crit": [f"A perfect strike. {n} howls.", "Critical hit. The room shakes.", f"{n} did not see that coming."],
         "wound": [f"{n} {boss['verb']}. You take the hit.", "It got through.", f"{n} finds the gap."],
-        "dodge": [f"{n} {boss['verb']}, and you are already elsewhere.", "Your armor turns the blow. Dodged."],
         "steady": ["You brace. Half the blow lands.", "Resolve holds. It only grazes you."],
-        "cleanse": ["Your trinket burns the curse away.", "The debuff lifts."],
         "win": [f"{n} falls. The room goes quiet.", f"{n} is beaten. The way forward is open."],
         "lose": [f"{n} stands over you. Regroup and return.", "You are knocked down. The boss room closes for now."],
     }
@@ -330,8 +248,8 @@ def debuff_for(subject: str | None, rng: random.Random) -> str:
     return rng.choice(list(DEBUFFS))
 
 
-def crit_chance(focus: int, gear_focus: int, seconds: float | None) -> int:
+def crit_chance(focus: int, seconds: float | None) -> int:
     speed = 0
     if seconds is not None and seconds <= SPEED_BONUS_SECONDS:
         speed = round(15 * (1 - seconds / SPEED_BONUS_SECONDS))
-    return min(40, 5 + focus + gear_focus + speed)
+    return min(40, 5 + focus + speed)

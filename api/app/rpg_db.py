@@ -12,23 +12,14 @@ CREATE TABLE IF NOT EXISTS characters (
     cosmetics   TEXT NOT NULL DEFAULT '{}',
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
-CREATE TABLE IF NOT EXISTS gear (
-    id           INTEGER PRIMARY KEY AUTOINCREMENT,
-    member_id    INTEGER NOT NULL,
-    item_key     TEXT NOT NULL,
-    slot         TEXT NOT NULL,
-    rarity       TEXT NOT NULL,
-    name         TEXT NOT NULL,
-    flavour      TEXT,
-    stat         TEXT NOT NULL,
-    bonus        INTEGER NOT NULL DEFAULT 0,
-    major        TEXT,
-    source_quest TEXT,
-    set_piece    INTEGER NOT NULL DEFAULT 0,
-    equipped     INTEGER NOT NULL DEFAULT 0,
-    earned_at    TEXT NOT NULL DEFAULT (datetime('now'))
+CREATE TABLE IF NOT EXISTS outfits (
+    member_id   INTEGER NOT NULL,
+    set_id      TEXT NOT NULL,                 -- see rpg.build_sets
+    source      TEXT,                          -- quest id, rank:n, achievement key, starter
+    earned_at   TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (member_id, set_id)
 );
-CREATE INDEX IF NOT EXISTS idx_gear_member ON gear(member_id);
+DROP TABLE IF EXISTS gear;                     -- the per-slot gear experiment (same day); outfits replace it
 CREATE TABLE IF NOT EXISTS fights (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     member_id   INTEGER NOT NULL,
@@ -60,9 +51,6 @@ class RpgDB:
 
     async def migrate(self) -> None:
         await self.conn.executescript(SCHEMA)
-        for old, new in (("body", "chest"), ("main", "weapon"), ("trinket", "offhand")):   # pre-art-pack slot names
-            await self.conn.execute("UPDATE gear SET slot=?, item_key=REPLACE(item_key, ?, ?) WHERE slot=?",
-                                    (new, f":{old}:", f":{new}:", old))
         await self.conn.commit()
 
     # ---------- character / gear ----------
@@ -82,32 +70,14 @@ class RpgDB:
         await self.conn.execute("UPDATE characters SET cosmetics=? WHERE member_id=?", (json.dumps(data), uid))
         await self.conn.commit()
 
-    async def gear(self, uid: int) -> list[dict]:
-        cur = await self.conn.execute("SELECT * FROM gear WHERE member_id=? ORDER BY equipped DESC, earned_at DESC", (uid,))
-        return [dict(r) for r in await cur.fetchall()]
+    async def outfits(self, uid: int) -> dict[str, dict]:
+        cur = await self.conn.execute("SELECT set_id, source, earned_at FROM outfits WHERE member_id=? ORDER BY earned_at", (uid,))
+        return {r["set_id"]: dict(r) for r in await cur.fetchall()}
 
-    async def add_gear(self, uid: int, item: dict, source_quest: str | None, equip: bool = False) -> int:
-        cur = await self.conn.execute(
-            "INSERT INTO gear(member_id,item_key,slot,rarity,name,flavour,stat,bonus,major,source_quest,set_piece,equipped)"
-            " VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-            (uid, item["key"], item["slot"], item["rarity"], item["name"], item.get("flavour"), item["stat"],
-             item["bonus"], item.get("major"), source_quest, int(bool(item.get("set_piece"))), int(equip)))
+    async def grant_outfit(self, uid: int, set_id: str, source: str) -> bool:
+        cur = await self.conn.execute("INSERT OR IGNORE INTO outfits(member_id, set_id, source) VALUES (?,?,?)", (uid, set_id, source))
         await self.conn.commit()
-        return cur.lastrowid
-
-    async def equip(self, uid: int, gear_id: int) -> bool:
-        cur = await self.conn.execute("SELECT slot FROM gear WHERE id=? AND member_id=?", (gear_id, uid))
-        row = await cur.fetchone()
-        if not row:
-            return False
-        await self.conn.execute("UPDATE gear SET equipped=0 WHERE member_id=? AND slot=?", (uid, row["slot"]))
-        await self.conn.execute("UPDATE gear SET equipped=1 WHERE id=?", (gear_id,))
-        await self.conn.commit()
-        return True
-
-    async def has_item(self, uid: int, key: str) -> bool:
-        cur = await self.conn.execute("SELECT 1 FROM gear WHERE member_id=? AND item_key=? LIMIT 1", (uid, key))
-        return await cur.fetchone() is not None
+        return cur.rowcount > 0
 
     # ---------- stat inputs ----------
     async def stat_inputs(self, uid: int) -> dict:
@@ -122,7 +92,10 @@ class RpgDB:
         reads = await one("SELECT COUNT(*) FROM kv WHERE user_id=? AND k LIKE 'read:%'", uid)
         cur = await self.conn.execute("SELECT streak_days FROM users WHERE discord_id=?", (uid,))
         row = await cur.fetchone()
-        return {"done": done, "first": first, "approved": approved, "reads": reads, "streak": row["streak_days"] if row else 0}
+        cur = await self.conn.execute("SELECT medal_key FROM medals WHERE user_id=?", (uid,))
+        medals = {r["medal_key"] for r in await cur.fetchall()}
+        return {"done": done, "first": first, "approved": approved, "reads": reads,
+                "streak": row["streak_days"] if row else 0, "medals": medals}
 
     async def mark_read(self, uid: int, qid: str) -> bool:
         await self.ensure_character(uid)

@@ -39,8 +39,9 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   little bonus XP (25/day cap). Bosses are generated from quest data (`api/app/rpg.py`). Winning writes the same rows
   the Discord quiz wrote (quiz_attempts, quest_progress, xp_log, kv fact) and an `events` row that the bot's `sync`
   cog picks up every 20 s to run promotion checks and orientation steps.
-- **RPG phase B (done):** character sheet on `/me`: five computed stats, six gear slots with major-flavoured items,
-  starter kit on first visit, loot rolled when a quest completes on the site, nameplate color.
+- **RPG phase B (done):** character sheet on `/me`: five computed stats and a wardrobe. Gear is cosmetic only:
+  whole outfit sets unlocked by quests (capstones), ranks and achievements, worn one at a time and switchable.
+  No stats from gear; nothing but the answers decides a fight.
 - **Phase 2 (done):** the chest. `POST /me/quests/{id}/submit` (multipart: text, ue_version, up to 4 images) with the
   bot's routing rules (auto/honor accept at once and complete the quest; peer/mentor/human wait for a review). The chest
   only shows once the boss is beaten. Images live in `api/data/uploads/<member>/` and are served to logged-in members
@@ -60,7 +61,7 @@ GET  /catalog/majors          GET /catalog/quests?major=&tier=&subject=&q=     G
 GET  /catalog/subjects        GET /changelog
 GET  /me                      GET /me/next                    GET /me/path
 GET  /members/{id}            GET /leaderboard?period=week|month|all
-GET  /me/character            PATCH /me/character {equip, nameplate}       POST /me/quests/{id}/read
+GET  /me/character            PATCH /me/character {wear, nameplate, appearance}       POST /me/quests/{id}/read
 POST /me/quests/{id}/fight    GET /fights/{id}   POST /fights/{id}/turn {answer, seconds}   POST /fights/{id}/retreat
 GET  /catalog/quests/{id}/boss
 POST /me/quests/{id}/submit   multipart text, ue_version, files[]     GET /uploads/{member}/{file}

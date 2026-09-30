@@ -1,9 +1,7 @@
-/** Character and creature figures.
+/** Character and creature figures. Outfits are looks only.
  *  With art-pack exports (see lib/art.ts) a figure is a stack of PNG layers on the pack's 1024x1024 canvas.
  *  Without them, the flat SVG silhouettes below stand in, so the site works while the art is produced. */
 import type { CSSProperties } from "react";
-
-export type GearMap = Record<string, { rarity: string; color?: string } | undefined>;
 
 const RAR: Record<string, string> = { common: "#4FA36C", uncommon: "#3D7DD8", rare: "#8E6CCF", epic: "#D9824A", legendary: "#D9534F" };
 export const RARITY_COLOR = RAR;
@@ -19,30 +17,35 @@ function Layered({ layers, size, cls, style, label }: { layers: string[]; size: 
   );
 }
 
-export function Character({ gear = {}, layers, color = "#556270", size = 160, pose = "idle", style }:
-  { gear?: GearMap; layers?: string[] | null; color?: string; size?: number; pose?: CharPose; style?: CSSProperties }) {
+const OUTFIT_TINT: Record<string, string> = { wayfarer: "#3fb6b0", first_blood: "#c0553f", flawless_10: "#8E6CCF", streak_30: "#e0842e", reader_50: "#d4af5a" };
+function outfitTint(id: string): string {
+  if (OUTFIT_TINT[id]) return OUTFIT_TINT[id];
+  const m = /_(r|cap)(\d)$/.exec(id);
+  return m ? ["#4FA36C", "#3D7DD8", "#8E6CCF", "#D9824A", "#D9534F"][Number(m[2])] ?? "#3fb6b0" : "#3fb6b0";
+}
+
+/** The member's figure: layered art when the pack has the worn set, otherwise a silhouette tinted by the set. */
+export function Character({ outfit = "wayfarer", layers, color = "#556270", size = 160, pose = "idle", style }:
+  { outfit?: string; layers?: string[] | null; color?: string; size?: number; pose?: CharPose; style?: CSSProperties }) {
   if (layers && layers.length) return <Layered layers={layers} size={size * 1.2} cls={`figure art pose-${pose}`} style={style} label="Your character" />;
-  const c = (slot: string) => (gear[slot] ? RAR[gear[slot]!.rarity] ?? "#888" : null);
+  const cloth = outfitTint(outfit);
   const tf = pose === "strike" ? "translate(14 0) rotate(-6 50 80)" : pose === "hurt" ? "translate(-8 0) rotate(5 50 80)"
     : pose === "down" ? "rotate(80 50 110) translate(0 10)" : pose === "win" ? "translate(0 -6)" : "";
   return (
     <svg viewBox="0 0 100 120" width={size} height={size * 1.2} style={style} className={`figure pose-${pose}`} aria-label="Your character">
       <g transform={tf} style={{ transition: "transform .25s ease" }}>
         <ellipse cx="50" cy="114" rx="26" ry="5" fill="#000" opacity=".18" />
-        {c("cape") && <path d="M36 44 L30 100 L70 100 L64 44 Z" fill={c("cape")!} opacity=".8" />}
-        <path d="M40 74 L36 108 L44 108 L48 80 L52 80 L56 108 L64 108 L60 74 Z" fill={color} />
-        {c("legs") && <path d="M40 76 L38 96 L46 96 L48 82 L52 82 L54 96 L62 96 L60 76 Z" fill={c("legs")!} />}
-        {c("feet") && <><rect x="33" y="103" width="14" height="7" rx="2" fill={c("feet")!} /><rect x="53" y="103" width="14" height="7" rx="2" fill={c("feet")!} /></>}
-        <path d="M34 42 Q50 34 66 42 L64 78 L36 78 Z" fill={color} />
-        {c("chest") && <path d="M36 44 Q50 38 64 44 L62 74 L38 74 Z" fill={c("chest")!} opacity=".95" />}
-        <path d="M34 46 L22 72 L28 75 L40 54 Z" fill={color} />
-        <path d="M66 46 L82 66 L77 71 L60 54 Z" fill={color} />
-        {c("shoulders") && <><circle cx="35" cy="45" r="6" fill={c("shoulders")!} /><circle cx="65" cy="45" r="6" fill={c("shoulders")!} /></>}
-        {c("hands") && <><circle cx="24" cy="74" r="5" fill={c("hands")!} /><circle cx="80" cy="69" r="5" fill={c("hands")!} /></>}
-        {c("offhand") && <circle cx="22" cy="74" r="9" fill={c("offhand")!} stroke="#fff" strokeWidth=".8" opacity=".9" />}
-        {c("weapon") && <g transform="rotate(-20 80 69)"><rect x="78" y="30" width="4" height="46" rx="1" fill={c("weapon")!} /><path d="M74 30 L86 30 L80 20 Z" fill={c("weapon")!} /></g>}
-        <circle cx="50" cy="26" r="13" fill={color} />
-        {c("head") && <path d="M37 24 Q50 8 63 24 L63 20 Q50 4 37 20 Z" fill={c("head")!} />}
+        <path d="M36 44 L30 100 L70 100 L64 44 Z" fill={cloth} opacity=".55" />
+        <path d="M40 74 L36 108 L44 108 L48 80 L52 80 L56 108 L64 108 L60 74 Z" fill="#3a3330" />
+        <rect x="33" y="103" width="14" height="7" rx="2" fill="#6b4a2e" /><rect x="53" y="103" width="14" height="7" rx="2" fill="#6b4a2e" />
+        <path d="M34 42 Q50 34 66 42 L64 78 L36 78 Z" fill={cloth} />
+        <path d="M38 62 L62 62 L62 66 L38 66 Z" fill="#6b4a2e" />
+        <path d="M34 46 L22 72 L28 75 L40 54 Z" fill={cloth} /><path d="M66 46 L82 66 L77 71 L60 54 Z" fill={cloth} />
+        <circle cx="24" cy="74" r="5" fill="#6b4a2e" /><circle cx="80" cy="69" r="5" fill="#6b4a2e" />
+        <g transform="rotate(-20 80 69)"><rect x="78" y="30" width="4" height="46" rx="1" fill="#c9ccd2" /><path d="M74 30 L86 30 L80 20 Z" fill="#c9ccd2" /><rect x="75" y="72" width="10" height="4" fill={color} /></g>
+        <circle cx="50" cy="26" r="13" fill="#e6c9a8" />
+        <path d="M37 24 Q50 8 63 24 L63 20 Q50 4 37 20 Z" fill={cloth} />
+        <circle cx="50" cy="50" r="3.5" fill={color} stroke="#fff" strokeWidth=".8" />
       </g>
     </svg>
   );

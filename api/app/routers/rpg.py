@@ -18,34 +18,48 @@ router = APIRouter(tags=["rpg"])
 NAMEPLATE_COLORS = ["#7A8C7E", "#B5714B", "#3D7DD8", "#8E6CCF", "#D9824A", "#D9534F", "#4FA36C", "#C85C8E", "#4AA3B5", "#D4AF37"]
 
 
-async def character_payload(request: Request, uid: int, major: str) -> dict:
-    rdb = request.app.state.rpg
+async def character_payload(request: Request, uid: int, u: dict) -> dict:
+    """Stats (computed), the outfits this member owns (granted idempotently from progress), and the one worn."""
+    rdb, cat = request.app.state.rpg, request.app.state.catalog
     await rdb.ensure_character(uid)
-    have = {g["slot"] for g in await rdb.gear(uid)}
-    for item in rpg.starter_kit(major):            # every slot gets a plain starter piece, once
-        if item["slot"] not in have:
-            await rdb.add_gear(uid, item, None, equip=True)
+    major = u.get("major", "undecided")
     inputs = await rdb.stat_inputs(uid)
     stats = rpg.stats_from(inputs["done"], inputs["first"], inputs["approved"], inputs["reads"], inputs["streak"])
-    gear = await rdb.gear(uid)
-    equipped = [g for g in gear if g["equipped"]]
-    totals = rpg.gear_totals(equipped)
-    return {
-        "stats": stats, "stat_blurb": rpg.STAT_BLURB, "gear_totals": totals,
-        "equipped": {g["slot"]: g for g in equipped},
-        "inventory": gear, "cosmetics": await rdb.cosmetics(uid), "nameplate_colors": NAMEPLATE_COLORS,
-        "slots": rpg.SLOTS, "major": major,
-    }
+    sets = rpg.build_sets(cat)
+    _, state, _ = await request.app.state.db.user_state(uid)
+    new_sets = []
+    owned = await rdb.outfits(uid)
+    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), major=major, done=state.done, medals=inputs["medals"], stats=stats):
+        if st["id"] not in owned:
+            src = st["unlock"].get("id") or st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else "starter")
+            if await rdb.grant_outfit(uid, st["id"], str(src)):
+                new_sets.append(st["id"])
+    owned = await rdb.outfits(uid)
+    cos = await rdb.cosmetics(uid)
+    worn = cos.get("outfit") if cos.get("outfit") in owned else "wayfarer"
+    catalog = []
+    for st in sets:
+        if st["major"] not in ("undecided", major) and st["id"] not in owned:
+            continue                                   # other majors' locked sets stay out of the wardrobe
+        d = {k: v for k, v in st.items() if k != "unlock"}
+        d["owned"] = st["id"] in owned
+        d["earned_at"] = owned[st["id"]]["earned_at"] if d["owned"] else None
+        d["hint"] = st["unlock"].get("hint")
+        d["worn"] = st["id"] == worn
+        catalog.append(d)
+    return {"stats": stats, "stat_blurb": rpg.STAT_BLURB, "worn": next((c for c in catalog if c["worn"]), catalog[0]),
+            "outfits": catalog, "new_outfits": new_sets, "cosmetics": cos, "nameplate_colors": NAMEPLATE_COLORS,
+            "slots": rpg.SLOTS, "major": major}
 
 
 @router.get("/me/character")
 async def character(request: Request, member=Depends(current_member)):
-    u = await request.app.state.db.user(member["id"])
-    return await character_payload(request, member["id"], (u or {}).get("major", "undecided"))
+    u, _, _ = await request.app.state.db.user_state(member["id"])
+    return await character_payload(request, member["id"], u)
 
 
 class CharacterPatch(BaseModel):
-    equip: int | None = None
+    wear: str | None = None
     nameplate: str | None = None
     banner: str | None = None
     featured: list[int] | None = None
@@ -56,9 +70,11 @@ class CharacterPatch(BaseModel):
 async def patch_character(body: CharacterPatch, request: Request, member=Depends(current_member)):
     rdb = request.app.state.rpg
     await rdb.ensure_character(member["id"])
-    if body.equip is not None and not await rdb.equip(member["id"], body.equip):
-        raise HTTPException(404, "No such item.")
     cos = await rdb.cosmetics(member["id"])
+    if body.wear is not None:
+        if body.wear not in await rdb.outfits(member["id"]):
+            raise HTTPException(403, "You have not earned that outfit yet.")
+        cos["outfit"] = body.wear
     if body.nameplate is not None:
         if body.nameplate not in NAMEPLATE_COLORS:
             raise HTTPException(400, "Pick a color from the palette.")
@@ -71,8 +87,8 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
-    u = await request.app.state.db.user(member["id"])
-    return await character_payload(request, member["id"], (u or {}).get("major", "undecided"))
+    u, _, _ = await request.app.state.db.user_state(member["id"])
+    return await character_payload(request, member["id"], u)
 
 
 @router.post("/me/quests/{qid}/read")
@@ -106,11 +122,9 @@ def _public(state: dict, q: Quest, boss: dict, char: dict, question: dict | None
         "quest": {"id": q.id, "title": q.raw["title"], "xp": q.xp, "verify_type": q.raw.get("verify_type")},
         "boss": boss,
         "you": {"vitality": char["stats"]["vitality"], "wounds": state["wounds"], "wounds_allowed": boss["wounds_allowed"],
-                "dodge_pct": char["gear_totals"]["dodge"], "dodge_used": state["dodges"] > 0,
-                "cleanse": bool(char["gear_totals"]["cleanse"]), "steady_available": state["steady_available"],
-                "craft": char["stats"]["craft"] + char["gear_totals"]["craft"], "focus": char["stats"]["focus"],
-                "crit_pct": rpg.crit_chance(char["stats"]["focus"], char["gear_totals"].get("focus", 0), None)},
-        "hits": state["right"] + state["dodges"], "hits_to_win": boss["hits_to_win"], "turn": state["i"] + 1, "total": total,
+                "steady_available": state["steady_available"], "craft": char["stats"]["craft"], "focus": char["stats"]["focus"],
+                "crit_pct": rpg.crit_chance(char["stats"]["focus"], None), "outfit": char["worn"]["art_id"]},
+        "hits": state["right"], "hits_to_win": boss["hits_to_win"], "turn": state["i"] + 1, "total": total,
         "first_try": state["first_try"], "log": state["log"][-6:], "question": question, "result": state.get("result"),
         "outcome": state.get("outcome"),
     }
@@ -126,13 +140,13 @@ async def start_fight(qid: str, request: Request, member=Depends(current_member)
     if q.rank > max(state_u.rank, 0) and q.rank >= 0:
         raise HTTPException(403, "This room is locked until you rank up.")
     # No cooldown after a loss: the reading is right there, try again when ready.
-    char = await character_payload(request, member["id"], u["major"])
+    char = await character_payload(request, member["id"], u)
     attempts = await db.quiz_attempts(member["id"], qid)
     rng = random.Random()
     boss = rpg.boss_for(q)
     state = {
         "orders": [rng.sample(range(len(it["choices"])), len(it["choices"])) for it in q.quiz],
-        "i": 0, "right": 0, "wounds": 0, "dodges": 0, "debuff": None, "log": [], "first_try": len(attempts) == 0,
+        "i": 0, "right": 0, "wounds": 0, "debuff": None, "log": [], "first_try": len(attempts) == 0,
         "steady_available": char["stats"]["resolve"] >= 7, "asked_at": time.time(), "crit_xp": 0, "answers": [],
     }
     fid = await rdb.create_fight(member["id"], qid, state)
@@ -156,8 +170,8 @@ async def get_fight(fid: int, request: Request, member=Depends(current_member)):
     import json
     state = json.loads(f["state"]); state["fight_id"] = fid
     q = cat.quests[f["quest_id"]]
-    u = await db.user(member["id"])
-    char = await character_payload(request, member["id"], u["major"])
+    u, _, _ = await db.user_state(member["id"])
+    char = await character_payload(request, member["id"], u)
     boss = rpg.boss_for(q)
     question = _question_view(q, state) if f["result"] is None and state["i"] < len(q.quiz) else None
     state["result"] = f["result"]
@@ -175,8 +189,8 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
         raise HTTPException(409, "This fight is over.")
     state = json.loads(f["state"]); state["fight_id"] = fid
     q = cat.quests[f["quest_id"]]
-    u = await db.user(member["id"])
-    char = await character_payload(request, member["id"], u["major"])
+    u, _, _ = await db.user_state(member["id"])
+    char = await character_payload(request, member["id"], u)
     boss = rpg.boss_for(q)
     rng = random.Random()
     i = state["i"]
@@ -188,15 +202,12 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
     right = chosen == item["answer_index"]
     events: list[dict] = []
     debuff = state.get("debuff")
-    if debuff and char["gear_totals"]["cleanse"]:
-        debuff = None
-        events.append({"kind": "cleanse", "text": rpg.boss_line(boss, "cleanse", rng)})
     state["debuff"] = None
     if right:
         state["right"] += 1
-        crit_pct = rpg.crit_chance(char["stats"]["focus"], char["gear_totals"].get("focus", 0), body.seconds)
+        crit_pct = rpg.crit_chance(char["stats"]["focus"], body.seconds)
         crit = rng.randint(1, 100) <= crit_pct
-        dmg = 10 + 2 * (char["stats"]["craft"] + char["gear_totals"]["craft"])
+        dmg = 10 + 2 * char["stats"]["craft"]
         if debuff == "weakened":
             dmg //= 2
         bonus_xp = 0
@@ -209,12 +220,7 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
         events.append({"kind": "crit" if crit else "hit", "text": rpg.boss_line(boss, "crit" if crit else "hit", rng),
                        "damage": dmg, "bonus_xp": bonus_xp, "explain": item.get("explain", "")})
     else:
-        dodge_pct = char["gear_totals"]["dodge"]
-        if state["dodges"] == 0 and dodge_pct and rng.randint(1, 100) <= dodge_pct:
-            state["dodges"] = 1
-            events.append({"kind": "dodge", "text": rpg.boss_line(boss, "dodge", rng),
-                           "explain": item.get("explain", ""), "correct": order.index(item["answer_index"])})
-        elif state["steady_available"]:
+        if state["steady_available"]:
             state["steady_available"] = False
             state["wounds"] += 0.5
             events.append({"kind": "steady", "text": rpg.boss_line(boss, "steady", rng),
@@ -223,7 +229,7 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
             state["wounds"] += 1
             events.append({"kind": "wound", "text": rpg.boss_line(boss, "wound", rng),
                            "explain": item.get("explain", ""), "correct": order.index(item["answer_index"])})
-        if state["wounds"] <= boss["wounds_allowed"] and i + 1 < len(q.quiz):
+        if (state["i"] + 1 - state["right"]) <= boss["wounds_allowed"] and i + 1 < len(q.quiz):
             state["debuff"] = rpg.debuff_for(None, rng)
             d = rpg.DEBUFFS[state["debuff"]]
             events.append({"kind": "debuff", "text": f"{d['name']}: {d['text']}", "debuff": state["debuff"]})
@@ -232,9 +238,8 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
     state["i"] = i + 1
 
     total = len(q.quiz)
-    # Score for the record: right answers plus the one dodged attack (gear may afford a dodge, by design).
     # A "steady" half-wound is visual only: the miss still counts, so Resolve never changes the outcome.
-    score = state["right"] + state["dodges"]
+    score = state["right"]
     misses = state["i"] - score
     result = None
     if misses > boss["wounds_allowed"]:
@@ -280,6 +285,8 @@ async def _finish(request: Request, uid: int, q: Quest, score: int, total: int, 
     if q.raw.get("verify_type") == "quiz" or test_out:
         xp, loot = await complete_quest(request, uid, q, u)
         completed = True
+    else:
+        loot = await new_outfits(request, uid)
     await rdb.emit("quiz_passed", uid, {"quest": q.id, "score": score, "total": total, "first_try": first_try})
     state["outcome"] = {"passed": True, "score": score, "total": total, "first_try_bonus": bonus, "crit_xp": state.get("crit_xp", 0),
                         "completed": completed, "quest_xp": xp, "loot": loot, "tested_out": bool(test_out and q.raw.get("verify_type") != "quiz"),
@@ -301,13 +308,19 @@ async def complete_quest(request: Request, uid: int, q: Quest, u: dict) -> tuple
     await rdb.touch_streak(uid)
     if q.rank >= 0:
         await rdb.grant_medal(uid, "first_blood")
-    loot = rpg.roll_loot(q, u["major"], random.Random())
-    if loot and (not loot.get("set_piece") or not await rdb.has_item(uid, loot["key"])):
-        loot["id"] = await rdb.add_gear(uid, loot, q.id)
-    else:
-        loot = None
-    await rdb.emit("quest_completed", uid, {"quest": q.id, "xp": xp, "loot": loot["name"] if loot else None})
+    loot = await new_outfits(request, uid)
+    await rdb.emit("quest_completed", uid, {"quest": q.id, "xp": xp, "outfit": loot["name"] if loot else None})
     return xp, loot
+
+
+async def new_outfits(request: Request, uid: int) -> dict | None:
+    """Grants any outfit the member just earned and returns the first new one (for the reward screen)."""
+    u, _, _ = await request.app.state.db.user_state(uid)
+    char = await character_payload(request, uid, u)
+    if not char["new_outfits"]:
+        return None
+    st = next(o for o in char["outfits"] if o["id"] == char["new_outfits"][0])
+    return {"name": st["name"], "flavour": st["flavour"], "tier": st["tier"], "color": st["color"], "id": st["id"]}
 
 
 @router.post("/fights/{fid}/retreat")

@@ -1,55 +1,45 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Character, GearDot, ItemIcon, type GearMap } from "./Figure";
+import { Character, ItemIcon } from "./Figure";
 
-type Item = { id: number; slot: string; rarity: string; name: string; flavour: string | null; stat: string; bonus: number; equipped: number; source_quest: string | null; set_piece: number; art_id?: string; item_key: string };
+export type Outfit = { id: string; name: string; flavour: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
-  stats: Record<string, number>; stat_blurb: Record<string, string>; gear_totals: Record<string, number>;
-  equipped: Record<string, Item>; inventory: Item[]; cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string> };
+  stats: Record<string, number>; stat_blurb: Record<string, string>; worn: Outfit; outfits: Outfit[]; new_outfits: string[];
+  cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string };
   nameplate_colors: string[]; slots: string[]; major: string;
 };
 export type ArtProps = { layers: string[] | null; icons: Record<string, string>; appearance: Record<string, string[]> };
-const SLOT_LABEL: Record<string, string> = { head: "Head", chest: "Chest", hands: "Hands", legs: "Legs", feet: "Feet", weapon: "Weapon", offhand: "Off hand", cape: "Cape", shoulders: "Shoulders" };
-const EFFECT: Record<string, string> = { lore: "Lore", craft: "Craft", dodge: "dodge chance", cleanse: "cleanses a debuff", focus: "Focus" };
 const APPEARANCE_LABEL: Record<string, string> = { body: "Body", skin: "Skin", face: "Face", hair: "Hair", hair_color: "Hair color", eye_color: "Eyes", facial_hair: "Facial hair", markings: "Markings" };
+const TIER_NAME: Record<string, string> = { novice: "Novice", apprentice: "Apprentice", adept: "Adept", expert: "Expert", master: "Master" };
+const RARITY_OF_TIER: Record<string, string> = { novice: "common", apprentice: "uncommon", adept: "rare", expert: "epic", master: "legendary" };
 
 export default function CharacterSheet({ initial, fallbackColor, art }: { initial: Char; fallbackColor: string; art: ArtProps }) {
   const router = useRouter();
   const [c, setC] = useState<Char>(initial);
   const [busy, setBusy] = useState(false);
   const color = c.cosmetics.nameplate ?? fallbackColor;
-  const gear: GearMap = Object.fromEntries(Object.entries(c.equipped).map(([k, v]) => [k, { rarity: v.rarity }]));
-  const artIdOf = (it: Item) => it.art_id ?? `gear_${it.item_key.split(":")[0]}_${it.slot}`;
+  const owned = c.outfits.filter((o) => o.owned);
+  const locked = c.outfits.filter((o) => !o.owned);
 
   async function patch(body: Record<string, unknown>) {
     setBusy(true);
     const r = await fetch("/api/me/character", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-    if (r.ok) { setC(await r.json()); router.refresh(); }   // refresh re-renders the layered figure on the server
+    if (r.ok) { setC(await r.json()); router.refresh(); }   // the layered figure is rendered on the server
     setBusy(false);
   }
-
   const appearanceKeys = Object.keys(art.appearance ?? {});
+
   return (
     <div className="two">
       <div>
         <div className="card" style={{ display: "flex", gap: 18, alignItems: "flex-start", flexWrap: "wrap" }}>
-          <Character gear={gear} layers={art.layers} color={color} size={170} />
+          <Character outfit={c.worn.id} layers={art.layers} color={color} size={170} />
           <div style={{ flex: 1, minWidth: 220 }}>
-            <div className="eyebrow">Equipped</div>
-            <ul className="plain small" style={{ marginTop: 6, listStyle: "none", paddingLeft: 0 }}>
-              {c.slots.map((s) => {
-                const it = c.equipped[s];
-                return (
-                  <li key={s} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <ItemIcon icon={it ? art.icons[artIdOf(it)] : null} rarity={it?.rarity ?? "common"} size={28} />
-                    <span className="muted" style={{ width: 70 }}>{SLOT_LABEL[s]}</span>
-                    {it ? <><b>{it.name}</b> <span className="muted">+{it.bonus} {EFFECT[it.stat]}{it.stat === "dodge" ? "%" : ""}</span></> : <span className="muted">empty</span>}
-                  </li>
-                );
-              })}
-            </ul>
-            <div className="eyebrow" style={{ marginTop: 10 }}>Nameplate color</div>
+            <div className="eyebrow">Wearing</div>
+            <div style={{ margin: "4px 0 2px" }}><b style={{ color: c.worn.color, fontSize: 16 }}>{c.worn.name}</b></div>
+            <div className="small muted"><i>{c.worn.flavour}</i></div>
+            <div className="eyebrow" style={{ marginTop: 12 }}>Nameplate color</div>
             <div className="row" style={{ gap: 6, marginTop: 6 }}>
               {c.nameplate_colors.map((col) => (
                 <button key={col} onClick={() => patch({ nameplate: col })} disabled={busy} aria-label={col}
@@ -75,36 +65,55 @@ export default function CharacterSheet({ initial, fallbackColor, art }: { initia
             )}
           </div>
         </div>
-        <h2>Inventory</h2>
+
+        <div className="section-h"><h2>Wardrobe</h2><span className="muted small">{owned.length} outfit{owned.length === 1 ? "" : "s"} earned · outfits are looks only, no stats</span></div>
         <div className="grid">
-          {c.inventory.map((it) => (
-            <div key={it.id} className="card qcard" style={{ borderColor: it.equipped ? "var(--gold)" : undefined }}>
+          {owned.map((o) => (
+            <div key={o.id} className="card qcard" style={{ borderColor: o.worn ? "var(--gold)" : undefined }}>
               <div className="row" style={{ justifyContent: "space-between", alignItems: "flex-start" }}>
                 <div className="row" style={{ gap: 10 }}>
-                  <ItemIcon icon={art.icons[artIdOf(it)]} rarity={it.rarity} />
+                  <ItemIcon icon={art.icons[o.art_id]} rarity={RARITY_OF_TIER[o.tier]} />
                   <div>
-                    <div className="title">{it.name}{it.set_piece ? " ★" : ""}</div>
-                    <div className="small muted"><GearDot rarity={it.rarity} />{it.rarity} {SLOT_LABEL[it.slot]?.toLowerCase() ?? it.slot}</div>
+                    <div className="title">{o.name}</div>
+                    <div className="small muted" style={{ color: o.color }}>{TIER_NAME[o.tier]} set{o.earned_at ? ` · earned ${o.earned_at.slice(0, 10)}` : ""}</div>
                   </div>
                 </div>
-                {it.equipped ? <span className="status now">Equipped</span> : <button onClick={() => patch({ equip: it.id })} disabled={busy}>Equip</button>}
+                {o.worn ? <span className="status now">Wearing</span> : <button onClick={() => patch({ wear: o.id })} disabled={busy}>Wear</button>}
               </div>
-              <div className="small muted"><i>{it.flavour}</i></div>
-              <div className="meta"><span>+{it.bonus} {EFFECT[it.stat]}{it.stat === "dodge" ? "%" : ""}</span>{it.source_quest && <><span>·</span><span>from {it.source_quest}</span></>}</div>
+              <div className="small muted"><i>{o.flavour}</i></div>
             </div>
           ))}
         </div>
+        {locked.length > 0 && (
+          <>
+            <div className="section-h"><h2>Not yet earned</h2><span className="muted small">{locked.length} to find</span></div>
+            <div className="grid lock">
+              {locked.map((o) => (
+                <div key={o.id} className="card qcard">
+                  <div className="row" style={{ gap: 10 }}>
+                    <ItemIcon icon={null} rarity={RARITY_OF_TIER[o.tier]} />
+                    <div>
+                      <div className="title">🔒 {o.name}</div>
+                      <div className="small muted" style={{ color: o.color }}>{TIER_NAME[o.tier]} set</div>
+                    </div>
+                  </div>
+                  <div className="small">{o.hint}</div>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
       </div>
       <aside>
         <div className="card">
           <div className="eyebrow">Stats</div>
           {Object.entries(c.stats).map(([k, v]) => (
             <div key={k} style={{ padding: "8px 0", borderBottom: "1px solid var(--line)" }}>
-              <div className="row" style={{ justifyContent: "space-between" }}><b style={{ textTransform: "capitalize" }}>{k}</b><b>{v}{c.gear_totals[k] ? <span className="muted"> +{c.gear_totals[k]}</span> : null}</b></div>
+              <div className="row" style={{ justifyContent: "space-between" }}><b style={{ textTransform: "capitalize" }}>{k}</b><b>{v}</b></div>
               <div className="small muted">{c.stat_blurb[k]}</div>
             </div>
           ))}
-          <div className="small muted" style={{ marginTop: 8 }}>Gear: dodge {c.gear_totals.dodge}% (one per fight){c.gear_totals.cleanse ? ", cleanses one debuff" : ""}.</div>
+          <div className="small muted" style={{ marginTop: 8 }}>Stats grow from what you do. They change how fights look and how much bonus XP crits give, never whether you pass.</div>
         </div>
       </aside>
     </div>

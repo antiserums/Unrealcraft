@@ -119,7 +119,7 @@ async def submit(qid: str, request: Request, member=Depends(current_member), tex
         xp, loot = await complete_quest(request, uid, q, u)
         await rdb.emit("submission_accepted", uid, {"submission": sid, "quest": qid, "route": route})
         return {"status": "accepted", "submission": sid, "xp": xp, "loot": loot,
-                "message": f"Chest opened. +{xp} XP." + (f" Loot: {loot['name']}." if loot else "")}
+                "message": f"Chest opened. +{xp} XP." + (f" New outfit: {loot['name']}." if loot else "")}
     await rdb.emit("submission_created", uid, {"submission": sid, "quest": qid, "route": route})
     who = {"peer": "a peer (Rank 2+) or a mentor", "mentor": "a mentor or two peers", "human": "a human mentor"}[route]
     return {"status": "pending", "submission": sid, "route": route,

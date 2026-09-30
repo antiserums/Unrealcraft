@@ -1,22 +1,22 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Boss, Character, type GearMap } from "./Figure";
+import { Boss, Character } from "./Figure";
 
 type Ev = { kind: string; text: string; damage?: number; bonus_xp?: number; explain?: string; correct?: number; debuff?: string };
 type Q = { index: number; total: number; q: string; choices: string[]; hint: string | null; debuff: string | null };
 type Fight = {
   fight_id: number; quest: { id: string; title: string; xp: number; verify_type: string };
   boss: { name: string; short: string; look: string; color: string; hits_to_win: number; questions: number; wounds_allowed: number; verb: string; intro: string; tier: string };
-  you: { vitality: number; wounds: number; wounds_allowed: number; dodge_pct: number; dodge_used: boolean; cleanse: boolean; steady_available: boolean; craft: number; focus: number; crit_pct: number };
+  you: { vitality: number; wounds: number; wounds_allowed: number; steady_available: boolean; craft: number; focus: number; crit_pct: number; outfit: string };
   hits: number; hits_to_win: number; turn: number; total: number; first_try: boolean; log: Ev[]; question: Q | null;
   result: string | null; events?: Ev[];
-  outcome?: { passed: boolean; score: number; total: number; first_try_bonus?: number; crit_xp?: number; completed?: boolean; quest_xp?: number; loot?: { name: string; rarity: string; flavour?: string; slot: string } | null; tested_out?: boolean; next?: string } | null;
+  outcome?: { passed: boolean; score: number; total: number; first_try_bonus?: number; crit_xp?: number; completed?: boolean; quest_xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string; id: string } | null; tested_out?: boolean; next?: string } | null;
 };
 
 const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled.", weakened: "Weakened: your next hit does half damage.", blinded: "Blinded: no hint this turn." };
 
-export default function FightScreen({ questId, gear, color, layers, bossImage }: { questId: string; gear: GearMap; color: string; layers?: string[] | null; bossImage?: string | null }) {
+export default function FightScreen({ questId, outfit, color, layers, bossImage }: { questId: string; outfit: string; color: string; layers?: string[] | null; bossImage?: string | null }) {
   const [f, setF] = useState<Fight | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -47,13 +47,13 @@ export default function FightScreen({ questId, gear, color, layers, bossImage }:
     const j: Fight = await r.json();
     if (!r.ok) { setErr((j as unknown as { detail: string }).detail); setBusy(false); return; }
     const evs = j.events ?? [];
-    const main = evs.find((e) => ["hit", "crit", "wound", "dodge", "steady"].includes(e.kind));
+    const main = evs.find((e) => ["hit", "crit", "wound", "steady"].includes(e.kind));
     if (main && (main.kind === "hit" || main.kind === "crit")) {
       setYouPose("strike"); setBossPose("hit");
       setFloat({ text: `-${main.damage}${main.kind === "crit" ? " CRIT" : ""}`, side: "boss", kind: main.kind });
     } else if (main) {
-      setYouPose(main.kind === "dodge" ? "idle" : "hurt"); setBossPose("attack");
-      setFloat({ text: main.kind === "dodge" ? "DODGE" : main.kind === "steady" ? "-½" : "-1", side: "you", kind: main.kind });
+      setYouPose("hurt"); setBossPose("attack");
+      setFloat({ text: main.kind === "steady" ? "-½" : "-1", side: "you", kind: main.kind });
     }
     setLast(evs);
     setTimeout(() => {
@@ -79,11 +79,10 @@ export default function FightScreen({ questId, gear, color, layers, bossImage }:
             <div className="eyebrow">You · Vitality {f.you.vitality}</div>
             <div className="bar big"><span style={{ width: `${youHp * 100}%`, background: "#4FA36C" }} /></div>
             <div className="small muted">{f.you.wounds} wound{f.you.wounds === 1 ? "" : "s"} · {Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds))} more before you fall
-              {f.you.dodge_pct > 0 && <> · dodge {f.you.dodge_pct}%{f.you.dodge_used ? " (used)" : ""}</>}
               {f.you.steady_available && <> · steady ready</>}
             </div>
           </div>
-          <div className="stage">{float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}<Character gear={gear} layers={layers} color={color} pose={youPose} size={150} /></div>
+          <div className="stage">{float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}<Character outfit={outfit} layers={layers} color={color} pose={youPose} size={150} /></div>
         </div>
         <div className="side boss">
           <div className="hpbox">
@@ -136,13 +135,13 @@ export default function FightScreen({ questId, gear, color, layers, bossImage }:
                 {f.outcome?.first_try_bonus ? <li>⭐ Flawless first try: +{f.outcome.first_try_bonus} XP</li> : null}
                 {f.outcome?.crit_xp ? <li>Crits: +{f.outcome.crit_xp} XP</li> : null}
                 {f.outcome?.completed ? <li>✅ Quest complete: +{f.outcome.quest_xp} XP{f.outcome.tested_out ? " (tested out, no turn-in needed)" : ""}</li> : null}
-                {f.outcome?.loot ? <li>🎁 Loot: <b style={{ color: "var(--accent)" }}>{f.outcome.loot.name}</b> ({f.outcome.loot.rarity} {f.outcome.loot.slot}). <i>{f.outcome.loot.flavour}</i></li> : null}
+                {f.outcome?.loot ? <li>🎁 New outfit: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>. <i>{f.outcome.loot.flavour}</i></li> : null}
               </ul>
               <div className="row">
                 {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>Claim the chest: send your work</Link>}
                 {f.outcome?.next === "next" && <Link className="btn primary" href="/">Next room</Link>}
                 {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>Back to the room</Link>}
-                <Link className="btn" href="/me">Character sheet</Link>
+                <Link className="btn" href="/me">{f.outcome?.loot ? "Wear it" : "Character sheet"}</Link>
               </div>
             </>
           ) : (
