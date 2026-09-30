@@ -1,5 +1,13 @@
 # Notes for the artist — website art, 30 September 2026
 
+## Update after the scrollbar delivery (`docs/17-current-art-handoff.md`)
+
+Done on the site: the new scrollbar (12 px, thumb sliced 12 2 12 2), Log out and the profile tabs on the tall
+family, `.btn` on every plain action button (Edit wardrobe, Change, Cancel, Copy link, featured toggles), flat
+specialization chips, and the public copies of every retired file removed. The old button plates, tab plates and
+`navigation-16` had no consumers left, so they were removed from the pack too and added to `retired-assets.json`.
+Still open from the earlier list: the 1 px low button text and the 16 px statistics contrast (both optional).
+
 ## Update after the refinement delivery (`docs/14-theme-refinement-handoff.md`)
 
 Everything from the refinement is wired: tall buttons (with disabled and focus states), progress track v2 with the

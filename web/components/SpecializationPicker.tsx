@@ -33,10 +33,10 @@ export default function SpecializationPicker({ mine, options }: { mine: MySpecia
         <div>
           <div className="eyebrow">{t("Specializations")}</div>
           <div style={{ marginTop: 4 }}>
-            {mine.length ? mine.map((s) => <span key={s.key} className="pill" style={{ marginRight: 6, borderColor: s.primary ? "var(--gold)" : undefined }}>{s.primary ? t("{title} · primary", { title: t(s.title) }) : t(s.title)}</span>) : <span className="muted">{t("Undecided. Pick one to get a path.")}</span>}
+            {mine.length ? mine.map((s) => <span key={s.key} className={`pill spec-chip ${s.primary ? "primary" : ""}`}>{s.primary ? t("{title} · primary", { title: t(s.title) }) : t(s.title)}</span>) : <span className="muted">{t("Undecided. Pick one to get a path.")}</span>}
           </div>
         </div>
-        {!open && <button onClick={() => setOpen(true)}>{t("Change")}</button>}
+        {!open && <button className="btn" onClick={() => setOpen(true)}>{t("Change")}</button>}
       </div>
       {open && (
         <div style={{ marginTop: 12 }}>
@@ -64,7 +64,7 @@ export default function SpecializationPicker({ mine, options }: { mine: MySpecia
           {err && <div className="note small" style={{ marginTop: 8, borderColor: "var(--bad)" }}>{err}</div>}
           <div className="row" style={{ gap: 6, marginTop: 10 }}>
             <button className="primary" onClick={save} disabled={busy || !dirty}>{busy ? t("Saving…") : t("Save")}</button>
-            <button onClick={() => { setOpen(false); setPrimary(startPrimary); setExtras(startExtras ? startExtras.split(",") : []); setErr(null); }} disabled={busy}>{t("Cancel")}</button>
+            <button onClick={() => { setOpen(false); setPrimary(startPrimary); setExtras(startExtras ? startExtras.split(",") : []); setErr(null); }} className="btn" disabled={busy}>{t("Cancel")}</button>
           </div>
         </div>
       )}

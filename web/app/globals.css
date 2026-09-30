@@ -634,9 +634,9 @@ html.site-art :is(.btn.primary, button.primary):hover:not(:disabled) { border-im
 html.site-art :is(.btn.primary, button.primary):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons-tall/gold-pressed.png"); }
 html.site-art :is(.btn.primary, button.primary):disabled { border-image-source: url("/art/website-art/interface/buttons-tall/gold-disabled.png"); }
 html.site-art :is(.btn, button):focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
-html.site-art .nav form button, html.site-art .banner-btn { border-image: url("/art/website-art/interface/buttons/stone-normal.png") 10 18 fill / 10px 18px stretch; padding: 8px 20px; }
-html.site-art .banner-btn { padding: 6px 12px; opacity: .8; }
-html.site-art .banner-btn .pxi { margin: -8px -4px; }
+html.site-art .nav form button { padding: 9px 18px; }
+html.site-art .banner-btn { padding: 4px 6px; opacity: .8; }
+html.site-art .banner-btn .pxi { margin: -6px -2px; }
 .arena-box { max-width: 960px; margin-inline: auto; }
 /* small icons next to words */
 .h-ico { margin: -8px 4px -8px 0; }
@@ -666,11 +666,15 @@ html.site-art .lang-picker select { padding: 8px 24px 8px 12px; }
 
 html.site-art .subnav { border: 0; background: none; padding: 0; gap: 6px; }
 html.site-art .subnav a {
-  display: inline-flex; align-items: center; gap: 4px; padding: 10px 18px; border-radius: 0; color: var(--muted);
-  border-image: url("/art/website-art/interface/tab-plates/normal.png") 12 fill / 12px repeat; image-rendering: pixelated;
+  display: inline-flex; align-items: center; gap: 4px; padding: 12px 20px; border-radius: 0; color: var(--ink); text-shadow: 0 1px 0 #000;
+  border-image: url("/art/website-art/interface/buttons-tall/stone-normal.png") 12 14 fill / 12px 14px stretch; image-rendering: pixelated;
 }
-html.site-art .subnav a:hover { border-image-source: url("/art/website-art/interface/tab-plates/hover.png"); color: var(--gold-2); }
-html.site-art .subnav a.on { border-image-source: url("/art/website-art/interface/tab-plates/active.png"); background: none; box-shadow: none; color: var(--gold-2); }
+html.site-art .subnav a:hover { border-image-source: url("/art/website-art/interface/buttons-tall/stone-hover.png"); color: #fff; }
+html.site-art .subnav a:active { border-image-source: url("/art/website-art/interface/buttons-tall/stone-pressed.png"); }
+html.site-art .subnav a.on { border-image-source: url("/art/website-art/interface/buttons-tall/gold-normal.png"); background: none; box-shadow: none; color: var(--gold-2); }
+html.site-art .subnav a.on:hover { border-image-source: url("/art/website-art/interface/buttons-tall/gold-hover.png"); color: #fff2c8; }
+html.site-art .subnav a:focus-visible { outline: 2px solid var(--teal-2); outline-offset: 2px; }
+html.site-art .subnav a .ico { margin: -8px 4px -8px -6px; }
 
 html.site-art .note {
   border: 0; border-radius: 0; background: none; box-shadow: none; padding: 14px 18px; min-height: 48px;
@@ -732,4 +736,16 @@ html.site-art .tile-lock { display: none; }          /* the locked slot art says
 .stat-ico { position: absolute; right: 12px; top: 12px; margin: 0; opacity: .9; }
 html.site-art .lang-picker .ico-16 { margin: -4px 0; }
 
-/* scrollbars: the pack's first scrollbar parts are not used; the artist is redesigning them (docs/12) */
+/* specialization chips on the player card: labels, not buttons */
+.spec-chip { margin: 0 6px 6px 0; }
+html.site-art .spec-chip { border-radius: 0; background: var(--leather); border: 1px solid var(--bronze); box-shadow: none; color: var(--ink); padding: 3px 10px; white-space: normal; }
+html.site-art .spec-chip.primary { border-color: var(--gold); color: var(--gold-2); background: #1f1a12; }
+
+/* scrollbar: 12 px, the pack's track row and 9-slice thumb (caps 12 px, sides 2 px, repeatable middle). Browsers
+   that ignore these rules keep their own scrollbar; Firefox gets matching colours. */
+@supports not selector(::-webkit-scrollbar) { html.site-art { scrollbar-color: #2a221a #0a0c12; } }   /* Firefox; setting scrollbar-color in Chrome would switch the art off */
+html.site-art ::-webkit-scrollbar { width: 12px; height: 12px; }
+html.site-art ::-webkit-scrollbar-track { background: #0a0c12 url("/art/website-art/interface/scrollbar/track.png") repeat-y; }
+html.site-art ::-webkit-scrollbar-thumb { min-height: 36px; border: 0; background: #2a221a; border-image: url("/art/website-art/interface/scrollbar/thumb.png") 12 2 fill / 12px 2px repeat; image-rendering: pixelated; }
+html.site-art ::-webkit-scrollbar-thumb:hover { border-image-source: url("/art/website-art/interface/scrollbar/thumb-hover.png"); }
+html.site-art ::-webkit-scrollbar-corner { background: #0a0c12; }

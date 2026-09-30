@@ -111,14 +111,16 @@ an image hangs off that class, so without the pack the site looks as it did befo
 | `textures/stone-tile` | Page background |
 | `interface/divider-gem` | The rule under section headings |
 | `interface/panel-stone-gold` | Frame of step cards, spot cards and the fight result (9-slice, 20 px) |
-| `interface/buttons-tall/*` | `.btn` and primary buttons, 96 x 48 plates (ends 14 px, trims 12 px, middle stretches); the 96 x 32 `buttons/*` plates on Log out and the banner buttons |
+| `interface/buttons-tall/*` | Every `.btn`, primary button, Log out and the sub-navigation tabs (stone, gold for the current one): 96 x 48 plates, ends 14 px, trims 12 px, middle stretches. Plain action buttons need the `btn` class to get the plate |
 | `interface/answer-plates`, `icons/selection-controls`, `icons/statistics` | Quiz choices; checkboxes and radios; the number tiles on the home and admin dashboards |
 | `header-*-narrow`, `<arena>-4x` | Header crops below 600 px; the 1920 x 1080 arenas as the fight's large background |
 | `identity` emblem | Beside the site name and as the browser tab icon |
 
-| `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*` | Inputs and selects, the sub-navigation tabs, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars. The scrollbar parts are not used; the artist is redesigning them |
+| `interface/form-fields`, `tab-plates`, `message-panels`, `inventory-slots`, `progress-*`, `scrollbar/*` | Inputs and selects, `.note` boxes (`data-tone` success/warning/error), wardrobe tiles, progress bars, the page scrollbar (12 px track row and a 9-slice thumb; Firefox gets plain colours) |
 | `icons/utility`, `rewards`, `navigation` | Buttons and links: Filter, Edit profile, View as others, Public/Private, external reading links, the language picker; reward lines in the fight result and on achievements; the sub-navigation tabs. `components/Ico.tsx` renders these by path, so client components can use them |
 
-Not used yet: the leather and parchment panels, the section title plate (v1 and v2), the tooltip plate, the 16 px
-navigation icons and the Senior and Lead crests (the catalog has no such ranks yet). Notes on what the artist should fix are in
+Retired (removed from the pack and from `web/public/art`, listed in the pack's `retired-assets.json`): the first
+button plates and tab plates, the 16 px navigation icons, the old divider, progress track and fill, both section
+title plates, the tooltip plate and the first scrollbar parts. Not used yet: the leather and parchment panels and
+the Senior and Lead crests (the catalog has no such ranks yet). Notes on what the artist should fix are in
 `docs/12-notes-for-the-artist.md`; the artist's route-by-route plan is in `docs/11-website-theme-audit.md`.

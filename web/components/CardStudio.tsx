@@ -100,7 +100,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
       {mode === "view" && (
         <div className="studio-actions">
           <button className="primary" onClick={() => setMode("profile")}><Ico group="utility" id="edit" />{t("Edit profile")}</button>
-          {wardrobe && <button onClick={() => setMode("wardrobe")}><Ico group="navigation" id="wardrobe" />{t("Edit wardrobe")}</button>}
+          {wardrobe && <button className="btn" onClick={() => setMode("wardrobe")}><Ico group="navigation" id="wardrobe" />{t("Edit wardrobe")}</button>}
           <Link className="btn" href={`/members/${c.id}`}><Ico group="utility" id="public" />{t("View as others")}</Link>
         </div>
       )}
@@ -110,7 +110,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
             <div><div className="eyebrow">{t("Editing your wardrobe")}</div><div className="small muted">{t("Pick a set, weapons and build; the card shows them. Nothing is kept until you press Save.")}</div></div>
             <div className="row" style={{ gap: 6 }}>
-              <button onClick={cancelWardrobe} disabled={busy}>{t("Cancel")}</button>
+              <button className="btn" onClick={cancelWardrobe} disabled={busy}>{t("Cancel")}</button>
               <button className="primary" onClick={saveWardrobe} disabled={busy || !wardrobeDirty || wardrobeBlocked} title={wardrobeBlocked ? t("That set is not earned yet") : undefined}>{busy ? t("Saving…") : t("Save")}</button>
             </div>
           </div>
@@ -127,7 +127,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               <div className="small muted">{t("Changes show on the card as you pick. Nothing is kept until you press Save. Locked items are entitlements you have not earned yet.")}</div>
             </div>
             <div className="row" style={{ gap: 6 }}>
-              <button onClick={cancel} disabled={busy}>{t("Cancel")}</button>
+              <button className="btn" onClick={cancel} disabled={busy}>{t("Cancel")}</button>
               <button className="primary" onClick={save} disabled={busy || !dirty}>{busy ? t("Saving…") : t("Save")}</button>
             </div>
           </div>
@@ -161,7 +161,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               {c.earned_achievements.length ? (
                 <div className="row" style={{ gap: 6 }}>
                   {c.earned_achievements.map((a) => (
-                    <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={draft.featured.includes(a.key) ? "primary" : ""} title={t(a.desc)} style={{ padding: "5px 9px", fontSize: 11 }}>
+                    <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={draft.featured.includes(a.key) ? "btn primary" : "btn"} title={t(a.desc)} style={{ padding: "5px 9px", fontSize: 11 }}>
                       {a.icon} {t(a.name)}
                     </button>
                   ))}
@@ -176,7 +176,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               <div className="small muted" style={{ marginTop: 6 }}>{draft.public ? t("Anyone with the link can open your card.") : t("Only logged-in guild members can open your card.")}</div>
               <div className="row" style={{ gap: 8, marginTop: 8 }}>
                 <input type="text" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} style={{ flex: 1, minWidth: 160, fontFamily: "var(--mono)", fontSize: 12 }} />
-                <button type="button" onClick={copy}>{copied ? t("Copied") : t("Copy link")}</button>
+                <button type="button" className="btn" onClick={copy}>{copied ? t("Copied") : t("Copy link")}</button>
               </div>
             </div>
 

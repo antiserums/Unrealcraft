@@ -92,7 +92,7 @@ export default function HeroBanner({ animated, still, living, children, icons = 
               </div>
             </div>
           )}
-          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={t("Season and time of day")}>{icons.still ? <Ico group="navigation" id="settings" size={16} /> : "⚙"}</button>}
+          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={t("Season and time of day")}>{icons.still ? <Ico group="navigation" id="settings" /> : "⚙"}</button>}
           <button type="button" className="banner-btn" onClick={togglePause} aria-pressed={paused} title={paused ? t("Play the banner") : t("Pause the banner")}>{icons.play && icons.pause ? <img className="px pxi" src={paused ? icons.play : icons.pause} width={32} height={32} alt="" /> : paused ? "▶" : "❚❚"}</button>
         </div>
       )}
