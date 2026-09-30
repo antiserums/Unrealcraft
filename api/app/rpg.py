@@ -78,6 +78,10 @@ REWARD_SETS = [
 EXCLUSIVE_SETS = [
     ("developer", "Sourceforged Sovereign", "Circuit-blue plate forged from the source itself. Worn by those who build the guild.", "master",
      {"type": "staff", "role": "developer", "hint": "Developers only"}),
+    ("admin", "Sunforged Arbiter", "Gold-chased plate that catches the light of judgement. Worn by those who keep the guild.", "master",
+     {"type": "staff", "role": "admin", "hint": "Admins only"}),
+    ("mentor", "Astral Guide", "Star-green robes for those who walk beside the newcomer. Worn by those who teach the guild.", "master",
+     {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
 ]
 
 
@@ -311,6 +315,8 @@ DECORATIONS = [
     ("celestial", "Celestial", "Midnight blue, gold stars, a crescent moon.", {"type": "achievement", "key": "lore_10", "hint": "Open the reading on ten quests"}),
     ("dragonheart", "Dragonheart", "Crimson scales and dragon horns.", {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
     ("developer", "Developer", "Circuit-blue trim with a living pulse.", {"type": "staff", "role": "developer", "hint": "Developers only"}),
+    ("admin", "Admin", "Sunforged gold with a steady shine.", {"type": "staff", "role": "admin", "hint": "Admins only"}),
+    ("mentor", "Mentor", "Astral green with a quiet glow.", {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
 ]
 AVATAR_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
 CARD_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]

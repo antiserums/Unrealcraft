@@ -1,6 +1,6 @@
 /** Decoration overlays. Nothing cycles frames (that looked jittery); special themes get a soft glow that breathes
  *  like the staff title, in the same colour. */
-const GLOW: Record<string, string> = { developer: "#3FB6B0" };   // the ring and border art is already bright; the halo uses the colour at 60% (see .pcard-deco.glow)
+const GLOW: Record<string, string> = { developer: "#3FB6B0", admin: "#D4AF37", mentor: "#6FB3A0" };   // the ring and border art is already bright; the halo uses the colour at 60% (see .pcard-deco.glow)
 
 /** The card border overlay: a 9-slice drawn in the gutter around the card, fading in when a decoration is on. */
 export function CardDeco({ src, theme }: { src: string | null; theme?: string }) {
