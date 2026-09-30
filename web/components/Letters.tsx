@@ -5,9 +5,9 @@ import { useMemo, useState } from "react";
 import { useT } from "./I18n";
 import Ico from "./Ico";
 
-export type Letter = { id: number; member_id: number; kind: string; title: string; body: string; link: string | null; sender_id: number | null; created_at: string; read: boolean };
+export type Letter = { id: number; member_id: number; kind: string; title: string; body: string; link: string | null; sender_id: number | null; sender?: string | null; created_at: string; read: boolean };
 
-/** What each kind of letter is, for the label and the icon. */
+/** What each kind of letter is: the label, the icon and who it reads as being from. */
 const KIND: Record<string, { label: string; group: "quest-state" | "rewards" | "utility" | "statistics"; icon: string }> = {
   letter: { label: "Letter", group: "utility", icon: "edit" },
   announcement: { label: "Announcement", group: "statistics", icon: "members" },
@@ -16,12 +16,11 @@ const KIND: Record<string, { label: string; group: "quest-state" | "rewards" | "
   rank: { label: "Rank", group: "rewards", icon: "rank-up" },
   donation: { label: "Thank you", group: "rewards", icon: "outfit" },
 };
-/** The inbox folders: a filter each. */
-const FOLDERS: { key: string; label: string; match: (l: Letter, read: boolean) => boolean }[] = [
-  { key: "all", label: "Inbox", match: () => true },
+/** The filter tabs across the top. */
+const TABS: { key: string; label: string; match: (l: Letter, read: boolean) => boolean }[] = [
+  { key: "all", label: "All", match: () => true },
   { key: "unread", label: "Unread", match: (_, read) => !read },
-  { key: "announcement", label: "Announcements", match: (l) => l.kind === "announcement" },
-  { key: "letter", label: "Letters", match: (l) => l.kind === "letter" },
+  { key: "announcement", label: "Announcements", match: (l) => l.kind === "announcement" || l.kind === "letter" },
   { key: "ticket", label: "Tickets", match: (l) => l.kind === "ticket" },
   { key: "review", label: "Reviews", match: (l) => l.kind === "review" },
   { key: "rewards", label: "Ranks and rewards", match: (l) => l.kind === "rank" || l.kind === "donation" },
@@ -31,17 +30,27 @@ async function post(path: string) {
   await fetch(`/api${path}`, { method: "POST" }).catch(() => null);
 }
 
-/** The mailbox: folders on the left, the list in the middle, the open letter on the right. Opening a letter marks
- *  it read. On a phone the three stack. */
+/** Relative date for the list: today's time, else the day. */
+function when(iso: string): string {
+  const d = new Date(iso.replace(" ", "T") + "Z");
+  const now = new Date();
+  const same = d.toDateString() === now.toDateString();
+  return same ? d.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+}
+
+/** The inbox. A list of letters like any mail app: who it is from, the subject and a preview, the date on the
+ *  right, unread rows in bold. Click a row to read it full width; Back returns to the list. Tabs filter. */
 export default function Letters({ letters }: { letters: Letter[] }) {
   const t = useT();
   const router = useRouter();
-  const [folder, setFolder] = useState("all");
+  const [tab, setTab] = useState("all");
   const [readIds, setReadIds] = useState<Set<number>>(new Set(letters.filter((l) => l.read).map((l) => l.id)));
-  const [openId, setOpenId] = useState<number | null>(letters.find((l) => !l.read)?.id ?? letters[0]?.id ?? null);
+  const [openId, setOpenId] = useState<number | null>(null);
   const isRead = (l: Letter) => readIds.has(l.id);
-  const shown = useMemo(() => letters.filter((l) => (FOLDERS.find((f) => f.key === folder) ?? FOLDERS[0]).match(l, isRead(l))), [letters, folder, readIds]);   // eslint-disable-line react-hooks/exhaustive-deps
+  const from = (l: Letter) => l.sender ?? (l.kind === "announcement" || l.kind === "letter" ? t("Staff") : "Unrealcraft");
+  const shown = useMemo(() => letters.filter((l) => (TABS.find((f) => f.key === tab) ?? TABS[0]).match(l, isRead(l))), [letters, tab, readIds]);   // eslint-disable-line react-hooks/exhaustive-deps
   const open = letters.find((l) => l.id === openId) ?? null;
+  const unread = letters.filter((l) => !isRead(l)).length;
 
   async function show(l: Letter) {
     setOpenId(l.id);
@@ -56,51 +65,72 @@ export default function Letters({ letters }: { letters: Letter[] }) {
     await post("/me/letters/read-all");
     router.refresh();
   }
-  const unread = letters.filter((l) => !isRead(l)).length;
+  function step(dir: 1 | -1) {
+    if (!open) return;
+    const i = shown.findIndex((l) => l.id === open.id);
+    const next = shown[i + dir];
+    if (next) show(next);
+  }
+
+  if (open) {
+    const k = KIND[open.kind] ?? KIND.letter;
+    const i = shown.findIndex((l) => l.id === open.id);
+    return (
+      <div className="mail">
+        <div className="mail-bar">
+          <button type="button" className="btn" onClick={() => setOpenId(null)}>← {t("Back")}</button>
+          <span className="spacer" />
+          <span className="small muted">{i + 1} / {shown.length}</span>
+          <button type="button" className="btn" disabled={i <= 0} onClick={() => step(-1)} aria-label={t("Newer")}>‹</button>
+          <button type="button" className="btn" disabled={i >= shown.length - 1} onClick={() => step(1)} aria-label={t("Older")}>›</button>
+        </div>
+        <article className="card mail-read">
+          <div className="mail-read-head">
+            <Ico group={k.group} id={k.icon} className="pill-ico" />
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <h2 style={{ margin: 0 }}>{open.title}</h2>
+              <div className="small muted">{t("From {who}", { who: from(open) })} · {t(k.label)} · {open.created_at.slice(0, 16).replace("T", " ")}</div>
+            </div>
+          </div>
+          <p className="letter-text">{open.body}</p>
+          {open.link && <Link className="btn primary" href={open.link}>{t("Open")}</Link>}
+        </article>
+      </div>
+    );
+  }
 
   return (
-    <div className="inbox">
-      <nav className="inbox-folders" aria-label={t("Folders")}>
-        {FOLDERS.map((f) => {
-          const n = letters.filter((l) => f.match(l, isRead(l)) && !isRead(l)).length;
-          return (
-            <button key={f.key} type="button" className={`bare inbox-folder ${folder === f.key ? "on" : ""}`} onClick={() => setFolder(f.key)}>
-              <span>{t(f.label)}</span>{n > 0 && <span className="count">{n}</span>}
-            </button>
-          );
-        })}
-        {unread > 0 && <button type="button" className="btn inbox-readall" onClick={readAll}>{t("Mark all read")}</button>}
-      </nav>
-
-      <div className="inbox-list card">
-        {shown.length === 0 && <div className="muted small" style={{ padding: 10 }}>{t("Nothing in this folder.")}</div>}
+    <div className="mail">
+      <div className="mail-bar">
+        <nav className="mail-tabs" aria-label={t("Folders")}>
+          {TABS.map((f) => {
+            const n = letters.filter((l) => f.match(l, isRead(l)) && !isRead(l)).length;
+            return (
+              <button key={f.key} type="button" className={`bare mail-tab ${tab === f.key ? "on" : ""}`} onClick={() => setTab(f.key)} aria-pressed={tab === f.key}>
+                {t(f.label)}{n > 0 && <span className="count">{n}</span>}
+              </button>
+            );
+          })}
+        </nav>
+        <span className="spacer" />
+        {unread > 0 && <button type="button" className="btn" onClick={readAll}>{t("Mark all read")}</button>}
+      </div>
+      <div className="card mail-list">
+        {shown.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("Nothing here.")}</div>}
         {shown.map((l) => {
           const k = KIND[l.kind] ?? KIND.letter;
+          const unreadRow = !isRead(l);
           return (
-            <button key={l.id} type="button" className={`bare inbox-row ${isRead(l) ? "" : "unread"} ${openId === l.id ? "on" : ""}`} onClick={() => show(l)} aria-current={openId === l.id ? "true" : undefined}>
-              <Ico group={k.group} id={k.icon} className="pill-ico" />
-              <span className="inbox-row-text">
-                <span className="inbox-title">{l.title}</span>
-                <span className="small muted">{t(k.label)} · {l.created_at.slice(0, 10)}</span>
-              </span>
-              {!isRead(l) && <span className="inbox-dot" aria-label={t("new")} />}
+            <button key={l.id} type="button" className={`bare mail-row ${unreadRow ? "unread" : ""}`} onClick={() => show(l)}>
+              <span className="mail-dot" aria-hidden="true" />
+              <Ico group={k.group} id={k.icon} className="mail-ico" />
+              <span className="mail-from">{from(l)}</span>
+              <span className="mail-subject"><b>{l.title}</b><span className="mail-preview"> — {l.body.replace(/\s+/g, " ").slice(0, 120)}</span></span>
+              <span className="mail-when">{when(l.created_at)}</span>
             </button>
           );
         })}
       </div>
-
-      <article className="inbox-read card">
-        {open ? (
-          <>
-            <div className="eyebrow">{t((KIND[open.kind] ?? KIND.letter).label)} · {open.created_at.slice(0, 16).replace("T", " ")}</div>
-            <h2 style={{ marginTop: 6 }}>{open.title}</h2>
-            <p className="letter-text">{open.body}</p>
-            {open.link && <Link className="btn primary" href={open.link}>{t("Open")}</Link>}
-          </>
-        ) : (
-          <div className="muted small">{t("Pick a letter to read it.")}</div>
-        )}
-      </article>
     </div>
   );
 }

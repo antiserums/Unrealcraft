@@ -1,4 +1,4 @@
-"""Letters: the site's notifications. A letter goes to one member, to every member, or to staff. The site writes
+"""Mail (letters): the site's notifications, shown at /mail. A letter goes to one member, to every member, or to staff. The site writes
 them itself when something happens (a ticket is answered or queued, work is reviewed, a rank is reached, a
 donation lands), and admins write announcements and personal letters from the admin panel.
 

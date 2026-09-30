@@ -3,7 +3,7 @@ import { api, type Me } from "@/lib/api";
 
 /** The admin panel's sections. Admins and developers see everything; mentors see only the review inbox and
  *  the tickets. The API enforces the same split, this only hides the tabs. */
-const ADMIN_TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"], ["/admin/letters", "Letters"]] as const;
+const ADMIN_TABS = [["/admin", "Members"], ["/admin/quests", "Quests"], ["/admin/entitlements", "Entitlements"], ["/admin/letters", "Mail"]] as const;
 const STAFF_TABS = [["/admin/review", "Review inbox"], ["/admin/tickets", "Tickets"]] as const;
 
 export default async function AdminNav({ active }: { active: string }) {

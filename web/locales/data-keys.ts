@@ -155,8 +155,8 @@ export const DATA_KEYS = [
   "Shipped short",
   "Try things. Must pick by Rank 2.",
   "Three-route courtyard (default)",
-  // the mailbox: folders and letter kinds (components/Letters.tsx)
-  "Inbox", "Unread", "Announcements", "Letters", "Tickets", "Reviews", "Ranks and rewards",
+  // mail: the filter tabs and letter kinds (components/Letters.tsx)
+  "All", "Unread", "Announcements", "Tickets", "Reviews", "Ranks and rewards",
   "Letter", "Announcement", "Ticket", "Review", "Rank", "Thank you",
   // the mission statement (web/lib/mission.ts)
   "Unrealcraft is an RPG learning experience for Unreal Engine so you can learn the way you would play it. Read the guides, build it in Unreal, beat the bosses, claim your rewards. Whether you are here to learn the basics or to prove yourself against the hardest of challenges, Unrealcraft is a home for you.",

@@ -1,5 +1,8 @@
 # Handoff for the artist — 30 September 2026 (evening)
 
+**Small request:** a 20 x 14 (or 16 x 16) pixel **envelope** icon in gold for the top bar's mail button
+(`icons/utility/mail.png`, plus a 16 px version). The site draws a stand-in envelope in CSS until then.
+
 **Update, later that evening:** the polish pass (tall buttons one pixel up with slices 11 14 13 14, the 64 x 32
 tier plates, the brighter statistics icons) and the Patron set (four sheets, eleven icons, avatar ring and card
 border under `supporter`) are synced and live. Nothing is outstanding on the art side; the list under "Wanted
