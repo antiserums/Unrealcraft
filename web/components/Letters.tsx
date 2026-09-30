@@ -47,14 +47,15 @@ function when(iso: string, long = false): string {
 /** The inbox: folders down the left, the message list beside them. Mail rows say what they are with a coloured
  *  type tag; the Tickets folder lists the member's own tickets. Clicking a row opens it in place of the list (the
  *  folders stay): a mail shows its text, a ticket shows the whole thread with a reply box. */
-export default function Letters({ letters, tickets = [], openTicket = null, openMail = null }:
-  { letters: Letter[]; tickets?: Ticket[]; openTicket?: number | null; openMail?: number | null }) {
+export default function Letters({ letters, tickets = [], staffTickets = [], openTicket = null, openMail = null }:
+  { letters: Letter[]; tickets?: Ticket[]; staffTickets?: Ticket[]; openTicket?: number | null; openMail?: number | null }) {
   const t = useT();
   const router = useRouter();
   const [readIds, setReadIds] = useState<Set<number>>(new Set(letters.filter((l) => l.read).map((l) => l.id)));
   const [folder, setFolder] = useState(openTicket ? "ticket" : "inbox");
   const [openId, setOpenId] = useState<number | null>(openMail);
   const [ticketId, setTicketId] = useState<number | null>(openTicket);
+  const [asStaff, setAsStaff] = useState(false);            // reading a ticket another member opened (staff only)
   const [thread, setThread] = useState<Ticket | null>(null);
   const isRead = (l: Letter) => readIds.has(l.id);
   const from = (l: Letter) => l.sender ?? (l.kind === "announcement" || l.kind === "letter" ? t("Staff") : "Unrealcraft");
@@ -62,15 +63,15 @@ export default function Letters({ letters, tickets = [], openTicket = null, open
   const shown = useMemo(() => letters.filter((l) => current.match(l, isRead(l))), [letters, current, readIds]);   // eslint-disable-line react-hooks/exhaustive-deps
   const open = letters.find((l) => l.id === openId) ?? null;
   const unread = letters.filter((l) => !isRead(l)).length;
-  const openTickets = tickets.filter((k) => k.status !== "closed").length;
+  const openTickets = tickets.filter((k) => k.status !== "closed").length + staffTickets.filter((k) => k.status === "open").length;
 
   // the ticket being read: fetched fresh each time it opens or changes
   useEffect(() => {
     if (ticketId === null) { setThread(null); return; }
     let live = true;
-    fetch(`/api/me/tickets/${ticketId}`).then((r) => (r.ok ? r.json() : null)).then((j) => { if (live) setThread(j); }).catch(() => { if (live) setThread(null); });
+    fetch(asStaff ? `/api/admin/tickets/${ticketId}` : `/api/me/tickets/${ticketId}`).then((r) => (r.ok ? r.json() : null)).then((j) => { if (live) setThread(j); }).catch(() => { if (live) setThread(null); });
     return () => { live = false; };
-  }, [ticketId]);
+  }, [ticketId, asStaff]);
 
   async function show(l: Letter) {
     if (!readIds.has(l.id)) {
@@ -78,8 +79,10 @@ export default function Letters({ letters, tickets = [], openTicket = null, open
       await post(`/me/letters/${l.id}/read`);
       router.refresh();
     }
-    const m = l.kind === "ticket" && l.link ? /ticket=(\d+)|\/support\/(\d+)/.exec(l.link) : null;
-    if (m) { setTicketId(Number(m[1] ?? m[2])); setOpenId(null); return; }     // a note about a ticket opens the ticket itself
+    const mine = l.kind === "ticket" && l.link ? /ticket=(\d+)|\/support\/(\d+)/.exec(l.link) : null;
+    const theirs = l.kind === "ticket" && l.link ? /\/admin\/tickets\/(\d+)/.exec(l.link) : null;
+    if (mine) { setAsStaff(false); setTicketId(Number(mine[1] ?? mine[2])); setOpenId(null); return; }   // a note about a ticket opens the ticket itself
+    if (theirs) { setAsStaff(true); setTicketId(Number(theirs[1])); setOpenId(null); return; }
     setOpenId(l.id);
   }
   async function toggleRead(l: Letter) {
@@ -99,7 +102,7 @@ export default function Letters({ letters, tickets = [], openTicket = null, open
     const next = shown[i + dir];
     if (next) show(next);
   }
-  function back() { setOpenId(null); setTicketId(null); }
+  function back() { setOpenId(null); setTicketId(null); setAsStaff(false); }
   function refetchThread() { const id = ticketId; setTicketId(null); setTimeout(() => setTicketId(id), 0); }
 
   const Tag = ({ kind }: { kind: string }) => { const k = KIND[kind] ?? KIND.letter; return <span className="mail-tag" style={{ color: k.color, borderColor: k.color }}>{t(k.label)}</span>; };
@@ -145,9 +148,9 @@ export default function Letters({ letters, tickets = [], openTicket = null, open
                 <div className="mail-read-top"><Tag kind="ticket" /><StatusTag status={thread.status} /><span className="spacer" /></div>
                 <h2 className="mail-read-title">#{thread.id} · {thread.subject}</h2>
                 <div className="mail-read-meta">
-                  <span className="small muted">{t(CATEGORY[thread.category] ?? thread.category)} · {t("opened {date}", { date: thread.created_at.slice(0, 10) })}</span>
+                  <span className="small muted">{t(CATEGORY[thread.category] ?? thread.category)} · {t("opened {date}", { date: thread.created_at.slice(0, 10) })}{asStaff && thread.author ? <> · {t("From {who}", { who: `${thread.author.name}, ${t(thread.author.rank_title)}` })}</> : null}</span>
                 </div>
-                <TicketThread ticket={thread} onChanged={refetchThread} />
+                <TicketThread ticket={thread} staff={asStaff} onChanged={refetchThread} />
               </>
             ) : <div className="muted small">{t("Loading…")}</div>}
           </article>
@@ -201,9 +204,21 @@ export default function Letters({ letters, tickets = [], openTicket = null, open
             <Link className="btn" href="/support">{t("Open a ticket")}</Link>
           </div>
           <section className="card mail-list" aria-label={t("Tickets")}>
-            {tickets.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("No tickets yet. When you open one, it shows here with its answers.")}</div>}
+            {tickets.length === 0 && staffTickets.length === 0 && <div className="muted small" style={{ padding: "18px 12px" }}>{t("No tickets yet. When you open one, it shows here with its answers.")}</div>}
+            {staffTickets.length > 0 && <div className="mail-list-head">{t("Waiting for staff")}</div>}
+            {staffTickets.map((k) => (
+              <button key={`s${k.id}`} type="button" className={`bare mail-row ${k.status === "open" ? "unread" : ""}`} onClick={() => { setAsStaff(true); setTicketId(k.id); }}>
+                <span className="mail-dot" aria-hidden="true" />
+                <span className="mail-row-main">
+                  <span className="mail-row-top"><span className="mail-sender"><span className="mail-seal" aria-hidden="true">{(k.name ?? "?").slice(0, 1)}</span><span>{k.name ?? t("Member")} · #{k.id}</span></span><span className="mail-when">{when(k.updated_at)}</span></span>
+                  <span className="mail-subject">{k.subject}</span>
+                  <span className="mail-row-bottom"><StatusTag status={k.status} /><span className="mail-preview">{(k.last ?? "").replace(/\s+/g, " ").slice(0, 140)}</span></span>
+                </span>
+              </button>
+            ))}
+            {staffTickets.length > 0 && tickets.length > 0 && <div className="mail-list-head">{t("Your tickets")}</div>}
             {tickets.map((k) => (
-              <button key={k.id} type="button" className={`bare mail-row ${k.status === "answered" ? "unread" : ""}`} onClick={() => setTicketId(k.id)}>
+              <button key={k.id} type="button" className={`bare mail-row ${k.status === "answered" ? "unread" : ""}`} onClick={() => { setAsStaff(false); setTicketId(k.id); }}>
                 <span className="mail-dot" aria-hidden="true" />
                 <span className="mail-row-main">
                   <span className="mail-row-top"><span className="mail-sender"><span className="mail-seal" aria-hidden="true">#</span><span>#{k.id}</span></span><span className="mail-when">{when(k.updated_at)}</span></span>
