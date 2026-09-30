@@ -43,7 +43,7 @@ def main() -> None:
     (LOCALES / "en.json").write_text(json.dumps({k: k for k in ks}, ensure_ascii=False, indent=1) + "\n", encoding="utf-8", newline="\n")
     print(f"{len(ks)} keys -> web/locales/en.json")
     for f in sorted(LOCALES.glob("*.json")):
-        if f.name == "en.json":
+        if f.name == "en.json" or f.name.startswith("_") or f.name.endswith("-missing.json"):
             continue
         d = json.loads(f.read_text(encoding="utf-8") or "{}")
         missing = [k for k in ks if not d.get(k)]
