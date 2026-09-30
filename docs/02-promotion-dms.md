@@ -1,5 +1,7 @@
 # 02 — Promotion templates
 
+> **Superseded (2026-09-30).** This describes the older design where the game was played in Discord. The website now runs quests, reviews and ranks; the Discord server is a guild hall. See `03-commands.md`, `04-discord-setup-checklist.md` and `07-website.md`. Kept for history.
+
 Every promotion does five things, in this order (see `bot/cogs/ranks.py → promote()`):
 1. Swap the visible rank role. Never stack them.
 2. Unlock the new category or categories so the channels appear.

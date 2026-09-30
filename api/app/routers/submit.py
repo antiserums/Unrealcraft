@@ -1,4 +1,4 @@
-"""Claim the chest: submit proof of work on the website. Mirrors the bot's /submit rules; the bot only mirrors."""
+"""Claim the chest: submit proof of work on the website. Reviews happen on the site; Discord is not involved."""
 from __future__ import annotations
 
 import datetime as dt
@@ -69,11 +69,11 @@ async def submit(qid: str, request: Request, member=Depends(current_member), tex
     if q.id == "O5":
         if text.strip().upper() != "READY":
             raise HTTPException(400, "For O5 the proof is literally READY.")
-        await rdb.add_fact(uid, "submit.O5")
-        await rdb.emit("quiz_passed", uid, {"quest": "O5"})       # lets the bot tick the checklist
+        from .. import progress
+        await progress.add_fact(request, uid, "submit.O5")        # the practice quest finishes itself on this fact
         return {"status": "practice", "message": "Practice done. A real turn-in works the same way."}
     if q.raw.get("verify_type") == "action":
-        raise HTTPException(400, "Nothing to send here. The Quartermaster ticks this when it sees you do it.")
+        raise HTTPException(400, "Nothing to send here. This one ticks itself when you do it on the site.")
     if q.quiz and not (prog.get(qid) or {}).get("quiz_passed"):
         raise HTTPException(409, "Beat the boss first.")
     subs = await db.submissions(uid, qid)

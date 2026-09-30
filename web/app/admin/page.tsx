@@ -56,7 +56,7 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
 
       <div className="two" style={{ marginTop: 24 }}>
         <div>
-          <div className="section-h"><h2>Events for the bot</h2><span className="muted small">newest first · the bot polls every 20 s</span></div>
+          <div className="section-h"><h2>Site events</h2><span className="muted small">newest first · the bot acts on rank and specialization changes only</span></div>
           <div className="card" style={{ padding: 0, overflow: "auto", maxHeight: 420 }}>
             <table className="adm">
               <thead><tr><th>#</th><th>Type</th><th>Member</th><th>Payload</th><th>Sent</th></tr></thead>

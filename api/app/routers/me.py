@@ -119,12 +119,16 @@ async def set_specializations(body: SpecializationPatch, request: Request, membe
             raise HTTPException(400, f"Up to {MAX_EXTRAS} extra specializations.")
     if primary != u["major"]:
         await rdb.set_user(member["id"], major=primary)
-        await rdb.emit("specialization_set", member["id"], {"primary": primary})
     if extras is not None:
         await rdb.kv_set(member["id"], "web.specializations", json.dumps(extras))
     elif primary != u["major"]:                      # the new primary leaves the extras
         _, state, _ = await db.user_state(member["id"])
         await rdb.kv_set(member["id"], "web.specializations", json.dumps([e for e in state.extras if e != primary]))
+    _, now, _ = await db.user_state(member["id"])
+    await rdb.emit("specialization_set", member["id"], {"primary": now.major, "extras": now.extras})   # the bot swaps roles
+    if body.primary is not None:
+        from .. import progress
+        await progress.add_fact(request, member["id"], "spec.chosen")
     return await me_payload(request, member)
 
 
@@ -143,6 +147,8 @@ async def next_quest(request: Request, member=Depends(current_member)):
 async def path(request: Request, member=Depends(current_member)):
     """The personal path as data: sections of quests with a status each, plus the locked next rank."""
     db, cat = request.app.state.db, request.app.state.catalog
+    from .. import progress
+    await progress.add_fact(request, member["id"], "site.path")
     u, state, prog = await db.user_state(member["id"])
     major = u["major"]
     pick = cat.pick(state)

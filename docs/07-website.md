@@ -81,6 +81,13 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   outside the primary) feed cross-specialization entitlements (Many Trades, Guild of One, Far Traveller, the
   titles the Versatile and the Wayfarer). The bot still maps the primary to its Discord role; the Discord side
   (roles, labs, `/major`) is a later pass, and `tools/migrate_specializations.py` is the one-off that did the YAML.
+- **The site runs the game (done, 2026-09-30):** promotions and Orientation moved from the bot to the API
+  (`api/app/progress.py`). The site records facts (`fact:<name>` in kv) for things done on the site, finishes
+  `verify_type: action` quests whose checklist is all facts, and promotes as soon as XP and requirements are met,
+  writing a `rank_up` event. Orientation is five site steps (O1 rules quiz, O2 pick a primary specialization, O3 open
+  the card, path and achievements pages, O4 save a motto, O5 practice turn-in). The Discord bot is now small: it
+  builds the server, keeps rank and specialization roles in step, announces rank-ups, posts patch notes and runs
+  voice rooms (`docs/03-commands.md`). Turn-ins are never sent to Discord.
 - **Quest editor (done):** `/admin/quests` lists the catalog; `/admin/quests/{id}` (or `new`) edits one quest as a
   form (every field, a quiz editor, flavors as YAML) or as raw YAML. Saving validates the quest against the whole
   catalog, rewrites its curriculum file with `yaml.safe_dump` (comments in that file are lost, so hand-written

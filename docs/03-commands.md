@@ -1,83 +1,53 @@
-# 03 — Commands and data
+# 03 — The Discord bot (Quartermaster)
 
-Slash commands only. No prefix commands and no message-content intent except for reading the #help-desk template (see below).
+The website is where Unrealcraft is played: quests, boss fights, turn-ins, reviews, ranks and entitlements. The
+Discord server is the guild hall: a place to talk, ask for help and show progress. The bot is small on purpose.
 
-## User
-| Command | Rank | Does |
+## What the bot does
+- **Builds the server** (`/setup bootstrap`): roles, categories, channels, forums, pins, Rules Screening, the
+  welcome screen and AutoMod. Safe to re-run. IDs are written to `bot/config/unlocks.yaml`.
+- **Keeps roles in step with the site** (`cogs/roles.py`): one rank role (swapped, never stacked) and one role
+  per chosen specialization, the primary and every extra.
+- **Announces rank-ups** in #rank-ups when the site promotes someone (Apprentice and above).
+- **Posts patch notes** in #patch-notes for every version tag pushed to GitHub.
+- **Join-to-create voice rooms** in Town Hall (`cogs/voice.py`).
+
+It never grants XP, quests or ranks, and it does not read what members write (Message Content intent is off).
+
+## Commands
+| Command | Who | What it does |
 |---|---|---|
-| /start | any | Opens the Orientation embed (O1–O8 checklist with live ticks). Idempotent. |
-| /help-server | any | Short manual: the loop, 5 commands, where to ask. |
-| /where `thing` | any | Autocomplete: submit, ask for help, see my rank, find C++, showcase, change major. Replies with a channel link or command and one sentence. |
-| /major `major` | any | Set major. Free once before R3; after that, starts a respec (4 quests). |
-| /minor `major` | R3+ | Optional second focus. Earns a medal. It is not a ladder. |
-| /path | any | Personal tree: ✔ done, ▶ now, 🔒 locked-for-rank, ◇ optional shelf. |
-| /quest `[id]` | any | No arg: the picker's next quest + 2 electives + 1 adjacent. With id: that quest's embed. |
-| /quiz `id` | any | Ephemeral quiz, one question per step, with buttons. |
-| /submit `id` `proof` `[attachment]` | any | Creates a submission and routes it by verify_type/rank. 2h cooldown per quest after a Fail. |
-| /rank `[member]` | any | Rank card: major, XP bar, streak, next unlock, medals. |
-| /tree | any | The full catalog as ranks × tracks. Same for everyone, no personalization. |
-| /leaderboard `[scope]` | any | Weekly XP (quests only), by major or server-wide. |
-| /profile `[ue_version]` | any | Show or set profile fields. |
-| /post `[forum]` | R0+ | Opens the New post dialog (title, WIP/Help/Done, quest, details with engine version, up to 4 files) for a major forum you have unlocked. Also a **New post** button on each forum's pinned intro. |
-| /skip-voice | Orientation | Completes O7 without voice. |
-| /room rename `name` · /room limit `n` | owner of a voice room | Rename your join-to-create voice room or cap how many can join (0 = no limit). Same as the buttons in the room's chat. |
-| /skip-elective `id` | any | Hides an elective from /quest suggestions. |
-| /critique `link` `question` | R3+ | Opens a #showcase post tagged Critique-wanted and pings people in the same major. |
+| /site | anyone | A button to the website. |
+| /card `[member]` | anyone | Rank, specializations, XP and quests done, with a link to the player card. |
+| /room rename `name` · /room limit `n` | owner of a voice room | Rename your join-to-create room or cap how many can join. |
+| /setup bootstrap | admin | Create or repair roles, channels and pins, then sync everyone's roles. |
+| /setup sync-pins | admin | Update pinned messages in place and remove stray bot posts. |
+| /setup sync-roles | admin | Make every member's roles match the site. |
+| /setup patch-notes | admin | Post released versions missing from #patch-notes. |
+| /setup reload-curriculum | admin | Reload ranks and specializations after the curriculum changed. |
 
-## Mentor / reviewer
-| Command | Who | Does |
+## How the site talks to the bot
+The API and the bot share one SQLite file. The API writes rows to `events`; the bot polls every 20 seconds.
+Only three event types make the bot act:
+
+| Event | Written when | Bot does |
 |---|---|---|
-| /mentor-review `submission` `verdict` `[notes]` | Mentor, Lead, eligible peers | Pass / Changes / Fail. These are also buttons on the queue embed. |
+| `rank_up` | the site promotes a member (`api/app/progress.py`) | swaps the rank role, posts the #rank-ups card |
+| `rank_set` | an admin sets a rank in the admin panel | swaps the rank role |
+| `specialization_set` | a member or an admin changes specializations | swaps the specialization roles |
 
-## Staff
-| Command | Who | Does |
-|---|---|---|
-| /grant-xp `member` `amount` `reason` | Mod | Logged to #mod-log and xp_log. Never auto. |
-| /curriculum-add `yaml_attachment` | Curriculum | Validate and upsert quests. Dry-run by default. |
-| /curriculum-propose-publish `proposal_id` | Curriculum | Promote an Senior's proposal. |
-| /commend `member` `note` | Lead+ | +medal Teacher progress / a public note. No XP. |
-| /raid `start/end` `quest_id` | Senior+, Staff | Weekly raid. |
-| /admin bootstrap · sync-perms · reload-curriculum | Owner | Phase 2 setup helpers. |
+Every other event type (`quest_completed`, `quiz_passed`, `submission_*`) is marked delivered and ignored. They
+remain useful in the admin panel's event list.
 
-## Senior+
-| /curriculum-propose `yaml_attachment` | Senior+ | Drafts to #curriculum-wip. |
+## Where things moved
+| Was a Discord command | Now |
+|---|---|
+| /start, /quiz, /quest, /submit, /skip-elective | the quest page on the site |
+| /major, /minor | Specializations on the player card page (a primary plus extras) |
+| /rank, /path, /tree, /profile | the player card, My path and the Quest Board |
+| /mentor-review and the mentor queue | the review inbox on the site |
+| /grant-xp, /admin … | the admin panel on the site |
 
-## How checklists are verified
-Each checklist line in the YAML can have a `check:` (engine: `bot/registrar/checks.py`). `/quest` and `/start` show:
-✅ the bot saw it · ☐ not yet · 📎 checked when you /submit · ▫ honor (only for work done inside Unreal).
-
-| Check | Seen when | Used by |
-|---|---|---|
-| `fact: rules.accepted` | Rules Screening "I've read and agree" (member stops being *pending*) | O1 (+ /start is blocked until then) |
-| `fact: quiz.<ID>` | quiz passed | O1 |
-| `fact: cmd.major / cmd.rank / cmd.quest / cmd.path / cmd.profile_version / cmd.skip_voice` | slash command used | O2, O3, O7, O-E1 |
-| `fact: btn.clockin` | pinned button pressed | O4 |
-| `fact: submit.O5` | `/submit O5 READY` | O5 |
-| `fact: thread.help_desk` | post created through the **Unreal help** or **Server / bot problem** form | (recorded; no step uses it now) |
-| `any: [voice.studio_floor, cmd.skip_voice]` | 60 s in any voice room | O7 |
-| `fact: react.showcase` | reaction on someone else's showcase post | O8 |
-| `fact: msg.<channel>` | any message in that channel (author + channel only, no Message Content intent) | O-E3 |
-| `fact: nick.major` | nickname contains `|` | O-E2 |
-| `attachment: image / video` | file attached on /submit (content type checked) | screenshot quests (default), SQ13/02 |
-| `min_length: N` | proof text length | writeup quests (default 80), META-03, SQ12 |
-| `link: showcase, on: others / own` | pasted message link is fetched: right server, right channel, your message, someone else's (or your own) post | SQ16/05 |
-
-Quests whose every line is a `fact` check complete themselves; there is nothing to press. `/submit` is refused while any ✅-type line is still ☐.
-Reading can't be observed by Discord, so reading is proven by the quiz.
-
-## Routing a /submit
-| Rank of quest | verify_type | Route |
-|---|---|---|
-| −1 | action | auto |
-| 0–1 | quiz | auto on quiz pass |
-| 0–1 | screenshot/writeup | honor system: auto-Pass, logged, spot-checkable |
-| 2 | any | peer (R2+, cap 3/day) **or** mentor in #mentor-queue |
-| 3–4 | any | mentor **or** two peer Approves (peers of rank ≥ quest rank) |
-| 5–6 | any | human mentor only. Senior/Lead promotions also need staff sign-off, plus 2 vouchers for Lead. |
-
-A capstone Pass triggers `check_promotion()`, which promotes only if XP ≥ threshold **and** every required quest and taster for the rank is done **and** the member has finished the rank's tier count (`quests_to_leave` in majors.yaml: 30 Apprentice, 60 Adept, 120 Expert, 220 Master quests of that tier in their major, any they choose; capped at what exists).
-
-## SQLite schema
-See `bot/db/schema.sql`. Tables: users, quests, submissions, unlocks, xp_log, medals, quest_progress, quiz_attempts, raids, review_actions, kv.
-The brief listed the first six. The rest are the minimum the commands above need, for example the per-user completion state, the peer-review
-daily cap and the submit cooldown.
+## Settings (`bot/.env`)
+`DISCORD_TOKEN`, `GUILD_ID`, `DB_PATH`, `CURRICULUM_DIR`, `UNLOCKS_PATH`, `LOG_LEVEL`, and `SITE_URL` (where the
+site lives; pins, `/site` and `/card` link there).

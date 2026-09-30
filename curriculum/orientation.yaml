@@ -1,45 +1,44 @@
 # Unrealcraft — Orientation (Rank -1)
-# 6 small steps that teach the server before Unreal. Written in simple English on purpose:
+# 5 small steps that teach the site before Unreal. Written in simple English on purpose:
 # short sentences, common words, no idioms. Many members don't speak English as a first language.
-# Every step can be done alone, even on an empty server.
+# Every step is done on the website and can be done alone.
 #
-# Step 1 is only the rules quiz (Discord's Rules Screening already makes everyone accept the rules).
-# `step` is the one line shown on the Orientation page. `checklist` lines have a `check:` the Quartermaster
-# verifies itself (see bot/registrar/checks.py), so nobody ticks steps by hand.
+# `step` is the one line shown for the quest. `checklist` lines have a `check:` the site verifies itself
+# (see api/app/progress.py for the fact names), so nobody ticks steps by hand. A quest made only of such
+# checks (`verify_type: action`) finishes itself when its last fact is recorded.
 
 quests:
   - id: O1
     rank: -1
     difficulty: novice
     specializations: [all]
-    subjects: [discord, rules]
+    subjects: [rules]
     required_spine: false
     required: true
     title: First quest - rules quiz
-    step: "Press **Start Questing** in #welcome and get 4 of 5 right."
+    step: "Beat your first boss: a short quiz about the rules. Get 4 of 5 right."
     time_min: 5
-    official_url: "discord://#welcome"
     backup_url: null
     checklist:
-      - text: "Press Start Questing in #welcome (or type /quiz O1) and get 4 of 5 right."
+      - text: "Press Fight on this page and get 4 of 5 right."
         check: {fact: quiz.O1}
     done_when: "Quiz passed."
     xp: 10
     verify_type: quiz
     quiz:
       - q: "You are stuck in Unreal. Where do you ask?"
-        choices: ["#general", "#help-desk, with the Unreal help button", "Send a private message to a mentor", "#rank-ups"]
+        choices: ["#general", "The #help-desk forum on the Discord server", "A private message to a mentor", "#rank-ups"]
         answer_index: 1
-        explain: "Use #help-desk. The form helps people understand your problem."
+        explain: "Use #help-desk on Discord. Say your Unreal version and what you tried."
       - q: "How do you rank up?"
         choices: ["Chat a lot", "Finish quests", "Stay on the server for a long time", "Boost the server"]
         answer_index: 1
         explain: "Only quests give XP. Chatting does not."
-      - q: "Someone asks how to fix dark lighting. What is a good answer?"
-        choices: ["\"Watch this 8-hour video.\"", "A link to the right Epic docs page and the setting to change.", "\"Just Google it.\"", "No answer."]
+      - q: "Where is your work reviewed?"
+        choices: ["In a Discord channel", "Here on the site, by mentors", "By private message", "Nowhere"]
         answer_index: 1
-        explain: "Give a short, exact answer that helps. Don't send people to very long videos."
-      - q: "What can you post in #showcase?"
+        explain: "You send your work on the quest page. Mentors review it on the site. Discord is for talking and showing progress."
+      - q: "What can you post in #showcase on Discord?"
         choices: ["Any cool art you found online", "Your own work, finished or not", "Only finished games", "Store pages"]
         answer_index: 1
         explain: "Only your own work. Work in progress is welcome."
@@ -55,164 +54,86 @@ quests:
     rank: -1
     difficulty: novice
     specializations: [all]
-    subjects: [discord, majors]
+    subjects: [specializations]
     required: true
     title: Pick what to learn
-    step: "Answer the join question, or type /major."
+    step: "Choose a primary specialization on your player card page. Not sure? Pick Undecided."
     time_min: 2
-    official_url: "discord://#welcome"
     backup_url: null
     checklist:
-      - text: "Pick what you want to learn (your major). Not sure? Pick Undecided."
-        check: {fact: cmd.major}
-    done_when: "A major is set."
+      - text: "Open your player card page, press Change under Specializations, pick a primary and press Save. Undecided is fine."
+        check: {fact: spec.chosen}
+    done_when: "A primary specialization is saved."
     xp: 10
     verify_type: action
     quiz: []
     flavors:
       _default:
-        why: "Your major decides which quests you get."
+        why: "Your primary specialization decides your path. You can add more later, and change it any time."
 
   - id: O3
     rank: -1
     difficulty: novice
     specializations: [all]
-    subjects: [discord, commands]
+    subjects: [navigation]
     required: true
-    title: Try 3 commands
-    step: "Type /rank, then /quest, then /path."
+    title: Look around
+    step: "Open three pages: your player card, My path on the quest board, and your achievements."
     time_min: 3
-    official_url: "discord://#welcome"
     backup_url: null
     checklist:
-      - text: "Type /rank: see your level."
-        check: {fact: cmd.rank}
-      - text: "Type /quest: see your next task."
-        check: {fact: cmd.quest}
-      - text: "Type /path: see all your quests."
-        check: {fact: cmd.path}
-    done_when: "All 3 commands used."
-    xp: 10
+      - text: "Open your player card (your name, top right)."
+        check: {fact: site.card}
+      - text: "Open the Quest Board and look at My path."
+        check: {fact: site.path}
+      - text: "Open Achievements from your player card page."
+        check: {fact: site.achievements}
+    done_when: "All three pages opened."
+    xp: 15
     verify_type: action
     quiz: []
     flavors:
       _default:
-        why: "/quest always tells you what to do next."
+        why: "My path always shows what to do next."
 
   - id: O4
     rank: -1
     difficulty: novice
     specializations: [all]
-    subjects: [discord, navigation]
+    subjects: [player-card]
     required: true
-    title: Find #quest-log
-    step: "Open #quest-log and press **Continue questing**."
-    time_min: 1
-    official_url: "discord://#quest-log"
+    title: Make your card yours
+    step: "Press Edit profile on your player card page, write a motto and press Save."
+    time_min: 2
     backup_url: null
     checklist:
-      - text: "Open #quest-log and press Continue questing."
-        check: {fact: btn.clockin}
-    done_when: "Continue questing pressed in #quest-log."
-    xp: 10
+      - text: "On your player card page press Edit profile, write a short motto and press Save."
+        check: {fact: card.motto}
+    done_when: "A motto is saved on your player card."
+    xp: 15
     verify_type: action
     quiz: []
     flavors:
       _default:
-        why: "New quests and weekly events are posted there."
+        why: "Your player card is what others see. Colours, frames and titles unlock as you play."
 
   - id: O5
     rank: -1
     difficulty: novice
     specializations: [all]
-    subjects: [discord, submit]
+    subjects: [turn-in]
     required: true
     title: Practice sending work
-    step: "Type `/submit quest:O5 proof:READY`"
+    step: "On this page, type READY in the chest and send it."
     time_min: 1
-    official_url: "discord://#welcome"
     backup_url: null
     checklist:
-      - text: "Type /submit quest:O5 proof:READY"
+      - text: "Type READY in the chest on this page and press Send."
         check: {fact: submit.O5}
-    done_when: "Practice submit sent."
+    done_when: "Practice turn-in sent."
     xp: 10
     verify_type: action
     quiz: []
     flavors:
       _default:
-        why: "Every quest ends with /submit. Practice it once."
-
-  - id: O7
-    rank: -1
-    difficulty: novice
-    specializations: [all]
-    subjects: [discord, voice]
-    required: true
-    title: Visit voice chat
-    step: "Join **➕ Join to create**. It makes a room just for you. Stay 1 minute (you can stay muted), or press **Skip voice**."
-    time_min: 1
-    official_url: "discord://#➕ Join to create"
-    backup_url: null
-    checklist:
-      - text: "Stay in a voice room for 1 minute, or press Skip voice."
-        check: {any: [voice.studio_floor, cmd.skip_voice]}
-    done_when: "1 minute in voice, or skipped."
-    xp: 10
-    verify_type: action
-    quiz: []
-    flavors:
-      _default:
-        why: "People work together in voice. Now you know where."
-
-  # ---------------- Orientation extras (optional) ----------------
-  - id: O-E1
-    rank: -1
-    difficulty: novice
-    specializations: [all]
-    subjects: [discord, profile]
-    required: false
-    title: Save your Unreal version
-    time_min: 1
-    official_url: "discord://#welcome"
-    checklist:
-      - text: "Type /profile ue_version:5.8 (use your version)."
-        check: {fact: cmd.profile_version}
-    done_when: "Version saved."
-    xp: 5
-    verify_type: action
-    quiz: []
-
-  - id: O-E2
-    rank: -1
-    difficulty: novice
-    specializations: [all]
-    subjects: [discord, profile]
-    required: false
-    title: Show your major in your name
-    time_min: 1
-    official_url: "discord://#welcome"
-    checklist:
-      - text: "Change your server nickname to Name | Major (for example: Sam | Level Design)."
-        check: {fact: nick.major}
-    done_when: "Nickname has a |."
-    xp: 5
-    verify_type: action
-    quiz: []
-
-  - id: O-E3
-    rank: -1
-    difficulty: novice
-    specializations: [all]
-    subjects: [discord, social]
-    required: false
-    title: Say hi
-    time_min: 2
-    official_url: "discord://#introductions"
-    checklist:
-      - text: "Write in #introductions: what you want to learn, and one thing you want to make."
-        check: {fact: msg.introductions}
-    done_when: "One message in #introductions."
-    xp: 5
-    verify_type: action
-    quiz: []
+        why: "Every dungeon ends with a chest. Practice it once."

@@ -13,16 +13,12 @@ from .config import BOT_ROOT, Unlocks, load_settings
 from .curriculum import Catalog
 from .db import DB
 
+# The site runs the game. The bot builds the server, keeps roles in step with the site, announces rank-ups,
+# posts patch notes and runs the join-to-create voice rooms.
 COGS = [
-    "registrar.cogs.onboarding",
-    "registrar.cogs.majors",
-    "registrar.cogs.quests",
-    "registrar.cogs.quiz",
-    "registrar.cogs.ranks",
     "registrar.cogs.setup_server",
-    "registrar.cogs.workshop",
+    "registrar.cogs.roles",
     "registrar.cogs.voice",
-    "registrar.cogs.sync",
 ]
 
 log = logging.getLogger("quartermaster")
@@ -31,10 +27,9 @@ log = logging.getLogger("quartermaster")
 class Quartermaster(commands.Bot):
     def __init__(self, settings):
         intents = discord.Intents.default()
-        intents.members = True          # role swaps + first-week DMs (privileged; enable in Dev Portal)
-        intents.voice_states = True     # O7
-        intents.reactions = True        # O8, showcase 🔥
-        # Message Content intent deliberately OFF. The help-desk template uses a modal instead (see onboarding cog).
+        intents.members = True          # role swaps (privileged; enable Server Members in the Dev Portal)
+        intents.voice_states = True     # join-to-create voice rooms
+        # Message Content intent deliberately OFF: the bot never reads what members write.
         super().__init__(command_prefix=commands.when_mentioned, intents=intents,
                          allowed_mentions=discord.AllowedMentions(everyone=False, roles=False))
         self.settings = settings
@@ -107,6 +102,7 @@ class Quartermaster(commands.Bot):
                 log.info("bootstrap: %s", line)
             log.info("bootstrap: pins %s", await cog.sync_pins(g))
             log.info("bootstrap: %s", await cog.cleanup_bot_posts(g))
+            log.info("bootstrap: roles synced for %d members", await self.get_cog("Roles").sync_all(g))
 
     def update_community(self) -> None:
         """Quests that need other people unlock once the server has enough real members."""

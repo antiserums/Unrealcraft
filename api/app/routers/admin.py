@@ -87,6 +87,8 @@ async def quest(uid: int, body: QuestAction, request: Request, admin=Depends(adm
         await rdb.add_xp(uid, q.xp, f"admin:{q.id}")
     await rdb.emit("quest_completed", uid, {"quest": q.id, "xp": q.xp if body.xp else 0, "outfit": None, "admin": True})
     await rdb.admin_log(admin["id"], "grant_quest", uid, {"quest": q.id, "xp": body.xp})
+    from .. import progress
+    await progress.check_promotion(request, uid)
     return {"ok": True, "message": f"{q.id} marked done{' with XP' if body.xp else ''}."}
 
 
@@ -114,7 +116,8 @@ async def rank(uid: int, body: RankAction, request: Request, admin=Depends(admin
     await rdb.set_user(uid, **fields)
     await rdb.conn.execute("UPDATE users SET rank_since=datetime('now') WHERE discord_id=?", (uid,))
     await rdb.conn.commit()
-    await rdb.emit("rank_set", uid, {"rank": body.rank, "admin": True})
+    await rdb.emit("rank_set", uid, {"old": u["rank"], "rank": body.rank, "admin": True})
+    await rdb.emit("specialization_set", uid, {"primary": fields.get("major", u["major"])})
     await rdb.admin_log(admin["id"], "set_rank", uid, fields)
     return {"ok": True, "message": f"Rank set to {body.rank}. The bot will swap the Discord roles within a minute."}
 
@@ -132,6 +135,8 @@ async def xp(uid: int, body: XpAction, request: Request, admin=Depends(admin_onl
         raise HTTPException(400, "Amount must be a non-zero number.")
     await request.app.state.rpg.add_xp(uid, body.amount, f"admin:{body.reason[:40]}")
     await request.app.state.rpg.admin_log(admin["id"], "add_xp", uid, {"amount": body.amount, "reason": body.reason[:40]})
+    from .. import progress
+    await progress.check_promotion(request, uid)
     return {"ok": True, "message": f"{body.amount:+} XP."}
 
 

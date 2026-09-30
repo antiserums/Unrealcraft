@@ -1,12 +1,17 @@
-"""/admin bootstrap + /admin post-pins. Builds the whole server from docs/01 and writes IDs to unlocks.yaml.
+"""/setup bootstrap, sync-pins, sync-roles, patch-notes, reload-curriculum. Builds the guild hall.
 
-Idempotent: roles, categories and channels are matched by name and reused if they already exist.
-Deletes only (a) Discord's default starter channels and (b) our own text channels being upgraded to forums,
-and only when no member ever posted in them. Anything with member messages is kept/renamed.
+The website is where Unrealcraft is played. The Discord server is a guild hall: a place to talk, ask for help and
+show progress. So the server is small and open: everyone who accepted the rules can read and post everywhere
+except the staff category. Roles show rank and specializations and are handed out by cogs/roles.py.
+
+Idempotent: roles, categories and channels are matched by name and reused if they already exist. It migrates a
+server built by the older "Discord is the game" bootstrap: it renames what carries over and removes only its own
+leftovers (the quest log, the mentor queue, the gate roles), and only when no member ever posted there.
 """
 from __future__ import annotations
 
 import logging
+import re
 
 import discord
 import yaml
@@ -20,55 +25,25 @@ log = logging.getLogger("quartermaster.setup")
 C = discord.Color.from_str
 P = discord.PermissionOverwrite
 
-# (name, color or None, hoist, mentionable, unlocks key path)
-ROLES = [
-    ("Mod", "#E0E0E0", True, True, ("staff", "mod")),
-    ("Curriculum", "#B0A48A", False, True, ("staff", "curriculum")),
-    ("Mentor", "#6FB3A0", False, True, ("staff", "mentor")),
-    ("Mentor-in-Training", "#8FC4B5", False, False, ("staff", "mentor_in_training")),
-    ("Lead", "#D4AF37", True, True, ("rank", 6)),
-    ("Senior", "#8E6CCF", True, True, ("rank", 5)),
-    ("Master", "#8A9BA8", True, True, ("rank", 4)),
-    ("Expert", "#D9824A", False, True, ("rank", 3)),
-    ("Adept", "#3D7DD8", False, False, ("rank", 2)),
-    ("Apprentice", "#B5714B", False, False, ("rank", 1)),
-    ("Novice", "#7A8C7E", False, False, ("rank", 0)),
-    ("Oriented", None, False, False, ("oriented",)),
-    ("Recruit", None, False, False, ("recruit",)),
-    ("Major · Level Design", None, False, False, ("major", "level_design")),
-    ("Major · Environment Art", None, False, False, ("major", "lookdev")),
-    ("Major · Tech Art", None, False, False, ("major", "tech_art")),
-    ("Major · Gameplay Design", None, False, False, ("major", "gameplay_design")),
-    ("Major · Animation", None, False, False, ("major", "animation")),
-    ("Major · Programming", None, False, False, ("major", "programming")),
-    ("Major · Cinematics", None, False, False, ("major", "cinematics")),
-    ("Major · Undecided", None, False, False, ("major", "undecided")),
-    *[(name, None, False, False, ("profile", qkey, value)) for name, qkey, value in profile.all_role_names()],
-    ("Ping · Raid", None, False, True, ("ping", "raid")),
-    ("Ping · Showcase", None, False, True, ("ping", "showcase")),
-    ("Ping · Patch Notes", None, False, True, ("ping", "patch_notes")),
-    ("Alumni", "#A0A0A0", False, False, None),
-    ("Visiting Mentor", "#A0A0A0", False, False, None),
-    ("Founding Crew", "#A0A0A0", False, False, None),
-    ("On Leave", "#555555", False, False, ("on_leave",)),
-]
-
+RANK_ROLES = [(6, "Lead", "#D4AF37", True), (5, "Senior", "#8E6CCF", True), (4, "Master", "#8A9BA8", True),
+              (3, "Expert", "#D9824A", False), (2, "Adept", "#3D7DD8", False), (1, "Apprentice", "#B5714B", False),
+              (0, "Novice", "#7A8C7E", False)]
 MOD_PERMS = discord.Permissions(kick_members=True, moderate_members=True, manage_messages=True,
                                 manage_threads=True, view_audit_log=True, manage_nicknames=True)
+# Roles from the older design that gated channels or tagged onboarding answers. Nothing uses them any more.
+LEGACY_ROLES = ["Recruit", "Oriented", "Major · Undecided", "Mentor-in-Training", "Ping · Raid"]
 
 SHOWCASE_TAGS = ["WIP", "Blockout", "Lit", "Playable", "Critique-wanted", "Shipped"]
-HELP_TAGS = ["Server / Bot issue", "Blueprint", "C++", "Materials", "Animation", "Lighting", "Level Design",
-             "Packaging", "Discord-help"]
+HELP_TAGS = ["Site / Bot issue", "Blueprint", "C++", "Materials", "Animation", "Lighting", "Level Design", "Packaging"]
+SPEC_TAGS = ["WIP", "Question", "Tip", "Done"]
 
-# (category name, unlocks.categories key or None, min rank or special, channels)
-# channel: (name, kind, unlocks.channels key path or None, flags)
-TRACKS = [
-    ("03 · STARTER QUESTS", "foundations", 0, "foundations"),   # unlocks key kept for existing servers
-    ("03 · WORLD & LIGHTING", "world_lighting", 1, "world-lighting"),
-    ("03 · MATERIALS", "materials", 2, "materials"),
-    ("03 · BLUEPRINT", "blueprint", 2, "blueprint"),
-    ("03 · CHARACTERS & ANIM", "characters_anim", 3, "characters-anim"),
-]
+CAT_GATE, CAT_HALL, CAT_SPEC, CAT_VOICE, CAT_STAFF = ("00 · GATE", "01 · GUILD HALL", "02 · SPECIALIZATIONS",
+                                                      "03 · TOWN HALL", "04 · STAFF")
+
+
+def spec_slug(cat, key: str) -> str:
+    """Forum name for a specialization: its title, lower-case with dashes (level-design, environment-art)."""
+    return re.sub(r"[^a-z0-9]+", "-", cat.title_of(key).lower()).strip("-")
 
 
 def _set(d: dict, path: tuple, value: int) -> None:
@@ -81,45 +56,54 @@ class SetupServer(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # ------------------------------------------------------------------ helpers
-    RENAMED_ROLES: dict[str, str] = {}                   # new prefix -> old prefix (for future renames)
-    RENAMED_EXACT = {"Major · Environment Art": "Major · Lookdev",          # new name -> old name
-                     # rank titles now match the quest tiers (were guild ranks, before that studio job titles)
-                     "Novice": "Initiate", "Apprentice": "Journeyman", "Adept": "Craftsman", "Master": "Master Artisan",
-                     "Expert · Environment Art": "Artisan · Environment Art", "Expert · Design": "Artisan · Design",
-                     "Expert · Anim": "Artisan · Anim", "Expert · Code": "Artisan · Code",
-                     "Senior": "Grandmaster", "Lead": "Guildmaster"}
+    def role_specs(self) -> list[tuple]:
+        """(name, color or None, hoist, mentionable, unlocks key path, older name or None), highest first."""
+        cat = self.bot.catalog
+        specs = [("Mod", "#E0E0E0", True, True, ("staff", "mod"), None),
+                 ("Mentor", "#6FB3A0", False, True, ("staff", "mentor"), None)]
+        specs += [(name, color, hoist, n >= 3, ("rank", n), None) for n, name, color, hoist in RANK_ROLES]
+        for key in cat.specializations:
+            if key != "undecided":
+                title = cat.title_of(key)
+                old = "Major · Lookdev" if key == "lookdev" else f"Major · {title}"
+                specs.append((title, None, False, True, ("specialization", key), old))
+        specs += [("Ping · Showcase", None, False, True, ("ping", "showcase"), None),
+                  ("Ping · Patch Notes", None, False, True, ("ping", "patch_notes"), None)]
+        return specs
 
-    async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None) -> discord.Role:
+    # ------------------------------------------------------------------ helpers
+    async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None, old=None) -> discord.Role:
         r = discord.utils.get(g.roles, name=name)
         if r:
             return r
-        old_exact = self.RENAMED_EXACT.get(name)
-        if old_exact and (r := discord.utils.get(g.roles, name=old_exact)):
-            await r.edit(name=name, reason="Unrealcraft: renamed")
-            return r
-        for new, old in self.RENAMED_ROLES.items():
-            if name.startswith(new) and (r := discord.utils.get(g.roles, name=old + name[len(new):])):
-                await r.edit(name=name, reason="Unrealcraft: renamed")
+        for old_name in ([old] if old else []) + ([f"Major · {name}"]):
+            if (r := discord.utils.get(g.roles, name=old_name)):
+                await r.edit(name=name, mentionable=mention, reason="Unrealcraft: renamed")
                 return r
         return await g.create_role(name=name, color=C(color) if color else discord.Color.default(), hoist=hoist,
                                    mentionable=mention, permissions=perms or discord.Permissions.none(),
                                    reason="Unrealcraft bootstrap")
 
-    async def _category(self, g, name, overwrites) -> discord.CategoryChannel:
+    async def _category(self, g, name, overwrites, old_names=()) -> discord.CategoryChannel:
         c = discord.utils.get(g.categories, name=name)
+        if not c:
+            for old in old_names:
+                if (c := discord.utils.get(g.categories, name=old)):
+                    await c.edit(name=name, reason="Unrealcraft: renamed")
+                    break
         if c:
             await c.edit(overwrites=overwrites)
             return c
         return await g.create_category(name, overwrites=overwrites, reason="Unrealcraft bootstrap")
 
-    async def _text(self, g, cat, name, overwrites=None, topic=None, news=False):
-        ch = discord.utils.get(cat.channels, name=name)
+    async def _text(self, g, cat, name, topic=None, news=False, old_names=()):
+        """Find a text channel anywhere by name (or an old name) and move it into `cat`; else create it.
+        Its permissions always follow the category."""
+        ch = next((c for n in (name, *old_names) for c in g.text_channels if c.name == n), None)
         if ch:
+            await ch.edit(name=name, category=cat, topic=topic or ch.topic, overwrites=cat.overwrites, reason="Unrealcraft: layout")
             return ch
         kw = dict(category=cat, topic=topic, reason="Unrealcraft bootstrap")
-        if overwrites:
-            kw["overwrites"] = {**cat.overwrites, **overwrites}
         if news and "COMMUNITY" in g.features:
             kw["news"] = True
         return await g.create_text_channel(name, **kw)
@@ -131,303 +115,165 @@ class SetupServer(commands.Cog):
                 return False
         return True
 
-    async def _forum_or_text(self, g, cat, name, tags, overwrites=None, topic=None, require_tag=False,
-                             reaction=None, report=None):
-        ch = discord.utils.get(cat.channels, name=name)
+    async def _forum(self, g, cat, name, tags, topic=None, require_tag=False, reaction=None, report=None):
+        """A forum (or a text channel while Community is off) inside `cat`, with the category's permissions."""
+        ch = discord.utils.get(g.channels, name=name)
         community = "COMMUNITY" in g.features
         if ch and community and isinstance(ch, discord.TextChannel):
             # Community was switched on after the first bootstrap: swap the text channel for a forum.
             if await self._is_empty(ch):
                 await ch.delete(reason="Unrealcraft: replaced by a forum (Community on)")
-                if report is not None:
-                    report.append(f"#{name}: text → forum")
+                report is not None and report.append(f"#{name}: text → forum")
             else:
                 await ch.edit(name=f"{name}-archive", reason="Unrealcraft: kept (had member posts)")
-                if report is not None:
-                    report.append(f"#{name}: had member posts, renamed to #{name}-archive")
+                report is not None and report.append(f"#{name}: had member posts, renamed to #{name}-archive")
             ch = None
         if ch:
+            await ch.edit(category=cat, topic=topic, overwrites=cat.overwrites, reason="Unrealcraft: layout")
+            if isinstance(ch, discord.ForumChannel):
+                have = {t.name for t in ch.available_tags}
+                missing = [discord.ForumTag(name=t) for t in tags if t not in have]
+                if missing:
+                    await ch.edit(available_tags=list(ch.available_tags) + missing)
             return ch
-        ow = {**cat.overwrites, **(overwrites or {})}
         if community:
             extra = {"default_reaction_emoji": reaction} if reaction else {}
-            forum = await g.create_forum(name, category=cat, topic=topic, overwrites=ow,
+            forum = await g.create_forum(name, category=cat, topic=topic,
                                          available_tags=[discord.ForumTag(name=t) for t in tags],
                                          default_sort_order=discord.ForumOrderType.latest_activity,
                                          reason="Unrealcraft bootstrap", **extra)
             if require_tag:
                 await forum.edit(require_tag=True)
             return forum
-        return await g.create_text_channel(name, category=cat, topic=topic, overwrites=ow,
-                                           reason="Unrealcraft bootstrap")
+        return await g.create_text_channel(name, category=cat, topic=topic, reason="Unrealcraft bootstrap")
 
-    async def _rename_category(self, g, old: str, new: str) -> None:
-        c = discord.utils.get(g.categories, name=old)
-        if c and not discord.utils.get(g.categories, name=new):
-            await c.edit(name=new, reason="Unrealcraft: renamed")
-
-    async def _move_or_text(self, g, cat, name, old_names=(), topic=None):
-        """Find a text channel anywhere (by name or an old name), move/rename it into `cat`; else create it."""
-        ch = next((c for n in (name, *old_names) for c in g.text_channels if c.name == n), None)
-        if ch:
-            if ch.category_id != cat.id or ch.name != name:
-                await ch.edit(name=name, category=cat, topic=topic, reason="Unrealcraft: layout")
-            return ch
-        return await self._text(g, cat, name, topic=topic)
-
-    async def _ensure_tags(self, forum, tags) -> None:
-        if not isinstance(forum, discord.ForumChannel):
-            return
-        have = {t.name for t in forum.available_tags}
-        missing = [discord.ForumTag(name=t) for t in tags if t not in have]
-        if missing:
-            await forum.edit(available_tags=list(forum.available_tags) + missing)
-
-    async def _retire(self, g, cat, names, drop_category=False) -> list[str]:
-        """Delete our own obsolete channels (names=None: all in the category), only if no member ever posted."""
+    async def _retire(self, g, names) -> list[str]:
+        """Delete our own obsolete channels by name, only if no member ever posted in them."""
         out = []
-        if not cat:
-            return out
-        for ch in list(cat.channels):
-            if names is not None and ch.name not in names:
-                continue
-            if isinstance(ch, discord.TextChannel) and not await self._is_empty(ch):
-                out.append(f"kept #{ch.name} (has member messages)")
-                continue
-            if isinstance(ch, discord.ForumChannel) and ch.threads and any(
-                    t.owner_id != g.me.id for t in ch.threads):
-                out.append(f"kept #{ch.name} (has member posts)")
-                continue
-            await ch.delete(reason="Unrealcraft: channel layout simplified")
-            out.append(f"removed #{ch.name}")
-        if drop_category and not cat.channels:
-            await cat.delete(reason="Unrealcraft: channel layout simplified")
+        for name in names:
+            for ch in [c for c in g.channels if c.name == name]:
+                if isinstance(ch, discord.TextChannel) and not await self._is_empty(ch):
+                    await ch.edit(name=f"{name}-archive", reason="Unrealcraft: no longer used (kept: has member messages)")
+                    out.append(f"#{name}: had member messages, renamed to #{name}-archive")
+                    continue
+                if isinstance(ch, discord.ForumChannel):
+                    threads = list(ch.threads) + [t async for t in ch.archived_threads(limit=50)]
+                    if any(t.owner_id != g.me.id for t in threads):
+                        await ch.edit(name=f"{name}-archive", reason="Unrealcraft: no longer used (kept: has member posts)")
+                        out.append(f"#{name}: had member posts, renamed to #{name}-archive")
+                        continue
+                await ch.delete(reason="Unrealcraft: the site replaced this channel")
+                out.append(f"removed #{name}")
         return out
 
-    async def _voice(self, g, cat, name, overwrites=None):
-        ch = discord.utils.get(cat.channels, name=name)
+    async def _voice(self, g, cat, name):
+        ch = discord.utils.get(g.voice_channels, name=name)
         if ch:
+            await ch.edit(category=cat, overwrites=cat.overwrites, reason="Unrealcraft: layout")
             return ch
-        return await g.create_voice_channel(name, category=cat, overwrites={**cat.overwrites, **(overwrites or {})},
-                                            reason="Unrealcraft bootstrap")
+        return await g.create_voice_channel(name, category=cat, reason="Unrealcraft bootstrap")
 
     # ------------------------------------------------------------------ bootstrap
     async def bootstrap(self, g: discord.Guild) -> list[str]:
         report: list[str] = []
-        unl = self.bot.unlocks
+        unl, cat, me = self.bot.unlocks, self.bot.catalog, g.me
         data = unl.data
-        me = g.me
 
         # roles ------------------------------------------------------------
+        specs = self.role_specs()
+        data["roles"] = {k: v for k, v in (data.get("roles") or {}).items() if k in ("staff", "rank", "ping")}
         roles: dict[str, discord.Role] = {}
-        for name, color, hoist, mention, key in ROLES:
-            perms = MOD_PERMS if name == "Mod" else None
-            r = await self._role(g, name, color, hoist, mention, perms)
+        for name, color, hoist, mention, key, old in specs:
+            r = await self._role(g, name, color, hoist, mention, MOD_PERMS if name == "Mod" else None, old)
             roles[name] = r
-            if key:
-                _set(data.setdefault("roles", {}), key, r.id)
-        # order: first in ROLES = highest, all below the bot's top role
+            _set(data["roles"], key, r.id)
         top = me.top_role.position
-        positions = {}
-        for i, (name, *_rest) in enumerate(ROLES):
-            positions[roles[name]] = max(1, top - 1 - i)
-        try:
-            await g.edit_role_positions(positions, reason="Unrealcraft bootstrap")
+        try:                                      # first in the list = highest, all below the bot's own role
+            await g.edit_role_positions({roles[s[0]]: max(1, top - 1 - i) for i, s in enumerate(specs)},
+                                        reason="Unrealcraft bootstrap")
         except discord.HTTPException as e:
-            report.append(f"⚠ could not order roles ({e}). Drag the bot's role to the top.")
-        report.append(f"roles: {len(ROLES)} ready")
+            report.append(f"⚠ could not order roles ({e}). Drag the Quartermaster role to the top.")
+        report.append(f"roles: {len(specs)} ready")
+        # the old gate and onboarding-answer roles: nothing reads them any more
+        legacy = set(LEGACY_ROLES) | {name for name, _q, _v in profile.all_role_names()}
+        for r in [r for r in g.roles if r.name in legacy or r.name.startswith(("Specialty · ", "Seal · "))]:
+            try:
+                await r.delete(reason="Unrealcraft: the site replaced this role")
+                report.append(f"removed role {r.name}")
+            except discord.HTTPException as e:
+                report.append(f"⚠ could not remove role {r.name}: {e}")
 
-        R = roles
-        rank_roles = {n: R[x] for n, x in ((0, "Novice"), (1, "Apprentice"), (2, "Adept"), (3, "Expert"),
-                                           (4, "Master"), (5, "Senior"), (6, "Lead"))}
-        staff = [R["Mod"], R["Mentor"], R["Curriculum"]]
-        cat = self.bot.catalog
-        everyone = g.default_role
-        bot_ow = P(view_channel=True, send_messages=True, manage_messages=True, manage_threads=True,
-                   embed_links=True, attach_files=True, read_message_history=True, connect=True)
-
-        def allowed_from(rank: int) -> list[discord.Role]:
-            rs = [r for n, r in rank_roles.items() if n >= rank]
-            return rs + staff
-
-        def gated(rank: int, extra: dict | None = None) -> dict:
-            ow = {everyone: P(view_channel=False), me: bot_ow}
-            for r in allowed_from(rank):
-                ow[r] = P(view_channel=True)
-            ow.update(extra or {})
-            return ow
-
-        # 00 GATE: read-only essentials, visible to everyone ----------------------
+        everyone, staff = g.default_role, [roles["Mod"], roles["Mentor"]]
+        bot_ow = P(view_channel=True, send_messages=True, manage_messages=True, manage_threads=True, manage_channels=True,
+                   embed_links=True, attach_files=True, read_message_history=True, connect=True, move_members=True)
+        read_ow = P(view_channel=True, send_messages=False, add_reactions=True, create_public_threads=False,
+                    read_message_history=True, use_application_commands=True)
+        member_ow = P(view_channel=True, send_messages=True, send_messages_in_threads=True, create_public_threads=True,
+                      attach_files=True, embed_links=True, add_reactions=True, read_message_history=True,
+                      use_application_commands=True, connect=True, speak=True)
         chans = data.setdefault("channels", {})
-        cats = data.setdefault("categories", {})
-        gate_ow = {everyone: P(view_channel=True, send_messages=False, add_reactions=True, create_public_threads=False,
-                               read_message_history=True, use_application_commands=True),
-                   me: bot_ow}
-        gate = await self._category(g, "00 · GATE", gate_ow)
-        welcome = await self._text(g, gate, "welcome",
-                                   topic="Start here. Accept the rules, press Start Questing (a short rules quiz). "
-                                         "Commands only; chat in #general.")
-        # Discord greys out the message box where you can't send, which also blocks slash commands. Allow sending
-        # in #welcome so /start and /quiz work; plain messages are removed by the bot (commands-only channel).
-        await welcome.edit(overwrites={**gate_ow, everyone: P(view_channel=True, send_messages=True,
-                                                              add_reactions=True, create_public_threads=False,
-                                                              read_message_history=True,
-                                                              use_application_commands=True)})
-        ann = await self._text(g, gate, "announcements", news=True,       # converted after _community() frees it
-                               topic="Raids, events and big news.")
-        notes = await self._text(g, gate, "patch-notes", news=True,
-                                 topic="What changed on the server, the bot and the curriculum. Posted on every update.")
-        resources = await self._move_or_text(g, gate, "epic-games-resources", old_names=("resources",),
-                                             topic="Epic Games docs and free courses. Quests also link hand-picked community guides.")
-        rankups = await self._move_or_text(g, gate, "rank-ups", topic="Promotions. Posted by the Quartermaster.")
-        for c in (resources, rankups):
-            await c.edit(overwrites=gate_ow)
-        report += await self._retire(g, gate, ["roles", "how-this-place-works"])   # merged into #welcome
-        chans.pop("roles_info", None)
-        chans.pop("how_this_place_works", None)
-        chans.update(welcome=welcome.id, announcements=ann.id, patch_notes=notes.id,
-                     resources=resources.id, rank_ups=rankups.id)
+        for stale in ("quest_board", "mentor_queue", "tracks", "curriculum_wip", "roles_info", "how_this_place_works", "bays"):
+            chans.pop(stale, None)
 
-        # 01 GUILD HUB: open to everyone who accepted the rules (Rules Screening gates talking).
-        # Discord Onboarding needs >= 7 @everyone-visible default channels, 5 of them postable.
-        member_ow = P(view_channel=True, send_messages=True, send_messages_in_threads=True,
-                      create_public_threads=True, attach_files=True, embed_links=True, add_reactions=True,
-                      read_message_history=True, use_application_commands=True, connect=True, speak=True)
-        recruit_ow = P(view_channel=True, send_messages=False, send_messages_in_threads=True,
-                       create_public_threads=False, add_reactions=True, read_message_history=True,
-                       use_application_commands=True, connect=True, speak=True)
-        hub_ow = {everyone: member_ow, me: bot_ow}
-        await self._rename_category(g, "01 · HUB", "01 · GUILD HUB")
-        hub = await self._category(g, "01 · GUILD HUB", hub_ow)
-        cats["hub"] = hub.id
-        general = await self._text(g, hub, "general")
-        intros = await self._text(g, hub, "introductions",
-                                  topic="Say hi: your major and one thing you want to build in 3 months.")
-        showcase = await self._forum_or_text(
-            g, hub, "showcase", SHOWCASE_TAGS, reaction="🔥", report=report,
-            topic="Your own map or scene. WIP welcome. Pick a tag. One thing that works, one issue, one next step.")
-        helpdesk = await self._forum_or_text(
-            g, hub, "help-desk", HELP_TAGS, require_tag=True, report=report,
-            topic="Stuck in Unreal, or something broken on the server or with the Quartermaster? Use the buttons "
-                  "in the pinned post. Always say your engine version / what you did right before it broke.")
-        await self._ensure_tags(helpdesk, HELP_TAGS)
-        suggestions = await self._forum_or_text(
-            g, hub, "suggestions", ["Server", "Bot", "Quests", "Other"], report=report,
-            topic="Ideas for the server, the Quartermaster or the quests. One idea per post; upvote with 👍.")
-        for c in (general, intros, showcase, helpdesk, suggestions):
-            await c.edit(overwrites=hub_ow)
+        # 00 GATE: read-only essentials -------------------------------------------------
+        gate = await self._category(g, CAT_GATE, {everyone: read_ow, me: bot_ow})
+        welcome = await self._text(g, gate, "welcome", topic="Start here: what Unrealcraft is, the rules, and the way to the site.")
+        ann = await self._text(g, gate, "announcements", news=True, topic="Events and big news.")
+        notes = await self._text(g, gate, "patch-notes", news=True,
+                                 topic="What changed on the site and in the curriculum. Posted on every release.")
+        rankups = await self._text(g, gate, "rank-ups", topic="Promotions earned on the site. Posted by the Quartermaster.")
+        resources = await self._text(g, gate, "epic-games-resources", old_names=("resources",),
+                                     topic="Epic Games docs and free courses. Quests link to these too.")
+        chans.update(welcome=welcome.id, announcements=ann.id, patch_notes=notes.id, rank_ups=rankups.id, resources=resources.id)
+
+        # 01 GUILD HALL: open to everyone who accepted the rules ------------------------
+        hall = await self._category(g, CAT_HALL, {everyone: member_ow, me: bot_ow}, old_names=("01 · GUILD HUB", "01 · HUB"))
+        general = await self._text(g, hall, "general", topic="Talk about anything Unreal.")
+        intros = await self._text(g, hall, "introductions", topic="Say hi: what you want to learn and one thing you want to build.")
+        showcase = await self._forum(g, hall, "showcase", SHOWCASE_TAGS, reaction="🔥", report=report,
+                                     topic="Your own map or scene. Work in progress is welcome. Pick a tag.")
+        helpdesk = await self._forum(g, hall, "help-desk", HELP_TAGS, require_tag=True, report=report,
+                                     topic="Stuck in Unreal, on a quest, or something broken on the site? Say your engine "
+                                           "version, what you tried, and what happened.")
+        suggestions = await self._forum(g, hall, "suggestions", ["Site", "Server", "Quests", "Other"], report=report,
+                                        topic="Ideas for the site, the server or the quests. One idea per post.")
         chans.update(general=general.id, introductions=intros.id, showcase=showcase.id, help_desk=helpdesk.id,
                      suggestions=suggestions.id)
 
-        # 03 TOWN HALL ---------------------------------------------------------------
-        for old in ("02 · TRAINING GROUNDS", "02 · VOICE ROOMS", "02 · TOWN HALL"):
-            await self._rename_category(g, old, "03 · TOWN HALL")
-        training = await self._category(g, "03 · TOWN HALL", {everyone: P(view_channel=False),
-                                                                R["Recruit"]: recruit_ow,
-                                                                R["Oriented"]: member_ow, me: bot_ow})
-        cats["training"] = training.id
-        # One join-to-create hub (cogs/voice.py): joining it makes your own room. It replaced the static rooms.
+        # 02 SPECIALIZATIONS: one discussion forum each, open to everyone ---------------
+        spec_cat = await self._category(g, CAT_SPEC, {everyone: member_ow, me: bot_ow},
+                                        old_names=("02 · QUEST BOARD", "03 · WORKSHOP"))
+        chans["specializations"] = {}
+        for key, cfg in cat.specializations.items():
+            if key == "undecided":
+                continue
+            slug = spec_slug(cat, key)
+            forum = await self._forum(g, spec_cat, slug, SPEC_TAGS, report=report,
+                                      topic=f"{cfg['title']}: questions, tips and work in progress. {cfg.get('blurb', '')}".strip())
+            chans["specializations"][key] = forum.id
+        report += await self._retire(g, ["quest-log", "starter-quests", "foundations", "mentor-queue"])
+
+        # 03 TOWN HALL: join-to-create voice ---------------------------------------------
         from .voice import HUBS
-        hub_name = HUBS["studio_floor_voice"][0]
-        for old in ("Studio Floor", "➕ New voice room"):
-            if (ch := discord.utils.get(training.voice_channels, name=old)):
-                await ch.edit(name=hub_name, reason="Unrealcraft: join-to-create voice rooms")
-        for old in ("Pair Program", "Critique Room", "➕ Pair Program", "➕ Critique Room"):
-            if (ch := discord.utils.get(training.voice_channels, name=old)) and not ch.members:
-                await ch.delete(reason="Unrealcraft: replaced by ➕ Join to create")
-                report.append(f"removed {old} voice")
-        floor = await self._voice(g, training, hub_name)
+        town = await self._category(g, CAT_VOICE, {everyone: member_ow, me: bot_ow},
+                                    old_names=("02 · TOWN HALL", "02 · VOICE ROOMS", "02 · TRAINING GROUNDS"))
+        floor = await self._voice(g, town, HUBS["studio_floor_voice"][0])
         chans.update(studio_floor_voice=floor.id)
 
-        # 02 QUEST BOARD (was WORKSHOP): #quest-log + #starter-quests + one forum per major --------------
-        # Quests live on the board; /submit posts turn-ins into #starter-quests or the member's major forum.
-        await self._rename_category(g, "03 · WORKSHOP", "02 · QUEST BOARD")
-        workshop = await self._category(g, "02 · QUEST BOARD", {everyone: P(view_channel=False), me: bot_ow})
-        cats["workshop"] = workshop.id
-        qb = await self._move_or_text(g, workshop, "quest-log", old_names=("quests", "quest-board"), topic="How quests work and the weekly raid.")
-        # send_messages on so slash commands work here; plain chat is removed by the bot (commands-only)
-        board_ow = P(view_channel=True, send_messages=True, create_public_threads=False, add_reactions=True,
-                     read_message_history=True, use_application_commands=True)
-        await qb.edit(overwrites={**workshop.overwrites, R["Recruit"]: board_ow, R["Oriented"]: board_ow})
-        chans.update(quest_board=qb.id)
-        # One forum per major + #starter-quests. After Orientation everyone can READ all of them; you can POST in
-        # #starter-quests and in the forums of the majors you picked (your Major roles). Mentors/staff post anywhere.
-        from .workshop import STARTER, major_slug
-        read_only = P(view_channel=True, send_messages=False, send_messages_in_threads=False,
-                      create_public_threads=False, add_reactions=True, read_message_history=True)
-        can_post = P(view_channel=True, send_messages=True, send_messages_in_threads=True, create_public_threads=True,
-                     attach_files=True, embed_links=True, add_reactions=True, read_message_history=True)
-        staff_post = {r: can_post for r in staff}
-        old_foundations = discord.utils.get(workshop.channels, name="foundations")
-        if old_foundations and not discord.utils.get(workshop.channels, name=STARTER):
-            await old_foundations.edit(name=STARTER, reason="Unrealcraft: renamed")
-            report.append("#foundations → #starter-quests")
-        forums = [(STARTER, None, "The 11 Starter Quests (SQ1–SQ11) everyone does. Share WIP, ask for help, see turn-ins.")]
-        forums += [(major_slug(cat, k), k, f"{cfg['title']}: quests, WIP, help and turn-ins. Everyone can read; "
-                                         f"members who picked {cfg['title']} can post.")
-                   for k, cfg in cat.majors.items() if k != "undecided"]
-        chans["tracks"] = {}
-        for slug, major, topic in forums:
-            forum = await self._forum_or_text(g, workshop, slug, ["Turn-in", "WIP", "Help", "Done"],
-                                              report=report, topic=topic)
-            if major is None:
-                ow = {R["Oriented"]: can_post}
-            else:
-                ow = {R["Oriented"]: read_only, R[f"Major · {cat.majors[major]['title']}"]: can_post}
-            await forum.edit(topic=topic, overwrites={**workshop.overwrites, **ow, **staff_post})
-            chans["tracks"][slug] = forum.id
-        # retire the old rank-based track forums (kept as *-archive if members ever posted in them)
-        for old in ("world-lighting", "materials", "blueprint", "characters-anim"):
-            ch = discord.utils.get(workshop.channels, name=old)
-            if not ch:
-                continue
-            threads = list(ch.threads) + [t async for t in ch.archived_threads(limit=50)]
-            if any(t.owner_id != g.me.id or not t.flags.pinned for t in threads):
-                await ch.edit(name=f"{old}-archive", reason="Unrealcraft: replaced by major forums")
-                report.append(f"#{old}: had posts, renamed to #{old}-archive")
-            else:
-                await ch.delete(reason="Unrealcraft: replaced by major forums")
-                report.append(f"removed #{old}")
-        for old_cat, key, _rank, _slug in TRACKS:
-            cats.pop(key, None)
-            report += await self._retire(g, discord.utils.get(g.categories, name=old_cat), None, drop_category=True)
-        data["unlock_at_rank"] = {0: ["hub", "training"], 1: [], 2: [], 3: [], 4: ["systems"], 5: ["net_shipping"], 6: []}
+        # 04 STAFF -----------------------------------------------------------------------
+        st = await self._category(g, CAT_STAFF, {everyone: P(view_channel=False), me: bot_ow,
+                                                 **{r: P(view_channel=True) for r in staff}})
+        modlog = await self._text(g, st, "mod-log", topic="AutoMod alerts and Discord's own notices.")
+        chans.update(mod_log=modlog.id)
 
-        # Specialist Halls were removed: retire the category, its channels and the Specialty permission roles.
-        for old_cat in ("03 · SPECIALIST HALLS", "03 · BAYS"):
-            report += await self._retire(g, discord.utils.get(g.categories, name=old_cat), None, drop_category=True)
-        for r in [r for r in g.roles if r.name.startswith(("Specialty · ", "Seal · ", "Expert · "))]:
-            await r.delete(reason="Unrealcraft: seals removed; the major is the specialty")
-            report.append(f"removed role {r.name}")
-        cats.pop("bays", None)
-        chans.pop("bays", None)
-        data.get("roles", {}).pop("seal", None)
-        data.get("roles", {}).pop("specialist", None)
-        uar = data.get("unlock_at_rank") or {}
-        uar[3] = [x for x in uar.get(3, []) if x != "bays"]
-
-        # 04 STAFF ------------------------------------------------------------
-        st = await self._category(g, "04 · STAFF", {everyone: P(view_channel=False), me: bot_ow,
-                                                    **{r: P(view_channel=True) for r in staff}})
-        modlog = await self._text(g, st, "mod-log")
-        wip = await self._text(g, st, "curriculum-wip", overwrites={R["Lead"]: P(view_channel=True)})
-        mq = await self._text(g, st, "mentor-queue", overwrites={
-            R["Mentor-in-Training"]: P(view_channel=True, send_messages=False),
-            R["Senior"]: P(view_channel=True, send_messages=False),
-            R["Lead"]: P(view_channel=True)})
-        chans.update(mod_log=modlog.id, curriculum_wip=wip.id, mentor_queue=mq.id)
+        data["categories"] = {"hall": hall.id, "specializations": spec_cat.id, "town_hall": town.id}
+        data.pop("unlock_at_rank", None)
+        unl.path.write_text("# Written by /setup bootstrap. Safe to edit; bootstrap re-matches by name.\n"
+                            + yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
         if "COMMUNITY" in g.features:
-            if not discord.utils.get(training.channels, name="Lecture Hall"):
-                speakers = [rank_roles[5], rank_roles[6], R["Mentor"], R["Mod"]]
-                await g.create_stage_channel("Lecture Hall", category=training, reason="Unrealcraft bootstrap",
-                                             overwrites={**training.overwrites,
-                                                         R["Recruit"]: P(view_channel=False),
-                                                         **{r: P(request_to_speak=True, speak=True) for r in speakers}})
-                report.append("Lecture Hall stage created (Senior+ speak)")
-            report += await self._community(g, welcome, welcome, qb, helpdesk, showcase, modlog)
+            report += await self._community(g, welcome, modlog)
             report += await self.onboarding(g)
-            # Discord's community-updates channel can't be an announcement channel; _community moved it to #mod-log.
             if isinstance(ann, discord.TextChannel) and not ann.is_news():
                 try:
                     await ann.edit(type=discord.ChannelType.news)
@@ -435,39 +281,32 @@ class SetupServer(commands.Cog):
                 except discord.HTTPException as e:
                     report.append(f"⚠ #announcements conversion: {e}")
         else:
-            report.append("Community is off: showcase, help-desk and turn-ins are text channels, and there's no stage.")
+            report.append("Community is off: showcase, help-desk and the specialization forums are plain text channels. "
+                          "Turn on Community in Server Settings and run bootstrap again.")
         report += await self._remove_defaults(g)
         report += await self.order(g)
-
-        # persist ---------------------------------------------------------------
-        data.setdefault("unlock_at_rank", {0: ["hub", "training", "foundations"], 1: ["world_lighting"],
-                                           2: ["materials", "blueprint"], 3: ["characters_anim"],
-                                           4: ["systems"], 5: ["net_shipping"], 6: []})
-        unl.path.write_text("# Written by /admin bootstrap. Safe to edit; bootstrap re-matches by name.\n"
-                            + yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
         report.append("categories + channels ready; IDs written to config/unlocks.yaml")
         return report
 
     # ------------------------------------------------------------------ community extras
-    async def _community(self, g, welcome, manual, quest_board, helpdesk, showcase, modlog) -> list[str]:
+    async def _community(self, g, welcome, modlog) -> list[str]:
         out = []
         try:
             await g.edit(community=True, rules_channel=welcome, public_updates_channel=modlog, safety_alerts_channel=modlog,
-                         system_channel=None,
-                         reason="Unrealcraft bootstrap")
+                         system_channel=None, reason="Unrealcraft bootstrap")
             out.append("rules channel = #welcome, Discord community updates → #mod-log, join spam off")
         except discord.HTTPException as e:
             out.append(f"⚠ guild settings: {e}")
         try:
             await g.edit_welcome_screen(
                 enabled=True,
-                description="A Discord RPG for learning Unreal Engine 5. Quests, ranks, real work.",
-                welcome_channels=[   # must be readable by @everyone, so GATE channels only
-                    discord.WelcomeChannel(channel=welcome, description="Start here: press Start Questing",
+                description="The guild hall of Unrealcraft, an RPG for learning Unreal Engine 5. The game is on the site; "
+                            "this is where we talk and show our work.",
+                welcome_channels=[
+                    discord.WelcomeChannel(channel=welcome, description="Start here: the rules and the way to the site",
                                            emoji=discord.PartialEmoji(name="🚪")),
-                    discord.WelcomeChannel(channel=g.get_channel(self.bot.unlocks.channel("announcements")),
-                                           description="Raids, events, new quests",
-                                           emoji=discord.PartialEmoji(name="📣")),
+                    discord.WelcomeChannel(channel=g.get_channel(self.bot.unlocks.channel("general")),
+                                           description="Say hello", emoji=discord.PartialEmoji(name="👋")),
                 ])
             out.append("welcome screen set")
         except discord.HTTPException as e:
@@ -480,14 +319,12 @@ class SetupServer(commands.Cog):
                 await self.bot.http.request(route)
                 out.append("rules screening already set (left as is)")
             except discord.NotFound:
-                rules = [l.split(". ", 1)[1].replace("**", "") for l in
-                         (Path_root() / "docs" / "06-community-rules.md").read_text(encoding="utf-8").splitlines()
-                         if l[:2].rstrip(".").isdigit()]
+                rules = self.rules()
                 await self.bot.http.request(
                     discord.http.Route("PATCH", "/guilds/{guild_id}/member-verification", guild_id=g.id),
                     json={"enabled": True,
-                          "description": "Unrealcraft is a Discord RPG for learning Unreal Engine 5. Read the rules, "
-                                         "then press Start Questing in #welcome.",
+                          "description": "Unrealcraft is an RPG for learning Unreal Engine 5. Read the rules, then follow "
+                                         "the link in #welcome to the site.",
                           "form_fields": [{"field_type": "TERMS", "label": "Read and agree to the server rules",
                                            "values": rules, "required": True}]},
                     reason="Unrealcraft rules screening")
@@ -502,8 +339,7 @@ class SetupServer(commands.Cog):
             if "UC · mention spam" not in existing:
                 await g.create_automod_rule(
                     name="UC · mention spam", event_type=discord.AutoModRuleEventType.message_send,
-                    trigger=discord.AutoModTrigger(type=discord.AutoModRuleTriggerType.mention_spam,
-                                                   mention_limit=6),
+                    trigger=discord.AutoModTrigger(type=discord.AutoModRuleTriggerType.mention_spam, mention_limit=6),
                     actions=[block, alert], enabled=True, reason="Unrealcraft bootstrap")
             if "UC · flagged words" not in existing:
                 await g.create_automod_rule(
@@ -521,92 +357,36 @@ class SetupServer(commands.Cog):
             out.append(f"⚠ AutoMod: {e}")
         return out
 
+    def rules(self) -> list[str]:
+        text = (Path_root() / "docs" / "06-community-rules.md").read_text(encoding="utf-8")
+        return [ln.split(". ", 1)[1].replace("**", "") for ln in text.splitlines() if ln[:2].rstrip(".").isdigit()]
+
     async def onboarding(self, g: discord.Guild) -> list[str]:
-        """Discord Onboarding (Questions + default channels) and the Server Guide (welcome, to-dos, resources)."""
-        out, unl = [], self.bot.unlocks
-        ch = lambda key: g.get_channel(unl.channel(key))
-        recruit = unl.role("recruit")
+        """Discord Onboarding: no questions about what to learn (that is chosen on the site), only opt-in pings."""
+        unl = self.bot.unlocks
         E = discord.PartialEmoji
-        prompts = []
-        for q in profile.QUESTIONS:
-            opts = []
-            for ans in q.answers:
-                roles = [unl.role("major", ans.value), recruit] if q.key == "major"                     else [unl.role("profile", q.key, ans.value)]
-                opts.append(discord.OnboardingPromptOption(title=ans.title, description=ans.description,
-                                                           emoji=E(name=ans.emoji), roles=[r for r in roles if r]))
-            prompts.append(discord.OnboardingPrompt(type=discord.OnboardingPromptType.multiple_choice,
-                                                    title=q.title, single_select=q.single, required=q.required,
-                                                    in_onboarding=q.pre_join, options=opts))
         pings = discord.OnboardingPrompt(
             type=discord.OnboardingPromptType.multiple_choice, title="What should we ping you for?",
             single_select=False, required=False, in_onboarding=False,
             options=[
-                discord.OnboardingPromptOption(title="Weekly raid", description="One server-wide quest each week",
-                                               emoji=E(name="⚔️"), roles=[unl.role("ping", "raid")]),
-                discord.OnboardingPromptOption(title="Showcase spotlights", description="Great maps from members",
+                discord.OnboardingPromptOption(title="Showcase spotlights", description="Great work from members",
                                                emoji=E(name="🔥"), roles=[unl.role("ping", "showcase")]),
-                discord.OnboardingPromptOption(title="Patch notes", description="New quests and bot changes",
+                discord.OnboardingPromptOption(title="Patch notes", description="New quests and site changes",
                                                emoji=E(name="📦"), roles=[unl.role("ping", "patch_notes")]),
             ])
-        # Default channels must be readable by @everyone: GATE + the open hub. Major forums stay rank-locked.
-        gate = discord.utils.get(g.categories, name="00 · GATE")
-        defaults = [c for c in (gate.channels if gate else []) if isinstance(c, discord.TextChannel)]
-        defaults += [c for c in (ch("general"), ch("introductions"), ch("showcase"), ch("help_desk"),
-                                 ch("suggestions")) if c]
+        defaults = [c for name in (CAT_GATE, CAT_HALL) if (cat := discord.utils.get(g.categories, name=name))
+                    for c in cat.channels if isinstance(c, (discord.TextChannel, discord.ForumChannel))]
         try:
-            ob = await g.edit_onboarding(prompts=prompts + [pings], default_channels=defaults, enabled=True,
-                                         mode=discord.OnboardingMode.advanced, reason="Unrealcraft onboarding")
-            out.append(f"onboarding on: {len(prompts) + 1} questions, {len(defaults)} default channels")
+            await g.edit_onboarding(prompts=[pings], default_channels=defaults, enabled=True,
+                                    mode=discord.OnboardingMode.advanced, reason="Unrealcraft onboarding")
+            return [f"onboarding on: 1 question (pings), {len(defaults)} default channels"]
         except discord.HTTPException as e:
-            out.append(f"⚠ onboarding: {e}")
+            return [f"⚠ onboarding: {e}"]
 
-        # Server Guide (not in discord.py yet: raw route)
-        def act(key, title, desc, emoji, chat=False):
-            c = ch(key)
-            return c and {"channel_id": str(c.id), "action_type": 1 if chat else 0, "title": title,
-                          "description": desc, "emoji": {"name": emoji}}
-        def res(key, title, desc, emoji):
-            c = ch(key) if isinstance(key, str) and key in (unl.data.get("channels") or {}) else                 discord.utils.get(g.channels, name=key)
-            return c and {"channel_id": str(c.id), "title": title, "description": desc, "emoji": {"name": emoji}}
-        guide = {
-            "enabled": True,
-            "welcome_message": {
-                "author_ids": [str(g.owner_id)],
-                "message": "Welcome to Unrealcraft, where you level up by making things in Unreal Engine 5. "
-                           "Every rank is earned with real work: quests, quizzes and turn-ins, never by chatting. "
-                           "Start with Orientation and the Quartermaster will walk you through it.",
-            },
-            "new_member_actions": [a for a in (
-                act("welcome", "Start Questing", "Press the green button. It is a short rules quiz.", "🚪"),
-
-                act("introductions", "Say hi with a goal", "Your major + one thing you want to build.", "👋", chat=True),
-                act("quest_board", "Find #quest-log", "Press Continue questing on the pinned post.", "🗺️"),
-                act("help_desk", "Ask for help the right way", "Use the New help post button.", "🛠️"),
-            ) if a],
-            "resource_channels": [r for r in (
-                res("welcome", "How Unrealcraft works", "Start here, commands, ranks and help", "🎖️"),
-                res("resources", "Epic Games resources", "Where every quest's reading comes from", "📘"),
-                res("announcements", "Announcements", "Raids, events, changes", "📣"),
-            ) if r],
-        }
-        try:
-            await self.bot.http.request(
-                discord.http.Route("PUT", "/guilds/{guild_id}/new-member-welcome", guild_id=g.id),
-                json=guide, reason="Unrealcraft server guide")
-            out.append(f"server guide on: {len(guide['new_member_actions'])} to-dos, "
-                       f"{len(guide['resource_channels'])} resources")
-        except discord.HTTPException as e:
-            out.append(f"⚠ server guide: {e}")
-        return out
-
-    CATEGORY_ORDER = ["00 · GATE", "01 · GUILD HUB", "02 · QUEST BOARD", "03 · TOWN HALL",
-                      "04 · STAFF"]
+    CATEGORY_ORDER = [CAT_GATE, CAT_HALL, CAT_SPEC, CAT_VOICE, CAT_STAFF]
     CHANNEL_ORDER = {
-        "00 · GATE": ["welcome", "announcements", "patch-notes", "epic-games-resources",
-                      "rank-ups"],
-        "01 · GUILD HUB": ["general", "introductions", "showcase", "help-desk", "suggestions"],
-        "02 · QUEST BOARD": ["quest-log", "starter-quests", "level-design", "environment-art", "tech-art",
-                          "gameplay-design", "animation", "programming", "cinematics"],
+        CAT_GATE: ["welcome", "announcements", "patch-notes", "rank-ups", "epic-games-resources"],
+        CAT_HALL: ["general", "introductions", "showcase", "help-desk", "suggestions"],
     }
 
     async def order(self, g: discord.Guild) -> list[str]:
@@ -622,8 +402,7 @@ class SetupServer(commands.Cog):
             if not c:
                 continue
             present = [ch for n in names if (ch := discord.utils.get(c.channels, name=n))]
-            current = sorted(present, key=lambda ch: ch.position)
-            if current != present:                       # only touch categories that are out of order
+            if present and sorted(present, key=lambda ch: ch.position) != present:
                 base = min(ch.position for ch in present)
                 for i, ch in enumerate(present):
                     await ch.edit(position=base + i, reason="Unrealcraft: order")
@@ -650,118 +429,53 @@ class SetupServer(commands.Cog):
                 await cat.delete(reason="Unrealcraft: default starter category")
         return out
 
-    # ------------------------------------------------------------------ pins
     # ------------------------------------------------------------------ pinned messages
     # One pinned bot message per purpose. Updates EDIT that message in place (never re-post), so channels stay clean.
     # kv(user 0) "pin:<key>" = "<channel_id>:<message_id>:<content hash>"
-
-    TRACK_ABOUT = {
-        "foundations": (0, "the Starter Quests: install, editor basics, your first level, light, material and Blueprint."),
-        "world-lighting": (1, "blockouts, landscapes, foliage and lighting that makes spaces readable."),
-        "materials": (2, "the Material Editor, instances, PBR, landscape materials and decals."),
-        "blueprint": (2, "Actor Blueprints, triggers, timelines, interfaces: making things play."),
-        "characters-anim": (3, "characters, Animation Blueprints, montages and retargeting."),
-    }
-
     def pin_specs(self, g: discord.Guild) -> list[dict]:
-        from .onboarding import BugReportButton, HelpPostButton, StartButton
-        from .quiz import QuizButton
-        from .quests import NextQuestButton
-        QuestBoardButton = lambda: NextQuestButton("Continue questing")
-        from .workshop import NewPostButton
-        unl, cat = self.bot.unlocks, self.bot.catalog
+        unl, cat, site = self.bot.unlocks, self.bot.catalog, self.bot.settings.site_url
         ch = lambda *k: g.get_channel(unl.channel(*k))
+        E = lambda title, text, color="#7A8C7E": discord.Embed(title=title, description=text, color=C(color))
 
-        def view(*items):
+        def link(label: str, url: str) -> discord.ui.View:
             v = discord.ui.View(timeout=None)
-            for item in items:
-                v.add_item(item)
+            v.add_item(discord.ui.Button(label=label, url=url))
             return v
 
-        rules = (Path_root() / "docs" / "06-community-rules.md").read_text(encoding="utf-8").split("\n", 2)[2].strip()
-        E = lambda title, text, color="#7A8C7E": discord.Embed(title=title, description=text, color=C(color))
-        rank_lines = "\n".join(f"**{r['title']}** → {r.get('opens', '—')}" for r in cat.meta["ranks"])
-        rule_lines = "\n".join(f"{i}. {r}" for i, r in enumerate(
-            [ln.split(". ", 1)[1].replace("**", "") for ln in rules.splitlines() if ln[:2].rstrip(".").isdigit()], 1))
-        welcome_page = [
-            E("👋 Welcome to Unrealcraft",
-              "Learn **Unreal Engine 5** by doing quests.\n"
-              "Finish quests → get XP → rank up → new channels open.\n"
-              "Chatting does **not** give XP. Only finished work does."),
-            E("🚀 Start here: 3 steps",
-              "**1.** Press the green button below. Your first quest is a short quiz about the rules.\n"
-              "**2.** Then do the other small steps. There is always a button for the next one.\n"
-              "**3.** When you finish, go to **#quest-log**. After Orientation, quests only work there.", "#3D7DD8"),
-            E("⌨️ 5 commands",
-              "`/quest` : your next task\n"
-              "`/quiz` : answer questions about a quest\n"
-              "`/submit` : send your finished work\n"
-              "`/rank` : see your level and XP\n"
-              "`/path` : see all your quests\n"
-              "Lost? Type `/where`.", "#B5714B"),
-            E("🗺️ What opens when",
-              "You only see channels you have unlocked.\n"
-              "**Everyone:** GATE and Guild Hub channels.\n"
-              "**After Orientation:** #quest-log, #starter-quests and the major forums (read all, post in "
-              "your major's), plus Town Hall (voice).\n" + rank_lines, "#8E6CCF"),
-            E("🆘 Need help?",
-              "Go to #help-desk.\n"
-              "🛠️ **Unreal help**: a problem in Unreal or with a quest.\n"
-              "🐞 **Server / bot problem**: something here is broken.", "#D9824A"),
-            E("📜 Rules", rule_lines, "#D4AF37"),
-        ]
-
+        rule_lines = "\n".join(f"{i}. {r}" for i, r in enumerate(self.rules(), 1))
+        rank_lines = "\n".join(f"**{r['title']}**" + (f": {r['xp']} XP" if r.get("xp") else "") for r in cat.meta["ranks"] if r["n"] <= 4)
         specs = [
-            dict(key="welcome", channel=ch("welcome"), embeds=welcome_page,
-                 view=view(StartButton())),
-            dict(key="quest-board", channel=ch("quest_board"), view=view(QuestBoardButton()), embeds=[
-                E("📋 Quest log", "**This is your home for quests.**\n"
-                  "After Orientation, quests only work in this channel."),
-                E("▶️ How to quest", "1. Press **Continue questing** (or type `/quest`).\n"
-                  "2. Read the guides the quest links to.\n"
-                  "3. Do the work in Unreal.\n"
-                  "4. Take the quiz.\n"
-                  "5. Press **Send my work** (or type `/submit`).", "#3D7DD8"),
-                E("📣 Also here", "New quests and weekly events are posted in this channel.", "#8E6CCF"),
+            dict(key="welcome", channel=ch("welcome"), view=link("Open Unrealcraft", site), embeds=[
+                E("👋 Welcome to Unrealcraft",
+                  "Learn **Unreal Engine 5** the way you would play it.\n"
+                  "Read the guides, build it in Unreal, beat the bosses, claim your rewards."),
+                E("🗺️ The game is on the site",
+                  "Quests, boss fights, turn-ins and reviews all happen on the website. "
+                  "Press the button below and log in with Discord.\n"
+                  "Your rank and specializations show up here as roles once you play.", "#3D7DD8"),
+                E("🏛️ This server is the guild hall",
+                  "**#general** and **#introductions**: talk and say hi.\n"
+                  "**#showcase**: show what you are building, finished or not.\n"
+                  "**#help-desk**: stuck in Unreal or on a quest.\n"
+                  "**Specialization forums**: questions and tips for each field.\n"
+                  "**#rank-ups**: promotions earned on the site.", "#8E6CCF"),
+                E("🎖️ Ranks", "Ranks come only from quests. Chatting gives no XP.\n" + rank_lines, "#B5714B"),
+                E("📜 Rules", rule_lines, "#D4AF37"),
             ]),
-            dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag="Discord-help",
-                 view=view(HelpPostButton(), BugReportButton()), embeds=[
-                E("🆘 Need help?", "Two kinds of help, one desk. Press a button below."),
-                E("🛠️ Unreal help", "Stuck on a quest or in the editor.\n"
-                  "The form asks for your engine version, what you tried, and what you expected vs what happened.",
-                  "#3D7DD8"),
-                E("🐞 Server / bot problem", "A command failed, a channel or role looks wrong, a quest won't tick, "
-                  "or something broke after an update.\n"
-                  "The form asks what you did, what happened and when. Staff get notified and check #patch-notes.",
-                  "#D9824A"),
-                E("✍️ A good question", "❌ \"lighting broken help\"\n"
+            dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag=HELP_TAGS[0], embeds=[
+                E("🆘 Need help?", "Make a post and pick a tag. One problem per post."),
+                E("✍️ A good question", "Say your **engine version**, what you **tried**, and what you **expected** "
+                  "against what **happened**. Add a screenshot.\n\n"
+                  "❌ \"lighting broken help\"\n"
                   "✅ \"5.8 · Level Design · Tried raising Sky Light intensity · [screenshot] · "
-                  "Expected a lit interior, got black walls\"", "#D4AF37"),
+                  "Expected a lit interior, got black walls\"", "#3D7DD8"),
+                E("🐞 Something wrong on the site?", "Use the **Site / Bot issue** tag. Say what you did, what happened "
+                  "and when. Staff check #patch-notes and answer there.", "#D9824A"),
             ]),
-            dict(key="wip-feedback", channel=ch("showcase"), title="How to give WIP feedback", tag="WIP", embeds=[
-                E("🔥 Showcase", "Share what you're building. Finished or not."),
+            dict(key="wip-feedback", channel=ch("showcase"), title="How to give feedback", tag="WIP", embeds=[
+                E("🔥 Showcase", "Share what you are building. Finished or not. Only your own work."),
                 E("💬 Giving feedback", "One thing that works.\nOne specific issue.\nOne next step.", "#3D7DD8"),
-                E("⭐ Want critique?", "Tag your post **Critique-wanted**.\n"
-                  "React 🔥 👀 or 🧱 on anything you looked at. Five 🔥 on your post earns +25 XP (once a week).",
-                  "#D4AF37"),
-            ]),
-            dict(key="mentor-queue-guide", channel=ch("mentor_queue"), embeds=[
-                E("📋 Mentor queue", "Turn-ins that need a person to review them show up here as cards, "
-                  "newest at the bottom.\n**Aim to review within 48 hours.**\n"
-                  "Who can review: Mentors, Leads and server admins."),
-                E("✅ Review cards", "Rank 2 and up. Three buttons:\n"
-                  "• **Pass**: the work matches the quest's *Done when* line. The member gets their XP.\n"
-                  "• **Changes**: close, but something is missing. Write exactly what to fix. "
-                  "They can send it again right away.\n"
-                  "• **Fail**: not an honest attempt, or the wrong quest. They can send it again in 2 hours.",
-                  "#3D7DD8"),
-                E("🔎 Spot checks", "Grey cards. Rank 0–1 turn-ins that were already accepted on trust.\n"
-                  "Press **Looks good**, or **Flag** to send the member a kind note. "
-                  "Flagging does not take their XP away.", "#8E6CCF"),
-                E("⚖️ How to judge", "Compare the work with the *Done when* line on the card.\n"
-                  "Review the work, not the person.\n"
-                  "Every result, with your note, is posted in the member's turn-in thread and sent to them by DM.",
-                  "#D4AF37"),
+                E("⭐ Want critique?", "Tag your post **Critique-wanted**.", "#D4AF37"),
             ]),
             dict(key="resources", channel=ch("resources"), embeds=[
                 E("📚 Epic Games resources", "Epic's own docs and free courses. "
@@ -775,20 +489,15 @@ class SetupServer(commands.Cog):
                   "#3D7DD8"),
             ]),
         ]
-        from .workshop import STARTER, major_slug
-        abouts = [(STARTER, "For the 11 Starter Quests (SQ1–SQ11) everyone does after Orientation.\n"
-                            "Everyone can post here.")]
-        abouts += [(major_slug(cat, k), f"The {cfg['title']} forum.\n"
-                                       f"Everyone can read it. Members who picked **{cfg['title']}** can post.")
-                   for k, cfg in cat.majors.items() if k != "undecided"]
-        for slug, head in abouts:
-            specs.append(dict(key=f"about-{slug}", channel=ch("tracks", slug), title=f"About #{slug}", tag="Help",
-                              view=view(NewPostButton(slug)), embeds=[
-                E(f"🛠️ #{slug}", head),
-                E("📝 Post here", "Press **New post** below (or type `/post`).\n"
-                  "• One thread per thing you're building (tag WIP)\n• or a question (tag Help)", "#3D7DD8"),
-                E("📤 Turn-ins", "When you send your work, the Quartermaster posts it here (tag Turn-in) "
-                  "so people can see it and cheer it on.", "#D4AF37"),
+        for key, cfg in cat.specializations.items():
+            if key == "undecided":
+                continue
+            slug = spec_slug(cat, key)
+            specs.append(dict(key=f"about-{slug}", channel=ch("specializations", key), title=f"About #{slug}", tag="Tip",
+                              view=link(f"{cfg['title']} quests", f"{site}/quests?specialization={key}"), embeds=[
+                E(f"🛠️ {cfg['title']}", f"{cfg.get('blurb', '')}\nAnyone can post here, whatever their specialization."),
+                E("📝 Post here", "One thread per thing you are building (tag WIP), or a question (tag Question).\n"
+                  "Quests for this specialization are on the site.", "#3D7DD8"),
             ]))
         return [s for s in specs if s["channel"]]
 
@@ -796,9 +505,8 @@ class SetupServer(commands.Cog):
     def _fingerprint(spec: dict) -> str:
         import hashlib
         raw = (spec.get("content") or "") + "".join(str(e.to_dict()) for e in spec.get("embeds") or [])
-        items = [getattr(i, "item", i) for i in (spec["view"].children if spec.get("view") else [])]   # unwrap DynamicItems
-        raw += "".join((getattr(i, "custom_id", None) or "") + (getattr(i, "label", None) or "")
-                       + str(getattr(i, "url", "") or "") for i in items)
+        items = spec["view"].children if spec.get("view") else []
+        raw += "".join((getattr(i, "label", None) or "") + str(getattr(i, "url", "") or "") for i in items)
         return hashlib.sha1(raw.encode()).hexdigest()[:12]
 
     async def _fetch_pin(self, g: discord.Guild, rec: str | None) -> discord.Message | None:
@@ -828,6 +536,7 @@ class SetupServer(commands.Cog):
                     out.append(f"edited {key}")
                 mid = msg.id
             else:
+                kw = {"view": spec["view"]} if spec.get("view") else {}
                 if isinstance(chan, discord.ForumChannel):
                     tag = discord.utils.get(chan.available_tags, name=spec.get("tag", "")) or \
                         (chan.available_tags[:1] or [None])[0]
@@ -836,13 +545,12 @@ class SetupServer(commands.Cog):
                         if t.flags.pinned and t.owner_id == g.me.id:
                             await t.edit(pinned=False)
                     created = await chan.create_thread(name=spec.get("title", key), content=spec.get("content"),
-                                                       embeds=spec.get("embeds") or [], view=spec.get("view"),
-                                                       applied_tags=[tag] if tag else [])
+                                                       embeds=spec.get("embeds") or [],
+                                                       applied_tags=[tag] if tag else [], **kw)
                     await created.thread.edit(pinned=True)
                     mid = created.thread.id
                 else:
-                    m = await chan.send(content=spec.get("content"), embeds=spec.get("embeds") or [],
-                                        view=spec.get("view"))
+                    m = await chan.send(content=spec.get("content"), embeds=spec.get("embeds") or [], **kw)
                     await m.pin()
                     mid = m.id
                 out.append(f"posted {key}")
@@ -850,32 +558,27 @@ class SetupServer(commands.Cog):
         return out
 
     async def cleanup_bot_posts(self, g: discord.Guild) -> list[str]:
-        """Delete every message/thread the bot posted except the tracked pins and real member activity
-        (turn-ins, /post threads, help posts, #rank-ups cards, staff channels)."""
+        """Delete every message/thread the bot posted except the tracked pins, anything that mentions a member
+        (old turn-in posts made for members), #rank-ups cards, patch notes and the staff channels."""
         cur = await self.bot.db.conn.execute("SELECT k, v FROM kv WHERE user_id=0 AND k LIKE 'pin:%'")
         current = {f"pin:{spec['key']}" for spec in self.pin_specs(g)}
         keep = set()
         for row in await cur.fetchall():
             parts = (row["v"] or "").split(":")
-            if row["k"] not in current:              # a pin we no longer use (renamed/removed channel): forget it
+            if row["k"] not in current or len(parts) != 3:     # a pin we no longer use: forget it
                 await self.bot.db.conn.execute("DELETE FROM kv WHERE user_id=0 AND k=?", (row["k"],))
                 continue
-            if len(parts) == 3:
-                keep.add(int(parts[1]))
-            else:                                   # old-style flag from before pins were tracked
-                await self.bot.db.conn.execute("DELETE FROM kv WHERE user_id=0 AND k=?", (row["k"],))
+            keep.add(int(parts[1]))
         await self.bot.db.conn.commit()
         unl = self.bot.unlocks
-        skip = {unl.channel(k) for k in ("rank_ups", "mentor_queue", "mod_log", "curriculum_wip", "patch_notes",
-                                          "announcements")}
-        member_markers = ("<@",)            # any bot thread that mentions a member is that member's post
+        skip = {unl.channel(k) for k in ("rank_ups", "mod_log", "patch_notes", "announcements")}
         removed = 0
         for chan in g.channels:
             if chan.id in skip:
                 continue
             if isinstance(chan, discord.TextChannel):
                 async for m in chan.history(limit=200):
-                    if m.author.id == g.me.id and m.id not in keep:
+                    if m.author.id == g.me.id and m.id not in keep and "<@" not in m.content:
                         await m.delete()
                         removed += 1
             elif isinstance(chan, discord.ForumChannel):
@@ -887,18 +590,18 @@ class SetupServer(commands.Cog):
                         continue
                     try:
                         starter = await t.fetch_message(t.id)
-                        if any(mk in starter.content for mk in member_markers):
-                            continue                # a member's post made through the bot
+                        if "<@" in starter.content:
+                            continue                # a member's post made through the old bot
                     except discord.HTTPException:
                         pass
                     await t.delete()
                     removed += 1
         return [f"cleaned up {removed} old bot posts"]
 
+    # ------------------------------------------------------------------ patch notes
     @staticmethod
     def patch_embed(rel: dict) -> discord.Embed:
         """One embed per version: the summary line as description, each '### Section' as a field."""
-        import re
         parts = re.split(r"\n(?=### )", rel["body"])
         intro = parts[0].strip() if not parts[0].startswith("### ") else ""
         sections = [p for p in parts if p.startswith("### ")]
@@ -954,14 +657,28 @@ class SetupServer(commands.Cog):
         return done
 
     # ------------------------------------------------------------------ commands
-    admin = app_commands.Group(name="setup", description="Owner: build the server",
+    admin = app_commands.Group(name="setup", description="Owner: build and maintain the server",
                                default_permissions=discord.Permissions(administrator=True))
+
+    @admin.command(name="bootstrap", description="Create or repair roles, channels and pins. Only removes the bot's own leftovers.")
+    async def bootstrap_cmd(self, itx: discord.Interaction):
+        await itx.response.defer(ephemeral=True, thinking=True)
+        rep = await self.bootstrap(itx.guild)
+        rep += await self.sync_pins(itx.guild) + await self.cleanup_bot_posts(itx.guild)
+        rep.append(f"roles synced for {await self.bot.get_cog('Roles').sync_all(itx.guild)} members")
+        await itx.followup.send("\n".join(rep)[:1900], ephemeral=True)
 
     @admin.command(name="sync-pins", description="Update pinned messages in place and remove stray bot posts.")
     async def sync_cmd(self, itx: discord.Interaction):
         await itx.response.defer(ephemeral=True, thinking=True)
         rep = await self.sync_pins(itx.guild) + await self.cleanup_bot_posts(itx.guild)
         await itx.followup.send("\n".join(rep) or "Everything up to date.", ephemeral=True)
+
+    @admin.command(name="sync-roles", description="Make every member's rank and specialization roles match the site.")
+    async def sync_roles_cmd(self, itx: discord.Interaction):
+        await itx.response.defer(ephemeral=True, thinking=True)
+        n = await self.bot.get_cog("Roles").sync_all(itx.guild)
+        await itx.followup.send(f"Roles updated for {n} members.", ephemeral=True)
 
     @admin.command(name="patch-notes", description="Post pushed versions missing from #patch-notes (re-posts the latest).")
     async def patch_notes_cmd(self, itx: discord.Interaction):
@@ -970,12 +687,16 @@ class SetupServer(commands.Cog):
         await itx.followup.send(f"Posted {', '.join(v)}." if v else "Nothing to post: no version tag pushed to GitHub yet, or #patch-notes is missing.",
                                 ephemeral=True)
 
-    @admin.command(name="bootstrap", description="Create/repair roles, channels and pins. Only removes the bot's own leftovers.")
-    async def bootstrap_cmd(self, itx: discord.Interaction):
-        await itx.response.defer(ephemeral=True, thinking=True)
-        rep = await self.bootstrap(itx.guild)
-        rep += await self.sync_pins(itx.guild) + await self.cleanup_bot_posts(itx.guild)
-        await itx.followup.send("\n".join(rep)[:1900], ephemeral=True)
+    @admin.command(name="reload-curriculum", description="Reload ranks and specializations from the curriculum files.")
+    async def reload_curriculum(self, itx: discord.Interaction):
+        from ..curriculum import Catalog
+        new = Catalog.load(self.bot.settings.curriculum_dir)
+        errs, warns = new.validate()
+        if errs:
+            await itx.response.send_message("Not reloaded:\n" + "\n".join(errs[:20]), ephemeral=True)
+            return
+        self.bot.catalog = new
+        await itx.response.send_message(f"Reloaded {len(new.quests)} quests ({len(warns)} warnings).", ephemeral=True)
 
 
 def Path_root():

@@ -9,7 +9,7 @@ import { creatureSheet, loadManifest } from "@/lib/art";
 
 const MARK: Record<string, string> = { done: "✅", todo: "☐", on_submit: "📎", honor: "▫", optional: "⏳" };
 const HINT: Record<string, string> = {
-  done: "Seen by the Quartermaster", todo: "Not yet", on_submit: "Checked when you send your work",
+  done: "Done", todo: "Not yet", on_submit: "Checked when you send your work",
   honor: "On your honor", optional: "Optional until the server is bigger",
 };
 
@@ -74,8 +74,8 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
           {(() => {
             const bossDown = !q.has_quiz || !!p?.quiz_passed;
             const done = p?.status === "done";
-            if (q.verify_type === "action") return (
-              <section className="card" id="claim"><h3>✅ Step {next()}: Done when</h3><p>{q.done_when ?? "—"}</p><p className="muted">Nothing to send. The Quartermaster ticks this when it sees you do it.</p></section>);
+            if (q.verify_type === "action" && q.id !== "O5") return (
+              <section className="card" id="claim"><h3>✅ Step {next()}: Done when</h3><p>{q.done_when ?? "—"}</p><p className="muted">Nothing to send. This ticks itself when you do it on the site.</p></section>);
             if (q.verify_type === "quiz") return (
               <section className="card" id="claim"><h3>{done ? "✅" : "🎁"} Step {next()}: {done ? "Dungeon cleared" : "Beat the boss to clear the dungeon"}</h3><p className="muted">{q.done_when ?? "Beating the boss completes this quest."}</p></section>);
             if (!me) return (

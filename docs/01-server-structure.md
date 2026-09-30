@@ -1,5 +1,7 @@
 # 01 — Server structure (final)
 
+> **Superseded (2026-09-30).** This describes the older design where the game was played in Discord. The website now runs quests, reviews and ranks; the Discord server is a guild hall. See `03-commands.md`, `04-discord-setup-checklist.md` and `07-website.md`. Kept for history.
+
 Bot name: **Quartermaster**. It is used in every embed, DM and log line. Proctor, Foreman and Deanbot are retired.
 Visual: dark UI. Embeds use `#1E1F22` backgrounds with the rank color as the accent bar. Gold is reserved for Lead.
 

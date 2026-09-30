@@ -100,6 +100,8 @@ async def achievements_payload(request: Request, uid: int) -> list[dict]:
 
 @router.get("/me/achievements")
 async def my_achievements(request: Request, member=Depends(current_member)):
+    from .. import progress
+    await progress.add_fact(request, member["id"], "site.achievements")
     return {"achievements": await achievements_payload(request, member["id"])}
 
 
@@ -161,6 +163,8 @@ async def title_of(request: Request, uid: int) -> str | None:
 
 @router.get("/me/card")
 async def my_card(request: Request, member=Depends(current_member)):
+    from .. import progress
+    await progress.add_fact(request, member["id"], "site.card")
     return await card_payload(request, member["id"], member)
 
 
@@ -183,6 +187,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     await rdb.ensure_character(member["id"])
     cos = await rdb.cosmetics(member["id"])
     unlock_all = _unlock_all(member)
+    motto_set = False
     if body.wear is not None:
         if body.wear not in await rdb.outfits(member["id"]) and not unlock_all:
             raise HTTPException(403, "You have not earned that outfit yet.")
@@ -202,6 +207,8 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         cos[field] = hit["id"]
     if body.banner is not None:
         cos["banner"] = body.banner[:40]
+        if body.banner.strip():
+            motto_set = True
     if body.featured is not None:
         cos["featured"] = [k[:40] for k in body.featured[:3]]
     if body.public is not None:
@@ -214,6 +221,9 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
+    if motto_set:
+        from .. import progress
+        await progress.add_fact(request, member["id"], "card.motto")
     if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame, body.title)):
         return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
@@ -440,6 +450,8 @@ async def complete_quest(request: Request, uid: int, q: Quest, u: dict) -> tuple
         await rdb.grant_medal(uid, "first_blood")
     loot = await new_outfits(request, uid)
     await rdb.emit("quest_completed", uid, {"quest": q.id, "xp": xp, "outfit": loot["name"] if loot else None})
+    from .. import progress
+    await progress.check_promotion(request, uid)      # the site promotes; the bot only mirrors the new rank
     return xp, loot
 
 

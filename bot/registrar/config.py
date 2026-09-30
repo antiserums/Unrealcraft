@@ -21,6 +21,7 @@ class Settings:
     curriculum_dir: Path
     unlocks_path: Path
     log_level: str
+    site_url: str = "http://localhost:3000"      # where the game is played; pins and /card link here
 
 
 def load_settings() -> Settings:
@@ -38,6 +39,7 @@ def load_settings() -> Settings:
         curriculum_dir=_p("CURRICULUM_DIR", "../curriculum"),
         unlocks_path=_p("UNLOCKS_PATH", "config/unlocks.yaml"),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
+        site_url=(os.getenv("SITE_URL", "").strip() or "http://localhost:3000").rstrip("/"),
     )
 
 

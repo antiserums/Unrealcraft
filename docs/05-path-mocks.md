@@ -1,5 +1,7 @@
 # 05 — /path mocks: Level Design Novice vs Programming Novice
 
+> **Superseded (2026-09-30).** This describes the older design where the game was played in Discord. The website now runs quests, reviews and ranks; the Discord server is a guild hall. See `03-commands.md`, `04-discord-setup-checklist.md` and `07-website.md`. Kept for history.
+
 Both members joined the same day, finished Orientation, and have done SQ1–SQ6 of the Starter Quests.
 The output below was worked out by hand from `Catalog.path_lines()` against the current YAML. Orientation is hidden once it's complete.
 

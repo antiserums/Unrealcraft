@@ -37,7 +37,7 @@ async function Path({ me }: { me: Me | null }) {
     );
   }
   const p = await api<PathData>("/me/path");
-  if (!p) return <div className="card">The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>;
+  if (!p) return <div className="card">Your path could not be loaded. Log out and back in, then try again.</div>;
   return <PathView p={p} />;
 }
 

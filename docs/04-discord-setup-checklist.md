@@ -1,47 +1,43 @@
-# 04 — Human Discord setup checklist (test server first)
+# 04 — Discord setup checklist
 
-Do these steps in order. They take about 45 minutes. Check each box as you go.
+Do these steps in order. They take about 20 minutes.
 
 ## A. Bot application
-- [ ] discord.com/developers → New Application → name it **Quartermaster**. Give it a dark avatar with a gold "UC" crest.
-- [ ] Bot tab → Reset Token → paste the token into `bot/.env` as `DISCORD_TOKEN`. Never commit it.
-- [ ] Bot tab → Privileged Gateway Intents: **Server Members ON**. Presence OFF. **Message Content OFF**; the help-desk modal makes it unnecessary.
+- [ ] discord.com/developers → your **Quartermaster** application → Bot tab.
+- [ ] Reset Token if you are not sure the one in `bot/.env` is current, and paste it there as `DISCORD_TOKEN`. Never commit it.
+- [ ] Privileged Gateway Intents: **Server Members ON**. Presence OFF. Message Content OFF (the bot never reads messages).
 - [ ] OAuth2 → URL Generator: scopes `bot` + `applications.commands`. Bot permissions: Manage Roles, Manage Channels,
       Manage Threads, Send Messages, Send Messages in Threads, Create Public Threads, Embed Links, Attach Files,
-      Read Message History, Add Reactions, Use Application Commands. Invite it to the **test server**.
+      Read Message History, Move Members, Use Application Commands. Invite it to the server.
 
 ## B. Server settings
-- [ ] Server Settings → Community: enable it. Forums, announcement channels and Stage need Community.
-- [ ] Rules screening / Onboarding: **off** for now. /start is the onboarding.
+- [ ] Server Settings → Community: enable it. Forums and announcement channels need it.
+- [ ] Server Settings → Roles: drag the **Quartermaster** role above every rank and specialization role, or role swaps fail.
 - [ ] Default notifications: Only @mentions.
-- [ ] Verification level: Low (test) / Medium (live).
-- [ ] AutoMod: enable the "Block mention spam" and "Commonly flagged words" presets, logging to #mod-log.
+- [ ] Invite link (https://discord.gg/Y2yDDNQQw): never expire, no max uses.
 
-## C–E. Roles, channels, IDs: automated
-The bot builds all of this itself. Run `python -m registrar --bootstrap` (or `/setup bootstrap` in Discord):
-roles, categories, forums, permissions, Rules Screening, Onboarding questions, welcome screen, AutoMod, pins,
-and it writes every ID into `bot/config/unlocks.yaml`. It is safe to re-run; it never deletes anything a member posted in.
+## C. `bot/.env`
+- [ ] `SITE_URL` = the address members use for the site. Pins, `/site` and `/card` link there. While testing on this
+      machine it is `http://localhost:3000`; change it when the site has a public address, then run `/setup sync-pins`.
 
-The only manual step is the **Server Guide** (Server Settings → Onboarding → Server Guide); Discord blocks bots from it.
+## D. Build the server
+- [ ] From `bot/`: `.venv/Scripts/python.exe -m registrar --bootstrap` (or `/setup bootstrap` in Discord once the bot is online).
+      It builds roles, categories, channels, forums, pins, Rules Screening, the welcome screen and AutoMod, writes the IDs
+      to `bot/config/unlocks.yaml`, and syncs everyone's roles from the site. Safe to re-run.
+- [ ] On a server built by the older bot it renames what carries over (Major roles → specialization roles, the old
+      categories) and removes the quest log, the mentor queue and the gate roles. A channel that members posted in is
+      never deleted: it is renamed to `…-archive` for you to decide.
+- [ ] The only manual step is the **Server Guide** (Server Settings → Onboarding → Server Guide); Discord blocks bots from it.
 
-## F. Pins
-Pinned guides are created and updated in place by the bot (`/setup sync-pins`). Nothing to post by hand.
+## E. The site side
+- [ ] `api/.env`: your Discord ID in `ADMIN_IDS` or `DEVELOPER_IDS`; `DEV_LOGIN_ID` **empty** before real members arrive
+      (the dev login is a developer account with no password).
+- [ ] Restart the API after changing `api/.env`.
 
-## F2. Old checklist (kept for reference)
-- [x] Pins are posted by bootstrap. Only the Server Guide is manual.
-- [ ] #welcome: 5 posts. (1) The loop. (2) Ranks and what they unlock. (3) Majors and tasters. (4) The five commands. (5) Help-desk format.
-- [ ] #quest-log: "How quests work" pin. Its **Clocked in** button is posted by `/admin post-pins` (Phase 2).
-- [ ] #help-desk: pin the **New help post** button (also `/admin post-pins`) and one "bad vs good" example (used by SQ15).
-- [ ] #showcase: pin "How to give WIP feedback: one thing that works, one specific issue, one next step."
-- [ ] #epic-games-resources: Epic Get Started, Your First Hour, Level Designer Quick Start, Programming Quick Start, Materials, Blueprints.
-- [ ] Add a link to the sample Behavior Tree that LDQ34 refers to in the #epic-games-resources pin (Phase 4).
-
-## G. Smoke test (Phase 2 exit criteria)
-- [ ] Fresh alt account: /start → O1 quiz → /major → /rank + /quest → Clocked in → /submit O5 READY → help post → voice 60s → react.
-- [ ] It receives Oriented + Novice, and the DM names SQ1.
-- [ ] /path matches docs/05 for that major.
-- [ ] Completing SQ1–SQ11 plus reaching 650 XP promotes to Apprentice. The card appears in #rank-ups, the world-lighting channels appear, and the rank role is swapped, not stacked.
-
-## H. Invite link
-- [ ] Server invite: https://discord.gg/Y2yDDNQQw. Make sure it is set to **never expire** with **no max uses** (Server Settings → Invites), because it goes on pins and in the README.
-- [ ] Post it in #welcome only after the smoke test passes. Until then, test on a separate private server or with the bot invited to this server and all non-GATE categories hidden.
+## F. Smoke test
+- [ ] Fresh alt account: join the server, accept the rules, follow the #welcome button, log in on the site.
+- [ ] Do Orientation on the site (O1–O5). The alt becomes Novice and gets the **Novice** role in Discord within 20 seconds.
+- [ ] Pick a primary specialization and one extra on the player card page. Both roles appear in Discord.
+- [ ] In the admin panel set the alt to Apprentice. The role swaps, not stacks.
+- [ ] `/card` on the alt shows the same rank and specializations as the site.
+- [ ] Join **➕ Join to create** in Town Hall: a room is made for you and removed five minutes after it empties.

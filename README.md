@@ -52,7 +52,7 @@ web/                     Next.js website (login with Discord, quests, path, prof
 run.ps1                  starts API, website and bot on the Windows server
 tools/sync_art.py        copies finished art from ../UCSourceArt into web/public/art + manifest
 bot/
-  registrar/               discord.py 2.x package (cogs: onboarding, majors, quests, quiz, ranks)
+  registrar/               discord.py 2.x package (cogs: setup_server, roles, voice; the site runs the game)
   db/schema.sql            SQLite
   config/unlocks.yaml      role, channel and category IDs
   tools/validate_curriculum.py
