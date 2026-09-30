@@ -24,6 +24,7 @@ export type Manifest = {
   environments: Record<string, { path: string; large?: string | null; width: number; height: number; groundY: number }>;
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
+  living_town?: { script: string; stills: Record<string, string>; seasons: string[] };
   decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: number; anim?: Record<"avatar" | "card", Record<string, { frames: string[]; fps: number }>> };
 };
 export type DecoAnim = { frames: string[]; fps: number };
@@ -93,11 +94,17 @@ export function bannerImage(m: Manifest | null, key = "town"): string | null {
 
 /** The home banner as a pair: the looping animated version (when the pack has one) and a still for reduced
  *  motion and the pause control. Without an animation both point at the still banner. */
-export function bannerSet(m: Manifest | null): { animated: string | null; still: string } | null {
+export function bannerSet(m: Manifest | null): { animated: string | null; still: string; living: LivingTownArt | null } | null {
   const still = bannerImage(m, "town_still") ?? bannerImage(m, "town");
   if (!still) return null;
-  return { animated: bannerImage(m, "town_animated"), still };
+  const lt = m?.living_town;
+  const living = lt?.script ? { script: art(lt.script), stills: Object.fromEntries(Object.entries(lt.stills).map(([k, v]) => [k, art(v)])), seasons: lt.seasons } : null;
+  return { animated: bannerImage(m, "town_animated"), still, living };
 }
+
+/** The living-town banner: a canvas component with seasons and time-of-day lighting, plus one still per season and
+ *  time (e.g. "summer-day") shown before the script runs. */
+export type LivingTownArt = { script: string; stills: Record<string, string>; seasons: string[] };
 
 /** Avatar ring or card border for a decoration theme id. */
 export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): string | null {

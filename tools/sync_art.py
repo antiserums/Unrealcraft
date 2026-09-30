@@ -98,6 +98,18 @@ def main() -> None:
             m["banners"]["town_animated"] = rel
         if still.exists() and (rel := put(still.relative_to(PACK).as_posix())):
             m["banners"]["town_still"] = rel
+    # banners/living-town/: the artist's canvas component (seasons, local-time lighting, villagers). The site loads
+    # living-town.js as a browser module; it finds assets/ next to itself, so the folder layout is kept.
+    lt = PACK / "banners" / "living-town"
+    if (lt / "living-town.js").exists():
+        script = put("banners/living-town/living-town.js")
+        for f in sorted((lt / "assets").glob("*.png")):
+            put(f.relative_to(PACK).as_posix())
+        stills = {}
+        for f in sorted((lt / "stills").glob("*.png")):
+            if rel := put(f.relative_to(PACK).as_posix()):
+                stills[f.stem] = rel                                # spring-day, winter-night, ...
+        m["living_town"] = {"script": script, "stills": stills, "seasons": ["spring", "summer", "autumn", "winter"]}
     # Card borders follow docs/09-playercard-art-spec.md: 352 x 252 with the card in the centre 320 x 220, so the
     # band's inner edge is 16 source px from the canvas edge on every side and every theme.
     m["decorations"] = {"avatar": {}, "card": {}, "inset": 16, "anim": {"avatar": {}, "card": {}}}

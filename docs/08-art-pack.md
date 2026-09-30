@@ -23,11 +23,15 @@ worn set and style (`GET /api/me/character` -> `body`, `worn.art_id`, `style`) a
 `components/Sprite.tsx`. The body occupies 64 x 96 px at (32, 12) of the frame, so cards and the wardrobe crop
 to a tighter window (`HERO_CROP` in `Figure.tsx`); the fight draws the full frame so swings stay in view.
 
-**Home banner.** `banners/` holds the 3:1 town banner; `banners/animated/` adds a looping animated WebP (48
-frames, 8 fps, a 6-second exact cycle: water, ripples, lantern flicker) and a still. The sync maps them to
-`banners.town`, `banners.town_animated` and `banners.town_still`; `HeroBanner.tsx` shows the animation as the
-hero's background, swaps to the still under `prefers-reduced-motion`, and has a small pause control (remembered
-per browser). Without the animated file the hero falls back to the still.
+**Home banner.** `banners/` holds the 3:1 town banner. `banners/living-town/` is the artist's canvas component
+(`living-town.js` plus `assets/`): protected water, foliage, clouds, a waterwheel, villagers, four seasons and
+lighting that follows the visitor's clock, with a manual hour. The sync copies the script, its assets and one
+still per season and time (`living_town` in the manifest); `HeroBanner.tsx` loads the script as a browser module
+straight from `public/art`, shows the matching still until the canvas has drawn, and puts a small ⚙ in the corner
+with season and time choices (My time, Dawn, Day, Dusk, Night) plus a pause. Choices persist under the artist's
+own storage key `uc-living-town-v2`, so their preview page and the site agree. The component honours
+`prefers-reduced-motion` itself. `banners/animated/` (the earlier 6-second WebP loop) stays as the fallback when
+the living-town folder is absent, and the plain still when neither is.
 
 **Outfit sets.** The pack's eleven sets are the built-in catalog (`api/app/rpg.py`, `default_entitlements`;
 admins can add rows that point at these art ids under `/admin/entitlements`):

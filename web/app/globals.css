@@ -389,8 +389,18 @@ main.wrap { flex: 1; width: 100%; }
 .hero.banner-hero.paused::before { background-image: var(--banner-still); }
 @media (prefers-reduced-motion: reduce) { .hero.banner-hero::before { background-image: var(--banner-still); } }
 .hero.banner-hero::after { content: none; }
-.banner-pause { position: absolute; right: 10px; top: 10px; z-index: 2; padding: 4px 8px; font-size: 11px; line-height: 1; opacity: .55; }
-.banner-pause:hover { opacity: 1; }
+/* the living-town canvas sits over the still; the still stays underneath until the script has drawn */
+.hero.banner-hero.living .banner-canvas { position: absolute; left: 0; top: 0; width: 100%; height: auto; aspect-ratio: 3 / 1; display: block; image-rendering: pixelated; opacity: 0; transition: opacity .4s ease; z-index: 1; }
+.hero.banner-hero.living.live .banner-canvas { opacity: 1; }
+.hero.banner-hero.living .ribbon { position: relative; z-index: 1; }
+/* the small controls: ⚙ and pause in the corner; the menu opens beside them and closes when not needed */
+.banner-tools { position: absolute; right: 10px; top: 10px; z-index: 2; display: flex; align-items: flex-start; gap: 4px; }
+.banner-btn { padding: 4px 8px; font-size: 11px; line-height: 1; opacity: .55; }
+.banner-tools:hover .banner-btn, .banner-tools.open .banner-btn { opacity: 1; }
+.banner-menu { display: flex; flex-direction: column; gap: 4px; padding: 6px; border: 1px solid var(--bronze); border-radius: 4px; background: rgba(10, 12, 18, .82); backdrop-filter: blur(3px); }
+.banner-menu button { padding: 3px 8px; font-size: 10px; line-height: 1.2; letter-spacing: .04em; }
+.banner-menu button.on { background: linear-gradient(180deg, var(--gold-2), var(--gold)); color: var(--accent-ink); border-color: #3b2a0a; }
+@media (max-width: 640px) { .banner-menu .row { flex-wrap: wrap; } }
 .ribbon { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(0, 1.4fr) auto; align-items: center; gap: 0; background: linear-gradient(180deg, #171b26, #0e1119); border-top: 1px solid var(--gold-3); box-shadow: inset 0 1px 0 rgba(212,175,90,.25); }
 .ribbon > * { padding: 16px 22px; min-width: 0; }
 .ribbon > * + * { border-left: 1px solid rgba(212,175,90,.18); }

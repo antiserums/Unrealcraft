@@ -61,7 +61,7 @@ export default async function Home() {
 
   return (
     <>
-      {banner ? <HeroBanner animated={banner.animated} still={banner.still}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
+      {banner ? <HeroBanner animated={banner.animated} still={banner.still} living={banner.living}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
 
       {me && stats ? (
         <>
