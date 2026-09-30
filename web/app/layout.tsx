@@ -1,26 +1,38 @@
 import type { Metadata } from "next";
 import { Cinzel, Cinzel_Decorative, IBM_Plex_Sans } from "next/font/google";
 import Foot from "@/components/Foot";
+import { I18nProvider } from "@/components/I18n";
 import Nav from "@/components/Nav";
+import { getDict, getLocale, getT } from "@/lib/i18n";
+import { LOCALES } from "@/lib/i18n-config";
 import "./globals.css";
 
-const plex = IBM_Plex_Sans({ variable: "--font-plex", subsets: ["latin"], weight: ["400", "500", "600"] });
-const cinzel = Cinzel({ variable: "--font-cinzel", subsets: ["latin"], weight: ["600", "700"] });
+// Latin, extended Latin and Cyrillic come from the web fonts; other scripts fall back to the system's own fonts.
+const plex = IBM_Plex_Sans({ variable: "--font-plex", subsets: ["latin", "latin-ext", "cyrillic"], weight: ["400", "500", "600"] });
+const cinzel = Cinzel({ variable: "--font-cinzel", subsets: ["latin", "latin-ext"], weight: ["600", "700"] });
 const cinzelDeco = Cinzel_Decorative({ variable: "--font-cinzel-deco", subsets: ["latin"], weight: ["700"] });
 
-export const metadata: Metadata = {
-  title: { default: "Unrealcraft", template: "%s · Unrealcraft" },
-  description: "An RPG learning experience for Unreal Engine. Every quest is a dungeon: read, build, beat the boss, open the chest.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getT();
+  return {
+    title: { default: "Unrealcraft", template: "%s · Unrealcraft" },
+    description: t("An RPG learning experience for Unreal Engine. Every quest is a dungeon: read, build, beat the boss, open the chest."),
+  };
+}
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default async function RootLayout({ children }: LayoutProps<"/">) {
+  const locale = await getLocale();
+  const dict = await getDict(locale);
+  const dir = LOCALES.find((l) => l.code === locale)?.dir ?? "ltr";
   return (
-    <html lang="en" className={`${plex.variable} ${cinzel.variable} ${cinzelDeco.variable}`}>
+    <html lang={locale} dir={dir} className={`${plex.variable} ${cinzel.variable} ${cinzelDeco.variable}`}>
       <body>
-        <Nav />
-        <div className="banner" aria-hidden="true"><span className="crest">❖</span></div>
-        <main className="wrap tome">{children}</main>
-        <Foot />
+        <I18nProvider locale={locale} dict={dict}>
+          <Nav />
+          <div className="banner" aria-hidden="true"><span className="crest">❖</span></div>
+          <main className="wrap tome">{children}</main>
+          <Foot />
+        </I18nProvider>
       </body>
     </html>
   );

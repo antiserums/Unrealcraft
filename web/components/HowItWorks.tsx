@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Specializations } from "@/lib/api";
+import { getT } from "@/lib/i18n";
 
 const SPEC_BLURB: Record<string, string> = {
   level_design: "Spaces, flow and encounters. Build places people want to move through.",
@@ -14,29 +15,30 @@ const SPEC_GLYPH: Record<string, string> = { level_design: "🗺️", programmin
 
 /** The explainer: how a quest works, the seven specializations, the ladder, what you keep. Shown to guests on the
  *  home page and on /how-it-works for everyone. */
-export default function HowItWorks({ specs }: { specs: Specializations | null }) {
+export default async function HowItWorks({ specs }: { specs: Specializations | null }) {
+  const t = await getT();
   const list = specs ? Object.values(specs.specializations).filter((m) => m.key !== "undecided") : [];
   return (
     <>
       <section>
-        <div className="section-h"><h2>How a quest works</h2></div>
+        <div className="section-h"><h2>{t("How a quest works")}</h2></div>
         <div className="steps4">
-          <Step n="I" title="Read" text="Every dungeon starts with a short guide from the Unreal docs or a trusted source. Open it, and you learn the boss's next move." />
-          <Step n="II" title="Build" text="Do the thing in the engine. A checklist tells you exactly what done looks like." />
-          <Step n="III" title="Fight the boss" text="A quiz, turn by turn. Right answers hit. Wrong ones wound you and leave a debuff. Beat it with 80% or better." />
-          <Step n="IV" title="Open the chest" text="Show your work: a few lines and a screenshot. Auto, honor or a mentor accepts it. XP, outfits and ranks follow." />
+          <Step n="I" title={t("Read")} text={t("Every dungeon starts with a short guide from the Unreal docs or a trusted source. Open it, and you learn the boss's next move.")} />
+          <Step n="II" title={t("Build")} text={t("Do the thing in the engine. A checklist tells you exactly what done looks like.")} />
+          <Step n="III" title={t("Fight the boss")} text={t("A quiz, turn by turn. Right answers hit. Wrong ones wound you and leave a debuff. Beat it with 80% or better.")} />
+          <Step n="IV" title={t("Open the chest")} text={t("Show your work: a few lines and a screenshot. Auto, honor or a mentor accepts it. XP, outfits and ranks follow.")} />
         </div>
       </section>
 
       <section>
-        <div className="section-h"><h2>Seven specializations</h2><span className="muted small">{specs?.quest_count ?? 700}+ quests. Pick a primary, add as many others as you like.</span></div>
+        <div className="section-h"><h2>{t("Seven specializations")}</h2><span className="muted small">{t("{n}+ quests. Pick a primary, add as many others as you like.", { n: specs?.quest_count ?? 700 })}</span></div>
         <div className="specs">
           {list.map((m) => (
             <Link key={m.key} href={`/quests?specialization=${m.key}`} className="spec-banner">
               <span className="spec-glyph">{SPEC_GLYPH[m.key] ?? "❖"}</span>
-              <b>{m.title}</b>
-              <span className="small muted">{SPEC_BLURB[m.key] ?? ""}</span>
-              <span className="small" style={{ color: "var(--gold)" }}>{m.prefix} quests · {Object.keys(m.capstones ?? {}).length} capstone dungeons</span>
+              <b>{t(m.title)}</b>
+              <span className="small muted">{SPEC_BLURB[m.key] ? t(SPEC_BLURB[m.key]) : ""}</span>
+              <span className="small" style={{ color: "var(--gold)" }}>{t("{prefix} quests · {n} capstone dungeons", { prefix: m.prefix ?? "", n: Object.keys(m.capstones ?? {}).length })}</span>
             </Link>
           ))}
         </div>
@@ -44,28 +46,32 @@ export default function HowItWorks({ specs }: { specs: Specializations | null })
 
       {specs && (
         <section>
-          <div className="section-h"><h2>The ladder</h2><span className="muted small">Five ranks. Each one opens a harder tier of dungeons.</span></div>
+          <div className="section-h"><h2>{t("The ladder")}</h2><span className="muted small">{t("Five ranks. Each one opens a harder tier of dungeons.")}</span></div>
           <ol className="ladder">
             {specs.ranks.filter((r) => r.n <= 4).map((r) => (
               <li key={r.n} style={{ "--rank": r.color ?? "var(--gold)" } as React.CSSProperties}>
                 <span className="ladder-dot" />
                 <div>
-                  <b style={{ color: r.color ?? "inherit" }}>{r.title}</b>
-                  <div className="small muted">{r.n === 0 ? "Where everyone starts. Orientation, then the Starter Quests." : `${r.xp} XP and ${r.quests_to_leave ?? ""} ${specs.tiers[r.tier]?.name ?? ""} quests to move on`}{r.n >= 3 ? " · your primary specialization joins your title" : ""}</div>
+                  <b style={{ color: r.color ?? "inherit" }}>{t(r.title)}</b>
+                  <div className="small muted">{r.n === 0
+                    ? t("Where everyone starts. Orientation, then the Starter Quests.")
+                    : r.n >= 3
+                      ? t("{xp} XP and {n} {tier} quests to move on · your primary specialization joins your title", { xp: r.xp, n: r.quests_to_leave ?? "", tier: specs.tiers[r.tier]?.name ? t(specs.tiers[r.tier].name) : "" })
+                      : t("{xp} XP and {n} {tier} quests to move on", { xp: r.xp, n: r.quests_to_leave ?? "", tier: specs.tiers[r.tier]?.name ? t(specs.tiers[r.tier].name) : "" })}</div>
                 </div>
               </li>
             ))}
           </ol>
-          <p className="small muted" style={{ marginTop: 12 }}>Beyond Master sit Senior and Lead: guild roles for those who review work and write quests.</p>
+          <p className="small muted" style={{ marginTop: 12 }}>{t("Beyond Master sit Senior and Lead: guild roles for those who review work and write quests.")}</p>
         </section>
       )}
 
       <section>
-        <div className="section-h"><h2>What you keep</h2></div>
+        <div className="section-h"><h2>{t("What you keep")}</h2></div>
         <div className="grid">
-          <div className="card"><div className="eyebrow">Outfits</div><p className="small" style={{ margin: "6px 0 0" }}>Whole sets for ranking up, clearing capstone dungeons and hitting milestones. Looks only. Nothing but your answers decides a fight.</p></div>
-          <div className="card"><div className="eyebrow">Entitlements</div><p className="small" style={{ margin: "6px 0 0" }}>Achievements, titles, colours and frames, earned by ranks, milestones and working across specializations. Feature three achievements on your player card.</p></div>
-          <div className="card"><div className="eyebrow">A player card</div><p className="small" style={{ margin: "6px 0 0" }}>Your rank, specializations, title, motto and streak on one card, with decorations you unlock. Share the link with anyone.</p></div>
+          <div className="card"><div className="eyebrow">{t("Outfits")}</div><p className="small" style={{ margin: "6px 0 0" }}>{t("Whole sets for ranking up, clearing capstone dungeons and hitting milestones. Looks only. Nothing but your answers decides a fight.")}</p></div>
+          <div className="card"><div className="eyebrow">{t("Entitlements")}</div><p className="small" style={{ margin: "6px 0 0" }}>{t("Achievements, titles, colours and frames, earned by ranks, milestones and working across specializations. Feature three achievements on your player card.")}</p></div>
+          <div className="card"><div className="eyebrow">{t("A player card")}</div><p className="small" style={{ margin: "6px 0 0" }}>{t("Your rank, specializations, title, motto and streak on one card, with decorations you unlock. Share the link with anyone.")}</p></div>
         </div>
       </section>
 

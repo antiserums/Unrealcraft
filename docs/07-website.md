@@ -117,3 +117,21 @@ GET  /auth/dev-login          local testing only, when DEV_LOGIN_ID is set in ap
 ```
 
 Quiz answers are never sent to the browser; `/catalog/quests/{id}` returns questions and choices only.
+
+## Languages
+
+The site is translated into 15 languages: English, Spanish, Portuguese, French, German, Italian, Polish, Turkish,
+Russian, Arabic (right-to-left), Hindi, Indonesian, Chinese, Japanese and Korean. Visitors pick one in the footer;
+the choice is kept in the `uc_lang` cookie. Without a cookie, the browser's language is used.
+
+- The English sentence is the key. Server pages use `const t = await getT()` (`web/lib/i18n.ts`), client components
+  use `const t = useT()` (`web/components/I18n.tsx`), then `t("Quest board")` or `t("{n} quests", { n })`.
+  For a sentence with a link inside, use `rich()` from `web/lib/i18n-config.tsx`.
+- Translations live in `web/locales/<code>.json`. A missing entry falls back to English.
+- Text that arrives as data (rank names, titles, achievement names, unlock hints) is listed in
+  `web/locales/data-keys.ts` so translators see it. Entitlements added in the admin panel show in English
+  until their text is added there and translated.
+- After changing any site text, run `py -3 tools/i18n_extract.py`. It rebuilds `en.json` and reports what each
+  language is missing. `--prune` drops entries that are no longer used.
+- Not translated: quest content, boss lines, outfit names, messages from the API, the admin and review pages.
+  The privacy policy and terms stay in English, with a note saying so.

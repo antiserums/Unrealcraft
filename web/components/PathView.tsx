@@ -1,44 +1,56 @@
 import QuestCard from "@/components/QuestCard";
 import type { PathData } from "@/lib/api";
+import { getT } from "@/lib/i18n";
+import { rich } from "@/lib/i18n-config";
 
 /** The member's own road through the curriculum: what is next, what is done, what the next rank opens. */
-export default function PathView({ p }: { p: PathData }) {
+export default async function PathView({ p }: { p: PathData }) {
+  const t = await getT();
+  const extras = p.specializations.filter((s) => !s.primary).map((s) => t(s.title)).join(", ");
+  const specTitle = t(p.specialization_title);
+  const locked = p.locked;
+  const needs = !locked ? "" : locked.gate_tier
+    ? (locked.n === 1
+      ? t("needs {xp} XP + Starter Quests + {need} {tier} quests", { xp: locked.xp, need: locked.gate_tier.need, tier: t(locked.gate_tier.name) })
+      : t("needs {xp} XP + Rank {n} path + {need} {tier} quests", { xp: locked.xp, n: locked.n - 1, need: locked.gate_tier.need, tier: t(locked.gate_tier.name) }))
+    : (locked.n === 1
+      ? t("needs {xp} XP + Starter Quests", { xp: locked.xp })
+      : t("needs {xp} XP + Rank {n} path", { xp: locked.xp, n: locked.n - 1 }));
   return (
     <>
       <p className="muted">
-        <span className="eyebrow" style={{ marginRight: 8 }}>{p.specialization_title}{p.specializations.filter((s) => !s.primary).length ? ` (+ ${p.specializations.filter((s) => !s.primary).map((s) => s.title).join(", ")})` : ""} · {p.rank < 0 ? "Orientation" : `Rank ${p.rank}`}</span>
-        Why this next: {p.reason}
+        <span className="eyebrow" style={{ marginRight: 8 }}>{specTitle}{extras ? ` (+ ${extras})` : ""} · {p.rank < 0 ? t("Orientation") : t("Rank {n}", { n: p.rank })}</span>
+        {t("Why this next: {reason}", { reason: p.reason })}
       </p>
       {p.sections.map((s) => (
         <section key={s.key}>
           <div className="section-h">
             <h2>{s.title}</h2>
-            <span className="muted small">{s.quests.filter((q) => q.status === "done").length}/{s.quests.length} done</span>
+            <span className="muted small">{t("{done}/{total} done", { done: s.quests.filter((q) => q.status === "done").length, total: s.quests.length })}</span>
           </div>
           {s.tier && (
             <div className="note small" style={{ marginBottom: 10 }}>
-              {s.tier.emoji} {s.tier.name} quests: <b>{s.tier.done}/{s.tier.need}</b> done. Any {s.tier.name} quest in {p.specialization_title} counts; {s.tier.available} exist so far.
+              {s.tier.emoji} {rich(t("{tier} quests: {count} done. Any {tier} quest in {spec} counts; {available} exist so far.", { tier: t(s.tier.name), spec: specTitle, available: s.tier.available }), { count: <b>{s.tier.done}/{s.tier.need}</b> })}
             </div>
           )}
           <div className="grid">{s.quests.map((q) => <QuestCard key={q.id} q={q} showStatus />)}</div>
         </section>
       ))}
-      {p.locked && (
+      {locked && (
         <section className="lock">
           <div className="section-h">
-            <h2>🔒 Rank {p.locked.n} · {p.locked.title}</h2>
+            <h2>🔒 {t("Rank {n}", { n: locked.n })} · {t(locked.title)}</h2>
             <span className="muted small">
-              needs {p.locked.xp} XP + {p.locked.n === 1 ? "Starter Quests" : `Rank ${p.locked.n - 1} path`}
-              {p.locked.gate_tier && ` + ${p.locked.gate_tier.need} ${p.locked.gate_tier.name} quests`}
+              {needs}
             </span>
           </div>
-          <div className="grid">{p.locked.quests.slice(0, 6).map((q) => <QuestCard key={q.id} q={q} />)}</div>
-          {p.locked.tasters.length > 0 && (
+          <div className="grid">{locked.quests.slice(0, 6).map((q) => <QuestCard key={q.id} q={q} />)}</div>
+          {locked.tasters.length > 0 && (
             <p className="small muted" style={{ marginTop: 10 }}>
-              Tasters: {p.locked.tasters.map((g) => g.map((t) => `${t.id} ${t.title}`).join(" or ")).join("; ")}
+              {t("Tasters: {list}", { list: locked.tasters.map((g) => g.map((x) => `${x.id} ${x.title}`).join(` ${t("or")} `)).join("; ") })}
             </p>
           )}
-          {p.locked.capstone && <p className="small"><b>★ Capstone:</b> {p.locked.capstone.title}. {p.locked.capstone.brief}</p>}
+          {locked.capstone && <p className="small"><b>★ {t("Capstone:")}</b> {locked.capstone.title}. {locked.capstone.brief}</p>}
         </section>
       )}
     </>

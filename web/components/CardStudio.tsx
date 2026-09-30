@@ -7,6 +7,7 @@ import type { SheetSpec } from "@/lib/art";
 import { CardDeco } from "./DecoAnim";
 import CharacterSheet, { type ArtProps, type Char, type TryOn } from "./CharacterSheet";
 import PlayerCard from "./PlayerCard";
+import { useT } from "./I18n";
 
 type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
 type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; title: string; featured: string[]; public: boolean };
@@ -19,6 +20,7 @@ type Mode = "view" | "profile" | "wardrobe";
 export default function CardStudio({ initial, sheet, badges, deco, shareUrl, wardrobe }:
   { initial: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco: DecoImages; shareUrl: string;
     wardrobe: { char: Char; art: ArtProps } | null }) {
+  const t = useT();
   const router = useRouter();
   const [c, setC] = useState<Card>(initial);
   const fromCard = (x: Card): Draft => ({ motto: x.motto, nameplate: x.nameplate_id, avatar_frame: x.avatar_frame, card_frame: x.card_frame, title: x.title_id, featured: x.cosmetics.featured ?? x.featured.map((a) => a.key), public: x.public });
@@ -59,7 +61,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   async function patch(body: Record<string, unknown>) {
     setBusy(true); setErr(null);
     const r = await fetch("/api/me/character", { method: "PATCH", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-    if (!r.ok) { setBusy(false); setErr((await r.json()).detail ?? "Could not save that."); return false; }
+    if (!r.ok) { setBusy(false); setErr((await r.json()).detail ?? t("Could not save that.")); return false; }
     const j: Card = await fetch("/api/me/card").then((x) => x.json());   // the card shape, whatever the patch returned
     setBusy(false); setC(j); setDraft(fromCard(j)); router.refresh(); return true;
   }
@@ -78,10 +80,10 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   const detail = (k: Kind) => {
     const o = hover?.kind === k ? hover.o : opts[k].find((x) => x.id === draft[k]);
     if (!o) return null;
-    return <div className="pick-detail"><b>{o.name}</b>{o.desc ? <span className="muted"> · {o.desc}</span> : null}{o.owned ? <span className="muted"> · {o.id === draft[k] ? "selected" : o.granted ? "granted by staff" : "entitled"}</span> : <span style={{ color: "var(--warn)" }}> · 🔒 {o.hint}</span>}</div>;
+    return <div className="pick-detail"><b>{t(o.name)}</b>{o.desc ? <span className="muted"> · {t(o.desc)}</span> : null}{o.owned ? <span className="muted"> · {o.id === draft[k] ? t("selected") : o.granted ? t("granted by staff") : t("entitled")}</span> : <span style={{ color: "var(--warn)" }}> · 🔒 {o.hint ? t(o.hint) : null}</span>}</div>;
   };
   const tile = (k: Kind, o: EntitlementOption) => ({
-    type: "button" as const, disabled: busy || !o.owned, title: o.owned ? o.name : `${o.name} · ${o.hint}`,
+    type: "button" as const, disabled: busy || !o.owned, title: o.owned ? t(o.name) : `${t(o.name)} · ${o.hint ? t(o.hint) : o.hint}`,
     className: `pick ${draft[k] === o.id ? "on" : ""} ${o.owned ? "" : "locked"}`,
     onMouseEnter: () => setHover({ kind: k, o }), onMouseLeave: () => setHover(null), onFocus: () => setHover({ kind: k, o }), onBlur: () => setHover(null),
     onClick: () => o.owned && setDraft((d) => ({ ...d, [k]: o.id })),
@@ -96,19 +98,19 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
 
       {mode === "view" && (
         <div className="studio-actions">
-          <button className="primary" onClick={() => setMode("profile")}>Edit profile</button>
-          {wardrobe && <button onClick={() => setMode("wardrobe")}>Edit wardrobe</button>}
-          <Link className="btn" href={`/members/${c.id}`}>View as others</Link>
+          <button className="primary" onClick={() => setMode("profile")}>{t("Edit profile")}</button>
+          {wardrobe && <button onClick={() => setMode("wardrobe")}>{t("Edit wardrobe")}</button>}
+          <Link className="btn" href={`/members/${c.id}`}>{t("View as others")}</Link>
         </div>
       )}
 
       {mode === "wardrobe" && wardrobe && (
         <div className="studio-panel">
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
-            <div><div className="eyebrow">Editing your wardrobe</div><div className="small muted">Pick a set, weapons and build; the card shows them. Nothing is kept until you press Save.</div></div>
+            <div><div className="eyebrow">{t("Editing your wardrobe")}</div><div className="small muted">{t("Pick a set, weapons and build; the card shows them. Nothing is kept until you press Save.")}</div></div>
             <div className="row" style={{ gap: 6 }}>
-              <button onClick={cancelWardrobe} disabled={busy}>Cancel</button>
-              <button className="primary" onClick={saveWardrobe} disabled={busy || !wardrobeDirty || wardrobeBlocked} title={wardrobeBlocked ? "That set is not earned yet" : undefined}>{busy ? "Saving…" : "Save"}</button>
+              <button onClick={cancelWardrobe} disabled={busy}>{t("Cancel")}</button>
+              <button className="primary" onClick={saveWardrobe} disabled={busy || !wardrobeDirty || wardrobeBlocked} title={wardrobeBlocked ? t("That set is not earned yet") : undefined}>{busy ? t("Saving…") : t("Save")}</button>
             </div>
           </div>
           <CharacterSheet key={`${c.worn.id}-${c.style}-${c.body}`} initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} mirror={false} deferred onPreview={setTryOn} />
@@ -120,68 +122,68 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
         <div className="card studio-panel editor">
           <div className="row" style={{ justifyContent: "space-between" }}>
             <div>
-              <div className="eyebrow">Editing your profile</div>
-              <div className="small muted">Changes show on the card as you pick. Nothing is kept until you press Save. Locked items are entitlements you have not earned yet.</div>
+              <div className="eyebrow">{t("Editing your profile")}</div>
+              <div className="small muted">{t("Changes show on the card as you pick. Nothing is kept until you press Save. Locked items are entitlements you have not earned yet.")}</div>
             </div>
             <div className="row" style={{ gap: 6 }}>
-              <button onClick={cancel} disabled={busy}>Cancel</button>
-              <button className="primary" onClick={save} disabled={busy || !dirty}>{busy ? "Saving…" : "Save"}</button>
+              <button onClick={cancel} disabled={busy}>{t("Cancel")}</button>
+              <button className="primary" onClick={save} disabled={busy || !dirty}>{busy ? t("Saving…") : t("Save")}</button>
             </div>
           </div>
 
           <div className="edit-grid" style={{ marginTop: 6 }}>
             <div>
-              <label className="small muted" htmlFor="motto" style={{ display: "block", marginTop: 12 }}>Motto (40 letters)</label>
-              <input id="motto" type="text" value={draft.motto} maxLength={40} onChange={(e) => setDraft((d) => ({ ...d, motto: e.target.value }))} placeholder="Something short and true" style={{ width: "100%", marginTop: 4 }} />
+              <label className="small muted" htmlFor="motto" style={{ display: "block", marginTop: 12 }}>{t("Motto (40 letters)")}</label>
+              <input id="motto" type="text" value={draft.motto} maxLength={40} onChange={(e) => setDraft((d) => ({ ...d, motto: e.target.value }))} placeholder={t("Something short and true")} style={{ width: "100%", marginTop: 4 }} />
 
-              <div className="pick-head"><span className="small muted">Nameplate colour</span><span className="small muted">{owned("nameplate")}/{opts.nameplate.length}</span></div>
+              <div className="pick-head"><span className="small muted">{t("Nameplate colour")}</span><span className="small muted">{owned("nameplate")}/{opts.nameplate.length}</span></div>
               <div className="pick-grid">
                 {opts.nameplate.map((o) => (
-                  <button key={o.id} {...tile("nameplate", o)} aria-label={o.name} style={{ width: 28, height: 28, borderRadius: "50%", background: o.value }}>
+                  <button key={o.id} {...tile("nameplate", o)} aria-label={t(o.name)} style={{ width: 28, height: 28, borderRadius: "50%", background: o.value }}>
                     {!o.owned && <span className="pick-lock">🔒</span>}
                   </button>
                 ))}
               </div>
               {detail("nameplate")}
 
-              <div className="pick-head"><span className="small muted">Title · shown after your name</span><span className="small muted">{owned("title") - 1}/{opts.title.length - 1}</span></div>
+              <div className="pick-head"><span className="small muted">{t("Title · shown after your name")}</span><span className="small muted">{owned("title") - 1}/{opts.title.length - 1}</span></div>
               <div className="pick-grid">
                 {opts.title.map((o) => (
                   <button key={o.id} {...tile("title", o)} className={`pick pick-title ${draft.title === o.id ? "on" : ""} ${o.owned ? "" : "locked"}`}>
-                    {o.id === "none" ? "None" : o.name}{!o.owned && " 🔒"}
+                    {o.id === "none" ? t("None") : t(o.name)}{!o.owned && " 🔒"}
                   </button>
                 ))}
               </div>
               {detail("title")}
 
-              <div className="pick-head"><span className="small muted">Shown on the card</span><span className="small muted">up to three</span></div>
+              <div className="pick-head"><span className="small muted">{t("Shown on the card")}</span><span className="small muted">{t("up to three")}</span></div>
               {c.earned_achievements.length ? (
                 <div className="row" style={{ gap: 6 }}>
                   {c.earned_achievements.map((a) => (
-                    <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={draft.featured.includes(a.key) ? "primary" : ""} title={a.desc} style={{ padding: "5px 9px", fontSize: 11 }}>
-                      {a.icon} {a.name}
+                    <button key={a.key} onClick={() => toggleFeat(a.key)} disabled={busy} className={draft.featured.includes(a.key) ? "primary" : ""} title={t(a.desc)} style={{ padding: "5px 9px", fontSize: 11 }}>
+                      {a.icon} {t(a.name)}
                     </button>
                   ))}
                 </div>
-              ) : <div className="small">Nothing earned yet. Finish a quest.</div>}
+              ) : <div className="small">{t("Nothing earned yet. Finish a quest.")}</div>}
 
-              <div className="pick-head"><span className="small muted">Profile visibility</span></div>
+              <div className="pick-head"><span className="small muted">{t("Profile visibility")}</span></div>
               <div className="subnav" style={{ margin: 0 }}>
-                <a href="#" className={!draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: false })); }}>Private</a>
-                <a href="#" className={draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: true })); }}>Public</a>
+                <a href="#" className={!draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: false })); }}>{t("Private")}</a>
+                <a href="#" className={draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: true })); }}>{t("Public")}</a>
               </div>
-              <div className="small muted" style={{ marginTop: 6 }}>{draft.public ? "Anyone with the link can open your card." : "Only logged-in guild members can open your card."}</div>
+              <div className="small muted" style={{ marginTop: 6 }}>{draft.public ? t("Anyone with the link can open your card.") : t("Only logged-in guild members can open your card.")}</div>
               <div className="row" style={{ gap: 8, marginTop: 8 }}>
                 <input type="text" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} style={{ flex: 1, minWidth: 160, fontFamily: "var(--mono)", fontSize: 12 }} />
-                <button type="button" onClick={copy}>{copied ? "Copied" : "Copy link"}</button>
+                <button type="button" onClick={copy}>{copied ? t("Copied") : t("Copy link")}</button>
               </div>
             </div>
 
             <div>
-              <div className="pick-head"><span className="small muted">Avatar frame</span><span className="small muted">{owned("avatar_frame")}/{opts.avatar_frame.length}</span></div>
+              <div className="pick-head"><span className="small muted">{t("Avatar frame")}</span><span className="small muted">{owned("avatar_frame")}/{opts.avatar_frame.length}</span></div>
               <div className="pick-grid">
                 {opts.avatar_frame.map((o) => (
-                  <button key={o.id} {...tile("avatar_frame", o)} aria-label={o.name} style={{ width: 52, height: 52, borderRadius: 8 }}>
+                  <button key={o.id} {...tile("avatar_frame", o)} aria-label={t(o.name)} style={{ width: 52, height: 52, borderRadius: 8 }}>
                     <span className="pick-av" />
                     {o.art && deco.avatar[o.art] ? <img className="px" src={deco.avatar[o.art]} alt="" style={{ position: "absolute", inset: 2, width: 48, height: 48 }} /> : o.id === "none" ? null : <span className="pick-swatch" />}
                     {!o.owned && <span className="pick-lock">🔒</span>}
@@ -190,11 +192,11 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
               </div>
               {detail("avatar_frame")}
 
-              <div className="pick-head"><span className="small muted">Player card frame</span><span className="small muted">{owned("card_frame")}/{opts.card_frame.length}</span></div>
+              <div className="pick-head"><span className="small muted">{t("Player card frame")}</span><span className="small muted">{owned("card_frame")}/{opts.card_frame.length}</span></div>
               <div className="pick-grid">
                 {opts.card_frame.map((o) => (
-                  <button key={o.id} {...tile("card_frame", o)} aria-label={o.name} style={{ width: 72, height: 58, borderRadius: 6 }}>
-                    {o.art && deco.card[o.art] ? <img className="px" src={deco.card[o.art]} alt="" style={{ position: "absolute", inset: 3, width: 66, height: 52 }} /> : o.id === "none" ? <span className="pick-none">none</span> : <span className="pick-swatch" />}
+                  <button key={o.id} {...tile("card_frame", o)} aria-label={t(o.name)} style={{ width: 72, height: 58, borderRadius: 6 }}>
+                    {o.art && deco.card[o.art] ? <img className="px" src={deco.card[o.art]} alt="" style={{ position: "absolute", inset: 3, width: 66, height: 52 }} /> : o.id === "none" ? <span className="pick-none">{t("none")}</span> : <span className="pick-swatch" />}
                     {!o.owned && <span className="pick-lock">🔒</span>}
                   </button>
                 ))}

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import type { LivingTownArt } from "@/lib/art";
+import { useT } from "./I18n";
 
 /** The artist's canvas component (art/banners/living-town/living-town.js), loaded as a browser module. */
 type LivingTown = {
@@ -23,6 +24,7 @@ function savePrefs(p: Prefs) { try { localStorage.setItem(KEY, JSON.stringify(p)
 /** The home hero. With the living-town pack: a canvas that follows the visitor's clock, with a small ⚙ that opens
  *  season and time-of-day choices and a pause. Otherwise the looping WebP with a pause, or the still. */
 export default function HeroBanner({ animated, still, living, children }: { animated: string | null; still: string; living: LivingTownArt | null; children: ReactNode }) {
+  const t = useT();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const townRef = useRef<LivingTown | null>(null);
   const [prefs, setPrefs] = useState<Prefs>({ season: "summer", timeMode: "local", hour: 12 });
@@ -54,18 +56,18 @@ export default function HeroBanner({ animated, still, living, children }: { anim
 
   function apply(next: Prefs) {
     setPrefs(next); savePrefs(next);
-    const t = townRef.current;
-    if (!t) return;
-    if (t.season !== next.season) t.setSeason(next.season);
-    t.setTime(next.timeMode, next.hour);
+    const town = townRef.current;
+    if (!town) return;
+    if (town.season !== next.season) town.setSeason(next.season);
+    town.setTime(next.timeMode, next.hour);
   }
   function togglePause() {
     const next = !paused;
     setPaused(next);
     const p = { ...prefs, paused: next };
     setPrefs(p); savePrefs(p);
-    const t = townRef.current;
-    if (t) { t.playing = !next; t.render(t.seconds); }
+    const town = townRef.current;
+    if (town) { town.playing = !next; town.render(town.seconds); }
   }
   const stillFor = living ? (living.stills[`${prefs.season}-${prefs.timeMode === "manual" && (prefs.hour < 6 || prefs.hour >= 20) ? "night" : "day"}`] ?? still) : still;
   const style = { "--banner": `url("${living ? stillFor : animated ?? still}")`, "--banner-still": `url("${stillFor}")` } as React.CSSProperties;
@@ -73,24 +75,24 @@ export default function HeroBanner({ animated, still, living, children }: { anim
 
   return (
     <section className={`hero px banner-hero ${living ? "living" : ""} ${live ? "live" : ""} ${paused || (!animated && !living) ? "paused" : ""}`} style={style}>
-      {living && <canvas ref={canvasRef} className="banner-canvas" role="img" aria-label="A pixel-art town by a river: water, foliage, clouds, a waterwheel and villagers, lit for the time of day" />}
+      {living && <canvas ref={canvasRef} className="banner-canvas" role="img" aria-label={t("A pixel-art town by a river: water, foliage, clouds, a waterwheel and villagers, lit for the time of day")} />}
       {canPause && (
         <div className={`banner-tools ${open ? "open" : ""}`}>
           {living && open && (
             <div className="banner-menu">
               <div className="row" style={{ gap: 4 }}>
-                {living.seasons.map((s) => <button key={s} type="button" className={prefs.season === s ? "on" : ""} onClick={() => apply({ ...prefs, season: s })}>{SEASON_LABEL[s] ?? s}</button>)}
+                {living.seasons.map((s) => <button key={s} type="button" className={prefs.season === s ? "on" : ""} onClick={() => apply({ ...prefs, season: s })}>{SEASON_LABEL[s] ? t(SEASON_LABEL[s]) : s}</button>)}
               </div>
               <div className="row" style={{ gap: 4 }}>
-                {TIMES.map((t) => {
-                  const on = t.mode === "local" ? prefs.timeMode === "local" : prefs.timeMode === "manual" && prefs.hour === t.hour;
-                  return <button key={t.label} type="button" className={on ? "on" : ""} onClick={() => apply({ ...prefs, timeMode: t.mode, hour: t.hour ?? prefs.hour })}>{t.label}</button>;
+                {TIMES.map((tm) => {
+                  const on = tm.mode === "local" ? prefs.timeMode === "local" : prefs.timeMode === "manual" && prefs.hour === tm.hour;
+                  return <button key={tm.label} type="button" className={on ? "on" : ""} onClick={() => apply({ ...prefs, timeMode: tm.mode, hour: tm.hour ?? prefs.hour })}>{t(tm.label)}</button>;
                 })}
               </div>
             </div>
           )}
-          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title="Season and time of day">⚙</button>}
-          <button type="button" className="banner-btn" onClick={togglePause} aria-pressed={paused} title={paused ? "Play the banner" : "Pause the banner"}>{paused ? "▶" : "❚❚"}</button>
+          {living && <button type="button" className="banner-btn" onClick={() => setOpen((o) => !o)} aria-expanded={open} title={t("Season and time of day")}>⚙</button>}
+          <button type="button" className="banner-btn" onClick={togglePause} aria-pressed={paused} title={paused ? t("Play the banner") : t("Pause the banner")}>{paused ? "▶" : "❚❚"}</button>
         </div>
       )}
       {children}

@@ -1,17 +1,18 @@
 import Link from "next/link";
 import { api, type Me } from "@/lib/api";
+import { getT } from "@/lib/i18n";
 
 export default async function Nav() {
-  const me = await api<Me>("/me");
+  const [me, t] = await Promise.all([api<Me>("/me"), getT()]);
   return (
     <header className="nav">
       <div className="nav-in">
         <Link href="/" className="brand">Unrealcraft</Link>
-        <nav className="nav-links" aria-label="Main">
-          <Link href="/quests" className="link">Quest Board</Link>
-          <Link href="/how-it-works" className="link">How it works</Link>
-          <Link href="/leaderboard" className="link">Leaderboard</Link>
-          <Link href="/mission" className="link">Mission statement</Link>
+        <nav className="nav-links" aria-label={t("Main")}>
+          <Link href="/quests" className="link">{t("Quest Board")}</Link>
+          <Link href="/how-it-works" className="link">{t("How it works")}</Link>
+          <Link href="/leaderboard" className="link">{t("Leaderboard")}</Link>
+          <Link href="/mission" className="link">{t("Mission statement")}</Link>
         </nav>
         <div className="nav-user">
           {me ? (
@@ -19,12 +20,12 @@ export default async function Nav() {
               <Link href="/me" className="who">
                 {me.avatar && <img className="avatar" src={me.avatar} alt="" />}
                 <span>{me.name}</span>
-                <span className={`pill ${me.staff ? "staff-title" : ""}`} style={{ borderColor: me.rank_color, color: me.rank_color }}>{me.rank_title}</span>
+                <span className={`pill ${me.staff ? "staff-title" : ""}`} style={{ borderColor: me.rank_color, color: me.rank_color }}>{t(me.rank_title)}</span>
               </Link>
-              <form action="/api/auth/logout" method="post"><button type="submit">Log out</button></form>
+              <form action="/api/auth/logout" method="post"><button type="submit">{t("Log out")}</button></form>
             </>
           ) : (
-            <a className="btn primary" href="/api/auth/discord">Enter with Discord</a>
+            <a className="btn primary" href="/api/auth/discord">{t("Enter with Discord")}</a>
           )}
         </div>
       </div>

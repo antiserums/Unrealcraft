@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { DISCORD_INVITE } from "@/lib/mission";
+import { getLocale, getT } from "@/lib/i18n";
 
-export const metadata = { title: "Terms of service" };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t("Terms of service") };
+}
 const UPDATED = "30 September 2026";
 
-export default function Terms() {
+export default async function Terms() {
+  const t = await getT();
+  const locale = await getLocale();
   return (
     <>
       <div className="eyebrow">Unrealcraft</div>
-      <h1>Terms of service</h1>
-      <p className="muted small">Last updated {UPDATED}. By using Unrealcraft you agree to these terms.</p>
+      <h1>{t("Terms of service")}</h1>
+      <p className="muted small">{t("Last updated {date}. By using Unrealcraft you agree to these terms.", { date: UPDATED })}</p>
+      {locale !== "en" && <p className="note small">{t("This page is available in English only. The English text is the one that applies.")}</p>}
 
       <div className="card legal">
         <h2>What Unrealcraft is</h2>

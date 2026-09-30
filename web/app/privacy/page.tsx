@@ -1,15 +1,22 @@
 import Link from "next/link";
 import { DISCORD_INVITE } from "@/lib/mission";
+import { getLocale, getT } from "@/lib/i18n";
 
-export const metadata = { title: "Privacy policy" };
+export async function generateMetadata() {
+  const t = await getT();
+  return { title: t("Privacy policy") };
+}
 const UPDATED = "30 September 2026";
 
-export default function Privacy() {
+export default async function Privacy() {
+  const t = await getT();
+  const locale = await getLocale();
   return (
     <>
       <div className="eyebrow">Unrealcraft</div>
-      <h1>Privacy policy</h1>
-      <p className="muted small">Effective {UPDATED}</p>
+      <h1>{t("Privacy policy")}</h1>
+      <p className="muted small">{t("Effective {date}", { date: UPDATED })}</p>
+      {locale !== "en" && <p className="note small">{t("This page is available in English only. The English text is the one that applies.")}</p>}
 
       <div className="card legal">
         <p>This Privacy Policy describes the information Unrealcraft collects when you use this website and the Unrealcraft Discord bot (together, the &quot;Service&quot;), how that information is used, and the choices available to you. By using the Service you acknowledge the practices described in this policy.</p>

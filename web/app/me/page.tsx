@@ -5,10 +5,12 @@ import MeNav from "@/components/MeNav";
 import SpecializationPicker from "@/components/SpecializationPicker";
 import { badgeImage, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
+import { getT } from "@/lib/i18n";
 
-export const metadata = { title: "Player card" };
+export async function generateMetadata() { const t = await getT(); return { title: t("Player card") }; }
 
 export default async function Profile() {
+  const t = await getT();
   const [c, ch, manifest] = await Promise.all([api<Card>("/me/card"), api<Char>("/me/character"), loadManifest()]);
   if (!c) redirect("/api/auth/discord?next=/me");
   const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
@@ -23,19 +25,19 @@ export default async function Profile() {
   }
   return (
     <>
-      <div className="eyebrow">Profile</div>
-      <h1>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {c.title}</span>}</h1>
+      <div className="eyebrow">{t("Profile")}</div>
+      <h1>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</h1>
       <MeNav active="/me" />
       <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} wardrobe={wardrobe} />
       <SpecializationPicker mine={c.specializations} options={c.specialization_options ?? []} />
       {c.next_rank && (
         <div className="card" style={{ marginTop: 14 }}>
-          <div className="eyebrow">Next rank: {c.next_rank.title}</div>
+          <div className="eyebrow">{t("Next rank: {rank}", { rank: t(c.next_rank.title) })}</div>
           <ul className="plain small" style={{ marginTop: 6 }}>
-            <li>{c.next_rank.xp_to_go} XP to go</li>
-            <li>{c.next_rank.required_left > 0 ? `${c.next_rank.required_left} required quests left` : "Core path done"}</li>
-            {c.tier_progress && <li>{c.tier_progress.emoji} {c.tier_progress.name} quests: {c.tier_progress.done}/{c.tier_progress.need}</li>}
-            {c.next_rank.human_review && <li>Staff approval needed for this rank</li>}
+            <li>{t("{xp} XP to go", { xp: c.next_rank.xp_to_go })}</li>
+            <li>{c.next_rank.required_left > 0 ? t("{n} required quests left", { n: c.next_rank.required_left }) : t("Core path done")}</li>
+            {c.tier_progress && <li>{c.tier_progress.emoji} {t("{tier} quests: {done}/{need}", { tier: t(c.tier_progress.name), done: c.tier_progress.done, need: c.tier_progress.need })}</li>}
+            {c.next_rank.human_review && <li>{t("Staff approval needed for this rank")}</li>}
           </ul>
         </div>
       )}

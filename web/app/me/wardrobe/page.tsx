@@ -3,10 +3,12 @@ import CharacterSheet, { type ArtProps, type Char } from "@/components/Character
 import MeNav from "@/components/MeNav";
 import { iconImage, loadManifest, presetSheets } from "@/lib/art";
 import { api, type Me } from "@/lib/api";
+import { getT } from "@/lib/i18n";
 
-export const metadata = { title: "Wardrobe" };
+export async function generateMetadata() { const t = await getT(); return { title: t("Wardrobe") }; }
 
 export default async function Wardrobe() {
+  const t = await getT();
   const me = await api<Me>("/me");
   if (!me) redirect("/api/auth/discord?next=/me/wardrobe");
   const [ch, manifest] = await Promise.all([api<Char>("/me/character"), loadManifest()]);
@@ -23,8 +25,8 @@ export default async function Wardrobe() {
   };
   return (
     <>
-      <div className="eyebrow">Profile</div>
-      <h1>Wardrobe</h1>
+      <div className="eyebrow">{t("Profile")}</div>
+      <h1>{t("Wardrobe")}</h1>
       <MeNav active="/me/wardrobe" />
       <CharacterSheet initial={ch} fallbackColor={ch.cosmetics.nameplate ?? me.rank_color} art={art} />
     </>

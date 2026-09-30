@@ -2,7 +2,9 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import type { SheetSpec } from "@/lib/art";
+import { rich } from "@/lib/i18n-config";
 import { Boss, Character } from "./Figure";
+import { useT } from "./I18n";
 
 type Ev = { kind: string; text: string; damage?: number; bonus_xp?: number; explain?: string; correct?: number; debuff?: string };
 type Q = { index: number; total: number; q: string; choices: string[]; hint: string | null; debuff: string | null };
@@ -21,6 +23,7 @@ const STAGE_W = 960, STAGE_H = 540, GROUND = 464;
 
 export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background }:
   { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null }) {
+  const t = useT();
   const [f, setF] = useState<Fight | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -39,7 +42,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
     (async () => {
       const r = await fetch(`/api/me/quests/${questId}/fight`, { method: "POST" });
       const j = await r.json();
-      if (!r.ok) { setErr(j.detail ?? "Could not start the fight."); return; }
+      if (!r.ok) { setErr(j.detail ?? t("Could not start the fight.")); return; }
       setF(j); asked.current = Date.now();
     })();
   }, [questId]);
@@ -64,7 +67,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
     const main = evs.find((e) => ["hit", "crit", "wound", "steady"].includes(e.kind));
     if (main && (main.kind === "hit" || main.kind === "crit")) {
       setYouPose("strike"); setBossPose("hit");
-      setFloat({ text: `-${main.damage}${main.kind === "crit" ? " CRIT" : ""}`, side: "boss", kind: main.kind });
+      setFloat({ text: main.kind === "crit" ? t("-{damage} CRIT", { damage: main.damage ?? 0 }) : `-${main.damage}`, side: "boss", kind: main.kind });
     } else if (main) {
       setYouPose("hurt"); setBossPose("attack");
       setFloat({ text: main.kind === "steady" ? "-½" : "-1", side: "you", kind: main.kind });
@@ -78,8 +81,8 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
     }, 700);
   }
 
-  if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← Back to the dungeon</Link></p></div>;
-  if (!f) return <div className="card muted">Entering the dungeon…</div>;
+  if (err) return <div className="card"><b>{err}</b><p style={{ margin: "8px 0 0" }}><Link href={`/quests/${questId}`}>← {t("Back to the dungeon")}</Link></p></div>;
+  if (!f) return <div className="card muted">{t("Entering the dungeon…")}</div>;
 
   const bossHp = Math.max(0, f.hits_to_win - f.hits) / f.hits_to_win;
   const youHp = Math.max(0, (f.you.wounds_allowed + 1 - f.you.wounds)) / (f.you.wounds_allowed + 1);
@@ -93,14 +96,18 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
       <div ref={box} className="arena-box" style={{ height: STAGE_H * k }}>
         <div className={`arena-stage ${bg ? "dungeon" : ""}`} style={{ width: STAGE_W, height: STAGE_H, transform: `scale(${k})`, backgroundImage: bg ? `url("${bg}")` : undefined }}>
           <div className="hpbox you">
-            <div className="eyebrow">You</div>
+            <div className="eyebrow">{t("You")}</div>
             <div className="bar big"><span style={{ width: `${youHp * 100}%`, background: "#4FA36C" }} /></div>
-            <div className="small">{f.you.wounds} wound{f.you.wounds === 1 ? "" : "s"} · {Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds))} more before you fall{f.you.steady_available && <> · steady ready</>}</div>
+            <div className="small">{f.you.steady_available
+              ? t("Wounds: {wounds} · {more} more before you fall · steady ready", { wounds: f.you.wounds, more: Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds)) })
+              : t("Wounds: {wounds} · {more} more before you fall", { wounds: f.you.wounds, more: Math.max(0, f.you.wounds_allowed - Math.floor(f.you.wounds)) })}</div>
           </div>
           <div className="hpbox boss">
             <div className="eyebrow" style={{ color: f.boss.color }}>{f.boss.name}</div>
             <div className="bar big"><span style={{ width: `${bossHp * 100}%`, background: f.boss.color }} /></div>
-            <div className="small">{Math.min(f.hits, f.hits_to_win)}/{f.hits_to_win} hits{f.hits > f.hits_to_win ? " · victory lap" : ""} · {f.boss.questions} questions</div>
+            <div className="small">{f.hits > f.hits_to_win
+              ? t("{hits}/{total} hits · victory lap · {questions} questions", { hits: Math.min(f.hits, f.hits_to_win), total: f.hits_to_win, questions: f.boss.questions })
+              : t("{hits}/{total} hits · {questions} questions", { hits: Math.min(f.hits, f.hits_to_win), total: f.hits_to_win, questions: f.boss.questions })}</div>
           </div>
 
           <div className="fighter" style={{ left: 96, top: GROUND - 208 - 8 }}>
@@ -119,8 +126,8 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
           {last.map((e, i) => (
             <div key={i} className={`ev ${e.kind}`}>
               <b>{e.text}</b>
-              {e.kind === "crit" && e.bonus_xp ? <span className="pill" style={{ marginLeft: 8 }}>+{e.bonus_xp} XP</span> : null}
-              {e.explain && <div className="small" style={{ marginTop: 4 }}>{["hit", "crit"].includes(e.kind) ? "You saw through it: " : "It got you because: "}{e.explain}</div>}
+              {e.kind === "crit" && e.bonus_xp ? <span className="pill" style={{ marginLeft: 8 }}>{t("+{xp} XP", { xp: e.bonus_xp })}</span> : null}
+              {e.explain && <div className="small" style={{ marginTop: 4 }}>{["hit", "crit"].includes(e.kind) ? t("You saw through it: {why}", { why: e.explain }) : t("It got you because: {why}", { why: e.explain })}</div>}
             </div>
           ))}
         </div>
@@ -128,7 +135,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
 
       {q && !f.result && (
         <div className="card question">
-          <div className="eyebrow">Turn {f.turn} of {f.total}{q.debuff && <span className="pill" style={{ marginLeft: 8, color: "var(--bad)", borderColor: "var(--bad)" }}>{DEBUFF[q.debuff]}</span>}</div>
+          <div className="eyebrow">{t("Turn {turn} of {total}", { turn: f.turn, total: f.total })}{q.debuff && <span className="pill" style={{ marginLeft: 8, color: "var(--bad)", borderColor: "var(--bad)" }}>{DEBUFF[q.debuff] ? t(DEBUFF[q.debuff]) : q.debuff}</span>}</div>
           {q.hint && <p className="muted small" style={{ margin: "6px 0 0" }}>{q.hint}</p>}
           <h2 style={{ marginTop: 8 }}>{q.q}</h2>
           <div className="choices">
@@ -139,9 +146,9 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
             ))}
           </div>
           <div className="row small muted" style={{ marginTop: 8 }}>
-            <span>Answer fast for a better crit chance.</span>
+            <span>{t("Answer fast for a better crit chance.")}</span>
             <span className="spacer" />
-            <Link href={`/quests/${questId}`} className="muted">Retreat (nothing is recorded)</Link>
+            <Link href={`/quests/${questId}`} className="muted">{t("Retreat (nothing is recorded)")}</Link>
           </div>
         </div>
       )}
@@ -150,27 +157,27 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
         <div className="card result">
           {f.result === "win" ? (
             <>
-              <h2 style={{ marginTop: 0 }}>🏆 {f.boss.short} is beaten · {f.outcome?.score}/{f.outcome?.total}</h2>
+              <h2 style={{ marginTop: 0 }}>🏆 {t("{boss} is beaten · {score}/{total}", { boss: f.boss.short, score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
               <ul className="plain">
-                {f.outcome?.first_try_bonus ? <li>⭐ Flawless first try: +{f.outcome.first_try_bonus} XP</li> : null}
-                {f.outcome?.crit_xp ? <li>Crits: +{f.outcome.crit_xp} XP</li> : null}
-                {f.outcome?.completed ? <li>✅ Quest complete: +{f.outcome.quest_xp} XP{f.outcome.tested_out ? " (tested out, no turn-in needed)" : ""}</li> : null}
-                {f.outcome?.loot ? <li>🎁 New outfit: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>. <i>{f.outcome.loot.flavour}</i></li> : null}
+                {f.outcome?.first_try_bonus ? <li>⭐ {t("Flawless first try: +{xp} XP", { xp: f.outcome.first_try_bonus })}</li> : null}
+                {f.outcome?.crit_xp ? <li>{t("Crits: +{xp} XP", { xp: f.outcome.crit_xp })}</li> : null}
+                {f.outcome?.completed ? <li>✅ {f.outcome.tested_out ? t("Quest complete: +{xp} XP (tested out, no turn-in needed)", { xp: f.outcome.quest_xp ?? 0 }) : t("Quest complete: +{xp} XP", { xp: f.outcome.quest_xp ?? 0 })}</li> : null}
+                {f.outcome?.loot ? <li>🎁 {rich(t("New outfit: {name}. {flavour}"), { name: <b style={{ color: f.outcome.loot.color }}>{f.outcome.loot.name}</b>, flavour: <i>{f.outcome.loot.flavour}</i> })}</li> : null}
               </ul>
               <div className="row">
-                {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>Claim the chest: send your work</Link>}
-                {f.outcome?.next === "next" && <Link className="btn primary" href="/">Next dungeon</Link>}
-                {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>Back to the dungeon</Link>}
-                <Link className="btn" href="/me/wardrobe">{f.outcome?.loot ? "Wear it" : "Wardrobe"}</Link>
+                {f.outcome?.next === "submit" && <Link className="btn primary" href={`/quests/${questId}#claim`}>{t("Claim the chest: send your work")}</Link>}
+                {f.outcome?.next === "next" && <Link className="btn primary" href="/">{t("Next dungeon")}</Link>}
+                {f.outcome?.next === "action" && <Link className="btn primary" href={`/quests/${questId}`}>{t("Back to the dungeon")}</Link>}
+                <Link className="btn" href="/me/wardrobe">{f.outcome?.loot ? t("Wear it") : t("Wardrobe")}</Link>
               </div>
             </>
           ) : (
             <>
-              <h2 style={{ marginTop: 0 }}>You are knocked down · {f.outcome?.score}/{f.outcome?.total}</h2>
-              <p>You need {f.hits_to_win} right. Read the guide again and come back whenever you are ready.</p>
+              <h2 style={{ marginTop: 0 }}>{t("You are knocked down · {score}/{total}", { score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
+              <p>{t("You need {n} right. Read the guide again and come back whenever you are ready.", { n: f.hits_to_win })}</p>
               <div className="row">
-                <a className="btn primary" href={`/quests/${questId}/fight`}>Fight again</a>
-                <Link className="btn" href={`/quests/${questId}`}>Back to the reading</Link>
+                <a className="btn primary" href={`/quests/${questId}/fight`}>{t("Fight again")}</a>
+                <Link className="btn" href={`/quests/${questId}`}>{t("Back to the reading")}</Link>
               </div>
             </>
           )}
