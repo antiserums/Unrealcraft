@@ -19,7 +19,6 @@ CREATE TABLE IF NOT EXISTS outfits (
     earned_at   TEXT NOT NULL DEFAULT (datetime('now')),
     PRIMARY KEY (member_id, set_id)
 );
-DROP TABLE IF EXISTS gear;                     -- the per-slot gear experiment (same day); outfits replace it
 CREATE TABLE IF NOT EXISTS fights (
     id          INTEGER PRIMARY KEY AUTOINCREMENT,
     member_id   INTEGER NOT NULL,
