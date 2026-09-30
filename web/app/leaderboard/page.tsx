@@ -2,7 +2,7 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { api } from "@/lib/api";
 
-type Row = { id: number; xp: number; rank: number; rank_title: string; rank_color: string; major_title: string };
+type Row = { id: number | string; xp: number; rank: number; rank_title: string; rank_color: string; major_title: string };
 export const metadata = { title: "Leaderboard" };
 
 export default async function Leaderboard({ searchParams }: PageProps<"/leaderboard">) {

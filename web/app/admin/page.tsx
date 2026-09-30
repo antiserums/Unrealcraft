@@ -6,11 +6,11 @@ export const metadata = { title: "Admin" };
 
 type Overview = {
   stats: Record<string, number>; db_path: string; curriculum_dir: string; admin_ids: number[];
-  events: { id: number; type: string; member_id: number; payload: string; created_at: string; delivered: number }[];
-  log: { id: number; admin_id: number; action: string; target_id: number | null; detail: string; created_at: string }[];
-  pending: { id: number; user_id: number; quest_id: string; route: string; created_at: string }[];
+  events: { id: number; type: string; member_id: number | string; payload: string; created_at: string; delivered: number }[];
+  log: { id: number; admin_id: number | string; action: string; target_id: number | string | null; detail: string; created_at: string }[];
+  pending: { id: number; user_id: number | string; quest_id: string; route: string; created_at: string }[];
 };
-type MemberRow = { discord_id: number; name: string | null; avatar: string | null; major: string; rank: number; xp: number; done: number; streak_days: number; created_at: string };
+type MemberRow = { discord_id: number | string; name: string | null; avatar: string | null; major: string; rank: number; xp: number; done: number; streak_days: number; created_at: string };
 
 const LABEL: Record<string, string> = { members: "members", members_logged_in: "logged in on the site", quests_done: "quests done", pending_reviews: "pending reviews", fights_today: "fights today", fights_total: "fights ever", events_undelivered: "events waiting for the bot", xp_total: "XP awarded", quests_in_catalog: "quests in catalog" };
 

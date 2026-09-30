@@ -5,6 +5,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 
 from registrar.curriculum import Catalog  # noqa: E402  (bot package, path set in config)
 
@@ -39,7 +40,29 @@ async def lifespan(app: FastAPI):
     await app.state.db.close()
 
 
-app = FastAPI(title="Unrealcraft API", version="0.1.0", lifespan=lifespan)
+class SafeJSONResponse(JSONResponse):
+    """Discord ids are 64-bit; JavaScript numbers are exact only to 2**53. Any integer beyond that goes out as a
+    string so the browser never rounds a member id (which broke every /members/{id} link)."""
+
+    LIMIT = 2 ** 53
+
+    @classmethod
+    def _fix(cls, v):
+        if isinstance(v, bool):
+            return v
+        if isinstance(v, int) and abs(v) > cls.LIMIT:
+            return str(v)
+        if isinstance(v, dict):
+            return {k: cls._fix(x) for k, x in v.items()}
+        if isinstance(v, (list, tuple, set)):
+            return [cls._fix(x) for x in v]
+        return v
+
+    def render(self, content) -> bytes:
+        return super().render(self._fix(content))
+
+
+app = FastAPI(title="Unrealcraft API", version="0.1.0", lifespan=lifespan, default_response_class=SafeJSONResponse)
 app.include_router(auth.router)
 app.include_router(catalog.router)
 app.include_router(me.router)

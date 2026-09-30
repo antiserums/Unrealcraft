@@ -34,7 +34,7 @@ export type Progress = {
   submissions: { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> }[];
 } | null;
 export type Me = {
-  id: number; name: string | null; avatar: string | null; major: string; major_title: string; minor: string | null;
+  id: number | string; name: string | null; avatar: string | null; major: string; major_title: string; minor: string | null;
   rank: number; rank_title: string; rank_color: string; xp: number; xp_floor: number; xp_next: number | null;
   streak_days: number; ue_version: string | null; rank_since: string | null; member_since: string | null;
   next_rank: { n: number; title: string; xp: number; opens: string | null; xp_to_go: number; required_left: number; tier_left: number; requirements_met: boolean; human_review: boolean } | null;
@@ -45,7 +45,7 @@ export type Me = {
 };
 export type ReviewItem = {
   id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;
-  member: { id: number; name: string | null; avatar: string | null; rank: number | null; major: string | null };
+  member: { id: number | string; name: string | null; avatar: string | null; rank: number | null; major: string | null };
   quest: QuestSummary; payload: { text?: string; ue_version?: string; attachments?: string[] };
   reviewed_by_me: boolean; blocked: string | null;
   quest_detail?: { done_when: string | null; do: string | null; checklist: { text: string; kind: string }[]; verify_type: string | null };
