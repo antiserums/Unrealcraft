@@ -10,7 +10,7 @@ export default function PlayerCard({ c, sheet, badges, deco }: { c: Card; sheet:
   const pct = c.xp_next ? Math.min(100, Math.round(((c.xp - c.xp_floor) / (c.xp_next - c.xp_floor)) * 100)) : 100;
   return (
     <article className={`pcard ${deco?.card ? "decorated" : ""}`} style={{ "--plate": c.nameplate } as React.CSSProperties}>
-      {deco?.card && <img className="px pcard-deco" src={deco.card} alt="" aria-hidden="true" />}
+      {deco?.card && <div className="px pcard-deco" style={{ borderImageSource: `url("${deco.card}")` }} aria-hidden="true" />}
       <div className="pcard-banner">
         <span className="pcard-rank" style={{ color: c.rank_color, borderColor: c.rank_color }}>{c.rank_title}</span>
         <span className="pcard-major">{c.major_title}</span>

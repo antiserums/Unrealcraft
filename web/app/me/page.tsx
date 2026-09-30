@@ -1,8 +1,7 @@
 import { redirect } from "next/navigation";
-import CardEditor from "@/components/CardEditor";
+import CardStudio from "@/components/CardStudio";
 import MeNav from "@/components/MeNav";
-import PlayerCard from "@/components/PlayerCard";
-import { badgeImage, decorationImage, decorationImages, loadManifest, presetSheet } from "@/lib/art";
+import { badgeImage, decorationImages, loadManifest, presetSheet } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
 
 export const metadata = { title: "Player card" };
@@ -11,8 +10,7 @@ export default async function Profile() {
   const [c, manifest] = await Promise.all([api<Card>("/me/card"), loadManifest()]);
   if (!c) redirect("/api/auth/discord?next=/me");
   const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
-  const badges = Object.fromEntries(c.featured.map((a) => [a.key, badgeImage(manifest, a.badge)]));
-  const deco = { avatar: decorationImage(manifest, "avatar", c.avatar_frame), card: decorationImage(manifest, "card", c.card_frame) };
+  const badges = Object.fromEntries(c.earned_achievements.map((a) => [a.key, badgeImage(manifest, a.badge)]));
   const shareUrl = `${process.env.WEB_ORIGIN ?? "http://localhost:3000"}/members/${c.id}`;
   return (
     <>
@@ -20,10 +18,9 @@ export default async function Profile() {
       <h1>{c.name}</h1>
       <MeNav active="/me" />
       {c.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
-      <div className="two">
-        <PlayerCard c={c} sheet={sheet} badges={badges} deco={deco} />
+      <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} />
+      <div style={{ marginTop: 12 }}>
         <div>
-          <CardEditor initial={c} shareUrl={shareUrl} deco={decorationImages(manifest)} />
           {c.next_rank && (
             <div className="card" style={{ marginTop: 12 }}>
               <div className="eyebrow">Next rank: {c.next_rank.title}</div>

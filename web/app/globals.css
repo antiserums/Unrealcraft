@@ -438,7 +438,6 @@ table.adm code { font-size: 12px; }
 /* ---- card cosmetics: the pack's decorations as overlays, and compact pickers ---- */
 .pcard { overflow: visible; }
 .pcard.decorated { border-color: transparent; outline: none; box-shadow: 0 10px 30px rgba(0,0,0,.55); }
-.pcard-deco { position: absolute; left: -3.5%; top: -5%; width: 107%; height: 110%; pointer-events: none; z-index: 3; }
 .pcard-avatar-wrap { position: relative; width: 64px; height: 64px; flex: 0 0 64px; }
 .deco-avatar { position: absolute; left: -18%; top: -18%; width: 136%; height: 136%; pointer-events: none; z-index: 2; }
 .pick-head { display: flex; justify-content: space-between; margin: 14px 0 6px; }
@@ -451,3 +450,14 @@ table.adm code { font-size: 12px; }
 .pick-av { width: 26px; height: 26px; border-radius: 50%; background: radial-gradient(circle at 40% 35%, #3a4152, #1a1e28); }
 .pick-swatch { position: absolute; inset: 8px; border-radius: 4px; background: var(--bronze); opacity: .4; }
 .pick-detail { font-size: 12px; margin-top: 6px; min-height: 18px; }
+
+/* a decorated card keeps a gutter inside its edge so the border art never covers content */
+.pcard.decorated { padding: 40px 14px 36px; margin: 14px 12px 12px; background: linear-gradient(180deg, var(--paper), #0e1119); }
+.pcard.decorated .pcard-banner, .pcard.decorated .pcard-foot { padding-left: 64px; padding-right: 64px; }
+.pcard.decorated .pcard-banner { border-radius: 4px 4px 0 0; }
+.pcard.decorated .pcard-foot { border-radius: 0 0 4px 4px; }
+.pcard.decorated .pcard-banner, .pcard.decorated .pcard-foot { border-left: 1px solid rgba(212,175,90,.15); border-right: 1px solid rgba(212,175,90,.15); }
+.pick-none { font-family: var(--display); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+
+/* card border art: 9-slice so corners keep their shape and the band stays 2x thick whatever the card's size */
+.pcard-deco { position: absolute; inset: -14px; pointer-events: none; z-index: 3; border: 76px solid transparent; border-image-slice: 38; border-image-width: 76px; border-image-repeat: round; border-image-outset: 0; image-rendering: pixelated; }

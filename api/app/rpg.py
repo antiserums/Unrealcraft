@@ -291,6 +291,7 @@ NAMEPLATES = [
 # Ten decoration themes from the art pack (profile-decorations/): each has a matching avatar ring and card border.
 # The same rule unlocks both, so a theme arrives as a pair.
 DECORATIONS = [
+    ("none", "None", "No decoration.", {"type": "starter"}),
     ("novice", "Novice", "Leather wraps and a bronze rim.", {"type": "starter"}),
     ("apprentice", "Apprentice", "Teal ribbons on bronze.", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
     ("adept", "Adept", "Polished silver with blue crystal.", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
