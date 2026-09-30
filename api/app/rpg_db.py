@@ -83,6 +83,7 @@ CREATE TABLE IF NOT EXISTS ticket_messages (
     author_id   INTEGER NOT NULL,
     staff       INTEGER NOT NULL DEFAULT 0,        -- 1 when a staff member wrote it
     body        TEXT NOT NULL,
+    attachments TEXT NOT NULL DEFAULT '[]',        -- json list of image urls
     created_at  TEXT NOT NULL DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_ticket_messages ON ticket_messages(ticket_id, id);
@@ -107,6 +108,10 @@ class RpgDB:
 
     async def migrate(self) -> None:
         await self.conn.executescript(SCHEMA)
+        # columns added after a table shipped (CREATE IF NOT EXISTS leaves old tables alone)
+        cur = await self.conn.execute("PRAGMA table_info(ticket_messages)")
+        if "attachments" not in {r[1] for r in await cur.fetchall()}:
+            await self.conn.execute("ALTER TABLE ticket_messages ADD COLUMN attachments TEXT NOT NULL DEFAULT '[]'")
         await self.conn.commit()
 
     # ---------- character / gear ----------
@@ -243,10 +248,11 @@ class RpgDB:
         return streak
 
     # ---------- support tickets ----------
-    async def create_ticket(self, uid: int, category: str, subject: str, body: str) -> int:
+    async def create_ticket(self, uid: int, category: str, subject: str, body: str, attachments: list[str] | None = None) -> int:
         cur = await self.conn.execute("INSERT INTO tickets(member_id, category, subject) VALUES (?,?,?)", (uid, category, subject))
         tid = cur.lastrowid
-        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body) VALUES (?,?,0,?)", (tid, uid, body))
+        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body, attachments) VALUES (?,?,0,?,?)",
+                                (tid, uid, body, json.dumps(attachments or [])))
         await self.conn.commit()
         return int(tid)
 
@@ -278,8 +284,9 @@ class RpgDB:
         cur = await self.conn.execute(sql, (*args, limit))
         return [dict(r) for r in await cur.fetchall()]
 
-    async def ticket_reply(self, tid: int, author: int, staff: bool, body: str, status: str) -> None:
-        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body) VALUES (?,?,?,?)", (tid, author, 1 if staff else 0, body))
+    async def ticket_reply(self, tid: int, author: int, staff: bool, body: str, status: str, attachments: list[str] | None = None) -> None:
+        await self.conn.execute("INSERT INTO ticket_messages(ticket_id, author_id, staff, body, attachments) VALUES (?,?,?,?,?)",
+                                (tid, author, 1 if staff else 0, body, json.dumps(attachments or [])))
         await self.conn.execute("UPDATE tickets SET status=?, updated_at=datetime('now') WHERE id=?", (status, tid))
         await self.conn.commit()
 

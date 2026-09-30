@@ -4,11 +4,16 @@ Members: list and open their own tickets, reply, close. Staff (admins, developer
 reply (which marks it answered), change status. Nothing here touches XP, ranks or entitlements."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, HTTPException, Request
-from pydantic import BaseModel, Field
+import json
+import secrets
 
+from fastapi import APIRouter, Depends, File, Form, HTTPException, Request, UploadFile
+from pydantic import BaseModel
+
+from ..config import settings
 from ..session import current_member
 from ..staff import can_review, is_admin
+from .submit import IMAGE_TYPES, MAX_BYTES, MAX_FILES
 
 router = APIRouter(tags=["tickets"])
 CATEGORIES = ["account", "quest", "review", "bug", "donation", "other"]
@@ -25,18 +30,36 @@ def staff_only(member=Depends(current_member)) -> dict:
     return member
 
 
-class NewTicket(BaseModel):
-    category: str = "other"
-    subject: str = Field(min_length=3, max_length=120)
-    body: str = Field(min_length=10, max_length=4000)
-
-
-class Reply(BaseModel):
-    body: str = Field(min_length=1, max_length=4000)
-
-
 class Status(BaseModel):
     status: str
+
+
+async def _store(uid: int, files: list[UploadFile]) -> list[str]:
+    """Screenshots on a ticket: the same folder and limits as the chest (data/uploads/<uid>/, members only)."""
+    files = [f for f in files if f and f.filename]
+    if len(files) > MAX_FILES:
+        raise HTTPException(400, f"At most {MAX_FILES} images.")
+    for f in files:
+        if f.content_type not in IMAGE_TYPES:
+            raise HTTPException(400, f"{f.filename}: only PNG, JPG, WEBP or GIF.")
+    folder = settings.uploads_dir / str(uid)
+    folder.mkdir(parents=True, exist_ok=True)
+    urls = []
+    for f in files:
+        data = await f.read()
+        if len(data) > MAX_BYTES:
+            raise HTTPException(400, f"{f.filename} is larger than 8 MB.")
+        name = secrets.token_urlsafe(12) + IMAGE_TYPES[f.content_type]
+        (folder / name).write_bytes(data)
+        urls.append(f"{settings.web_origin}/api/uploads/{uid}/{name}")
+    return urls
+
+
+def _text(body: str, lo: int, hi: int, what: str) -> str:
+    body = body.strip()
+    if not lo <= len(body) <= hi:
+        raise HTTPException(400, f"{what} must be {lo} to {hi} characters.")
+    return body
 
 
 def _public(t: dict) -> dict:
@@ -44,7 +67,8 @@ def _public(t: dict) -> dict:
     out["name"] = t.get("name")
     out["avatar"] = t.get("avatar")
     if isinstance(t.get("messages"), list):
-        out["messages"] = [{"id": m["id"], "staff": bool(m["staff"]), "body": m["body"], "created_at": m["created_at"]} for m in t["messages"]]
+        out["messages"] = [{"id": m["id"], "staff": bool(m["staff"]), "body": m["body"], "created_at": m["created_at"],
+                            "attachments": json.loads(m.get("attachments") or "[]")} for m in t["messages"]]
     else:
         out["messages"] = t.get("messages", 0)
         out["last"] = t.get("last")
@@ -59,14 +83,18 @@ async def my_tickets(request: Request, member=Depends(current_member)):
 
 
 @router.post("/me/tickets")
-async def open_ticket(body: NewTicket, request: Request, member=Depends(current_member)):
+async def open_ticket(request: Request, category: str = Form("other"), subject: str = Form(""), body: str = Form(""),
+                      files: list[UploadFile] = File(default=[]), member=Depends(current_member)):
     rdb = request.app.state.rpg
-    if body.category not in CATEGORIES:
+    if category not in CATEGORIES:
         raise HTTPException(400, "Pick a category from the list.")
+    subject = _text(subject, 3, 120, "The subject")
+    body = _text(body, 10, 4000, "The message")
     if len(await rdb.tickets(uid=member["id"], status="open")) >= 5:
         raise HTTPException(429, "You have five open tickets already. Wait for an answer, or close one.")
-    tid = await rdb.create_ticket(member["id"], body.category, body.subject.strip(), body.body.strip())
-    await rdb.emit("ticket_opened", member["id"], {"ticket": tid, "category": body.category})
+    urls = await _store(member["id"], files)
+    tid = await rdb.create_ticket(member["id"], category, subject, body, urls)
+    await rdb.emit("ticket_opened", member["id"], {"ticket": tid, "category": category})
     return _public(await rdb.ticket(tid))
 
 
@@ -83,12 +111,13 @@ async def my_ticket(tid: int, request: Request, member=Depends(current_member)):
 
 
 @router.post("/me/tickets/{tid}/reply")
-async def my_reply(tid: int, body: Reply, request: Request, member=Depends(current_member)):
+async def my_reply(tid: int, request: Request, body: str = Form(""), files: list[UploadFile] = File(default=[]), member=Depends(current_member)):
     t = await _mine(request, tid, member)
     if t["status"] == "closed":
         raise HTTPException(409, "This ticket is closed. Open a new one.")
+    body = _text(body, 1, 4000, "The message")
     rdb = request.app.state.rpg
-    await rdb.ticket_reply(tid, member["id"], False, body.body.strip(), "open")
+    await rdb.ticket_reply(tid, member["id"], False, body, "open", await _store(member["id"], files))
     return _public(await rdb.ticket(tid))
 
 
@@ -117,12 +146,13 @@ async def staff_ticket(tid: int, request: Request, _=Depends(staff_only)):
 
 
 @router.post("/admin/tickets/{tid}/reply")
-async def staff_reply(tid: int, body: Reply, request: Request, member=Depends(staff_only)):
+async def staff_reply(tid: int, request: Request, body: str = Form(""), files: list[UploadFile] = File(default=[]), member=Depends(staff_only)):
     rdb = request.app.state.rpg
     t = await rdb.ticket(tid)
     if not t:
         raise HTTPException(404, "No such ticket.")
-    await rdb.ticket_reply(tid, member["id"], True, body.body.strip(), "answered")
+    body = _text(body, 1, 4000, "The message")
+    await rdb.ticket_reply(tid, member["id"], True, body, "answered", await _store(member["id"], files))
     await rdb.admin_log(member["id"], "ticket_reply", t["member_id"], {"ticket": tid})
     return _public(await rdb.ticket(tid))
 

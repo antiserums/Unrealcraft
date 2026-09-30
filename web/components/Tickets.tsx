@@ -7,8 +7,10 @@ import Ico from "./Ico";
 import { CATEGORY, STATUS, type Ticket } from "@/lib/tickets";
 
 
+/** POST to the API. Plain objects go as JSON; a FormData (text plus screenshots) goes as it is. */
 async function call(path: string, body?: unknown) {
-  const r = await fetch(`/api${path}`, { method: "POST", headers: { "content-type": "application/json" }, body: body ? JSON.stringify(body) : undefined });
+  const form = body instanceof FormData;
+  const r = await fetch(`/api${path}`, { method: "POST", headers: form ? undefined : { "content-type": "application/json" }, body: form ? body : body ? JSON.stringify(body) : undefined });
   const j = await r.json().catch(() => ({}));
   if (!r.ok) throw new Error(j.detail ?? `Request failed (${r.status})`);
   return j;
@@ -21,6 +23,7 @@ export function TicketForm({ categories }: { categories: string[] }) {
   const [category, setCategory] = useState("other");
   const [subject, setSubject] = useState("");
   const [body, setBody] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
@@ -28,7 +31,10 @@ export function TicketForm({ categories }: { categories: string[] }) {
     e.preventDefault();
     setBusy(true); setErr(null);
     try {
-      const j = await call("/me/tickets", { category, subject, body });
+      const fd = new FormData();
+      fd.set("category", category); fd.set("subject", subject); fd.set("body", body);
+      files.forEach((f) => fd.append("files", f));
+      const j = await call("/me/tickets", fd);
       router.push(`/support/${j.id}`);
     } catch (x) {
       setErr((x as Error).message); setBusy(false);
@@ -45,7 +51,8 @@ export function TicketForm({ categories }: { categories: string[] }) {
       <input id="ticket-subject" type="text" value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={120} required minLength={3} placeholder={t("One line that says what you need")} />
       <label className="small eyebrow" htmlFor="ticket-body">{t("Tell us what happened")}</label>
       <textarea id="ticket-body" value={body} onChange={(e) => setBody(e.target.value)} rows={6} maxLength={4000} required minLength={10}
-        placeholder={t("What you were doing, what you expected, what happened instead. Quest ids and screenshots links help.")} />
+        placeholder={t("What you were doing, what you expected, what happened instead. Quest ids and screenshots help.")} />
+      <ScreenshotPicker files={files} onChange={setFiles} id="ticket-files" />
       {err && <div className="note small" data-tone="error">{err}</div>}
       <div className="row">
         <button type="submit" className="btn primary" disabled={busy}>{busy ? t("Sending…") : t("Open ticket")}</button>
@@ -59,6 +66,7 @@ export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?
   const t = useT();
   const router = useRouter();
   const [body, setBody] = useState("");
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const base = staff ? `/admin/tickets/${ticket.id}` : `/me/tickets/${ticket.id}`;
@@ -68,7 +76,7 @@ export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?
     setBusy(true); setErr(null);
     try {
       await call(path, payload);
-      setBody("");
+      setBody(""); setFiles([]);
       router.refresh();
     } catch (x) {
       setErr((x as Error).message);
@@ -83,12 +91,16 @@ export function TicketThread({ ticket, staff = false }: { ticket: Ticket; staff?
           <div key={m.id} className={`ticket-msg ${m.staff ? "staff" : "member"}`}>
             <div className="small muted">{m.staff ? t("Staff") : (ticket.name ?? t("Member"))} · {m.created_at.slice(0, 16).replace("T", " ")}</div>
             <p>{m.body}</p>
+            {m.attachments && m.attachments.length > 0 && (
+              <div className="ticket-shots">{m.attachments.map((u) => <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" loading="lazy" /></a>)}</div>
+            )}
           </div>
         ))}
       </div>
       {ticket.status !== "closed" || staff ? (
-        <form className="ticket-reply" onSubmit={(e) => { e.preventDefault(); act(`${base}/reply`, { body }); }}>
+        <form className="ticket-reply" onSubmit={(e) => { e.preventDefault(); const fd = new FormData(); fd.set("body", body); files.forEach((f) => fd.append("files", f)); act(`${base}/reply`, fd); }}>
           <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} maxLength={4000} required placeholder={staff ? t("Write to the member…") : t("Write a reply…")} />
+          <ScreenshotPicker files={files} onChange={setFiles} id={`reply-files-${ticket.id}`} />
           {err && <div className="note small" data-tone="error">{err}</div>}
           <div className="row">
             <button type="submit" className="btn primary" disabled={busy || !body.trim()}>{staff ? t("Reply and mark answered") : t("Reply")}</button>
@@ -121,5 +133,17 @@ export function TicketRow({ tk, href }: { tk: Ticket; href: string }) {
       <div className="small muted">{t(CATEGORY[tk.category] ?? tk.category)}{tk.name ? ` · ${tk.name}` : ""} · {tk.updated_at.slice(0, 10)}{typeof tk.messages === "number" ? ` · ${t("{n} messages", { n: tk.messages })}` : ""}</div>
       {tk.last && <div className="small ticket-last">{tk.last.length > 140 ? tk.last.slice(0, 140) + "…" : tk.last}</div>}
     </Link>
+  );
+}
+
+/** Up to four screenshots (PNG, JPG, WEBP or GIF, 8 MB each), the same limits as the chest. */
+function ScreenshotPicker({ files, onChange, id }: { files: File[]; onChange: (f: File[]) => void; id: string }) {
+  const t = useT();
+  return (
+    <div className="upload ticket-upload">
+      <label className="small eyebrow" htmlFor={id}>{t("Screenshots (optional)")}</label>
+      <input id={id} type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple onChange={(e) => onChange(Array.from(e.target.files ?? []).slice(0, 4))} />
+      {files.length > 0 && <div className="small muted">{files.map((f) => f.name).join(", ")}</div>}
+    </div>
   );
 }
