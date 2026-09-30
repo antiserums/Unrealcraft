@@ -10,7 +10,7 @@ export default async function Foot() {
       <nav className="foot-links" aria-label="Site">
         <Link href="/faq">FAQ</Link>
         <Link href="/changelog">Changelog</Link>
-        <Link href="/privacy">Privacy</Link>
+        <Link href="/privacy">Privacy policy</Link>
         <Link href="/terms">Terms of service</Link>
         {me?.review?.can && <Link href="/review">Review{me.review.pending > 0 ? ` (${me.review.pending})` : ""}</Link>}
         {me?.admin && <Link href="/admin">Admin</Link>}
