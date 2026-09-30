@@ -26,17 +26,17 @@ export default function Privacy() {
         <p>The Service does not use advertising cookies, third-party analytics or tracking technologies.</p>
 
         <h2>3. How we use information</h2>
-        <p>Information is used to operate the Service: to authenticate you, to record and display your progress, to determine ranks and entitlements, to review submitted work, to show player cards and the leaderboard, to keep the Discord server in step with the website, and to investigate misuse. Unrealcraft does not sell personal information and does not use it for advertising.</p>
+        <p>Information is used to operate the Service: to authenticate you, to record and display your progress, to determine ranks and entitlements, to review submitted work on the website, to show player cards and the leaderboard, to keep your Discord roles in step with your rank, and to investigate misuse. Unrealcraft does not sell personal information and does not use it for advertising.</p>
 
         <h2>4. How information is disclosed</h2>
         <p><b>Other members.</b> Your player card is visible to signed-in members. It is visible to people who are not signed in only if you set it to Public.</p>
         <p><b>The public.</b> The leaderboard is publicly accessible and displays your display name, avatar, rank, title, primary specialization and experience points.</p>
-        <p><b>Staff.</b> Mentors, administrators and developers can view submissions in order to review them. Administrators and developers can view account data in order to operate the Service.</p>
-        <p><b>Discord.</b> The Unrealcraft bot mirrors certain activity into the Discord server, including roles, rank announcements and submitted work posted to review or showcase channels. Information posted in Discord is also subject to Discord&apos;s own privacy policy.</p>
+        <p><b>Staff.</b> Submitted work is reviewed on this website only. Mentors, administrators and developers can view submissions in order to review them. Administrators and developers can view account data in order to operate the Service.</p>
+        <p><b>Discord.</b> The Discord server is a community space for discussion and for sharing progress. The Unrealcraft bot keeps your server roles in step with your rank and specialization and may announce rank-ups. Submitted work is not sent to Discord for review. Anything you choose to post in the server yourself is visible to its members and is also subject to Discord&apos;s own privacy policy.</p>
         <p>Unrealcraft does not otherwise disclose personal information to third parties, except where required by law.</p>
 
         <h2>5. Retention</h2>
-        <p>Information is retained for as long as your account exists. On a verified deletion request, Unrealcraft removes your progress, experience points, submissions, uploaded images, player card and stored display name. Content previously posted by the bot in Discord is removed on request.</p>
+        <p>Information is retained for as long as your account exists. On a verified deletion request, Unrealcraft removes your progress, experience points, submissions, uploaded images, player card and stored display name. Messages you posted in the Discord server yourself remain under your control there and can be removed by you or, on request, by staff.</p>
 
         <h2>6. Your choices and rights</h2>
         <p>You may set your player card to Private or Public, change or remove your motto, title and featured achievements, and change your specializations at any time from <Link href="/me">your player card page</Link>. You may request a copy of the information held about you, the correction of inaccurate information, or the deletion of your account by contacting staff through the <a href={DISCORD_INVITE}>Unrealcraft Discord server</a>. Depending on where you live, you may have additional rights under local data protection law, and Unrealcraft will honour valid requests made under those laws.</p>

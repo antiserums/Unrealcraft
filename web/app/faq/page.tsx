@@ -47,7 +47,8 @@ const GROUPS: { title: string; items: { q: string; a: ReactNode }[] }[] = [
   {
     title: "Reviews and help",
     items: [
-      { q: "Who reviews my work?", a: "Mentors, admins and developers. A review ends in Pass, Changes or Fail, with notes." },
+      { q: "Who reviews my work, and where?", a: "Mentors, admins and developers, here on the site. A review ends in Pass, Changes or Fail, with notes you can read on the quest page. Nothing is reviewed on Discord." },
+      { q: "What is the Discord server for, then?", a: <>It is the guild hall: a place to talk, ask questions and show off your progress. Your roles there follow your rank and specialization here. Join at the <a href={DISCORD_INVITE}>Discord server</a>.</> },
       { q: "How long does a review take?", a: "Reviewers are volunteers, so it varies. You can keep questing while you wait." },
       { q: "A quest is wrong or a link is dead. What do I do?", a: <>Tell staff on the <a href={DISCORD_INVITE}>Discord server</a>. Quests are fixed in the curriculum and the fix shows in the <Link href="/changelog">changelog</Link>.</> },
       { q: "How do I delete my account?", a: <>Message staff on Discord. The <Link href="/privacy">privacy page</Link> lists what is removed.</> },

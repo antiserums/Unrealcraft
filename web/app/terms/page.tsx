@@ -31,7 +31,7 @@ export default function Terms() {
         </ul>
 
         <h2>What you turn in</h2>
-        <p>Your work stays yours. By turning it in, you let us store it, show it to reviewers, and show it in the Discord server&apos;s review and showcase channels. Only upload things you have the right to share. We may remove a turn-in that breaks these terms.</p>
+        <p>Your work stays yours. By turning it in, you let us store it and show it to the reviewers on this site. Reviews happen here, not on Discord. The Discord server is a place to talk and to show your progress, and what you post there is your own choice. Only upload things you have the right to share. We may remove a turn-in that breaks these terms.</p>
 
         <h2>Ranks, XP and entitlements</h2>
         <p>Ranks, XP, titles, outfits, frames and other entitlements are part of the game. They have no cash value, cannot be sold or traded, and are not a certificate or qualification. We may rebalance, rename, add or remove them as the game changes. Staff may correct or remove progress that was earned by breaking these terms.</p>
@@ -40,7 +40,7 @@ export default function Terms() {
         <p>Quests link to Epic&apos;s documentation and to other guides. Those sites belong to their owners, and we are not responsible for them. We try hard to keep quests correct for the engine version they name, but we cannot promise every quest is right or current. Tell us when one is wrong.</p>
 
         <h2>Staff decisions</h2>
-        <p>Mentors, admins and developers review work and keep the community healthy. They may ask for changes, fail a turn-in, remove content, reset progress, or suspend or remove an account that breaks these terms. If you think a decision was wrong, raise it with staff on Discord.</p>
+        <p>Mentors, admins and developers review work on this site and keep the community healthy. They may ask for changes, fail a turn-in, remove content, reset progress, or suspend or remove an account that breaks these terms. If you think a decision was wrong, raise it with staff on Discord.</p>
 
         <h2>No warranty</h2>
         <p>Unrealcraft is provided as it is, for free, by volunteers. It may be slow, wrong or offline at times, and data can be lost. To the extent the law allows, we are not liable for losses that come from using it. Keep your own copies of your work.</p>
