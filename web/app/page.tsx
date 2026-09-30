@@ -26,14 +26,22 @@ export default async function Home() {
         <div className="hero-copy">
           {me ? (
             <>
-              <div className="eyebrow">Welcome back, {me.rank_title}</div>
-              <h1>{me.name}</h1>
-              <p className="lead">{next?.main ? <>Your next room is waiting. {next.reason}</> : (next?.reason ?? "Nothing is required right now. Pick any quest you like.")}</p>
-              <div className="row" style={{ marginTop: 14 }}>
-                {next?.main && <Link className="btn primary" href={`/quests/${next.main.id}`}>Enter {next.main.id}</Link>}
-                <Link className="btn" href="/quests">Quest board</Link>
-                <Link className="btn" href="/me">Player card</Link>
+              <div>
+                <div className="eyebrow">Welcome back, {me.rank_title}</div>
+                <h1>{me.name}</h1>
+                <p className="lead">{next?.main ? <>Your next room is waiting. {next.reason}</> : (next?.reason ?? "Nothing is required right now. Pick any quest you like.")}</p>
+                <div className="row" style={{ marginTop: 10 }}>
+                  <Link className="btn" href="/quests">Quest board</Link>
+                  <Link className="btn" href="/me">Player card</Link>
+                </div>
               </div>
+              {next?.main && (
+                <div className="hero-next">
+                  <div className="eyebrow">Continue questing</div>
+                  <QuestCard q={next.main} />
+                  <Link className="btn primary" href={`/quests/${next.main.id}`}>Enter {next.main.id}</Link>
+                </div>
+              )}
             </>
           ) : (
             <>
@@ -49,16 +57,6 @@ export default async function Home() {
           )}
         </div>
       </section>
-
-      {me && next?.main && (
-        <section>
-          <div className="section-h"><h2>Continue questing</h2><span className="muted small">{next.reason}</span></div>
-          <div className="grid">
-            <QuestCard q={next.main} />
-            {next.electives.slice(0, 2).map((q) => <QuestCard key={q.id} q={q} />)}
-          </div>
-        </section>
-      )}
 
       {/* how it works */}
       <section>
