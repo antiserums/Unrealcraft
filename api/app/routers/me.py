@@ -84,6 +84,16 @@ async def me_payload(request: Request, member: dict) -> dict:
                          "pending": len(await request.app.state.rpg.pending_submissions()) if a["can_review"] else 0}
     payload["specialization_options"] = [{"key": k, "title": v.get("title", k), "blurb": v.get("blurb", "")}
                                          for k, v in cat.specializations.items() if k != "undecided"]
+    # what the member chose to wear on their card, for the home page and the top bar (no card fetch needed)
+    from .. import rpg as rpg_rules
+    from .rpg import _unlock_all, entitlement_options, member_ctx
+    cos = await request.app.state.rpg.cosmetics(member["id"])
+    opts = entitlement_options(request, await member_ctx(request, member["id"]), int(u.get("rank", -1)), role_of(member), _unlock_all(member))
+    frame = rpg_rules.pick_owned(opts["avatar_frame"], cos.get("avatar_frame"))
+    title = rpg_rules.pick_owned(opts["title"], cos.get("title"))
+    payload["avatar_frame"], payload["avatar_frame_art"] = frame["id"], frame.get("art")
+    payload["title"] = None if title["id"] == rpg_rules.DEFAULT_TITLE else title["name"]
+    payload["nameplate"] = rpg_rules.pick_owned(opts["nameplate"], cos.get("nameplate"))["value"]
     return payload
 
 

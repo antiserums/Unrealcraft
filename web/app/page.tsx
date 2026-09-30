@@ -3,7 +3,8 @@ import HowItWorks from "@/components/HowItWorks";
 import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
-import { bannerSet, loadManifest } from "@/lib/art";
+import { AvatarDeco } from "@/components/DecoAnim";
+import { bannerSet, decorationImage, loadManifest } from "@/lib/art";
 import { MISSION } from "@/lib/mission";
 
 type MemberStats = { fights: number; fights_won: number; bosses_first_try: number; crit_xp: number; xp_week: number; reads: number; turnins: number; turnins_passed: number; turnins_pending: number };
@@ -23,14 +24,26 @@ export default async function Home() {
     <>
         {me ? (
           <div className="ribbon">
-            <div className="ribbon-who">
-              {me.avatar && <img className="avatar big" src={me.avatar} alt="" />}
-              <div>
+            <Link href="/me" className="ribbon-who" title="Your player card">
+              <div className="pcard-avatar-wrap">
+                <div className="pcard-avatar" style={{ "--plate": me.nameplate ?? me.rank_color } as React.CSSProperties}>{me.avatar ? <img src={me.avatar} alt="" /> : <span>{(me.name ?? "?").slice(0, 1)}</span>}</div>
+                <AvatarDeco src={decorationImage(manifest, "avatar", me.avatar_frame_art ?? undefined)} theme={me.avatar_frame} />
+              </div>
+              <div className="ribbon-id">
                 <div className="eyebrow">Welcome back</div>
                 <h1>{me.name}</h1>
-                <div className="small"><span className={me.staff ? "staff-title" : ""} style={{ color: me.rank_color, fontWeight: 600 }}>{me.rank_title}</span><span className="muted"> · {me.specializations.length ? me.specializations.map((s) => s.title).join(" · ") : "Undecided"} · {me.xp} XP</span></div>
+                {me.title && <div className="ribbon-title">{me.title}</div>}
+                <div className="ribbon-meta">
+                  <span className={`pill ${me.staff ? "staff-title" : ""}`} style={{ borderColor: me.rank_color, color: me.rank_color }}>{me.rank_title}</span>
+                  <span className="muted small">{me.xp} XP{me.next_rank ? ` · ${me.next_rank.xp_to_go} to ${me.next_rank.title}` : ""}</span>
+                </div>
+                <div className="ribbon-specs">
+                  {me.specializations.length
+                    ? me.specializations.map((s) => <span key={s.key} className={s.primary ? "primary" : ""}>{s.title}</span>)
+                    : <span>Undecided</span>}
+                </div>
               </div>
-            </div>
+            </Link>
             {next?.main ? (
               <Link href={`/quests/${next.main.id}`} className="ribbon-next">
                 <div className="eyebrow">Next dungeon</div>

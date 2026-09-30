@@ -45,6 +45,7 @@ export type Me = {
   medals: { medal_key: string; earned_at: string }[]; done_count: number;
   recent_xp?: { amount: number; reason: string; created_at: string }[]; known?: boolean;
   review?: { can: boolean; mentor: boolean; pending: number }; admin?: boolean; staff?: string | null;
+  avatar_frame?: string; avatar_frame_art?: string | null; title?: string | null; nameplate?: string;
 };
 export type ReviewItem = {
   id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;
