@@ -749,3 +749,16 @@ html.site-art ::-webkit-scrollbar-track { background: #0a0c12 url("/art/website-
 html.site-art ::-webkit-scrollbar-thumb { min-height: 36px; border: 0; background: #2a221a; border-image: url("/art/website-art/interface/scrollbar/thumb.png") 12 2 fill / 12px 2px repeat; image-rendering: pixelated; }
 html.site-art ::-webkit-scrollbar-thumb:hover { border-image-source: url("/art/website-art/interface/scrollbar/thumb-hover.png"); }
 html.site-art ::-webkit-scrollbar-corner { background: #0a0c12; }
+/* the top bar: name, the four links as one block, then the member, on one row. Below 1180 px the links take a
+   full second row (brand and member stay on the first), so the four links are never split. */
+html.site-art .nav-in { display: flex; flex-wrap: nowrap; align-items: center; gap: 6px 18px; padding: 10px 16px; }
+html.site-art .brand { flex: 0 0 auto; font-size: 19px; }
+html.site-art .nav-links { flex: 0 0 auto; flex-wrap: nowrap; gap: 13px; padding: 0; }
+html.site-art .nav-user { flex: 0 0 auto; margin-left: auto; }
+html.site-art .nav a.link { letter-spacing: .03em; font-size: 11.5px; }
+@media (max-width: 1180px) {
+  html.site-art .nav-in { flex-wrap: wrap; }
+  html.site-art .nav-links { order: 3; flex: 1 0 100%; }
+  html.site-art .nav-user { order: 2; }
+}
+@media (max-width: 560px) { html.site-art .nav-links { flex-wrap: wrap; } }
