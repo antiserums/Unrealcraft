@@ -84,14 +84,14 @@ export default async function Home() {
 
       {g && (
         <section>
-          <div className="section-h"><h2>The guild this week</h2><Link href="/leaderboard" className="small">Hall of Fame →</Link></div>
+          <div className="section-h"><h2>Player statistics</h2><span className="muted small">everyone, this week</span><Link href="/leaderboard" className="small" style={{ marginLeft: "auto" }}>Hall of Fame →</Link></div>
           <div className="stats-grid">
-            <Stat n={g.members} label="members" />
+            <Stat n={g.members} label="players" />
             <Stat n={g.quests_done_week} label="rooms cleared this week" />
-            <Stat n={g.fights_week} label="boss fights this week" />
-            <Stat n={g.xp_week} label="XP earned this week" />
-            <Stat n={g.quests_done} label="rooms cleared ever" />
-            <Stat n={g.masters} label="masters and above" />
+            <Stat n={g.fights_week} label="boss fights fought" />
+            <Stat n={g.xp_week} label="XP earned by players" />
+            <Stat n={g.quests_done} label="rooms cleared all time" />
+            <Stat n={g.masters} label="players at Master or above" />
           </div>
           {!me && <p className="small muted" style={{ marginTop: 12 }}>New here? Read <Link href="/how-it-works">how it works</Link>, or browse the <Link href="/quests">quest board</Link> before logging in.</p>}
         </section>
