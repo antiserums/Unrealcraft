@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PlayerCard from "@/components/PlayerCard";
 import { badgeImage, decorationImage, loadManifest, presetSheet } from "@/lib/art";
+import { gutterFor } from "@/lib/deco";
 import { api, type Card } from "@/lib/api";
 
 export default async function Member({ params }: PageProps<"/members/[id]">) {
@@ -16,7 +17,7 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
       <div className="eyebrow">Player card</div>
       <h1>{c.name ?? "A guild member"}</h1>
       <div className="studio">
-        <div className="studio-card">
+        <div className={`studio-card ${deco.card ? "framed" : ""}`} style={deco.card ? gutterFor(manifest?.decorations?.inset?.[c.card_frame]) : undefined}>
           {deco.card && <div className="px pcard-deco" style={{ borderImageSource: `url("${deco.card}")` }} aria-hidden="true" />}
           <PlayerCard c={c} sheet={sheet} badges={badges} deco={{ avatar: deco.avatar, card: null }} />
         </div>

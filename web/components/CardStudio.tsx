@@ -4,9 +4,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import type { Card, CosmeticOption } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
+import { gutterFor, type Inset } from "@/lib/deco";
 import PlayerCard from "./PlayerCard";
 
-type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
+type DecoImages = { avatar: Record<string, string>; card: Record<string, string>; inset: Record<string, Inset> };
 type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; featured: string[] };
 type Kind = "nameplate" | "avatar_frame" | "card_frame";
 
@@ -71,7 +72,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl }:
 
   return (
     <div className="studio">
-      <div className="studio-card">
+      <div className={`studio-card ${cardArt ? "framed" : ""}`} style={cardArt ? gutterFor(deco.inset[shown.card_frame]) : undefined}>
         {cardArt && <div className="px pcard-deco" style={{ borderImageSource: `url("${cardArt}")` }} aria-hidden="true" />}
         <PlayerCard c={shown} sheet={sheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
       </div>

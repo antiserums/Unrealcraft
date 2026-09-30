@@ -19,7 +19,9 @@ from __future__ import annotations
 import json
 import re
 import shutil
+import struct
 import sys
+import zlib
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
@@ -27,6 +29,53 @@ ROOT = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else REPO.parent / "UCSo
 PACK = ROOT / "pixel-v3" if (ROOT / "pixel-v3").is_dir() else ROOT
 OUT = REPO / "web" / "public" / "art"
 SET_ICON_SLOT = "chest"          # the one icon that stands for a whole set in the wardrobe
+
+
+def png_alpha(path: Path):
+    """(width, height, alpha(x, y)) for an 8-bit RGBA or RGB PNG, no third-party libraries."""
+    data = path.read_bytes(); pos = 8; idat = b""; w = h = 0; ct = 6
+    while pos < len(data):
+        ln, = struct.unpack(">I", data[pos:pos + 4]); t = data[pos + 4:pos + 8]; body = data[pos + 8:pos + 8 + ln]
+        if t == b"IHDR":
+            w, h, _bd, ct = struct.unpack(">IIBB", body[:10])
+        elif t == b"IDAT":
+            idat += body
+        pos += 12 + ln
+    bpp = 4 if ct == 6 else 3
+    raw = zlib.decompress(idat); stride = w * bpp; rows = []; prev = bytearray(stride); i = 0
+    for _y in range(h):
+        f = raw[i]; i += 1; line = bytearray(raw[i:i + stride]); i += stride
+        for x in range(stride):
+            a = line[x - bpp] if x >= bpp else 0; b = prev[x]; c = prev[x - bpp] if x >= bpp else 0
+            if f == 1: line[x] = (line[x] + a) & 255
+            elif f == 2: line[x] = (line[x] + b) & 255
+            elif f == 3: line[x] = (line[x] + (a + b) // 2) & 255
+            elif f == 4:
+                pr = a + b - c; pa, pb, pc = abs(pr - a), abs(pr - b), abs(pr - c)
+                line[x] = (line[x] + (a if pa <= pb and pa <= pc else b if pb <= pc else c)) & 255
+        rows.append(bytes(line)); prev = line
+    return w, h, (lambda x, y: rows[y][x * 4 + 3] if bpp == 4 else 255)
+
+
+def border_inset(path: Path) -> dict:
+    """Inner edge of the border band on each side, in source pixels. Sampled on many lines across the middle
+    60 percent of each edge and taking the smallest reading, so corner and centre ornaments (which only add
+    to a reading) drop out and the band itself is measured. The site pads the card's gutter by this."""
+    w, h, alpha = png_alpha(path)
+    xs = range(int(w * 0.2), int(w * 0.8), 3)
+    ys = range(int(h * 0.2), int(h * 0.8), 3)
+    def edge(samples, along, half, inner):
+        vals = []
+        for s_ in samples:
+            hits = [k for k in half if alpha(*(along(s_, k))) > 20]
+            if hits:
+                vals.append(inner(hits))
+        return min(vals) if vals else 0
+    top = edge(xs, lambda x, y: (x, y), range(h // 2), lambda hits: max(hits) + 1)
+    bottom = edge(xs, lambda x, y: (x, y), range(h // 2, h), lambda hits: h - min(hits))
+    left = edge(ys, lambda y, x: (x, y), range(w // 2), lambda hits: max(hits) + 1)
+    right = edge(ys, lambda y, x: (x, y), range(w // 2, w), lambda hits: w - min(hits))
+    return {"top": top, "bottom": bottom, "left": left, "right": right}
 
 
 def main() -> None:
@@ -89,13 +138,15 @@ def main() -> None:
         rel = put(f.relative_to(PACK).as_posix())
         if rel and (key not in m["banners"] or f.suffix == ".webp"):
             m["banners"][key] = rel
-    m["decorations"] = {"avatar": {}, "card": {}}
+    m["decorations"] = {"avatar": {}, "card": {}, "inset": {}}
     for kind in ("avatar", "card"):
         for f in sorted((PACK / "profile-decorations" / kind).glob("*.png")):
             key = re.sub(r"^\d+-", "", f.stem)                      # 06-thornwood.png -> thornwood
             rel = put(f.relative_to(PACK).as_posix())
             if rel:
                 m["decorations"][kind][key] = rel
+                if kind == "card":
+                    m["decorations"]["inset"][key] = border_inset(f)
     (OUT / "manifest.json").write_text(json.dumps(m, indent=1), encoding="utf-8")
     print(f"pack: {PACK}\ncopied {copied} files; {sum(len(v) for b in m['presets'].values() for v in b.values())} preset sheets, "
           f"{len(m['creatures'])} creatures, {len(m['icons'])} set icons, {len(m['badges'])} badges -> {OUT / 'manifest.json'}")

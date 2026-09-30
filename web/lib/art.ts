@@ -24,8 +24,10 @@ export type Manifest = {
   environments: Record<string, { path: string; large?: string | null; width: number; height: number; groundY: number }>;
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
-  decorations?: { avatar: Record<string, string>; card: Record<string, string> };
+  decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: Record<string, Inset> };
 };
+import type { Inset } from "./deco";
+export type { Inset } from "./deco";
 
 let cache: { at: number; m: Manifest | null } | null = null;
 
@@ -96,9 +98,9 @@ export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id:
   return f ? art(f) : null;
 }
 
-/** Every decoration image by kind, for the pickers. */
-export function decorationImages(m: Manifest | null): { avatar: Record<string, string>; card: Record<string, string> } {
-  const out = { avatar: {} as Record<string, string>, card: {} as Record<string, string> };
+/** Every decoration image by kind, plus each card border's band inset (source px), for the pickers and the gutter. */
+export function decorationImages(m: Manifest | null): { avatar: Record<string, string>; card: Record<string, string>; inset: Record<string, Inset> } {
+  const out = { avatar: {} as Record<string, string>, card: {} as Record<string, string>, inset: m?.decorations?.inset ?? {} };
   for (const kind of ["avatar", "card"] as const) for (const [k, v] of Object.entries(m?.decorations?.[kind] ?? {})) out[kind][k] = art(v);
   return out;
 }
