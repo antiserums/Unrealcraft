@@ -33,33 +33,35 @@ export default async function Home() {
                 <AvatarDeco src={decorationImage(manifest, "avatar", me.avatar_frame_art ?? undefined)} theme={me.avatar_frame} />
               </div>
               <div className="ribbon-id">
-                <div className="eyebrow">{t("Welcome back")}</div>
-                <h1>{me.name}</h1>
+                <div className="ribbon-name">
+                  <h1>{me.name}</h1>
+                  <span className={`pill ${me.staff ? "staff-title" : ""}`} data-role={me.staff ?? undefined} style={{ borderColor: me.rank_color, color: me.rank_color }}>{t(me.rank_title)}</span>
+                </div>
                 {me.title && <div className="ribbon-title">{t(me.title)}</div>}
-                <div className="ribbon-meta">
-                  <span className={`pill ${me.staff ? "staff-title" : ""}`} style={{ borderColor: me.rank_color, color: me.rank_color }}>{t(me.rank_title)}</span>
-                  <span className="muted small">{me.next_rank ? t("{xp} XP · {n} to {rank}", { xp: me.xp, n: me.next_rank.xp_to_go, rank: t(me.next_rank.title) }) : t("{xp} XP", { xp: me.xp })}</span>
+                <div className="ribbon-xp">
+                  <div className="bar"><span style={{ width: `${pct}%` }} /></div>
+                  <div className="small muted">
+                    {me.next_rank ? t("{xp} XP · {n} to {rank}", { xp: me.xp, n: me.next_rank.xp_to_go, rank: t(me.next_rank.title) }) : t("{xp} XP", { xp: me.xp })}
+                    {me.tier_progress ? ` · ${t("{tier} quests {done}/{need}", { tier: t(me.tier_progress.name), done: me.tier_progress.done, need: me.tier_progress.need })}` : ""}
+                  </div>
                 </div>
-                <div className="ribbon-specs">
-                  {me.specializations.length
-                    ? me.specializations.map((s) => <span key={s.key} className={s.primary ? "primary" : ""}>{t(s.title)}</span>)
-                    : <span>{t("Undecided")}</span>}
-                </div>
+                {me.specializations.length > 0 && (
+                  <div className="ribbon-specs">
+                    {me.specializations.map((s) => <span key={s.key} className={`pill spec-chip ${s.primary ? "primary" : ""}`}>{t(s.title)}</span>)}
+                  </div>
+                )}
               </div>
             </Link>
             {next?.main ? (
               <Link href={`/quests/${next.main.id}`} className="ribbon-next">
                 <div className="eyebrow">{t("Next dungeon")}</div>
                 <div className="ribbon-next-title"><TierBadge tier={next.main.tier} /><b>{next.main.id} · {next.main.title}</b></div>
-                <div className="small muted">{[t("{xp} XP", { xp: next.main.xp }), next.main.time_min ? t("~{n} min", { n: next.main.time_min }) : null, next.main.has_quiz ? t("boss with {n} questions", { n: next.main.quiz_len }) : null, next.reason].filter(Boolean).join(" · ")}</div>
+                <div className="small muted">{[t("{xp} XP", { xp: next.main.xp }), next.main.time_min ? t("~{n} min", { n: next.main.time_min }) : null, next.main.has_quiz ? t("boss with {n} questions", { n: next.main.quiz_len }) : null].filter(Boolean).join(" · ")}</div>
+                <span className="btn primary ribbon-enter">{t("Enter the dungeon")}</span>
               </Link>
             ) : (
-              <div className="ribbon-next"><div className="eyebrow">{t("Next dungeon")}</div><div className="small muted">{next?.reason ?? t("Nothing is required right now. Pick any quest you like.")}</div></div>
+              <div className="ribbon-next"><div className="eyebrow">{t("Next dungeon")}</div><div className="small muted">{next?.reason ?? t("Nothing is required right now. Pick any quest you like.")}</div><Link className="btn primary ribbon-enter" href="/quests">{t("Quest board")}</Link></div>
             )}
-            <div className="ribbon-actions">
-              {next?.main && <Link className="btn primary" href={`/quests/${next.main.id}`}>{t("Enter {id}", { id: next.main.id })}</Link>}
-              <Link className="btn" href="/quests">{t("Quest board")}</Link>
-            </div>
           </div>
         ) : (
           <div className="ribbon guest">
@@ -84,13 +86,6 @@ export default async function Home() {
         <>
           <section>
             <div className="section-h"><h2>{t("Your statistics")}</h2><Link href="/me" className="small">{t("Player card →")}</Link></div>
-            <div className="card" style={{ marginBottom: 12 }}>
-              <div className="row" style={{ justifyContent: "space-between" }}>
-                <span className="eyebrow">{me.next_rank ? t("{n} XP to {rank}", { n: me.next_rank.xp_to_go, rank: t(me.next_rank.title) }) : t("Top of the ladder")}</span>
-                {me.tier_progress && <span className="small muted">{me.tier_progress.emoji} {[t("{tier} quests {done}/{need}", { tier: t(me.tier_progress.name), done: me.tier_progress.done, need: me.tier_progress.need }), me.next_rank && me.next_rank.required_left > 0 ? t("{n} required left", { n: me.next_rank.required_left }) : null].filter(Boolean).join(" · ")}</span>}
-              </div>
-              <div className="bar" style={{ marginTop: 8 }}><span style={{ width: `${pct}%`, background: me.rank_color }} /></div>
-            </div>
             <div className="stats-grid">
               <Stat icon="quests" n={me.done_count} label={t("quests done")} />
               <Stat icon="streak" n={me.streak_days} label={t("day streak")} />
