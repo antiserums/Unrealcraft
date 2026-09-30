@@ -95,16 +95,17 @@ export default async function Home() {
         <section>
           <div className="section-h"><h2>The ladder</h2><span className="muted small">Five ranks. Each one opens a harder tier of rooms.</span></div>
           <ol className="ladder">
-            {majors.ranks.map((r) => (
+            {majors.ranks.filter((r) => r.n <= 4).map((r) => (
               <li key={r.n} style={{ "--rank": r.color ?? "var(--gold)" } as React.CSSProperties}>
                 <span className="ladder-dot" />
                 <div>
                   <b style={{ color: r.color ?? "inherit" }}>{r.title}</b>
-                  <div className="small muted">{r.xp} XP{r.quests_to_leave ? ` · ${r.quests_to_leave} ${majors.tiers[r.tier]?.name} quests to leave` : " · where everyone starts"}{r.opens ? ` · opens ${r.opens}` : ""}</div>
+                  <div className="small muted">{r.n === 0 ? "Where everyone starts. Orientation, then the first rooms." : `${r.xp} XP and ${r.quests_to_leave ?? ""} ${majors.tiers[r.tier]?.name ?? ""} quests to move on`}</div>
                 </div>
               </li>
             ))}
           </ol>
+          <p className="small muted" style={{ marginTop: 12 }}>Beyond Master sit Senior and Lead: guild roles for those who review work and write quests.</p>
         </section>
       )}
 
