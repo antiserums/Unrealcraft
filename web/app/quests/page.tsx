@@ -2,6 +2,7 @@ import Link from "next/link";
 import PathView from "@/components/PathView";
 import QuestCard from "@/components/QuestCard";
 import { api, type Me, type PathData, type QuestSummary, type Specializations } from "@/lib/api";
+import { PageHeader, Spot } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 const TIERS = ["novice", "apprentice", "adept", "expert", "master"];
@@ -19,7 +20,7 @@ export default async function Quests({ searchParams }: PageProps<"/quests">) {
   const view = pick("view") === "path" || (!pick("view") && !pick("specialization") && !pick("tier") && !pick("q") && !pick("subject") && me) ? "path" : "all";
   return (
     <>
-      <h1>{t("Quest board")}</h1>
+      <PageHeader art={view === "path" ? "header-path" : "header-quests"} title={t("Quest board")} />
       <nav className="subnav" aria-label={t("Quest board views")}>
         <Link href="/quests?view=path" className={view === "path" ? "on" : ""}>{t("My path")}</Link>
         <Link href="/quests?view=all" className={view === "all" ? "on" : ""}>{t("All quests")}</Link>
@@ -97,7 +98,7 @@ async function All({ sp }: { sp: Record<string, string | string[] | undefined> }
           <div className="grid">{list.map((x) => <QuestCard key={x.id} q={x} />)}</div>
         </section>
       ))}
-      {quests.length === 0 && <div className="card">{t("No quests match. Clear a filter.")}</div>}
+      {quests.length === 0 && <Spot art="empty-notice-board">{t("No quests match. Clear a filter.")}</Spot>}
     </>
   );
 }

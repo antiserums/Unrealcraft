@@ -25,6 +25,8 @@ export type Manifest = {
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
   living_town?: { script: string; stills: Record<string, string>; seasons: string[] };
+  /** website-art: "<group>" or "<group>/<frame>" -> path, plus the extra fight arenas */
+  website_art?: { images: Record<string, string>; arenas: Record<string, { path: string; width: number; height: number; groundY: number }> };
   decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: number; anim?: Record<"avatar" | "card", Record<string, { frames: string[]; fps: number }>> };
 };
 export type DecoAnim = { frames: string[]; fps: number };
@@ -70,9 +72,57 @@ export function badgeImage(m: Manifest | null, n: number | undefined): string | 
   return b ? art(b.file) : null;
 }
 
-export function arenaBackground(m: Manifest | null): { small: string; large: string | null; groundY: number } | null {
-  const e = m?.environments.dungeon_training_chamber ?? (m && Object.values(m.environments)[0]);
-  return e ? { small: art(e.path), large: e.large ? art(e.large) : null, groundY: e.groundY } : null;
+/** The fight background. With a quest id the room is picked from every arena the pack has, always the same room
+ *  for the same quest; without one it is the training chamber. */
+export function arenaBackground(m: Manifest | null, questId?: string): { small: string; large: string | null; groundY: number } | null {
+  if (!m) return null;
+  const rooms = [
+    ...Object.values(m.environments).map((e) => ({ small: art(e.path), large: e.large ? art(e.large) : null, groundY: e.groundY })),
+    ...Object.values(m.website_art?.arenas ?? {}).map((e) => ({ small: art(e.path), large: null, groundY: e.groundY })),
+  ];
+  if (!rooms.length) return null;
+  if (!questId) return rooms[0];
+  let h = 0;
+  for (const ch of questId) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  return rooms[h % rooms.length];
+}
+
+/** One website-art image by id: "header-quests", "rank-crests/novice", "spots"… null when the pack lacks it. */
+export function siteArt(m: Manifest | null, id: string): string | null {
+  const f = m?.website_art?.images[id];
+  return f ? art(f) : null;
+}
+
+/** Every image of one group, keyed by frame id: siteArtGroup(m, "specializations")["level-design"]. */
+export function siteArtGroup(m: Manifest | null, group: string): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(m?.website_art?.images ?? {})) if (k.startsWith(group + "/")) out[k.slice(group.length + 1)] = art(v);
+  return out;
+}
+
+/** Achievement keys that have their own named badge in website-art (the older badges are picked by index). */
+const NAMED_BADGE: Record<string, string> = {
+  rooms_50: "dungeons-50", rooms_150: "dungeons-150", focus_50: "first-try-wins-50", craft_10: "works-accepted-10", lore_50: "readings-50",
+  streak_30: "streak-30", capstone_4: "capstones-4", specs_7: "all-specializations", cross_25: "outside-field-25",
+};
+/** The badge for an achievement: its named website-art badge when there is one, else the pack badge by index. */
+export function achievementBadge(m: Manifest | null, a: { key: string; badge?: number }): string | null {
+  const named = NAMED_BADGE[a.key] ? siteArt(m, `achievement-badges/${NAMED_BADGE[a.key]}`) : null;
+  return named ?? badgeImage(m, a.badge);
+}
+
+/** Art ids use hyphens and the older "lookdev" key is Environment Art. */
+export const specArtId = (key: string) => (key === "lookdev" ? "environment-art" : key.replace(/_/g, "-"));
+const TIER_ORDER = ["novice", "apprentice", "adept", "expert", "master"];
+/** Difficulty mark (1 to 5) for a tier name such as "Adept". */
+export function difficultyArt(m: Manifest | null, tierName: string): string | null {
+  const i = TIER_ORDER.indexOf(tierName.toLowerCase());
+  return i < 0 ? null : siteArt(m, `difficulty/difficulty-${i + 1}`);
+}
+/** Rank crest for a rank number: -1 Orientation, 0 Novice … 4 Master. Staff ranks beyond that use the Master crest. */
+export function rankCrest(m: Manifest | null, n: number): string | null {
+  const ids = ["orientation", ...TIER_ORDER];
+  return siteArt(m, `rank-crests/${ids[Math.max(0, Math.min(n + 1, ids.length - 1))]}`);
 }
 
 /** Sheets for every set (for the wardrobe's try-on mirror), keyed by set id. */

@@ -562,3 +562,76 @@ html:not(:lang(en)):not(:lang(es)):not(:lang(pt)):not(:lang(fr)):not(:lang(de)):
 /* a button that reads as a text link (the fight's Retreat) */
 .linklike { background: none; border: 0; padding: 0; font: inherit; color: inherit; cursor: pointer; text-decoration: underline; }
 .linklike:disabled { opacity: .5; cursor: default; }
+
+/* ---------------------------------------------------------------- website art (pack: pixel-v3/website-art)
+   Everything here hangs off html.site-art, which the layout sets only when the synced pack has the art.
+   Pixel pieces are drawn at whole-number scales with nearest-neighbour sampling. */
+.pxi { flex: none; vertical-align: middle; }
+html.site-art body {
+  background:
+    radial-gradient(900px 420px at 50% -120px, rgba(63, 182, 176, .14) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(10, 12, 18, .55) 0%, rgba(10, 12, 18, .8) 100%),
+    var(--bg) url("/art/website-art/textures/stone-tile.png") repeat;
+  background-attachment: scroll, fixed, fixed;
+  image-rendering: pixelated;
+}
+html.site-art body::before { opacity: .25; }
+
+/* page header strips: 960 x 160, title in the quiet centre */
+.page-header {
+  max-width: 960px; height: clamp(104px, 16vw, 160px); margin: 0 auto 16px; display: grid; place-content: center; text-align: center; gap: 2px;
+  background: #0a0c12 center / cover no-repeat; image-rendering: pixelated;
+  border: 1px solid var(--gold-dim); box-shadow: 0 0 0 1px #000, 0 10px 30px rgba(0, 0, 0, .55);
+}
+.page-header h1 { margin: 0; padding: 0; filter: drop-shadow(0 2px 0 #000) drop-shadow(0 0 14px #000); }
+.page-header .eyebrow { text-shadow: 0 1px 0 #000, 0 0 10px #000; }
+
+/* spot illustrations */
+.spot { display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+.spot > img { flex: none; }
+.spot > div { flex: 1 1 220px; }
+.lock-art { display: block; margin: 0 0 -6px; }
+.result-art { float: right; margin: -6px 0 6px 12px; }
+[dir="rtl"] .result-art { float: left; margin: -6px 12px 6px 0; }
+
+/* nav: the site emblem */
+.brand.has-emblem { display: inline-flex; align-items: center; gap: 8px; }
+.brand.has-emblem::before { content: none; }
+
+/* how it works */
+.step-art { display: flex; align-items: flex-end; justify-content: space-between; }
+.ladder li:has(.ladder-crest) { padding-left: 22px; }
+.ladder-crest { position: absolute; left: -27px; top: -4px; background: var(--bg); }
+.tier.has-mark { padding: 0 10px 0 2px; gap: 2px; }
+.tier.has-mark img { margin: -4px 0; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .8)); }
+
+/* section rule: the gem divider */
+html.site-art .section-h { padding-bottom: 14px; }
+html.site-art .section-h::after { height: 16px; bottom: -4px; right: auto; width: min(100%, 512px); background: url("/art/website-art/interface/divider-gem.png") left center / 512px 32px no-repeat; image-rendering: pixelated; }
+html.site-art .section-h::before { content: none; }
+
+/* framed panels: a 9-slice (20 px corners, centre left to the panel's own fill) */
+html.site-art :is(.step, .spot, .result) {
+  border: 20px solid transparent; border-image: url("/art/website-art/interface/panel-stone-gold.png") 20 / 20px repeat; border-radius: 0;
+  background-clip: padding-box; padding: 8px 12px 12px; image-rendering: pixelated; box-shadow: none; outline: none;
+  background: var(--paper);
+}
+html.site-art :is(.step, .spot, .result) > * { image-rendering: auto; }
+html.site-art :is(.step, .spot, .result) .px { image-rendering: pixelated; }
+
+/* buttons: plate art, 96 x 32 with 4 px of clear space around it. The ends (18 px) and trims (10 px) keep their
+   size and the middle stretches; the image is painted over the button's own box, so sizes stay as they were. */
+html.site-art :is(.btn, button.primary, .nav form button) {
+  border: 0; border-image: url("/art/website-art/interface/buttons/stone-normal.png") 10 18 fill / 10px 18px stretch;
+  background: none; box-shadow: none; border-radius: 0; padding: 9px 22px; color: var(--ink); text-shadow: 0 1px 0 #000; image-rendering: pixelated;
+}
+html.site-art :is(.btn, button.primary, .nav form button):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/stone-hover.png"); filter: none; color: #fff; }
+html.site-art :is(.btn, button.primary, .nav form button):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/stone-pressed.png"); }
+html.site-art :is(.btn.primary, button.primary) { border-image-source: url("/art/website-art/interface/buttons/gold-normal.png"); color: var(--gold-2); }
+html.site-art :is(.btn.primary, button.primary):hover:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/gold-hover.png"); color: #fff2c8; }
+html.site-art :is(.btn.primary, button.primary):active:not(:disabled) { border-image-source: url("/art/website-art/interface/buttons/gold-pressed.png"); }
+html.site-art .nav form button { padding: 8px 20px; }
+.arena-box { max-width: 960px; margin-inline: auto; }
+html.site-art .nav-in { column-gap: 14px; }
+html.site-art .nav-links { flex-wrap: nowrap; gap: 11px; }
+@media (max-width: 900px) { html.site-art .nav-links { flex-wrap: wrap; } }

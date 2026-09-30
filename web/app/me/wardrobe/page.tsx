@@ -3,6 +3,7 @@ import CharacterSheet, { type ArtProps, type Char } from "@/components/Character
 import MeNav from "@/components/MeNav";
 import { iconImage, loadManifest, presetSheets } from "@/lib/art";
 import { api, type Me } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 export async function generateMetadata() { const t = await getT(); return { title: t("Wardrobe") }; }
@@ -25,8 +26,7 @@ export default async function Wardrobe() {
   };
   return (
     <>
-      <div className="eyebrow">{t("Profile")}</div>
-      <h1>{t("Wardrobe")}</h1>
+      <PageHeader art="header-wardrobe" eyebrow={t("Profile")} title={t("Wardrobe")} />
       <MeNav active="/me/wardrobe" />
       <CharacterSheet initial={ch} fallbackColor={ch.cosmetics.nameplate ?? me.rank_color} art={art} />
     </>

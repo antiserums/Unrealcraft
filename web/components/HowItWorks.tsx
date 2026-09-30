@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Specializations } from "@/lib/api";
+import { loadManifest, rankCrest, siteArtGroup, specArtId } from "@/lib/art";
 import { getT } from "@/lib/i18n";
+import { Px } from "./SiteArt";
 
 const SPEC_BLURB: Record<string, string> = {
   level_design: "Spaces, flow and encounters. Build places people want to move through.",
@@ -16,17 +18,18 @@ const SPEC_GLYPH: Record<string, string> = { level_design: "🗺️", programmin
 /** The explainer: how a quest works, the seven specializations, the ladder, what you keep. Shown to guests on the
  *  home page and on /how-it-works for everyone. */
 export default async function HowItWorks({ specs }: { specs: Specializations | null }) {
-  const t = await getT();
+  const [t, m] = await Promise.all([getT(), loadManifest()]);
+  const stepArt = siteArtGroup(m, "quest-steps"), specArt = siteArtGroup(m, "specializations");
   const list = specs ? Object.values(specs.specializations).filter((m) => m.key !== "undecided") : [];
   return (
     <>
       <section>
         <div className="section-h"><h2>{t("How a quest works")}</h2></div>
         <div className="steps4">
-          <Step n="I" title={t("Read")} text={t("Every dungeon starts with a short guide from the Unreal docs or a trusted source. Open it, and you learn the boss's next move.")} />
-          <Step n="II" title={t("Build")} text={t("Do the thing in the engine. A checklist tells you exactly what done looks like.")} />
-          <Step n="III" title={t("Fight the boss")} text={t("A quiz, turn by turn. Right answers hit. Wrong ones wound you and leave a debuff. Beat it with 80% or better.")} />
-          <Step n="IV" title={t("Open the chest")} text={t("Show your work: a few lines and a screenshot. Auto, honor or a mentor accepts it. XP, outfits and ranks follow.")} />
+          <Step art={stepArt["read"]} n="I" title={t("Read")} text={t("Every dungeon starts with a short guide from the Unreal docs or a trusted source. Open it, and you learn the boss's next move.")} />
+          <Step art={stepArt["build"]} n="II" title={t("Build")} text={t("Do the thing in the engine. A checklist tells you exactly what done looks like.")} />
+          <Step art={stepArt["boss"]} n="III" title={t("Fight the boss")} text={t("A quiz, turn by turn. Right answers hit. Wrong ones wound you and leave a debuff. Beat it with 80% or better.")} />
+          <Step art={stepArt["turn-in"]} n="IV" title={t("Open the chest")} text={t("Show your work: a few lines and a screenshot. Auto, honor or a mentor accepts it. XP, outfits and ranks follow.")} />
         </div>
       </section>
 
@@ -35,7 +38,7 @@ export default async function HowItWorks({ specs }: { specs: Specializations | n
         <div className="specs">
           {list.map((m) => (
             <Link key={m.key} href={`/quests?specialization=${m.key}`} className="spec-banner">
-              <span className="spec-glyph">{SPEC_GLYPH[m.key] ?? "❖"}</span>
+              {specArt[specArtId(m.key)] ? <Px src={specArt[specArtId(m.key)]} scale={2} /> : <span className="spec-glyph">{SPEC_GLYPH[m.key] ?? "❖"}</span>}
               <b>{t(m.title)}</b>
               <span className="small muted">{SPEC_BLURB[m.key] ? t(SPEC_BLURB[m.key]) : ""}</span>
               <span className="small" style={{ color: "var(--gold)" }}>{t("{prefix} quests · {n} capstone dungeons", { prefix: m.prefix ?? "", n: Object.keys(m.capstones ?? {}).length })}</span>
@@ -50,7 +53,7 @@ export default async function HowItWorks({ specs }: { specs: Specializations | n
           <ol className="ladder">
             {specs.ranks.filter((r) => r.n <= 4).map((r) => (
               <li key={r.n} style={{ "--rank": r.color ?? "var(--gold)" } as React.CSSProperties}>
-                <span className="ladder-dot" />
+                {rankCrest(m, r.n) ? <Px src={rankCrest(m, r.n)} className="ladder-crest" /> : <span className="ladder-dot" />}
                 <div>
                   <b style={{ color: r.color ?? "inherit" }}>{t(r.title)}</b>
                   <div className="small muted">{r.n === 0
@@ -79,10 +82,10 @@ export default async function HowItWorks({ specs }: { specs: Specializations | n
   );
 }
 
-function Step({ n, title, text }: { n: string; title: string; text: string }) {
+function Step({ n, title, text, art }: { n: string; title: string; text: string; art?: string }) {
   return (
     <div className="card step">
-      <span className="step-n">{n}</span>
+      {art ? <span className="step-art"><Px src={art} scale={2} /><span className="step-n">{n}</span></span> : <span className="step-n">{n}</span>}
       <h3 style={{ margin: "6px 0 4px" }}>{title}</h3>
       <p className="small muted" style={{ margin: 0 }}>{text}</p>
     </div>

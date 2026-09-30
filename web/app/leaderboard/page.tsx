@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 type Row = { id: number | string; xp: number; rank: number; rank_title: string; rank_color: string; specialization_title: string; name: string | null; avatar: string | null; staff?: string | null; title?: string | null };
@@ -15,7 +16,7 @@ export default async function Leaderboard({ searchParams }: PageProps<"/leaderbo
   const data = (await api<{ period: string; rows: Row[] }>(`/leaderboard?period=${p}`)) ?? { period: p, rows: [] };
   return (
     <>
-      <h1>{t("Leaderboard")}</h1>
+      <PageHeader art="header-leaderboard" title={t("Leaderboard")} />
       <div className="row" style={{ marginBottom: 14 }}>
         {(["week", "month", "all"] as const).map((k) => (
           <Link key={k} href={`/leaderboard?period=${k}`} className={`btn ${p === k ? "primary" : ""}`}>{k === "all" ? t("All time") : k === "month" ? t("This month") : t("This week")}</Link>

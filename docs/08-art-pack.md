@@ -85,3 +85,30 @@ appearance                = { body: [...], style: [...] }
 Character: 176 x 232 px (2x, cropped) on the card and in the wardrobe mirror, 256 px full frame in the fight.
 Enemies 192 px and bosses 256 px in the fight; 128 px on the room card. Icons 60 px tiles (2x of 32).
 Always integer scales with `image-rendering: pixelated`.
+
+## Website art (`website-art/`)
+
+Interface pieces, icons, page headers, spot illustrations, three more arenas, a stone tile and the site emblem.
+`tools/sync_art.py` copies every PNG the pack's `website-art/manifest.json` lists and adds `website_art` to the
+site manifest: `images` maps `"<group>"` or `"<group>/<frame>"` to a path, `arenas` lists the extra fight rooms.
+The artist's own `sync_website_art.py` is not needed. Helpers are in `web/lib/art.ts` (`siteArt`, `siteArtGroup`,
+`achievementBadge`, `difficultyArt`, `rankCrest`, `specArtId`) and `web/components/SiteArt.tsx` (`PageHeader`,
+`Spot`, `Px`). The layout adds the class `site-art` to `<html>` when the art is present; every style that needs
+an image hangs off that class, so without the pack the site looks as it did before.
+
+| Art | Where it shows |
+|---|---|
+| `headers/*` (960 x 160) | Quest board (board and path), leaderboard, wardrobe, achievements |
+| `icons/specializations`, `quest-steps`, `rank-crests` | How it works: the seven fields, the four steps, the ladder |
+| `icons/difficulty` | The tier badge on every quest card |
+| `icons/achievement-badges` | Achievements by key (`NAMED_BADGE` in `art.ts`); the older eight stay index-based |
+| `arenas/*` | Boss fights. The room is picked from the quest id, so a quest always has the same room |
+| `spots/*` | No quests match, review inbox empty, page not found, the locked rank on the path, a won fight |
+| `textures/stone-tile` | Page background |
+| `interface/divider-gem` | The rule under section headings |
+| `interface/panel-stone-gold` | Frame of step cards, spot cards and the fight result (9-slice, 20 px) |
+| `interface/buttons/*` | `.btn`, primary buttons and Log out (ends 18 px, trims 10 px, middle stretches) |
+| `identity` emblem | Beside the site name and as the browser tab icon |
+
+Not used yet: the navigation icons, the leather and parchment panels, the section title plate and the progress
+track and fill.

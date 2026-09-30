@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import PlayerCard from "@/components/PlayerCard";
-import { badgeImage, decorationImage, loadManifest, presetSheet } from "@/lib/art";
+import { achievementBadge, decorationImage, loadManifest, presetSheet } from "@/lib/art";
 import { CardDeco } from "@/components/DecoAnim";
 import { api, type Card } from "@/lib/api";
 import { getT } from "@/lib/i18n";
@@ -12,7 +12,7 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
   const [c, manifest] = await Promise.all([api<Card>(`/members/${id}`), loadManifest()]);
   if (!c) notFound();      // unknown member, or a private card seen while logged out
   const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
-  const badges = Object.fromEntries(c.featured.map((a) => [a.key, badgeImage(manifest, a.badge)]));
+  const badges = Object.fromEntries(c.featured.map((a) => [a.key, achievementBadge(manifest, a)]));
   const deco = { avatar: decorationImage(manifest, "avatar", c.avatar_frame_art ?? undefined), card: decorationImage(manifest, "card", c.card_frame_art ?? undefined) };
   return (
     <>

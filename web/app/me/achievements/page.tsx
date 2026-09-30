@@ -1,7 +1,8 @@
 import { redirect } from "next/navigation";
 import MeNav from "@/components/MeNav";
-import { badgeImage, loadManifest } from "@/lib/art";
+import { achievementBadge, loadManifest } from "@/lib/art";
 import { api, type Achievement, type Me } from "@/lib/api";
+import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 export async function generateMetadata() { const t = await getT(); return { title: t("Achievements") }; }
@@ -14,11 +15,10 @@ export default async function Achievements() {
   const all = data?.achievements ?? [];
   const earned = all.filter((a) => a.earned);
   const todo = all.filter((a) => !a.earned);
-  const badge = (a: Achievement) => badgeImage(manifest, a.badge);
+  const badge = (a: Achievement) => achievementBadge(manifest, a);
   return (
     <>
-      <div className="eyebrow">{t("Profile")}</div>
-      <h1>{t("Achievements")}</h1>
+      <PageHeader art="header-achievements" eyebrow={t("Profile")} title={t("Achievements")} />
       <MeNav active="/me/achievements" />
       <p className="muted">{t("{earned} of {total} earned. Achievements are entitlements: some unlock an outfit, a frame, a colour or a title. Pick up to three to show on your card.", { earned: earned.length, total: all.length })}</p>
       {earned.length > 0 && (

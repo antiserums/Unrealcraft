@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { Spot } from "@/components/SiteArt";
 import { api, type Me, type ReviewAccess, type ReviewItem } from "@/lib/api";
 
 export const metadata = { title: "Review inbox" };
@@ -28,7 +29,7 @@ export default async function ReviewInbox() {
       <p className="muted">{pending.length} waiting. Pass gives the member their XP and opens their chest. Changes sends it back with your note. Fail is for work that is not an honest attempt; they can try again in two hours. Honor-route work (rank 0 and 1) was accepted on trust and needs nothing from you.</p>
 
       <div className="section-h"><h2>For you</h2><span className="muted small">{mine.length} you can act on</span></div>
-      {mine.length === 0 && <div className="card muted">Nothing waiting for you right now.</div>}
+      {mine.length === 0 && <Spot art="sleeping-dragon">Nothing waiting for you right now.</Spot>}
       <div className="grid">{mine.map((s) => <Row key={s.id} s={s} />)}</div>
 
       {rest.length > 0 && (

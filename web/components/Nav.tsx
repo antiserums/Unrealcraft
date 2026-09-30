@@ -1,13 +1,16 @@
 import Link from "next/link";
 import { api, type Me } from "@/lib/api";
+import { loadManifest, siteArt } from "@/lib/art";
 import { getT } from "@/lib/i18n";
+import { Px } from "./SiteArt";
 
 export default async function Nav() {
-  const [me, t] = await Promise.all([api<Me>("/me"), getT()]);
+  const [me, t, m] = await Promise.all([api<Me>("/me"), getT(), loadManifest()]);
+  const emblem = siteArt(m, "site-emblem/emblem-32");
   return (
     <header className="nav">
       <div className="nav-in">
-        <Link href="/" className="brand">Unrealcraft</Link>
+        <Link href="/" className={`brand ${emblem ? "has-emblem" : ""}`}><Px src={emblem} />Unrealcraft</Link>
         <nav className="nav-links" aria-label={t("Main")}>
           <Link href="/quests" className="link">{t("Quest Board")}</Link>
           <Link href="/how-it-works" className="link">{t("How it works")}</Link>

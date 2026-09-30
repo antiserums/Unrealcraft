@@ -22,8 +22,8 @@ const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled
 /** The pack's scene: 480 x 270 logical pixels, drawn at 2x. Feet land on the ground line (y = 232). */
 const STAGE_W = 960, STAGE_H = 540, GROUND = 464;
 
-export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background }:
-  { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null }) {
+export default function FightScreen({ questId, outfit, weaponStyle = "melee", color, heroSheet, bossSheet, background, winArt }:
+  { questId: string; outfit: string; weaponStyle?: string; color: string; heroSheet?: SheetSpec | null; bossSheet?: SheetSpec | null; background?: { small: string; large: string | null } | null; winArt?: string | null }) {
   const t = useT();
   const router = useRouter();
   const [f, setF] = useState<Fight | null>(null);
@@ -172,6 +172,7 @@ export default function FightScreen({ questId, outfit, weaponStyle = "melee", co
         <div className="card result">
           {f.result === "win" ? (
             <>
+              {winArt && <img className="px result-art" src={winArt} width={160} height={120} alt="" />}
               <h2 style={{ marginTop: 0 }}>🏆 {t("{boss} is beaten · {score}/{total}", { boss: f.boss.short, score: f.outcome?.score ?? 0, total: f.outcome?.total ?? 0 })}</h2>
               <ul className="plain">
                 {f.outcome?.first_try_bonus ? <li>⭐ {t("Flawless first try: +{xp} XP", { xp: f.outcome.first_try_bonus })}</li> : null}

@@ -11,6 +11,7 @@ What it copies (see pixel-v3/INTEGRATION.txt):
   environments/dungeon-training-chamber-*.png          the arena background (480 x 270, and the 4x version)
   banners/*.webp|png                                   the home banner (3:1, no text baked in)
   profile-decorations/{avatar,card}/NN-<theme>.png     avatar rings (48 px) and card borders (352 x 252), transparent
+  website-art/**                                       interface pieces, icons, headers, spots, arenas, site emblem
   metadata/pack.json, metadata/character-presets.json  frame rectangles, animation rows, fps
 Nothing in the pack is modified. Only PNG/SVG/JSON files are copied.
 """
@@ -131,6 +132,20 @@ def main() -> None:
             frames = [f for f in frames if f]
             if frames:
                 m["decorations"]["anim"][a["type"]][a["theme"]] = {"frames": frames, "fps": int(anim.get("fps", 8))}
+    # website-art/: interface pieces, icons, page headers, spot illustrations, extra arenas and the site emblem.
+    # Its own manifest lists every canonical PNG; `images` maps "<group>" and "<group>/<frame>" to a path.
+    wa = PACK / "website-art" / "manifest.json"
+    if wa.is_file():
+        images, arenas = {}, {}
+        for a in json.loads(wa.read_text(encoding="utf-8-sig")).get("assets", []):
+            if rel := put(f"website-art/{a['path']}"):
+                images[a["id"]] = rel
+                if a.get("kind") == "arena":
+                    arenas[a["id"]] = {"path": rel, "width": a["width"], "height": a["height"], "groundY": a.get("groundY", 232)}
+            for fr in a.get("frames", []):
+                if rel := put(f"website-art/{fr['path']}"):
+                    images[f"{a['id']}/{fr['id']}"] = rel
+        m["website_art"] = {"images": images, "arenas": arenas}
     (OUT / "manifest.json").write_text(json.dumps(m, indent=1), encoding="utf-8")
     print(f"pack: {PACK}\ncopied {copied} files; {sum(len(v) for b in m['presets'].values() for v in b.values())} preset sheets, "
           f"{len(m['creatures'])} creatures, {len(m['icons'])} set icons, {len(m['badges'])} badges -> {OUT / 'manifest.json'}")

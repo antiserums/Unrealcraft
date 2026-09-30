@@ -3,7 +3,7 @@ import CardStudio from "@/components/CardStudio";
 import type { ArtProps, Char } from "@/components/CharacterSheet";
 import MeNav from "@/components/MeNav";
 import SpecializationPicker from "@/components/SpecializationPicker";
-import { badgeImage, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
+import { achievementBadge, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
 import { getT } from "@/lib/i18n";
 
@@ -14,7 +14,7 @@ export default async function Profile() {
   const [c, ch, manifest] = await Promise.all([api<Card>("/me/card"), api<Char>("/me/character"), loadManifest()]);
   if (!c) redirect("/api/auth/discord?next=/me");
   const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
-  const badges = Object.fromEntries(c.earned_achievements.map((a) => [a.key, badgeImage(manifest, a.badge)]));
+  const badges = Object.fromEntries(c.earned_achievements.map((a) => [a.key, achievementBadge(manifest, a)]));
   const shareUrl = `${process.env.WEB_ORIGIN ?? "http://localhost:3000"}/members/${c.id}`;
   let wardrobe: { char: Char; art: ArtProps } | null = null;
   if (ch) {

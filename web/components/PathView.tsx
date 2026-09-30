@@ -1,11 +1,13 @@
 import QuestCard from "@/components/QuestCard";
 import type { PathData } from "@/lib/api";
+import { loadManifest, siteArt } from "@/lib/art";
 import { getT } from "@/lib/i18n";
 import { rich } from "@/lib/i18n-config";
 
 /** The member's own road through the curriculum: what is next, what is done, what the next rank opens. */
 export default async function PathView({ p }: { p: PathData }) {
   const t = await getT();
+  const gate = siteArt(await loadManifest(), "locked-gate");
   const extras = p.specializations.filter((s) => !s.primary).map((s) => t(s.title)).join(", ");
   const specTitle = t(p.specialization_title);
   const locked = p.locked;
@@ -38,6 +40,7 @@ export default async function PathView({ p }: { p: PathData }) {
       ))}
       {locked && (
         <section className="lock">
+          {gate && <img className="px lock-art" src={gate} width={160} height={120} alt="" />}
           <div className="section-h">
             <h2>🔒 {t("Rank {n}", { n: locked.n })} · {t(locked.title)}</h2>
             <span className="muted small">

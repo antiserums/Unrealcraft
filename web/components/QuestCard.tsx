@@ -1,10 +1,12 @@
 import Link from "next/link";
 import type { QuestSummary } from "@/lib/api";
+import { difficultyArt, loadManifest } from "@/lib/art";
 import { getT } from "@/lib/i18n";
 
 export async function TierBadge({ tier }: { tier: QuestSummary["tier"] }) {
-  const t = await getT();
-  return <span className="tier" style={{ background: tier.color }}>{tier.emoji} {t(tier.name)}</span>;
+  const [t, m] = await Promise.all([getT(), loadManifest()]);
+  const mark = difficultyArt(m, tier.name);
+  return <span className={`tier ${mark ? "has-mark" : ""}`} style={{ background: tier.color }}>{mark ? <img className="px" src={mark} width={32} height={32} alt="" /> : tier.emoji} {t(tier.name)}</span>;
 }
 
 export default async function QuestCard({ q, showStatus = false }: { q: QuestSummary; showStatus?: boolean }) {
