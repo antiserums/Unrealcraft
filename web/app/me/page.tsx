@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import CharacterSheet, { type Char } from "@/components/CharacterSheet";
+import CharacterSheet, { type ArtProps, type Char } from "@/components/CharacterSheet";
+import { characterLayers, iconImage, loadManifest } from "@/lib/art";
 import { api, type Me } from "@/lib/api";
 
 export const metadata = { title: "Profile" };
@@ -7,7 +8,13 @@ export const metadata = { title: "Profile" };
 export default async function Profile() {
   const me = await api<Me>("/me");
   if (!me) redirect("/api/auth/discord?next=/me");
-  const ch = await api<Char>("/me/character");
+  const [ch, manifest] = await Promise.all([api<Char>("/me/character"), loadManifest()]);
+  const artIdOf = (it: { art_id?: string; item_key: string; slot: string }) => it.art_id ?? `gear_${it.item_key.split(":")[0]}_${it.slot}`;
+  const art: ArtProps = {
+    layers: ch ? characterLayers(manifest, ch.cosmetics.appearance?.body ?? "body-a", Object.values(ch.equipped).map(artIdOf)) : null,
+    icons: Object.fromEntries((ch?.inventory ?? []).map((it) => [artIdOf(it), iconImage(manifest, artIdOf(it))]).filter(([, v]) => v) as [string, string][]),
+    appearance: manifest?.appearance ?? {},
+  };
   const pct = me.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;
   return (
     <>
@@ -22,7 +29,7 @@ export default async function Profile() {
           </div>
         </div>
       </div>
-      {ch && <div style={{ marginBottom: 20 }}><CharacterSheet initial={ch} fallbackColor={me.rank_color} /></div>}
+      {ch && <div style={{ marginBottom: 20 }}><CharacterSheet initial={ch} fallbackColor={me.rank_color} art={art} /></div>}
       <h2 style={{ marginTop: 0 }}>Progress</h2>
       {me.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
       <div className="two">

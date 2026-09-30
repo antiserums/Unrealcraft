@@ -10,6 +10,8 @@
   --gold: #d4af5a;
   --gold-2: #f0d48a;
   --gold-dim: #8a7038;
+  --teal: #3fb6b0;          /* the concept board's teal: cloth, runes, HP */
+  --teal-dim: #23706d;
   --accent: var(--gold);
   --accent-ink: #1a1408;
   --soft: #23202a;
@@ -54,7 +56,7 @@ button:disabled { opacity: .5; cursor: not-allowed; }
 .nav-in { max-width: 1040px; margin: 0 auto; padding: 10px 20px; display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
 .brand { font-family: var(--display); font-weight: 700; font-size: 18px; color: var(--gold-2); letter-spacing: .06em; text-transform: uppercase; }
 .nav a.link { color: var(--muted); font-family: var(--display); font-size: 13px; letter-spacing: .05em; text-transform: uppercase; }
-.nav a.link:hover { color: var(--gold-2); text-decoration: none; }
+.nav a.link:hover { color: var(--teal); text-decoration: none; }
 .nav .spacer { flex: 1; }
 .avatar { width: 28px; height: 28px; border-radius: 50%; vertical-align: middle; border: 1px solid var(--gold-dim); }
 .who { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); font-weight: 500; }
@@ -85,7 +87,7 @@ a.card:hover { border-color: var(--gold-dim); text-decoration: none; }
 
 /* bars: segmented like an MMO health bar */
 .bar { height: 12px; background: #0a0d13; border: 1px solid var(--gold-dim); border-radius: 3px; overflow: hidden; position: relative; }
-.bar > span { display: block; height: 100%; background: var(--gold); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25), inset 0 2px 0 rgba(255,255,255,.18); transition: width .4s ease; }
+.bar > span { display: block; height: 100%; background: var(--teal); box-shadow: inset 0 -3px 0 rgba(0,0,0,.25), inset 0 2px 0 rgba(255,255,255,.18); transition: width .4s ease; }
 .bar::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(90deg, transparent 0 24px, rgba(0,0,0,.35) 24px 25px); pointer-events: none; }
 .stat { display: flex; flex-direction: column; gap: 2px; }
 .stat b { font-size: 20px; font-family: var(--display); color: var(--gold-2); }
@@ -137,3 +139,11 @@ pre.notes { white-space: pre-wrap; font-family: var(--sans); background: var(--p
 .chest textarea, .chest input[type="text"], .chest input:not([type]) { width: 100%; font: inherit; padding: 9px 11px; border: 1px solid var(--gold-dim); border-radius: 4px; background: var(--paper); color: var(--ink); margin-top: 4px; }
 .chest input[type="file"] { display: block; margin-top: 4px; font-size: 13px; color: var(--muted); }
 .chest.open { border: 1px solid var(--gold); border-radius: 6px; padding: 12px 14px; background: linear-gradient(180deg, #2a2418, var(--paper)); }
+
+/* ---- art pack ---- */
+.figure.art img { image-rendering: auto; }
+.figure.art.pose-strike { transform: translateX(10px); } .figure.art.pose-hurt { transform: translateX(-6px) rotate(3deg); }
+.figure.art.pose-down { transform: rotate(70deg) translateY(10px); } .figure.art.pose-win { transform: translateY(-6px); }
+.figure.boss.art.pose-attack { transform: translateX(-10px) scale(1.04); } .figure.boss.art.pose-hit { transform: translateX(8px); }
+.figure.art { transition: transform .25s ease; }
+.item-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; border: 1px solid; border-radius: 4px; background: #0b0e14; flex: 0 0 auto; overflow: hidden; }

@@ -60,6 +60,9 @@ class RpgDB:
 
     async def migrate(self) -> None:
         await self.conn.executescript(SCHEMA)
+        for old, new in (("body", "chest"), ("main", "weapon"), ("trinket", "offhand")):   # pre-art-pack slot names
+            await self.conn.execute("UPDATE gear SET slot=?, item_key=REPLACE(item_key, ?, ?) WHERE slot=?",
+                                    (new, f":{old}:", f":{new}:", old))
         await self.conn.commit()
 
     # ---------- character / gear ----------

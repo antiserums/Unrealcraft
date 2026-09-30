@@ -46,9 +46,11 @@ docs/
   05-path-mocks.md         /path for a Level Design vs Programming Novice
   06-community-rules.md
   07-website.md            website + API: setup, phases, endpoints
+  08-art-pack.md           how the UCSourceArt pack plugs into the site (ids, sync script, manifest)
 api/                     FastAPI service: the website's backend and the future source of truth (docs/07-website.md)
 web/                     Next.js website (login with Discord, quests, path, profile, leaderboard, changelog)
 run.ps1                  starts API, website and bot on the Windows server
+tools/sync_art.py        copies finished art from ../UCSourceArt into web/public/art + manifest
 bot/
   registrar/               discord.py 2.x package (cogs: onboarding, majors, quests, quiz, ranks)
   db/schema.sql            SQLite

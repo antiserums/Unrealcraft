@@ -17,7 +17,7 @@ RARITY = {"novice": "common", "apprentice": "uncommon", "adept": "rare", "expert
 RARITY_COLOR = {"common": TIERS["novice"]["color"], "uncommon": TIERS["apprentice"]["color"],
                 "rare": TIERS["adept"]["color"], "epic": TIERS["expert"]["color"], "legendary": TIERS["master"]["color"]}
 RARITY_RANK = {r: i for i, r in enumerate(["common", "uncommon", "rare", "epic", "legendary"])}
-SLOTS = ["head", "body", "hands", "feet", "main", "trinket"]
+SLOTS = ["head", "chest", "hands", "legs", "feet", "weapon", "offhand", "cape", "shoulders"]   # = UCSourceArt slots
 MAX_DODGE_PCT = 25
 CRIT_XP_DAILY_CAP = 25
 SPEED_BONUS_SECONDS = 20          # answer within this many seconds for the full speed crit bonus
@@ -57,84 +57,111 @@ STAT_BLURB = {
 GEAR = {
     "level_design": {
         "head": ("Surveyor's Hood", "Stitched from blockout tarps. Sees the flow of a room before it is built."),
-        "body": ("Greybox Mantle", "Plain armor of unlit cubes. Nothing fancy ever reached the player; this did."),
+        "chest": ("Greybox Mantle", "Plain armor of unlit cubes. Nothing fancy ever reached the player; this did."),
         "hands": ("Metric Gauntlets", "Every finger knows the jump height. 180 units, always."),
         "feet": ("Pathfinder Treads", "They only walk where the NavMesh is green."),
-        "main": ("Measuring Staff", "A staff marked in Unreal units. Struck once, it tells you what is too tall."),
-        "trinket": ("Compass of Sightlines", "It points at the thing the player should see next."),
+        "weapon": ("Measuring Staff", "A staff marked in Unreal units. Struck once, it tells you what is too tall."),
+        "offhand": ("Compass of Sightlines", "It points at the thing the player should see next."),
+        "legs": ("Blockout Greaves", "Grey, square, and exactly the right height."),
+        "cape": ("Flow Cloak", "It always drifts toward the exit the player should take."),
+        "shoulders": ("Sightline Pauldrons", "Wide enough to frame a view."),
     },
     "programming": {
         "head": ("Debugger's Visor", "Shows every value at the moment it went wrong."),
-        "body": ("Header Plate", "Declared once, included everywhere."),
+        "chest": ("Header Plate", "Declared once, included everywhere."),
         "hands": ("Pointer Gloves", "They never touch anything null."),
         "feet": ("Tick Boots", "Each step arrives exactly one frame later."),
-        "main": ("Compiler Blade", "It cuts the code that does not build. Clean edge, no warnings."),
-        "trinket": ("Breakpoint Charm", "Time stops when you hold it."),
+        "weapon": ("Compiler Blade", "It cuts the code that does not build. Clean edge, no warnings."),
+        "offhand": ("Breakpoint Charm", "Time stops when you hold it."),
+        "legs": ("Stack Greaves", "Push, pop, never overflow."),
+        "cape": ("Delegate Cloak", "Bound to an event nobody has fired yet."),
+        "shoulders": ("Interface Pauldrons", "Any class can wear them."),
     },
     "lookdev": {
         "head": ("Lumen Crown", "Bounced light gathers in it and stays."),
-        "body": ("Master Material Cloak", "One cloak, a hundred instances."),
+        "chest": ("Master Material Cloak", "One cloak, a hundred instances."),
         "hands": ("Painter's Wraps", "Vertex colors soak into the cloth."),
         "feet": ("Landscape Walkers", "Grass grows back behind them."),
-        "main": ("Palette Shield", "Every surface it touches finds its roughness."),
-        "trinket": ("Reflection Sphere", "A small captured sky."),
+        "weapon": ("Palette Shield", "Every surface it touches finds its roughness."),
+        "offhand": ("Reflection Sphere", "A small captured sky."),
+        "legs": ("Roughness Leggings", "Matte on the left leg, glossy on the right, for comparison."),
+        "cape": ("Skylight Cape", "Blue on top, bounce on the hem."),
+        "shoulders": ("Decal Pauldrons", "Projected on, never modelled."),
     },
     "tech_art": {
         "head": ("Node Circlet", "Wires run where the hair should be."),
-        "body": ("Shader Harness", "Written once, compiled a thousand times."),
+        "chest": ("Shader Harness", "Written once, compiled a thousand times."),
         "hands": ("Niagara Gloves", "Sparks leave the fingertips on their own."),
         "feet": ("Profiler's Soles", "They know how many milliseconds a step costs."),
-        "main": ("Node Wand", "Points at a graph and the graph explains itself."),
-        "trinket": ("Scratch Pad Rune", "A module that exists nowhere else."),
+        "weapon": ("Node Wand", "Points at a graph and the graph explains itself."),
+        "offhand": ("Scratch Pad Rune", "A module that exists nowhere else."),
+        "legs": ("Instance Greaves", "One draw call for both legs."),
+        "cape": ("Emitter Cape", "Sparks trail behind it at 60 frames a second."),
+        "shoulders": ("LOD Pauldrons", "They get simpler when you stand far away."),
     },
     "gameplay_design": {
         "head": ("Playtester's Cap", "It has seen the game break in every way."),
-        "body": ("Tuning Vest", "Pockets full of variables, all exposed."),
+        "chest": ("Tuning Vest", "Pockets full of variables, all exposed."),
         "hands": ("Feel Gloves", "They know when a jump is 80 milliseconds late."),
         "feet": ("Loop Runners", "Start, play, win, lose, again."),
-        "main": ("Dice Mace", "Rolls a number nobody expected. Balanced, somehow."),
-        "trinket": ("Data Table Token", "One row changes the whole game."),
+        "weapon": ("Dice Mace", "Rolls a number nobody expected. Balanced, somehow."),
+        "offhand": ("Data Table Token", "One row changes the whole game."),
+        "legs": ("Iteration Leggings", "Patched twelve times. Still fun."),
+        "cape": ("Playtest Cape", "Someone new always trips on it, so it was shortened."),
+        "shoulders": ("Balance Pauldrons", "Exactly the same weight on each side."),
     },
     "animation": {
         "head": ("Keyframe Helm", "Poses hold still under it."),
-        "body": ("Rigger's Coat", "Every joint has a control."),
+        "chest": ("Rigger's Coat", "Every joint has a control."),
         "hands": ("Blend Gloves", "Two motions become one between the fingers."),
         "feet": ("Root Motion Boots", "The capsule follows the feet, not the other way."),
-        "main": ("Rig Hook", "Pulls a bone into place from across the graph."),
-        "trinket": ("Retarget Chain", "Fits any skeleton that has a spine."),
+        "weapon": ("Rig Hook", "Pulls a bone into place from across the graph."),
+        "offhand": ("Retarget Chain", "Fits any skeleton that has a spine."),
+        "legs": ("IK Greaves", "The feet land where the ground is."),
+        "cape": ("Cloth Sim Cape", "It settles a frame after you stop."),
+        "shoulders": ("Twist Pauldrons", "They roll with the arm, not against it."),
     },
     "cinematics": {
         "head": ("Director's Cowl", "Sees the frame before the camera does."),
-        "body": ("Sequencer Robe", "Tracks stitched in rows down the front."),
+        "chest": ("Sequencer Robe", "Tracks stitched in rows down the front."),
         "hands": ("Focus Puller's Gloves", "Depth of field obeys them."),
         "feet": ("Dolly Shoes", "They move on rails only."),
-        "main": ("The Slate", "Clapped once, the take begins."),
-        "trinket": ("Render Lens", "A whole shot fits inside it."),
+        "weapon": ("The Slate", "Clapped once, the take begins."),
+        "offhand": ("Render Lens", "A whole shot fits inside it."),
+        "legs": ("Dolly Leggings", "Smooth movement only."),
+        "cape": ("Letterbox Cape", "2.39 to 1."),
+        "shoulders": ("Key Light Pauldrons", "Always lit from the upper left."),
     },
 }
 GEAR["undecided"] = {
     "head": ("Wayfarer's Hood", "For those still choosing a road."),
-    "body": ("Traveler's Mantle", "Warm enough for any major."),
+    "chest": ("Traveler's Mantle", "Warm enough for any major."),
     "hands": ("Curious Gloves", "They have tried a bit of everything."),
     "feet": ("Crossroad Boots", "Seven roads, one pair of boots."),
-    "main": ("Walking Staff", "Plain wood. It will become something."),
-    "trinket": ("Unset Compass", "It spins until you decide."),
+    "weapon": ("Walking Staff", "Plain wood. It will become something."),
+    "offhand": ("Unset Compass", "It spins until you decide."),
+    "legs": ("Wayfarer's Leggings", "Good for any road."),
+    "cape": ("Undyed Cape", "It will take the color of your major."),
+    "shoulders": ("Plain Pauldrons", "Nothing on them yet."),
 }
 RARITY_ADJ = {"common": "Worn", "uncommon": "Tempered", "rare": "Runed", "epic": "Sunforged", "legendary": "Mythic"}
 # What each slot does, by rarity index 0..4
 SLOT_EFFECT = {
-    "head":    ("lore",    [1, 1, 2, 2, 3]),
-    "body":    ("dodge",   [3, 5, 8, 12, 15]),      # percent chance to dodge one attack per fight
-    "hands":   ("craft",   [1, 1, 2, 2, 3]),
-    "feet":    ("dodge",   [2, 3, 4, 6, 8]),
-    "main":    ("craft",   [1, 2, 3, 4, 5]),
-    "trinket": ("cleanse", [0, 0, 1, 1, 1]),        # 1 = removes a debuff at the start of your next turn
+    "head":      ("lore",    [1, 1, 2, 2, 3]),
+    "chest":     ("dodge",   [3, 5, 8, 12, 15]),     # percent chance to dodge one attack per fight (total capped)
+    "hands":     ("craft",   [1, 1, 2, 2, 3]),
+    "legs":      ("dodge",   [1, 2, 3, 4, 5]),
+    "feet":      ("dodge",   [2, 3, 4, 6, 8]),
+    "weapon":    ("craft",   [1, 2, 3, 4, 5]),
+    "offhand":   ("cleanse", [0, 0, 1, 1, 1]),       # 1 = removes a debuff at the start of your next turn
+    "cape":      ("focus",   [0, 1, 1, 2, 3]),
+    "shoulders": ("craft",   [0, 1, 1, 2, 2]),
 }
 CAPSTONE_GEAR = {   # unique set pieces: (slot, name, flavour)
-    1: ("trinket", "Seal of the First Room", "You built a whole thing and someone else could walk it."),
-    2: ("body", "Mantle of the Second Gate", "Two dungeons behind you. The armor remembers both."),
+    1: ("offhand", "Seal of the First Room", "You built a whole thing and someone else could walk it."),
+    2: ("cape", "Mantle of the Second Gate", "Two dungeons behind you. The armor remembers both."),
     3: ("head", "Crown of the Specialty", "Your title is carved on the inside, where only you can read it."),
-    4: ("main", "Masterwork", "The weapon a Master carries. It is the work itself."),
+    4: ("weapon", "Masterwork", "The weapon a Master carries. It is the work itself."),
 }
 
 
@@ -149,7 +176,7 @@ def describe_item(major: str, slot: str, rarity: str, name_override: str | None 
     bonus = table[RARITY_RANK[rarity]]
     return {"key": item_key(major, slot, rarity), "slot": slot, "rarity": rarity, "color": RARITY_COLOR[rarity],
             "name": name_override or f"{RARITY_ADJ[rarity]} {base}", "flavour": flavour_override or flav,
-            "stat": stat, "bonus": bonus, "major": major}
+            "stat": stat, "bonus": bonus, "major": major, "art_id": f"gear_{major}_{slot}"}
 
 
 def starter_kit(major: str) -> list[dict]:
@@ -239,6 +266,23 @@ MOVES = {
 }
 
 
+# UCSourceArt creature ids. Ordinary rooms use the six enemies; capstones use the three bosses.
+ENEMY_FOR_LOOK = {"wisp": "enemy_rune_wisp", "golem": "enemy_broken_construct", "serpent": "enemy_crystal_crawler",
+                  "spectre": "enemy_rune_wisp", "beast": "enemy_moss_imp", "swarm": "enemy_crystal_slime",
+                  "sentinel": "enemy_thorn_sentinel", "treant": "enemy_thorn_sentinel", "construct": "enemy_broken_construct",
+                  "wraith": "enemy_rune_wisp", "knight": "enemy_crystal_slime", "drake": "boss_blueprint_hydra"}
+BOSS_TITLE = {"boss_compiler_golem": "The Compiler Golem", "boss_blueprint_hydra": "The Blueprint Hydra",
+              "boss_optimization_wyrm": "The Optimization Wyrm"}
+
+
+def capstone_creature(q: Quest) -> str:
+    owners = [m for m in q.required_for if m != "all"]
+    major = owners[0] if owners else ""
+    if q.difficulty in ("expert", "master"):
+        return "boss_optimization_wyrm"
+    return "boss_compiler_golem" if major in ("programming", "tech_art") else "boss_blueprint_hydra"
+
+
 def boss_for(q: Quest) -> dict:
     subjects = [s.lower() for s in (q.raw.get("subjects") or [])]
     h = int(hashlib.sha1(q.id.encode()).hexdigest(), 16)
@@ -248,8 +292,11 @@ def boss_for(q: Quest) -> dict:
     epithet = "Dragon" if q.capstone else EPITHET.get(q.difficulty, "Keeper")
     total = len(q.quiz)
     verb, line = MOVES[look]
+    creature = capstone_creature(q) if q.capstone else ENEMY_FOR_LOOK.get(look, "enemy_crystal_slime")
+    full_name = f"{BOSS_TITLE[creature]} of {domain}" if q.capstone else f"{name}, {epithet} of {domain}"
     return {
-        "name": f"{name}, {epithet} of {domain}", "short": name, "epithet": epithet, "domain": domain, "look": look,
+        "name": full_name, "short": BOSS_TITLE[creature].removeprefix("The ") if q.capstone else name,
+        "epithet": epithet, "domain": domain, "look": look, "creature": creature, "kind": "boss" if q.capstone else "enemy",
         "tier": q.difficulty, "color": q.tier["color"], "hits_to_win": pass_mark(total) if total else 0,
         "questions": total, "wounds_allowed": wounds_allowed(total) if total else 0, "verb": verb, "intro": line,
         "hint_topics": subjects[:3],

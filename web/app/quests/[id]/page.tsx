@@ -5,6 +5,7 @@ import Chest from "@/components/Chest";
 import { TierBadge } from "@/components/QuestCard";
 import ReadingList from "@/components/ReadingList";
 import { api, type Me, type Progress, type QuestFull } from "@/lib/api";
+import { creatureImage, loadManifest } from "@/lib/art";
 
 const MARK: Record<string, string> = { done: "✅", todo: "☐", on_submit: "📎", honor: "▫", optional: "⏳" };
 const HINT: Record<string, string> = {
@@ -19,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/quests/[id]">) {
 
 export default async function Quest({ params }: PageProps<"/quests/[id]">) {
   const { id } = await params;
-  const [data, me, boss] = await Promise.all([api<{ quest: QuestFull; progress: Progress }>(`/catalog/quests/${id}`), api<Me>("/me"), api<BossInfo>(`/catalog/quests/${id}/boss`)]);
+  const [data, me, boss, manifest] = await Promise.all([api<{ quest: QuestFull; progress: Progress }>(`/catalog/quests/${id}`), api<Me>("/me"), api<BossInfo>(`/catalog/quests/${id}/boss`), loadManifest()]);
   if (!data) notFound();
   const { quest: q, progress: p } = data;
   const kind = q.kind === "capstone" ? "★ Capstone" : q.kind === "elective" ? "Elective" : "Required";
@@ -66,7 +67,7 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
           {q.has_quiz && boss && (
             <section style={{ marginBottom: 14 }}>
               <h3>⚔️ Step {next()}: Fight the boss (the quiz)</h3>
-              <BossCard boss={boss} questId={q.id} canFight={!!me && !!p?.unlocked && !p?.quiz_passed}
+              <BossCard boss={boss} questId={q.id} image={creatureImage(manifest, boss.creature)} canFight={!!me && !!p?.unlocked && !p?.quiz_passed}
                 reason={!me ? "Log in to fight." : !p?.unlocked ? "Locked until you rank up." : p?.quiz_passed ? "Beaten. The boss stays down." : undefined} />
             </section>
           )}

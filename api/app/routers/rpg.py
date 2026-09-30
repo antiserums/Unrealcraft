@@ -20,9 +20,10 @@ NAMEPLATE_COLORS = ["#7A8C7E", "#B5714B", "#3D7DD8", "#8E6CCF", "#D9824A", "#D95
 
 async def character_payload(request: Request, uid: int, major: str) -> dict:
     rdb = request.app.state.rpg
-    new = await rdb.ensure_character(uid)
-    if new or not await rdb.gear(uid):
-        for item in rpg.starter_kit(major):
+    await rdb.ensure_character(uid)
+    have = {g["slot"] for g in await rdb.gear(uid)}
+    for item in rpg.starter_kit(major):            # every slot gets a plain starter piece, once
+        if item["slot"] not in have:
             await rdb.add_gear(uid, item, None, equip=True)
     inputs = await rdb.stat_inputs(uid)
     stats = rpg.stats_from(inputs["done"], inputs["first"], inputs["approved"], inputs["reads"], inputs["streak"])
@@ -48,6 +49,7 @@ class CharacterPatch(BaseModel):
     nameplate: str | None = None
     banner: str | None = None
     featured: list[int] | None = None
+    appearance: dict[str, str] | None = None      # body, skin, face, hair, hair_color... (art pack ids)
 
 
 @router.patch("/me/character")
@@ -65,6 +67,9 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         cos["banner"] = body.banner[:40]
     if body.featured is not None:
         cos["featured"] = body.featured[:3]
+    if body.appearance is not None:
+        clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
+        cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
     u = await request.app.state.db.user(member["id"])
     return await character_payload(request, member["id"], (u or {}).get("major", "undecided"))

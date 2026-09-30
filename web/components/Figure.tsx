@@ -1,45 +1,56 @@
-/** Flat SVG silhouettes: the member's character (with gear layers) and the twelve boss looks.
- *  Everything is drawn in a 100x120 box so the two can stand side by side at any size. */
+/** Character and creature figures.
+ *  With art-pack exports (see lib/art.ts) a figure is a stack of PNG layers on the pack's 1024x1024 canvas.
+ *  Without them, the flat SVG silhouettes below stand in, so the site works while the art is produced. */
 import type { CSSProperties } from "react";
 
 export type GearMap = Record<string, { rarity: string; color?: string } | undefined>;
 
 const RAR: Record<string, string> = { common: "#4FA36C", uncommon: "#3D7DD8", rare: "#8E6CCF", epic: "#D9824A", legendary: "#D9534F" };
+export const RARITY_COLOR = RAR;
 
-export function Character({ gear = {}, color = "#556270", size = 160, pose = "idle", style }:
-  { gear?: GearMap; color?: string; size?: number; pose?: "idle" | "strike" | "hurt" | "down" | "win"; style?: CSSProperties }) {
+type CharPose = "idle" | "strike" | "hurt" | "down" | "win";
+type BossPose = "idle" | "attack" | "hit" | "dead";
+
+function Layered({ layers, size, cls, style, label }: { layers: string[]; size: number; cls: string; style?: CSSProperties; label: string }) {
+  return (
+    <div className={cls} role="img" aria-label={label} style={{ position: "relative", width: size, height: size, ...style }}>
+      {layers.map((src, i) => <img key={i} src={src} alt="" draggable={false} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "contain" }} />)}
+    </div>
+  );
+}
+
+export function Character({ gear = {}, layers, color = "#556270", size = 160, pose = "idle", style }:
+  { gear?: GearMap; layers?: string[] | null; color?: string; size?: number; pose?: CharPose; style?: CSSProperties }) {
+  if (layers && layers.length) return <Layered layers={layers} size={size * 1.2} cls={`figure art pose-${pose}`} style={style} label="Your character" />;
   const c = (slot: string) => (gear[slot] ? RAR[gear[slot]!.rarity] ?? "#888" : null);
   const tf = pose === "strike" ? "translate(14 0) rotate(-6 50 80)" : pose === "hurt" ? "translate(-8 0) rotate(5 50 80)"
     : pose === "down" ? "rotate(80 50 110) translate(0 10)" : pose === "win" ? "translate(0 -6)" : "";
   return (
     <svg viewBox="0 0 100 120" width={size} height={size * 1.2} style={style} className={`figure pose-${pose}`} aria-label="Your character">
       <g transform={tf} style={{ transition: "transform .25s ease" }}>
-        {/* shadow */}
         <ellipse cx="50" cy="114" rx="26" ry="5" fill="#000" opacity=".18" />
-        {/* legs */}
+        {c("cape") && <path d="M36 44 L30 100 L70 100 L64 44 Z" fill={c("cape")!} opacity=".8" />}
         <path d="M40 74 L36 108 L44 108 L48 80 L52 80 L56 108 L64 108 L60 74 Z" fill={color} />
+        {c("legs") && <path d="M40 76 L38 96 L46 96 L48 82 L52 82 L54 96 L62 96 L60 76 Z" fill={c("legs")!} />}
         {c("feet") && <><rect x="33" y="103" width="14" height="7" rx="2" fill={c("feet")!} /><rect x="53" y="103" width="14" height="7" rx="2" fill={c("feet")!} /></>}
-        {/* body */}
         <path d="M34 42 Q50 34 66 42 L64 78 L36 78 Z" fill={color} />
-        {c("body") && <path d="M36 44 Q50 38 64 44 L62 74 L38 74 Z" fill={c("body")!} opacity=".95" />}
-        {/* arms */}
+        {c("chest") && <path d="M36 44 Q50 38 64 44 L62 74 L38 74 Z" fill={c("chest")!} opacity=".95" />}
         <path d="M34 46 L22 72 L28 75 L40 54 Z" fill={color} />
         <path d="M66 46 L82 66 L77 71 L60 54 Z" fill={color} />
+        {c("shoulders") && <><circle cx="35" cy="45" r="6" fill={c("shoulders")!} /><circle cx="65" cy="45" r="6" fill={c("shoulders")!} /></>}
         {c("hands") && <><circle cx="24" cy="74" r="5" fill={c("hands")!} /><circle cx="80" cy="69" r="5" fill={c("hands")!} /></>}
-        {/* main hand weapon */}
-        {c("main") && <g transform="rotate(-20 80 69)"><rect x="78" y="30" width="4" height="46" rx="1" fill={c("main")!} /><path d="M74 30 L86 30 L80 20 Z" fill={c("main")!} /></g>}
-        {/* head */}
+        {c("offhand") && <circle cx="22" cy="74" r="9" fill={c("offhand")!} stroke="#fff" strokeWidth=".8" opacity=".9" />}
+        {c("weapon") && <g transform="rotate(-20 80 69)"><rect x="78" y="30" width="4" height="46" rx="1" fill={c("weapon")!} /><path d="M74 30 L86 30 L80 20 Z" fill={c("weapon")!} /></g>}
         <circle cx="50" cy="26" r="13" fill={color} />
         {c("head") && <path d="M37 24 Q50 8 63 24 L63 20 Q50 4 37 20 Z" fill={c("head")!} />}
-        {/* trinket */}
-        {c("trinket") && <circle cx="50" cy="50" r="3.5" fill={c("trinket")!} stroke="#fff" strokeWidth=".8" />}
       </g>
     </svg>
   );
 }
 
-export function Boss({ look, color = "#8E6CCF", size = 200, pose = "idle", style }:
-  { look: string; color?: string; size?: number; pose?: "idle" | "attack" | "hit" | "dead"; style?: CSSProperties }) {
+export function Boss({ look, image, color = "#8E6CCF", size = 200, pose = "idle", style }:
+  { look: string; image?: string | null; color?: string; size?: number; pose?: BossPose; style?: CSSProperties }) {
+  if (image) return <Layered layers={[image]} size={size * 1.2} cls={`figure boss art pose-${pose}`} style={{ opacity: pose === "dead" ? .35 : 1, transition: "opacity .6s ease", ...style }} label="The boss" />;
   const tf = pose === "attack" ? "translate(-12 0) scale(1.04)" : pose === "hit" ? "translate(8 0)" : pose === "dead" ? "translate(0 30) scale(1 .3)" : "";
   const op = pose === "dead" ? 0.35 : 1;
   const body = BOSS_SHAPES[look] ?? BOSS_SHAPES.knight;
@@ -71,4 +82,14 @@ const BOSS_SHAPES: Record<string, (c: string) => React.ReactNode> = {
 
 export function GearDot({ rarity }: { rarity: string }) {
   return <span style={{ display: "inline-block", width: 10, height: 10, borderRadius: 3, background: RAR[rarity] ?? "#888", marginRight: 6 }} />;
+}
+
+/** Inventory tile: the pack's icon inside a rarity frame, or a rarity swatch until the icon exists. */
+export function ItemIcon({ icon, rarity, size = 44 }: { icon?: string | null; rarity: string; size?: number }) {
+  const c = RAR[rarity] ?? "#888";
+  return (
+    <span className="item-icon" style={{ width: size, height: size, borderColor: c, boxShadow: `inset 0 0 0 1px ${c}55, 0 0 8px ${c}33` }}>
+      {icon ? <img src={icon} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} /> : <span style={{ background: c, opacity: .35, position: "absolute", inset: 6, borderRadius: 3 }} />}
+    </span>
+  );
 }

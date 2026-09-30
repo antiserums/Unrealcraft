@@ -16,7 +16,7 @@ type Fight = {
 
 const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled.", weakened: "Weakened: your next hit does half damage.", blinded: "Blinded: no hint this turn." };
 
-export default function FightScreen({ questId, gear, color }: { questId: string; gear: GearMap; color: string }) {
+export default function FightScreen({ questId, gear, color, layers, bossImage }: { questId: string; gear: GearMap; color: string; layers?: string[] | null; bossImage?: string | null }) {
   const [f, setF] = useState<Fight | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -83,7 +83,7 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
               {f.you.steady_available && <> · steady ready</>}
             </div>
           </div>
-          <div className="stage">{float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}<Character gear={gear} color={color} pose={youPose} size={150} /></div>
+          <div className="stage">{float?.side === "you" && <span className={`float ${float.kind}`}>{float.text}</span>}<Character gear={gear} layers={layers} color={color} pose={youPose} size={150} /></div>
         </div>
         <div className="side boss">
           <div className="hpbox">
@@ -91,7 +91,7 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
             <div className="bar big"><span style={{ width: `${bossHp * 100}%`, background: f.boss.color }} /></div>
             <div className="small muted">{Math.min(f.hits, f.hits_to_win)}/{f.hits_to_win} hits{f.hits > f.hits_to_win ? " · victory lap" : ""} · {f.boss.questions} questions in the room</div>
           </div>
-          <div className="stage">{float?.side === "boss" && <span className={`float ${float.kind}`}>{float.text}</span>}<Boss look={f.boss.look} color={f.boss.color} pose={bossPose} size={170} /></div>
+          <div className="stage">{float?.side === "boss" && <span className={`float ${float.kind}`}>{float.text}</span>}<Boss look={f.boss.look} image={bossImage} color={f.boss.color} pose={bossPose} size={170} /></div>
         </div>
       </div>
 
