@@ -831,26 +831,25 @@ html.site-art .tile.locked .tile-rarity { opacity: .35; }
 .ticket-form { display: flex; flex-direction: column; gap: 6px; }
 .ticket-form select, .ticket-form input, .ticket-form textarea { width: 100%; box-sizing: border-box; }
 .ticket-form .row { margin-top: 8px; }
-/* a ticket thread reads like a chat: avatar column, then who and when, then the words. No boxes inside boxes:
-   messages are separated by space and a hairline; staff replies carry a gold rule. */
-.ticket-msgs { display: flex; flex-direction: column; margin-bottom: 20px; }
-.ticket-msg { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 14px; align-items: start; padding: 20px 4px; border-bottom: 1px solid rgba(212, 175, 90, .14); max-width: 84ch; }
-.ticket-msg:last-child { border-bottom: 0; }
-/* staff replies are told apart by the Staff tag alone: no tints, every message sits the same way */
+/* a ticket thread: every message is the same kind of speech card, avatar outside it on the left, the sender line
+   inside at the top (name, rank, Staff tag) with the time under it, then the words in a wide, high-contrast column */
+.ticket-msgs { display: flex; flex-direction: column; gap: 16px; margin-bottom: 22px; }
+.ticket-msg { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start; max-width: 86ch; }
+.ticket-av { padding-top: 6px; }
 .ticket-av .avatar, .ticket-av .mail-seal { width: 40px; height: 40px; font-size: 16px; }
 .ticket-av .avatar { border-width: 1px; box-shadow: 0 0 0 1px #000; }
-.ticket-msg-body { min-width: 0; }
-.ticket-msg p { margin: 8px 0 0; white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: #f0e9d8; max-width: 68ch; }
-.ticket-who { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
-.ticket-who .who { display: inline-flex; align-items: center; gap: 6px; }
+.ticket-msg-body { min-width: 0; padding: 14px 18px 16px; background: #222736; border: 1px solid #3a4051; border-left: 3px solid var(--gold-3); box-shadow: 0 2px 0 #000; }
+.ticket-msg p { margin: 10px 0 0; white-space: pre-wrap; font-size: 16px; line-height: 1.7; color: #f6efdc; max-width: 70ch; }
+.ticket-who { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.ticket-who .who { display: inline-flex; align-items: center; gap: 8px; }
 .ticket-who .who .avatar { display: none; }
-.ticket-who .who b { font-size: 15px; color: #fff3d6; }
+.ticket-who .who b { font-size: 15.5px; color: #fff3d6; }
 .ticket-who .who .pill { font-size: 11px; padding: 4px 8px; line-height: 10px; }
 .ticket-staff-tag { color: var(--accent-ink); background: var(--gold); border-color: var(--gold); }
-.ticket-when { margin-left: auto; font-size: 12px; }
+.ticket-when { flex-basis: 100%; margin: 2px 0 0; font-size: 12px; }
 .ticket-shots { margin-top: 12px; }
-.ticket-reply { padding-top: 16px; border-top: 1px solid rgba(212, 175, 90, .18); }
-.ticket-reply textarea { width: 100%; box-sizing: border-box; margin-bottom: 8px; font-size: 15px; line-height: 1.55; }
+.ticket-reply { padding-top: 18px; border-top: 1px solid rgba(212, 175, 90, .18); }
+.ticket-reply textarea { width: 100%; box-sizing: border-box; margin-bottom: 8px; font-size: 15px; line-height: 1.55; min-height: 110px; }
 .ticket-row .ticket-last { color: var(--muted); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .pill.ticket-open { color: var(--gold-2); } .pill.ticket-answered { color: var(--ok); } .pill.ticket-closed { color: var(--muted); }
 .donate .row { flex-wrap: wrap; }
