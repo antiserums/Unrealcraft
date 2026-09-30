@@ -90,19 +90,26 @@ export function TicketThread({ ticket, staff = false, onChanged }: { ticket: Tic
       <div className="ticket-msgs">
         {messages.map((m) => (
           <div key={m.id} className={`ticket-msg ${m.staff ? "staff" : "member"}`}>
-            <div className="ticket-who">
-              {m.author ? <Who a={m.author} /> : <b>{m.staff ? t("Staff") : (ticket.name ?? t("Member"))}</b>}
-              <span className="small muted">{m.created_at.slice(0, 16).replace("T", " ")}</span>
+            <span className="ticket-av" aria-hidden="true">
+              {m.author?.avatar ? <img className="avatar" src={m.author.avatar} alt="" /> : <span className="mail-seal">{(m.author?.name ?? (m.staff ? "S" : ticket.name ?? "?")).slice(0, 1)}</span>}
+            </span>
+            <div className="ticket-msg-body">
+              <div className="ticket-who">
+                {m.author ? <Who a={m.author} /> : <b>{m.staff ? t("Staff") : (ticket.name ?? t("Member"))}</b>}
+                {m.staff && <span className="mail-tag ticket-staff-tag">{t("Staff")}</span>}
+                <span className="small muted ticket-when">{m.created_at.slice(0, 16).replace("T", " ")}</span>
+              </div>
+              <p>{m.body}</p>
+              {m.attachments && m.attachments.length > 0 && (
+                <div className="ticket-shots">{m.attachments.map((u) => <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" loading="lazy" /></a>)}</div>
+              )}
             </div>
-            <p>{m.body}</p>
-            {m.attachments && m.attachments.length > 0 && (
-              <div className="ticket-shots">{m.attachments.map((u) => <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" loading="lazy" /></a>)}</div>
-            )}
           </div>
         ))}
       </div>
       {ticket.status !== "closed" || staff ? (
         <form className="ticket-reply" onSubmit={(e) => { e.preventDefault(); const fd = new FormData(); fd.set("body", body); files.forEach((f) => fd.append("files", f)); act(`${base}/reply`, fd); }}>
+          <div className="eyebrow small" style={{ marginBottom: 6 }}>{staff ? t("Reply to the member") : t("Your reply")}</div>
           <textarea value={body} onChange={(e) => setBody(e.target.value)} rows={4} maxLength={4000} required placeholder={staff ? t("Write to the member…") : t("Write a reply…")} />
           <ScreenshotPicker files={files} onChange={setFiles} id={`reply-files-${ticket.id}`} />
           {err && <div className="note small" data-tone="error">{err}</div>}
