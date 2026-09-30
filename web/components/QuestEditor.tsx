@@ -5,8 +5,8 @@ import type { Curriculum } from "./QuestList";
 
 type Quiz = { q: string; choices: string[]; answer_index: number; explain: string };
 type Form = {
-  id: string; title: string; rank: string; difficulty: string; track: string; subjects: string; required_for_majors: string; taster_for_majors: string;
-  adjacent_for: string; required_spine: boolean; elective: boolean; capstone: boolean; needs_others: boolean; time_min: string; xp: string; verify_type: string;
+  id: string; title: string; rank: string; difficulty: string; specializations: string[]; subjects: string; taster: boolean; taster_for: string;
+  required_spine: boolean; required: boolean; capstone: boolean; needs_others: boolean; time_min: string; xp: string; verify_type: string;
   official_url: string; backup_url: string; extra_urls: string; community_urls: string; checklist: string; done_when: string; action_key: string; next_hint: string;
   quiz: Quiz[]; flavors: string;
 };
@@ -14,13 +14,10 @@ type Form = {
 const NEW_YAML = `id: LDQ99
 rank: 1
 difficulty: apprentice
-track: level-design
+specializations: [level_design]
 subjects: [blockout]
-required_for_majors: []
-taster_for_majors: []
-adjacent_for: []
 required_spine: false
-elective: true
+required: false
 title: A short imperative title
 time_min: 30
 official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/"
@@ -43,7 +40,7 @@ const lines = (v: unknown) => Array.isArray(v) ? v.map((x) => (typeof x === "str
 const str = (v: unknown) => (v === null || v === undefined ? "" : String(v));
 
 function toYamlish(o: Record<string, unknown> | undefined): string {
-  // flavors as YAML text the admin can edit; the API parses it back (majors -> {why, do})
+  // flavors as YAML text the admin can edit; the API parses it back (specialization -> {why, do})
   if (!o) return "_default: {why: \"\"}";
   return Object.entries(o).map(([k, v]) => {
     const inner = v && typeof v === "object" ? Object.entries(v as Record<string, string>).map(([a, b]) => `${a}: ${JSON.stringify(b ?? "")}`).join(", ") : "";
@@ -54,10 +51,10 @@ function toYamlish(o: Record<string, unknown> | undefined): string {
 function fromRaw(raw: Record<string, unknown> | null, cur: Curriculum): Form {
   const r = raw ?? {};
   return {
-    id: str(r.id), title: str(r.title), rank: str(r.rank ?? 1), difficulty: str(r.difficulty ?? "apprentice"), track: str(r.track ?? cur.tracks[0] ?? ""),
-    subjects: (r.subjects as string[] | undefined)?.join(", ") ?? "", required_for_majors: (r.required_for_majors as string[] | undefined)?.join(", ") ?? "",
-    taster_for_majors: (r.taster_for_majors as string[] | undefined)?.join(", ") ?? "", adjacent_for: (r.adjacent_for as string[] | undefined)?.join(", ") ?? "",
-    required_spine: !!r.required_spine, elective: raw ? !!r.elective : true, capstone: !!r.capstone, needs_others: !!r.needs_others,
+    id: str(r.id), title: str(r.title), rank: str(r.rank ?? 1), difficulty: str(r.difficulty ?? "apprentice"),
+    specializations: (r.specializations as string[] | undefined) ?? (cur.specializations[0] ? [cur.specializations[0].key] : []),
+    subjects: (r.subjects as string[] | undefined)?.join(", ") ?? "", taster: !!r.taster, taster_for: (r.taster_for as string[] | undefined)?.join(", ") ?? "",
+    required_spine: !!r.required_spine, required: raw ? !!r.required : false, capstone: !!r.capstone, needs_others: !!r.needs_others,
     time_min: str(r.time_min ?? 30), xp: str(r.xp ?? 40), verify_type: str(r.verify_type ?? "screenshot"),
     official_url: str(r.official_url), backup_url: str(r.backup_url), extra_urls: lines(r.extra_urls), community_urls: lines(r.community_urls),
     checklist: lines(r.checklist), done_when: str(r.done_when), action_key: str(r.action_key), next_hint: str(r.next_hint),
@@ -70,9 +67,9 @@ function toRaw(f: Form): Record<string, unknown> {
   const list = (s: string) => s.split(/[\n,]/).map((x) => x.trim()).filter(Boolean);
   const nl = (s: string) => s.split("\n").map((x) => x.trim()).filter(Boolean);
   return {
-    id: f.id.trim().toUpperCase(), rank: Number(f.rank), difficulty: f.difficulty, track: f.track.trim(), subjects: list(f.subjects),
-    required_for_majors: list(f.required_for_majors), taster_for_majors: list(f.taster_for_majors), adjacent_for: list(f.adjacent_for),
-    required_spine: f.required_spine, elective: f.elective, capstone: f.capstone, ...(f.needs_others ? { needs_others: true } : {}),
+    id: f.id.trim().toUpperCase(), rank: Number(f.rank), difficulty: f.difficulty, specializations: f.specializations, subjects: list(f.subjects),
+    required_spine: f.required_spine, required: f.required, ...(f.taster ? { taster: true } : {}), ...(list(f.taster_for).length ? { taster_for: list(f.taster_for) } : {}),
+    capstone: f.capstone, ...(f.needs_others ? { needs_others: true } : {}),
     title: f.title.trim(), time_min: f.time_min ? Number(f.time_min) : null, official_url: f.official_url.trim() || "TODO_URL", backup_url: f.backup_url.trim() || null,
     extra_urls: nl(f.extra_urls), community_urls: nl(f.community_urls), checklist: nl(f.checklist), done_when: f.done_when.trim(), xp: Number(f.xp),
     verify_type: f.verify_type, action_key: f.action_key.trim() || null, next_hint: f.next_hint.trim() || null,
@@ -145,16 +142,24 @@ export default function QuestEditor({ cur, initial, file: file0, yamlText }: { c
             <div className="wide" style={{ marginTop: 0 }}><label>Title</label><input value={f.title} onChange={(e) => set("title", e.target.value)} placeholder="Snap every block to the grid" /></div>
             <div><label>Rank</label><select value={f.rank} onChange={(e) => set("rank", e.target.value)}><option value="-1">-1 · Orientation</option>{cur.ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title}</option>)}</select></div>
             <div><label>Difficulty</label><select value={f.difficulty} onChange={(e) => set("difficulty", e.target.value)}>{Object.entries(cur.tiers).map(([k, t]) => <option key={k} value={k}>{t.name} · {t.quiz_len} questions</option>)}</select></div>
-            <div><label>Track</label><input list="quest-tracks" value={f.track} onChange={(e) => set("track", e.target.value)} /><datalist id="quest-tracks">{cur.tracks.map((t) => <option key={t} value={t} />)}</datalist></div>
+            <div className="wide" style={{ marginTop: 0 }}>
+              <label>Specializations (where the quest lives; "all" = everyone)</label>
+              <div className="row" style={{ gap: 10, flexWrap: "wrap" }}>
+                {[{ key: "all", title: "Everyone" }, ...cur.specializations].map((s) => (
+                  <label key={s.key} className="row small" style={{ gap: 5, textTransform: "none", letterSpacing: 0, color: "var(--ink)", cursor: "pointer", marginBottom: 0 }}>
+                    <input type="checkbox" checked={f.specializations.includes(s.key)} onChange={(e) => set("specializations", e.target.checked ? [...f.specializations, s.key] : f.specializations.filter((k) => k !== s.key))} /> {s.title}
+                  </label>
+                ))}
+              </div>
+            </div>
             <div><label>XP</label><input type="number" value={f.xp} onChange={(e) => set("xp", e.target.value)} /></div>
             <div><label>Minutes</label><input type="number" value={f.time_min} onChange={(e) => set("time_min", e.target.value)} /></div>
             <div><label>Verify by</label><select value={f.verify_type} onChange={(e) => set("verify_type", e.target.value)}>{cur.verify_types.map((v) => <option key={v} value={v}>{v}</option>)}</select></div>
             <div><label>Subjects (comma separated)</label><input value={f.subjects} onChange={(e) => set("subjects", e.target.value)} placeholder="snapping, grid" /></div>
-            <div><label>Required for majors</label><input value={f.required_for_majors} onChange={(e) => set("required_for_majors", e.target.value)} placeholder={`all, ${cur.majors.slice(0, 2).join(", ")}`} /></div>
-            <div><label>Taster for majors</label><input value={f.taster_for_majors} onChange={(e) => set("taster_for_majors", e.target.value)} /></div>
-            <div><label>Adjacent for</label><input value={f.adjacent_for} onChange={(e) => set("adjacent_for", e.target.value)} /></div>
+            <div><label>Taster for (other specializations it gives a taste of)</label><input value={f.taster_for} onChange={(e) => set("taster_for", e.target.value)} placeholder="programming, animation" /></div>
             <div className="wide row" style={{ gap: 16, marginTop: 0 }}>
-              <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.elective} onChange={(e) => set("elective", e.target.checked)} /> elective</label>
+              <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.required} onChange={(e) => set("required", e.target.checked)} /> required in its specializations</label>
+              <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.taster} onChange={(e) => set("taster", e.target.checked)} /> taster</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.required_spine} onChange={(e) => set("required_spine", e.target.checked)} /> on the spine</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.capstone} onChange={(e) => set("capstone", e.target.checked)} /> capstone</label>
               <label className="row" style={{ gap: 5, textTransform: "none", letterSpacing: 0, fontSize: 13, color: "var(--ink)" }}><input type="checkbox" checked={f.needs_others} onChange={(e) => set("needs_others", e.target.checked)} /> needs other members</label>
@@ -168,7 +173,7 @@ export default function QuestEditor({ cur, initial, file: file0, yamlText }: { c
           <div className="adm-field"><label>Checklist (one step per line)</label><textarea value={f.checklist} onChange={(e) => set("checklist", e.target.value)} rows={6} /></div>
           <div className="adm-field"><label>Done when (what the turn-in must show)</label><textarea value={f.done_when} onChange={(e) => set("done_when", e.target.value)} rows={3} /></div>
           <div className="adm-field"><label>Next hint (optional)</label><input value={f.next_hint} onChange={(e) => set("next_hint", e.target.value)} /></div>
-          <div className="adm-field"><label>Flavors, one line per major: <code>major: {"{"}why: &quot;…&quot;, do: &quot;…&quot;{"}"}</code> (<code>_default</code> is the fallback)</label><textarea value={f.flavors} onChange={(e) => set("flavors", e.target.value)} rows={4} /></div>
+          <div className="adm-field"><label>Flavors, one line per specialization: <code>level_design: {"{"}why: &quot;…&quot;, do: &quot;…&quot;{"}"}</code> (<code>_default</code> is the fallback)</label><textarea value={f.flavors} onChange={(e) => set("flavors", e.target.value)} rows={4} /></div>
 
           <div className="section-h" style={{ margin: "18px 0 6px" }}><h2 style={{ fontSize: 16 }}>Boss fight · quiz</h2><span className="muted small">{f.quiz.length} questions{want ? ` · ${want} wanted for ${cur.tiers[f.difficulty].name}` : ""}</span></div>
           {f.quiz.map((item, i) => (

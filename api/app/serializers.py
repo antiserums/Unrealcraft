@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from registrar import checks  # noqa: E402
-from registrar.curriculum import TIERS, Catalog, Quest  # noqa: E402
+from registrar.curriculum import TIERS, Catalog, Quest, UserState  # noqa: E402
 
 
 def reading_links(q: Quest) -> list[dict]:
@@ -36,23 +36,33 @@ def checklist(q: Quest, facts: set[str], community_ready: bool) -> list[dict]:
     return out
 
 
-def quest_summary(cat: Catalog, q: Quest, major: str | None = None) -> dict:
+def _who(who: UserState | str | None) -> tuple[str | None, list[str]]:
+    """The viewer's primary specialization and extras, from a UserState or a bare key."""
+    if isinstance(who, UserState):
+        return who.major, who.extras
+    return who, []
+
+
+def quest_summary(cat: Catalog, q: Quest, who: UserState | str | None = None) -> dict:
     r = q.raw
+    major, extras = _who(who)
     return {
         "id": q.id, "title": r["title"], "rank": q.rank, "difficulty": q.difficulty,
         "tier": {"name": q.tier["name"], "emoji": q.tier["emoji"], "color": q.tier["color"]},
-        "track": q.track, "subjects": r.get("subjects") or [], "xp": q.xp, "time_min": r.get("time_min"),
-        "kind": "capstone" if q.capstone else ("elective" if q.elective else "required"),
+        "specializations": q.specializations, "required": q.required, "taster_for": q.taster_for,
+        "subjects": r.get("subjects") or [], "xp": q.xp, "time_min": r.get("time_min"),
+        "kind": "capstone" if q.capstone else ("required" if q.required else "elective"),
         "spine": q.spine, "verify_type": r.get("verify_type"), "has_quiz": bool(q.quiz), "quiz_len": len(q.quiz),
-        "owner": cat.owner_label(q), "required_for": q.required_for, "adjacent_for": q.adjacent_for,
-        "affinity": cat.affinity(q, major) if major else None,
+        "owner": cat.owner_label(q),
+        "affinity": cat.affinity(q, major, extras) if major else None,
     }
 
 
-def quest_full(cat: Catalog, q: Quest, major: str, facts: set[str]) -> dict:
+def quest_full(cat: Catalog, q: Quest, who: UserState | str | None, facts: set[str]) -> dict:
     r = q.raw
-    d = quest_summary(cat, q, major)
-    fl = q.flavor(major)
+    d = quest_summary(cat, q, who)
+    major, _ = _who(who)
+    fl = q.flavor(major or "undecided")
     d.update({
         "why": fl.get("why"), "do": fl.get("do"),
         "reading": reading_links(q),
@@ -65,12 +75,12 @@ def quest_full(cat: Catalog, q: Quest, major: str, facts: set[str]) -> dict:
     return d
 
 
-def majors_meta(cat: Catalog) -> dict:
+def specializations_meta(cat: Catalog) -> dict:
     return {
         "tiers": TIERS,
         "ranks": [{k: v for k, v in r.items()} for r in cat.meta.get("ranks", [])],
-        "majors": {k: {"key": k, "title": v.get("title", k), "prefix": v.get("prefix"),
-                       "capstones": v.get("capstones") or {}} for k, v in cat.majors.items()},
+        "specializations": {k: {"key": k, "title": v.get("title", k), "prefix": v.get("prefix"), "blurb": v.get("blurb"),
+                                "capstones": v.get("capstones") or {}} for k, v in cat.specializations.items()},
         "xp_rules": cat.xp_rules,
         "quest_count": len(cat.quests),
     }

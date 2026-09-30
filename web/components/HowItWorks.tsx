@@ -1,7 +1,7 @@
 import Link from "next/link";
-import type { Majors } from "@/lib/api";
+import type { Specializations } from "@/lib/api";
 
-const MAJOR_BLURB: Record<string, string> = {
+const SPEC_BLURB: Record<string, string> = {
   level_design: "Spaces, flow and encounters. Build places people want to move through.",
   programming: "Blueprints first, then C++. Make the engine do what you mean.",
   lookdev: "Materials, lighting and Lumen. Make it look the way it feels.",
@@ -10,12 +10,12 @@ const MAJOR_BLURB: Record<string, string> = {
   animation: "Rigs, blends and state machines. Make characters move with intent.",
   cinematics: "Sequencer, cameras and cuts. Tell it like a film.",
 };
-const MAJOR_GLYPH: Record<string, string> = { level_design: "🗺️", programming: "⚙️", lookdev: "🎨", tech_art: "🔮", gameplay_design: "🎲", animation: "🏃", cinematics: "🎬" };
+const SPEC_GLYPH: Record<string, string> = { level_design: "🗺️", programming: "⚙️", lookdev: "🎨", tech_art: "🔮", gameplay_design: "🎲", animation: "🏃", cinematics: "🎬" };
 
-/** The explainer: how a quest works, the seven majors, the ladder, what you keep. Shown to guests on the home
- *  page and on /how-it-works for everyone. */
-export default function HowItWorks({ majors }: { majors: Majors | null }) {
-  const list = majors ? Object.values(majors.majors).filter((m) => m.key !== "undecided") : [];
+/** The explainer: how a quest works, the seven specializations, the ladder, what you keep. Shown to guests on the
+ *  home page and on /how-it-works for everyone. */
+export default function HowItWorks({ specs }: { specs: Specializations | null }) {
+  const list = specs ? Object.values(specs.specializations).filter((m) => m.key !== "undecided") : [];
   return (
     <>
       <section>
@@ -29,29 +29,29 @@ export default function HowItWorks({ majors }: { majors: Majors | null }) {
       </section>
 
       <section>
-        <div className="section-h"><h2>Seven majors</h2><span className="muted small">{majors?.quest_count ?? 700}+ quests. Pick one, cross-train in the rest.</span></div>
-        <div className="majors">
+        <div className="section-h"><h2>Seven specializations</h2><span className="muted small">{specs?.quest_count ?? 700}+ quests. Pick a primary, add as many others as you like.</span></div>
+        <div className="specs">
           {list.map((m) => (
-            <Link key={m.key} href={`/quests?major=${m.key}`} className="major-banner">
-              <span className="major-glyph">{MAJOR_GLYPH[m.key] ?? "❖"}</span>
+            <Link key={m.key} href={`/quests?specialization=${m.key}`} className="spec-banner">
+              <span className="spec-glyph">{SPEC_GLYPH[m.key] ?? "❖"}</span>
               <b>{m.title}</b>
-              <span className="small muted">{MAJOR_BLURB[m.key] ?? ""}</span>
+              <span className="small muted">{SPEC_BLURB[m.key] ?? ""}</span>
               <span className="small" style={{ color: "var(--gold)" }}>{m.prefix} quests · {Object.keys(m.capstones ?? {}).length} capstone dungeons</span>
             </Link>
           ))}
         </div>
       </section>
 
-      {majors && (
+      {specs && (
         <section>
           <div className="section-h"><h2>The ladder</h2><span className="muted small">Five ranks. Each one opens a harder tier of dungeons.</span></div>
           <ol className="ladder">
-            {majors.ranks.filter((r) => r.n <= 4).map((r) => (
+            {specs.ranks.filter((r) => r.n <= 4).map((r) => (
               <li key={r.n} style={{ "--rank": r.color ?? "var(--gold)" } as React.CSSProperties}>
                 <span className="ladder-dot" />
                 <div>
                   <b style={{ color: r.color ?? "inherit" }}>{r.title}</b>
-                  <div className="small muted">{r.n === 0 ? "Where everyone starts. Orientation, then the Starter Quests." : `${r.xp} XP and ${r.quests_to_leave ?? ""} ${majors.tiers[r.tier]?.name ?? ""} quests to move on`}{r.n >= 3 ? " · your major joins your title" : ""}</div>
+                  <div className="small muted">{r.n === 0 ? "Where everyone starts. Orientation, then the Starter Quests." : `${r.xp} XP and ${r.quests_to_leave ?? ""} ${specs.tiers[r.tier]?.name ?? ""} quests to move on`}{r.n >= 3 ? " · your primary specialization joins your title" : ""}</div>
                 </div>
               </li>
             ))}
@@ -64,8 +64,8 @@ export default function HowItWorks({ majors }: { majors: Majors | null }) {
         <div className="section-h"><h2>What you keep</h2></div>
         <div className="grid">
           <div className="card"><div className="eyebrow">Outfits</div><p className="small" style={{ margin: "6px 0 0" }}>Whole sets for ranking up, clearing capstone dungeons and hitting milestones. Looks only. Nothing but your answers decides a fight.</p></div>
-          <div className="card"><div className="eyebrow">Achievements</div><p className="small" style={{ margin: "6px 0 0" }}>Fourteen to earn, from First Blood to Dragonslayer. Feature three on your player card.</p></div>
-          <div className="card"><div className="eyebrow">A player card</div><p className="small" style={{ margin: "6px 0 0" }}>Your rank, major, motto and streak on one card, with decorations you unlock. Share the link with anyone.</p></div>
+          <div className="card"><div className="eyebrow">Entitlements</div><p className="small" style={{ margin: "6px 0 0" }}>Achievements, titles, colours and frames, earned by ranks, milestones and working across specializations. Feature three achievements on your player card.</p></div>
+          <div className="card"><div className="eyebrow">A player card</div><p className="small" style={{ margin: "6px 0 0" }}>Your rank, specializations, title, motto and streak on one card, with decorations you unlock. Share the link with anyone.</p></div>
         </div>
       </section>
 

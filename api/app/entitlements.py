@@ -23,9 +23,11 @@ KINDS = ["outfit", "nameplate", "avatar_frame", "card_frame", "title", "achievem
 KIND_LABEL = {"outfit": "Outfit", "nameplate": "Nameplate colour", "avatar_frame": "Avatar frame", "card_frame": "Player card frame",
               "title": "Title", "achievement": "Achievement"}
 UNLOCK_TYPES = ["starter", "rank", "achievement", "medal", "staff", "granted"]
-COUNTERS = ["done", "first", "approved", "reads", "streak", "capstones", "medal"]     # what an achievement counts
+COUNTERS = ["done", "first", "approved", "reads", "streak", "capstones", "specs", "cross", "medal"]     # what an achievement counts
 COUNTER_LABEL = {"done": "quests finished", "first": "bosses beaten first try", "approved": "work accepted by a reviewer",
-                 "reads": "readings opened", "streak": "day streak", "capstones": "capstone dungeons cleared", "medal": "a medal with this key"}
+                 "reads": "readings opened", "streak": "day streak", "capstones": "capstone dungeons cleared",
+                 "specs": "specializations with a finished quest", "cross": "quests finished outside the primary specialization",
+                 "medal": "a medal with this key"}
 ID_RE = re.compile(r"^[a-z0-9_]{2,40}$")
 
 

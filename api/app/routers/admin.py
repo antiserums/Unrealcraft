@@ -52,13 +52,14 @@ async def member(uid: int, request: Request, admin=Depends(admin_only)):
     ents = request.app.state.ents
     grants = await rdb.grants(uid)
     return {
-        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "staff", "major_title", "worn", "achievements_earned", "achievements_total", "cosmetics", "title")},
+        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "staff", "specialization_title", "specializations", "worn", "achievements_earned", "achievements_total", "cosmetics", "title")},
         "grants": [{"kind": k, "id": i, **g, "name": (ents.get(k, i) or {}).get("name", i)} for (k, i), g in grants.items()],
         "entitlements": [{"kind": r["kind"], "id": r["id"], "name": r["name"]} for r in ents.rows if r["enabled"]],
         "progress": [{**p, "quest": quest_summary(cat, cat.quests[p["quest_id"]]) if p["quest_id"] in cat.quests else None} for p in prog],
         "medals": await db.medals(uid), "xp_recent": await db.xp_recent(uid, 30), "submissions": await db.submissions(uid),
         "ranks": [{"n": n, "title": r["title"], "xp": r["xp"]} for n, r in sorted(cat.ranks.items())],
-        "majors": sorted(k for k in cat.majors.keys()),
+        "specializations": [{"key": k, "title": cat.title_of(k)} for k in sorted(cat.specializations)],
+        "extras": (await db.user_state(uid))[1].extras,
     }
 
 
@@ -91,7 +92,7 @@ async def quest(uid: int, body: QuestAction, request: Request, admin=Depends(adm
 
 class RankAction(BaseModel):
     rank: int
-    major: str | None = None
+    specialization: str | None = None      # the primary; users.major is the column's older name
 
 
 @router.post("/members/{uid}/rank")
@@ -102,10 +103,10 @@ async def rank(uid: int, body: RankAction, request: Request, admin=Depends(admin
     if body.rank < -1 or body.rank > 6:
         raise HTTPException(400, "Rank is -1 (Orientation) to 6.")
     fields: dict = {"rank": body.rank}
-    if body.major is not None:
-        if body.major not in cat.majors:
-            raise HTTPException(400, "No such major.")
-        fields["major"] = body.major
+    if body.specialization is not None:
+        if body.specialization not in cat.specializations:
+            raise HTTPException(400, "No such specialization.")
+        fields["major"] = body.specialization
     u = await db.user(uid)
     xp_floor = cat.ranks.get(body.rank, {}).get("xp", 0) if body.rank >= 0 else 0
     if u["xp"] < xp_floor:

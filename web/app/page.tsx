@@ -1,7 +1,7 @@
 import Link from "next/link";
 import HowItWorks from "@/components/HowItWorks";
 import { TierBadge } from "@/components/QuestCard";
-import { api, type Majors, type Me, type Next } from "@/lib/api";
+import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import { bannerImage, loadManifest } from "@/lib/art";
 
 type MemberStats = { fights: number; fights_won: number; bosses_first_try: number; crit_xp: number; xp_week: number; reads: number; turnins: number; turnins_passed: number; turnins_pending: number };
@@ -9,11 +9,11 @@ type GuildStats = { members: number; quests_done: number; quests_done_week: numb
 
 export default async function Home() {
   const [me, manifest] = await Promise.all([api<Me>("/me"), loadManifest()]);
-  const [next, stats, guild, majors] = await Promise.all([
+  const [next, stats, guild, specs] = await Promise.all([
     me ? api<Next>("/me/next") : null,
     me ? api<{ me: MemberStats; guild: GuildStats }>("/me/stats") : null,
     me ? null : api<GuildStats>("/catalog/stats"),
-    me ? null : api<Majors>("/catalog/majors"),
+    me ? null : api<Specializations>("/catalog/specializations"),
   ]);
   const banner = bannerImage(manifest);
   const pct = me?.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;
@@ -28,7 +28,7 @@ export default async function Home() {
               <div>
                 <div className="eyebrow">Welcome back</div>
                 <h1>{me.name}</h1>
-                <div className="small"><span className={me.staff ? "staff-title" : ""} style={{ color: me.rank_color, fontWeight: 600 }}>{me.rank_title}</span><span className="muted"> · {me.major_title} · {me.xp} XP</span></div>
+                <div className="small"><span className={me.staff ? "staff-title" : ""} style={{ color: me.rank_color, fontWeight: 600 }}>{me.rank_title}</span><span className="muted"> · {me.specializations.length ? me.specializations.map((s) => s.title).join(" · ") : "Undecided"} · {me.xp} XP</span></div>
               </div>
             </div>
             {next?.main ? (
@@ -95,7 +95,7 @@ export default async function Home() {
         </>
       ) : (
         <>
-          <HowItWorks majors={majors} />
+          <HowItWorks specs={specs} />
           {guild && (
             <section>
               <div className="section-h"><h2>Player statistics</h2><span className="muted small">everyone, this week</span></div>

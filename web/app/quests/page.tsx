@@ -1,7 +1,7 @@
 import Link from "next/link";
 import PathView from "@/components/PathView";
 import QuestCard from "@/components/QuestCard";
-import { api, type Majors, type Me, type PathData, type QuestSummary } from "@/lib/api";
+import { api, type Me, type PathData, type QuestSummary, type Specializations } from "@/lib/api";
 
 const TIERS = ["novice", "apprentice", "adept", "expert", "master"];
 
@@ -11,7 +11,7 @@ export default async function Quests({ searchParams }: PageProps<"/quests">) {
   const sp = await searchParams;
   const pick = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : "");
   const me = await api<Me>("/me");
-  const view = pick("view") === "path" || (!pick("view") && !pick("major") && !pick("tier") && !pick("q") && !pick("subject") && me) ? "path" : "all";
+  const view = pick("view") === "path" || (!pick("view") && !pick("specialization") && !pick("tier") && !pick("q") && !pick("subject") && me) ? "path" : "all";
   return (
     <>
       <h1>Quest board</h1>
@@ -28,7 +28,7 @@ async function Path({ me }: { me: Me | null }) {
   if (!me) {
     return (
       <div className="card">
-        <p style={{ margin: 0 }}>Your path is the road through your major: what is next, what is done, what the next rank opens.</p>
+        <p style={{ margin: 0 }}>Your path is the road through your primary specialization: what is next, what is done, what the next rank opens.</p>
         <div className="row" style={{ marginTop: 12 }}>
           <a className="btn primary" href="/api/auth/discord?next=/quests">Enter with Discord</a>
           <Link className="btn" href="/quests?view=all">Browse all quests</Link>
@@ -43,37 +43,34 @@ async function Path({ me }: { me: Me | null }) {
 
 async function All({ sp }: { sp: Record<string, string | string[] | undefined> }) {
   const pick = (k: string) => (typeof sp[k] === "string" ? (sp[k] as string) : "");
-  const major = pick("major"), tier = pick("tier"), q = pick("q"), subject = pick("subject");
+  const spec = pick("specialization"), tier = pick("tier"), q = pick("q"), subject = pick("subject");
   const qs = new URLSearchParams();
-  if (major) qs.set("major", major);
+  if (spec) qs.set("specialization", spec);
   if (tier) qs.set("tier", tier);
   if (q) qs.set("q", q);
   if (subject) qs.set("subject", subject);
-  const [majors, data, subjects] = await Promise.all([
-    api<Majors>("/catalog/majors"),
+  const [specs, data, subjects] = await Promise.all([
+    api<Specializations>("/catalog/specializations"),
     api<{ count: number; quests: QuestSummary[] }>(`/catalog/quests?${qs}`),
     api<{ subjects: [string, number][] }>("/catalog/subjects"),
   ]);
-  const all = data?.quests ?? [];
-  const quests = all.filter((x) => !x.cross);
-  const cross = all.filter((x) => x.cross);
+  const quests = data?.quests ?? [];
   const byTier = TIERS.map((t) => ({ t, list: quests.filter((x) => x.difficulty === t) })).filter((g) => g.list.length);
-  const majorTitle = major && majors ? majors.majors[major]?.title : null;
+  const specTitle = spec && specs ? specs.specializations[spec]?.title : null;
   return (
     <>
       <p className="muted">
-        {majorTitle ? `${quests.length} ${majorTitle} quests` : `${quests.length} of ${majors?.quest_count ?? 0} quests`}
-        {cross.length > 0 && `, plus ${cross.length} cross-training`}. Browse freely; log in to earn.
+        {specTitle ? `${quests.length} ${specTitle} quests` : `${quests.length} of ${specs?.quest_count ?? 0} quests`}. Browse freely; log in to earn.
       </p>
       <form className="filters" method="get">
         <input type="hidden" name="view" value="all" />
-        <select name="major" defaultValue={major}>
-          <option value="">All majors</option>
-          {majors && Object.values(majors.majors).map((m) => <option key={m.key} value={m.key}>{m.title}</option>)}
+        <select name="specialization" defaultValue={spec}>
+          <option value="">All specializations</option>
+          {specs && Object.values(specs.specializations).filter((m) => m.key !== "undecided").map((m) => <option key={m.key} value={m.key}>{m.title}</option>)}
         </select>
         <select name="tier" defaultValue={tier}>
           <option value="">All tiers</option>
-          {majors && TIERS.map((t) => <option key={t} value={t}>{majors.tiers[t].emoji} {majors.tiers[t].name}</option>)}
+          {specs && TIERS.map((t) => <option key={t} value={t}>{specs.tiers[t].emoji} {specs.tiers[t].name}</option>)}
         </select>
         <select name="subject" defaultValue={subject}>
           <option value="">All subjects</option>
@@ -85,22 +82,13 @@ async function All({ sp }: { sp: Record<string, string | string[] | undefined> }
       {byTier.map(({ t, list }) => (
         <section key={t}>
           <div className="section-h">
-            <h2>{majors?.tiers[t].emoji} {majors?.tiers[t].name}</h2>
+            <h2>{specs?.tiers[t].emoji} {specs?.tiers[t].name}</h2>
             <span className="muted small">{list.length} quests</span>
           </div>
           <div className="grid">{list.map((x) => <QuestCard key={x.id} q={x} />)}</div>
         </section>
       ))}
-      {cross.length > 0 && (
-        <section className="lock">
-          <div className="section-h">
-            <h2>Cross-training from other majors</h2>
-            <span className="muted small">{cross.length} quests · optional, do not count toward {majorTitle} rank-ups</span>
-          </div>
-          <div className="grid">{cross.map((x) => <QuestCard key={x.id} q={x} />)}</div>
-        </section>
-      )}
-      {all.length === 0 && <div className="card">No quests match. Clear a filter.</div>}
+      {quests.length === 0 && <div className="card">No quests match. Clear a filter.</div>}
     </>
   );
 }

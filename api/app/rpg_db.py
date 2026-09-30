@@ -290,7 +290,7 @@ class RpgDB:
 
     async def search_members(self, q: str, limit: int = 40) -> list[dict]:
         """Members by id prefix or by the display name saved at login. Empty query -> most recently created."""
-        sql = ("SELECT u.discord_id, u.major, u.rank, u.xp, u.streak_days, u.created_at, u.rank_since, "
+        sql = ("SELECT u.discord_id, u.major AS specialization, u.rank, u.xp, u.streak_days, u.created_at, u.rank_since, "
                "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.name') AS name, "
                "(SELECT v FROM kv k WHERE k.user_id=u.discord_id AND k.k='web.avatar') AS avatar, "
                "(SELECT COUNT(*) FROM quest_progress p WHERE p.user_id=u.discord_id AND p.status='done') AS done "

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { api } from "@/lib/api";
 
-type Row = { id: number | string; xp: number; rank: number; rank_title: string; rank_color: string; major_title: string; name: string | null; avatar: string | null; staff?: string | null; title?: string | null };
+type Row = { id: number | string; xp: number; rank: number; rank_title: string; rank_color: string; specialization_title: string; name: string | null; avatar: string | null; staff?: string | null; title?: string | null };
 export const metadata = { title: "Leaderboard" };
 
 export default async function Leaderboard({ searchParams }: PageProps<"/leaderboard">) {
@@ -18,14 +18,14 @@ export default async function Leaderboard({ searchParams }: PageProps<"/leaderbo
       </div>
       <div className="card">
         <table className="lb">
-          <thead><tr><th>#</th><th>Member</th><th>Rank</th><th>Major</th><th>XP</th></tr></thead>
+          <thead><tr><th>#</th><th>Member</th><th>Rank</th><th>Specialization</th><th>XP</th></tr></thead>
           <tbody>
             {data.rows.map((r, i) => (
               <tr key={r.id}>
                 <td>{i + 1}</td>
                 <td><Link href={`/members/${r.id}`} className="row" style={{ gap: 8, display: "inline-flex" }}>{r.avatar && <img className="avatar" src={r.avatar} alt="" />}{r.name ?? `Member ${String(r.id).slice(-4)}`}{r.title && <span className="muted">, {r.title}</span>}</Link></td>
                 <td><span className={r.staff ? "staff-title" : ""} style={{ color: r.rank_color, fontWeight: 600 }}>{r.rank_title}</span></td>
-                <td className="muted">{r.major_title}</td>
+                <td className="muted">{r.specialization_title}</td>
                 <td><b>{r.xp}</b></td>
               </tr>
             ))}

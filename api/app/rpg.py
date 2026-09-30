@@ -109,7 +109,7 @@ def build_sets(ents) -> list[dict]:
     for r in ents.of("outfit"):
         d = r["data"]
         tier = d.get("tier") if d.get("tier") in TIERS else "novice"
-        out.append({"id": r["id"], "name": r["name"], "flavour": r["desc"], "kind": d.get("set_kind", "reward"), "major": "undecided",
+        out.append({"id": r["id"], "name": r["name"], "flavour": r["desc"], "kind": d.get("set_kind", "reward"),
                     "tier": tier, "color": TIERS[tier]["color"], "art_id": d.get("art_id") or r["id"], "unlock": r["unlock"]})
     return out
 
@@ -267,6 +267,9 @@ ACHIEVEMENTS = [
     {"key": "streak_30", "name": "Ember of Thirty Days", "desc": "Keep a thirty-day streak.", "icon": "🌋", "need": 30, "of": "streak", "badge": 5},
     {"key": "capstone_1", "name": "Capstone Bearer", "desc": "Clear a capstone dungeon.", "icon": "🐉", "need": 1, "of": "capstones", "outfit": "warrior", "badge": 6},
     {"key": "capstone_4", "name": "Dragonslayer", "desc": "Clear four capstone dungeons.", "icon": "👑", "need": 4, "of": "capstones", "badge": 8},
+    {"key": "specs_3", "name": "Many Trades", "desc": "Finish a quest in three different specializations.", "icon": "🧭", "need": 3, "of": "specs", "badge": 3},
+    {"key": "specs_7", "name": "Guild of One", "desc": "Finish a quest in every specialization.", "icon": "🌐", "need": 7, "of": "specs", "badge": 8},
+    {"key": "cross_25", "name": "Far Traveller", "desc": "Finish twenty-five quests outside your primary specialization.", "icon": "🧳", "need": 25, "of": "cross", "badge": 3},
 ]
 RANK_UP_NAMES = {1: "Apprentice", 2: "Adept", 3: "Expert", 4: "Master"}
 
@@ -276,14 +279,19 @@ def _achievement_rows() -> list[dict]:
                  {k: v for k, v in a.items() if k in ("icon", "need", "of", "badge", "outfit")}, i) for i, a in enumerate(ACHIEVEMENTS)]
 
 
-def achievements_for(ents, cat, inputs: dict, done: set[str], medals: list[dict], grants: set[tuple[str, str]] | None = None) -> list[dict]:
+def achievements_for(ents, cat, inputs: dict, done: set[str], medals: list[dict], grants: set[tuple[str, str]] | None = None,
+                     primary: str | None = None) -> list[dict]:
     """Every achievement with progress, earned flag and the outfit it unlocks (if any). Rank-ups come from medals.
     An achievement counting `medal` is earned when the member holds a medal with the achievement's key; a direct
-    grant from the admin panel earns any of them."""
+    grant from the admin panel earns any of them. `specs` counts the specializations the member finished a quest
+    in; `cross` counts finished quests outside the primary specialization (both ignore quests for everyone)."""
     earned_at = {m["medal_key"]: m["earned_at"] for m in medals}
-    caps = sum(1 for qid in done if (q := cat.quests.get(qid)) and q.capstone) if cat else 0
+    done_q = [q for qid in done if cat and (q := cat.quests.get(qid))]
+    caps = sum(1 for q in done_q if q.capstone)
+    owned_specs = {s for q in done_q for s in q.specializations if s != "all"}
+    cross = sum(1 for q in done_q if q.specializations and "all" not in q.specializations and primary not in q.specializations)
     have = {"done": inputs["done"], "first": inputs["first"], "approved": inputs["approved"], "reads": inputs["reads"],
-            "streak": inputs["streak"], "capstones": caps}
+            "streak": inputs["streak"], "capstones": caps, "specs": len(owned_specs), "cross": cross}
     out = []
     for r in ents.of("achievement"):
         d = r["data"]
@@ -344,6 +352,8 @@ TITLES = [
     ("delver", "the Delver", "Fifty dungeons cleared.", {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
     ("dragonslayer", "the Dragonslayer", "Four capstone dungeons cleared.", {"type": "achievement", "key": "capstone_4", "hint": "Clear four capstone dungeons"}),
     ("master", "the Master", "The top rank of the guild.", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+    ("versatile", "the Versatile", "A quest finished in three specializations.", {"type": "achievement", "key": "specs_3", "hint": "Finish a quest in three specializations"}),
+    ("wayfarer", "the Wayfarer", "Twenty-five quests outside your primary specialization.", {"type": "achievement", "key": "cross_25", "hint": "Finish twenty-five quests outside your primary specialization"}),
     ("guide", "the Guide", "Walks beside the newcomer.", {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
     ("keeper", "Keeper of the Guild", "Keeps the guild.", {"type": "staff", "role": "admin", "hint": "Admins only"}),
     ("sourceforged", "the Sourceforged", "Builds the guild.", {"type": "staff", "role": "developer", "hint": "Developers only"}),

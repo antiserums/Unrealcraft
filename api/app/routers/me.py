@@ -1,7 +1,10 @@
-"""The logged-in member: profile, path, next quest. Read-only in phase 1."""
+"""The logged-in member: profile, path, next quest, specializations."""
 from __future__ import annotations
 
-from fastapi import APIRouter, Depends, Request
+import json
+
+from fastapi import APIRouter, Depends, HTTPException, Request
+from pydantic import BaseModel
 
 from registrar.curriculum import TIERS, Catalog, UserState  # noqa: E402
 
@@ -9,20 +12,26 @@ from ..serializers import quest_summary
 from ..session import current_member
 
 router = APIRouter(prefix="/me", tags=["me"])
+MAX_EXTRAS = 6
 
 
 def nameplate(cat: Catalog, rank: int, major: str) -> str:
-    """Rank title; from Expert up the major is the specialty and joins the plate: 'Expert · Level Design'."""
+    """Rank title; from Expert up the primary specialization joins the plate: 'Expert · Level Design'."""
     if rank < 0:
         return "Orientation"
     title = cat.ranks[rank]["title"]
     if 3 <= rank < 6 and major and major != "undecided":
-        return f"{title} · {cat.majors.get(major, {}).get('title', major)}"
+        return f"{title} · {cat.title_of(major)}"
     return title
 
 
 def rank_color(cat: Catalog, rank: int) -> str:
     return cat.ranks.get(rank, {}).get("color") or "#7A8C7E"
+
+
+def specializations_payload(cat: Catalog, state: UserState) -> list[dict]:
+    """The member's specializations, primary first."""
+    return [{"key": k, "title": cat.title_of(k), "primary": k == state.major} for k in state.specializations]
 
 
 def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState, medals: list[dict], role: str | None = None) -> dict:
@@ -44,7 +53,7 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
                      "emoji": TIERS[tier]["emoji"], "color": TIERS[tier]["color"]}
     return {
         "id": u["discord_id"], "name": member["name"] if member else None, "avatar": member["avatar"] if member else None,
-        "major": major, "major_title": cat.majors.get(major, {}).get("title", major), "minor": u.get("minor"),
+        "specialization": major, "specialization_title": cat.title_of(major), "specializations": specializations_payload(cat, state),
         "rank": rank, "rank_title": plate[0] if plate else nameplate(cat, rank, major),
         "rank_color": plate[1] if plate else rank_color(cat, max(rank, 0)), "staff": role,
         "xp": u["xp"], "xp_floor": lo, "xp_next": hi,
@@ -61,31 +70,72 @@ def profile_payload(cat: Catalog, member: dict | None, u: dict, state: UserState
     }
 
 
-@router.get("")
-async def me(request: Request, member=Depends(current_member)):
+async def me_payload(request: Request, member: dict) -> dict:
     db, cat = request.app.state.db, request.app.state.catalog
     u, state, _ = await db.user_state(member["id"])
-    from ..staff import role_of
+    from ..staff import is_admin, role_of
     payload = profile_payload(cat, member, u, state, await db.medals(member["id"]), role=role_of(member))
     payload["recent_xp"] = await db.xp_recent(member["id"], 15)
     payload["known"] = await db.user(member["id"]) is not None
     from .review import access_for
     a = await access_for(request, member)
-    from ..staff import is_admin
     payload["admin"] = is_admin(member)
     payload["review"] = {"can": a["can_review"], "mentor": a["mentor"],
                          "pending": len(await request.app.state.rpg.pending_submissions()) if a["can_review"] else 0}
+    payload["specialization_options"] = [{"key": k, "title": v.get("title", k), "blurb": v.get("blurb", "")}
+                                         for k, v in cat.specializations.items() if k != "undecided"]
     return payload
+
+
+@router.get("")
+async def me(request: Request, member=Depends(current_member)):
+    return await me_payload(request, member)
+
+
+class SpecializationPatch(BaseModel):
+    primary: str | None = None        # the specialization that drives ranks and the nameplate; "undecided" allowed
+    extras: list[str] | None = None   # further specializations whose quests count as yours
+
+
+@router.patch("/specializations")
+async def set_specializations(body: SpecializationPatch, request: Request, member=Depends(current_member)):
+    """Primary plus extras. The bot still maps the primary to its Discord role; extras live on the site only."""
+    db, rdb, cat = request.app.state.db, request.app.state.rpg, request.app.state.catalog
+    valid = set(cat.specializations)
+    await rdb.ensure_character(member["id"])
+    u = await db.user(member["id"])
+    primary = u["major"]
+    if body.primary is not None:
+        if body.primary not in valid:
+            raise HTTPException(400, "Pick a specialization from the list.")
+        primary = body.primary
+    extras = None
+    if body.extras is not None:
+        extras = list(dict.fromkeys(e for e in body.extras if e != primary))
+        bad = [e for e in extras if e not in valid or e == "undecided"]
+        if bad:
+            raise HTTPException(400, f"Not a specialization: {', '.join(bad)}.")
+        if len(extras) > MAX_EXTRAS:
+            raise HTTPException(400, f"Up to {MAX_EXTRAS} extra specializations.")
+    if primary != u["major"]:
+        await rdb.set_user(member["id"], major=primary)
+        await rdb.emit("specialization_set", member["id"], {"primary": primary})
+    if extras is not None:
+        await rdb.kv_set(member["id"], "web.specializations", json.dumps(extras))
+    elif primary != u["major"]:                      # the new primary leaves the extras
+        _, state, _ = await db.user_state(member["id"])
+        await rdb.kv_set(member["id"], "web.specializations", json.dumps([e for e in state.extras if e != primary]))
+    return await me_payload(request, member)
 
 
 @router.get("/next")
 async def next_quest(request: Request, member=Depends(current_member)):
     db, cat = request.app.state.db, request.app.state.catalog
-    u, state, _ = await db.user_state(member["id"])
+    _, state, _ = await db.user_state(member["id"])
     pick = cat.pick(state)
-    return {"main": quest_summary(cat, pick.main, u["major"]) if pick.main else None, "reason": pick.reason,
-            "electives": [quest_summary(cat, q, u["major"]) for q in pick.electives],
-            "adjacent": quest_summary(cat, pick.adjacent, u["major"]) if pick.adjacent else None,
+    return {"main": quest_summary(cat, pick.main, state) if pick.main else None, "reason": pick.reason,
+            "electives": [quest_summary(cat, q, state) for q in pick.electives],
+            "adjacent": quest_summary(cat, pick.adjacent, state) if pick.adjacent else None,
             "remaining_minutes": cat.remaining_minutes(state)}
 
 
@@ -99,7 +149,7 @@ async def path(request: Request, member=Depends(current_member)):
     now_id = pick.main.id if pick.main else None
 
     def row(q, tag: str | None = None) -> dict:
-        d = quest_summary(cat, q, major)
+        d = quest_summary(cat, q, state)
         d["status"] = "done" if q.id in state.done else ("now" if q.id == now_id else
                                                           ("skipped" if q.id in state.skipped else "todo"))
         d["tag"] = tag
@@ -134,10 +184,10 @@ async def path(request: Request, member=Depends(current_member)):
             if need:
                 gate_tier = {"need": need, "name": TIERS[tier]["name"]}
         locked = {"n": nxt_n, "title": cfg["title"], "xp": cfg["xp"], "opens": cfg.get("opens"),
-                  "gate_tier": gate_tier, "quests": [quest_summary(cat, q, major) for q in req],
+                  "gate_tier": gate_tier, "quests": [quest_summary(cat, q, state) for q in req],
                   "tasters": tasters, "capstone": cap}
-    return {"major": major, "major_title": cat.majors.get(major, {}).get("title", major), "rank": state.rank,
-            "sections": sections, "locked": locked, "now": now_id, "reason": pick.reason}
+    return {"specialization": major, "specialization_title": cat.title_of(major), "specializations": specializations_payload(cat, state),
+            "rank": state.rank, "sections": sections, "locked": locked, "now": now_id, "reason": pick.reason}
 
 
 @router.get("/stats")

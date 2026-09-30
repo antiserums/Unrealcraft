@@ -4,11 +4,11 @@ import { useEffect, useMemo, useState } from "react";
 import type { SheetSpec } from "@/lib/art";
 import { Character, RARITY_COLOR } from "./Figure";
 
-export type Outfit = { id: string; name: string; flavour: string; kind: string; major: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
+export type Outfit = { id: string; name: string; flavour: string; kind: string; tier: string; color: string; art_id: string; owned: boolean; earned_at: string | null; hint: string | null; worn: boolean };
 export type Char = {
   worn: Outfit; outfits: Outfit[]; new_outfits: string[]; style: string; body: string; styles: string[];
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string; style?: string };
-  nameplate_colors: string[]; slots: string[]; major: string;
+  nameplate_colors: string[]; slots: string[]; specialization: string;
 };
 /** sheets: body -> style -> set -> sheet, so a try-on can show any set in any style without a round trip. */
 export type ArtProps = { sheets: Record<string, Record<string, Record<string, SheetSpec>>>; icons: Record<string, string>; bodies: string[] };

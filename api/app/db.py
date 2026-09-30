@@ -93,8 +93,12 @@ class DB:
                                      "rank_since": None, "created_at": None}
         prog = await self.progress(uid)
         prof = json.loads(await self.kv_get(uid, "profile") or "{}")
+        try:                                             # extra specializations chosen on the site (the primary is users.major)
+            extras = [s for s in json.loads(await self.kv_get(uid, "web.specializations") or "[]") if isinstance(s, str)]
+        except ValueError:
+            extras = []
         state = UserState(u["major"], u["rank"],
                           {q for q, p in prog.items() if p["status"] == "done"},
                           {q for q, p in prog.items() if p["status"] == "skipped"},
-                          json.loads(u.get("tasters_json") or "[]"), prof)
+                          json.loads(u.get("tasters_json") or "[]"), prof, extras=[e for e in extras if e != u["major"]])
         return u, state, prog

@@ -22,7 +22,7 @@ export default async function ReviewDetail({ params }: PageProps<"/review/[id]">
               <div className="pcard-avatar">{s.member.avatar ? <img src={s.member.avatar} alt="" /> : <span>{(s.member.name ?? "?").slice(0, 1)}</span>}</div>
               <div>
                 <b>{s.member.name ?? `Member ${s.member.id}`}</b>
-                <div className="small muted">rank {s.member.rank ?? "?"} · {s.member.major ?? "undecided"} · sent {s.created_at.slice(0, 16).replace("T", " ")} · engine {s.payload.ue_version || "not stated ⚠"} · <Link href={`/members/${s.member.id}`}>player card</Link></div>
+                <div className="small muted">rank {s.member.rank ?? "?"} · {s.member.specialization ?? "Undecided"} · sent {s.created_at.slice(0, 16).replace("T", " ")} · engine {s.payload.ue_version || "not stated ⚠"} · <Link href={`/members/${s.member.id}`}>player card</Link></div>
               </div>
             </div>
             <div className="eyebrow" style={{ marginTop: 14 }}>What they sent</div>

@@ -15,7 +15,7 @@ import yaml
 from fastapi import APIRouter, Depends, HTTPException, Request
 from pydantic import BaseModel
 
-from registrar.curriculum import TIERS, VERIFY_TYPES, Catalog, Quest  # noqa: E402
+from registrar.curriculum import META_FILES, TIERS, VERIFY_TYPES, Catalog, Quest  # noqa: E402
 
 from .. import entitlements as ent
 from ..config import settings
@@ -23,8 +23,8 @@ from .admin import admin_only
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
-QUEST_KEYS = ["id", "rank", "difficulty", "track", "subjects", "required_for_majors", "taster_for_majors", "adjacent_for",
-              "required_spine", "elective", "capstone", "title", "time_min", "needs_others", "official_url", "backup_url",
+QUEST_KEYS = ["id", "rank", "difficulty", "specializations", "subjects", "required_spine", "required", "taster", "taster_for",
+              "capstone", "title", "time_min", "needs_others", "official_url", "backup_url",
               "extra_urls", "community_urls", "checklist", "done_when", "xp", "verify_type", "action_key", "next_hint", "quiz", "flavors"]
 FILE_RE = re.compile(r"^[a-z0-9_]+\.yaml$")
 ID_RE = re.compile(r"^[A-Z]{1,4}\d{1,4}[A-Z]?$")
@@ -52,17 +52,17 @@ def _load_file(path: Path) -> dict:
 
 
 def _summary(q: Quest) -> dict:
-    return {"id": q.id, "title": q.raw.get("title"), "rank": q.rank, "difficulty": q.difficulty, "track": q.track, "xp": q.xp,
-            "verify_type": q.raw.get("verify_type"), "file": q.raw.get("_file"), "quiz_len": len(q.quiz),
-            "kind": "capstone" if q.capstone else ("elective" if q.elective else "required"), "required_for": q.required_for}
+    return {"id": q.id, "title": q.raw.get("title"), "rank": q.rank, "difficulty": q.difficulty, "specializations": q.specializations,
+            "xp": q.xp, "verify_type": q.raw.get("verify_type"), "file": q.raw.get("_file"), "quiz_len": len(q.quiz),
+            "kind": "capstone" if q.capstone else ("required" if q.required else "elective"), "taster_for": q.taster_for}
 
 
 @router.get("/curriculum")
 async def curriculum(request: Request, _=Depends(admin_only)):
     cat: Catalog = request.app.state.catalog
-    files = sorted(p.name for p in Path(settings.curriculum_dir).glob("*.yaml") if p.name != "majors.yaml")
+    files = sorted(p.name for p in Path(settings.curriculum_dir).glob("*.yaml") if p.name not in META_FILES)
     return {"dir": str(settings.curriculum_dir), "files": files, "default_file": DEFAULT_FILE,
-            "tracks": sorted({q.track for q in cat.quests.values() if q.track}), "majors": sorted(cat.majors),
+            "specializations": [{"key": k, "title": cat.title_of(k)} for k in cat.specializations if k != "undecided"],
             "verify_types": sorted(VERIFY_TYPES), "tiers": {k: {"name": v["name"], "quiz_len": v["quiz_len"]} for k, v in TIERS.items()},
             "ranks": [{"n": n, "title": r["title"]} for n, r in sorted(cat.ranks.items())],
             "quests": [_summary(q) for q in cat.sorted(cat.quests.values())]}
@@ -106,13 +106,15 @@ def _parse(body: QuestSave) -> dict:
                 raw[k] = int(raw[k])
             except (TypeError, ValueError):
                 raise HTTPException(400, f"{k} must be a whole number.")
-    for k in ("subjects", "required_for_majors", "taster_for_majors", "adjacent_for", "extra_urls", "community_urls", "checklist"):
+    for k in ("subjects", "specializations", "taster_for", "extra_urls", "community_urls", "checklist"):
         v = raw.get(k)
         if isinstance(v, str):
             raw[k] = [s.strip() for s in re.split(r"[\n,]" if k != "checklist" else r"\n", v) if s.strip()]
-    for k in ("required_spine", "elective", "capstone", "needs_others"):
+    for k in ("required_spine", "required", "taster", "capstone", "needs_others"):
         if k in raw:
             raw[k] = bool(raw[k])
+    for k in ("elective", "track", "required_for_majors", "taster_for_majors", "adjacent_for"):
+        raw.pop(k, None)                                  # the older shape; the loader no longer reads these
     if isinstance(raw.get("flavors"), str):                 # the form sends flavors as YAML text
         try:
             raw["flavors"] = yaml.safe_load(raw["flavors"]) or {}
@@ -183,7 +185,7 @@ async def save_quest(body: QuestSave, request: Request, admin=Depends(admin_only
     if body.replace and not old:
         raise HTTPException(404, "The quest you are editing no longer exists.")
     file = (body.file or (old.raw.get("_file") if old else None) or DEFAULT_FILE).strip()
-    if not FILE_RE.match(file) or file == "majors.yaml":
+    if not FILE_RE.match(file) or file in META_FILES:
         raise HTTPException(400, "File name: lower-case letters, digits, underscores, ending in .yaml.")
     warns = _validate(request, raw, file, body.replace)
     _write(raw, file, old.id if old else None, old.raw.get("_file") if old else None)

@@ -11,7 +11,7 @@ type Overview = {
   log: { id: number; admin_id: number | string; action: string; target_id: number | string | null; detail: string; created_at: string }[];
   pending: { id: number; user_id: number | string; quest_id: string; route: string; created_at: string }[];
 };
-type MemberRow = { discord_id: number | string; name: string | null; avatar: string | null; major: string; rank: number; xp: number; done: number; streak_days: number; created_at: string };
+type MemberRow = { discord_id: number | string; name: string | null; avatar: string | null; specialization: string; rank: number; xp: number; done: number; streak_days: number; created_at: string };
 
 const LABEL: Record<string, string> = { members: "members", members_logged_in: "logged in on the site", quests_done: "quests done", pending_reviews: "pending reviews", fights_today: "fights today", fights_total: "fights ever", events_undelivered: "events waiting for the bot", xp_total: "XP awarded", quests_in_catalog: "quests in catalog" };
 
@@ -41,12 +41,12 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
       </form>
       <div className="card" style={{ padding: 0, overflow: "auto" }}>
         <table className="adm">
-          <thead><tr><th>Member</th><th>Id</th><th>Rank</th><th>Major</th><th>XP</th><th>Done</th><th>Streak</th><th>Since</th></tr></thead>
+          <thead><tr><th>Member</th><th>Id</th><th>Rank</th><th>Specialization</th><th>XP</th><th>Done</th><th>Streak</th><th>Since</th></tr></thead>
           <tbody>
             {(m?.members ?? []).map((r) => (
               <tr key={r.discord_id}>
                 <td><Link href={`/admin/members/${r.discord_id}`}>{r.name ?? <span className="muted">not logged in yet</span>}</Link></td>
-                <td><code>{r.discord_id}</code></td><td>{r.rank}</td><td>{r.major}</td><td>{r.xp}</td><td>{r.done}</td><td>{r.streak_days}</td><td className="muted">{r.created_at.slice(0, 10)}</td>
+                <td><code>{r.discord_id}</code></td><td>{r.rank}</td><td>{r.specialization}</td><td>{r.xp}</td><td>{r.done}</td><td>{r.streak_days}</td><td className="muted">{r.created_at.slice(0, 10)}</td>
               </tr>
             ))}
             {(m?.members ?? []).length === 0 && <tr><td colSpan={8} className="muted">No members match.</td></tr>}

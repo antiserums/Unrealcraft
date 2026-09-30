@@ -8,8 +8,8 @@ export type Grant = EntRef & { granted_by: number | string | null; created_at: s
 const KIND_LABEL: Record<string, string> = { outfit: "Outfit", nameplate: "Nameplate colour", avatar_frame: "Avatar frame", card_frame: "Player card frame", title: "Title", achievement: "Achievement" };
 
 /** Admin actions on one member. Every call goes to /api/admin/members/{id}/... and is written to the admin log. */
-export default function AdminActions({ uid, ranks, majors, current, entitlements = [], grants = [] }:
-  { uid: number; ranks: Rank[]; majors: string[]; current: { rank: number; major: string }; entitlements?: EntRef[]; grants?: Grant[] }) {
+export default function AdminActions({ uid, ranks, specializations, current, entitlements = [], grants = [] }:
+  { uid: number; ranks: Rank[]; specializations: { key: string; title: string }[]; current: { rank: number; specialization: string }; entitlements?: EntRef[]; grants?: Grant[] }) {
   const [entKind, setEntKind] = useState("title");
   const [entId, setEntId] = useState("");
   const router = useRouter();
@@ -19,7 +19,7 @@ export default function AdminActions({ uid, ranks, majors, current, entitlements
   const [quest, setQuest] = useState("");
   const [withXp, setWithXp] = useState(true);
   const [rank, setRank] = useState(String(current.rank));
-  const [major, setMajor] = useState(current.major);
+  const [spec, setSpec] = useState(current.specialization);
   const [xp, setXp] = useState("");
   const [reason, setReason] = useState("testing");
   const [medal, setMedal] = useState("");
@@ -49,18 +49,18 @@ export default function AdminActions({ uid, ranks, majors, current, entitlements
       </div>
       <div className="small muted" style={{ marginTop: 4 }}>Marks the quest done (quiz passed) and, with XP, awards its XP. The bot then checks for a promotion.</div>
 
-      <h3 style={{ marginTop: 16 }}>Rank and major</h3>
+      <h3 style={{ marginTop: 16 }}>Rank and primary specialization</h3>
       <div className="adm-form">
         <select value={rank} onChange={(e) => setRank(e.target.value)}>
           <option value="-1">-1 · Orientation</option>
           {ranks.map((r) => <option key={r.n} value={r.n}>{r.n} · {r.title} ({r.xp} XP)</option>)}
         </select>
-        <select value={major} onChange={(e) => setMajor(e.target.value)}>
-          {majors.map((m) => <option key={m} value={m}>{m}</option>)}
+        <select value={spec} onChange={(e) => setSpec(e.target.value)}>
+          {specializations.map((m) => <option key={m.key} value={m.key}>{m.title}</option>)}
         </select>
-        <button className="primary" disabled={busy} onClick={() => post("rank", { rank: Number(rank), major })}>Set</button>
+        <button className="primary" disabled={busy} onClick={() => post("rank", { rank: Number(rank), specialization: spec })}>Set</button>
       </div>
-      <div className="small muted" style={{ marginTop: 4 }}>From Expert up the major is the specialty on the nameplate. XP is raised to the rank's floor if it is below it. The bot swaps Discord roles within a minute.</div>
+      <div className="small muted" style={{ marginTop: 4 }}>From Expert up the primary specialization joins the nameplate. XP is raised to the rank&apos;s floor if it is below it. The bot swaps Discord roles within a minute. Members add extra specializations themselves on their player card page.</div>
 
       <h3 style={{ marginTop: 16 }}>XP</h3>
       <div className="adm-form">

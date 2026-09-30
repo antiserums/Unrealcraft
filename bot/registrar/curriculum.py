@@ -15,6 +15,7 @@ import yaml
 from . import profile as prof_mod
 
 ALL = "all"
+META_FILES = {"specializations.yaml", "majors.yaml"}
 ORIENTATION_RANK = -1
 VERIFY_TYPES = {"action", "quiz", "screenshot", "writeup", "package", "mentor"}
 QUIZ_PASS_RATIO = 0.8          # 4/5
@@ -43,10 +44,23 @@ class Quest:
     def id(self) -> str: return self.raw["id"]
     @property
     def rank(self) -> int: return int(self.raw["rank"])
+    # A quest belongs to one or more specializations (`all` = everyone). `required` means required within them;
+    # otherwise it is an elective on their shelf. `taster` marks a short look into a specialization for newcomers.
     @property
-    def track(self) -> str: return self.raw.get("track", "")
+    def specializations(self) -> list[str]: return list(self.raw.get("specializations") or [])
     @property
-    def elective(self) -> bool: return bool(self.raw.get("elective"))
+    def required(self) -> bool: return bool(self.raw.get("required", not self.raw.get("elective", False)))
+    @property
+    def taster(self) -> bool: return bool(self.raw.get("taster") or self.raw.get("taster_for"))
+
+    def in_specialization(self, key: str) -> bool:
+        return ALL in self.specializations or key in self.specializations
+
+    # ---- older names, kept so the bot's cogs read the same data until its Discord pass ----
+    @property
+    def track(self) -> str: return self.specializations[0] if self.specializations else ""
+    @property
+    def elective(self) -> bool: return not self.required
     @property
     def capstone(self) -> bool: return bool(self.raw.get("capstone"))
     @property
@@ -62,14 +76,18 @@ class Quest:
     @property
     def quiz(self) -> list[dict]: return self.raw.get("quiz") or []
     @property
-    def required_for(self) -> list[str]: return self.raw.get("required_for_majors") or []
+    def required_for(self) -> list[str]: return self.specializations if self.required else []
     @property
-    def taster_for(self) -> list[str]: return self.raw.get("taster_for_majors") or []
+    def taster_for(self) -> list[str]:
+        """Specializations this quest is a taster for: `taster_for` when listed, else its own when `taster: true`."""
+        if self.raw.get("taster_for"):
+            return list(self.raw["taster_for"])
+        return [s for s in self.specializations if s != ALL] if self.raw.get("taster") else []
     @property
-    def adjacent_for(self) -> list[str]: return self.raw.get("adjacent_for") or []
+    def adjacent_for(self) -> list[str]: return []
 
     def required_for_major(self, major: str) -> bool:
-        return not self.elective and (ALL in self.required_for or major in self.required_for)
+        return self.required and self.in_specialization(major)
 
     def flavor(self, major: str) -> dict:
         fl = self.raw.get("flavors") or {}
@@ -78,12 +96,17 @@ class Quest:
 
 @dataclass
 class UserState:
-    major: str
+    major: str                                       # the primary specialization (ranks, nameplate, next quest)
     rank: int
     done: set[str] = field(default_factory=set)
     skipped: set[str] = field(default_factory=set)
     injected_tasters: list[str] = field(default_factory=list)
     profile: dict = field(default_factory=dict)      # from onboarding answers (see profile.py)
+    extras: list[str] = field(default_factory=list)  # further specializations the member chose; their quests count as "yours"
+
+    @property
+    def specializations(self) -> list[str]:
+        return [self.major] + [e for e in self.extras if e != self.major] if self.major != "undecided" else list(self.extras)
 
 
 @dataclass
@@ -99,7 +122,8 @@ class Catalog:
         self.quests = quests
         self.meta = meta
         self.ranks = {r["n"]: r for r in meta.get("ranks", [])}
-        self.majors = meta.get("majors", {})
+        self.specializations: dict = meta.get("specializations") or meta.get("majors") or {}
+        self.majors = self.specializations                  # older name, same dict
         self.xp_rules = meta.get("xp_rules", {})
         self.min_members = int((meta.get("community") or {}).get("min_members", 20))
         self.community_ready = True        # set by the bot from the live member count
@@ -111,10 +135,13 @@ class Catalog:
     # ---------------- loading ----------------
     @classmethod
     def load(cls, directory: Path) -> "Catalog":
-        meta = yaml.safe_load((directory / "majors.yaml").read_text(encoding="utf-8"))
+        meta_file = directory / "specializations.yaml"
+        if not meta_file.exists():
+            meta_file = directory / "majors.yaml"           # the file's older name
+        meta = yaml.safe_load(meta_file.read_text(encoding="utf-8"))
         quests: dict[str, Quest] = {}
         for f in sorted(directory.glob("*.yaml")):
-            if f.name == "majors.yaml":
+            if f.name in META_FILES:
                 continue
             doc = yaml.safe_load(f.read_text(encoding="utf-8")) or {}
             for q in doc.get("quests", []) or []:
@@ -131,9 +158,14 @@ class Catalog:
         for q in self.quests.values():
             r = q.raw
             where = f"{q.id} ({r.get('_file')})"
-            for k in ("id", "rank", "track", "title", "xp", "verify_type", "done_when"):
+            for k in ("id", "rank", "title", "xp", "verify_type", "done_when"):
                 if r.get(k) in (None, ""):
                     errs.append(f"{where}: missing {k}")
+            if not q.specializations:
+                errs.append(f"{where}: missing specializations")
+            for s in q.specializations:
+                if s != ALL and s not in self.specializations:
+                    errs.append(f"{where}: unknown specialization {s!r}")
             if r.get("verify_type") not in VERIFY_TYPES:
                 errs.append(f"{where}: bad verify_type {r.get('verify_type')!r}")
             required_somewhere = not q.elective and q.rank >= 0 and bool(q.required_for)
@@ -191,25 +223,27 @@ class Catalog:
     def capstone(self, major: str, rank: int) -> dict | None:
         return (self.majors.get(major, {}).get("capstones") or {}).get(rank)
 
-    def home_tracks(self, major: str) -> set[str]:
-        return {q.track for q in self.quests.values() if q.rank >= 1 and major in q.required_for}
-
-    def affinity(self, q: Quest, major: str) -> str:
-        """major: the member's own path (or an elective in a home track). adjacent: flagged adjacent,
-        a taster, or it has a flavor written for this major. other: everything else."""
-        shared_tracks = {"starter-quests", "orientation"}          # meta electives are for everyone
-        if major in q.required_for or ALL in q.required_for or \
-                (q.elective and (q.track in self.home_tracks(major) or q.track in shared_tracks)):
+    def affinity(self, q: Quest, major: str, extras: list[str] | tuple[str, ...] = ()) -> str:
+        """major: in one of the member's specializations (primary or extra), or for everyone. adjacent: a taster
+        for one of them, or it has a flavor written for one. other: everything else."""
+        mine = {major, *extras} - {"undecided"}
+        if ALL in q.specializations or mine & set(q.specializations):
             return "major"
-        if major in q.adjacent_for or major in q.taster_for or major in (q.raw.get("flavors") or {}):
+        if mine & set(q.taster_for) or mine & set(q.raw.get("flavors") or {}):
             return "adjacent"
         return "other"
 
+    def title_of(self, key: str) -> str:
+        return self.specializations.get(key, {}).get("title", key)
+
     def owner_label(self, q: Quest) -> str:
-        owners = [m for m in q.required_for if m != ALL]
-        if owners:
-            return self.majors.get(owners[0], {}).get("title", owners[0])
-        return "Tasters" if (q.track == "tasters" or q.taster_for) else q.track
+        """Who a quest belongs to, for grouping: its specializations' titles, 'Everyone' or 'Tasters'."""
+        owners = [s for s in q.specializations if s != ALL]
+        if q.taster and not q.required:
+            return "Tasters"
+        if not owners:
+            return "Everyone"
+        return " · ".join(self.title_of(s) for s in owners[:2]) + (" …" if len(owners) > 2 else "")
 
     # ---------------- picker ----------------
     def pick(self, u: UserState) -> Pick:
@@ -246,10 +280,10 @@ class Catalog:
         pool = [q for q in self.sorted(self.quests.values())
                 if q.elective and 0 <= q.rank <= u.rank and todo(q) and self.available(q)]
         score = lambda q: -prof_mod.elective_score(q, u.profile, u.major)      # stable sort keeps catalog order on ties
-        majors = sorted([q for q in pool if self.affinity(q, u.major) == "major"], key=score)[:2]
+        majors = sorted([q for q in pool if self.affinity(q, u.major, u.extras) == "major"], key=score)[:2]
         adj_pool = [q for q in self.sorted(self.quests.values())
                     if 1 <= q.rank <= u.rank and todo(q) and q not in majors
-                    and self.affinity(q, u.major) == "adjacent" and not q.required_for_major(u.major)
+                    and self.affinity(q, u.major, u.extras) == "adjacent" and not q.required_for_major(u.major)
                     and not (q.taster_for and u.major not in q.taster_for)]   # other majors' tasters aren't for you
         if not adj_pool and u.profile.get("curious"):   # nothing flagged adjacent: fall back to a curiosity match
             adj_pool = [q for q in pool if q not in majors and prof_mod.quest_matches_curious(q, u.profile)]
@@ -299,9 +333,9 @@ class Catalog:
 
     # ---------------- tier counts ----------------
     def counts_for(self, q: Quest, major: str) -> bool:
-        """A quest counts toward a major's tier total if it is the major's own (ID prefix) or required for it."""
-        prefix = self.majors.get(major, {}).get("prefix")
-        return (prefix and q.id.startswith(prefix)) or major in q.required_for or ALL in q.required_for
+        """A quest counts toward a specialization's tier total if it belongs to it (or to everyone)."""
+        prefix = self.specializations.get(major, {}).get("prefix")
+        return bool(prefix and q.id.startswith(prefix)) or q.in_specialization(major)
 
     def tier_progress(self, u: UserState, rank: int) -> tuple[int, int, int, str]:
         """(done, needed, available, tier) for leaving `rank`. `needed` is capped at what exists so far."""
@@ -377,7 +411,7 @@ class Catalog:
                  if 1 <= q.rank <= nxt + 2 and not q.elective and not q.required_for_major(u.major)
                  and q.id not in taster_ids]
         if shelf:
-            lines.append("◇ OPTIONAL SHELF: other majors' work. Nothing here gates you. It opens by rank.")
+            lines.append("◇ OPTIONAL SHELF: other specializations' work. Nothing here gates you. It opens by rank.")
             groups: dict[str, list[int]] = {}
             hits: dict[str, int] = {}
             for q in shelf:

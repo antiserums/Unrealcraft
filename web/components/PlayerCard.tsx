@@ -13,7 +13,7 @@ export default function PlayerCard({ c, sheet, badges, deco }: { c: Card; sheet:
     <article className="pcard" style={{ "--plate": c.nameplate } as React.CSSProperties}>
       <div className="pcard-banner">
         <span className={`pcard-rank ${c.staff ? "staff-title" : ""}`} style={{ color: c.rank_color, borderColor: c.rank_color }}>{c.rank_title}</span>
-        <span className="pcard-major">{c.major_title}</span>
+        <span className="pcard-spec" title={c.specializations.map((s) => s.title).join(", ")}>{c.specialization_title}{c.specializations.length > 1 ? ` +${c.specializations.length - 1}` : ""}</span>
       </div>
       <div className="pcard-body">
         <div className="pcard-id">

@@ -244,7 +244,7 @@ class Quests(commands.Cog):
         u = await db.user(uid)
         xp = q.xp
         if u["rank"] >= 3 and self.cat.affinity(q, u["major"]) == "major":
-            xp = round(xp * self.cat.xp_rules.get("in_major_multiplier_rank3plus", 1.25))
+            xp = round(xp * self.cat.xp_rules.get("in_specialization_multiplier_rank3plus", 1.25))
         await db.set_progress(uid, qid, "done")
         await db.add_xp(uid, xp, f"quest:{qid}")
         await db.touch_streak(uid)

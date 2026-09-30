@@ -1,8 +1,8 @@
-# Unrealcraft — ranks, majors, tasters, capstones.
+# Unrealcraft — ranks, specializations, tasters, capstones.
 # The quest picker reads this file. Quest files hold the quests themselves.
 
 ranks:
-  # xp is CUMULATIVE. A rank-up needs BOTH xp >= threshold AND this major's capstone for the rank at Pass.
+  # xp is CUMULATIVE. A rank-up needs BOTH xp >= threshold AND this specialization's capstone for the rank at Pass.
   # The brief's example thresholds (0/200/500/1000/1800/3000/5000) are lower than the XP the Starter Quests
   # alone pays out (~620 + ~95 Orientation), so XP would never be the gate. The values below are rescaled so
   # XP roughly equals "the required quests for that rank are done". Tune after the first 30 days.
@@ -10,7 +10,7 @@ ranks:
   # end R3 ≈ 3825 raw (≈ 4050 with the 1.25× in-Specialty bonus). Each threshold sits a little below that, so the
   # capstone is the real gate. Phase 4 TODO: rebalance Programming and Environment Art quest XP to land near the same totals.
   # Each rank opens a quest difficulty tier (`tier`, see TIERS in bot/registrar/curriculum.py).
-  # `quests_to_leave`: how many quests of that tier (your major's own + shared ones required for it) you must
+  # `quests_to_leave`: how many quests of that tier (your specialization's own + shared ones required for it) you must
   # finish, on top of the core path, before the next promotion. Capped at what exists while content grows.
   - {n: 0, key: novice,       title: "Novice",       tier: novice,     xp: 0,     color: "#7A8C7E", hoist: false, opens: "🟢 Novice quests: #quest-log, #starter-quests and the major forums (read all, post in your major's)"}
   - {n: 1, key: apprentice,     title: "Apprentice",     tier: apprentice, quests_to_leave: 30, xp: 650,   color: "#B5714B", hoist: false, opens: "🔵 Apprentice quests and the Blockout tag in #showcase"}
@@ -33,10 +33,10 @@ xp_rules:
   chat_xp: 0                       # OFF. Never counts toward ranks.
   submit_cooldown_after_fail_min: 120
   spot_check_every: 5                # every Nth Rank 0-1 turn-in (accepted on trust) is also shown to mentors
-  in_major_multiplier_rank3plus: 1.25   # Expert+ earn more on quests in their own major
+  in_specialization_multiplier_rank3plus: 1.25   # Expert+ earn more on quests in their own major
   post_spine_mix: {major: 70, adjacent: 15, opposite: 10, social: 5}
 
-majors:
+specializations:
   level_design:
     title: "Level Design"
     prefix: LDQ
@@ -91,7 +91,7 @@ majors:
       5: {id: R5-LK-CAP, title: "Lighting scenarios", brief: "Time-of-day / weather / lighting scenario system."}
       6: {id: R6-LK-CAP, title: "Shipped shot", brief: "Packaged shot or level + breakdown."}
 
-  # ---------- stubbed majors (titles + capstones only in Phase 1) ----------
+  # ---------- stubbed specializations (titles + capstones only in Phase 1) ----------
   tech_art:
     title: "Tech Art"
     prefix: TAQ

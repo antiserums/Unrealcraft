@@ -87,11 +87,11 @@ PACE_HOURS = {"light": 1.5, "steady": 3.5, "focused": 7.5, "intense": 12}
 
 # curiosity → quest subjects/tracks it matches
 CURIOUS_MATCH = {
-    "lighting": {"lighting", "lumen", "exposure", "post-process", "world-lighting"},
+    "lighting": {"lighting", "lumen", "exposure", "post-process", "lookdev"},
     "materials": {"materials", "material", "shaders", "decals"},
     "blueprint": {"blueprint", "interaction", "bp"},
-    "animation": {"animation", "anim", "characters-anim", "montage", "retargeting"},
-    "cpp": {"cpp", "c++", "code", "bay-code"},
+    "animation": {"animation", "anim", "montage", "retargeting"},
+    "cpp": {"cpp", "c++", "code", "programming"},
     "vfx": {"niagara", "vfx", "fx"},
     "world": {"landscape", "foliage", "pcg", "water", "world"},
     "cinematics": {"sequencer", "cinematics", "camera", "cameras"},
@@ -159,5 +159,5 @@ def elective_score(q, prof: dict, major: str | None = None) -> int:
     words = {s.lower() for s in (q.raw.get("subjects") or [])}
     goal_words = set().union(*[GOAL_SUBJECTS.get(g, set()) for g in prof.get("goals") or []]) if prof.get("goals") else set()
     interests = [m for m in prof.get("majors") or [] if m != major]
-    interest_hit = any(m in (q.raw.get("required_for_majors") or []) for m in interests)
+    interest_hit = any(q.required and q.in_specialization(m) for m in interests)
     return 2 * quest_matches_curious(q, prof) + 2 * interest_hit + (1 if words & goal_words else 0)

@@ -69,6 +69,18 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   granted only. `entitlement_grants` hands one member one entitlement from their admin page whatever the rule says.
   Achievements count one of: quests done, first-try boss wins, accepted work, readings, streak, capstones, or a
   medal with the achievement's key. New art still comes only from the synced art pack; a row points at an art id.
+- **Specializations (done, 2026-09-30):** majors are specializations, in code and on screen. A member has a
+  primary (`users.major`, the column keeps its old name; it drives ranks, the next quest and the nameplate) plus
+  any number of extras (kv `web.specializations`, chosen on the player card page, `PATCH /me/specializations`).
+  Quests of any chosen specialization count as "yours" (affinity, the Expert+ XP bonus). Quest YAML: `track`,
+  `required_for_majors`, `taster_for_majors`, `adjacent_for` and `elective` are gone; a quest has
+  `specializations: [..]` (`all` = everyone), `required: true|false` (within those), and `taster: true` or
+  `taster_for: [..]`. `curriculum/specializations.yaml` replaces `majors.yaml`; the quest files were renamed
+  (`starter_quests`, `lighting_and_space`, `blueprint_in_levels`, `characters_and_encounters`, `lookdev_extra`,
+  `programming_extra`). Achievement counters `specs` (specializations with a finished quest) and `cross` (quests
+  outside the primary) feed cross-specialization entitlements (Many Trades, Guild of One, Far Traveller, the
+  titles the Versatile and the Wayfarer). The bot still maps the primary to its Discord role; the Discord side
+  (roles, labs, `/major`) is a later pass, and `tools/migrate_specializations.py` is the one-off that did the YAML.
 - **Quest editor (done):** `/admin/quests` lists the catalog; `/admin/quests/{id}` (or `new`) edits one quest as a
   form (every field, a quiz editor, flavors as YAML) or as raw YAML. Saving validates the quest against the whole
   catalog, rewrites its curriculum file with `yaml.safe_dump` (comments in that file are lost, so hand-written

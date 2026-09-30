@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import CardStudio from "@/components/CardStudio";
 import type { ArtProps, Char } from "@/components/CharacterSheet";
 import MeNav from "@/components/MeNav";
+import SpecializationPicker from "@/components/SpecializationPicker";
 import { badgeImage, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
 
@@ -27,6 +28,7 @@ export default async function Profile() {
       <MeNav active="/me" />
       {c.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
       <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} wardrobe={wardrobe} />
+      <SpecializationPicker mine={c.specializations} options={c.specialization_options ?? []} />
       {c.next_rank && (
         <div className="card" style={{ marginTop: 14 }}>
           <div className="eyebrow">Next rank: {c.next_rank.title}</div>

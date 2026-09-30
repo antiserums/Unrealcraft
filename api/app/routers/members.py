@@ -35,4 +35,4 @@ async def leaderboard(request: Request, period: str = "week"):
          "rank_color": (nameplate_for(role_of_id(r["discord_id"])) or (None, rank_color(cat, max(r["rank"], 0))))[1],
          "staff": role_of_id(r["discord_id"]), "name": await rdb.kv_get(r["discord_id"], "web.name"), "title": await title_of(request, r["discord_id"]),
          "avatar": await rdb.kv_get(r["discord_id"], "web.avatar"),
-         "major_title": cat.majors.get(r["major"], {}).get("title", r["major"])} for r in rows]}
+         "specialization_title": cat.title_of(r["major"])} for r in rows]}

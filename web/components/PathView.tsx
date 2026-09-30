@@ -6,7 +6,7 @@ export default function PathView({ p }: { p: PathData }) {
   return (
     <>
       <p className="muted">
-        <span className="eyebrow" style={{ marginRight: 8 }}>{p.major_title} · {p.rank < 0 ? "Orientation" : `Rank ${p.rank}`}</span>
+        <span className="eyebrow" style={{ marginRight: 8 }}>{p.specialization_title}{p.specializations.filter((s) => !s.primary).length ? ` (+ ${p.specializations.filter((s) => !s.primary).map((s) => s.title).join(", ")})` : ""} · {p.rank < 0 ? "Orientation" : `Rank ${p.rank}`}</span>
         Why this next: {p.reason}
       </p>
       {p.sections.map((s) => (
@@ -17,7 +17,7 @@ export default function PathView({ p }: { p: PathData }) {
           </div>
           {s.tier && (
             <div className="note small" style={{ marginBottom: 10 }}>
-              {s.tier.emoji} {s.tier.name} quests: <b>{s.tier.done}/{s.tier.need}</b> done. Any {s.tier.name} quest in {p.major_title} counts; {s.tier.available} exist so far.
+              {s.tier.emoji} {s.tier.name} quests: <b>{s.tier.done}/{s.tier.need}</b> done. Any {s.tier.name} quest in {p.specialization_title} counts; {s.tier.available} exist so far.
             </div>
           )}
           <div className="grid">{s.quests.map((q) => <QuestCard key={q.id} q={q} showStatus />)}</div>

@@ -45,7 +45,7 @@ async def member_ctx(request: Request, uid: int) -> MemberCtx:
     _, state, _ = await db.user_state(uid)
     medals = await db.medals(uid)
     grants = set(await rdb.grants(uid))
-    return MemberCtx(inputs, state, medals, grants, rpg.achievements_for(ents, cat, inputs, state.done, medals, grants))
+    return MemberCtx(inputs, state, medals, grants, rpg.achievements_for(ents, cat, inputs, state.done, medals, grants, primary=state.major))
 
 
 async def character_payload(request: Request, uid: int, u: dict, unlock_all: bool = False, role: str | None = None) -> dict:
@@ -84,7 +84,7 @@ async def character_payload(request: Request, uid: int, u: dict, unlock_all: boo
     body = (cos.get("appearance") or {}).get("body") or "body_a"
     return {"stats": stats, "worn": next(c for c in catalog if c["worn"]), "style": style, "body": body,
             "outfits": catalog, "new_outfits": new_sets, "cosmetics": cos, "nameplate_colors": NAMEPLATE_COLORS,
-            "slots": rpg.SLOTS, "styles": rpg.STYLES, "major": major}
+            "slots": rpg.SLOTS, "styles": rpg.STYLES, "specialization": major}
 
 
 @router.get("/me/character")
@@ -112,6 +112,9 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     medals = await db.medals(uid)
     who = session if session and session["id"] == uid else None
     p = profile_payload(cat, who, u, state, medals, role=role_of(who) if who else role_of_id(uid))
+    if who:                                           # the owner can change specializations from the card page
+        p["specialization_options"] = [{"key": k, "title": v.get("title", k), "blurb": v.get("blurb", "")}
+                                       for k, v in cat.specializations.items() if k != "undecided"]
     if not who:
         p["name"] = await rdb.kv_get(uid, "web.name")
         p["avatar"] = await rdb.kv_get(uid, "web.avatar")
@@ -427,8 +430,9 @@ async def complete_quest(request: Request, uid: int, q: Quest, u: dict) -> tuple
     if q.id in done:
         return 0, None
     xp = q.xp
-    if u.get("rank", -1) >= 3 and cat.affinity(q, u.get("major", "undecided")) == "major":
-        xp = round(xp * cat.xp_rules.get("in_major_multiplier_rank3plus", 1.25))
+    _, state, _ = await db.user_state(uid)
+    if u.get("rank", -1) >= 3 and cat.affinity(q, state.major, state.extras) == "major":
+        xp = round(xp * cat.xp_rules.get("in_specialization_multiplier_rank3plus", 1.25))
     await rdb.set_progress(uid, q.id, "done")
     await rdb.add_xp(uid, xp, f"quest:{q.id}")
     await rdb.touch_streak(uid)
