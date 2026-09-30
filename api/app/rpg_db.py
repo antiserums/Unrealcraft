@@ -4,6 +4,8 @@ from __future__ import annotations
 import datetime as dt
 import json
 
+import aiosqlite
+
 from .db import DB
 
 SCHEMA = """
@@ -197,3 +199,53 @@ class RpgDB:
         cur = await self.conn.execute("SELECT v FROM kv WHERE user_id=? AND k=?", (uid, k))
         row = await cur.fetchone()
         return row["v"] if row else None
+
+    # ---------- reviews (the bot's submissions / review_actions tables) ----------
+    async def submission(self, sid: int) -> dict | None:
+        cur = await self.conn.execute("SELECT * FROM submissions WHERE id=?", (sid,))
+        row = await cur.fetchone()
+        return dict(row) if row else None
+
+    async def pending_submissions(self, limit: int = 100) -> list[dict]:
+        cur = await self.conn.execute(
+            "SELECT s.*, u.rank AS member_rank, u.major AS member_major FROM submissions s "
+            "LEFT JOIN users u ON u.discord_id = s.user_id WHERE s.status='pending' ORDER BY s.id LIMIT ?", (limit,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def decided_submissions(self, limit: int = 50) -> list[dict]:
+        cur = await self.conn.execute(
+            "SELECT s.*, u.rank AS member_rank, u.major AS member_major FROM submissions s "
+            "LEFT JOIN users u ON u.discord_id = s.user_id WHERE s.status!='pending' ORDER BY s.decided_at DESC LIMIT ?", (limit,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def review_actions(self, sid: int) -> list[dict]:
+        cur = await self.conn.execute(
+            "SELECT reviewer_id, verdict, is_peer, notes, created_at FROM review_actions WHERE submission_id=? ORDER BY id", (sid,))
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def add_review_action(self, sid: int, reviewer: int, verdict: str, is_peer: bool, notes: str | None) -> bool:
+        try:
+            await self.conn.execute(
+                "INSERT INTO review_actions(submission_id, reviewer_id, verdict, is_peer, notes) VALUES (?,?,?,?,?)",
+                (sid, reviewer, verdict, int(is_peer), notes))
+            await self.conn.commit()
+            return True
+        except aiosqlite.IntegrityError:
+            return False
+
+    async def peer_approvals(self, sid: int) -> int:
+        cur = await self.conn.execute(
+            "SELECT COUNT(*) c FROM review_actions WHERE submission_id=? AND is_peer=1 AND verdict='approve'", (sid,))
+        return (await cur.fetchone())["c"]
+
+    async def decide(self, sid: int, status: str, reviewer_id: int | None, notes: str | None) -> None:
+        await self.conn.execute(
+            "UPDATE submissions SET status=?, reviewer_id=?, notes=?, decided_at=datetime('now') WHERE id=?",
+            (status, reviewer_id, notes, sid))
+        await self.conn.commit()
+
+    async def xp_count_today(self, uid: int, reason_prefix: str) -> int:
+        cur = await self.conn.execute(
+            "SELECT COUNT(*) c FROM xp_log WHERE user_id=? AND reason LIKE ? AND date(created_at)=date('now')",
+            (uid, reason_prefix + "%"))
+        return (await cur.fetchone())["c"]

@@ -89,8 +89,13 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
     featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
+    options = rpg.cosmetic_catalog(int(u.get("rank", -1)), {a["key"] for a in earned})
+    plate = rpg.pick_owned(options["nameplate"], cos.get("nameplate"))
     return {**p, "worn": char["worn"], "style": char["style"], "body": char["body"], "cosmetics": cos,
-            "nameplate": cos.get("nameplate") or p["rank_color"],
+            "nameplate": plate["value"], "nameplate_id": plate["id"],
+            "avatar_frame": rpg.pick_owned(options["avatar_frame"], cos.get("avatar_frame"))["id"],
+            "card_frame": rpg.pick_owned(options["card_frame"], cos.get("card_frame"))["id"],
+            "cosmetic_options": options,
             "motto": cos.get("banner") or "", "public": bool(cos.get("public")),
             "achievements_earned": len(earned), "achievements_total": len(ach), "featured": featured,
             "nameplate_colors": NAMEPLATE_COLORS, "earned_achievements": earned}
@@ -105,6 +110,8 @@ class CharacterPatch(BaseModel):
     wear: str | None = None
     nameplate: str | None = None
     banner: str | None = None                      # the motto on the player card
+    avatar_frame: str | None = None                # card cosmetics, see rpg.AVATAR_FRAMES / CARD_FRAMES
+    card_frame: str | None = None
     featured: list[str] | None = None              # up to three achievement keys shown on the card
     public: bool | None = None                     # card visible without logging in
     style: str | None = None                       # melee (sword + shield) | caster (staff + orb)
@@ -120,10 +127,20 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         if body.wear not in await rdb.outfits(member["id"]):
             raise HTTPException(403, "You have not earned that outfit yet.")
         cos["outfit"] = body.wear
-    if body.nameplate is not None:
-        if body.nameplate not in NAMEPLATE_COLORS:
-            raise HTTPException(400, "Pick a color from the palette.")
-        cos["nameplate"] = body.nameplate
+    u0, state0, _ = await request.app.state.db.user_state(member["id"])
+    earned0 = {a["key"] for a in rpg.achievements_for(request.app.state.catalog, await rdb.stat_inputs(member["id"]), state0.done,
+                                                       await request.app.state.db.medals(member["id"])) if a["earned"]}
+    options = rpg.cosmetic_catalog(int(u0.get("rank", -1)), earned0)
+    for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame")):
+        want = getattr(body, field)
+        if want is None:
+            continue
+        hit = next((c for c in options[kind] if want in (c["id"], c.get("value"))), None)
+        if not hit:
+            raise HTTPException(400, "Pick one from the list.")
+        if not hit["owned"]:
+            raise HTTPException(403, f"Not unlocked yet: {hit['hint']}.")
+        cos[field] = hit["id"]
     if body.banner is not None:
         cos["banner"] = body.banner[:40]
     if body.featured is not None:
@@ -138,7 +155,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
-    if body.banner is not None or body.featured is not None or body.public is not None or body.nameplate is not None:
+    if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame)):
         return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
     return await character_payload(request, member["id"], u)

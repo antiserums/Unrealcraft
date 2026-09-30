@@ -20,11 +20,11 @@ const OUTFIT_TINT: Record<string, string> = { novice: "#3fb6b0", apprentice: "#4
 
 /** The member's figure: the pack's sheet when there is one, otherwise a silhouette tinted by the set.
  *  `size` is the silhouette height; sheets draw at an integer `scale` (2 = 256 px frame) and can be cropped. */
-export function Character({ outfit = "novice", sheet, weapon = "melee", color = "#556270", size = 160, pose = "idle", scale = 2, crop = HERO_CROP, style }:
-  { outfit?: string; sheet?: SheetSpec | null; weapon?: string; color?: string; size?: number; pose?: CharPose; scale?: number; crop?: { x: number; y: number; w: number; h: number } | null; style?: CSSProperties }) {
+export function Character({ outfit = "novice", sheet, weapon = "melee", color = "#556270", size = 160, pose = "idle", scale = 2, crop = HERO_CROP, still = false, style }:
+  { outfit?: string; sheet?: SheetSpec | null; weapon?: string; still?: boolean; color?: string; size?: number; pose?: CharPose; scale?: number; crop?: { x: number; y: number; w: number; h: number } | null; style?: CSSProperties }) {
   if (sheet) {
     const anim = pose === "strike" && weapon === "caster" ? "cast" : CHAR_ANIM[pose];
-    return <Sprite spec={sheet} anim={anim} scale={scale} crop={crop ?? undefined} className={`figure pose-${pose}`} style={style} label="Your character" />;
+    return <Sprite spec={sheet} anim={anim} scale={scale} crop={crop ?? undefined} still={still} className={`figure pose-${pose}`} style={style} label="Your character" />;
   }
   const cloth = OUTFIT_TINT[outfit] ?? "#3fb6b0";
   const tf = pose === "strike" ? "translate(14 0) rotate(-6 50 80)" : pose === "hurt" ? "translate(-8 0) rotate(5 50 80)"

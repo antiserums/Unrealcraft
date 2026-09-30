@@ -63,6 +63,23 @@ class Sync(commands.Cog):
                     await quests.post_to_queue(guild, s["id"])
                 elif s["route"] == "honor" and await quests.spot_check_due():
                     await quests.post_to_queue(guild, s["id"], spot=True)
+        elif type_ == "submission_decided" and guild:
+            # A verdict given on the website: close the queue card, update the public turn-in post, tell the member.
+            sid, verdict, notes = int(payload["submission"]), payload["verdict"], payload.get("notes")
+            reviewer = guild.get_member(int(payload["reviewer"])) or self.bot.user
+            await quests.update_turnin(guild, sid, verdict, reviewer, notes)
+            await quests.close_queue_card(guild, sid, f"{verdict.upper()} by {getattr(reviewer, 'display_name', 'the website')}")
+            try:
+                user = await self.bot.fetch_user(uid)
+                await user.send(f"{payload.get('quest', '')}: **{verdict.upper()}** from {getattr(reviewer, 'display_name', 'a reviewer')}."
+                                + (f"
+> {notes}" if notes else ""))
+            except Exception:
+                pass
+            if verdict == "pass":
+                await onboarding.maybe_finish_orientation(guild, uid)
+                await onboarding.refresh_page(uid)
+                await ranks.check_promotion(guild, uid)
         log.info("website event %s for %s: %s", type_, uid, payload)
 
     @poll.before_loop

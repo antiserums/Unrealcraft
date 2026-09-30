@@ -9,7 +9,7 @@ export async function api<T>(path: string): Promise<T | null> {
     headers: { cookie: jar.toString() },
     cache: "no-store",
   });
-  if (res.status === 401 || res.status === 404) return null;
+  if (res.status === 401 || res.status === 403 || res.status === 404) return null;
   if (!res.ok) throw new Error(`API ${path} -> ${res.status}`);
   return (await res.json()) as T;
 }
@@ -41,7 +41,19 @@ export type Me = {
   tier_progress: { done: number; need: number; available: number; tier: string; name: string; emoji: string; color: string } | null;
   medals: { medal_key: string; earned_at: string }[]; done_count: number;
   recent_xp?: { amount: number; reason: string; created_at: string }[]; known?: boolean;
+  review?: { can: boolean; mentor: boolean; pending: number };
 };
+export type ReviewItem = {
+  id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;
+  member: { id: number; name: string | null; avatar: string | null; rank: number | null; major: string | null };
+  quest: QuestSummary; payload: { text?: string; ue_version?: string; attachments?: string[] };
+  approvals: number; needs: number; reviewed_by_me: boolean; blocked: string | null;
+  quest_detail?: { done_when: string | null; do: string | null; checklist: { text: string; kind: string }[]; verify_type: string | null };
+  actions?: { reviewer_id: number; verdict: string; is_peer: number; notes: string | null; created_at: string; name: string | null }[];
+  previous?: { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> }[];
+  access?: ReviewAccess;
+};
+export type ReviewAccess = { mentor: boolean; peer_max_rank: number; rank: number; can_review: boolean };
 export type Majors = {
   tiers: Record<string, { name: string; emoji: string; color: string; quiz_len: number }>;
   ranks: { n: number; key: string; title: string; tier: string; xp: number; color: string | null; opens?: string; quests_to_leave?: number }[];
@@ -56,9 +68,11 @@ export type PathData = {
 };
 export type Next = { main: QuestSummary | null; reason: string; electives: QuestSummary[]; adjacent: QuestSummary | null; remaining_minutes: number };
 export type Achievement = { key: string; name: string; desc: string; icon: string; need: number; of: string; have: number; earned: boolean; earned_at: string | null; outfit?: string; badge?: number };
+export type CosmeticOption = { id: string; name: string; value?: string; owned: boolean; hint: string | null };
 export type Card = Me & {
   worn: { id: string; name: string; flavour: string; tier: string; color: string; art_id: string };
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string; featured?: string[]; public?: boolean };
-  style: string; body: string; nameplate: string; motto: string; public: boolean; achievements_earned: number; achievements_total: number;
+  style: string; body: string; nameplate: string; nameplate_id: string; avatar_frame: string; card_frame: string; motto: string; public: boolean;
+  cosmetic_options: { nameplate: CosmeticOption[]; avatar_frame: CosmeticOption[]; card_frame: CosmeticOption[] }; achievements_earned: number; achievements_total: number;
   featured: Achievement[]; nameplate_colors: string[]; earned_achievements: Achievement[]; mine?: boolean;
 };

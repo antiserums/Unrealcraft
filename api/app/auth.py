@@ -86,7 +86,7 @@ async def dev_login(request: Request):
     if not uid or not settings.web_origin.startswith("http://localhost"):
         raise HTTPException(404, "Not found.")
     resp = RedirectResponse(f"{settings.web_origin}/", status_code=302)
-    set_session(resp, {"id": int(uid), "name": "Dev Tester", "username": "dev", "avatar": None, "roles": []})
+    set_session(resp, {"id": int(uid), "name": "Dev Tester", "username": "dev", "avatar": None, "roles": [], "dev": True})
     await request.app.state.rpg.ensure_character(int(uid))
     await request.app.state.rpg.kv_set(int(uid), "web.name", "Dev Tester")
     return resp

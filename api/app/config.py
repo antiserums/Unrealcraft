@@ -30,6 +30,8 @@ class Settings:
     uploads_dir: Path
     bot_service_token: str
     log_level: str
+    unlocks_path: Path            # the bot's config/unlocks.yaml: role ids for mentor and rank checks
+    admin_ids: frozenset[int]     # Discord ids that can always review (ADMIN_IDS, comma-separated)
 
 
 def _p(name: str, default: str) -> Path:
@@ -53,6 +55,8 @@ def load_settings() -> Settings:
         uploads_dir=_p("UPLOADS_DIR", "data/uploads"),
         bot_service_token=os.getenv("BOT_SERVICE_TOKEN", ""),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
+        unlocks_path=_p("UNLOCKS_PATH", "../bot/config/unlocks.yaml"),
+        admin_ids=frozenset(int(x) for x in os.getenv("ADMIN_IDS", "").replace(";", ",").split(",") if x.strip().isdigit()),
     )
 
 

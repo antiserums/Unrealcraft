@@ -4,8 +4,8 @@ import type { Anim, SheetSpec } from "@/lib/art";
 
 /** Plays one row of a pixel sprite sheet. Integer scales only; looping rows loop, the rest hold their last frame.
  *  `crop` shows a window of the frame (source pixels) so a 128 px canvas can sit in a tighter box. */
-export default function Sprite({ spec, anim = "idle", scale = 2, crop, flip = false, className = "", style, label }:
-  { spec: SheetSpec; anim?: string; scale?: number; crop?: { x: number; y: number; w: number; h: number }; flip?: boolean; className?: string; style?: CSSProperties; label?: string }) {
+export default function Sprite({ spec, anim = "idle", scale = 2, crop, flip = false, still = false, className = "", style, label }:
+  { spec: SheetSpec; anim?: string; scale?: number; still?: boolean; crop?: { x: number; y: number; w: number; h: number }; flip?: boolean; className?: string; style?: CSSProperties; label?: string }) {
   const a: Anim = useMemo(() => spec.animations.find((x) => x.id === anim) ?? spec.animations[0], [spec, anim]);
   const count = Array.isArray(a.frames) ? a.frames.length : a.frames;
   const [i, setI] = useState(0);
@@ -13,7 +13,7 @@ export default function Sprite({ spec, anim = "idle", scale = 2, crop, flip = fa
 
   useEffect(() => {
     setI(0);
-    if (count <= 1 || (typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    if (still || count <= 1 || (typeof matchMedia !== "undefined" && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
     let n = 0;
     const t = setInterval(() => {
       n += 1;
@@ -21,7 +21,7 @@ export default function Sprite({ spec, anim = "idle", scale = 2, crop, flip = fa
       setI(n);
     }, 1000 / a.fps);
     return () => clearInterval(t);
-  }, [a, count]);
+  }, [a, count, still]);
 
   const f = spec.frame, k = scale;
   const col = Array.isArray(a.frames) ? a.frames[i] % spec.columns : i;

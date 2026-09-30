@@ -23,6 +23,7 @@ export type Manifest = {
   rarity: Record<string, { color: string; label: string; frame: string | null }>;
   environments: Record<string, { path: string; large?: string | null; width: number; height: number; groundY: number }>;
   appearance: Record<string, string[]>;
+  banners?: Record<string, string>;
 };
 
 let cache: { at: number; m: Manifest | null } | null = null;
@@ -80,4 +81,10 @@ export function presetSheets(m: Manifest | null, body: string, style: string): R
     if (s) out[set] = s;
   }
   return out;
+}
+
+/** The home banner (3:1, title goes in the upper central sky). */
+export function bannerImage(m: Manifest | null, key = "town"): string | null {
+  const f = m?.banners?.[key];
+  return f ? art(f) : null;
 }

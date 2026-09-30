@@ -271,3 +271,59 @@ def achievements_for(cat, inputs: dict, done: set[str], medals: list[dict]) -> l
             out.append({"key": key, "name": f"Rose to {RANK_UP_NAMES.get(to, f'rank {to}')}", "desc": "Promoted by the guild.",
                         "icon": "🏅", "need": 1, "of": "medal", "have": 1, "earned": True, "earned_at": at, "badge": 2})
     return out
+
+
+# ------------------------------------------------------------------ card cosmetics (nameplate colours, frames)
+# Small unlockables in the spirit of Nitro perks, earned rather than bought: starter picks are free, the rest come
+# from ranks and achievements. Values are ids; the site maps them to colours and CSS frames.
+NAMEPLATES = [
+    ("slate", "#7A8C7E", "Slate", {"type": "starter"}),
+    ("teal", "#4AA3B5", "Teal", {"type": "starter"}),
+    ("umber", "#B5714B", "Umber", {"type": "starter"}),
+    ("cobalt", "#3D7DD8", "Cobalt", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
+    ("amethyst", "#8E6CCF", "Amethyst", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
+    ("ember", "#D9824A", "Ember", {"type": "rank", "n": 3, "hint": "Reach Expert"}),
+    ("crimson", "#D9534F", "Crimson", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+    ("moss", "#4FA36C", "Moss", {"type": "achievement", "key": "rooms_10", "hint": "Finish ten quests"}),
+    ("rose", "#C85C8E", "Rose", {"type": "achievement", "key": "streak_7", "hint": "Keep a seven-day streak"}),
+    ("gold", "#D4AF37", "Gold", {"type": "achievement", "key": "capstone_1", "hint": "Clear a capstone dungeon"}),
+]
+AVATAR_FRAMES = [
+    ("plain", "Plain ring", {"type": "starter"}),
+    ("bronze", "Bronze ring", {"type": "achievement", "key": "first_blood", "hint": "Finish your first quest"}),
+    ("laurel", "Silver laurel", {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
+    ("rune", "Rune ring", {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
+    ("ember", "Ember ring", {"type": "achievement", "key": "streak_30", "hint": "Keep a thirty-day streak"}),
+    ("crown", "Gold crown", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+]
+CARD_FRAMES = [
+    ("stone", "Stone", {"type": "starter"}),
+    ("leather", "Leather", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
+    ("steel", "Steel", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
+    ("gilded", "Gilded", {"type": "rank", "n": 3, "hint": "Reach Expert"}),
+    ("regalia", "Regalia", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+    ("arcane", "Arcane", {"type": "achievement", "key": "lore_50", "hint": "Open the reading on fifty quests"}),
+    ("dragonbone", "Dragonbone", {"type": "achievement", "key": "capstone_4", "hint": "Clear four capstone dungeons"}),
+]
+
+
+def _owned(unlock: dict, rank: int, earned: set[str]) -> bool:
+    return unlock["type"] == "starter" or (unlock["type"] == "rank" and rank >= unlock["n"]) or \
+        (unlock["type"] == "achievement" and unlock["key"] in earned)
+
+
+def cosmetic_catalog(rank: int, earned: set[str]) -> dict:
+    """Every card cosmetic with its owned flag and unlock hint, grouped by kind."""
+    return {
+        "nameplate": [{"id": i, "value": v, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
+        "avatar_frame": [{"id": i, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
+        "card_frame": [{"id": i, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
+    }
+
+
+def pick_owned(catalog: list[dict], chosen: str | None) -> dict:
+    """The chosen cosmetic if it is owned (by id or value), else the first starter."""
+    for c in catalog:
+        if chosen and chosen in (c["id"], c.get("value")) and c["owned"]:
+            return c
+    return next(c for c in catalog if c["owned"])

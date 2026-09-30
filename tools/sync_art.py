@@ -9,6 +9,7 @@ What it copies (see pixel-v3/INTEGRATION.txt):
   gear/icons/set_<set>_<slot>.png                      32 px inventory icons
   ui/badges/badge_<n>.png, ui/rarity/<r>.svg           achievement badges, rarity frames
   environments/dungeon-training-chamber-*.png          the arena background (480 x 270, and the 4x version)
+  banners/*.webp|png                                   the home banner (3:1, no text baked in)
   metadata/pack.json, metadata/character-presets.json  frame rectangles, animation rows, fps
 Nothing in the pack is modified. Only PNG/SVG/JSON files are copied.
 """
@@ -78,6 +79,14 @@ def main() -> None:
             big = e["path"].replace("480x270", "1920x1080")
             m["environments"][e["id"]] = {**{k: e[k] for k in ("path", "width", "height", "groundY", "hero", "enemy") if k in e},
                                           "large": put(big)}
+    m["banners"] = {}
+    for f in sorted((PACK / "banners").glob("*.webp")) + sorted((PACK / "banners").glob("*.png")):
+        if "source" in f.name:
+            continue
+        key = "town" if "town" in f.name else f.stem
+        rel = put(f.relative_to(PACK).as_posix())
+        if rel and (key not in m["banners"] or f.suffix == ".webp"):
+            m["banners"][key] = rel
     (OUT / "manifest.json").write_text(json.dumps(m, indent=1), encoding="utf-8")
     print(f"pack: {PACK}\ncopied {copied} files; {sum(len(v) for b in m['presets'].values() for v in b.values())} preset sheets, "
           f"{len(m['creatures'])} creatures, {len(m['icons'])} set icons, {len(m['badges'])} badges -> {OUT / 'manifest.json'}")

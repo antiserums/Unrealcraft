@@ -1,8 +1,7 @@
 import Link from "next/link";
 import QuestCard from "@/components/QuestCard";
-import { Boss, Character } from "@/components/Figure";
 import { api, type Majors, type Me, type Next } from "@/lib/api";
-import { creatureSheet, loadManifest, presetSheet } from "@/lib/art";
+import { bannerImage, loadManifest } from "@/lib/art";
 
 const MAJOR_BLURB: Record<string, string> = {
   level_design: "Spaces, flow and encounters. Build places people want to move through.",
@@ -19,10 +18,11 @@ export default async function Home() {
   const [me, majors, manifest] = await Promise.all([api<Me>("/me"), api<Majors>("/catalog/majors"), loadManifest()]);
   const next = me ? await api<Next>("/me/next") : null;
   const list = majors ? Object.values(majors.majors).filter((m) => m.key !== "undecided") : [];
+  const banner = bannerImage(manifest);
   return (
     <>
       {/* hero */}
-      <section className="hero">
+      <section className={`hero ${banner ? "px banner-hero" : ""}`} style={banner ? { backgroundImage: `url("${banner}")` } : undefined}>
         <div className="hero-copy">
           {me ? (
             <>
@@ -47,11 +47,6 @@ export default async function Home() {
               <div className="small muted" style={{ marginTop: 10 }}>You need to be a member of the Unrealcraft Discord server to log in.</div>
             </>
           )}
-        </div>
-        <div className="hero-art" aria-hidden="true">
-          <Character outfit="novice" sheet={presetSheet(manifest, "body_a", "novice", "melee")} color="#3fb6b0" size={150} pose="idle" scale={2} />
-          <span className="hero-vs">⚔</span>
-          <Boss look="golem" sheet={creatureSheet(manifest, "boss_compiler_golem")} color="#8E6CCF" size={180} pose="idle" />
         </div>
       </section>
 
