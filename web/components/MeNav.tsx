@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const TABS = [["/me", "Player card"], ["/me/wardrobe", "Wardrobe"], ["/me/achievements", "Achievements"], ["/path", "My path"]] as const;
+const TABS = [["/me", "Player card"], ["/me/wardrobe", "Wardrobe"], ["/me/achievements", "Achievements"]] as const;
 
 export default function MeNav({ active }: { active: string }) {
   return (

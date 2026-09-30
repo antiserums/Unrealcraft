@@ -30,7 +30,7 @@ export default async function Home() {
               <p className="lead">{next?.main ? <>Your next room is waiting. {next.reason}</> : (next?.reason ?? "Nothing is required right now. Pick any quest you like.")}</p>
               <div className="row" style={{ marginTop: 14 }}>
                 {next?.main && <Link className="btn primary" href={`/quests/${next.main.id}`}>Enter {next.main.id}</Link>}
-                <Link className="btn" href="/path">My path</Link>
+                <Link className="btn" href="/quests">Quest board</Link>
                 <Link className="btn" href="/me">Player card</Link>
               </div>
             </>

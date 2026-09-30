@@ -8,7 +8,6 @@ export default async function Nav() {
       <div className="nav-in">
         <Link href="/" className="brand">Unrealcraft</Link>
         <Link href="/quests" className="link">Quest Board</Link>
-        {me && <Link href="/path" className="link">My Path</Link>}
         {me && <Link href="/leaderboard" className="link">Hall of Fame</Link>}
         <Link href="/changelog" className="link">Changelog</Link>
         <span className="spacer" />
