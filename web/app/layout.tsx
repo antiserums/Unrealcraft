@@ -17,7 +17,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={`${plex.variable} ${cinzel.variable} ${cinzelDeco.variable}`}>
       <body>
         <Nav />
-        <main className="wrap">{children}</main>
+        <div className="banner" aria-hidden="true"><span className="crest">❖</span></div>
+        <main className="wrap tome">{children}</main>
+        <footer className="foot">
+          <span className="rule" /><span className="crest">❖</span><span className="rule" />
+          <div className="small muted">Unrealcraft · a learning guild for Unreal Engine 5 · ranks come only from quests</div>
+        </footer>
       </body>
     </html>
   );

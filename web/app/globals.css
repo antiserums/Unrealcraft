@@ -235,3 +235,41 @@ pre.notes { white-space: pre-wrap; font-family: var(--sans); background: var(--p
 .figure.boss.art.pose-attack { transform: translateX(-10px) scale(1.04); } .figure.boss.art.pose-hit { transform: translateX(8px); }
 .figure.art { transition: transform .25s ease; }
 .item-icon { position: relative; display: inline-flex; align-items: center; justify-content: center; border: 1px solid; border-radius: 3px; background: linear-gradient(180deg, #0b0e14, #151924); flex: 0 0 auto; overflow: hidden; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .08), 0 1px 3px rgba(0, 0, 0, .7); }
+
+/* ---- page shell: heraldic band under the nav, tome frame around the content, ornamented footer ---- */
+.banner { position: relative; z-index: 1; height: 10px; background: linear-gradient(90deg, transparent 0%, rgba(212, 175, 90, .12) 20%, rgba(212, 175, 90, .35) 50%, rgba(212, 175, 90, .12) 80%, transparent 100%); }
+.banner .crest { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: var(--gold); font-size: 14px; line-height: 1; padding: 0 10px; background: var(--bg); text-shadow: 0 0 10px rgba(212, 175, 90, .7); }
+.tome { position: relative; }
+.tome::before, .tome::after {
+  content: ""; position: absolute; top: 40px; bottom: 40px; width: 1px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(212, 175, 90, .25) 15%, rgba(212, 175, 90, .25) 85%, transparent);
+}
+.tome::before { left: 2px; } .tome::after { right: 2px; }
+@media (max-width: 1100px) { .tome::before, .tome::after { display: none; } }
+.foot { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 10px 20px 40px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; text-align: center; }
+.foot .rule { flex: 1; height: 1px; max-width: 220px; background: linear-gradient(90deg, transparent, var(--gold-3)); }
+.foot .rule + .crest + .rule { background: linear-gradient(90deg, var(--gold-3), transparent); }
+.foot .crest { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 90, .6); }
+.foot > div { flex-basis: 100%; letter-spacing: .04em; }
+
+/* page titles carry a fading gold rule beneath them */
+.wrap > h1 { position: relative; padding-bottom: 12px; margin-bottom: 14px; }
+.wrap > h1::after { content: ""; position: absolute; left: 0; bottom: 0; width: min(360px, 60%); height: 2px; background: linear-gradient(90deg, var(--gold), rgba(212, 175, 90, .35) 60%, transparent); box-shadow: 0 0 10px rgba(212, 175, 90, .35); }
+
+/* quest cards: tier-coloured edge and a faint rune watermark */
+.qcard { --tier: var(--gold); overflow: hidden; padding-left: 22px; }
+.qcard::before { content: ""; position: absolute; left: 6px; top: 12px; bottom: 12px; width: 3px; border-radius: 2px; background: linear-gradient(180deg, var(--tier), transparent); box-shadow: 0 0 8px var(--tier); }
+.qcard::after { content: "❖"; position: absolute; right: -6px; bottom: -18px; font-size: 72px; line-height: 1; color: var(--tier); opacity: .06; pointer-events: none; transform: rotate(-12deg); }
+.qcard .pill { background: linear-gradient(180deg, rgba(0, 0, 0, .35), rgba(0, 0, 0, .55)); }
+
+/* nameplate in the nav */
+.who { padding: 4px 12px 4px 4px; border: 1px solid var(--bronze); border-radius: 20px; background: linear-gradient(180deg, #1c2029, #12151c); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05), 0 1px 3px rgba(0, 0, 0, .6); }
+.who:hover { text-decoration: none; border-color: var(--gold-3); }
+
+/* the arena gets a stone floor and torchlight */
+.arena { background: radial-gradient(60% 30% at 50% 100%, rgba(63, 182, 176, .10), transparent 70%), radial-gradient(40% 50% at 8% 0%, rgba(230, 178, 79, .12), transparent 70%), radial-gradient(40% 50% at 92% 0%, rgba(230, 178, 79, .12), transparent 70%), radial-gradient(ellipse at 50% 100%, #221c30 0%, var(--arena) 70%); }
+.arena::before { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 22%; background: linear-gradient(180deg, transparent, rgba(0, 0, 0, .5)); pointer-events: none; border-radius: 0 0 6px 6px; }
+.arena { position: relative; }
+.hpbox .eyebrow::before { content: none; }
+body { display: flex; flex-direction: column; }
+main.wrap { flex: 1; width: 100%; }

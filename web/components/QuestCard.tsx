@@ -9,7 +9,7 @@ export default function QuestCard({ q, showStatus = false }: { q: QuestSummary; 
   const cls = ["card", "qcard", q.status ?? ""].join(" ");
   const kind = q.kind === "capstone" ? "★ Capstone" : q.kind === "elective" ? "Elective" : "Required";
   return (
-    <Link href={`/quests/${q.id}`} className={cls} style={{ color: "inherit", textDecoration: "none" }}>
+    <Link href={`/quests/${q.id}`} className={cls} style={{ color: "inherit", textDecoration: "none", "--tier": q.tier.color } as React.CSSProperties}>
       <div className="row" style={{ justifyContent: "space-between" }}>
         <TierBadge tier={q.tier} />
         {showStatus && q.status && (
