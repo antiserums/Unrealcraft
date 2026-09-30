@@ -313,12 +313,13 @@ def _owned(unlock: dict, rank: int, earned: set[str]) -> bool:
         (unlock["type"] == "achievement" and unlock["key"] in earned)
 
 
-def cosmetic_catalog(rank: int, earned: set[str]) -> dict:
-    """Every card cosmetic with its owned flag and unlock hint, grouped by kind."""
+def cosmetic_catalog(rank: int, earned: set[str], unlock_all: bool = False) -> dict:
+    """Every card cosmetic with its owned flag and unlock hint, grouped by kind. Admins testing get everything."""
+    own = (lambda u: True) if unlock_all else (lambda u: _owned(u, rank, earned))
     return {
-        "nameplate": [{"id": i, "value": v, "name": n, "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
-        "avatar_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
-        "card_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": _owned(u, rank, earned), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
+        "nameplate": [{"id": i, "value": v, "name": n, "owned": own(u), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
+        "avatar_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": own(u), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
+        "card_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": own(u), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
     }
 
 

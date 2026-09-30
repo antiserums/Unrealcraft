@@ -47,6 +47,11 @@ async def quests(request: Request, major: str | None = None, tier: str | None = 
     return {"count": len(out), "quests": out}
 
 
+def _admin(member: dict | None) -> bool:
+    from .admin import is_admin
+    return bool(member) and is_admin(member)
+
+
 @router.get("/quests/{qid}")
 async def quest(qid: str, request: Request, member=Depends(current_member_or_none)):
     cat = request.app.state.catalog
@@ -61,7 +66,7 @@ async def quest(qid: str, request: Request, member=Depends(current_member_or_non
         p = prog.get(qid)
         progress = {"status": p["status"] if p else None, "quiz_passed": bool(p and p["quiz_passed"]),
                     "completed_at": p["completed_at"] if p else None,
-                    "unlocked": quest.rank <= max(state.rank, 0) or quest.rank < 0,
+                    "unlocked": quest.rank <= max(state.rank, 0) or quest.rank < 0 or _admin(member),
                     "quiz_attempts": len(await db.quiz_attempts(member["id"], qid)),
                     "submissions": await db.submissions(member["id"], qid)}
     return {"quest": quest_full(cat, quest, major, facts), "progress": progress}

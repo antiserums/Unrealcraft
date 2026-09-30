@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Card, CosmeticOption } from "@/lib/api";
 import type { SheetSpec } from "@/lib/art";
-import CharacterSheet, { type ArtProps, type Char } from "./CharacterSheet";
+import CharacterSheet, { type ArtProps, type Char, type TryOn } from "./CharacterSheet";
 import PlayerCard from "./PlayerCard";
 
 type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
@@ -12,9 +12,9 @@ type Draft = { motto: string; nameplate: string; avatar_frame: string; card_fram
 type Kind = "nameplate" | "avatar_frame" | "card_frame";
 type Mode = "view" | "profile" | "wardrobe";
 
-/** The player card page. View mode: the card and two buttons. Edit profile: a draft (motto, colour, decorations,
- *  featured achievements, sharing) previews on the card and is saved in one request. Edit wardrobe: the closet
- *  (outfits, weapons, build) opens beneath the card; its changes save as you pick, like before. */
+/** The player card page. View mode: the card and three buttons. Edit profile: a draft (motto, colour, decorations,
+ *  featured achievements, private or public) previews on the card and is saved in one request. Edit wardrobe: the
+ *  closet opens under the card and the card is the preview: whatever you try on shows there at once. */
 export default function CardStudio({ initial, sheet, badges, deco, shareUrl, wardrobe }:
   { initial: Card; sheet: SheetSpec | null; badges: Record<string, string | null>; deco: DecoImages; shareUrl: string;
     wardrobe: { char: Char; art: ArtProps } | null }) {
@@ -27,6 +27,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   const [err, setErr] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [hover, setHover] = useState<{ kind: Kind; o: CosmeticOption } | null>(null);
+  const [tryOn, setTryOn] = useState<TryOn | null>(null);
   const opts = c.cosmetic_options;
 
   // the server re-renders the page after wardrobe changes; take the fresh card unless a profile draft is open
@@ -38,7 +39,9 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
     avatar_frame: draft.avatar_frame, card_frame: draft.card_frame,
     featured: draft.featured.map((k) => c.earned_achievements.find((a) => a.key === k)).filter(Boolean) as Card["featured"],
   };
-  const shown = mode === "profile" ? preview : c;
+  const wearing = mode === "wardrobe" && tryOn ? { ...c, worn: { ...c.worn, id: tryOn.outfit.id, name: tryOn.outfit.name, color: tryOn.outfit.color, art_id: tryOn.outfit.art_id }, style: tryOn.style, body: tryOn.body } : null;
+  const shown = mode === "profile" ? preview : wearing ?? c;
+  const shownSheet = mode === "wardrobe" && tryOn ? tryOn.sheet : sheet;
   const cardArt = deco.card[shown.card_frame] ?? null;
   const avatarArt = deco.avatar[shown.avatar_frame] ?? null;
 
@@ -78,7 +81,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
     <div className="studio">
       <div className={`studio-card ${cardArt ? "framed" : ""}`}>
         <div className={`px pcard-deco ${cardArt ? "on" : ""}`} style={cardArt ? { borderImageSource: `url("${cardArt}")` } : undefined} aria-hidden="true" />
-        <PlayerCard c={shown} sheet={sheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
+        <PlayerCard c={shown} sheet={shownSheet} badges={badges} deco={{ avatar: avatarArt, card: null }} />
       </div>
 
       {mode === "view" && (
@@ -92,10 +95,10 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
       {mode === "wardrobe" && wardrobe && (
         <div className="studio-panel">
           <div className="row" style={{ justifyContent: "space-between", marginBottom: 10 }}>
-            <div><div className="eyebrow">Wardrobe</div><div className="small muted">Outfits, weapons and build save as you pick; the card above follows.</div></div>
-            <button className="primary" onClick={() => setMode("view")}>Done</button>
+            <div><div className="eyebrow">Wardrobe</div><div className="small muted">Click a set to try it on the card. Wear, weapons and build save as you pick.</div></div>
+            <button className="primary" onClick={() => { setMode("view"); setTryOn(null); }}>Done</button>
           </div>
-          <CharacterSheet initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} />
+          <CharacterSheet initial={wardrobe.char} fallbackColor={c.nameplate} art={wardrobe.art} mirror={false} onPreview={setTryOn} />
         </div>
       )}
 
@@ -138,11 +141,12 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
                 </div>
               ) : <div className="small">Nothing earned yet. Finish a quest.</div>}
 
-              <div className="pick-head"><span className="small muted">Sharing</span></div>
-              <label className="row small" style={{ gap: 8, cursor: "pointer" }}>
-                <input type="checkbox" checked={draft.public} disabled={busy} onChange={(e) => setDraft((d) => ({ ...d, public: e.target.checked }))} />
-                <span>Anyone with the link can see this card{draft.public ? "" : " (guild members only)"}</span>
-              </label>
+              <div className="pick-head"><span className="small muted">Profile visibility</span></div>
+              <div className="subnav" style={{ margin: 0 }}>
+                <a href="#" className={!draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: false })); }}>Private</a>
+                <a href="#" className={draft.public ? "on" : ""} onClick={(e) => { e.preventDefault(); setDraft((d) => ({ ...d, public: true })); }}>Public</a>
+              </div>
+              <div className="small muted" style={{ marginTop: 6 }}>{draft.public ? "Anyone with the link can open your card." : "Only logged-in guild members can open your card."}</div>
               <div className="row" style={{ gap: 8, marginTop: 8 }}>
                 <input type="text" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} style={{ flex: 1, minWidth: 160, fontFamily: "var(--mono)", fontSize: 12 }} />
                 <button type="button" onClick={copy}>{copied ? "Copied" : "Copy link"}</button>
