@@ -47,12 +47,13 @@ the `supporter` outfit, avatar frame and card frame, all opened by the `supporte
 The `/api/...` prefix is the website's proxy to the API (`web/next.config.ts`). If the API is exposed directly,
 point the webhook at `/stripe/webhook` on it instead.
 
-## Mail (notifications)
+## Inbox (mail and notifications)
 
-Mail at `/mail` (the envelope in the top bar shows the unread count; `/letters` redirects).
-A mail list like any mail app: sender, subject and a preview, the date on the right, unread rows in bold. Tabs
-filter it (All, Unread, Announcements, Tickets, Reviews, Ranks and rewards). Clicking a row opens the mail full
-width with Back and newer/older buttons; opening marks it read; "Mark all read" clears the lot.
+The inbox at `/inbox` (the envelope in the top bar shows the unread count; `/mail` and `/letters` redirect).
+Laid out like a desktop mail client: folders on the left (Inbox, Unread, Announcements, Tickets, Reviews, Ranks
+and rewards, with unread counts), the message list in the middle (sender, subject, a coloured type tag and a
+preview; unread in bold with a dot), and the open mail in a reading pane on the right, with a Mark read/unread
+button and an action button that names where it goes. Opening marks it read; "Mark all read" clears the lot.
 
 - A letter goes to one member, to everyone (`member_id` 0, an announcement) or to staff (`member_id` -1). Reads
   are per member (`letter_reads`). Announcements written before a member joined are not shown to them.

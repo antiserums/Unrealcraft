@@ -21,7 +21,7 @@ export default async function Nav() {
         <div className="nav-user">
           {me ? (
             <>
-              <Link href="/mail" className={`mailbox ${me.letters_unread ? "has-new" : ""}`} title={t("Mail")} aria-label={me.letters_unread ? t("{n} unread mail", { n: me.letters_unread }) : t("Mail")}>
+              <Link href="/inbox" className={`mailbox ${me.letters_unread ? "has-new" : ""}`} title={t("Inbox")} aria-label={me.letters_unread ? t("{n} unread mail", { n: me.letters_unread }) : t("Inbox")}>
                 <span className="mail-glyph" aria-hidden="true" />
                 {me.letters_unread ? <span className="count">{me.letters_unread}</span> : null}
               </Link>

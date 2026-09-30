@@ -332,7 +332,8 @@ class RpgDB:
         aud, args = self._letter_where(uid, staff)
         cur = await self.conn.execute(
             f"SELECT l.*, (SELECT 1 FROM letter_reads r WHERE r.member_id=? AND r.letter_id=l.id) AS read, "
-            f"(SELECT v FROM kv k WHERE k.user_id=l.sender_id AND k.k='web.name') AS sender FROM letters l "
+            f"(SELECT v FROM kv k WHERE k.user_id=l.sender_id AND k.k='web.name') AS sender, "
+            f"(SELECT v FROM kv k WHERE k.user_id=l.sender_id AND k.k='web.avatar') AS sender_avatar FROM letters l "
             f"WHERE {aud} AND (l.member_id>0 OR l.created_at >= COALESCE((SELECT created_at FROM users WHERE discord_id=?), '')) "
             f"ORDER BY l.id DESC LIMIT ?", (uid, *args, uid, limit))
         return [{**dict(r), "read": bool(r["read"])} for r in await cur.fetchall()]
@@ -348,6 +349,10 @@ class RpgDB:
         aud, args = self._letter_where(uid, staff)
         cur = await self.conn.execute(f"SELECT 1 FROM letters l WHERE l.id=? AND {aud}", (lid, *args))
         return await cur.fetchone() is not None
+
+    async def unmark_letter(self, uid: int, lid: int) -> None:
+        await self.conn.execute("DELETE FROM letter_reads WHERE member_id=? AND letter_id=?", (uid, lid))
+        await self.conn.commit()
 
     async def mark_letter(self, uid: int, lid: int) -> None:
         await self.conn.execute("INSERT OR IGNORE INTO letter_reads(member_id, letter_id) VALUES (?,?)", (uid, lid))

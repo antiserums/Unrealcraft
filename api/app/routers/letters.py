@@ -47,6 +47,15 @@ async def mark_read(lid: int, request: Request, member=Depends(current_member)):
     return {"ok": True}
 
 
+@router.post("/me/letters/{lid}/unread")
+async def mark_unread(lid: int, request: Request, member=Depends(current_member)):
+    rdb = request.app.state.rpg
+    if not await rdb.letter_visible(lid, member["id"], staff=_staff(member)):
+        raise HTTPException(404, "No such letter.")
+    await rdb.unmark_letter(member["id"], lid)
+    return {"ok": True}
+
+
 @router.post("/me/letters/read-all")
 async def read_all(request: Request, member=Depends(current_member)):
     rdb = request.app.state.rpg
