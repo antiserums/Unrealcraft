@@ -11,11 +11,11 @@ export default async function Member({ params }: PageProps<"/members/[id]">) {
   if (!c) notFound();      // unknown member, or a private card seen while logged out
   const sheet = presetSheet(manifest, c.body, c.worn.art_id, c.style);
   const badges = Object.fromEntries(c.featured.map((a) => [a.key, badgeImage(manifest, a.badge)]));
-  const deco = { avatar: decorationImage(manifest, "avatar", c.avatar_frame), card: decorationImage(manifest, "card", c.card_frame) };
+  const deco = { avatar: decorationImage(manifest, "avatar", c.avatar_frame_art ?? undefined), card: decorationImage(manifest, "card", c.card_frame_art ?? undefined) };
   return (
     <>
       <div className="eyebrow">Player card</div>
-      <h1>{c.name ?? "A guild member"}</h1>
+      <h1>{c.name ?? "A guild member"}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {c.title}</span>}</h1>
       <div className="studio">
         <div className={`studio-card ${deco.card ? "framed" : ""}`}>
           <CardDeco src={deco.card} theme={c.card_frame} />

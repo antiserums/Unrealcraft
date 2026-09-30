@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import AdminNav from "@/components/AdminNav";
 import { api, type Me } from "@/lib/api";
 
 export const metadata = { title: "Admin" };
@@ -25,6 +26,7 @@ export default async function Admin({ searchParams }: PageProps<"/admin">) {
     <>
       <div className="eyebrow">Staff</div>
       <h1>Admin panel</h1>
+      <AdminNav active="/admin" />
       <p className="muted small">Database: <code>{o.db_path}</code> · curriculum: <code>{o.curriculum_dir}</code> · admins: {o.admin_ids.length ? o.admin_ids.join(", ") : "none"} · developers: {o.developer_ids.length ? o.developer_ids.join(", ") : "none"} · mentors by id: {o.mentor_ids.length ? o.mentor_ids.join(", ") : "none (Discord mentor role still counts)"}</p>
 
       <div className="stats-grid">

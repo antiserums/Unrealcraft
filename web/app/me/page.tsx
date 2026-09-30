@@ -23,7 +23,7 @@ export default async function Profile() {
   return (
     <>
       <div className="eyebrow">Profile</div>
-      <h1>{c.name}</h1>
+      <h1>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {c.title}</span>}</h1>
       <MeNav active="/me" />
       {c.known === false && <div className="note small" style={{ marginBottom: 12 }}>The Quartermaster has not seen you yet. Press <b>Start Questing</b> in #welcome on Discord to begin Orientation.</div>}
       <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} wardrobe={wardrobe} />

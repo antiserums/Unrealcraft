@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request
 from ..session import current_member_or_none
 from ..staff import nameplate_for, role_of_id
 from .me import nameplate, rank_color
-from .rpg import card_payload
+from .rpg import card_payload, title_of
 
 router = APIRouter(tags=["members"])
 
@@ -33,6 +33,6 @@ async def leaderboard(request: Request, period: str = "week"):
         {"id": r["discord_id"], "xp": r["xp"], "rank": r["rank"],
          "rank_title": (nameplate_for(role_of_id(r["discord_id"])) or (nameplate(cat, r["rank"], r["major"]), None))[0],
          "rank_color": (nameplate_for(role_of_id(r["discord_id"])) or (None, rank_color(cat, max(r["rank"], 0))))[1],
-         "staff": role_of_id(r["discord_id"]), "name": await rdb.kv_get(r["discord_id"], "web.name"),
+         "staff": role_of_id(r["discord_id"]), "name": await rdb.kv_get(r["discord_id"], "web.name"), "title": await title_of(request, r["discord_id"]),
          "avatar": await rdb.kv_get(r["discord_id"], "web.avatar"),
          "major_title": cat.majors.get(r["major"], {}).get("title", r["major"])} for r in rows]}

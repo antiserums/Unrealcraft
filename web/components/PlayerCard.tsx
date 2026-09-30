@@ -22,7 +22,7 @@ export default function PlayerCard({ c, sheet, badges, deco }: { c: Card; sheet:
             <AvatarDeco src={deco?.avatar ?? null} theme={deco?.avatarTheme} />
           </div>
           <div>
-            <div className="pcard-name">{c.name ?? "A guild member"}</div>
+            <div className="pcard-name">{c.name ?? "A guild member"}{c.title && <span className="pcard-title">, {c.title}</span>}</div>
             {c.motto ? <div className="pcard-motto">“{c.motto}”</div> : <div className="pcard-motto muted">No motto yet.</div>}
           </div>
         </div>

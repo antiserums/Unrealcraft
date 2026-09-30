@@ -1,16 +1,17 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import AdminActions from "@/components/AdminActions";
+import AdminActions, { type EntRef, type Grant } from "@/components/AdminActions";
 import { api, type Me, type QuestSummary } from "@/lib/api";
 
 export type AdminMember = {
   user: Record<string, string | number | null>;
-  card: { name: string | null; avatar: string | null; rank_title: string; rank_color: string; staff?: string | null; major_title: string; worn: { name: string }; achievements_earned: number; achievements_total: number; cosmetics: Record<string, unknown> };
+  card: { name: string | null; avatar: string | null; rank_title: string; rank_color: string; staff?: string | null; title?: string | null; major_title: string; worn: { name: string }; achievements_earned: number; achievements_total: number; cosmetics: Record<string, unknown> };
   progress: { quest_id: string; status: string; quiz_passed: number; completed_at: string | null; quest: QuestSummary | null }[];
   medals: { medal_key: string; earned_at: string }[];
   xp_recent: { amount: number; reason: string; created_at: string }[];
   submissions: { id: number; quest_id: string; status: string; route: string; notes: string | null; created_at: string }[];
   ranks: { n: number; title: string; xp: number }[]; majors: string[];
+  grants: Grant[]; entitlements: EntRef[];
 };
 
 export default async function AdminMember({ params }: PageProps<"/admin/members/[id]">) {
@@ -23,13 +24,13 @@ export default async function AdminMember({ params }: PageProps<"/admin/members/
   return (
     <>
       <div className="eyebrow"><Link href="/admin">← Admin panel</Link></div>
-      <h1>{m.card.name ?? `Member ${id}`}</h1>
+      <h1>{m.card.name ?? `Member ${id}`}{m.card.title && <span className="muted" style={{ fontWeight: 400 }}>, {m.card.title}</span>}</h1>
       <p className="muted small">
         <code>{id}</code> · <span className={m.card.staff ? "staff-title" : ""} style={{ color: m.card.rank_color }}>{m.card.rank_title}</span> (rank {u.rank}) · {m.card.major_title} · {u.xp} XP · streak {u.streak_days} · wearing {m.card.worn.name} · {m.card.achievements_earned}/{m.card.achievements_total} achievements · <Link href={`/members/${id}`}>player card</Link>
       </p>
       <div className="two">
         <div>
-          <AdminActions uid={Number(id)} ranks={m.ranks} majors={m.majors} current={{ rank: Number(u.rank), major: String(u.major) }} />
+          <AdminActions uid={Number(id)} ranks={m.ranks} majors={m.majors} current={{ rank: Number(u.rank), major: String(u.major) }} entitlements={m.entitlements} grants={m.grants} />
         </div>
         <div>
           <div className="card">

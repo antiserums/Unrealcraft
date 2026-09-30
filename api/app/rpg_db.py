@@ -47,6 +47,26 @@ CREATE TABLE IF NOT EXISTS events (
     created_at  TEXT NOT NULL DEFAULT (datetime('now')),
     delivered   INTEGER NOT NULL DEFAULT 0
 );
+CREATE TABLE IF NOT EXISTS entitlements (          -- admin-added or admin-edited unlockables; see entitlements.py
+    kind        TEXT NOT NULL,                     -- outfit | nameplate | avatar_frame | card_frame | title | achievement
+    id          TEXT NOT NULL,
+    name        TEXT NOT NULL,
+    desc        TEXT NOT NULL DEFAULT '',
+    data        TEXT NOT NULL DEFAULT '{}',        -- json, kind-specific (colour value, art id, achievement condition)
+    unlock      TEXT NOT NULL DEFAULT '{"type":"starter"}',
+    sort        INTEGER NOT NULL DEFAULT 100,
+    enabled     INTEGER NOT NULL DEFAULT 1,
+    updated_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (kind, id)
+);
+CREATE TABLE IF NOT EXISTS entitlement_grants (    -- one member handed one entitlement by staff
+    member_id   INTEGER NOT NULL,
+    kind        TEXT NOT NULL,
+    id          TEXT NOT NULL,
+    granted_by  INTEGER,
+    created_at  TEXT NOT NULL DEFAULT (datetime('now')),
+    PRIMARY KEY (member_id, kind, id)
+);
 """
 
 
@@ -306,7 +326,7 @@ class RpgDB:
         counts = {}
         for table, col in (("quest_progress", "user_id"), ("quiz_attempts", "user_id"), ("xp_log", "user_id"), ("medals", "user_id"),
                            ("submissions", "user_id"), ("outfits", "member_id"), ("fights", "member_id"), ("characters", "member_id"),
-                           ("events", "member_id"), ("kv", "user_id")):
+                           ("events", "member_id"), ("kv", "user_id"), ("entitlement_grants", "member_id")):
             cur = await self.conn.execute(f"DELETE FROM {table} WHERE {col}=?", (uid,))
             counts[table] = cur.rowcount
         await self.conn.execute("DELETE FROM review_actions WHERE reviewer_id=? OR submission_id NOT IN (SELECT id FROM submissions)", (uid,))
@@ -318,6 +338,38 @@ class RpgDB:
             counts["users"] = cur.rowcount
         await self.conn.commit()
         return counts
+
+    # ---------- entitlements (admin catalog + direct grants) ----------
+    async def entitlement_rows(self) -> list[dict]:
+        cur = await self.conn.execute("SELECT * FROM entitlements ORDER BY kind, sort, id")
+        return [dict(r) for r in await cur.fetchall()]
+
+    async def entitlement_save(self, kind: str, eid: str, name: str, desc: str, data: dict, unlock: dict, sort: int, enabled: bool) -> None:
+        await self.conn.execute(
+            "INSERT INTO entitlements(kind, id, name, desc, data, unlock, sort, enabled, updated_at) VALUES (?,?,?,?,?,?,?,?,datetime('now')) "
+            "ON CONFLICT(kind, id) DO UPDATE SET name=excluded.name, desc=excluded.desc, data=excluded.data, unlock=excluded.unlock, "
+            "sort=excluded.sort, enabled=excluded.enabled, updated_at=datetime('now')",
+            (kind, eid, name, desc, json.dumps(data), json.dumps(unlock), sort, int(enabled)))
+        await self.conn.commit()
+
+    async def entitlement_delete(self, kind: str, eid: str) -> int:
+        cur = await self.conn.execute("DELETE FROM entitlements WHERE kind=? AND id=?", (kind, eid))
+        await self.conn.commit()
+        return cur.rowcount
+
+    async def grants(self, uid: int) -> dict[tuple[str, str], dict]:
+        cur = await self.conn.execute("SELECT kind, id, granted_by, created_at FROM entitlement_grants WHERE member_id=?", (uid,))
+        return {(r["kind"], r["id"]): dict(r) for r in await cur.fetchall()}
+
+    async def grant(self, uid: int, kind: str, eid: str, by: int | None) -> bool:
+        cur = await self.conn.execute("INSERT OR IGNORE INTO entitlement_grants(member_id, kind, id, granted_by) VALUES (?,?,?,?)", (uid, kind, eid, by))
+        await self.conn.commit()
+        return cur.rowcount > 0
+
+    async def revoke(self, uid: int, kind: str, eid: str) -> int:
+        cur = await self.conn.execute("DELETE FROM entitlement_grants WHERE member_id=? AND kind=? AND id=?", (uid, kind, eid))
+        await self.conn.commit()
+        return cur.rowcount
 
     async def events_tail(self, limit: int = 50) -> list[dict]:
         cur = await self.conn.execute("SELECT * FROM events ORDER BY id DESC LIMIT ?", (limit,))

@@ -49,8 +49,12 @@ async def member(uid: int, request: Request, admin=Depends(admin_only)):
         raise HTTPException(404, "No such member. They appear here after pressing Start Questing on Discord or logging in.")
     card = await card_payload(request, uid, admin)
     prog = await rdb.progress_rows(uid)
+    ents = request.app.state.ents
+    grants = await rdb.grants(uid)
     return {
-        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "staff", "major_title", "worn", "achievements_earned", "achievements_total", "cosmetics")},
+        "user": u, "card": {k: card[k] for k in ("name", "avatar", "rank_title", "rank_color", "staff", "major_title", "worn", "achievements_earned", "achievements_total", "cosmetics", "title")},
+        "grants": [{"kind": k, "id": i, **g, "name": (ents.get(k, i) or {}).get("name", i)} for (k, i), g in grants.items()],
+        "entitlements": [{"kind": r["kind"], "id": r["id"], "name": r["name"]} for r in ents.rows if r["enabled"]],
         "progress": [{**p, "quest": quest_summary(cat, cat.quests[p["quest_id"]]) if p["quest_id"] in cat.quests else None} for p in prog],
         "medals": await db.medals(uid), "xp_recent": await db.xp_recent(uid, 30), "submissions": await db.submissions(uid),
         "ranks": [{"n": n, "title": r["title"], "xp": r["xp"]} for n, r in sorted(cat.ranks.items())],

@@ -29,22 +29,43 @@ def _unlock_all(member: dict | None) -> bool:
     return unlock_all(member)
 
 
+class MemberCtx:
+    """Everything an entitlement check needs about one member, loaded once per request."""
+
+    def __init__(self, inputs: dict, state, medals: list[dict], grants: set[tuple[str, str]], achievements: list[dict]):
+        self.inputs, self.state, self.medals, self.grants, self.achievements = inputs, state, medals, grants, achievements
+        self.earned = {a["key"] for a in achievements if a["earned"]}
+        self.medal_keys = {m["medal_key"] for m in medals}
+
+
+async def member_ctx(request: Request, uid: int) -> MemberCtx:
+    rdb, cat, db, ents = request.app.state.rpg, request.app.state.catalog, request.app.state.db, request.app.state.ents
+    await rdb.ensure_character(uid)
+    inputs = await rdb.stat_inputs(uid)
+    _, state, _ = await db.user_state(uid)
+    medals = await db.medals(uid)
+    grants = set(await rdb.grants(uid))
+    return MemberCtx(inputs, state, medals, grants, rpg.achievements_for(ents, cat, inputs, state.done, medals, grants))
+
+
 async def character_payload(request: Request, uid: int, u: dict, unlock_all: bool = False, role: str | None = None) -> dict:
     """Stats (computed, hidden), the outfits this member owns (granted idempotently from progress), and the one worn."""
-    rdb, cat, db = request.app.state.rpg, request.app.state.catalog, request.app.state.db
-    await rdb.ensure_character(uid)
+    rdb, ents = request.app.state.rpg, request.app.state.ents
     major = u.get("major", "undecided")
-    inputs = await rdb.stat_inputs(uid)
+    m = await member_ctx(request, uid)
+    inputs, earned = m.inputs, m.earned
     stats = rpg.stats_from(inputs["done"], inputs["first"], inputs["approved"], inputs["reads"], inputs["streak"])
-    sets = rpg.build_sets(cat)
-    _, state, _ = await db.user_state(uid)
-    earned = {a["key"] for a in rpg.achievements_for(cat, inputs, state.done, await db.medals(uid)) if a["earned"]}
+    sets = rpg.build_sets(ents)
     new_sets = []
     owned = await rdb.outfits(uid)
     from ..staff import role_of_id
-    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned, role=role or role_of_id(uid)):
+    for st in rpg.unlocked_now(sets, rank=u.get("rank", -1), earned=earned, role=role or role_of_id(uid), medals=m.medal_keys, grants=m.grants):
         if st["id"] not in owned:
-            src = st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else "starter")
+            from ..entitlements import owned as by_rule
+            if not by_rule(st["unlock"], rank=u.get("rank", -1), earned=earned, medals=m.medal_keys, role=role or role_of_id(uid)):
+                src = "granted"
+            else:
+                src = st["unlock"].get("key") or (f"rank:{st['unlock']['n']}" if st["unlock"]["type"] == "rank" else st["unlock"].get("type", "starter"))
             if await rdb.grant_outfit(uid, st["id"], str(src)):
                 new_sets.append(st["id"])
     owned = await rdb.outfits(uid)
@@ -74,11 +95,7 @@ async def character(request: Request, member=Depends(current_member)):
 
 
 async def achievements_payload(request: Request, uid: int) -> list[dict]:
-    rdb, cat, db = request.app.state.rpg, request.app.state.catalog, request.app.state.db
-    await rdb.ensure_character(uid)
-    inputs = await rdb.stat_inputs(uid)
-    _, state, _ = await db.user_state(uid)
-    return rpg.achievements_for(cat, inputs, state.done, await db.medals(uid))
+    return (await member_ctx(request, uid)).achievements
 
 
 @router.get("/me/achievements")
@@ -99,21 +116,44 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
         p["name"] = await rdb.kv_get(uid, "web.name")
         p["avatar"] = await rdb.kv_get(uid, "web.avatar")
     unlock_all = bool(who) and _unlock_all(who)
-    char = await character_payload(request, uid, u, unlock_all=unlock_all, role=role_of(who) if who else role_of_id(uid))
-    ach = rpg.achievements_for(cat, await rdb.stat_inputs(uid), state.done, medals)
+    role = role_of(who) if who else role_of_id(uid)
+    char = await character_payload(request, uid, u, unlock_all=unlock_all, role=role)
+    m = await member_ctx(request, uid)
+    ach = m.achievements
     earned = [a for a in ach if a["earned"]]
     cos = char["cosmetics"]
     featured = [a for k in cos.get("featured", []) for a in earned if a["key"] == k][:3] or earned[-3:]
-    options = rpg.cosmetic_catalog(int(u.get("rank", -1)), {a["key"] for a in earned}, unlock_all, role_of(who) if who else role_of_id(uid))
+    options = entitlement_options(request, m, int(u.get("rank", -1)), role, unlock_all)
     plate = rpg.pick_owned(options["nameplate"], cos.get("nameplate"))
+    av, cf = rpg.pick_owned(options["avatar_frame"], cos.get("avatar_frame")), rpg.pick_owned(options["card_frame"], cos.get("card_frame"))
+    title = rpg.pick_owned(options["title"], cos.get("title"))
     return {**p, "worn": char["worn"], "style": char["style"], "body": char["body"], "cosmetics": cos,
             "nameplate": plate["value"], "nameplate_id": plate["id"],
-            "avatar_frame": rpg.pick_owned(options["avatar_frame"], cos.get("avatar_frame"))["id"],
-            "card_frame": rpg.pick_owned(options["card_frame"], cos.get("card_frame"))["id"],
-            "cosmetic_options": options,
+            "avatar_frame": av["id"], "avatar_frame_art": av.get("art"), "card_frame": cf["id"], "card_frame_art": cf.get("art"),
+            "title_id": title["id"], "title": None if title["id"] == rpg.DEFAULT_TITLE else title["name"],
+            "entitlements": options,
             "motto": cos.get("banner") or "", "public": bool(cos.get("public")),
             "achievements_earned": len(earned), "achievements_total": len(ach), "featured": featured,
             "nameplate_colors": NAMEPLATE_COLORS, "earned_achievements": earned}
+
+
+def entitlement_options(request: Request, m: MemberCtx, rank: int, role: str | None, unlock_all: bool) -> dict:
+    return rpg.entitlement_catalog(request.app.state.ents, rank=rank, earned=m.earned, medals=m.medal_keys, role=role,
+                                   grants=m.grants, unlock_all=unlock_all, ranks=request.app.state.catalog.ranks)
+
+
+async def title_of(request: Request, uid: int) -> str | None:
+    """The title a member shows after their name (for lists), or None."""
+    from ..staff import role_of_id
+    rdb = request.app.state.rpg
+    cos = await rdb.cosmetics(uid)
+    if not cos.get("title") or cos.get("title") == rpg.DEFAULT_TITLE:
+        return None
+    u = await request.app.state.db.user(uid)
+    m = await member_ctx(request, uid)
+    options = entitlement_options(request, m, int((u or {}).get("rank", -1)), role_of_id(uid), False)
+    t = rpg.pick_owned(options["title"], cos.get("title"))
+    return None if t["id"] == rpg.DEFAULT_TITLE else t["name"]
 
 
 @router.get("/me/card")
@@ -125,8 +165,9 @@ class CharacterPatch(BaseModel):
     wear: str | None = None
     nameplate: str | None = None
     banner: str | None = None                      # the motto on the player card
-    avatar_frame: str | None = None                # card cosmetics, see rpg.AVATAR_FRAMES / CARD_FRAMES
+    avatar_frame: str | None = None                # card entitlements, see rpg.entitlement_catalog
     card_frame: str | None = None
+    title: str | None = None                       # shown after the name; "none" hides it
     featured: list[str] | None = None              # up to three achievement keys shown on the card
     public: bool | None = None                     # card visible without logging in
     style: str | None = None                       # melee (sword + shield) | caster (staff + orb)
@@ -143,12 +184,10 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         if body.wear not in await rdb.outfits(member["id"]) and not unlock_all:
             raise HTTPException(403, "You have not earned that outfit yet.")
         cos["outfit"] = body.wear
-    u0, state0, _ = await request.app.state.db.user_state(member["id"])
-    earned0 = {a["key"] for a in rpg.achievements_for(request.app.state.catalog, await rdb.stat_inputs(member["id"]), state0.done,
-                                                       await request.app.state.db.medals(member["id"])) if a["earned"]}
+    u0, _, _ = await request.app.state.db.user_state(member["id"])
     from ..staff import role_of
-    options = rpg.cosmetic_catalog(int(u0.get("rank", -1)), earned0, unlock_all, role_of(member))
-    for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame")):
+    options = entitlement_options(request, await member_ctx(request, member["id"]), int(u0.get("rank", -1)), role_of(member), unlock_all)
+    for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame"), ("title", "title")):
         want = getattr(body, field)
         if want is None:
             continue
@@ -172,7 +211,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
         clean = {k[:24]: v[:48] for k, v in body.appearance.items() if isinstance(v, str)}
         cos["appearance"] = {**cos.get("appearance", {}), **clean}
     await rdb.set_cosmetics(member["id"], cos)
-    if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame)):
+    if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame, body.title)):
         return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
     return await character_payload(request, member["id"], u, unlock_all=unlock_all, role=role_of(member))

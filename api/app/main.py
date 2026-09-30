@@ -12,7 +12,8 @@ from registrar.curriculum import Catalog  # noqa: E402  (bot package, path set i
 from . import auth
 from .config import settings
 from .db import DB
-from .routers import admin, catalog, changelog, me, members, review, rpg, submit
+from .entitlements import Entitlements
+from .routers import admin, admin_catalog, catalog, changelog, me, members, review, rpg, submit
 from .rpg_db import RpgDB
 
 log = logging.getLogger("unrealcraft.api")
@@ -35,6 +36,7 @@ async def lifespan(app: FastAPI):
     await app.state.db.open()
     app.state.rpg = RpgDB(app.state.db)
     await app.state.rpg.migrate()
+    app.state.ents = await Entitlements.load(app.state.rpg)     # built-ins plus the admin table; reloaded after admin edits
     log.info("Database: %s", settings.db_path)
     yield
     await app.state.db.close()
@@ -72,6 +74,7 @@ app.include_router(rpg.router)
 app.include_router(submit.router)
 app.include_router(review.router)
 app.include_router(admin.router)
+app.include_router(admin_catalog.router)
 
 
 @app.get("/health")

@@ -61,8 +61,19 @@ the server, then sets a signed cookie. No Discord tokens are stored.
 - **Admin panel (done):** `/admin` for admins and developers: stats, member search, the events queue and an
   admin log; `/admin/members/{id}` grants or clears quests, sets rank/major (emits `rank_set` so the bot swaps
   roles), gives XP or medals, and resets an account. Every action lands in `admin_log`.
-- **Card cosmetics (done):** nameplate colours, avatar frames and card frames are unlocks (`rpg.py`
-  `NAMEPLATES`, `AVATAR_FRAMES`, `CARD_FRAMES`).
+- **Entitlements (done):** every unlock an account can hold is an entitlement: outfits, nameplate colours, avatar
+  frames, player card frames, titles ("Kai, the Learner", shown after the name on the card, the member page and
+  the leaderboard; "None" hides it) and achievements. `app/entitlements.py` merges the built-in catalog
+  (`rpg.py` `default_entitlements()`, seeded from the art pack) with the `entitlements` table, where admins add,
+  edit or switch rows off (`/admin/entitlements`). Unlock rules: starter, rank, achievement, medal, staff role, or
+  granted only. `entitlement_grants` hands one member one entitlement from their admin page whatever the rule says.
+  Achievements count one of: quests done, first-try boss wins, accepted work, readings, streak, capstones, or a
+  medal with the achievement's key. New art still comes only from the synced art pack; a row points at an art id.
+- **Quest editor (done):** `/admin/quests` lists the catalog; `/admin/quests/{id}` (or `new`) edits one quest as a
+  form (every field, a quiz editor, flavors as YAML) or as raw YAML. Saving validates the quest against the whole
+  catalog, rewrites its curriculum file with `yaml.safe_dump` (comments in that file are lost, so hand-written
+  files are best edited by hand), and reloads the API's catalog. New quests default to `curriculum/admin.yaml`.
+  The bot keeps its own copy: run `/admin reload-curriculum` on Discord afterwards.
 - **Next:** retire the Discord quiz and submit commands; dungeon map; port the pack's renderer for appearance.
 - **Phase 3:** reviews and promotions on the site; event outbox for the bot (roles, DMs, #rank-ups).
 - **Phase 4:** slim the bot to link cards; orientation events reported to the API; staff panel.
@@ -77,7 +88,9 @@ GET  /catalog/majors          GET /catalog/quests?major=&tier=&subject=&q=     G
 GET  /catalog/subjects        GET /changelog
 GET  /me                      GET /me/next                    GET /me/path
 GET  /members/{id}            GET /leaderboard?period=week|month|all
-GET  /me/character            PATCH /me/character {wear, nameplate, banner (motto), featured, public, appearance}; GET /me/card; GET /me/achievements       POST /me/quests/{id}/read
+GET  /me/character            PATCH /me/character {wear, nameplate, avatar_frame, card_frame, title, banner (motto), featured, public, style, appearance}; GET /me/card; GET /me/achievements       POST /me/quests/{id}/read
+GET  /admin/curriculum        GET /admin/curriculum/quests/{id}   POST /admin/curriculum/quests {quest|yaml, file, replace}   DELETE /admin/curriculum/quests/{id}   POST /admin/curriculum/reload
+GET  /admin/entitlements      PUT /admin/entitlements/{kind}/{id}   DELETE /admin/entitlements/{kind}/{id}   POST /admin/members/{id}/entitlements {kind, id, remove}
 POST /me/quests/{id}/fight    GET /fights/{id}   POST /fights/{id}/turn {answer, seconds}   POST /fights/{id}/retreat
 GET  /catalog/quests/{id}/boss
 POST /me/quests/{id}/submit   multipart text, ue_version, files[]     GET /uploads/{member}/{file}

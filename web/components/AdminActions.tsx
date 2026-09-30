@@ -3,9 +3,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Rank = { n: number; title: string; xp: number };
+export type EntRef = { kind: string; id: string; name: string };
+export type Grant = EntRef & { granted_by: number | string | null; created_at: string };
+const KIND_LABEL: Record<string, string> = { outfit: "Outfit", nameplate: "Nameplate colour", avatar_frame: "Avatar frame", card_frame: "Player card frame", title: "Title", achievement: "Achievement" };
 
 /** Admin actions on one member. Every call goes to /api/admin/members/{id}/... and is written to the admin log. */
-export default function AdminActions({ uid, ranks, majors, current }: { uid: number; ranks: Rank[]; majors: string[]; current: { rank: number; major: string } }) {
+export default function AdminActions({ uid, ranks, majors, current, entitlements = [], grants = [] }:
+  { uid: number; ranks: Rank[]; majors: string[]; current: { rank: number; major: string }; entitlements?: EntRef[]; grants?: Grant[] }) {
+  const [entKind, setEntKind] = useState("title");
+  const [entId, setEntId] = useState("");
   const router = useRouter();
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -69,6 +75,27 @@ export default function AdminActions({ uid, ranks, majors, current }: { uid: num
         <button className="primary" disabled={busy || !medal} onClick={() => post("medal", { key: medal })}>Grant</button>
         <button disabled={busy || !medal} onClick={() => post("medal", { key: medal, remove: true })}>Remove</button>
       </div>
+
+      <h3 style={{ marginTop: 16 }}>Entitlements</h3>
+      <div className="small muted">Hand this member one unlock (outfit, colour, frame, title or achievement) whatever the rule says. Manage the catalog under <a href="/admin/entitlements">Entitlements</a>.</div>
+      <div className="adm-form">
+        <select value={entKind} onChange={(e) => { setEntKind(e.target.value); setEntId(""); }}>{Object.entries(KIND_LABEL).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</select>
+        <select value={entId} onChange={(e) => setEntId(e.target.value)} style={{ minWidth: 180 }}>
+          <option value="">pick one</option>
+          {entitlements.filter((x) => x.kind === entKind && x.id !== "none").map((x) => <option key={x.id} value={x.id}>{x.name} ({x.id})</option>)}
+        </select>
+        <button className="primary" disabled={busy || !entId} onClick={() => post("entitlements", { kind: entKind, id: entId })}>Grant</button>
+      </div>
+      {grants.length > 0 && (
+        <div className="small" style={{ marginTop: 8 }}>
+          {grants.map((g) => (
+            <span key={`${g.kind}:${g.id}`} className="pill" style={{ marginRight: 6, marginBottom: 4, display: "inline-flex", gap: 6, alignItems: "center" }}>
+              {KIND_LABEL[g.kind] ?? g.kind}: {g.name}
+              <a href="#" onClick={(e) => { e.preventDefault(); post("entitlements", { kind: g.kind, id: g.id, remove: true }); }} title="revoke">✕</a>
+            </span>
+          ))}
+        </div>
+      )}
 
       <h3 style={{ marginTop: 16, color: "var(--bad)" }}>Reset this account</h3>
       <div className="small muted">Wipes progress, XP, medals, turn-ins, fights, outfits and saved name. Type the member id to confirm.</div>

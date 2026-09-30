@@ -23,7 +23,8 @@ worn set and style (`GET /api/me/character` -> `body`, `worn.art_id`, `style`) a
 `components/Sprite.tsx`. The body occupies 64 x 96 px at (32, 12) of the frame, so cards and the wardrobe crop
 to a tighter window (`HERO_CROP` in `Figure.tsx`); the fight draws the full frame so swings stay in view.
 
-**Outfit sets.** The pack's eleven sets are the whole catalog (`api/app/rpg.py`, `build_sets`):
+**Outfit sets.** The pack's eleven sets are the built-in catalog (`api/app/rpg.py`, `default_entitlements`;
+admins can add rows that point at these art ids under `/admin/entitlements`):
 `novice` (starter), `apprentice`, `adept`, `expert`, `master` (rank 1 to 4, shared by every major), three
 reward sets: `warrior` Ironwarden (first capstone cleared), `ranger` Thornwatch (fifty quests), `spellcaster`
 Runekeeper (ten bosses beaten first try), and three exclusive sets (unlock type `staff`): `developer`

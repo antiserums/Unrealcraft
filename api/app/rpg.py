@@ -85,39 +85,44 @@ EXCLUSIVE_SETS = [
 ]
 
 
-def _set(sid: str, name: str, flavour: str, kind: str, tier: str, unlock: dict) -> dict:
-    return {"id": sid, "name": name, "flavour": flavour, "kind": kind, "major": "undecided", "tier": tier,
-            "color": TIERS[tier]["color"], "art_id": sid, "unlock": unlock}
-
-
-def build_sets(cat=None) -> list[dict]:
-    """The full outfit catalog. Unlock rules: starter | rank(n) | achievement(key)."""
-    out = []
+def _outfit_rows() -> list[dict]:
+    """The built-in outfit entitlements (rank sets, reward sets, staff exclusives)."""
+    rows = []
     for n, tier in TIER_OF_RANK.items():
         name = TIERS[tier]["name"]
         unlock = {"type": "starter"} if n == 0 else {"type": "rank", "n": n, "hint": f"Reach {name}"}
-        out.append(_set(tier, f"{name}'s Set", RANK_FLAVOUR[n], "rank", tier, unlock))
-    for sid, name, flavour, tier, unlock in REWARD_SETS:
-        out.append(_set(sid, name, flavour, "reward", tier, unlock))
-    for sid, name, flavour, tier, unlock in EXCLUSIVE_SETS:
-        out.append(_set(sid, name, flavour, "exclusive", tier, unlock))
+        rows.append(_row("outfit", tier, f"{name}'s Set", RANK_FLAVOUR[n], unlock, {"tier": tier, "art_id": tier, "set_kind": "rank"}, n))
+    for i, (sid, name, flavour, tier, unlock) in enumerate(REWARD_SETS):
+        rows.append(_row("outfit", sid, name, flavour, unlock, {"tier": tier, "art_id": sid, "set_kind": "reward"}, 10 + i))
+    for i, (sid, name, flavour, tier, unlock) in enumerate(EXCLUSIVE_SETS):
+        rows.append(_row("outfit", sid, name, flavour, unlock, {"tier": tier, "art_id": sid, "set_kind": "exclusive"}, 20 + i))
+    return rows
+
+
+def _row(kind: str, eid: str, name: str, desc: str, unlock: dict, data: dict, sort: int) -> dict:
+    return {"kind": kind, "id": eid, "name": name, "desc": desc, "unlock": unlock, "data": data, "sort": sort, "builtin": True, "enabled": True}
+
+
+def build_sets(ents) -> list[dict]:
+    """The outfit catalog in the shape the wardrobe uses, from the entitlement store."""
+    out = []
+    for r in ents.of("outfit"):
+        d = r["data"]
+        tier = d.get("tier") if d.get("tier") in TIERS else "novice"
+        out.append({"id": r["id"], "name": r["name"], "flavour": r["desc"], "kind": d.get("set_kind", "reward"), "major": "undecided",
+                    "tier": tier, "color": TIERS[tier]["color"], "art_id": d.get("art_id") or r["id"], "unlock": r["unlock"]})
     return out
 
 
 STARTER_SET = "novice"
 
 
-def unlocked_now(sets: list[dict], *, rank: int, earned: set[str], role: str | None = None) -> list[dict]:
-    """Which sets this member has earned. Idempotent, so it can run on every visit. `role` is a staff role."""
-    won = []
-    for st in sets:
-        u = st["unlock"]
-        ok = u["type"] == "starter" or (u["type"] == "rank" and rank >= u["n"]) or \
-             (u["type"] == "achievement" and u["key"] in earned) or \
-             (u["type"] == "staff" and role == u["role"])
-        if ok:
-            won.append(st)
-    return won
+def unlocked_now(sets: list[dict], *, rank: int, earned: set[str], role: str | None = None,
+                 medals: set[str] | None = None, grants: set[tuple[str, str]] | None = None) -> list[dict]:
+    """Which sets this member owns right now: by rule, or handed over by staff. Idempotent, so it runs on every visit."""
+    from .entitlements import owned
+    return [st for st in sets
+            if owned(st["unlock"], rank=rank, earned=earned, medals=medals or set(), role=role) or ("outfit", st["id"]) in (grants or set())]
 
 
 # ------------------------------------------------------------------ bosses
@@ -266,17 +271,27 @@ ACHIEVEMENTS = [
 RANK_UP_NAMES = {1: "Apprentice", 2: "Adept", 3: "Expert", 4: "Master"}
 
 
-def achievements_for(cat, inputs: dict, done: set[str], medals: list[dict]) -> list[dict]:
-    """Every achievement with progress, earned flag and the outfit it unlocks (if any). Rank-ups come from medals."""
+def _achievement_rows() -> list[dict]:
+    return [_row("achievement", a["key"], a["name"], a["desc"], {"type": "starter"},
+                 {k: v for k, v in a.items() if k in ("icon", "need", "of", "badge", "outfit")}, i) for i, a in enumerate(ACHIEVEMENTS)]
+
+
+def achievements_for(ents, cat, inputs: dict, done: set[str], medals: list[dict], grants: set[tuple[str, str]] | None = None) -> list[dict]:
+    """Every achievement with progress, earned flag and the outfit it unlocks (if any). Rank-ups come from medals.
+    An achievement counting `medal` is earned when the member holds a medal with the achievement's key; a direct
+    grant from the admin panel earns any of them."""
     earned_at = {m["medal_key"]: m["earned_at"] for m in medals}
     caps = sum(1 for qid in done if (q := cat.quests.get(qid)) and q.capstone) if cat else 0
     have = {"done": inputs["done"], "first": inputs["first"], "approved": inputs["approved"], "reads": inputs["reads"],
             "streak": inputs["streak"], "capstones": caps}
     out = []
-    for a in ACHIEVEMENTS:
-        n = 1 if (a["of"] == "medal" and a["key"] in earned_at) else (0 if a["of"] == "medal" else have[a["of"]])
-        ok = n >= a["need"]
-        out.append({**a, "have": min(n, a["need"]), "earned": ok, "earned_at": earned_at.get(a["key"]) if ok else None})
+    for r in ents.of("achievement"):
+        d = r["data"]
+        a = {"key": r["id"], "name": r["name"], "desc": r["desc"], "icon": d.get("icon") or "🏅", "need": int(d.get("need", 1)),
+             "of": d.get("of", "medal"), "badge": d.get("badge", 2), **({"outfit": d["outfit"]} if d.get("outfit") else {})}
+        n = 1 if (a["of"] == "medal" and a["key"] in earned_at) else (0 if a["of"] == "medal" else have.get(a["of"], 0))
+        ok = n >= a["need"] or ("achievement", a["key"]) in (grants or set())
+        out.append({**a, "have": a["need"] if ok else min(n, a["need"]), "earned": ok, "earned_at": earned_at.get(a["key"]) if ok else None})
     for key, at in earned_at.items():
         if key.startswith("jump_"):
             to = int(key.split("_")[-1])
@@ -318,29 +333,58 @@ DECORATIONS = [
     ("admin", "Admin", "Sunforged gold with a steady shine.", {"type": "staff", "role": "admin", "hint": "Admins only"}),
     ("mentor", "Mentor", "Astral green with a quiet glow.", {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
 ]
-AVATAR_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
-CARD_FRAMES = [(i, n, u) for i, n, _d, u in DECORATIONS]
-DECO_DESC = {i: d for i, _n, d, _u in DECORATIONS}
+# Titles, shown after the name like "Kai, the Learner". Earned, never bought; "none" hides it.
+TITLES = [
+    ("none", "No title", "Nothing after your name.", {"type": "starter"}),
+    ("learner", "the Learner", "You finished your first quest.", {"type": "achievement", "key": "first_blood", "hint": "Finish your first quest"}),
+    ("steadfast", "the Steadfast", "A seven-day streak.", {"type": "achievement", "key": "streak_7", "hint": "Keep a seven-day streak"}),
+    ("well_read", "the Well-Read", "Ten readings opened before the fight.", {"type": "achievement", "key": "lore_10", "hint": "Open the reading on ten quests"}),
+    ("flawless", "the Flawless", "Ten bosses beaten on the first try.", {"type": "achievement", "key": "focus_10", "hint": "Beat ten bosses on the first try"}),
+    ("reviewed", "the Reviewed", "A reviewer accepted your work.", {"type": "achievement", "key": "craft_1", "hint": "Have a piece of work accepted"}),
+    ("delver", "the Delver", "Fifty dungeons cleared.", {"type": "achievement", "key": "rooms_50", "hint": "Finish fifty quests"}),
+    ("dragonslayer", "the Dragonslayer", "Four capstone dungeons cleared.", {"type": "achievement", "key": "capstone_4", "hint": "Clear four capstone dungeons"}),
+    ("master", "the Master", "The top rank of the guild.", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+    ("guide", "the Guide", "Walks beside the newcomer.", {"type": "staff", "role": "mentor", "hint": "Mentors only"}),
+    ("keeper", "Keeper of the Guild", "Keeps the guild.", {"type": "staff", "role": "admin", "hint": "Admins only"}),
+    ("sourceforged", "the Sourceforged", "Builds the guild.", {"type": "staff", "role": "developer", "hint": "Developers only"}),
+]
+DEFAULT_TITLE = "none"
 
 
-def _owned(unlock: dict, rank: int, earned: set[str], role: str | None = None) -> bool:
-    return unlock["type"] == "starter" or (unlock["type"] == "rank" and rank >= unlock["n"]) or \
-        (unlock["type"] == "achievement" and unlock["key"] in earned) or \
-        (unlock["type"] == "staff" and role == unlock["role"])
+def default_entitlements() -> list[dict]:
+    """The built-in catalog, one flat list of entitlement rows. The admin table overrides or extends it."""
+    rows = _outfit_rows()
+    rows += [_row("nameplate", i, n, "", u, {"value": v}, k) for k, (i, v, n, u) in enumerate(NAMEPLATES)]
+    for kind in ("avatar_frame", "card_frame"):
+        rows += [_row(kind, i, n, d, u, {"art": None if i == "none" else i}, k) for k, (i, n, d, u) in enumerate(DECORATIONS)]
+    rows += [_row("title", i, n, d, u, {}, k) for k, (i, n, d, u) in enumerate(TITLES)]
+    rows += _achievement_rows()
+    return rows
 
 
-def cosmetic_catalog(rank: int, earned: set[str], unlock_all: bool = False, role: str | None = None) -> dict:
-    """Every card cosmetic with its owned flag and unlock hint, grouped by kind. Admins testing get everything."""
-    own = (lambda u: True) if unlock_all else (lambda u: _owned(u, rank, earned, role))
-    return {
-        "nameplate": [{"id": i, "value": v, "name": n, "owned": own(u), "hint": u.get("hint")} for i, v, n, u in NAMEPLATES],
-        "avatar_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": own(u), "hint": u.get("hint")} for i, n, u in AVATAR_FRAMES],
-        "card_frame": [{"id": i, "name": n, "desc": DECO_DESC[i], "owned": own(u), "hint": u.get("hint")} for i, n, u in CARD_FRAMES],
-    }
+def entitlement_catalog(ents, *, rank: int, earned: set[str], medals: set[str], role: str | None,
+                        grants: set[tuple[str, str]], unlock_all: bool = False, ranks: dict | None = None) -> dict:
+    """Every card entitlement (colour, frames, title) with its owned flag and unlock hint, grouped by kind.
+    Admins and developers testing get everything."""
+    from .entitlements import hint_for, owned
+    out: dict[str, list[dict]] = {}
+    for kind in ("nameplate", "avatar_frame", "card_frame", "title"):
+        items = []
+        for r in ents.of(kind):
+            granted = (kind, r["id"]) in grants
+            own = unlock_all or granted or owned(r["unlock"], rank=rank, earned=earned, medals=medals, role=role)
+            item = {"id": r["id"], "name": r["name"], "desc": r["desc"], "owned": own, "hint": hint_for(r["unlock"], ranks), "granted": granted}
+            if kind == "nameplate":
+                item["value"] = r["data"].get("value")
+            if kind in ("avatar_frame", "card_frame"):
+                item["art"] = r["data"].get("art")
+            items.append(item)
+        out[kind] = items
+    return out
 
 
 def pick_owned(catalog: list[dict], chosen: str | None) -> dict:
-    """The chosen cosmetic if it is owned (by id or value), else the first starter."""
+    """The chosen entitlement if it is owned (by id or value), else the first owned one."""
     for c in catalog:
         if chosen and chosen in (c["id"], c.get("value")) and c["owned"]:
             return c

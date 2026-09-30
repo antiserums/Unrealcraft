@@ -18,7 +18,7 @@ export default async function Achievements() {
       <div className="eyebrow">Profile</div>
       <h1>Achievements</h1>
       <MeNav active="/me/achievements" />
-      <p className="muted">{earned.length} of {all.length} earned. Some unlock an outfit for the wardrobe. Pick up to three to show on your card.</p>
+      <p className="muted">{earned.length} of {all.length} earned. Achievements are entitlements: some unlock an outfit, a frame, a colour or a title. Pick up to three to show on your card.</p>
       {earned.length > 0 && (
         <>
           <div className="section-h"><h2>Earned</h2></div>
