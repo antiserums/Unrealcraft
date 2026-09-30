@@ -274,7 +274,7 @@ def boss_line(boss: dict, kind: str, rng: random.Random) -> str:
 # ------------------------------------------------------------------ debuffs
 DEBUFFS = {
     "dazed": {"name": "Dazed", "text": "The choices shuffle next turn."},
-    "slowed": {"name": "Slowed", "text": "A short wait before you can answer next turn."},
+    "weakened": {"name": "Weakened", "text": "Your next hit does half damage."},
     "blinded": {"name": "Blinded", "text": "No hint next turn."},
 }
 

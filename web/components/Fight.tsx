@@ -14,7 +14,7 @@ type Fight = {
   outcome?: { passed: boolean; score: number; total: number; first_try_bonus?: number; crit_xp?: number; completed?: boolean; quest_xp?: number; loot?: { name: string; rarity: string; flavour?: string; slot: string } | null; tested_out?: boolean; next?: string } | null;
 };
 
-const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled.", slowed: "Slowed: wait a moment before answering.", blinded: "Blinded: no hint this turn." };
+const DEBUFF: Record<string, string> = { dazed: "Dazed: the choices are shuffled.", weakened: "Weakened: your next hit does half damage.", blinded: "Blinded: no hint this turn." };
 
 export default function FightScreen({ questId, gear, color }: { questId: string; gear: GearMap; color: string }) {
   const [f, setF] = useState<Fight | null>(null);
@@ -24,7 +24,6 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
   const [youPose, setYouPose] = useState<"idle" | "strike" | "hurt" | "down" | "win">("idle");
   const [float, setFloat] = useState<{ text: string; side: "boss" | "you"; kind: string } | null>(null);
   const [last, setLast] = useState<Ev[]>([]);
-  const [wait, setWait] = useState(0);
   const asked = useRef<number>(Date.now());
   const started = useRef(false);
 
@@ -39,13 +38,8 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
     })();
   }, [questId]);
 
-  useEffect(() => {
-    if (f?.question?.debuff === "slowed") { setWait(10); const t = setInterval(() => setWait((w) => (w <= 1 ? (clearInterval(t), 0) : w - 1)), 1000); return () => clearInterval(t); }
-    setWait(0);
-  }, [f?.question?.index, f?.question?.debuff]);
-
   async function answer(pos: number) {
-    if (!f || busy || wait > 0) return;
+    if (!f || busy) return;
     setBusy(true);
     setBossPose("attack");
     const seconds = (Date.now() - asked.current) / 1000;
@@ -120,13 +114,13 @@ export default function FightScreen({ questId, gear, color }: { questId: string;
           <h2 style={{ marginTop: 8 }}>{q.q}</h2>
           <div className="choices">
             {q.choices.map((c, i) => (
-              <button key={i} onClick={() => answer(i)} disabled={busy || wait > 0} className="choice">
+              <button key={i} onClick={() => answer(i)} disabled={busy} className="choice">
                 <span className="letter">{"ABCD"[i]}</span> {c}
               </button>
             ))}
           </div>
           <div className="row small muted" style={{ marginTop: 8 }}>
-            {wait > 0 ? <span>Slowed: {wait}s</span> : <span>Answer fast for a better crit chance ({f.you.crit_pct}% base).</span>}
+            <span>Answer fast for a better crit chance ({f.you.crit_pct}% base).</span>
             <span className="spacer" />
             <Link href={`/quests/${questId}`} className="muted">Retreat (nothing is recorded)</Link>
           </div>

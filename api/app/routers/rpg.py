@@ -182,8 +182,9 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
     chosen = order[body.answer]
     right = chosen == item["answer_index"]
     events: list[dict] = []
-    if state.get("debuff") and char["gear_totals"]["cleanse"]:
-        state["debuff"] = None
+    debuff = state.get("debuff")
+    if debuff and char["gear_totals"]["cleanse"]:
+        debuff = None
         events.append({"kind": "cleanse", "text": rpg.boss_line(boss, "cleanse", rng)})
     state["debuff"] = None
     if right:
@@ -191,6 +192,8 @@ async def turn(fid: int, body: Turn, request: Request, member=Depends(current_me
         crit_pct = rpg.crit_chance(char["stats"]["focus"], char["gear_totals"].get("focus", 0), body.seconds)
         crit = rng.randint(1, 100) <= crit_pct
         dmg = 10 + 2 * (char["stats"]["craft"] + char["gear_totals"]["craft"])
+        if debuff == "weakened":
+            dmg //= 2
         bonus_xp = 0
         if crit:
             dmg *= 2
