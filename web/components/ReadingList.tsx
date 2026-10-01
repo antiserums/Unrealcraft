@@ -8,11 +8,14 @@ export default function ReadingList({ questId, reading, loggedIn }: { questId: s
   const t = useT();
   const ping = () => { if (loggedIn) fetch(`/api/me/quests/${questId}/read`, { method: "POST", keepalive: true }).catch(() => {}); };
   return (
-    <ol className="steps">
+    <ol className="reading-list">
       {reading.map((r) => (
         <li key={r.url}>
-          <a href={r.url} target="_blank" rel="noreferrer" onClick={ping}>{r.label}<Ico group="utility" id="external" size={16} className="ico-after" /></a>
-          {r.kind === "community" && <span className="tag"> · {t("community")}</span>}
+          <a href={r.url} target="_blank" rel="noreferrer" onClick={ping}>
+            <span className="reading-label">{r.label}</span>
+            {r.kind === "community" && <span className="pill">{t("community")}</span>}
+            <Ico group="utility" id="external" size={16} />
+          </a>
         </li>
       ))}
     </ol>

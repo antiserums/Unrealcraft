@@ -969,3 +969,119 @@ html.site-art .stats-board .stat.on { border-image-source: url("/art/website-art
 .pick-banner { width: 132px; height: 62px; border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; }
 .pick-banner img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
 .pick-banner-name { position: relative; font-size: 10px; line-height: 1.1; padding: 3px 4px; background: rgba(10,12,18,.78); color: var(--gold-2); text-align: left; }
+
+/* ---- the quest page: the dungeon in the header, the steps on a trail, progress at the side ---- */
+.crumbs { display: flex; gap: 10px; align-items: center; margin: 0 0 10px; font-family: var(--display); font-size: 11px; font-weight: 600; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+.crumbs a { color: var(--muted); }
+.crumbs a:hover { color: var(--gold-2); text-decoration: none; }
+.crumbs span[aria-hidden] { font-size: 8px; color: var(--gold-dim); }
+
+.qhero {
+  position: relative; container-type: inline-size; overflow: hidden; height: 280px; display: flex; align-items: flex-end;
+  border: 1px solid var(--gold-3); border-bottom: none; border-radius: var(--radius) var(--radius) 0 0; background: #0b0d13;
+  box-shadow: 0 0 0 1px #050609, 0 10px 30px rgba(0, 0, 0, .55);
+}
+/* the room, 480 x 270 art scaled to the width: framed so the back wall, the gate and a strip of floor all show */
+.qhero-bg { position: absolute; inset: 0; background: var(--arena, none) center 30% / cover no-repeat; image-rendering: pixelated; }
+.qhero::before { content: ""; position: absolute; inset: 0; pointer-events: none; background:
+  linear-gradient(90deg, rgba(8, 9, 13, .96) 0%, rgba(8, 9, 13, .88) 34%, rgba(8, 9, 13, .35) 56%, rgba(8, 9, 13, 0) 74%),
+  linear-gradient(0deg, rgba(8, 9, 13, .45), rgba(8, 9, 13, 0) 35%); z-index: 1; }
+.qhero::after { content: ""; position: absolute; z-index: 2; left: 0; right: 0; top: 0; height: 3px; background: linear-gradient(90deg, var(--tier), transparent 70%); }
+.qhero-text { position: relative; z-index: 2; max-width: 58%; padding: 26px 28px 24px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.qhero-tags { gap: 8px; }
+.qhero h1 { margin: 0; font-size: clamp(24px, 3.6cqw, 38px); line-height: 1.12; }
+.qhero h1 .qhero-id { display: block; margin-bottom: 6px; font-family: var(--display); font-size: 12px; font-weight: 600; letter-spacing: .22em; color: var(--tier); text-shadow: 0 1px 0 #000; }
+.qhero-why { margin: 0; font-size: 16px; font-style: italic; color: var(--ink); text-shadow: 0 1px 0 #000, 0 0 12px #000; }
+/* the boss stands on the floor a little in front of the wall (row 152 of 270), wherever the crop puts that row */
+.qhero-boss { position: absolute; z-index: 1; right: 13%; bottom: calc(70% - 14.8cqw); transform: translateY(6.25%); filter: drop-shadow(0 6px 4px rgba(0, 0, 0, .65)); line-height: 0; }
+.qhero.cleared .qhero-boss { opacity: .75; }
+.qhero-plate { position: absolute; z-index: 2; right: 14px; top: 14px; max-width: 40%; padding: 6px 12px 7px; text-align: right;
+  background: rgba(8, 9, 13, .78); border: 1px solid var(--gold-dim); border-radius: 3px; box-shadow: 0 0 0 1px #000; }
+.qhero-plate b { display: block; font-family: var(--display); font-size: 14px; letter-spacing: .03em; color: #f3ecda; }
+
+.qstats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); margin: 0 0 22px; border: 1px solid var(--gold-3); border-radius: 0 0 var(--radius) var(--radius);
+  background: linear-gradient(180deg, var(--paper), var(--bg-2)); box-shadow: 0 0 0 1px #050609, inset 0 1px 0 rgba(255, 255, 255, .05), 0 10px 30px rgba(0, 0, 0, .45); }
+.qstat { display: flex; align-items: center; gap: 10px; padding: 12px 16px; border-left: 1px solid rgba(212, 175, 90, .14); min-width: 0; }
+.qstat:first-child { border-left: none; }
+.qstat img { flex: none; }
+.qstat dt { font-family: var(--display); font-size: 10px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); }
+.qstat dd { margin: 0; font-family: var(--display); font-size: 15px; font-weight: 600; color: var(--gold-2); text-shadow: 0 1px 0 #1a1204; overflow-wrap: anywhere; }
+
+.quest-body { display: grid; gap: 26px; grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
+.quest-side { position: sticky; top: 76px; display: flex; flex-direction: column; gap: 12px; }
+
+/* the trail: a marker per step, joined by a line that turns gold as steps are done */
+.qsteps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.qstep { position: relative; padding-left: 58px; scroll-margin-top: 80px; }
+.qstep::before { content: ""; position: absolute; left: 21px; top: 44px; bottom: -16px; width: 2px; background: var(--bronze); }
+.qstep:last-child::before { display: none; }
+.qstep.done::before { background: linear-gradient(var(--gold), var(--gold-3)); box-shadow: 0 0 8px rgba(212, 175, 90, .35); }
+.qstep-mark { position: absolute; left: 0; top: 2px; width: 44px; height: 44px; display: grid; place-items: center; font-size: 18px; line-height: 1; border-radius: 50%;
+  border: 1px solid var(--gold-3); background: radial-gradient(circle at 50% 35%, #2c2616, #12141b 70%); box-shadow: 0 0 0 1px #000, 0 0 0 4px var(--bg), inset 0 1px 0 rgba(255, 255, 255, .08); }
+.qstep.done .qstep-mark { border-color: var(--ok); box-shadow: 0 0 0 1px #000, 0 0 0 4px var(--bg), 0 0 12px rgba(108, 196, 138, .35); }
+.qstep.now .qstep-mark { border-color: var(--gold-2); box-shadow: 0 0 0 1px #000, 0 0 0 4px var(--bg), 0 0 14px rgba(212, 175, 90, .55); }
+.qstep.now > .card { border-color: var(--gold); box-shadow: var(--frame), 0 0 24px rgba(212, 175, 90, .22); }
+.qstep.locked > .card, .qstep.locked .qstep-mark { opacity: .6; }
+.qstep > .card > h3 { margin: 0 0 12px; padding-bottom: 10px; border-bottom: 1px solid rgba(212, 175, 90, .14); font-size: 16px; }
+.qstep > .card > :last-child { margin-bottom: 0; }
+
+.reading-list { list-style: none; padding: 0; margin: 0 0 10px; display: flex; flex-direction: column; gap: 8px; counter-reset: reading; }
+.reading-list a { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--bronze); border-radius: 3px; background: rgba(0, 0, 0, .28); color: var(--gold-2); transition: border-color .15s ease, background .15s ease; }
+.reading-list a::before { counter-increment: reading; content: counter(reading); flex: none; width: 22px; height: 22px; display: grid; place-items: center; font-family: var(--display); font-size: 12px; font-weight: 700; color: var(--gold); border: 1px solid var(--gold-dim); border-radius: 2px; background: rgba(0, 0, 0, .4); }
+.reading-list a:hover { text-decoration: none; border-color: var(--gold-3); background: rgba(212, 175, 90, .07); }
+.reading-list .reading-label { flex: 1; min-width: 0; font-weight: 600; }
+.reading-list .ico { flex: none; opacity: .8; }
+
+.qcheck { list-style: none; padding: 0; margin: 0; counter-reset: todo; }
+.qcheck li { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(212, 175, 90, .1); }
+.qcheck li:last-child { border-bottom: none; padding-bottom: 0; }
+.qcheck li:first-child { padding-top: 0; }
+.qcheck li::before { counter-increment: todo; content: counter(todo); flex: none; width: 22px; height: 22px; margin-top: 1px; display: grid; place-items: center; font-family: var(--display); font-size: 12px; font-weight: 700; color: var(--gold); border: 1px solid var(--gold-dim); border-radius: 2px; background: rgba(0, 0, 0, .4); }
+.qcheck li.done::before { color: var(--ok); border-color: var(--ok); }
+.qcheck li > span:first-of-type { flex: 1; min-width: 0; }
+.qcheck .mark { flex: none; cursor: help; }
+.qdo { margin: 12px 0 0; padding: 10px 12px; border-left: 3px solid var(--gold); background: rgba(0, 0, 0, .25); }
+
+.qboss { display: flex; flex-direction: column; align-items: flex-start; gap: 6px; padding-left: 14px; border-left: 3px solid var(--boss, var(--gold)); }
+.qboss-name { font-family: var(--display); font-size: 17px; letter-spacing: .03em; color: #f3ecda; }
+.qboss p { margin: 0; }
+.qboss .btn { margin-top: 6px; }
+
+.qprog-bar { margin: 12px 0 10px; }
+.qprog { list-style: none; padding: 0; margin: 0; }
+.qprog li { position: relative; padding: 4px 0 4px 20px; color: var(--muted); }
+.qprog li b { color: var(--ink); }
+.qprog li::before { content: ""; position: absolute; left: 2px; top: 10px; width: 8px; height: 8px; transform: rotate(45deg); border: 1px solid var(--gold-dim); }
+.qprog li.ok { color: var(--ink); }
+.qprog li.ok::before { background: var(--ok); border-color: var(--ok); box-shadow: 0 0 6px rgba(108, 196, 138, .6); }
+.qcta { display: flex; justify-content: center; margin-top: 14px; }
+
+@media (max-width: 860px) {
+  .quest-body { grid-template-columns: 1fr; }
+  .quest-side { position: static; order: -1; }
+}
+@media (max-width: 600px) {
+  /* phones: the words on top, then the room cropped to its height with the boss on the front of the floor */
+  .qhero { height: auto; flex-direction: column; align-items: stretch; }
+  .qhero-bg { background-position: center bottom; }
+  .qhero::before { background: linear-gradient(180deg, rgba(8, 9, 13, .95) 0%, rgba(8, 9, 13, .85) 50%, rgba(8, 9, 13, .15) 78%, rgba(8, 9, 13, .4) 100%); }
+  .qhero-text { max-width: none; padding: 20px 18px 236px; }
+  .qhero-boss { right: 50%; transform: translate(50%, 6.25%); bottom: 88px; }
+  .qhero-plate { left: 10px; right: 10px; top: auto; max-width: none; bottom: 8px; text-align: center; }
+  .qstats { grid-template-columns: 1fr 1fr; }
+  .qstat { gap: 8px; padding: 10px 12px; border-left: none; border-top: 1px solid rgba(212, 175, 90, .14); }
+  .qstat:nth-child(-n + 2) { border-top: none; }
+  .qstat dd { font-size: 13px; }
+  /* no room for the trail: the marker moves into the card, beside the step's title */
+  .qstep { padding-left: 0; }
+  .qstep::before { display: none; }
+  .qstep-mark { left: 12px; top: 10px; width: 38px; height: 38px; z-index: 1; box-shadow: 0 0 0 1px #000; }
+  .qstep > .card > h3 { padding-left: 46px; min-height: 30px; display: flex; align-items: center; }
+}
+[dir="rtl"] .qstep { padding-left: 0; padding-right: 58px; }
+[dir="rtl"] .qstep::before { left: auto; right: 21px; }
+[dir="rtl"] .qstep-mark { left: auto; right: 0; }
+@media (max-width: 600px) { [dir="rtl"] .qstep { padding-right: 0; } [dir="rtl"] .qstep-mark { right: 12px; } [dir="rtl"] .qstep > .card > h3 { padding-left: 0; padding-right: 46px; } }
+[dir="rtl"] .qhero::before { transform: scaleX(-1); }
+[dir="rtl"] .qhero-boss { right: auto; left: 11%; }
+[dir="rtl"] .qhero-plate { right: auto; left: 14px; text-align: left; }
