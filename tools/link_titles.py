@@ -13,6 +13,7 @@ import html
 import json
 import re
 import sys
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -23,9 +24,14 @@ ROOT = Path(__file__).resolve().parent.parent
 CURRICULUM = ROOT / "curriculum"
 OUT = CURRICULUM / "link_titles.json"
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
-PAUSE = 1.5                                   # seconds between requests
+PAUSE = 3.0                                   # seconds between requests; faster than this and the docs site stalls
+DEADLINE = 30                                 # seconds one request may take in all
 URL_RE = re.compile(r"https?://[^\s\"'<>)\]]+")
 TITLE_RE = re.compile(r"<meta[^>]+property=[\"']og:title[\"'][^>]+content=[\"']([^\"']+)[\"']|<title[^>]*>([^<]+)</title>", re.I)
+
+
+class Throttled(Exception):
+    """The site wants us to slow down: it answered 429, or stopped answering."""
 
 
 def curriculum_urls() -> list[str]:
@@ -37,19 +43,36 @@ def curriculum_urls() -> list[str]:
     return sorted(urls)
 
 
-def get(url: str, timeout: int = 20) -> str:
+def _get(url: str) -> str:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "en"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:
+    with urllib.request.urlopen(req, timeout=20) as r:
         return r.read(400_000).decode("utf-8", "replace")
+
+
+def get(url: str) -> str:
+    """One page, with a hard limit on the whole request: when the docs site has had enough it stops answering
+    instead of refusing, and a plain socket timeout never fires."""
+    box: dict = {}
+
+    def run() -> None:
+        try:
+            box["text"] = _get(url)
+        except Exception as e:                                           # noqa: BLE001
+            box["error"] = e
+
+    th = threading.Thread(target=run, daemon=True)
+    th.start()
+    th.join(DEADLINE)
+    if th.is_alive():
+        raise Throttled
+    if "error" in box:
+        raise box["error"]
+    return box["text"]
 
 
 def clean(title: str) -> str:
     """'Animation Sequences in Unreal Engine | Unreal Engine 5.8 Documentation | Epic…' -> the first part."""
     return re.sub(r"\s+", " ", html.unescape(title).split(" | ")[0]).strip()
-
-
-class Throttled(Exception):
-    """The site asked us to slow down (HTTP 429)."""
 
 
 def title_of(url: str) -> str | None:
@@ -60,6 +83,8 @@ def title_of(url: str) -> str | None:
             return f"{d['title']} ({d['author_name']})" if d.get("author_name") else d["title"]
         m = TITLE_RE.search(get(url))
         return (clean(m.group(1) or m.group(2)) if m else "") or None
+    except Throttled:
+        raise
     except urllib.error.HTTPError as e:
         if e.code == 429:
             raise Throttled from e
@@ -89,11 +114,11 @@ def main() -> None:
             if (t := title_of(todo[i])):
                 known[todo[i]] = t
             i += 1
-            pause = max(PAUSE, pause * 0.9)
+            pause = PAUSE
         except Throttled:
-            pause = min(pause * 2, 120)                                  # back off, then try the same link again
-            print(f"  slowing down: waiting {pause:.0f}s", flush=True)
-        if i % 25 == 0:
+            pause = min(max(pause * 2, 60), 300)                         # back off, then try the same link again
+            print(f"  slowing down: waiting {pause:.0f}s  ({save(urls, known)} titles saved)", flush=True)
+        if i and i % 25 == 0:
             print(f"  {i}/{len(todo)}  ({save(urls, known)} titles saved)", flush=True)
         time.sleep(pause)
     print(f"{save(urls, known)}/{len(urls)} titles -> {OUT.relative_to(ROOT)}", flush=True)
