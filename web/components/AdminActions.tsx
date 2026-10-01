@@ -5,7 +5,7 @@ import { useState } from "react";
 type Rank = { n: number; title: string; xp: number };
 export type EntRef = { kind: string; id: string; name: string };
 export type Grant = EntRef & { granted_by: number | string | null; created_at: string };
-const KIND_LABEL: Record<string, string> = { outfit: "Outfit", nameplate: "Nameplate colour", avatar_frame: "Avatar frame", card_frame: "Player card frame", title: "Title", achievement: "Achievement" };
+const KIND_LABEL: Record<string, string> = { outfit: "Outfit", nameplate: "Nameplate colour", avatar_frame: "Avatar frame", card_frame: "Player card frame", title: "Title", home_banner: "Home banner", achievement: "Achievement" };
 
 /** Admin actions on one member. Every call goes to /api/admin/members/{id}/... and is written to the admin log. */
 export default function AdminActions({ uid, ranks, specializations, current, entitlements = [], grants = [] }:

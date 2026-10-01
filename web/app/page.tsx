@@ -6,7 +6,7 @@ import { TierBadge } from "@/components/QuestCard";
 import { api, type Me, type Next, type Specializations } from "@/lib/api";
 import HeroBanner from "@/components/HeroBanner";
 import { AvatarDeco } from "@/components/DecoAnim";
-import { arenaBackground, bannerSet, creatureSheet, decorationImage, loadManifest, rankCrest, siteArtGroup } from "@/lib/art";
+import { arenaBackground, bannerSet, creatureSheet, decorationImage, loadManifest, rankBanners, rankCrest, siteArtGroup } from "@/lib/art";
 import type { BossInfo } from "@/components/BossCard";
 import { Boss } from "@/components/Figure";
 import { Px } from "@/components/SiteArt";
@@ -27,6 +27,9 @@ export default async function Home() {
   ]);
   const boss = next?.main?.has_quiz ? await api<BossInfo>(`/catalog/quests/${next.main.id}/boss`) : null;   // the ribbon shows who waits inside
   const banner = bannerSet(manifest);
+  // the scene behind the home page: the river town, or the rank scene the member chose on their card page
+  const scene = me?.home_banner ? rankBanners(manifest)[me.home_banner] ?? null : null;
+  if (banner && scene) banner.living = scene;
   const pct = me?.xp_next ? Math.min(100, Math.round(((me.xp - me.xp_floor) / (me.xp_next - me.xp_floor)) * 100)) : 100;
   const arena = next?.main ? arenaBackground(manifest, next.main.id) : null;
   const bossSheet = boss ? creatureSheet(manifest, boss.creature) : null;
@@ -120,7 +123,7 @@ export default async function Home() {
 
   return (
     <>
-      {banner ? <HeroBanner icons={siteArtGroup(manifest, "banner-controls")} animated={banner.animated} still={banner.still} living={banner.living}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
+      {banner ? <HeroBanner key={me?.home_banner ?? "town"} icons={siteArtGroup(manifest, "banner-controls")} animated={banner.animated} still={banner.still} living={banner.living}>{hero}</HeroBanner> : <section className="hero">{hero}</section>}
 
       {me && stats ? (
         <>

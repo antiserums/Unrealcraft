@@ -33,6 +33,17 @@ own storage key `uc-living-town-v2`, so their preview page and the site agree. T
 `prefers-reduced-motion` itself. `banners/animated/` (the earlier 6-second WebP loop) stays as the fallback when
 the living-town folder is absent, and the plain still when neither is.
 
+**Rank banners.** `banners/rank-banners/` adds four more living scenes, one per rank from Apprentice to Master
+(Mossgate Guild Outpost, Moonmere Academy, Emberfall Bastion, Crown of the Aether), each a module with the same
+`LivingTown` interface and its own `assets/`, `stills/` and `loops/`, sharing `shared/living-scene.js` and
+`shared/people.png`. `tools/sync_rank_banners.py` (the artist's helper) copies only the files listed in the pack's
+`manifest.json` and writes them as `rank_banners` in the site manifest. They are entitlements of kind
+`home_banner` (`api/app/rpg.py`, `HOME_BANNERS`): the river town is everyone's, each scene opens at its rank, and
+the member picks one under Edit profile on the card page ("Home banner"). The API validates the choice like every
+other entitlement, `/me` returns the chosen scene id, and the home page passes that scene to `HeroBanner`. Season,
+time and pause choices are shared across scenes (same storage key); the fallback still is picked by the device clock
+in "My time" mode, so a night visit never shows daylight.
+
 **Outfit sets.** The pack's eleven sets are the built-in catalog (`api/app/rpg.py`, `default_entitlements`;
 admins can add rows that point at these art ids under `/admin/entitlements`):
 `novice` (starter), `apprentice`, `adept`, `expert`, `master` (rank 1 to 4, shared by every major), three

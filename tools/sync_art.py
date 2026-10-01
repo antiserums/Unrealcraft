@@ -111,6 +111,11 @@ def main() -> None:
             if rel := put(f.relative_to(PACK).as_posix()):
                 stills[f.stem] = rel                                # spring-day, winter-night, ...
         m["living_town"] = {"script": script, "stills": stills, "seasons": ["spring", "summer", "autumn", "winter"]}
+    # banners/rank-banners/: four more living scenes (Apprentice to Master), each a module with its own assets; the
+    # artist's helper copies only the manifest's runtime files and maps them like the town above
+    if (PACK / "banners" / "rank-banners" / "manifest.json").exists():
+        from sync_rank_banners import sync_rank_banners
+        m["rank_banners"] = sync_rank_banners(PACK, OUT)
     # Card borders follow docs/09-playercard-art-spec.md: 352 x 252 with the card in the centre 320 x 220, so the
     # band's inner edge is 16 source px from the canvas edge on every side and every theme.
     m["decorations"] = {"avatar": {}, "card": {}, "inset": 16, "anim": {"avatar": {}, "card": {}}}

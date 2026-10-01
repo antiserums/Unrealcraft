@@ -25,6 +25,8 @@ export type Manifest = {
   appearance: Record<string, string[]>;
   banners?: Record<string, string>;
   living_town?: { script: string; stills: Record<string, string>; seasons: string[] };
+  /** banners/rank-banners: one more living scene per rank, keyed by scene id (apprentice … master) */
+  rank_banners?: Record<string, { id: string; name: string; unlockRank: string; minRank: number; script: string; stills: Record<string, string>; loops: Record<string, string>; seasons: string[]; alt: string; width: number; height: number }>;
   /** website-art: "<group>" or "<group>/<frame>" -> path, plus the extra fight arenas */
   website_art?: { images: Record<string, string>; arenas: Record<string, { path: string; width: number; height: number; groundY: number }> };
   decorations?: { avatar: Record<string, string>; card: Record<string, string>; inset?: number; anim?: Record<"avatar" | "card", Record<string, { frames: string[]; fps: number }>> };
@@ -170,7 +172,16 @@ export function bannerSet(m: Manifest | null): { animated: string | null; still:
 
 /** The living-town banner: a canvas component with seasons and time-of-day lighting, plus one still per season and
  *  time (e.g. "summer-day") shown before the script runs. */
-export type LivingTownArt = { script: string; stills: Record<string, string>; seasons: string[] };
+export type LivingTownArt = { script: string; stills: Record<string, string>; seasons: string[]; alt?: string; name?: string };
+
+/** The rank-unlocked home scenes, keyed by id, with site URLs. The member's choice is validated by the API. */
+export function rankBanners(m: Manifest | null): Record<string, LivingTownArt & { minRank: number; name: string; alt: string }> {
+  const out: Record<string, LivingTownArt & { minRank: number; name: string; alt: string }> = {};
+  for (const [id, b] of Object.entries(m?.rank_banners ?? {})) {
+    out[id] = { script: art(b.script), stills: Object.fromEntries(Object.entries(b.stills).map(([k, v]) => [k, art(v)])), seasons: b.seasons, alt: b.alt, name: b.name, minRank: b.minRank };
+  }
+  return out;
+}
 
 /** Avatar ring or card border for a decoration theme id. */
 export function decorationImage(m: Manifest | null, kind: "avatar" | "card", id: string | undefined): string | null {

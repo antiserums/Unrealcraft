@@ -45,7 +45,7 @@ export type Me = {
   medals: { medal_key: string; earned_at: string }[]; done_count: number;
   recent_xp?: { amount: number; reason: string; created_at: string }[]; known?: boolean;
   review?: { can: boolean; mentor: boolean; pending: number }; admin?: boolean; staff?: string | null; letters_unread?: number;
-  avatar_frame?: string; avatar_frame_art?: string | null; title?: string | null; nameplate?: string;
+  avatar_frame?: string; avatar_frame_art?: string | null; title?: string | null; nameplate?: string; home_banner?: string | null;
 };
 export type ReviewItem = {
   id: number; status: string; route: string; created_at: string; decided_at: string | null; notes: string | null; reviewer_id: number | null;
@@ -73,13 +73,13 @@ export type Next = { main: QuestSummary | null; reason: string; electives: Quest
 export type Achievement = { key: string; name: string; desc: string; icon: string; need: number; of: string; have: number; earned: boolean; earned_at: string | null; outfit?: string; badge?: number };
 /** One entitlement (an unlock an account can hold) as the card editor sees it. `art` is the art-pack id for frames. */
 export type EntitlementOption = { id: string; name: string; value?: string; art?: string | null; desc?: string; owned: boolean; hint: string | null; granted?: boolean };
-export type EntitlementKind = "outfit" | "nameplate" | "avatar_frame" | "card_frame" | "title" | "achievement";
+export type EntitlementKind = "outfit" | "nameplate" | "avatar_frame" | "card_frame" | "title" | "home_banner" | "achievement";
 export type Card = Me & {
   worn: { id: string; name: string; flavour: string; tier: string; color: string; art_id: string };
   cosmetics: { nameplate?: string; banner?: string; appearance?: Record<string, string>; outfit?: string; featured?: string[]; public?: boolean; title?: string };
-  style: string; body: string; nameplate: string; nameplate_id: string; avatar_frame: string; avatar_frame_art: string | null; card_frame: string; card_frame_art: string | null;
+  style: string; body: string; nameplate: string; nameplate_id: string; avatar_frame: string; avatar_frame_art: string | null; card_frame: string; card_frame_art: string | null; home_banner: string; home_banner_art: string | null;
   title: string | null; title_id: string; motto: string; public: boolean;
-  entitlements: { nameplate: EntitlementOption[]; avatar_frame: EntitlementOption[]; card_frame: EntitlementOption[]; title: EntitlementOption[] };
+  entitlements: { nameplate: EntitlementOption[]; avatar_frame: EntitlementOption[]; card_frame: EntitlementOption[]; title: EntitlementOption[]; home_banner: EntitlementOption[] };
   achievements_earned: number; achievements_total: number;
   featured: Achievement[]; nameplate_colors: string[]; earned_achievements: Achievement[]; mine?: boolean;
 };

@@ -93,6 +93,7 @@ async def me_payload(request: Request, member: dict) -> dict:
     payload["avatar_frame"], payload["avatar_frame_art"] = frame["id"], frame.get("art")
     payload["title"] = None if title["id"] == rpg_rules.DEFAULT_TITLE else title["name"]
     payload["nameplate"] = rpg_rules.pick_owned(opts["nameplate"], cos.get("nameplate"))["value"]
+    payload["home_banner"] = rpg_rules.pick_owned(opts["home_banner"], cos.get("home_banner")).get("art")   # None = the river town
     return payload
 
 

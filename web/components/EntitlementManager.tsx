@@ -8,7 +8,7 @@ export type EntitlementData = {
   rows: EntRow[]; kinds: EntitlementKind[]; kind_label: Record<string, string>; unlock_types: string[]; counters: string[]; counter_label: Record<string, string>;
   ranks: { n: number; title: string }[]; achievement_keys: string[]; tiers: string[];
 };
-type Art = { sets: { id: string; name: string }[]; avatar: string[]; card: string[]; badges: { n: number; name: string }[] };
+type Art = { sets: { id: string; name: string }[]; avatar: string[]; card: string[]; badges: { n: number; name: string }[]; banners?: string[] };
 type Draft = { kind: EntitlementKind; id: string; name: string; desc: string; sort: string; enabled: boolean; unlock_type: string; unlock_n: string; unlock_key: string; unlock_role: string; unlock_hint: string;
   value: string; art: string; art_id: string; tier: string; set_kind: string; of: string; need: string; icon: string; badge: string; outfit: string };
 
@@ -32,6 +32,7 @@ function toBody(x: Draft) {
   const data: Record<string, unknown> = {};
   if (x.kind === "nameplate") data.value = x.value.trim();
   if (x.kind === "avatar_frame" || x.kind === "card_frame") data.art = x.id === "none" ? null : x.art;
+  if (x.kind === "home_banner") data.art = x.id === "town" ? null : x.art;
   if (x.kind === "outfit") { data.art_id = x.art_id; data.tier = x.tier; data.set_kind = x.set_kind; }
   if (x.kind === "achievement") { data.of = x.of; data.need = Number(x.need); data.icon = x.icon; if (x.badge) data.badge = Number(x.badge); if (x.outfit) data.outfit = x.outfit; }
   return { name: x.name.trim(), desc: x.desc.trim(), unlock, data, sort: Number(x.sort) || 100, enabled: x.enabled };
@@ -63,7 +64,7 @@ export default function EntitlementManager({ data, art }: { data: EntitlementDat
   const ruleText = (r: EntRow) => r.kind === "achievement" ? `${r.data.need} × ${data.counter_label[String(r.data.of)] ?? r.data.of}` : `${UNLOCK_LABEL[String(r.unlock.type)] ?? r.unlock.type}${r.hint ? ` · ${r.hint}` : ""}`;
   const dataText = (r: EntRow) => {
     if (r.kind === "nameplate") return <span className="row" style={{ gap: 6 }}><span style={{ width: 14, height: 14, borderRadius: "50%", background: String(r.data.value), display: "inline-block" }} /><code>{String(r.data.value)}</code></span>;
-    if (r.kind === "avatar_frame" || r.kind === "card_frame") return <code>{r.data.art ? String(r.data.art) : "—"}</code>;
+    if (r.kind === "avatar_frame" || r.kind === "card_frame" || r.kind === "home_banner") return <code>{r.data.art ? String(r.data.art) : "—"}</code>;
     if (r.kind === "outfit") return <span><code>{String(r.data.art_id)}</code> · {String(r.data.tier)} · {String(r.data.set_kind)}</span>;
     if (r.kind === "achievement") return <span>{String(r.data.icon ?? "")} badge {String(r.data.badge ?? "—")}{r.data.outfit ? ` · outfit ${r.data.outfit}` : ""}</span>;
     return null;
@@ -92,6 +93,9 @@ export default function EntitlementManager({ data, art }: { data: EntitlementDat
             {draft.kind === "nameplate" && <div><label>Colour</label><div className="row" style={{ gap: 6 }}><input type="color" value={/^#[0-9a-fA-F]{6}$/.test(draft.value) ? draft.value : "#4AA3B5"} onChange={(e) => set("value", e.target.value.toUpperCase())} style={{ width: 44, padding: 2 }} /><input value={draft.value} onChange={(e) => set("value", e.target.value)} /></div></div>}
             {(draft.kind === "avatar_frame" || draft.kind === "card_frame") && (
               <div><label>Art (from the art pack)</label><select value={draft.art} onChange={(e) => set("art", e.target.value)}><option value="">pick one</option>{(draft.kind === "avatar_frame" ? art.avatar : art.card).map((a) => <option key={a} value={a}>{a}</option>)}</select></div>
+            )}
+            {draft.kind === "home_banner" && (
+              <div><label>Scene (banners/rank-banners in the art pack)</label><select value={draft.art} onChange={(e) => set("art", e.target.value)}><option value="">the river town</option>{(art.banners ?? []).map((a) => <option key={a} value={a}>{a}</option>)}</select></div>
             )}
             {draft.kind === "outfit" && <>
               <div><label>Set (from the art pack)</label><select value={draft.art_id} onChange={(e) => set("art_id", e.target.value)}><option value="">pick one</option>{art.sets.map((s) => <option key={s.id} value={s.id}>{s.id} · {s.name}</option>)}</select></div>

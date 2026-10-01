@@ -32,10 +32,12 @@ export default function HeroBanner({ animated, still, living, children, icons = 
   const [live, setLive] = useState(false);
   const [open, setOpen] = useState(false);
   const [paused, setPaused] = useState(false);
+  const [clockHour, setClockHour] = useState(12);                 // the device hour, read on the client only
 
   useEffect(() => {
     const p = loadPrefs();
     setPrefs(p);
+    setClockHour(new Date().getHours());
     setPaused(!!p.paused);
     if (!living || !canvasRef.current) return;
     let town: LivingTown | null = null;
@@ -70,13 +72,15 @@ export default function HeroBanner({ animated, still, living, children, icons = 
     const town = townRef.current;
     if (town) { town.playing = !next; town.render(town.seconds); }
   }
-  const stillFor = living ? (living.stills[`${prefs.season}-${prefs.timeMode === "manual" && (prefs.hour < 6 || prefs.hour >= 20) ? "night" : "day"}`] ?? still) : still;
+  // the still under the canvas (and the whole banner when the module cannot run): night by the chosen hour, or by the clock
+  const hourNow = prefs.timeMode === "manual" ? prefs.hour : clockHour;
+  const stillFor = living ? (living.stills[`${prefs.season}-${hourNow < 6 || hourNow >= 20 ? "night" : "day"}`] ?? still) : still;
   const style = { "--banner": `url("${living ? stillFor : animated ?? still}")`, "--banner-still": `url("${stillFor}")` } as React.CSSProperties;
   const canPause = !!living || !!animated;
 
   return (
     <section className={`hero px banner-hero ${living ? "living" : ""} ${live ? "live" : ""} ${paused || (!animated && !living) ? "paused" : ""}`} style={style}>
-      {living && <canvas ref={canvasRef} className="banner-canvas" role="img" aria-label={t("A pixel-art town by a river: water, foliage, clouds, a waterwheel and villagers, lit for the time of day")} />}
+      {living && <canvas ref={canvasRef} className="banner-canvas" role="img" aria-label={living.alt ?? t("A pixel-art town by a river: water, foliage, clouds, a waterwheel and villagers, lit for the time of day")} />}
       {canPause && (
         <div className={`banner-tools ${open ? "open" : ""}`}>
           {living && open && (

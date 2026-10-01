@@ -364,6 +364,16 @@ TITLES = [
     ("sourceforged", "the Sourceforged", "Builds the guild.", {"type": "staff", "role": "developer", "hint": "Developers only"}),
 ]
 DEFAULT_TITLE = "none"
+# Home banners: the living scene behind the home page. The river town is everyone's; each rank opens a new place.
+# Ids match the art pack (banners/rank-banners/<id>); "town" is the original living town.
+HOME_BANNERS = [
+    ("town", "Riverside Town", "The guild's town by the river, where everyone starts.", {"type": "starter"}),
+    ("apprentice", "Mossgate Guild Outpost", "An ancient oak, a training yard, a forest stream and a watermill.", {"type": "rank", "n": 1, "hint": "Reach Apprentice"}),
+    ("adept", "Moonmere Academy", "A lakeside observatory with a crystal telescope and an island shrine.", {"type": "rank", "n": 2, "hint": "Reach Adept"}),
+    ("expert", "Emberfall Bastion", "A dragon-guarded mountain fortress, a causeway and a hydraulic forge.", {"type": "rank", "n": 3, "hint": "Reach Expert"}),
+    ("master", "Crown of the Aether", "A floating celestial capital with garden canals and cascading islands.", {"type": "rank", "n": 4, "hint": "Reach Master"}),
+]
+DEFAULT_HOME_BANNER = "town"
 
 
 def default_entitlements() -> list[dict]:
@@ -373,17 +383,18 @@ def default_entitlements() -> list[dict]:
     for kind in ("avatar_frame", "card_frame"):
         rows += [_row(kind, i, n, d, u, {"art": None if i == "none" else i}, k) for k, (i, n, d, u) in enumerate(DECORATIONS)]
     rows += [_row("title", i, n, d, u, {}, k) for k, (i, n, d, u) in enumerate(TITLES)]
+    rows += [_row("home_banner", i, n, d, u, {"art": None if i == DEFAULT_HOME_BANNER else i}, k) for k, (i, n, d, u) in enumerate(HOME_BANNERS)]
     rows += _achievement_rows()
     return rows
 
 
 def entitlement_catalog(ents, *, rank: int, earned: set[str], medals: set[str], role: str | None,
                         grants: set[tuple[str, str]], unlock_all: bool = False, ranks: dict | None = None) -> dict:
-    """Every card entitlement (colour, frames, title) with its owned flag and unlock hint, grouped by kind.
+    """Every card entitlement (colour, frames, title, home banner) with its owned flag and unlock hint, grouped by kind.
     Admins and developers testing get everything."""
     from .entitlements import hint_for, owned
     out: dict[str, list[dict]] = {}
-    for kind in ("nameplate", "avatar_frame", "card_frame", "title"):
+    for kind in ("nameplate", "avatar_frame", "card_frame", "title", "home_banner"):
         items = []
         for r in ents.of(kind):
             granted = (kind, r["id"]) in grants
@@ -391,7 +402,7 @@ def entitlement_catalog(ents, *, rank: int, earned: set[str], medals: set[str], 
             item = {"id": r["id"], "name": r["name"], "desc": r["desc"], "owned": own, "hint": hint_for(r["unlock"], ranks), "granted": granted}
             if kind == "nameplate":
                 item["value"] = r["data"].get("value")
-            if kind in ("avatar_frame", "card_frame"):
+            if kind in ("avatar_frame", "card_frame", "home_banner"):
                 item["art"] = r["data"].get("art")
             items.append(item)
         out[kind] = items

@@ -23,6 +23,9 @@ Every group in the current pack manifest is placed, except the two listed under 
   divider v2, the 12 px scrollbar.
 - Icons: specializations, quest steps, quest states, combat status, rank crests, staff crests, difficulty marks,
   banner controls, statistics, utility (32 and 16 px), rewards, all seventeen achievement badges.
+- The four rank banners (Apprentice to Master): synced with your helper, offered as "Home banner" entitlements under
+  Edit profile, unlocked by rank, the river town stays the default. Switching re-creates the module; season, time
+  and pause carry over.
 - The CSS leftovers delivery: chips (stone, muted, primary, staff), tier plates, plain and hover panels on every
   ordinary card, the default avatar ring and card border, swatch rings, ornaments, the upload plate, leaderboard
   rows. The rarity SVGs from `ui/rarity` now frame the wardrobe tiles.

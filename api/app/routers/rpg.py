@@ -132,10 +132,12 @@ async def card_payload(request: Request, uid: int, session: dict | None) -> dict
     plate = rpg.pick_owned(options["nameplate"], cos.get("nameplate"))
     av, cf = rpg.pick_owned(options["avatar_frame"], cos.get("avatar_frame")), rpg.pick_owned(options["card_frame"], cos.get("card_frame"))
     title = rpg.pick_owned(options["title"], cos.get("title"))
+    hb = rpg.pick_owned(options["home_banner"], cos.get("home_banner"))
     return {**p, "worn": char["worn"], "style": char["style"], "body": char["body"], "cosmetics": cos,
             "nameplate": plate["value"], "nameplate_id": plate["id"],
             "avatar_frame": av["id"], "avatar_frame_art": av.get("art"), "card_frame": cf["id"], "card_frame_art": cf.get("art"),
             "title_id": title["id"], "title": None if title["id"] == rpg.DEFAULT_TITLE else title["name"],
+            "home_banner": hb["id"], "home_banner_art": hb.get("art"),
             "entitlements": options,
             "motto": cos.get("banner") or "", "public": bool(cos.get("public")),
             "achievements_earned": len(earned), "achievements_total": len(ach), "featured": featured,
@@ -175,6 +177,7 @@ class CharacterPatch(BaseModel):
     avatar_frame: str | None = None                # card entitlements, see rpg.entitlement_catalog
     card_frame: str | None = None
     title: str | None = None                       # shown after the name; "none" hides it
+    home_banner: str | None = None                 # the living scene on the home page; opened by rank
     featured: list[str] | None = None              # up to three achievement keys shown on the card
     public: bool | None = None                     # card visible without logging in
     style: str | None = None                       # melee (sword + shield) | caster (staff + orb)
@@ -195,7 +198,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     u0, _, _ = await request.app.state.db.user_state(member["id"])
     from ..staff import role_of
     options = entitlement_options(request, await member_ctx(request, member["id"]), int(u0.get("rank", 0)), role_of(member), unlock_all)
-    for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame"), ("title", "title")):
+    for field, kind in (("nameplate", "nameplate"), ("avatar_frame", "avatar_frame"), ("card_frame", "card_frame"), ("title", "title"), ("home_banner", "home_banner")):
         want = getattr(body, field)
         if want is None:
             continue
@@ -224,7 +227,7 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     if motto_set:
         from .. import progress
         await progress.add_fact(request, member["id"], "card.motto")
-    if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame, body.title)):
+    if any(x is not None for x in (body.banner, body.featured, body.public, body.nameplate, body.avatar_frame, body.card_frame, body.title, body.home_banner)):
         return await card_payload(request, member["id"], member)
     u, _, _ = await request.app.state.db.user_state(member["id"])
     return await character_payload(request, member["id"], u, unlock_all=unlock_all, role=role_of(member))

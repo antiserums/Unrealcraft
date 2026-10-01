@@ -16,6 +16,7 @@ export default async function AdminEntitlements() {
     sets: Object.entries(manifest?.sets ?? {}).map(([id, s]) => ({ id, name: s.name })),
     avatar: Object.keys(manifest?.decorations?.avatar ?? {}), card: Object.keys(manifest?.decorations?.card ?? {}),
     badges: (manifest?.badges ?? []).map((b, i) => ({ n: i + 1, name: b.name })),
+    banners: Object.keys(manifest?.rank_banners ?? {}),
   };
   return (
     <>

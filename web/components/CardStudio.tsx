@@ -10,9 +10,9 @@ import CharacterSheet, { type ArtProps, type Char, type TryOn } from "./Characte
 import PlayerCard from "./PlayerCard";
 import { useT } from "./I18n";
 
-type DecoImages = { avatar: Record<string, string>; card: Record<string, string> };
-type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; title: string; featured: string[]; public: boolean };
-type Kind = "nameplate" | "avatar_frame" | "card_frame" | "title";
+type DecoImages = { avatar: Record<string, string>; card: Record<string, string>; banners?: Record<string, string> };   // banners: scene id -> a preview still
+type Draft = { motto: string; nameplate: string; avatar_frame: string; card_frame: string; title: string; home_banner: string; featured: string[]; public: boolean };
+type Kind = "nameplate" | "avatar_frame" | "card_frame" | "title" | "home_banner";
 type Mode = "view" | "profile" | "wardrobe";
 
 /** The player card page. View mode: the card and three buttons. Edit profile: a draft (motto, colour, decorations,
@@ -24,7 +24,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
   const t = useT();
   const router = useRouter();
   const [c, setC] = useState<Card>(initial);
-  const fromCard = (x: Card): Draft => ({ motto: x.motto, nameplate: x.nameplate_id, avatar_frame: x.avatar_frame, card_frame: x.card_frame, title: x.title_id, featured: x.cosmetics.featured ?? x.featured.map((a) => a.key), public: x.public });
+  const fromCard = (x: Card): Draft => ({ motto: x.motto, nameplate: x.nameplate_id, avatar_frame: x.avatar_frame, card_frame: x.card_frame, title: x.title_id, home_banner: x.home_banner, featured: x.cosmetics.featured ?? x.featured.map((a) => a.key), public: x.public });
   const [draft, setDraft] = useState<Draft>(fromCard(initial));
   const [mode, setMode] = useState<Mode>("view");
   const [busy, setBusy] = useState(false);
@@ -67,7 +67,7 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
     setBusy(false); setC(j); setDraft(fromCard(j)); router.refresh(); return true;
   }
   async function save() {
-    if (await patch({ banner: draft.motto, nameplate: draft.nameplate, avatar_frame: draft.avatar_frame, card_frame: draft.card_frame, title: draft.title, featured: draft.featured, public: draft.public })) setMode("view");
+    if (await patch({ banner: draft.motto, nameplate: draft.nameplate, avatar_frame: draft.avatar_frame, card_frame: draft.card_frame, title: draft.title, home_banner: draft.home_banner, featured: draft.featured, public: draft.public })) setMode("view");
   }
   function cancel() { setDraft(fromCard(c)); setMode("view"); setErr(null); }
   function toggleFeat(key: string) {
@@ -203,6 +203,18 @@ export default function CardStudio({ initial, sheet, badges, deco, shareUrl, war
                 ))}
               </div>
               {detail("card_frame")}
+
+              <div className="pick-head"><span className="small muted">{t("Home banner · the scene behind the home page")}</span><span className="small muted">{owned("home_banner")}/{opts.home_banner.length}</span></div>
+              <div className="pick-grid banner-picks">
+                {opts.home_banner.map((o) => (
+                  <button key={o.id} {...tile("home_banner", o)} aria-label={t(o.name)} className={`${tile("home_banner", o).className} pick-banner`}>
+                    {deco.banners?.[o.id] ? <img className="px" src={deco.banners[o.id]} alt="" /> : <span className="pick-swatch" />}
+                    <span className="pick-banner-name">{t(o.name)}</span>
+                    {!o.owned && <span className="pick-lock">🔒</span>}
+                  </button>
+                ))}
+              </div>
+              {detail("home_banner")}
             </div>
           </div>
           {err && <div className="note small" data-tone="error" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}

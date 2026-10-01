@@ -1,6 +1,7 @@
 """Entitlements: every unlock an account can hold.
 
-Kinds: outfit, nameplate (colour), avatar_frame, card_frame, title ("Name, the Learner") and achievement.
+Kinds: outfit, nameplate (colour), avatar_frame, card_frame, title ("Name, the Learner"), home_banner (the living scene
+on the home page) and achievement.
 The built-in catalog is seeded from `rpg.py` (it mirrors the art pack). Admins add, edit or disable rows in the
 `entitlements` table; a row with the same (kind, id) as a built-in overrides it. A member can also be handed one
 directly (`entitlement_grants`), which counts as owned whatever the unlock rule says.
@@ -19,9 +20,9 @@ from __future__ import annotations
 import json
 import re
 
-KINDS = ["outfit", "nameplate", "avatar_frame", "card_frame", "title", "achievement"]
+KINDS = ["outfit", "nameplate", "avatar_frame", "card_frame", "title", "home_banner", "achievement"]
 KIND_LABEL = {"outfit": "Outfit", "nameplate": "Nameplate colour", "avatar_frame": "Avatar frame", "card_frame": "Player card frame",
-              "title": "Title", "achievement": "Achievement"}
+              "title": "Title", "home_banner": "Home banner", "achievement": "Achievement"}
 UNLOCK_TYPES = ["starter", "rank", "achievement", "medal", "staff", "granted"]
 COUNTERS = ["done", "first", "approved", "reads", "streak", "capstones", "specs", "cross", "medal"]     # what an achievement counts
 COUNTER_LABEL = {"done": "quests finished", "first": "bosses beaten first try", "approved": "work accepted by a reviewer",
@@ -130,4 +131,6 @@ def validate_row(kind: str, eid: str, name: str, unlock: dict, data: dict) -> li
             errs.append("Outfit: tier must be novice, apprentice, adept, expert or master.")
     if kind in ("avatar_frame", "card_frame") and eid != "none" and not data.get("art"):
         errs.append("Frame: art id (a decoration in the art pack) is required.")
+    if kind == "home_banner" and eid != "town" and not data.get("art"):
+        errs.append("Home banner: art id (a scene in banners/rank-banners) is required.")
     return errs

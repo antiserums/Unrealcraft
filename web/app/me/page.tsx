@@ -3,7 +3,7 @@ import CardStudio from "@/components/CardStudio";
 import type { ArtProps, Char } from "@/components/CharacterSheet";
 import MeNav from "@/components/MeNav";
 import SpecializationPicker from "@/components/SpecializationPicker";
-import { achievementBadge, decorationImages, iconImage, loadManifest, presetSheet, presetSheets } from "@/lib/art";
+import { achievementBadge, bannerSet, decorationImages, iconImage, loadManifest, presetSheet, presetSheets, rankBanners, type Manifest } from "@/lib/art";
 import { api, type Card } from "@/lib/api";
 import { PageHeader } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
@@ -28,7 +28,7 @@ export default async function Profile() {
     <>
       <PageHeader art="header-player" eyebrow={t("Profile")} title={<>{c.name}{c.title && <span className="muted" style={{ fontWeight: 400 }}>, {t(c.title)}</span>}</>} />
       <MeNav active="/me" />
-      <CardStudio initial={c} sheet={sheet} badges={badges} deco={decorationImages(manifest)} shareUrl={shareUrl} wardrobe={wardrobe} />
+      <CardStudio initial={c} sheet={sheet} badges={badges} deco={{ ...decorationImages(manifest), banners: bannerPreviews(manifest) }} shareUrl={shareUrl} wardrobe={wardrobe} />
       <SpecializationPicker mine={c.specializations} options={c.specialization_options ?? []} />
       {c.next_rank && (
         <div className="card" style={{ marginTop: 14 }}>
@@ -43,4 +43,13 @@ export default async function Profile() {
       )}
     </>
   );
+}
+
+/** One summer-day still per home scene, for the picker: the river town first, then the rank scenes. */
+function bannerPreviews(m: Manifest | null): Record<string, string> {
+  const out: Record<string, string> = {};
+  const town = bannerSet(m);
+  if (town) out.town = town.living?.stills["summer-day"] ?? town.still;
+  for (const [id, b] of Object.entries(rankBanners(m))) out[id] = b.stills["summer-day"] ?? Object.values(b.stills)[0];
+  return out;
 }

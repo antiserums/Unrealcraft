@@ -1,4 +1,50 @@
-# Claude handoff: website theme polish and Patron rewards
+# Claude handoff: rank banner unlocks, website theme polish and Patron rewards
+
+2026-09-30. Single current artist handoff. The newest delivery is four entirely new rank-unlocked banner locations. Earlier website-theme and Patron integration notes remain below.
+
+## New rank banners — ready for integration
+
+Source folder: **C:/Users/killt/Documents/GitHub/UCSourceArt/pixel-v3/banners/rank-banners/**.
+
+| Unlock rank | ID / minRank | Scene |
+| --- | --- | --- |
+| Apprentice | apprentice / 1 | Mossgate Guild Outpost: ancient oak, training yard, forest stream and watermill |
+| Adept | adept / 2 | Moonmere Academy: lakeside observatory, crystal telescope and island shrine |
+| Expert | expert / 3 | Emberfall Bastion: dragon-guarded mountain fortress, causeway and hydraulic forge |
+| Master | master / 4 | Crown of the Aether: floating celestial capital, garden canal and cascading islands |
+
+These are different locations with different layouts, not recolors or upgrades of the original town. The user explicitly requested completely new scenes. Early town-remix drafts were discarded and are not delivered. Keep the original living-town as the starting/default choice.
+
+### Feature parity and files
+
+Every scene has animated water/waterfalls, foliage, drifting sky detail, a turning wheel interior, three walking people, two workers, spring/summer/autumn/winter, seasonal particles, local device time, manual hour, dawn/day/dusk/night, pause, reduced motion and hidden-tab suspension. Water and sky masks, wheel occlusions and walking routes are authored separately for each scene.
+
+- Four per-rank living-town.js entry modules export **LivingTown**, compatible with HeroBanner's current constructor/method interface.
+- shared/living-scene.js and shared/people.png are required shared dependencies; keep this relative folder structure.
+- Each rank has assets/scene.png and assets/masks.png at **960×320**. Masks are technical data, never display them.
+- Eight seasonal day/night PNG stills per rank: **32 stills** total.
+- Four seasonal daytime WebP loops per rank: **16 loops**, each24 seconds /192 frames /8fps. Live renderer targets12fps. These are fallbacks/review loops; only the live component follows the visitor's clock.
+- manifest.json records unlock IDs/minimum rank numbers, entry modules, stills, loops, alt text and runtimeFiles. Use that allowlist; source/ and qa/ are not production dependencies.
+
+### Required Claude integration
+
+1. Extend tools/sync_art.py: it currently syncs only banners/living-town. **Running it unchanged will not install these new banners.** Copy the delivered sync_rank_banners.py helper next to sync_art.py, import sync_rank_banners, and assign **m["rank_banners"] = sync_rank_banners(PACK, OUT)** before saving the site manifest. Alternatively implement the equivalent allowlist copy and mapping. The helper returns paths relative to public/art, matching the existing manifest convention. It does not overwrite existing living_town entries.
+2. Extend web/lib/art.ts to read rank_banners and apply the existing /art/ URL prefix. Each selected scene supplies script, stills and seasons, compatible with the current LivingTownArt object; retain name, alt and minRank for selection UI.
+3. Add banner selection to the existing banner settings controls. Use the member's authoritative RPG rank: the current API maps1 Apprentice,2 Adept,3 Expert,4 Master. Unlock all banners where minRank <= member rank, keeping earlier choices available. Default new visitors/Novices to the original town. Validate a saved selection against current unlocks; do not trust a local-storage value to grant access. No ranks or rewards were granted by the artist.
+4. Pass the selected scene object to HeroBanner. Destroy the old instance on selection change, then initialize the new module. Keep season, time and pause choices when switching; use the same controls and reduced-motion behavior. Set canvas accessible text from the scene's alt description rather than the existing town-only description.
+5. Keep source960×320 and responsive3:1, image-rendering:pixelated. No smooth resizing or different crop per rank. The module resolves its own assets relative to its URL; do not flatten folders or copy just the scene PNG.
+6. Keep local time as the default and the manual override choices. For fallback stills in local mode, choose day/night using the device's current hour. The current HeroBanner fallback expression only tests the manual hour and otherwise picks day; fix that when adding these scenes so a failed/reduced-motion fallback at night does not show daylight.
+7. Verify every unlock boundary (0–4), saved earlier-rank choice, unavailable selection fallback, all four seasons, manual dawn/day/dusk/night, local clock, pause/play, reduced motion, narrow layout and repeated banner switching. The art preview is intentionally ungated so all ranks can be reviewed.
+
+### Review and validation
+
+Serve index.html in the rank-banners folder for an interactive review. overview.png is the four-location contact sheet. Per-rank qa/seasons-day-night.png shows all seasonal stills. validation.json records all six moving layers, zero changed pixels outside water/foliage/sky/wheel masks, local/manual time, reduced motion and exact24-second cycle seams. browser-validation.json and sync-validation.json describe their separate checks and scope.
+
+The artist has not edited the website app or live public art. This delivery requires the sync extension and selector/unlock wiring above. All existing main-banner and website-theme art remains available; no art was retired in this delivery.
+
+---
+
+## Previous delivery: website theme polish and Patron rewards
 
 2026-09-30. This is the single current artist handoff responding to docs/19-artist-handoff.md. It supersedes the earlier Patron-only version of this file. The website theme polish is now delivered too.
 
