@@ -49,12 +49,12 @@ Welcome Screen, AutoMod (mention spam, flagged words, spam → #mod-log), Server
 | 5 | Mentor | `#6FB3A0` | ✖ | ✔ | Reviews. |
 | 6 | Mentor-in-Training | `#6FB3A0` @60% | ✖ | ✖ | R3+ eligible. Queue read. |
 | 7 | Lead | `#D4AF37` gold | ✔ | ✔ | R6 |
-| 8 | Senior | `#8E6CCF` violet | ✔ | ✔ | R5 |
-| 9 | Master | `#8A9BA8` steel | ✔ | ✔ | R4 |
-| 10 | Expert | `#D9824A` | ✖ | ✔ | R3 |
-| 11 | Adept | `#3D7DD8` blueprint blue | ✖ | ✖ | R2 |
-| 15 | Apprentice | `#4FA36C` green | ✖ | ✖ | R1 |
-| 16 | Novice | `#7A8C7E` gray-green | ✖ | ✖ | R0 |
+| 8 | Senior | `#B9C6D2` silver | ✔ | ✔ | R5 |
+| 9 | Master | `#D9534F` red | ✔ | ✔ | R4 |
+| 10 | Expert | `#D9824A` orange | ✖ | ✔ | R3 |
+| 11 | Adept | `#8E6CCF` violet | ✖ | ✖ | R2 |
+| 15 | Apprentice | `#3D7DD8` blue | ✖ | ✖ | R1 |
+| 16 | Novice | `#4FA36C` green | ✖ | ✖ | R0 |
 | 17 | Oriented / Recruit | no color | ✖ | ✖ | Legacy, removed by the bot. Everyone starts as Novice now. |
 | 19 | Major · Level Design … Major · Undecided (8) | no color | ✖ | ✖ | Used for filtering and pings only. |
 | 20 | Medal roles | — | — | — | **None.** Medals live in the DB and on the /rank card, not in the role list. |

@@ -25,9 +25,9 @@ log = logging.getLogger("quartermaster.setup")
 C = discord.Color.from_str
 P = discord.PermissionOverwrite
 
-RANK_ROLES = [(6, "Lead", "#D4AF37", True), (5, "Senior", "#8E6CCF", True), (4, "Master", "#8A9BA8", True),
-              (3, "Expert", "#D9824A", False), (2, "Adept", "#3D7DD8", False), (1, "Apprentice", "#4FA36C", False),
-              (0, "Novice", "#7A8C7E", False)]
+RANK_ROLES = [(6, "Lead", "#D4AF37", True), (5, "Senior", "#B9C6D2", True), (4, "Master", "#D9534F", True),
+              (3, "Expert", "#D9824A", False), (2, "Adept", "#8E6CCF", False), (1, "Apprentice", "#3D7DD8", False),
+              (0, "Novice", "#4FA36C", False)]
 MOD_PERMS = discord.Permissions(kick_members=True, moderate_members=True, manage_messages=True,
                                 manage_threads=True, view_audit_log=True, manage_nicknames=True)
 # Roles from the older design that gated channels or tagged onboarding answers. Nothing uses them any more.
@@ -75,6 +75,8 @@ class SetupServer(commands.Cog):
     async def _role(self, g: discord.Guild, name, color, hoist, mention, perms=None, old=None) -> discord.Role:
         r = discord.utils.get(g.roles, name=name)
         if r:
+            if color and r.color != C(color):                     # the palette changed since the role was made
+                await r.edit(color=C(color), reason="Unrealcraft: role color updated")
             return r
         for old_name in ([old] if old else []) + ([f"Major · {name}"]):
             if (r := discord.utils.get(g.roles, name=old_name)):
@@ -459,7 +461,7 @@ class SetupServer(commands.Cog):
                   "**#help-desk**: stuck in Unreal or on a quest.\n"
                   "**Specialization forums**: questions and tips for each field.\n"
                   "**#rank-ups**: promotions earned on the site.", "#8E6CCF"),
-                E("🎖️ Ranks", "Ranks come only from quests. Chatting gives no XP.\n" + rank_lines, "#B5714B"),
+                E("🎖️ Ranks", "Ranks come only from quests. Chatting gives no XP.\n" + rank_lines, "#4FA36C"),
                 E("📜 Rules", rule_lines, "#D4AF37"),
             ]),
             dict(key="how-to-ask", channel=ch("help_desk"), title="How to get help", tag=HELP_TAGS[0], embeds=[
