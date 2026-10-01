@@ -5,7 +5,11 @@ Run it with the API's Python, which has PyYAML:
 
   api/.venv/Scripts/python.exe tools/quest_wording.py status        how many quests have new wording, per file
   api/.venv/Scripts/python.exe tools/quest_wording.py next 15       the next 15 quests still to do, as JSON
+  api/.venv/Scripts/python.exe tools/quest_wording.py show SQ1 SQ2  everything the curriculum holds for these quests
   api/.venv/Scripts/python.exe tools/quest_wording.py apply         put every file in tools/quest_wording/ into the curriculum
+
+Wording files are read in name order and a later file wins, so a correction goes in a file that sorts last
+(update-0001.json).
 
 A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Every key is optional:
 
@@ -242,11 +246,20 @@ def next_batch(count: int) -> None:
     print(json.dumps(out, ensure_ascii=False, indent=1))
 
 
+def show(ids: list[str]) -> None:
+    """Everything the curriculum holds for these quests, as JSON (quiz answers included)."""
+    want = set(ids)
+    out = [dict({k: v for k, v in q.items()}, file=fname) for fname, q in all_quests() if q["id"] in want]
+    print(json.dumps(out, ensure_ascii=False, indent=1))
+
+
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
     if cmd == "apply":
         apply()
+    elif cmd == "show":
+        show(sys.argv[2:])
     elif cmd == "next":
         next_batch(int(sys.argv[2]) if len(sys.argv) > 2 else 15)
     else:
