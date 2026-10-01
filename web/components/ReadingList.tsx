@@ -27,7 +27,9 @@ export default function ReadingList({ questId, reading, loggedIn, opened = [] }:
             <li key={r.url} className={ok ? "opened" : ""}>
               <a href={r.url} target="_blank" rel="noreferrer" onClick={() => ping(r.url)} onAuxClick={() => ping(r.url)}>
                 <span className="reading-label">{r.label}</span>
+                {r.kind === "official" && reading.length > 1 && <span className="pill">{t("official")}</span>}
                 {r.kind === "community" && <span className="pill">{t("community")}</span>}
+                {r.kind === "backup" && <span className="pill">{t("backup")}</span>}
                 {ok && <span className="reading-tick">✔ {t("Opened")}</span>}
                 <Ico group="utility" id="external" size={16} />
               </a>

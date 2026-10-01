@@ -1,24 +1,62 @@
 """Turn curriculum objects into JSON. Quiz answers never leave the API."""
 from __future__ import annotations
 
+import json
+import re
+from pathlib import Path
+from urllib.parse import urlparse
+
 from registrar import checks  # noqa: E402
 from registrar.curriculum import TIERS, Catalog, Quest, UserState  # noqa: E402
 
+from .config import settings
+
+
+_titles: tuple[float, dict[str, str]] = (0.0, {})
+_SMALL = {"a", "an", "and", "as", "at", "by", "for", "from", "in", "of", "on", "or", "the", "to", "with"}
+
+
+def link_titles() -> dict[str, str]:
+    """Page titles by URL, fetched by tools/link_titles.py into curriculum/link_titles.json. Read again when the file changes."""
+    global _titles
+    f = Path(settings.curriculum_dir) / "link_titles.json"
+    try:
+        mtime = f.stat().st_mtime
+        if mtime != _titles[0]:
+            _titles = (mtime, json.loads(f.read_text(encoding="utf-8")))
+    except (OSError, ValueError):
+        pass
+    return _titles[1]
+
+
+def link_label(url: str) -> str:
+    """What a reading link is called: the page's own title, or, for a link not fetched yet, a title made from its address."""
+    if (t := link_titles().get(url)):
+        return t
+    parts = urlparse(url)
+    slug = parts.path.rstrip("/").rsplit("/", 1)[-1]
+    words = [w for w in re.split(r"[-_]+", slug) if w]
+    if not words or "youtu" in parts.netloc or len(slug) < 4:
+        return parts.netloc.removeprefix("www.")
+    return " ".join(w if i and w in _SMALL else w.capitalize() for i, w in enumerate(words))
+
 
 def reading_links(q: Quest) -> list[dict]:
+    """Every link names itself by its page title; `kind` says where it comes from (official, extra, community, backup)."""
     r, out = q.raw, []
     if (u := r.get("official_url")) and u.startswith("http"):
-        out.append({"label": "Official Epic guide", "url": u, "kind": "official"})
-    for i, u in enumerate(r.get("extra_urls") or [], 1):
+        out.append({"label": link_label(u), "url": u, "kind": "official"})
+    for u in r.get("extra_urls") or []:
         if u.startswith("http"):
-            out.append({"label": f"Extra reading {i}", "url": u, "kind": "extra"})
-    for i, c in enumerate(r.get("community_urls") or [], 1):
+            out.append({"label": link_label(u), "url": u, "kind": "extra"})
+    for c in r.get("community_urls") or []:
         u, t = (c.get("url", ""), c.get("title")) if isinstance(c, dict) else (c, None)
         if u.startswith("http"):
-            out.append({"label": t or f"Community guide {i}", "url": u, "kind": "community"})
+            out.append({"label": t or link_label(u), "url": u, "kind": "community"})
     if (u := r.get("backup_url")) and u.startswith("http"):
-        out.append({"label": "Backup video", "url": u, "kind": "backup"})
-    return out
+        out.append({"label": link_label(u), "url": u, "kind": "backup"})
+    seen: set[str] = set()                                   # the same page listed twice shows once
+    return [x for x in out if not (x["url"] in seen or seen.add(x["url"]))]
 
 
 def checklist(q: Quest, facts: set[str], community_ready: bool) -> list[dict]:
