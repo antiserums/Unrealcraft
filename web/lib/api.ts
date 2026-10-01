@@ -33,6 +33,7 @@ export type QuestFull = QuestSummary & {
 };
 export type Progress = {
   status: string | null; quiz_passed: boolean; completed_at: string | null; unlocked: boolean; quiz_attempts: number;
+  read_links: string[];                                          // the reading links (URLs) this member has opened
   submissions: { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> }[];
 } | null;
 export type Me = {

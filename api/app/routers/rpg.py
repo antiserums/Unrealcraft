@@ -233,13 +233,21 @@ async def patch_character(body: CharacterPatch, request: Request, member=Depends
     return await character_payload(request, member["id"], u, unlock_all=unlock_all, role=role_of(member))
 
 
+class ReadBody(BaseModel):
+    url: str | None = None            # which of the quest's reading links was opened
+
+
 @router.post("/me/quests/{qid}/read")
-async def mark_read(qid: str, request: Request, member=Depends(current_member)):
-    """Called when a reading link is opened. Feeds the Lore stat; one per quest."""
-    if qid not in request.app.state.catalog.quests:
+async def mark_read(qid: str, request: Request, body: ReadBody | None = None, member=Depends(current_member)):
+    """Called when a reading link is opened. Feeds the Lore stat (one per quest) and ticks that link on the quest page."""
+    quest = request.app.state.catalog.quests.get(qid)
+    if not quest:
         raise HTTPException(404, "No such quest.")
-    new = await request.app.state.rpg.mark_read(member["id"], qid)
-    return {"ok": True, "new": new}
+    from ..serializers import reading_links
+    urls = {r["url"] for r in reading_links(quest)}
+    url = body.url if body and body.url in urls else None      # only the quest's own links are kept
+    new = await request.app.state.rpg.mark_read(member["id"], qid, url)
+    return {"ok": True, "new": new, "opened": await request.app.state.rpg.read_links(member["id"], qid)}
 
 
 # ------------------------------------------------------------------ fights

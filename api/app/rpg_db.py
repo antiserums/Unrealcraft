@@ -177,11 +177,27 @@ class RpgDB:
         return {"done": done, "first": first, "approved": approved, "reads": reads,
                 "streak": row["streak_days"] if row else 0, "medals": medals}
 
-    async def mark_read(self, uid: int, qid: str) -> bool:
+    async def mark_read(self, uid: int, qid: str, url: str | None = None) -> bool:
+        """`read:<quest>` is the Lore point (one per quest); `links:<quest>` lists which of its links were opened."""
         await self.ensure_character(uid)
         cur = await self.conn.execute("INSERT OR IGNORE INTO kv(user_id,k,v) VALUES (?,?,datetime('now'))", (uid, f"read:{qid}"))
         await self.conn.commit()
+        if url:
+            opened = await self.read_links(uid, qid)
+            if url not in opened:
+                await self.kv_set(uid, f"links:{qid}", json.dumps(opened + [url]))
         return cur.rowcount > 0
+
+    async def read_links(self, uid: int, qid: str) -> list[str]:
+        """The reading links of a quest this member has opened (by URL)."""
+        raw = await self.kv_get(uid, f"links:{qid}")
+        try:
+            return [str(u) for u in json.loads(raw)] if raw else []
+        except ValueError:
+            return []
+
+    async def has_read(self, uid: int, qid: str) -> bool:
+        return await self.kv_get(uid, f"read:{qid}") is not None
 
     async def crit_xp_today(self, uid: int) -> int:
         cur = await self.conn.execute(

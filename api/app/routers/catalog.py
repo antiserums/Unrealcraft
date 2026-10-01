@@ -4,7 +4,7 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, HTTPException, Request
 
 from ..session import current_member_or_none
-from ..serializers import quest_full, quest_summary, specializations_meta
+from ..serializers import quest_full, quest_summary, reading_links, specializations_meta
 
 router = APIRouter(prefix="/catalog", tags=["catalog"])
 
@@ -62,6 +62,13 @@ async def quest(qid: str, request: Request, member=Depends(current_member_or_non
                     "unlocked": quest.rank <= max(state.rank, 0) or _admin(member),
                     "quiz_attempts": len(await db.quiz_attempts(member["id"], qid)),
                     "submissions": await db.submissions(member["id"], qid)}
+        # which reading links were opened; a quest read before links were tracked counts its only link as opened
+        rdb = request.app.state.rpg
+        opened = await rdb.read_links(member["id"], qid)
+        reading = [r["url"] for r in reading_links(quest)]
+        if not opened and len(reading) == 1 and await rdb.has_read(member["id"], qid):
+            opened = reading
+        progress["read_links"] = [u for u in opened if u in reading]
     return {"quest": quest_full(cat, quest, who, facts), "progress": progress}
 
 

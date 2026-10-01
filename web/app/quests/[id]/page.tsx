@@ -55,6 +55,7 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
 
   const done = p?.status === "done";
   const bossDown = !q.has_quiz || !!p?.quiz_passed;
+  const readDone = done || (q.reading.length > 0 && q.reading.every((r) => p?.read_links?.includes(r.url)));   // every link opened
   const open = !!me && !!p?.unlocked;                       // the member may play this quest
   const canFight = open && q.has_quiz && !p?.quiz_passed;
   const fightable = q.has_quiz && !!boss;
@@ -139,8 +140,8 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
       <div className="quest-body">
         <ol className="qsteps">
           {q.reading.length > 0 && (
-            <Step state={done ? "done" : "open"} mark={stepMark(done ? "done" : "open", "quest-steps/read", "📖")} title={t("Step {n}: Read this first", { n: readN })}>
-              <ReadingList questId={q.id} reading={q.reading} loggedIn={!!me} />
+            <Step state={readDone ? "done" : "open"} mark={stepMark(readDone ? "done" : "open", "quest-steps/read", "📖")} title={t("Step {n}: Read this first", { n: readN })}>
+              <ReadingList questId={q.id} reading={q.reading} loggedIn={!!me} opened={p?.read_links ?? []} />
               {q.has_quiz && <p className="muted small" style={{ margin: 0 }}>{t("The boss asks about these pages. Opening them raises your Lore.")}</p>}
             </Step>
           )}
