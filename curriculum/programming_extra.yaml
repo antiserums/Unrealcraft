@@ -200,10 +200,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 editor preferences settings for programmers"
     checklist:
-      - "Choose how Play In Editor (PIE) opens. You can set it to open in a New Editor Window, or you can keep it inside the viewport. Try both and note which one you prefer."
-      - "Open the Editor Preferences and find the Performance settings. Turn on Show Frame Rate and Memory, which shows these numbers in the editor at all times."
-      - "Find the source code editor setting in the Editor Preferences. This is the program that Unreal opens when you want to read or write C++ code. Note what it is set to now."
-    done_when: "Send a written note that lists the 3 settings you changed and says why you changed each one."
+      - "Choose how Play In Editor (PIE) opens. Click the three dots next to the Play button in the main toolbar and pick New Editor Window (PIE) or Selected Viewport. Try both and note which one you prefer."
+      - "Open Edit > Editor Preferences, go to General, then Performance. Turn on Show Frame Rate and Memory, which shows these numbers in the editor at all times."
+      - "In the Editor Preferences, go to General, then Source Code, and find Source Code Editor. This is the program that Unreal opens when you want to read or write C++ code. Note what it is set to now. Change it only if you use a different program."
+    done_when: "Send a written note that lists the 3 settings from the steps, says what each one is set to now, and says why you chose that."
     xp: 30
     verify_type: writeup
     quiz: []  # TODO Phase 4
@@ -225,8 +225,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal insights beginner trace capture timing"
     checklist:
-      - "Start a trace from the editor. Then play your L_TestHarness level for 10 seconds and stop."
-      - "Open the trace in Unreal Insights. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn."
+      - "Start a trace from the editor: click Trace in the bar at the bottom of the editor window and choose Start Trace. Then play your L_TestHarness level for 10 seconds, stop playing, and choose Stop Trace in the same menu."
+      - "Open the trace in Unreal Insights: in the same Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn."
       - "Take a screenshot of the timing view of one frame."
     done_when: "Send a screenshot of a trace that is open in Unreal Insights."
     xp: 40
@@ -280,12 +280,12 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 game mode vs game state win condition blueprint"
     checklist:
-      - "Create two Blueprints named BP_UUGameMode and BP_UUGameState. Assign both of them in your harness level, so the level uses them when it runs."
-      - "In the GameState, add a variable that stores a score or a count of collected items."
-      - "Make the GameMode check the count. When the count reaches a target number, the GameMode declares a win."
-      - "Print or log the win message one time only. It must not appear again on every frame."
+      - "Create two Blueprints: BP_UUGameMode with Game Mode Base as the parent class, and BP_UUGameState with Game State Base as the parent class. In the Class Defaults of BP_UUGameMode, set Game State Class to BP_UUGameState. In the World Settings of your harness level, set GameMode Override to BP_UUGameMode, so the level uses them when it runs."
+      - "In BP_UUGameState, add an Integer variable named Collected that stores a score or a count of collected items. Add a function named AddPoint that adds 1 to it."
+      - "In BP_UUGameMode, add an Integer variable named Target with the value 3, and a Custom Event named CheckWin. In CheckWin, use Get Game State, cast it to BP_UUGameState and read Collected. When the count reaches Target, the GameMode declares a win. Call AddPoint and then CheckWin each time the player collects something."
+      - "Print or log the win message one time only. Put a Do Once node in front of the Print String, or use a Boolean variable named HasWon. The message must not appear again on every frame."
       - "Write 2 lines that say why the score is stored in the GameState and not in the GameMode."
-    done_when: "Send a clip from PIE, or screenshots, that show the win happening, and add your 2 lines."
+    done_when: "Send two screenshots from PIE, or a short GIF, that show the win happening, and add your 2 lines."
     xp: 100
     verify_type: screenshot
     quiz: []  # TODO Phase 4
@@ -449,7 +449,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine blueprint communication direct cast interface event dispatcher"
     checklist:
-      - "Connect two actors three times. First use a direct reference, then use an interface, and then use an Event Dispatcher."
+      - "Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react."
       - "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
     done_when: "Send your written lines, and a screenshot of the graph of the Event Dispatcher version."
     xp: 50
@@ -473,8 +473,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 umg score hud widget blueprint beginner"
     checklist:
-      - "Create a Widget Blueprint named WBP_Score. On the BeginPlay event, which runs when the game starts, create the widget and add it to the viewport so it shows on the screen."
-      - "Update the widget from the GameState when the score changes. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+      - "Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of your Player Controller or character, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen."
+      - "Update the widget from the GameState when the score changes. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
     done_when: "Send a screenshot of the HUD updating in PIE."
     xp: 50
     verify_type: screenshot
@@ -497,9 +497,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 checkpoint respawn kill volume blueprint"
     checklist:
-      - "Add a kill volume to your level. When the player touches it, the player must respawn, which means appear again, at the last checkpoint they reached."
-      - "Store the last checkpoint in a place where the GameMode can read it."
-    done_when: "Send a clip or screenshots that show the player respawning at a checkpoint."
+      - "Add a kill volume to your level: an Actor Blueprint with a large Box Collision. When the player overlaps it, the player must respawn, which means appear again, at the last checkpoint they reached. The simple way is to call an event on the GameMode that moves the player back with Set Actor Transform."
+      - "Store the last checkpoint in a place where the GameMode can read it, for example a Transform variable named LastCheckpoint in the GameMode itself or in the GameState. Make a checkpoint Blueprint with a Box Collision that writes its own transform into that variable when the player overlaps it."
+    done_when: "Send two or three screenshots from PIE, or a short GIF, that show the player touching the kill volume and standing at the checkpoint again."
     xp: 60
     verify_type: screenshot
     quiz: []  # TODO Phase 4
@@ -525,7 +525,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 visual studio or rider setup first c++ compile"
     checklist:
-      - "Install the IDE and the workloads that the documentation page lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work."
+      - "Install the IDE and the workloads that the page Coder 01: Set Up and Compile a C++ Project, linked on this quest, lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work."
       - "Add a C++ class to your UC_Sandbox project, or to a copy of it. When you do this, the project becomes a C++ project."
       - "Generate the project files and open the solution in the IDE. Then build the Editor target with the configuration Development Editor."
       - "Start the Unreal editor from the IDE with the debugger attached. The debugger is the tool that lets you pause the program and look inside it."
@@ -687,7 +687,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-with-cplusplus-in-unreal-engine"
     checklist:
-      - "Read the Blueprint vs C++ documentation page again, and read your notes from quest SQ11 again."
+      - "Read the documentation page Coding in Unreal Engine: Blueprint vs. C++ again, which is linked on this quest, and read your notes from quest SQ11 again."
       - "Pick one piece of your loop from quest PQ19. Make a sketch of how you would split it into a C++ base class and a Blueprint child."
       - "Decide which values get the specifier EditDefaultsOnly, which get BlueprintReadOnly, and which stay private. A specifier is a word in the UPROPERTY macro that controls what the editor and Blueprints can do with the value."
       - "Expose one delegate that Blueprints can assign to, for an event that designers care about. A delegate is a signal that other code can listen to."
@@ -745,7 +745,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 c++ character movement component configure"
     checklist:
-      - "Make a copy of your project and follow the Coder 03 page in that copy."
+      - "Make a copy of your project. In that copy, follow the tutorial page Coder 03: Configure Character Movement with C++, which is linked on this quest."
       - "Expose 2 movement values so that a Blueprint child, a Blueprint made from your C++ class, can tune them."
     done_when: "Send a screenshot of the tuned values in a Blueprint child."
     xp: 80
@@ -769,7 +769,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 c++ primary data asset items"
     checklist:
-      - "Follow the Coder 05 page and define a Data Asset class for items in C++."
+      - "Follow the tutorial page Coder 05: Manage Item and Data, which is linked on this quest, and define a Data Asset class for items in C++."
       - "In the editor, create 2 item assets from your class."
     done_when: "Send a screenshot of 2 Data Assets made from your C++ class."
     xp: 80

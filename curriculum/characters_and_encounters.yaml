@@ -137,7 +137,7 @@ quests:
       - "When the player interacts, through an Enhanced Input action or a key event, get the player character. Then call Play Montage and give it the character's Mesh and AM_PullLever."
       - "Connect the On Completed pin of Play Montage, which fires when the animation has finished. From this pin, flip the lever and do one thing in the level, for example open a door or turn on a light."
       - "Play in the editor (PIE) and pull the lever. Then pull it while the character is running and note what happens."
-    done_when: "Send a short PIE clip of the character pulling the lever, and a screenshot of the lever graph."
+    done_when: "Send two screenshots from PIE that show the character pulling the lever, one before and one after, and a screenshot of the lever graph. A short GIF also works in place of the two screenshots."
     xp: 110
     verify_type: screenshot
     quiz:
@@ -188,8 +188,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-retargeting-in-unreal-engine"
     checklist:
       - "Pick one source animation. Also pick a second character that has a different skeleton from the first one."
-      - "Retarget the animation to the second character with auto retargeting, the option where Unreal sets up the retarget for you."
-      - "Open the IK Rigs and the Retargeter that Unreal generated. Fix one problem that you can see, for example in the feet, the hands or the root."
+      - "In the Content Browser, right-click the source animation and choose Retarget Animations. The Retarget Animations window opens. Set Target Preview Mesh to the Skeletal Mesh of the second character and leave Auto Generate Retargeter turned on, so that Unreal sets up the retarget for you. Select your animation in the list, click Export Animations, and pick a folder for the new animation."
+      - "In the same window, click Export Retarget Assets to save the IK Rig assets and the IK Retargeter asset that Unreal generated. Open them and fix one problem that you can see, for example in the feet, the hands or the root."
     done_when: "Send a screenshot that shows the source pose and the retargeted pose side by side, and add one line that says what you fixed."
     xp: 100
     verify_type: screenshot
@@ -209,9 +209,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 control rig beginner create controls"
     checklist:
-      - "Create a Control Rig asset for the skeleton of your character."
-      - "Add controls for one arm. In the rig graph, make the controls drive the bones, so that the bones follow when you move a control."
-      - "Use the controls to pose the arm in the viewport."
+      - "In the Content Browser, right-click the Skeletal Mesh of your character and choose Create, then Control Rig. Double-click the new asset to open the Control Rig Editor."
+      - "In the Rig Hierarchy tab, right-click the upper arm bone and choose New Element, then New Control. Select the new control and press Shift+P to unparent it from the bones. Do the same for the lower arm and the hand. Then drag each control into the Rig Graph and choose Get Control, drag its bone into the graph and choose Set Bone, and connect the Transform pin of the Get node to the Value pin of the Set node. Connect the Forwards Solve node to the Set nodes one after the other, so that the bones follow when you move a control."
+      - "Move and rotate the controls in the viewport to pose the arm. Clicking Compile puts the controls back in their starting position, so take your screenshot before you compile again."
     done_when: "Send a screenshot of the rig graph and a screenshot of the posed arm."
     xp: 100
     verify_type: screenshot
@@ -236,7 +236,7 @@ quests:
       - "Open AM_PullLever and add a notify at the frame where the hand grips the lever."
       - "On your Play Montage node, use the On Notify Begin pin to handle the notify. Trigger the lever from this pin, so that the lever moves at that frame."
       - "Add a sound notify or a footstep notify to a walk cycle, which is a walk animation that loops."
-    done_when: "Send a PIE clip in which the lever moves on the notify frame and not at the end of the animation."
+    done_when: "Send two screenshots from PIE, or a short GIF, that show the lever moving on the notify frame and not at the end of the animation. Also send a screenshot of the montage that shows where the notify is placed."
     xp: 80
     verify_type: screenshot
     quiz: []
@@ -257,10 +257,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
     checklist:
-      - "Create a new blend space. Give it a speed axis whose top value matches the Max Walk Speed of your character."
-      - "Place an idle sample, a walk sample and a run sample on the axis. Put each one at the speed it was authored for, which means the speed the animation was made to move at."
-      - "Make a copy of the AnimBP and use your blend space in the copy in place of the old one. Play in the editor (PIE) and check whether the feet slide."
-    done_when: "Send a screenshot of the blend space grid, and a PIE clip of the character at walk speed and at run speed."
+      - "In the Content Browser, click Add, then Animation, then Blend Space, and pick the Skeleton of your character. Open the new asset. In Asset Details, under Axis Settings, open Horizontal Axis, name it Speed, and set Maximum Axis Value to the Max Walk Speed of your character. You find Max Walk Speed on the Character Movement component in the Blueprint of the character."
+      - "Drag an idle animation, a walk animation and a run animation from the Asset Browser onto the bottom line of the grid. Put each one at the speed it was authored for, which means the speed the animation was made to move at: idle at 0, and walk and run at their own speeds. Hold Ctrl and move the mouse over the grid to preview the blend."
+      - "Make a copy of the AnimBP: right-click it and choose Duplicate. In the copy, select the Blend Space Player node and pick your blend space in its Details panel. Select the Mesh in the Blueprint of your character and set Anim Class to the copy. Play in the editor (PIE) and check whether the feet slide."
+    done_when: "Send a screenshot of the blend space grid, and two screenshots from PIE: one of the character at walk speed and one at run speed. A short GIF also works, and you can paste a link to a longer video."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -279,10 +279,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 aim offset setup control rotation pitch yaw"
     checklist:
-      - "Create an aim offset asset from additive aim poses."
-      - "In the AnimBP, read the pitch and the yaw from the control rotation and give them to the aim offset. Pitch is looking up and down, yaw is looking left and right, and the control rotation is the direction the player is looking."
-      - "Layer the aim offset over the locomotion, which is the walking and running animation. Then test looking up, down and to the sides."
-    done_when: "Send a PIE clip of the character aiming around while walking."
+      - "Aim poses must be additive. Open each aim pose animation and, in Asset Details, set Additive Anim Type to Mesh Space and choose an idle pose as the base pose. Then click Add, then Animation, then Aim Offset in the Content Browser, and pick the Skeleton of your character. In the new asset, set the horizontal axis to Yaw and the vertical axis to Pitch, both from -90 to 90, and drag each aim pose onto the grid at the direction it aims in."
+      - "In the AnimBP, read the pitch and the yaw from the control rotation: use Get Control Rotation on the owning Pawn and take the difference with the rotation of the Actor (the Delta Rotator node does this). Store the result in two variables named Pitch and Yaw. Pitch is looking up and down, yaw is looking left and right, and the control rotation is the direction the player is looking."
+      - "In the AnimGraph, add an Aim Offset Player node for your asset. Connect the locomotion pose, which is the walking and running animation, to its Base Pose pin, connect the Pitch and Yaw variables, and connect the result to Output Pose. Then test looking up, down and to the sides."
+    done_when: "Send three screenshots from PIE that show the character walking while it aims up, down and to one side. A short GIF also works, and you can paste a link to a longer video."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -358,11 +358,11 @@ quests:
     checklist:
       - "In L_Arena_01, add a Nav Mesh Bounds Volume that covers the whole arena. Press P to show the NavMesh, and fix any gaps near cover and doorways."
       - "Create a Blueprint named BP_Enemy with Character as its parent class. Set its Auto Possess AI property to 'Placed in World or Spawned', so that the enemy always gets an AI controller."
-      - "Give the enemy a simple loop that uses AI MoveTo to walk between two target points. Or run the sample Behavior Tree that is linked in the #epic-games-resources channel. A Behavior Tree is an asset that describes what an AI decides to do."
-      - "If you use the provided Behavior Tree, open it and write one line for each node that says what the node does. You do not need to build anything in it yourself."
+      - "Give the enemy a simple loop that uses AI MoveTo to walk between two target points. If you would rather use a Behavior Tree, which is an asset that describes what an AI decides to do, follow the Create an Enemy tutorial or the Behavior Trees page linked on this quest."
+      - "If you use a Behavior Tree, open it and write one line for each node that says what the node does."
       - "Place 3 spawn points that the player cannot see from the entry. Mark each one with a simple arrow or billboard that is visible in the editor."
       - "Play in the editor (PIE) and watch each enemy reach its first position. Fix any enemy that gets stuck."
-    done_when: "Send a screenshot with the NavMesh shown (press P) and the spawn points visible, and a PIE clip of the enemies moving into position."
+    done_when: "Send a screenshot with the NavMesh shown (press P) and the spawn points visible, and two screenshots from PIE, or a short GIF, of the enemies moving into position."
     xp: 120
     verify_type: screenshot
     quiz:
@@ -511,8 +511,8 @@ quests:
       - "Ask one specific question in your post, for example 'Is the left flank too safe?'. Do not ask a general question such as 'thoughts?'."
       - "Start an iteration log. For each entry, write the date, the feedback you received, what you changed, and what you did not change and why."
       - "Make at least one change that is based on the feedback, and write it in your log."
-      - "Give one critique on the /critique post of another person. Name 1 thing that works, 1 specific issue, and 1 next step."
-    done_when: "Send a link to your /critique thread, your iteration log, and the critique you gave."
+      - "Give one critique on the Critique-wanted post of another person in #showcase. Name 1 thing that works, 1 specific issue, and 1 next step."
+    done_when: "Send a link to your Critique-wanted post in #showcase, your iteration log, and the critique you gave."
     xp: 80
     verify_type: writeup
     quiz:
@@ -668,8 +668,8 @@ quests:
         needs_others: true
       - text: "Make at least one change that comes from the feedback. Take a screenshot before and after from the same bookmark, and write the change in your log."
         needs_others: true
-      - "Record a PIE clip of one full run from the entry to the exit."
-    done_when: "Send a PIE clip, your marked map from above, the link to your GDD, and screenshots from before and after the change you made after critique, with the link to the critique thread. A mentor or two peers must approve your work."
+      - "Record a video of one full run in PIE from the entry to the exit, and upload it somewhere you can link to. Also take two or three screenshots of the run."
+    done_when: "Send screenshots of one full run in PIE with a pasted link to the video, your marked map from above, the link to your GDD, and screenshots from before and after the change you made after critique, with the link to your Critique-wanted post. A mentor reviews your work."
     done_when_solo: "PIE clip, annotated top-down map, GDD link, and one self-review change with before/after screenshots. Approved by a mentor."
     xp: 200
     verify_type: mentor
@@ -712,8 +712,8 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---quick-start"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 smart objects quick start"
-    checklist: ["Follow the Smart Objects quick start guide in a test level.", "Place one Smart Object in your arena, for example a spot where an enemy takes cover or stands idle."]
-    done_when: "Send a PIE clip of an AI character using the Smart Object."
+    checklist: ["Follow the Smart Objects quick start guide in a test level.", "Place one Smart Object in your arena, for example a spot where an enemy takes cover or stands idle. Press Play and watch an AI character from the quick start guide find it and use it."]
+    done_when: "Send two screenshots from PIE, or a short GIF, that show an AI character walking to the Smart Object in your arena and using it."
     xp: 60
     verify_type: screenshot
     quiz: []
@@ -731,7 +731,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "level design stealth space sightlines patrol routes"
     checklist: ["Duplicate L_Arena_01 and name the copy L_Arena_Stealth.", "Change the cover and the patrols so that the player can cross the arena without being seen.", "Take a screenshot from above and mark the patrol routes and the safe path on it."]
-    done_when: "Send your marked screenshot from above, and a PIE clip of a crossing in which the player is not seen."
+    done_when: "Send your marked screenshot from above, and two or three screenshots from PIE of a crossing in which the player is not seen. A short GIF also works, and you can paste a link to a longer video."
     xp: 60
     verify_type: screenshot
     quiz: []
@@ -749,7 +749,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "level design vertical combat arena multiple floors"
     checklist: ["Graybox an arena with two or three levels of height. Use CubeGrid, a modeling tool in Unreal for building simple block shapes on a grid.", "Check every change of height against your step metrics and jump metrics, the numbers that say how high your character can step and jump.", "Press P to show the NavMesh. Make sure it connects the levels in the places where the AI should be able to follow the player."]
-    done_when: "Send a screenshot of the arena from the side, and a PIE clip of moving between the levels."
+    done_when: "Send a screenshot of the arena from the side, and two screenshots from PIE, or a short GIF, of moving between the levels."
     xp: 70
     verify_type: screenshot
     quiz: []
@@ -787,7 +787,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
     checklist: ["Build a Blueprint named BP_WaveSpawner. Give it three Instance Editable variables, which are variables you can change in the Details panel: the wave count, the enemies per wave, and the delay.", "Make the spawner start the next wave when all enemies from the current wave are destroyed.", "Place the spawn points where the player cannot see them."]
-    done_when: "Send a PIE clip that shows two waves, and a screenshot of the Details panel of the spawner."
+    done_when: "Send two screenshots from PIE, or a short GIF, that show two waves, and a screenshot of the Details panel of the spawner."
     xp: 70
     verify_type: screenshot
     quiz: []

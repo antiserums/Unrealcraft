@@ -1,0 +1,470 @@
+{
+ "PQ46": {
+  "checklist": [
+   "Make a Blueprint named BP_Bullet with a small sphere mesh and a Projectile Movement Component. On BeginPlay, call Set Life Span with 2.0 so that the bullet destroys itself after 2 seconds.",
+   "In the character, on the left mouse button, use Spawn Actor from Class to spawn BP_Bullet at the camera location. To make it repeat while you hold the button, start a timer on Pressed with Set Timer by Event, with Time 0.05 and Looping turned on, and stop it on Released with Clear and Invalidate Timer by Handle. Hold the button for 10 seconds. Open the console, run stat game, and note the frame time and the lines about spawning actors while you shoot.",
+   "Make an Actor Blueprint named BP_BulletPool. On BeginPlay, spawn 30 BP_Bullet actors. Hide each one with Set Actor Hidden In Game, disable its collision, and set its Projectile Movement to inactive. Store them all in an array variable named Pool.",
+   "Add a function named GetBullet. It finds the first hidden bullet, unhides it, enables its collision, activates its movement, and returns it. Add a function named ReturnBullet that does the opposite.",
+   "Change BP_Bullet: remove Set Life Span. Add a Custom Event named OnTakenFromPool to BP_Bullet, and call it from GetBullet each time a bullet is taken from the pool. In this event, use Set Timer by Event with Time 2.0 and Looping off. When the timer ends, call ReturnBullet on the pool with this bullet. Then change the character so that it calls GetBullet instead of Spawn Actor.",
+   "Shoot for 10 seconds again with stat game open. Write three lines: what changed, why destroyed actors are not freed immediately, and one case where pooling is not worth it."
+  ]
+ },
+ "PQ49": {
+  "checklist": [
+   "Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin that you want).",
+   "Enable the plugin with its checkbox. Save your work and restart the Editor when it asks you to.",
+   "In the Content Drawer, click the Settings button with the gear icon in the upper right and turn on Show Plugin Content. Then find a plugin folder in the folder tree.",
+   "On your disk, open the engine folder Engine\\Plugins and find the folder of the plugin you enabled. Open its .uplugin file in a text editor.",
+   "In the .uplugin file, find FriendlyName, Category, CanContainContent and the Modules list. Note the Type of each module (Runtime, Editor, and so on).",
+   "In the Editor, open Edit > Plugins and click the Add button in the top left corner. In the New Plugin window, choose the Content Only template and name the plugin MyToolsPlugin. Then find its folder under <Project>\\Plugins."
+  ],
+  "quiz": [
+   {
+    "q": "Where do you enable or disable a plugin for your project?",
+    "choices": [
+     "Edit > Plugins",
+     "Edit > Project Settings > Plugins",
+     "Window > Plugins",
+     "File > Plugins"
+    ],
+    "explain": "From the main menu go to Edit > Plugins. This opens the Plugins window where you tick or clear the checkbox next to a plugin."
+   },
+   {
+    "q": "After you enable a plugin, what does the page tell you to do?",
+    "choices": [
+     "Nothing, it works right away",
+     "Show Plugin Content in the Content Drawer settings (gear icon)",
+     "Save your work, then restart Unreal Engine",
+     "Re-import all assets"
+    ],
+    "explain": "Before you can use plugin content, click the gear icon in the upper right corner of the Content Drawer and enable Show Plugin Content."
+   },
+   {
+    "q": "You cannot see the assets that come with a plugin in the Content Drawer. What must you turn on?",
+    "choices": [
+     "Show Engine Content in View Options",
+     "Plugin Content in the Content Drawer settings (gear icon)",
+     "The Fab plugin",
+     "Show Hidden Folders in Windows"
+    ],
+    "explain": "Before you can use plugin content, click the gear icon in the upper right corner of the Content Drawer and enable Plugin Content."
+   },
+   {
+    "q": "What is a .uplugin file?",
+    "choices": [
+     "The compiled binary of the plugin",
+     "A JSON plugin descriptor with basic information the engine reads at startup",
+     "The plugin's icon",
+     "A list of assets the plugin contains"
+    ],
+    "explain": "Unreal finds plugins by searching for .uplugin files, called plugin descriptors. They are JSON text files with basic information about the plugin."
+   },
+   {
+    "q": "Where must a project (game) plugin live so the engine can find it?",
+    "choices": [
+     "[Project Root]/Plugins/[Plugin Name]/",
+     "[Project Root]/Content/Plugins/",
+     "[Project Root]/Source/Plugins/",
+     "Anywhere, as long as the path is in the .uproject"
+    ],
+    "explain": "Game plugins are searched in [Project Root Directory]/Plugins/[Plugin Name]/. Engine plugins live in [Engine Root]/Engine/Plugins/."
+   },
+   {
+    "q": "You disable a plugin that other plugins depend on. What happens?",
+    "choices": [
+     "The editor refuses and nothing changes",
+     "The other plugins keep working",
+     "You see a notification asking if you want to disable those plugins too",
+     "The dependent plugins are deleted from disk"
+    ],
+    "explain": "If the plugin is a dependency for other plugins, you get a notification asking whether to disable those as well. This can break features in your project."
+   }
+  ]
+ },
+ "PQ50": {
+  "brief": "Source control, which the Editor now calls revision control, is a system that keeps every version of the project files and lets a team work on the same project without overwriting each other. Unreal assets cannot be merged like text, so the Editor lets you check out a file, which locks it for you while you edit it, and then submit your change. Teams depend on this, and the Editor has the buttons built in. The documentation page still uses the older name Source Control for menus that are now named Revision Control. In this quest you look at the revision control settings and either do a real check out and submit, or describe the workflow in writing.",
+  "checklist": [
+   "Open Edit > Editor Preferences, then Loading & Saving, and find the Source Control section (named Revision Control in newer versions). Read each option and note which ones are on by default.",
+   "Click the Revision Control button in the bottom right corner of the editor window and choose Connect to Revision Control. The documentation page calls this the Source Control icon. In the login dialog, look at the list of providers (Perforce, Subversion, and Git if its plugin is enabled).",
+   "If you have a server (for example Perforce or a Git repo), pick the provider, enter its settings, and click Accept Settings. If you do not have one, close the dialog without connecting and continue with the writing part.",
+   "If you have a connection: right-click an asset in the Content Browser and use Check Out, then change the asset and save it. After that, open the Revision Control menu again, choose Submit Content, and write a short description. The documentation page lists this as File > Submit to Source Control.",
+   "If you have no connection: read the sections Checking Out, Submitting, Syncing and Deleting Files on the documentation page. Write 5 lines that describe that workflow in your own words.",
+   "Open Edit > Project Settings and look for the check-out indicator on the config file. Note why config files cannot be checked back in from the Editor."
+  ],
+  "done_when": "Send a screenshot of the revision control login dialog that shows your provider list. Also send either a screenshot of a successful Submit dialog or your 5 lines about the workflow."
+ },
+ "PQ53": {
+  "checklist": [
+   "Open any Blueprint (for example BP_TestActor). In the Blueprint Editor, open Window > Compiler Results and dock the panel under the graph.",
+   "Click Compile without changing anything. Read the success line and note the compile time in milliseconds.",
+   "Now make an error. Add a Cast To node and leave its Object pin with nothing connected. Also add a Get node for a variable, and then delete that variable. Click Compile.",
+   "Move the mouse over each message to read the extra detail. Then click a message and watch the graph jump to the node with the problem.",
+   "Fix the error. Now make a message that is not an error. For example, connect Get Player Character to a Cast To Character node. This cast is not needed, and the compiler tells you so with a warning or a note. Click Compile and compare the colors of the two kinds of message.",
+   "Click Clear in the panel. Compile once more so that the panel is empty and the compile is green."
+  ]
+ },
+ "PQ55": {
+  "checklist": [
+   "Open a level that has a NavMeshBoundsVolume, the volume that tells AI where it can walk. Add one AI Character named BP_VLogBot that uses AI Move To on BeginPlay to walk toward a target point.",
+   "Open Tools > Debug > Visual Logger.",
+   "Start recording in the Visual Logger, and then press Play to start Play In Editor (PIE). Let the bot walk for 10 to 20 seconds, and then stop PIE.",
+   "In the Actor list of the Visual Logger, search for the AI controller of the bot and select it.",
+   "Drag the timeline scrubber, the bar that marks the current time, to a moment when the bot was moving. Look at the snapshot area and the text window.",
+   "Write one sentence that says what changes in the snapshot when you move the scrubber."
+  ],
+  "quiz": [
+   {
+    "q": "Where do you open the Visual Logger in the editor?",
+    "choices": [
+     "Edit > Project Settings > Debug",
+     "Tools > Debug > Visual Logger",
+     "Tools > Session Frontend > Logger",
+     "Build > Visual Logger"
+    ],
+    "explain": "In UE5 the Visual Logger is under Tools > Debug > Visual Logger. Older versions had it under Window > Developer Tools, and before 4.7 the console command was VisLog."
+   },
+   {
+    "q": "What is the main reason the Visual Logger records data for later review?",
+    "choices": [
+     "To make the game run faster",
+     "To replace the Output Log",
+     "To study rare bugs that are hard to reproduce, after they happened",
+     "To compile Blueprints"
+    ],
+    "explain": "Recording lets you scrub through the frames around the moment a bug happened, which helps with rare or hard-to-reproduce bugs."
+   },
+   {
+    "q": "Which part of the Visual Logger viewport lets you move to any point in time?",
+    "choices": [
+     "The Actor list",
+     "The snapshot view",
+     "The text window",
+     "The timeline"
+    ],
+    "explain": "The timeline has a bar (scrubber) that you drag to view the selected actor's status at different times."
+   },
+   {
+    "q": "Which macro logs text to the Visual Logger text window?",
+    "choices": [
+     "UE_VLOG",
+     "UE_PRINT",
+     "PRINT_STRING",
+     "UE_TRACE"
+    ],
+    "explain": "UE_VLOG takes the actor, the log category, the verbosity and the text. UE_VLOG_UELOG also sends a copy to the normal log."
+   },
+   {
+    "q": "Two visual logging calls happen in the same frame from the same actor. What happens?",
+    "choices": [
+     "Both are shown side by side",
+     "The second overwrites the first captured data",
+     "The Visual Logger crashes",
+     "The second call is ignored"
+    ],
+    "explain": "The page warns that multiple visual logging calls in the same frame from the same actor overwrite the previously captured data."
+   },
+   {
+    "q": "What is the third data type you can add, besides actor snapshots and log messages?",
+    "choices": [
+     "Saved games",
+     "Debug shapes drawn in the world",
+     "Screenshots",
+     "Network packets"
+    ],
+    "explain": "Debug shapes (segments, boxes, cones, capsules and more) can be drawn in the game world and can last for several frames."
+   }
+  ]
+ },
+ "PQ105": {
+  "checklist": [
+   "In a C++ actor (for example AProjectileTurret), add IVisualLoggerDebugSnapshotInterface to the list of classes that it inherits from.",
+   "Override GrabDebugSnapshot and put it inside #if ENABLE_VISUAL_LOG. In it, add one category with two values: the target name and the cooldown.",
+   "In your fire function, call UE_VLOG with your log category and the verbosity Verbose to log the target and its location.",
+   "Add UE_VLOG_LOCATION for the target point, and UE_VLOG_ARROW to draw an arrow from the muzzle to the target.",
+   "Add UE_VLOG_CONE for the detection cone. It takes the origin, direction, length, angle and colour.",
+   "Open Tools > Debug > Visual Logger. Play in PIE and fire. Then stop and drag the timeline to move through the recording.",
+   "Select your actor in the Actor list and expand your snapshot category."
+  ]
+ },
+ "PQ57": {
+  "checklist": [
+   "In BP_Debug (any actor Blueprint), make a function named CountDown that takes an integer. It prints the number and then calls itself again with the number minus one, until the number reaches 0.",
+   "Call CountDown with the value 3 from BeginPlay. Place the actor in the level.",
+   "Right-click the Print String node inside CountDown and choose Add Breakpoint.",
+   "Open the Blueprint Debugger: in the Blueprint Editor, open the Debug menu and choose Blueprint Debugger. In the Level Editor it is under Tools > Debug. Press Play. When the game pauses, look at the Call Stack. CountDown should appear in it more than once.",
+   "Use Resume and the step button to move through the calls one by one. Watch the Execution Trace list while you do this.",
+   "Right-click the breakpoint and choose Disable Breakpoint. Press Play again and confirm that the game does not pause."
+  ]
+ },
+ "PQ59": {
+  "checklist": [
+   "In BP_Debug, add an integer array variable named Scores with 3 default values, and a float variable named Speed. On Tick, add Delta Seconds to Speed and set Speed to the result.",
+   "Place two copies of BP_Debug in the level. In the Blueprint Editor, use the Debug Object dropdown to pick one of the two copies, so the editor knows which one to show.",
+   "Right-click the output pin of the Add node and choose Watch this value.",
+   "Press Play. Look at the wires that pulse, which shows they are active. Hover the mouse over a pin that has not run yet and read its message.",
+   "Open the Blueprint Debugger from the Debug menu of the Blueprint Editor (in the Level Editor it is under Tools > Debug) and go to the Data Flow tab. Filter the list to BP_Debug and expand the Scores array to see its items.",
+   "Put a breakpoint on the Set Speed node so that the game pauses there. Compare the watched value with the value in the tooltip."
+  ]
+ },
+ "PQ62": {
+  "checklist": [
+   "Open the Saved/Logs folder of your project and open the newest .txt log file. Find three lines that contain Warning or Error and write down what they say.",
+   "Open the Saved/Crashes folder. If it is empty, cause a crash on purpose. Save your work first. Then open the console with the backtick key and type debug crash. This closes the editor and writes a crash report. A mistake in a Blueprint, such as calling a function on an empty reference, only gives an Accessed None error in the Message Log and does not crash. In C++ you can also crash with check(false).",
+   "Open one crash folder and find the callstack text and the copy of the log inside it.",
+   "Open Editor Preferences, go to Privacy, then Bug Reports, and read the options. Do not change them unless you want to.",
+   "Open Project Settings, go to Project, then Packaging, then the Advanced part, and find Include Crash Reporter. Leave it as it is.",
+   "Write 5 lines that say what crashed, which function is at the top of the callstack, and where you found the report."
+  ]
+ },
+ "PQ63": {
+  "checklist": [
+   "Create a Blueprint Interface named BPI_Usable with three functions: CanUse with a Boolean output, GetPrompt with a Text output, and Use with an input named Instigator of the type Actor Object Reference. An object reference input cannot have a default value, so the caller must always pass the Instigator.",
+   "Make an Actor Blueprint named BP_UsableBase that implements BPI_Usable. Implement CanUse so that it returns true, and GetPrompt so that it returns the text Use. Click Compile.",
+   "Make BP_Chest as a child of BP_UsableBase. Open the inherited GetPrompt function, right-click its entry node and choose Add Call to Parent Function. Append the word Chest to the text that the parent returns. Then override CanUse so that it returns false after the first Use.",
+   "Make an Actor Blueprint named BP_Vendor that has no parent Blueprint and also implements BPI_Usable. Make it return a different prompt and print a line in Use.",
+   "In the player, on overlap, call Does Object Implement Interface with BPI_Usable. If the result is true, call CanUse and GetPrompt with the Interface call type and show the prompt with Print String. On the E key, call Use (Message) with the player as Instigator.",
+   "Place BP_Chest, BP_Vendor and a plain cube in the level and press Play. The cube should give no prompt, the chest prompt should show the parent text plus Chest, and after one Use the chest should report CanUse = false.",
+   "Open Class Settings on BP_Chest and take a screenshot of the Inherited Interfaces list."
+  ]
+ },
+ "PQ43": {
+  "checklist": [
+   "Make an Actor Blueprint named BP_Torch with a Static Mesh and a Point Light. On BeginPlay, print 'Torch BeginPlay' plus the display name you get from Get Parent Actor.",
+   "Make an Actor Blueprint named BP_Wall with a Static Mesh cube scaled to 4 x 0.2 x 2. Add two Child Actor Components and set the Child Actor Class of each to BP_Torch. Move them to the left end and the right end of the wall.",
+   "Place BP_Wall in the level and press Play. Read the Output Log: each torch prints the wall as its parent actor.",
+   "In BP_Wall, add an event for the T key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, call Get All Child Actors with Include Descendants turned on, and print the length of the result. You should see 2.",
+   "Make BP_Torch2, a child Blueprint of BP_Torch that has a different light color. In BP_Wall, add an event for the C key that calls Set Child Actor Class on the first Child Actor Component with BP_Torch2.",
+   "In BP_Torch, also print the value of Is Child Actor on BeginPlay. Drag one BP_Torch directly into the level and compare what it prints with what the wall torches print."
+  ]
+ },
+ "PQ44": {
+  "checklist": [
+   "Create a new Blueprint Class with Actor Component as the parent, and name it BPC_Health. Add a float variable named MaxHealth with the value 100, and a float variable named Health.",
+   "In BPC_Health, on Event Begin Play, set Health to the value of MaxHealth. Add a function named ApplyDamage with an input named Amount. It lowers Health, clamps it so it cannot go below 0, and prints the name of the owner plus Health. Use Get Owner to get the name.",
+   "Add BPC_Health to BP_ThirdPersonCharacter and to a new actor named BP_Barrel. Make MaxHealth Instance Editable, and set it to 30 on the barrel.",
+   "In BP_Barrel, add an event for the K key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, use Get Component by Class with BPC_Health and call ApplyDamage with 10. Press Play and watch the two actors keep separate Health values.",
+   "In BPC_Health, add an Event Dispatcher named OnDied and call it when Health reaches 0. In BP_Barrel, bind an event to it that destroys the barrel.",
+   "In the defaults of the barrel's component, turn Auto Activate off. In ApplyDamage, check Is Active and ignore the damage when the component is not active. Then call Activate from the BeginPlay of the barrel."
+  ]
+ },
+ "PQ65": {
+  "checklist": [
+   "Create a Blueprint Class with Scene Component as the parent and name it BPC_Orbit. Add the float variables Radius (150), Speed (90) and Angle.",
+   "In BPC_Orbit, on Event Tick, add Speed times Delta Seconds to Angle. Then call Set Relative Location with (cos(Angle) * Radius, sin(Angle) * Radius, 0). This makes the component move itself in a circle around its parent.",
+   "Make an Actor Blueprint named BP_Planet with a Static Mesh sphere as the root. Add BPC_Orbit as a child of the root, and add a second, smaller sphere Static Mesh as a child of BPC_Orbit. Press Play and check that the small sphere orbits.",
+   "Add a second BPC_Orbit under the first small sphere, with a third mesh under it. Notice that the tree now goes root, Orbit, mesh, Orbit, mesh, and that each orbit uses the transform of its parent.",
+   "In BP_Planet, add an event for the T key that calls Set Component Tick Enabled (false) on the first BPC_Orbit, and an event for the Y key that sets it to true. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. Press Play and confirm that the outer orbit stops and starts again.",
+   "Add an event for the A key that spawns a new BP_Planet. Use Attach Component to Component (or Attach Actor to Component) to attach it under the outer mesh while the game runs. Confirm that it follows.",
+   "Write three lines: why BPC_Orbit must be a Scene Component and not an Actor Component, why the mesh needs BPC_Orbit as its parent, and one thing that would need a Primitive Component instead."
+  ]
+ },
+ "PQ75": {
+  "checklist": [
+   "Make an Enum named E_GameFlow with the values Playing, Paused and GameOver. Add a variable named GameFlow of that type to your Player Controller BP_FlowController. Set this controller as the default controller in the GameMode.",
+   "Make two Widget Blueprints: WBP_PauseMenu with a Resume button and a Quit button, and WBP_GameOver with a Restart button.",
+   "In BP_FlowController, add a function named SetFlow with an input named New State and use a Switch on E_GameFlow. For Playing: Set Game Paused false, Set Input Mode Game Only, and hide the cursor. For Paused: create WBP_PauseMenu, Add to Viewport, Set Game Paused true, Set Input Mode UI Only with the menu as In Widget to Focus, and show the cursor.",
+   "For GameOver: create WBP_GameOver, call Set Input Mode Game And UI, and show the cursor. Keep the game running so that the camera still moves.",
+   "Bind a Pause input action. Use Is Game Paused to decide if you call SetFlow with Playing or with Paused. Open the Input Action asset of your Pause action and turn on Trigger When Paused, or you cannot unpause with the same key. If you use an old style key event node, the setting is Execute when Paused in the Details of the node.",
+   "Connect the Resume button to SetFlow with Playing and to Remove from Parent. Connect the Restart button to Open Level with the name of the current level.",
+   "Press Play. Pause the game, move the mouse and click Resume. Then trigger GameOver and confirm that the camera still moves and that the button works."
+  ]
+ },
+ "PQ76": {
+  "checklist": [
+   "Make three levels: L_Hub, L_Arena and L_ArenaStream, which is a small room. Put a Player Start in L_Hub and in L_Arena.",
+   "In your Game Instance, add a String variable named LastLevel and an Integer variable named Score.",
+   "Make BP_Portal with a Box Collision and an editable variable named Level of the type Soft Object Reference to World. On overlap with the player, store the result of Get Current Level Name (with Remove Prefix String on) in LastLevel, and then call Open Level (by Object Reference).",
+   "Make BP_ReturnPortal and place it in L_Arena. On overlap with the player, it reads LastLevel from the Game Instance and calls Open Level (by Name) with LastLevel as the Level Name and the text fromArena in the Options pin. Options are extra text that is passed to the level that opens. To see them arrive, open the GameMode Blueprint that L_Hub uses, and on Begin Play print its Options String variable.",
+   "In the Levels window, add L_ArenaStream as a sublevel of L_Arena. Make BP_Streamer. On overlap it calls Load Stream Level (by Name) with Make Visible After Load on, and on end overlap it calls Unload Stream Level.",
+   "Add 10 to Score before each transition. Print Score on Begin Play of each level, to prove that the Game Instance survives Open Level.",
+   "Press Play in L_Hub. Go to the arena, walk into the streamer, and come back through the return portal."
+  ]
+ },
+ "PQ79": {
+  "checklist": [
+   "In your C++ project, add a header file named ItemTypes.h. It does not need a class. You can use the Class Wizard with the parent None, or create the file by hand.",
+   "Declare UENUM(BlueprintType) enum class EItemRarity : uint8 with the values Common, Rare and Epic. Give Epic the text UMETA(DisplayName=\"Legendary\"), which changes the name shown in the editor. Add one more value and mark it with UMETA(Hidden).",
+   "Declare USTRUCT(BlueprintType) struct FItemRow. Put GENERATED_BODY() on its first line. Then add these UPROPERTY fields: FName Id, int32 Stack and EItemRarity Rarity. Mark each of them with EditAnywhere, BlueprintReadWrite.",
+   "On a C++ actor named AItemChest, add a UPROPERTY of the type TArray<FItemRow> named Items. Compile, and make a Blueprint named BP_ItemChest from the actor.",
+   "In BP_ItemChest, fill in two rows of Items in the Details panel. In the Event Graph, use the Make ItemRow and Break ItemRow nodes and print the Rarity of one row. Blueprint shows the struct name without the F at the start.",
+   "Check the dropdown of the enum in the editor. The DisplayName should show, and the Hidden value should not show."
+  ],
+  "done_when": "Send a screenshot of the header with the UENUM and the USTRUCT, and a screenshot of BP_ItemChest that shows the rows in the Details panel and a Break ItemRow node with the Rarity pin."
+ },
+ "PQ87": {
+  "checklist": [
+   "Open Tools > New C++ Class. Pick PrimaryDataAsset as the parent and type the name WeaponDefinition. Unreal adds the U at the start itself, so the class in the code is named UWeaponDefinition. Build the project.",
+   "Add these members marked with UPROPERTY(EditAnywhere): FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Build again.",
+   "In the Content Browser, right-click and choose Miscellaneous, then Data Asset. Choose WeaponDefinition as the class. Make two assets named DA_Sword and DA_Bow, and fill in their values.",
+   "Make a Blueprint child of WeaponDefinition named BP_WeaponBase. Then make a Data Only Blueprint child of BP_WeaponBase named BP_WeaponFire, and change one value in this child.",
+   "In any Blueprint, call Get Primary Asset Id on DA_Sword and show the result with Print String. Do the same for BP_WeaponFire.",
+   "Write 3 lines that answer this: when do you pick a Data Asset instance, and when do you pick a Data Only Blueprint?"
+  ]
+ },
+ "PQ92": {
+  "checklist": [
+   "Enable the plugins Python Editor Script Plugin and Editor Scripting Utilities, and restart the editor. Create the folder Content/Python in your project.",
+   "Write a script named rename_meshes.py. It gets all Static Mesh assets in a folder with unreal.EditorAssetLibrary, and adds the prefix SM_ to every name that does not have it yet. Rename with the Unreal API and never with os.rename.",
+   "Wrap the loop in unreal.ScopedEditorTransaction(\"Prefix meshes\") and in unreal.ScopedSlowTask, so that the editor shows a progress dialog with a Cancel button.",
+   "Log each rename with unreal.log and each skipped asset with unreal.log_warning. Run the script from the Tools > Execute Python Script menu. The documentation page lists this command under the File menu, where it was in older versions.",
+   "Open Edit > Undo History and check that it shows one entry named Prefix meshes. Undo it and confirm that the old names come back.",
+   "Create the file Content/Python/init_unreal.py and make it print a message with unreal.log. Restart the editor and find the message in the Output Log."
+  ]
+ },
+ "TAQ6": {
+  "checklist": [
+   "Open Edit > Plugins and look in the Scripting category. Enable the Python Editor Script Plugin and Editor Scripting Utilities, and then restart the editor.",
+   "Open the Output Log. Next to the input line at the bottom, switch the input from Cmd to Python. Then type this line and press Enter: unreal.log(\"Hello from Python\")",
+   "Select 3 or more assets in the Content Browser.",
+   "In the Python console, type this line and press Enter: print([a.get_name() for a in unreal.EditorUtilityLibrary.get_selected_assets()])",
+   "Save the same code in a file named list_selected.py inside the Content/Python folder of your project. Add the line import unreal at the top of the file.",
+   "Run the file with Tools > Execute Python Script, and check the result in the Output Log. The documentation page lists this command under the File menu, where it was in older versions."
+  ],
+  "quiz": [
+   {
+    "q": "Which plugin gives the Unreal Editor its Python support?",
+    "choices": [
+     "Tools > Execute Python Script",
+     "Niagara",
+     "Modeling Tools Editor Mode",
+     "Remote Control API"
+    ],
+    "explain": "Python support comes from the Python Editor Script Plugin. The docs also recommend Editor Scripting Utilities."
+   },
+   {
+    "q": "What is the only way to run Python code line by line?",
+    "choices": [
+     "File > Execute Python Script",
+     "A startup script in Project Settings",
+     "The Python console in the Output Log",
+     "The command line with -run=pythonscript"
+    ],
+    "explain": "The Python console runs each line right away. All the other ways run a script file."
+   },
+   {
+    "q": "What happens to a file called init_unreal.py in your project's Content/Python folder?",
+    "choices": [
+     "Nothing until you run it by hand",
+     "The editor runs it automatically when it starts",
+     "It is packaged into the game",
+     "It is deleted on save"
+    ],
+    "explain": "If the editor finds init_unreal.py in one of its Python paths, it runs it automatically at startup."
+   },
+   {
+    "q": "You need to move an asset to another folder with Python. What should you use?",
+    "choices": [
+     "os.rename",
+     "shutil.move",
+     "Delete it and import it again",
+     "unreal.EditorAssetLibrary or unreal.AssetTools"
+    ],
+    "explain": "Never move asset files with Python file functions. That can break internal references. Use the Unreal API."
+   },
+   {
+    "q": "Why use set_editor_property() instead of setting the property directly?",
+    "choices": [
+     "It runs the same pre- and post-edit code as changing the value in the Details panel",
+     "It is faster",
+     "It works without the unreal module",
+     "It saves the level automatically"
+    ],
+    "explain": "set_editor_property() triggers the editor's pre- and post-edit changes, as if you changed it in the Details panel."
+   },
+   {
+    "q": "Your script changes 200 Actors. How do you make one Undo revert all of it?",
+    "choices": [
+     "Call unreal.log() after each change",
+     "Wrap the changes in unreal.ScopedEditorTransaction",
+     "Use unreal.ScopedSlowTask",
+     "Save after each change"
+    ],
+    "explain": "A ScopedEditorTransaction bundles many operations into one entry in the Undo history. ScopedSlowTask only shows progress."
+   }
+  ]
+ },
+ "PQ107": {
+  "checklist": [
+   "Make a C++ actor named ALeakyCache that allocates a large TArray in BeginPlay and does not free it until EndPlay.",
+   "Start UnrealInsights.exe from the folder Engine/Binaries/Win64 before you run the game.",
+   "Run your project from a command prompt, with the memory trace channel active from the start of the process. To do this, add the argument -trace=default,memory to the command line, for example: UnrealEditor.exe YourProject.uproject -game -trace=default,memory",
+   "Load a level with 20 ALeakyCache actors and wait a moment. Then open a different level and stop the session.",
+   "Open the .utrace file and select Menu > Memory Insights. Read the Total Allocated Memory graph.",
+   "In the Investigation panel, run a Memory Leaks query. Put the markers A and B around the first level, and the marker C after the level change.",
+   "Group the result by Alloc Callstack and find the allocation of your ALeakyCache."
+  ]
+ },
+ "PQ5": {
+  "checklist": [
+   "Choose how Play In Editor (PIE) opens. Click the three dots next to the Play button in the main toolbar and pick New Editor Window (PIE) or Selected Viewport. Try both and note which one you prefer.",
+   "Open Edit > Editor Preferences, go to General, then Performance. Turn on Show Frame Rate and Memory, which shows these numbers in the editor at all times.",
+   "In the Editor Preferences, go to General, then Source Code, and find Source Code Editor. This is the program that Unreal opens when you want to read or write C++ code. Note what it is set to now. Change it only if you use a different program."
+  ],
+  "done_when": "Send a written note that lists the 3 settings from the steps, says what each one is set to now, and says why you chose that."
+ },
+ "PQ6": {
+  "checklist": [
+   "Start a trace from the editor: click Trace in the bar at the bottom of the editor window and choose Start Trace. Then play your L_TestHarness level for 10 seconds, stop playing, and choose Stop Trace in the same menu.",
+   "Open the trace in Unreal Insights: in the same Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn.",
+   "Take a screenshot of the timing view of one frame."
+  ]
+ },
+ "PQ9": {
+  "checklist": [
+   "Create two Blueprints: BP_UUGameMode with Game Mode Base as the parent class, and BP_UUGameState with Game State Base as the parent class. In the Class Defaults of BP_UUGameMode, set Game State Class to BP_UUGameState. In the World Settings of your harness level, set GameMode Override to BP_UUGameMode, so the level uses them when it runs.",
+   "In BP_UUGameState, add an Integer variable named Collected that stores a score or a count of collected items. Add a function named AddPoint that adds 1 to it.",
+   "In BP_UUGameMode, add an Integer variable named Target with the value 3, and a Custom Event named CheckWin. In CheckWin, use Get Game State, cast it to BP_UUGameState and read Collected. When the count reaches Target, the GameMode declares a win. Call AddPoint and then CheckWin each time the player collects something.",
+   "Print or log the win message one time only. Put a Do Once node in front of the Print String, or use a Boolean variable named HasWon. The message must not appear again on every frame.",
+   "Write 2 lines that say why the score is stored in the GameState and not in the GameMode."
+  ],
+  "done_when": "Send two screenshots from PIE, or a short GIF, that show the win happening, and add your 2 lines."
+ },
+ "PQ14": {
+  "checklist": [
+   "Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react.",
+   "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
+  ]
+ },
+ "PQ15": {
+  "checklist": [
+   "Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of your Player Controller or character, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen.",
+   "Update the widget from the GameState when the score changes. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+  ]
+ },
+ "PQ16": {
+  "checklist": [
+   "Add a kill volume to your level: an Actor Blueprint with a large Box Collision. When the player overlaps it, the player must respawn, which means appear again, at the last checkpoint they reached. The simple way is to call an event on the GameMode that moves the player back with Set Actor Transform.",
+   "Store the last checkpoint in a place where the GameMode can read it, for example a Transform variable named LastCheckpoint in the GameMode itself or in the GameState. Make a checkpoint Blueprint with a Box Collision that writes its own transform into that variable when the player overlaps it."
+  ],
+  "done_when": "Send two or three screenshots from PIE, or a short GIF, that show the player touching the kill volume and standing at the checkpoint again."
+ },
+ "PQ20": {
+  "checklist": [
+   "Install the IDE and the workloads that the page Coder 01: Set Up and Compile a C++ Project, linked on this quest, lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work.",
+   "Add a C++ class to your UC_Sandbox project, or to a copy of it. When you do this, the project becomes a C++ project.",
+   "Generate the project files and open the solution in the IDE. Then build the Editor target with the configuration Development Editor.",
+   "Start the Unreal editor from the IDE with the debugger attached. The debugger is the tool that lets you pause the program and look inside it.",
+   "Set one breakpoint in your class, which is a mark on a line where the program will pause. Then make that line run so the program stops on it."
+  ]
+ },
+ "PQ26": {
+  "checklist": [
+   "Read the documentation page Coding in Unreal Engine: Blueprint vs. C++ again, which is linked on this quest, and read your notes from quest SQ11 again.",
+   "Pick one piece of your loop from quest PQ19. Make a sketch of how you would split it into a C++ base class and a Blueprint child.",
+   "Decide which values get the specifier EditDefaultsOnly, which get BlueprintReadOnly, and which stay private. A specifier is a word in the UPROPERTY macro that controls what the editor and Blueprints can do with the value.",
+   "Expose one delegate that Blueprints can assign to, for an event that designers care about. A delegate is a signal that other code can listen to."
+  ]
+ },
+ "PQ27": {
+  "checklist": [
+   "Make a copy of your project. In that copy, follow the tutorial page Coder 03: Configure Character Movement with C++, which is linked on this quest.",
+   "Expose 2 movement values so that a Blueprint child, a Blueprint made from your C++ class, can tune them."
+  ]
+ },
+ "PQ28": {
+  "checklist": [
+   "Follow the tutorial page Coder 05: Manage Item and Data, which is linked on this quest, and define a Data Asset class for items in C++.",
+   "In the editor, create 2 item assets from your class."
+  ]
+ }
+}

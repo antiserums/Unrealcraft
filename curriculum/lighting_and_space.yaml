@@ -610,11 +610,11 @@ quests:
       - q: "Why keep exposure locked while doing this pass?"
         choices: ["Lumen requires it", "Auto exposure would brighten dark routes and hide the problem", "It raises frame rate", "It enables shadows"]
         answer_index: 1
-        explain: "WL-03 again. Locked exposure shows the real brightness difference between routes."
+        explain: "This is quest EAQ10 again. Locked exposure shows the real brightness difference between routes."
       - q: "Six colored lights in one room, none meaning anything. The issue?"
         choices: ["Performance only", "They cancel out", "Visual noise that competes with your guidance cues", "No issue"]
         answer_index: 2
-        explain: "Light color should support your LD-05 color rule, not compete with it."
+        explain: "Light color should support your color rule from quest LDQ15, not compete with it."
     flavors:
       _default: {why: "Good lighting shows the player the route and the threats. Looking pretty comes second."}
       level_design: {why: "This is lighting for play. Beauty comes later, from lookdev or from you.", do: "If a route needs a sign to be found, it needs a light first."}
@@ -660,9 +660,9 @@ quests:
       - q: "What makes the three routes count as three?"
         choices: ["Three different floor materials", "They differ in a clear way, like length, risk, height or cover", "Three separate levels", "Three lights"]
         answer_index: 1
-        explain: "Same as LD-03. A route only counts if choosing it changes something."
+        explain: "Same as quest LDQ13. A route only counts if choosing it changes something."
       - q: "The goal is hard to find in Lighting Only view. Which quest's pass do you redo?"
-        choices: ["WL-01 landscape", "LD-08 lighting for readability", "LD-02 toolkit", "SQ8 material instance"]
+        choices: ["EAQ8 landscape", "LDQ18 lighting for readability", "LDQ12 toolkit", "SQ8 material instance"]
         answer_index: 1
         explain: "The goal should be the brightest point. Fix the lighting before adding detail."
       - q: "Which bookmarks does the capstone ask for?"
@@ -708,7 +708,7 @@ quests:
       - q: "A doorway feels too tight. What's it usually measured against?"
         choices: ["The camera's field of view only", "The character capsule plus comfort margin", "The skybox", "The light radius"]
         answer_index: 1
-        explain: "Level designers size spaces from character metrics. That's what LD-01 builds."
+        explain: "Level designers size spaces from character metrics. That's what quest LDQ11 builds."
     flavors:
       _default: {why: "See a space the way a level designer checks it."}
       level_design: {why: "Level designers teach this walk to every new playtester."}
@@ -729,8 +729,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 water system lake river beginner"
     checklist:
-      - "Enable the Water plugin in the Plugins window and restart the editor."
-      - "Add a Water Body Lake or a Water Body River to L_Terrain_01."
+      - "Open Edit > Plugins, search for Water, enable the Water plugin and restart the editor."
+      - "Open the Place Actors panel (Window > Place Actors), search for Water Body, and drag a Water Body Lake or a Water Body River into L_Terrain_01. A water body is shaped by a spline, a line with points you can move: select the water, then click and move its points to change the outline."
       - "Use the water as a boundary that the path runs beside. It should not be a blocker that the player cannot understand."
     done_when: "Send a screenshot taken at eye level that shows the path beside the water."
     xp: 30
@@ -752,8 +752,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/volumetric-fog-in-unreal-engine"
     checklist:
-      - "In L_Routes_01, select the Exponential Height Fog actor and enable Volumetric Fog on it."
-      - "Add a Local Fog Volume over one dead end to make it feel less inviting."
+      - "In L_Routes_01, select the Exponential Height Fog actor in the Outliner. If the level has none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog."
+      - "In the Place Actors panel, search for Local Fog Volume and drag one over one dead end. Scale it so that it covers the dead end, and raise its two Extinction values in the Details panel, which make the fog thicker, until the dead end feels less inviting."
       - "Check that you can still see the goal and the landmark clearly through the fog."
     done_when: "Send before and after screenshots taken from the same bookmark."
     xp: 30
@@ -773,8 +773,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 decal actor beginner"
     checklist:
-      - "Place a Decal Actor in your level. Give it a decal material from the Starter Content or another simple decal material."
-      - "Use 3 to 4 decals, such as scuffs, arrows or stains, to lead toward one route entrance."
+      - "Open the Place Actors panel, search for Decal, and drag a Decal Actor onto a floor or wall in your level. In its Details panel, set Decal Material to a decal material from the Starter Content. You can also make a simple one: create a material, set its Material Domain to Deferred Decal and its Blend Mode to Translucent, and connect a color and an opacity."
+      - "Use 3 to 4 decals, such as scuffs, arrows or stains, to lead toward one route entrance. Hold Alt and drag a decal to copy it. A decal only shows where its box touches a surface, so rotate and move each one until you see it."
     done_when: "Send a screenshot taken at eye level that shows the trail of decals."
     xp: 25
     verify_type: screenshot
@@ -793,9 +793,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 level instance create from selection beginner"
     checklist:
-      - "Select all the actors of a small blockout room and create a Level Instance from the selection."
-      - "Place the instance two more times in the level, so that you have three."
-      - "Edit one copy, and confirm that the change shows up in all of them."
+      - "Select all the actors of a small blockout room. Right-click the selection, open Level and choose Create Level Instance. Click OK in the window that opens and save the new level file, for example as L_Room_Instance."
+      - "Place the instance two more times in the level, so that you have three. Hold Alt and drag the instance to make a copy."
+      - "Select one copy and click Edit in the Details panel. Change something, for example move a wall. Then select the Level Instance in the Outliner and click Commit Changes in the Details panel. Confirm that the change shows up in all three copies."
     done_when: "Send a screenshot that shows the three instances after the shared edit."
     xp: 35
     verify_type: screenshot
@@ -816,7 +816,7 @@ quests:
     checklist:
       - "In L_Terrain_01, open Landscape Mode, go to the Manage tab and select the Splines tool."
       - "Hold Ctrl and click on the landscape to place control points along your ramped path."
-      - "Deform the landscape to the spline, so that the path sits flat and is walkable."
+      - "Deform the landscape to the spline, so that the path sits flat and is walkable: in the settings of the Splines tool, under Deform Landscape to Splines, click All Splines. If the path is too narrow, select the control points and raise their Width in the Details panel, then click the button again."
     done_when: "Send a screenshot of the spline path, and one PIE screenshot of you walking on it."
     xp: 35
     verify_type: screenshot
@@ -837,8 +837,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-framework-in-unreal-engine"
     checklist:
-      - "Enable the PCG plugin. Then create a PCG Graph, which holds the rules, and a PCG Volume, which is the box that marks where the graph works."
-      - "Set up the graph so that it scatters one rock mesh on the landscape inside the volume."
+      - "Open Edit > Plugins, enable the Procedural Content Generation Framework (PCG) plugin and restart the editor. Right-click in the Content Browser, open PCG and choose PCG Graph. The graph holds the rules. Then drag a PCG Volume from the Place Actors panel onto the landscape, and set Graph on its PCG component in the Details panel. The volume is the box that marks where the graph works."
+      - "Open the graph. Add a Get Landscape Data node, a Surface Sampler node and a Static Mesh Spawner node, and connect them in that order. In the Static Mesh Spawner, add one entry under Mesh Entries and pick one rock mesh. Select the PCG Volume and click Generate in the Details panel. The rocks appear on the landscape inside the volume."
       - "Move the volume away from your path, so that the scattered rocks do not block it."
     done_when: "Send a screenshot of the graph and a screenshot of the scattered result."
     xp: 40
@@ -859,7 +859,7 @@ quests:
     backup_search: "unreal engine 5 night lighting readable level design moonlight"
     checklist:
       - "Duplicate L_Routes_01 and name the copy L_Routes_01_Night."
-      - "Lower the sun and change it to a dim, cool moonlight. Keep the exposure locked."
+      - "Select the Directional Light, which is the sun. Rotate it until it sits low over the horizon, lower its Intensity until the level is dim, and set its Light Color to a cool blue so that it reads as moonlight. Keep the exposure locked."
       - "Add local lights so that every route entrance and the goal are still easy to see."
     done_when: "Send day and night screenshots taken from the same 3 bookmarks."
     xp: 40
@@ -879,9 +879,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 ambient sound actor attenuation audio volume beginner"
     checklist:
-      - "Place an Ambient Sound actor near the goal. The Starter Content has looping sounds that you can use."
-      - "Set the attenuation so that the player can hear the sound from the route entrances, and so that it is louder near the goal."
-      - "Add an Audio Volume to one room and change its reverb."
+      - "Drag a looping sound from the Content Browser into the level, near the goal. This creates an Ambient Sound actor. The Starter Content has looping sounds in its Audio folder that you can use."
+      - "Select the Ambient Sound actor. In the Details panel, under Attenuation, turn on Override Attenuation. Attenuation is how a sound gets quieter with distance. Set Inner Radius and Falloff Distance so that the player can hear the sound from the route entrances, and so that it is louder near the goal."
+      - "In the Place Actors panel, open Volumes and drag an Audio Volume around one room. In its Details panel, under Reverb, turn on Apply Reverb and pick a Reverb Effect. Walk into the room in PIE and listen to the change."
     done_when: "Send a writeup that says where the sound is and how it pulls the player."
     xp: 25
     verify_type: writeup
@@ -900,8 +900,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 landscape grass type quick start"
     checklist:
-      - "Follow the Grass Quick Start guide on L_Terrain_01. Use one Landscape Grass Type."
-      - "Paint a path layer that has no grass, so that the route stays clear."
+      - "Follow the Grass Quick Start guide that is linked on this quest, on L_Terrain_01. It has you create one Landscape Grass Type asset, add a grass mesh to it, and connect it in the Landscape Material with a Landscape Grass Output node."
+      - "Paint a path layer that has no grass, so that the route stays clear. The grass only grows where its own layer is painted, so painting another layer, such as dirt, along the route removes the grass there."
     done_when: "Send a screenshot taken at eye level that shows grass on both sides of a clear path."
     xp: 35
     verify_type: screenshot
@@ -920,8 +920,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "level design landmark silhouette readability study"
     checklist:
-      - "Block out 3 landmark options with the tools in Modeling Mode."
-      - "Look at each one from a distance against the sky. Use the Unlit or the Lighting Only view mode, so that you judge only the shape."
+      - "Switch the editor to Modeling Mode with the mode dropdown in the main toolbar. If Modeling is not in the list, enable the Modeling Tools Editor Mode plugin in Edit > Plugins. Block out 3 landmark options with the shape tools, such as Box and Cylinder, and make them about the same height."
+      - "Look at each one from a distance against the sky. Open the view mode menu of the viewport, which shows Lit by default, and choose Unlit or Lighting Only, so that you judge only the shape."
       - "Keep the one that you recognize the fastest, and note why."
     done_when: "Send one screenshot that shows all 3 silhouettes, and add one line about the one you chose."
     xp: 25

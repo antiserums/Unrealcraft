@@ -235,10 +235,10 @@ quests:
       - "Open a run animation of the mannequin. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser."
       - "In Asset Details, set Rate Scale to 0.5 and press play to see the animation at half speed. Then set it back to 1. Also read the values of Number of Sampled Frames and Target Frame Rate."
       - "Find the setting Additive Anim Type and read its options. Leave it on No additive."
-      - "Find the setting EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock."
+      - "Find the setting Enable Root Motion. In the Asset Details panel it is written as one word, EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock."
       - "Select a bone in the Skeleton Tree and rotate it a little in the viewport. Press Key in the Toolbar and see the additive track appear in the timeline. Then undo the change."
       - "In the timeline, open the menu of the Curves track and choose Add Curve..., then Create Curve, and name the curve TestCurve. Open Window > Anim Curves to see it. Delete the curve afterwards and save the Skeleton."
-    done_when: "Send a screenshot of the editor with the six areas labeled, and a screenshot of Asset Details that shows Rate Scale, Additive Anim Type and EnableRootMotion. Add one line that says what the Key button does."
+    done_when: "Send a screenshot of the editor with the six areas labeled, and a screenshot of Asset Details that shows Rate Scale, Additive Anim Type and Enable Root Motion (EnableRootMotion). Add one line that says what the Key button does."
     xp: 115
     verify_type: screenshot
     quiz:
@@ -674,7 +674,7 @@ quests:
       - "Open an Animation Sequence that moves the character forward, such as a roll, a vault or a walk with root movement. Give it a clear name, or write down the name it has."
       - "In the viewport, open the Character menu, go to Bones, then Bone Drawing, and choose All Hierarchy so that all bones are drawn. Watch the red root bone and its red line while the animation plays."
       - "In the Character menu, go to Animation, then Root Motion, and try the options Ignore, Loop, and Loop and Reset. Note what each option does to the preview."
-      - "In the Asset Details panel, check Enable Root Motion on the sequence. Then create a montage from the sequence and name it AM_Roll."
+      - "In the Asset Details panel, check Enable Root Motion on the sequence. The panel writes it as one word, EnableRootMotion. Then create a montage from the sequence and name it AM_Roll."
       - "Open the Animation Blueprint and click Class Defaults in the toolbar. Set Root Motion Mode to Root Motion from Montages Only."
       - "In the Character Blueprint, play AM_Roll when a key is pressed. Play in the editor and press the key while the character is standing still."
       - "Open the console with the backtick key and type show collision. You can now see the capsule, the collision shape of the character, move together with the mesh."
@@ -1029,7 +1029,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-plugins-in-unreal-engine"
     checklist:
-      - "Enable the Motion Warping plugin. Pick an animation with root motion, such as a vault, a mantle or a punch, and turn on EnableRootMotion in the asset."
+      - "Enable the Motion Warping plugin. Pick an animation with root motion, such as a vault, a mantle or a punch. Open it and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion."
       - "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage."
       - "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target."
       - "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget."
@@ -1100,7 +1100,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
     checklist:
-      - "Create an Animation Layer Interface named ALI_Character: click Add, then Animation, then Animation Interface. Add three layers named FullBody, UpperBody and IK."
+      - "Create an Animation Layer Interface named ALI_Character: in the Content Browser click Add, then Animation, then Animation Layer Interface (the documentation page calls this menu item Animation Interface). Add three layers named FullBody, UpperBody and IK."
       - "Give the UpperBody layer and the IK layer a pose input. Put all three layers in one Group, and give the Group a name that is not the default name."
       - "Open ABP_Base, the Animation Blueprint of your character. In Class Settings, add ALI_Character under Interfaces."
       - "Drag the three layers into the AnimGraph in this order: FullBody, then UpperBody, then IK. Connect them one after the other, and connect the last one to Output Pose."
@@ -1277,14 +1277,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-editor-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequence-editor-in-unreal-engine"
     checklist:
-      - "Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it AM_FootSync."
+      - "Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it BP_FootSyncModifier."
       - "Add a variable for the name of the foot bone, for example foot_l. Make the variable Instance Editable, so that you can change it later without opening the Blueprint."
       - "Implement the OnApply function. First add a Notify track named FootSync. Then loop through the frames with Get Bone Pose for Frame, and add a sync marker at the frame where the foot is lowest."
       - "Implement the OnRevert function so that it removes the FootSync notify track."
-      - "Open a walk animation and go to Window > Animation Data Modifiers. Click Add Modifier and choose AM_FootSync, set the bone name, and then choose Apply Modifier."
+      - "Open a walk animation and go to Window > Animation Data Modifiers. Click Add Modifier and choose BP_FootSyncModifier, set the bone name, and then choose Apply Modifier."
       - "Check the new track and its markers in the Notifies area. Then choose Revert Modifier and confirm that the track is gone."
       - "Now apply the modifier on the Skeleton instead of on one animation. Check that another animation also gets the track."
-    done_when: "Send screenshots of the AM_FootSync graph that show OnApply and OnRevert. Also send a screenshot of a walk sequence that shows the generated FootSync track with its markers and the Animation Data Modifiers tab."
+    done_when: "Send screenshots of the BP_FootSyncModifier graph that show OnApply and OnRevert. Also send a screenshot of a walk sequence that shows the generated FootSync track with its markers and the Animation Data Modifiers tab."
     xp: 85
     verify_type: screenshot
     quiz:
@@ -1516,7 +1516,7 @@ quests:
       - "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon."
       - "Enable the Animation Budget Allocator plugin. Set the Mesh Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play."
       - "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh."
-      - "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level, under the sections [ViewDistanceQuality@0..3]. Test two of the levels."
+      - "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level. Each level has its own section, so you write four sections: [ViewDistanceQuality@0], [ViewDistanceQuality@1], [ViewDistanceQuality@2] and [ViewDistanceQuality@3], each with its own a.Budget.BudgetMs line below it. Test two of the levels."
       - "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD."
       - "Compare stat unit before and after your changes, and write the numbers down."
     done_when: "Send screenshots of the budget graph with the overlay, of the Compiler Results with no Blueprint usage warnings, and of the LOD settings, and a table with the stat unit numbers before and after. Add 5 lines about what gave the biggest improvement and one thing you would not do on a hero character."
@@ -1598,8 +1598,8 @@ quests:
       - "Delete the modules of the left arm. Build them again by selecting the modules of the right arm and using Mirror in the Module Hierarchy."
       - "Make one connector unresolved on purpose, for example by renaming a bone or removing a socket. Then fix it with Use Selected or with the hierarchy dropdown. Take a screenshot of the red none before the fix and another one after the fix."
       - "Create your own module. Make a new Control Rig, choose Switch to Rig Module, and set its Name, Icon and Description. Add one Secondary connector with a Type Rule, and then add your module to CR_Modular_Hero."
-      - "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and record a short clip."
-    done_when: "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module, and send the Sequencer clip. Add 4 lines about what your module does and how its connectors resolve."
+      - "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and take a screenshot of each pose."
+    done_when: "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module. Also send the screenshots of your 3 poses in Sequencer, or a short GIF of them. Add 4 lines about what your module does and how its connectors resolve."
     xp: 250
     verify_type: screenshot
     quiz:
@@ -1794,9 +1794,9 @@ quests:
       - "Right-click the section again and choose Apply Clothing Asset, then CA_Cape. Open Window > Clothing and click Activate Cloth Paint."
       - "Create a Max Distance mask. Paint the value 0 along the shoulders, so the cloth stays fixed there. Then use the Gradient tool to go down to a large value at the hem, the bottom edge of the cape. Hold H to preview the cloth."
       - "Add a Backstop Distance mask so that the cape cannot pass into the back of the character. Then tune these Config values: Damping, Gravity Scale and Collision Thickness. Set Wind Method to Accurate."
-      - "Play the character with a run animation and a turn, and record a clip of 20 seconds. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh."
+      - "Play the character with a run animation and a turn for about 20 seconds, and take screenshots or record a short GIF of the cloth moving. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh."
       - "Read the overview page of the Panel Cloth Editor. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
-    done_when: "Send screenshots of the Clothing panel with your masks and of the Config values you changed, and send the 20 second clip. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
+    done_when: "Send screenshots of the Clothing panel with your masks and of the Config values you changed. Also send two screenshots or a short GIF of the cloth moving while the character runs and turns, and you can paste a link to a longer video. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
     xp: 120
     verify_type: screenshot
     quiz:
@@ -2055,10 +2055,10 @@ quests:
       - "Open your Mannequin Skeletal Mesh. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody."
       - "Right-click the bone spine_01 and use Recursively Set Blend Scales to set it and all the bones below it to 1. Set the pelvis and the leg bones to 0."
       - "In the Animation Blueprint of your character, add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect your locomotion as the base pose, and connect a Slot that plays an upper body montage as the blend pose."
-      - "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it BP_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5."
-      - "In your State Machine, select the transition rule from Idle to Walk and set its Blend Profile to BP_LegsFast. Also set the same profile on a Blend Poses by bool node."
+      - "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it Profile_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5."
+      - "In your State Machine, select the transition rule from Idle to Walk and set its Blend Profile to Profile_LegsFast. Also set the same profile on a Blend Poses by bool node."
       - "Play in the editor. Compare how the character stops with the profile and without it."
-    done_when: "Send a screenshot of the Skeleton Tree that shows the Blend column with the BM_UpperBody values, a screenshot of the Details panel of the Layered blend per bone node with Blend Mode set to Blend Mask, and a screenshot of the Details panel of a transition rule with BP_LegsFast assigned."
+    done_when: "Send a screenshot of the Skeleton Tree that shows the Blend column with the BM_UpperBody values, a screenshot of the Details panel of the Layered blend per bone node with Blend Mode set to Blend Mask, and a screenshot of the Details panel of a transition rule with Profile_LegsFast assigned."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -2115,10 +2115,10 @@ quests:
       - "From your Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save."
       - "In the AnimGraph, add a Slot node after the State Machine and set its Slot Name to FullBody."
       - "Add a second Slot node and set it to UpperBody. Connect it to a Layered blend per bone node that uses a Branch Filter on spine_01, so that only the upper body plays the slot animation."
-      - "Enable Always Update Source Pose on the FullBody slot. Read in the documentation what difference this setting makes, and note it."
+      - "Select the FullBody Slot node and enable Always Update Source Pose in its Details panel. With this setting on, the pose that goes into the Slot node keeps updating while a montage plays over it. With it off, that source pose is not updated during the montage. Write down in one line which behavior you need for your character."
       - "Make two montages, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops."
       - "In a Level Sequence, add your character and an Animation track. Right-click the animation section, open Properties, find Slot Name and type FullBody."
-    done_when: "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short clip or screenshot of AM_Emote interrupting AM_Reload."
+    done_when: "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short GIF or two screenshots of AM_Emote interrupting AM_Reload."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -2887,9 +2887,9 @@ quests:
         answer_index: 1
         explain: "Float, Integer and Vector 2D Controls are limited by default to a 0 - 100 range, which is useful for slider Controls."
       - q: "You want to move a new Bone or a Null in the viewport. Which mode must be active?"
-        choices: ["Backwards Solve", "Setup Event", "Debug Mode", "Forwards Solve"]
+        choices: ["Backwards Solve", "Construction Event (formerly Setup Event)", "Debug Mode", "Forwards Solve"]
         answer_index: 1
-        explain: "Setup Event mode lets you edit the Initial Pose of an element in the viewport. Enabling it also shows all Nulls."
+        explain: "Construction Event mode (called Setup Event in older versions) lets you edit the Initial Pose of an element in the viewport. Enabling it also shows all Nulls."
       - q: "Which transform value do you change when you animate a Control in Sequencer?"
         choices: ["Initial", "Offset", "Current", "Parent"]
         answer_index: 2
@@ -2922,11 +2922,11 @@ quests:
       - "Open a Control Rig that has at least four controls, for example CR_Manny_FKArm from quest AQ55."
       - "Select each control in turn. In the Details panel, under Control Shape, pick a different Shape. Set the controls of the left side to blue and the controls of the right side to red."
       - "In the Settings of the Content Browser, enable Show Engine Content and Show Plugin Content. Find the shape library in this folder: Engine, then Plugins, then Control Rig Content, then Controls."
-      - "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRGL_Project, and open it."
+      - "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRSL_Project, and open it."
       - "Model or export a simple .fbx shape, such as a flat arrow or a ring. Import it with Import Textures turned off and Material Import Method set to Do Not Create Material. Name it SM_CtrlArrow."
-      - "In CRGL_Project, add an element to Gizmos. Set Gizmo Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin."
-      - "In your Control Rig, open Class Settings and set Gizmo Library to CRGL_Project. Then set the Shape of one control to Arrow."
-    done_when: "Send two screenshots. The first shows CRGL_Project open with the Gizmos array and your Arrow entry. The second shows the Control Rig viewport with the Arrow shape on one control, and the blue and red colors on the other controls."
+      - "In CRSL_Project, add an element to the Shapes array (the documentation page still uses the old name, Gizmos). Set Shape Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin."
+      - "In your Control Rig, open Class Settings and add CRSL_Project under Shape Libraries (the documentation page calls this property Gizmo Library). Then set the Shape of one control to Arrow."
+    done_when: "Send two screenshots. The first shows CRSL_Project open with the Shapes array and your Arrow entry. The second shows the Control Rig viewport with the Arrow shape on one control, and the blue and red colors on the other controls."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -2935,9 +2935,9 @@ quests:
         answer_index: 0
         explain: "Select the control and find the Control Shape properties in the Details panel. Shape is a drop-down and Color opens the Color Picker."
       - q: "Which Class Settings property points a Control Rig at its shape library?"
-        choices: ["Shape Source", "Gizmo Library", "Mesh Library", "Control Style"]
+        choices: ["Shape Source", "Shape Libraries (called Gizmo Library on the docs page)", "Mesh Library", "Control Style"]
         answer_index: 1
-        explain: "Class Settings in the Control Rig Editor shows the Gizmo Library property, which references a ControlRigGizmoLibrary asset."
+        explain: "Class Settings in the Control Rig Editor shows the Shape Libraries property (Gizmo Library on the docs page), which references a Control Rig Shape Library asset."
       - q: "Why can you not see the default shape library in the Content Browser at first?"
         choices: ["It is stored outside the project as a text file", "It only exists after you package the project", "It lives in Engine > Plugins, so Show Engine Content and Show Plugin Content must be enabled", "It is hidden until a control is selected"]
         answer_index: 2
@@ -2947,9 +2947,9 @@ quests:
         answer_index: 1
         explain: "Control Shapes are represented using Static Meshes, stored in the same folder as the library asset."
       - q: "Which library property is the array that fills the Shape drop-down on controls?"
-        choices: ["Default Material", "Static Mesh", "Transform", "Gizmos"]
+        choices: ["Default Material", "Static Mesh", "Transform", "Shapes (called Gizmos on the docs page)"]
         answer_index: 3
-        explain: "The Gizmos array holds each shape's Name, Static Mesh and Transform. Add Element adds a new shape."
+        explain: "The Shapes array (Gizmos on the docs page) holds each shape's Name, Static Mesh and Transform. Add Element adds a new shape."
       - q: "When importing an .fbx to use as a control shape, what does the page recommend for materials?"
         choices: ["Import Textures on and create a material per shape", "Import Textures off and Material Import Method = Do Not Create Material", "Assign the mannequin material", "Use a translucent material"]
         answer_index: 1
@@ -2959,9 +2959,9 @@ quests:
         answer_index: 1
         explain: "It is the Vector 3 Material Parameter from the Default Material that is affected when you change Color on a Control Shape."
       - q: "Which property gives the shape used when a new control is first added?"
-        choices: ["Gizmo Name and Static Mesh at the top of the library", "The last Gizmos entry", "The control's Offset transform", "The Preview Mesh"]
+        choices: ["The default shape (name and Static Mesh) at the top of the library", "The last entry of the Shapes array", "The control's Offset transform", "The Preview Mesh"]
         answer_index: 0
-        explain: "Gizmo Name, Static Mesh and Transform at the top of the library define the initial Control Shape for a new control."
+        explain: "The shape name, Static Mesh and Transform at the top of the library define the initial Control Shape for a new control."
     flavors:
       _default: {why: "Clear shapes and colors make a rig easy to read for anyone who animates with it."}
       animation: {why: "Left blue, right red, and distinct shapes per body part is how animators find controls fast.", do: "Make all foot controls a flat box and all hand controls a ring."}
@@ -3304,13 +3304,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-debugging-in-unreal-engine"
     checklist:
       - "Open CR_Manny_FKArm, or any other mannequin rig. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose."
-      - "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Setup Event, so that the starting A-pose is stored."
+      - "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Construction Event, so that the starting A-pose is stored. The documentation page still uses the old name of this event, Setup Event."
       - "Add a second Rig Pose variable named ArmsPose. Fill it with a Get Pose Cache node that has Element Type set to Bones, and whose Items to Set input comes from a Get Children node of the left upperarm bone."
       - "On Forwards Solve, add an Apply Pose Cache node that reads RestPose. Add a Float variable named RestWeight and connect it to the Weight pin."
       - "In Preview Scene Settings, set a walk animation as the Preview Controller. Change RestWeight from 0 to 1 and watch the rig blend to the A-pose."
       - "Add a Draw Pose Cache node for ArmsPose, and confirm that only the elements of the arm are drawn."
       - "Add a Branch node so that RestPose is only stored when a Bool variable named StorePose is true."
-    done_when: "Send two screenshots. The first shows the graph with Get Pose Cache on the Setup Event, and Apply Pose Cache with a Weight variable on Forwards Solve. The second shows the viewport with a walk animation playing and RestWeight at 0.5, and the axes of Draw Pose Cache on the arm."
+    done_when: "Send two screenshots. The first shows the graph with Get Pose Cache on the Construction Event, and Apply Pose Cache with a Weight variable on Forwards Solve. The second shows the viewport with a walk animation playing and RestWeight at 0.5, and the axes of Draw Pose Cache on the arm."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -3319,9 +3319,9 @@ quests:
         answer_index: 1
         explain: "Poses are stored as variables of type Rig Pose in the My Blueprint panel."
       - q: "In the quickstart, which event is the Set node connected to so the initial A-pose is stored?"
-        choices: ["Forwards Solve", "Backwards Solve", "Setup Event", "Event Tick"]
+        choices: ["Forwards Solve", "Backwards Solve", "Construction Event (called Setup Event on the docs page)", "Event Tick"]
         answer_index: 2
-        explain: "Connecting the Set to the Setup Event stores the character's initial A-pose."
+        explain: "Connecting the Set to the Construction Event (the docs page still calls it the Setup Event) stores the character's initial A-pose."
       - q: "Which node writes a stored pose back onto the rig?"
         choices: ["Get Pose Cache", "Apply Pose Cache", "Draw Pose Cache", "Get Pose Cache Transform"]
         answer_index: 1
@@ -3557,7 +3557,7 @@ quests:
       - "In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root."
       - "Turn on Enable Debug Draw. In the preview, move the Effector Location, shown in red, and the Joint Target Location, shown in green. Watch the knee point toward the green target."
       - "Set Effector Location Space to World. In the Event Graph, do a Line Trace from foot_l down to the floor, and store the hit location in a Vector variable named FootTarget_L. Connect this variable to Effector Location."
-      - "Set Joint Target Location Space to Bone with Joint Target set to calf_l. Give it a small forward offset so that the knee bends in a natural way."
+      - "Select the Two Bone IK node. In its Details panel, set Joint Target Location Space to Bone Space and choose calf_l as the Joint Target bone. Then type a small value, for example 30, into one axis of Joint Target Location and watch the green target in the preview. Use the axis that moves the green target in front of the knee, so that the knee bends forward in a natural way."
       - "Place BP_ThirdPersonCharacter on a low step or a slope and press Play. Add a Float variable named FootAlpha and connect it to the Alpha of the node, so that you can blend the effect off."
       - "Enable Allow Stretching with Start Stretch Ratio 0.9 and Max Stretch Scale 1.2. Move the target too far away and note how the leg stretches."
       - "Do the same for foot_r. You can also duplicate the setup and rename the variables."
@@ -3872,7 +3872,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/root-motion-in-unreal-engine"
     checklist:
       - "Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
-      - "Open a landing animation that has root motion, and go to Windows > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers."
+      - "Open a landing animation that has root motion, and go to Window > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers."
       - "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details."
       - "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time."
       - "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround."
@@ -3890,7 +3890,7 @@ quests:
         answer_index: 1
         explain: "The page lists the Animation Locomotion Library plugin as the first prerequisite. Enable it and restart the editor."
       - q: "Where do you generate the distance curve for a sequence?"
-        choices: ["Curve Editor > Add Curve", "Asset Details > Root Motion > Bake Curve", "Windows > Animation Data Modifiers > Add Modifier > Distance Curve Modifier", "Right-click the animation > Create > Distance Curve"]
+        choices: ["Curve Editor > Add Curve", "Asset Details > Root Motion > Bake Curve", "Window > Animation Data Modifiers > Add Modifier > Distance Curve Modifier", "Right-click the animation > Create > Distance Curve"]
         answer_index: 2
         explain: "The Distance Curve Modifier is an Animation Data Modifier. You add it in that window and press Apply All Modifiers."
       - q: "You are distance matching a landing animation. Which Axis setting does the page recommend?"
@@ -4002,7 +4002,7 @@ quests:
       - "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends."
       - "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V."
       - "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies."
-      - "Open Windows > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values."
+      - "Open Window > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values."
       - "Use BP_RagdollPawn, a Blueprint with a Skeletal Mesh Component that has Collision Enabled and ignores the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Press Play and compare with the default profile."
     done_when: "Send a screenshot of the elbow constraint with its arc in the viewport and the Details panel. Also send a screenshot of the Profiles tab that shows CP_Stiff assigned, and a screenshot of the Blueprint graph that applies it."
     xp: 65
@@ -4123,7 +4123,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-profiles-for-bodies-and-constraints-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-asset-editor-in-unreal-engine---tools-and-profiles"
     checklist:
-      - "Open the Physics Asset of the character and go to Windows > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody."
+      - "Open the Physics Asset of the character and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody."
       - "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled."
       - "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset."
       - "Create BP_PhysAnimPawn with a Skeletal Mesh Component. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01."
@@ -4135,9 +4135,9 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where do you create a Physical Animation Profile?"
-        choices: ["Physics Asset Editor > Windows > Profiles > New under Physical Animation Profiles", "Project Settings > Physics > Profiles", "In the Animation Blueprint Class Defaults", "By right-clicking a bone in the Skeleton Editor"]
+        choices: ["Physics Asset Editor > Window > Profiles > New under Physical Animation Profiles", "Project Settings > Physics > Profiles", "In the Animation Blueprint Class Defaults", "By right-clicking a bone in the Skeleton Editor"]
         answer_index: 0
-        explain: "The page opens the Profiles window from the Windows menu of the Physics Asset Editor and adds the profile with New."
+        explain: "The page opens the Profiles window from the Window menu of the Physics Asset Editor and adds the profile with New."
       - q: "Which starting values does the page suggest for a Physical Animation profile?"
         choices: ["0, 0, 0, 0, 0, 0", "100, 1000, 100, 1000, 50, 50", "1, 1, 1, 1, 1, 1", "1000, 100, 1000, 100, 0, 0"]
         answer_index: 3
@@ -4372,7 +4372,7 @@ quests:
     checklist:
       - "Export one animation from your DCC tool (Blender, Maya or 3ds Max) with the Animations checkbox enabled. Export only the skeleton, and put one animation in each file."
       - "In the Content Browser, go to the folder where the animation should be stored. Click Import and pick the FBX file."
-      - "In the FBX Import Options, set Skeleton to your existing Skeleton, for example SK_Mannequin_Skeleton. Do not create a new one."
+      - "In the FBX Import Options, set Skeleton to your existing Skeleton. For the UE5 mannequins this is the asset named SK_Mannequin. Do not create a new one."
       - "Open the Animation section. Set Animation Length to Animated Time, and turn off Use Default Sample Rate so that the frame rate is read from the file."
       - "Type a name in Override Animation Name, for example A_Wave. Then click Import."
       - "Import a second animation, but this time use Set Range and import only the first 20 frames. Compare the two Animation Sequences."

@@ -210,8 +210,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 volumetric fog light shafts god rays"
     checklist:
-      - "Turn on Volumetric Fog, which is a setting on the Exponential Height Fog actor. Adjust the scene until you can see light shafts coming through a window."
-      - "Tune the volumetric scattering intensity of the light, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
+      - "Select the Exponential Height Fog actor in your scene. If there is none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog. Aim a Directional Light or a Spot Light through a window into a darker room, and adjust the scene until you can see light shafts coming through the window."
+      - "Select the light and change Volumetric Scattering Intensity in its Details panel, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
     done_when: "Send a screenshot that shows the light shafts."
     xp: 40
     verify_type: screenshot
@@ -234,7 +234,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 local fog volume"
     checklist:
-      - "Add 2 Local Fog Volumes to your scene. Place them so that they separate the foreground from the background."
+      - "In the Place Actors panel, search for Local Fog Volume and drag 2 of them into your scene. Scale and move them so that they separate the foreground from the background, for example one behind the main subject and one far away. Change the two Extinction values in the Details panel to make the fog thicker or thinner."
       - "Take one screenshot with the volumes and one screenshot without them, from the same view."
     done_when: "Send the before and after screenshots."
     xp: 30
@@ -258,7 +258,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 directional light source angle soft shadows"
     checklist:
-      - "Render the same view at 3 sun angles and with 2 Source Angle values for each, so that you get 6 renders."
+      - "Render the same view at 3 sun angles and with 2 Source Angle values for each, so that you get 6 renders. Select the Directional Light and rotate it to change the sun angle. Source Angle is in its Details panel, under Light: a small value gives sharp shadows and a large value gives soft shadows. Take each render from the same camera bookmark."
       - "Pick the render where the shapes are the easiest to read, and write one line that says why."
     done_when: "Send a contact sheet (one image that shows all 6 renders together), and say which one you picked."
     xp: 40
@@ -318,7 +318,7 @@ quests:
       - "Make 4 swatches: a rough dielectric, a glossy dielectric, a rough metal and a polished metal."
       - "Keep the Base Color values of each swatch in a plausible range. Do not use pure black or pure white."
       - "Add a normal map to one swatch. A normal map is a texture that fakes small bumps on the surface. Compare the swatch with and without it."
-      - "Check each swatch under your R1 lighting."
+      - "Check each swatch under the lighting you built in the earlier quests."
     done_when: "Send a screenshot of the 4 swatches under the same light, with a label on each one."
     xp: 70
     verify_type: screenshot
@@ -400,7 +400,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-paint-mode-in-unreal-engine"
     checklist:
       - "Build a landscape material that has 3 layers. Use a Landscape Layer Blend node, which is the node that mixes the layers based on where you paint."
-      - "Create the layer info objects, which are small assets that store where each layer is painted. Then paint all 3 layers on your R1 landscape."
+      - "Create the layer info objects, which are small assets that store where each layer is painted. Then paint all 3 layers on the landscape you made in the earlier quests."
       - "Stand at the height of a player and look at the ground. Keep the tiling scale sensible, so that the texture is not too large and not too small from there."
     done_when: "Send a screenshot of the painted landscape, and also a screenshot of the layer blend graph."
     xp: 90
@@ -480,8 +480,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 world aligned texture material function triplanar"
     checklist:
-      - "Apply a world-aligned texture to blockout meshes that you have scaled to different sizes."
-      - "Apply normal UV-based texturing to the same meshes, and compare the two results."
+      - "Make a material that uses a world-aligned texture: add the WorldAlignedTexture node, connect a Texture Object node with your texture to its TextureObject input, and connect its XYZ Texture output to Base Color. Apply the material to blockout meshes that you have scaled to different sizes. The pattern keeps the same size on all of them."
+      - "Make a second material that uses a normal Texture Sample node, which follows the UVs of the mesh. Apply it to the same meshes, and compare the two results. Look at how the pattern stretches on the scaled meshes."
     done_when: "Send a before and after screenshot."
     xp: 50
     verify_type: screenshot
@@ -504,7 +504,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 landscape grass type output"
     checklist:
-      - "In your landscape material, add a Landscape Grass Output node. Set it up so that one paint layer controls where the grass appears."
+      - "In your landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick a Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears."
       - "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
     done_when: "Send a screenshot that shows grass following a painted layer."
     xp: 50
@@ -528,7 +528,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 emissive material lumen light contribution"
     checklist:
-      - "Make an emissive screen or sign. Give its material an intensity parameter, so that you can change how strong the glow is."
+      - "Make an emissive screen or sign. In its material, multiply a color or a texture by a Scalar Parameter named Intensity and connect the result to Emissive Color. Make a Material Instance, so that you can change how strong the glow is, and try the values 1, 10 and 50."
       - "With Lumen on, check how much the glow lights the surfaces near it. Work out in which cases you would still need a real light."
     done_when: "Send a screenshot, and add one line that says when you would add a real light."
     xp: 40
@@ -692,7 +692,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
     checklist:
       - "Grade the scene in a Post Process Volume. Start with the white balance, then change the global settings, and then the shadows, midtones and highlights."
-      - "Export a screenshot together with a neutral LUT, which is a LUT that changes nothing yet. Grade it in an image editor, import the graded LUT again, and apply it as a LUT in the Post Process Volume."
+      - "Now grade with a LUT. Take a screenshot of the scene without a grade. Download the neutral LUT image, a LUT that changes nothing yet (256 x 16 pixels), from the Epic documentation page about color grading with Look-Up Tables. Open both in an image editor, apply the same color adjustments to the screenshot and to the LUT image, and save the LUT image. Import it into Unreal, open the texture, and set Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps. In the Post Process Volume, open Color Grading, then Misc, and assign it as the Color Grading LUT."
       - "Compare the manual grade with the LUT grade."
       - "Keep one screenshot without any grade for reference."
     done_when: "Send three stills taken from the same camera: one without a grade, one with the manual grade, and one with the LUT grade."
@@ -775,8 +775,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 pcg scatter rocks debris beginner"
     checklist:
-      - "Make a PCG graph that scatters debris or rocks on a surface."
-      - "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, or an exclusion rule, which removes objects from an area."
+      - "Make a PCG graph that scatters debris or rocks on a surface. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Right-click in the Content Browser, open PCG and choose PCG Graph. In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick your mesh under Mesh Entries. Place a PCG Volume in the level, set Graph on its PCG component, and click Generate."
+      - "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, for example a Density Filter node after the Surface Sampler. It can also be an exclusion rule, which removes objects from an area, for example a Difference node that subtracts the points near a spline along the path."
     done_when: "Send a screenshot of the scattered objects, and also a screenshot of the graph."
     xp: 80
     verify_type: screenshot
@@ -799,8 +799,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 water system lake material tuning"
     checklist:
-      - "Add a small lake or a river to your scene with the Water system."
-      - "Tune the color and the scattering of the water until it matches your mood target. Scattering controls how light spreads inside the water, which changes how clear or murky it looks."
+      - "Add a small lake or a river to your scene with the Water system. Enable the Water plugin in Edit > Plugins and restart the editor. Then search for Water Body in the Place Actors panel and drag a Water Body Lake or a Water Body River into the level."
+      - "Tune the color and the scattering of the water until it matches your mood target. Select the water body and find Water Material in its Details panel. Make a copy of that Material Instance for your scene, assign the copy, and change its Absorption and Scattering values. Scattering controls how light spreads inside the water, which changes how clear or murky it looks."
     done_when: "Send a still image of the water in your scene."
     xp: 70
     verify_type: screenshot
@@ -823,8 +823,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 procedural foliage spawner volume"
     checklist:
-      - "Set up a Procedural Foliage Volume with 2 species."
-      - "Tune the spacing settings until the edge of the forest looks natural and not uniform."
+      - "Set up a Procedural Foliage Volume with 2 species. First open Edit > Editor Preferences, find the Experimental section and enable Procedural Foliage. Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the forest edge, and click Resimulate in its Details panel."
+      - "Tune the spacing settings in the two Static Mesh Foliage assets, such as Shade Radius, Initial Seed Density and Average Spread Distance, and click Resimulate after each change. Continue until the edge of the forest looks natural and not uniform."
     done_when: "Send a screenshot of the forest edge."
     xp: 60
     verify_type: screenshot

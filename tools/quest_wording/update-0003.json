@@ -1,0 +1,155 @@
+{
+ "GDQ35": {
+  "checklist": [
+   "Enable the Gameplay Abilities plugin and restart the editor. Attribute Sets cannot be made in Blueprint, so add one small C++ class named UAS_Basic with the parent AttributeSet. Give it two FGameplayAttributeData properties, Health and Stamina. Copy the code from the Attributes page and compile.",
+   "Add an Ability System Component to BP_ThirdPersonCharacter. In its Default Starting Data, add AS_Basic and a Data Table named DT_AttributeInit with the row type AttributeMetaData. In the table, set AS_Basic.Health to 100 and AS_Basic.Stamina to 50.",
+   "Create three Gameplay Effect Blueprints. GE_Damage has Duration Policy Instant and a modifier that adds -25 to Health. GE_SprintCost is Instant and adds -10 to Stamina. GE_Regen uses Has Duration with 5 s, has a Period of 1 s, and adds +5 to Stamina.",
+   "Create a Blueprint named GA_Slam with the parent GameplayAbility. In Activate Ability, call Commit Ability, then play a short montage or use a Delay. Then damage an overlapped enemy: make Target Data from the enemy with the node Ability Target Data from Actor, and give it to Apply Gameplay Effect to Target with GE_Damage. The enemy needs its own Ability System Component with AS_Basic, because the effect changes the Health of the actor that receives it. Finish with End Ability. Add State.Stunned as an Activation Blocked Tag, so the ability cannot start while the character is stunned.",
+   "On Begin Play, on the server side, call Give Ability with GA_Slam. Bind a key to Try Activate Ability By Class. Add a second key that applies GE_Regen to the character itself.",
+   "Make a widget named WBP_Stats with a health bar. Update it from On Attribute Changed, or read Get Float Attribute on each tick. Press Play, use the ability, and watch Health and Stamina change."
+  ]
+ },
+ "GDQ39": {
+  "checklist": [
+   "Create a persistent level named L_Hub with a Player Start and a corridor. Create two more levels, L_Arena and L_Reward, each with a few graybox props. In L_Hub, open Window > Levels and use Add Existing to add both levels as sublevels with the streaming type Blueprint.",
+   "Place a Level Streaming Volume in L_Hub that covers the corridor and the whole arena. In the Levels window, open the details of L_Arena and add the volume under Streaming Volumes. Uncheck Initially Loaded and Initially Visible. Then set the Streaming Usage of the volume to SVB Visibility Blocking on Load.",
+   "Make an Actor Blueprint named BP_LevelStreamer with a Box collision and an editable Name variable called LevelToStream. When the player begins to overlap the box, call Load Stream Level with Make Visible After Load turned on. On End Overlap, call Unload Stream Level. Place one in front of the door of L_Reward and set LevelToStream to L_Reward.",
+   "Now control the pacing. A level that has a streaming volume should not also be loaded from a Blueprint, so L_Reward gets no volume. In BP_LevelStreamer, add a Boolean variable named Locked that is Instance Editable, and only call Load Stream Level when Locked is false. Turn Locked on for the streamer in front of L_Reward. When the player picks up a key in the arena, set Locked to false on that streamer. This way the reward room only starts to load after the player has the key.",
+   "Test in Play In Editor, and then test again as Standalone Game. Note the difference in when the levels appear.",
+   "Write 3 sentences that say where a player could see a hitch, which is a short freeze, and how you would resize a volume to hide it."
+  ]
+ },
+ "GDQ40": {
+  "checklist": [
+   "Enable the MassEntity, MassGameplay and MassCrowd plugins and restart the editor. In a Third Person level, add a NavMeshBoundsVolume that covers a large open area.",
+   "Create a Mass Entity Config asset named DA_Crowd_Walker. Add traits, which are sets of features, for collision, movement and avoidance. Also add a visualization trait that uses a low-poly Static Mesh (Instanced Static Mesh).",
+   "Place a MassSpawner actor in the level. Set its Entity Types to DA_Crowd_Walker with a Count of 200. Under Spawn Data Generators, add an element and choose EQS SpawnPoints Generator. Give it an Environment Query that makes points on the nav mesh, so that the entities are spread over the open area.",
+   "Press Play. Take a screenshot with stat fps and stat unit visible on screen. Then set Count to 1000 and compare the numbers.",
+   "Make a second config named DA_Crowd_Runner as a child of DA_Crowd_Walker. Change only the movement speed in it. Spawn 50 of them with a second spawner.",
+   "Write 5 sentences. Say in your own words what a Fragment, an Entity, an Archetype and a Processor are. Also name one case in your game where Mass would matter and one case where plain Actors are enough."
+  ]
+ },
+ "GDQ44": {
+  "checklist": [
+   "Read the node pages for Crouch, Un Crouch and Can Crouch, the Characters page, and the Third Person Template page. Also read the Enhanced Input part of the sprint tutorial.",
+   "In your character Blueprint, select the Character Movement component. In the Details panel, open Nav Movement, then Movement Capabilities, and enable Can Crouch. Then search the Details panel for Crouched Half Height and note its value. It is half the height of the capsule while crouched.",
+   "Create an Input Action named IA_Crouch with the value type Digital (bool) and a Down trigger. Map it to the C key in IMC_Default.",
+   "Call Crouch from the Triggered pin of IA_Crouch, and call Un Crouch from its Completed pin. Print Is Crouched after each call to see the change.",
+   "On the Character Movement component, set Max Walk Speed Crouched to about half of Max Walk Speed.",
+   "Build a test corridor with a low tunnel that is taller than the crouched capsule but shorter than the standing capsule. Also add a tunnel that is too low for both, so players learn the rule.",
+   "Add a Box Collision above the tunnel exit. While the player overlaps it, keep the player crouched. You can call Crouch again when the player tries to stand up, or block Un Crouch with a bool variable."
+  ]
+ },
+ "GDQ47": {
+  "checklist": [
+   "Read the Projectile Movement section of the Movement Components page, the Arena Shooter section of the First Person Template page, the Implementing Projectiles overview, and the Set Life Span node page.",
+   "Create a First Person project with the Arena Shooter variant. Open BP_FirstPersonProjectile in Content/Variant_Shooter/Blueprints/Pickups/Projectiles and read how it spawns, how it hits, and how it applies an impulse.",
+   "In your own project, make a Blueprint named BP_Ball from Actor. Give it a Sphere Collision as the root, a Static Mesh, and a Projectile Movement component. Set Initial Speed to 2000, Max Speed to 2000 and Projectile Gravity Scale to 0.5.",
+   "In the player character, from the Started pin of IA_Fire, add a Spawn Actor from Class node with the class BP_Ball. Spawn it at the camera location plus 100 units forward, and use the camera rotation.",
+   "In BP_Ball, add Event Hit. If the Other Comp is simulating physics, call Add Impulse on it with the velocity of the ball multiplied by 20. Then call Destroy Actor. On BeginPlay, call Set Life Span with 3.0 so the ball removes itself after 3 seconds.",
+   "Make three Child Blueprints of BP_Ball. BP_Ball_Bouncy has Should Bounce on, Bounciness 0.8, and is not destroyed on hit. BP_Ball_Heavy has Gravity Scale 2 and Initial Speed 1200. BP_Ball_Homing has Is Homing Projectile on and a Homing Acceleration Magnitude of about 5000. Its target cannot be picked in the Details panel, so set it on BeginPlay: find an actor you choose, for example with Get Actor Of Class, and use Set Homing Target Component on the Projectile Movement component with the root component of that actor.",
+   "Place some physics cubes and a target dummy in the level. Write one line for each ball that says what kind of weapon it would suit."
+  ]
+ },
+ "GDQ56": {
+  "checklist": [
+   "Open the HUD from quest GDQ49, or a new WBP_HUD. Add a Safe Zone widget under the Canvas Panel and move your bars and text inside it.",
+   "Anchor the health bar to the bottom with the horizontal stretch preset, so that it grows with the viewport. Anchor a minimap Image to the bottom-right corner.",
+   "Use the Screen Size button in the Designer to preview a phone in Portrait, a 4:3 monitor and a 1080p TV. Fix anything that goes outside the viewport.",
+   "Open Project Settings and go to User Interface. Add a key to the DPI Curve so that the interface is larger at 720. Check that the DPI Scale Rule is Shortest Side.",
+   "Set the debug title safe zone to a value less than 1: open the console with the backtick key and type r.DebugSafeZone.TitleRatio 0.9. Confirm that the red unsafe area appears and that your widgets scale to stay inside the safe area. Type the same command with the value 1 to turn it off again.",
+   "Open Editor Preferences, then Level, then Play, then Game Viewport Settings, and choose a phone size. Play in a New Editor Window. Take screenshots at two very different sizes."
+  ]
+ },
+ "GDQ64": {
+  "checklist": [
+   "Start from the crowd of quest GDQ40: the MassEntity, MassGameplay and MassCrowd plugins, DA_Crowd_Walker with movement and avoidance traits, and a MassSpawner with 200 entities. If you do not have it, build it first.",
+   "Build a corridor from two long wall meshes with a gap of about 300 units between them, so that the crowd must squeeze through.",
+   "Open Tools > Debug > Visual Logger and select the MassSimulationSubsystem track. In Editor Preferences, under Visual Logger, enable Stick to Recent Data. In the console, run the command ai.debug.mass.SetDebugEntityRange for a few entities, and then use Simulate.",
+   "Look at the categories LogAvoidance, LogAvoidanceVelocity and LogAvoidanceAgents. Find the obstacle edges and the predicted collisions near the gap.",
+   "Press Play. Press the apostrophe key to open the Gameplay Debugger. Then press Shift+O for the Entity Overview and Shift+V for the avoidance view. Take a screenshot at the gap.",
+   "In the avoidance trait of DA_Crowd_Walker, change the moving avoidance parameters, for example the separation settings. Use Simulate again and compare how the crowd flows through the gap. Note the value of stat fps before and after."
+  ]
+ },
+ "GDQ79": {
+  "checklist": [
+   "Create a material named M_PP_Damage. In the Details panel, set Material Domain to Post Process and set Blendable Location to After Tonemapping.",
+   "Build the graph. Add a SceneTexture node set to PostProcessInput0, which gives you the color of the scene. Make a round mask from Screen Position, using the distance from the point 0.5, 0.5. Use a Lerp node to blend from the scene color to a red color. For the blend amount, multiply the mask by a Scalar Parameter named Intensity with the default value 0. Connect the result to Emissive Color.",
+   "Make a Material Instance named MI_PP_Damage. Add an unbound Post Process Volume to the level, which is a volume that affects the whole level. Add MI_PP_Damage to its Blendables array, under Post Process Materials.",
+   "In BP_ThirdPersonCharacter, on Begin Play, call Create Dynamic Material Instance with MI_PP_Damage as the parent and store the result in a variable. A dynamic instance is a copy of the material that a Blueprint can change while the game runs. Then call Add or Update Blendable on the Camera Component with this dynamic instance and a Weight of 1, so that the camera uses the copy you can change. On damage, call Set Scalar Parameter Value on the dynamic instance to set Intensity to 1.0, and then bring it back to 0 over 0.5 seconds with a Timeline.",
+   "Test it. With the default Intensity of 0, confirm that the screen looks unchanged. Then change the default of the parameter to 1 and confirm that the red vignette is always on. Set it back to 0.",
+   "Write 2 sentences: why the default parameter value must make the screen look as if nothing happened, and why you chose After Tonemapping."
+  ]
+ },
+ "GDQ85": {
+  "checklist": [
+   "Make two small maps named L_Arena_A and L_Arena_B. In World Settings, set GameMode Override to BP_GM_Rounds on both. Give each map a floor of a different color, so that you can tell them apart.",
+   "Make an almost empty map named L_Transition with only a floor. Open Project Settings, go to Maps & Modes, and set Transition Map to L_Transition.",
+   "In the Class Defaults of BP_GM_Rounds, turn on Use Seamless Travel.",
+   "At the end of a round, from your End Match key or your timer, run a server travel to the other map. In a Blueprint, use Execute Console Command with the text servertravel L_Arena_B, or ask a programmer to expose ServerTravel. Run it only from the server.",
+   "Seamless travel does not work in a normal Play In Editor session, so test it as a standalone game. Open the dropdown next to the Play button, set Number of Players to 2 and Net Mode to Play As Listen Server, and choose Standalone Game. Trigger the travel. Both windows must arrive in L_Arena_B, and the client must stay connected without a reconnect.",
+   "Now turn Use Seamless Travel off and play again. Describe the difference that you see in the client window.",
+   "Write 3 sentences: which travel type you used, why the transition map exists, and one thing that was kept across the travel."
+  ]
+ },
+ "GDQ88": {
+  "checklist": [
+   "Open Edit > Plugins and enable Game Features and Modular Gameplay. Both are in the Gameplay category. Then restart the editor.",
+   "In the Plugins window, click Add and choose Game Feature (Content Only). Name the plugin GF_DoubleJump. Check in the Content Browser that it is stored under /Plugins/GameFeatures/.",
+   "Inside the content folder of the plugin, create a Data Asset of the class GameFeatureData. Name it GF_DoubleJump, the same name as the plugin.",
+   "Inside the plugin, create an Actor Component named BPC_DoubleJump. On Begin Play, get the owner, cast it to Character, and set Jump Max Count to 2. Keep all the jump logic in the component. The character only needs one node: in BP_ThirdPersonCharacter, on Begin Play, call Add Game Framework Component Receiver with Self as the Receiver. Without this node, the character does not receive components from a Game Feature.",
+   "Open the GF_DoubleJump Data Asset. In Actions, add one Add Components action. Set the Actor Class to BP_ThirdPersonCharacter, not to the base Actor class, and set the Component Class to BPC_DoubleJump. Leave Client and Server both turned on.",
+   "Restart the editor one time, because the Data Asset loads at startup. Press Play and confirm that you can double jump. Then remove the action or disable the plugin, play again, and confirm that the double jump is gone.",
+   "Write 3 sentences: why the component is stored in the plugin, why you chose the character class and not Actor, and what other Action type you could use for a debug cheat."
+  ]
+ },
+ "GDQ7": {
+  "checklist": [
+   "Post your arena in the #showcase channel with the tag Critique-wanted. Include a screenshot from above, one screenshot at eye level, and a link to your GDD.",
+   "Ask one specific question in your post, for example 'Is the left flank too safe?'. Do not ask a general question such as 'thoughts?'.",
+   "Start an iteration log. For each entry, write the date, the feedback you received, what you changed, and what you did not change and why.",
+   "Make at least one change that is based on the feedback, and write it in your log.",
+   "Give one critique on the Critique-wanted post of another person in #showcase. Name 1 thing that works, 1 specific issue, and 1 next step."
+  ],
+  "done_when": "Send a link to your Critique-wanted post in #showcase, your iteration log, and the critique you gave."
+ },
+ "LDQ40": {
+  "checklist": [
+   "Finish one encounter space. It needs an entry, an exit, cover built to your metrics, flanks, high ground with a cost, a NavMesh, and 3 or more enemies.",
+   "Apply your color key and your lighting from quest LDQ36.",
+   "Update the one-page GDD so that it matches what you built. Check the goal, the verbs, the beats, the fail state and the tuning knobs.",
+   "Post the space in the #showcase channel with the tag Critique-wanted, and ask one specific question.",
+   "Make at least one change that comes from the feedback. Take a screenshot before and after from the same bookmark, and write the change in your log.",
+   "Record a video of one full run in PIE from the entry to the exit, and upload it somewhere you can link to. Also take two or three screenshots of the run."
+  ],
+  "done_when": "Send screenshots of one full run in PIE with a pasted link to the video, your marked map from above, the link to your GDD, and screenshots from before and after the change you made after critique, with the link to your Critique-wanted post. A mentor reviews your work."
+ },
+ "GDQ9": {
+  "checklist": [
+   "Follow the Smart Objects quick start guide in a test level.",
+   "Place one Smart Object in your arena, for example a spot where an enemy takes cover or stands idle. Press Play and watch an AI character from the quick start guide find it and use it."
+  ],
+  "done_when": "Send two screenshots from PIE, or a short GIF, that show an AI character walking to the Smart Object in your arena and using it."
+ },
+ "GDQ2": {
+  "checklist": [
+   "Create an Actor Blueprint named BP_TriggerZone with a Box Collision component as its root. Add a Vector variable named BoxSize, give it a default value such as 200, 200, 100, and turn on Instance Editable. In the Construction Script, call Set Box Extent on the Box Collision and connect BoxSize to it. Now you can change the size of the box on each copy in the level from the Details panel.",
+   "Add the On Component Begin Overlap event. Compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues.",
+   "Add the On Component End Overlap event with the same filter. After the filter, add a Print String node with the text \"left zone\".",
+   "Push a physics cube (a cube with Simulate Physics turned on) into the zone. Confirm that nothing fires.",
+   "Also place a Trigger Box from the editor in the level, and handle its overlap once in the Level Blueprint. This way you have seen both ways to do it."
+  ]
+ },
+ "GDQ3": {
+  "done_when": "Send two or three screenshots from PIE, or a short GIF, that show the door opening and reversing halfway. Also send a screenshot of the Timeline curve and the graph."
+ },
+ "GDQ4": {
+  "done_when": "Send a screenshot of both lever graphs, and two PIE screenshots or a short GIF that show one lever opening the gate and another lever switching the lamp."
+ },
+ "GDQ10": {
+  "done_when": "Send two screenshots from PIE, or a short GIF, that show two waves, and a screenshot of the Details panel of the spawner."
+ },
+ "GDQ5": {
+  "done_when": "Send two or three screenshots, or a GIF of less than 30 seconds, taken while playing in the editor, that show you collecting all 3 coins and the win message appearing. Also send a screenshot of the AddCoin function."
+ }
+}

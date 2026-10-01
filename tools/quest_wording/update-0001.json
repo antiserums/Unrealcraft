@@ -1,0 +1,652 @@
+{
+ "AQ28": {
+  "checklist": [
+   "Create an Animation Layer Interface named ALI_Character: in the Content Browser click Add, then Animation, then Animation Layer Interface (the documentation page calls this menu item Animation Interface). Add three layers named FullBody, UpperBody and IK.",
+   "Give the UpperBody layer and the IK layer a pose input. Put all three layers in one Group, and give the Group a name that is not the default name.",
+   "Open ABP_Base, the Animation Blueprint of your character. In Class Settings, add ALI_Character under Interfaces.",
+   "Drag the three layers into the AnimGraph in this order: FullBody, then UpperBody, then IK. Connect them one after the other, and connect the last one to Output Pose.",
+   "Create a second Animation Blueprint named ABP_Rifle that also implements ALI_Character. In its UpperBody layer, put a different animation or an aim offset.",
+   "In BP_ThirdPersonCharacter, add a key press event that calls Link Anim Class Layers. Use the Mesh as Target and ABP_Rifle as In Class.",
+   "Press Play and press the key. Confirm that the upper body changes while the base locomotion keeps running."
+  ]
+ },
+ "AQ31": {
+  "done_when": "Send screenshots of the BP_FootSyncModifier graph that show OnApply and OnRevert. Also send a screenshot of a walk sequence that shows the generated FootSync track with its markers and the Animation Data Modifiers tab.",
+  "checklist": [
+   "Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it BP_FootSyncModifier.",
+   "Add a variable for the name of the foot bone, for example foot_l. Make the variable Instance Editable, so that you can change it later without opening the Blueprint.",
+   "Implement the OnApply function. First add a Notify track named FootSync. Then loop through the frames with Get Bone Pose for Frame, and add a sync marker at the frame where the foot is lowest.",
+   "Implement the OnRevert function so that it removes the FootSync notify track.",
+   "Open a walk animation and go to Window > Animation Data Modifiers. Click Add Modifier and choose BP_FootSyncModifier, set the bone name, and then choose Apply Modifier.",
+   "Check the new track and its markers in the Notifies area. Then choose Revert Modifier and confirm that the track is gone.",
+   "Now apply the modifier on the Skeleton instead of on one animation. Check that another animation also gets the track."
+  ]
+ },
+ "TAQ96": {
+  "done_when": "Send one screenshot of the OnApply graph of BP_BoneHeightCurveModifier, and one screenshot of an Animation Sequence that shows the BoneHeight curve with the Animation Data Modifiers tab open. The modifier must be applied and not marked Out of Date.",
+  "checklist": [
+   "Create a Blueprint Class with the parent Animation Modifier (search for it under All Classes) and name it BP_BoneHeightCurveModifier.",
+   "Add two variables and mark both as Instance Editable: BoneName (type Name) and CurveName (type Name, with the default value BoneHeight).",
+   "Implement the OnApply event with nodes from the Animation Blueprint Library. First add a Curve track with CurveName, and then loop over the frames of the sequence. For each frame, call Get Bone Pose for Frame with BoneName, read the Z of the location, convert the frame to a time with Get Time at Frame, and add a float curve key at that time.",
+   "Implement the OnRevert event so that it removes the curve track again.",
+   "Open a walk or jump Animation Sequence, go to Window > Animation Data Modifiers, click Add Modifier and pick BP_BoneHeightCurveModifier. Set BoneName to a bone whose parent is the root (for example pelvis), because Get Bone Pose returns values in local space, which means relative to the parent bone.",
+   "Right-click the modifier and choose Apply Modifier. Check that the BoneHeight curve now appears in the sequence. Then choose Revert, and confirm that the curve is gone.",
+   "Add the same modifier to the Skeleton asset and apply it there. Open a second sequence and confirm that the curve was added to it too."
+  ]
+ },
+ "AQ42": {
+  "done_when": "Send a screenshot of the Skeleton Tree that shows the Blend column with the BM_UpperBody values, a screenshot of the Details panel of the Layered blend per bone node with Blend Mode set to Blend Mask, and a screenshot of the Details panel of a transition rule with Profile_LegsFast assigned.",
+  "checklist": [
+   "Open your Mannequin Skeletal Mesh. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody.",
+   "Right-click the bone spine_01 and use Recursively Set Blend Scales to set it and all the bones below it to 1. Set the pelvis and the leg bones to 0.",
+   "In the Animation Blueprint of your character, add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect your locomotion as the base pose, and connect a Slot that plays an upper body montage as the blend pose.",
+   "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it Profile_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5.",
+   "In your State Machine, select the transition rule from Idle to Walk and set its Blend Profile to Profile_LegsFast. Also set the same profile on a Blend Poses by bool node.",
+   "Play in the editor. Compare how the character stops with the profile and without it."
+  ]
+ },
+ "AQ56": {
+  "checklist": [
+   "Open a Control Rig that has at least four controls, for example CR_Manny_FKArm from quest AQ55.",
+   "Select each control in turn. In the Details panel, under Control Shape, pick a different Shape. Set the controls of the left side to blue and the controls of the right side to red.",
+   "In the Settings of the Content Browser, enable Show Engine Content and Show Plugin Content. Find the shape library in this folder: Engine, then Plugins, then Control Rig Content, then Controls.",
+   "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRSL_Project, and open it.",
+   "Model or export a simple .fbx shape, such as a flat arrow or a ring. Import it with Import Textures turned off and Material Import Method set to Do Not Create Material. Name it SM_CtrlArrow.",
+   "In CRSL_Project, add an element to the Shapes array (the documentation page still uses the old name, Gizmos). Set Shape Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin.",
+   "In your Control Rig, open Class Settings and add CRSL_Project under Shape Libraries (the documentation page calls this property Gizmo Library). Then set the Shape of one control to Arrow."
+  ],
+  "done_when": "Send two screenshots. The first shows CRSL_Project open with the Shapes array and your Arrow entry. The second shows the Control Rig viewport with the Arrow shape on one control, and the blue and red colors on the other controls.",
+  "quiz": [
+   {
+    "q": "Where do you change the shape and color of a selected control?",
+    "choices": [
+     "The Control Shape properties in the Details panel",
+     "The Rig Graph context menu",
+     "Project Settings > Animation",
+     "The Preview Scene Settings"
+    ],
+    "explain": "Select the control and find the Control Shape properties in the Details panel. Shape is a drop-down and Color opens the Color Picker."
+   },
+   {
+    "q": "Which Class Settings property points a Control Rig at its shape library?",
+    "choices": [
+     "Shape Source",
+     "Shape Libraries (called Gizmo Library on the docs page)",
+     "Mesh Library",
+     "Control Style"
+    ],
+    "explain": "Class Settings in the Control Rig Editor shows the Shape Libraries property (Gizmo Library on the docs page), which references a Control Rig Shape Library asset."
+   },
+   {
+    "q": "Why can you not see the default shape library in the Content Browser at first?",
+    "choices": [
+     "It is stored outside the project as a text file",
+     "It only exists after you package the project",
+     "It lives in Engine > Plugins, so Show Engine Content and Show Plugin Content must be enabled",
+     "It is hidden until a control is selected"
+    ],
+    "explain": "The library is in Engine > Plugins > Control Rig Content > Controls, so both engine and plugin content must be shown."
+   },
+   {
+    "q": "What are control shapes made of?",
+    "choices": [
+     "Spline components",
+     "Static Meshes",
+     "Skeletal Meshes",
+     "2D sprites"
+    ],
+    "explain": "Control Shapes are represented using Static Meshes, stored in the same folder as the library asset."
+   },
+   {
+    "q": "Which library property is the array that fills the Shape drop-down on controls?",
+    "choices": [
+     "Default Material",
+     "Static Mesh",
+     "Transform",
+     "Shapes (called Gizmos on the docs page)"
+    ],
+    "explain": "The Shapes array (Gizmos on the docs page) holds each shape's Name, Static Mesh and Transform. Add Element adds a new shape."
+   },
+   {
+    "q": "When importing an .fbx to use as a control shape, what does the page recommend for materials?",
+    "choices": [
+     "Import Textures on and create a material per shape",
+     "Import Textures off and Material Import Method = Do Not Create Material",
+     "Assign the mannequin material",
+     "Use a translucent material"
+    ],
+    "explain": "Shapes do not need textures or materials, so disable Import Textures and set Material Import Method to Do Not Create Material."
+   },
+   {
+    "q": "What does the Material Color Parameter property in the library do?",
+    "choices": [
+     "Sets the color of the viewport background",
+     "Names the Vector 3 parameter of the Default Material that the control's Color property changes",
+     "Chooses the color of selected bones",
+     "Picks the color of the rig graph nodes"
+    ],
+    "explain": "It is the Vector 3 Material Parameter from the Default Material that is affected when you change Color on a Control Shape."
+   },
+   {
+    "q": "Which property gives the shape used when a new control is first added?",
+    "choices": [
+     "The default shape (name and Static Mesh) at the top of the library",
+     "The last entry of the Shapes array",
+     "The control's Offset transform",
+     "The Preview Mesh"
+    ],
+    "explain": "The shape name, Static Mesh and Transform at the top of the library define the initial Control Shape for a new control."
+   }
+  ]
+ },
+ "AQ62": {
+  "checklist": [
+   "Open CR_Manny_FKArm, or any other mannequin rig. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose.",
+   "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Construction Event, so that the starting A-pose is stored. The documentation page still uses the old name of this event, Setup Event.",
+   "Add a second Rig Pose variable named ArmsPose. Fill it with a Get Pose Cache node that has Element Type set to Bones, and whose Items to Set input comes from a Get Children node of the left upperarm bone.",
+   "On Forwards Solve, add an Apply Pose Cache node that reads RestPose. Add a Float variable named RestWeight and connect it to the Weight pin.",
+   "In Preview Scene Settings, set a walk animation as the Preview Controller. Change RestWeight from 0 to 1 and watch the rig blend to the A-pose.",
+   "Add a Draw Pose Cache node for ArmsPose, and confirm that only the elements of the arm are drawn.",
+   "Add a Branch node so that RestPose is only stored when a Bool variable named StorePose is true."
+  ],
+  "done_when": "Send two screenshots. The first shows the graph with Get Pose Cache on the Construction Event, and Apply Pose Cache with a Weight variable on Forwards Solve. The second shows the viewport with a walk animation playing and RestWeight at 0.5, and the axes of Draw Pose Cache on the arm.",
+  "quiz": [
+   {
+    "q": "What variable type stores a cached pose?",
+    "choices": [
+     "Transform Array",
+     "Rig Pose",
+     "Pose Asset",
+     "Rig Element Key"
+    ],
+    "explain": "Poses are stored as variables of type Rig Pose in the My Blueprint panel."
+   },
+   {
+    "q": "In the quickstart, which event is the Set node connected to so the initial A-pose is stored?",
+    "choices": [
+     "Forwards Solve",
+     "Backwards Solve",
+     "Construction Event (called Setup Event on the docs page)",
+     "Event Tick"
+    ],
+    "explain": "Connecting the Set to the Construction Event (the docs page still calls it the Setup Event) stores the character's initial A-pose."
+   },
+   {
+    "q": "Which node writes a stored pose back onto the rig?",
+    "choices": [
+     "Get Pose Cache",
+     "Apply Pose Cache",
+     "Draw Pose Cache",
+     "Get Pose Cache Transform"
+    ],
+    "explain": "Apply Pose Cache applies a saved pose and has properties for elements, space, items and weight."
+   },
+   {
+    "q": "You leave Items to Set empty on Get Pose Cache. What is saved?",
+    "choices": [
+     "Nothing",
+     "Only controls",
+     "All items matching the Element Type",
+     "Only the root bone"
+    ],
+    "explain": "If no items are specified, all items are used according to the Element Type filter."
+   },
+   {
+    "q": "Which node compares two poses and outputs a boolean?",
+    "choices": [
+     "Get Pose Cache Delta",
+     "Is Pose Cache Empty",
+     "For Each Pose Cache Element",
+     "Get Pose Cache Curve"
+    ],
+    "explain": "Get Pose Cache Delta compares two poses and outputs a comparison check boolean."
+   },
+   {
+    "q": "How can you save a pose for only one arm's elements?",
+    "choices": [
+     "Set Space to Local",
+     "Use Draw Pose Cache",
+     "Build the Items array with Get Children and feed it to Get Pose Cache",
+     "Set Weight to 0.5"
+    ],
+    "explain": "Array building nodes like Get Children give a subsection of elements to save into the pose."
+   },
+   {
+    "q": "What does the Space property on pose cache nodes choose?",
+    "choices": [
+     "Whether the pose is stored in Local or Global space",
+     "Which skeleton to use",
+     "The viewport camera space",
+     "Whether curves are included"
+    ],
+    "explain": "Space sets the transform space the pose is stored and applied in: Local or Global."
+   },
+   {
+    "q": "What does Draw Pose Cache show in the viewport?",
+    "choices": [
+     "The full skeleton always",
+     "Axis debug information only for the elements saved in the pose",
+     "The animation timeline",
+     "The control shapes"
+    ],
+    "explain": "It draws axis debug info on the saved pose and only draws the elements saved in that pose."
+   }
+  ]
+ },
+ "AQ55": {
+  "quiz": [
+   {
+    "q": "You create a Control while a bone is selected in the Rig Hierarchy. Where does the new Control appear?",
+    "choices": [
+     "At the world origin, unparented",
+     "At the location of the selected bone, parented to it",
+     "At the camera position",
+     "Under the skeleton root bone"
+    ],
+    "explain": "With an element selected, new elements are created at its location and parented to it. With nothing selected they appear at the origin."
+   },
+   {
+    "q": "What name does a Control get when you create it relative to a bone named hand_l?",
+    "choices": [
+     "ctrl_hand_l",
+     "hand_l_control",
+     "hand_l_ctrl",
+     "Control_1"
+    ],
+    "explain": "Controls created from a bone inherit the bone name with the suffix _ctrl."
+   },
+   {
+    "q": "In the Add Controls For Selected dialog, what does Output Format = Child do?",
+    "choices": [
+     "Parents each new Control under its bone",
+     "Makes a flat list at the hierarchy root",
+     "Copies the bone hierarchy with the top control unparented",
+     "Creates one Control for the whole selection"
+    ],
+    "explain": "Child parents all created Controls under the associated bone. Hierarchy copies the bone structure, List makes a flat list."
+   },
+   {
+    "q": "Which Animation Type creates a Control that cannot be animated directly but drives other Controls?",
+    "choices": [
+     "Animation Control",
+     "Animation Channel",
+     "Visual Cue",
+     "Proxy Control"
+    ],
+    "explain": "Proxy Controls drive Controls listed in their Driven Controls array and cannot be animated directly."
+   },
+   {
+    "q": "A Float-type Control is moved along its Primary Axis. What is the default movement range?",
+    "choices": [
+     "-1 to 1",
+     "0 to 100",
+     "-100 to 100",
+     "0 to 1"
+    ],
+    "explain": "Float, Integer and Vector 2D Controls are limited by default to a 0 - 100 range, which is useful for slider Controls."
+   },
+   {
+    "q": "You want to move a new Bone or a Null in the viewport. Which mode must be active?",
+    "choices": [
+     "Backwards Solve",
+     "Construction Event (formerly Setup Event)",
+     "Debug Mode",
+     "Forwards Solve"
+    ],
+    "explain": "Construction Event mode (called Setup Event in older versions) lets you edit the Initial Pose of an element in the viewport. Enabling it also shows all Nulls."
+   },
+   {
+    "q": "Which transform value do you change when you animate a Control in Sequencer?",
+    "choices": [
+     "Initial",
+     "Offset",
+     "Current",
+     "Parent"
+    ],
+    "explain": "Current is the real-time transform in Forwards Solve. Sequencer animates the Current value; Initial is the starting value before the graph runs."
+   },
+   {
+    "q": "What is the Offset transform on an Euler Transform Control mainly used for?",
+    "choices": [
+     "Locking the Control from moving",
+     "Changing the Control's zero position without editing Initial or Current",
+     "Mirroring the Control to the other side",
+     "Scaling the Control shape only"
+    ],
+    "explain": "Offset spatially moves a Control without changing Initial or Current, like Freeze Transformations in Maya."
+   }
+  ]
+ },
+ "AQ71": {
+  "checklist": [
+   "Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Open a landing animation that has root motion, and go to Window > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers.",
+   "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details.",
+   "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time.",
+   "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround.",
+   "Compile. In the preview viewport, open Scene Setup and change Floor Height Offset. Watch the legs reach for the ground at different distances."
+  ],
+  "quiz": [
+   {
+    "q": "What drives an Animation Sequence in Distance Matching instead of time?",
+    "choices": [
+     "A calculated distance variable read against an animation curve",
+     "The montage play rate",
+     "The character's capsule radius",
+     "A random seed per frame"
+    ],
+    "explain": "Distance Matching selects poses by a distance value. The Animation Blueprint searches the distance curve and outputs the matching pose."
+   },
+   {
+    "q": "Which plugin must be enabled before you can use the Distance Matching nodes?",
+    "choices": [
+     "Motion Warping",
+     "Animation Locomotion Library",
+     "Pose Search",
+     "Control Rig"
+    ],
+    "explain": "The page lists the Animation Locomotion Library plugin as the first prerequisite. Enable it and restart the editor."
+   },
+   {
+    "q": "Where do you generate the distance curve for a sequence?",
+    "choices": [
+     "Curve Editor > Add Curve",
+     "Asset Details > Root Motion > Bake Curve",
+     "Window > Animation Data Modifiers > Add Modifier > Distance Curve Modifier",
+     "Right-click the animation > Create > Distance Curve"
+    ],
+    "explain": "The Distance Curve Modifier is an Animation Data Modifier. You add it in that window and press Apply All Modifiers."
+   },
+   {
+    "q": "You are distance matching a landing animation. Which Axis setting does the page recommend?",
+    "choices": [
+     "XY, because the character moves forward",
+     "None, the axis does not matter for landings",
+     "All axes",
+     "Z, because the distance is a change in height"
+    ],
+    "explain": "The page says Z is useful for land animations. XY is for locomotion transitions like stop, start and pivot."
+   },
+   {
+    "q": "What does the Stop at End property do on the Distance Curve Modifier?",
+    "choices": [
+     "Stops the animation from looping",
+     "Removes the last keyframe",
+     "Freezes the root bone at the end",
+     "Declares the character stopped only on the last frame of the sequence"
+    ],
+    "explain": "With Stop at End, the curve marks the character as stopped only on the final frame. Use it when the character could otherwise be counted as stopped earlier."
+   },
+   {
+    "q": "Distance matching reads the curve at runtime. What compression does it need?",
+    "choices": [
+     "A Bone Compression Settings asset with Least Destructive",
+     "No compression at all",
+     "A Curve Compression Settings asset with the Uniform Indexable codec",
+     "The default Engine compression"
+    ],
+    "explain": "The page says you must use a Uniform Indexable Curve Compression Settings asset instead of the default compression so the distance curve can be read at runtime."
+   },
+   {
+    "q": "Which nodes go inside the Sequence Evaluator's On Update anim node function?",
+    "choices": [
+     "Play Montage and Get Anim Instance",
+     "Distance Match to Target and Convert to Sequence Evaluator",
+     "Blend Poses by Bool and Inertialization",
+     "Set Play Rate and Sequence Player"
+    ],
+    "explain": "The workflow creates a Distance Match to Target node and converts the node reference with Convert to Sequence Evaluator inside the bound function."
+   },
+   {
+    "q": "Which node advances a Sequence Evaluator by the distance the character travelled each frame?",
+    "choices": [
+     "Advance Time By Distance Matching",
+     "Set Playrate to Match Speed",
+     "Distance Match to Target",
+     "Sequence Player"
+    ],
+    "explain": "Advance Time By Distance Matching moves the evaluator forward by the distance travelled. Set Playrate to Match Speed only scales play rate and assumes a constant speed."
+   }
+  ]
+ },
+ "AQ73": {
+  "checklist": [
+   "Open the Physics Asset of your character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow.",
+   "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends.",
+   "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V.",
+   "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies.",
+   "Open Window > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values.",
+   "Use BP_RagdollPawn, a Blueprint with a Skeletal Mesh Component that has Collision Enabled and ignores the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Press Play and compare with the default profile."
+  ]
+ },
+ "AQ75": {
+  "checklist": [
+   "Open the Physics Asset of the character and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody.",
+   "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled.",
+   "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset.",
+   "Create BP_PhysAnimPawn with a Skeletal Mesh Component. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01.",
+   "In the Event Graph, connect three nodes after BeginPlay. First, call Set Skeletal Mesh Component with the Physical Animation Component as target. Second, call Apply Physical Animation Profile Below with Body Name set to BoneName, Profile Name set to PAP_UpperBody, and Include Self on. Third, call Set All Bodies Below Simulate Physics with BoneName, New Simulate on and Include Self on.",
+   "Set the mesh to play a looping animation. Play in the editor and push the character with a physics cube. The upper body should follow the animation and also react to the hits.",
+   "Try Orientation Strength 100 and then 5000. Note how closely the pose still follows the animation in each case."
+  ],
+  "quiz": [
+   {
+    "q": "Where do you create a Physical Animation Profile?",
+    "choices": [
+     "Physics Asset Editor > Window > Profiles > New under Physical Animation Profiles",
+     "Project Settings > Physics > Profiles",
+     "In the Animation Blueprint Class Defaults",
+     "By right-clicking a bone in the Skeleton Editor"
+    ],
+    "explain": "The page opens the Profiles window from the Window menu of the Physics Asset Editor and adds the profile with New."
+   },
+   {
+    "q": "Which starting values does the page suggest for a Physical Animation profile?",
+    "choices": [
+     "0, 0, 0, 0, 0, 0",
+     "100, 1000, 100, 1000, 50, 50",
+     "1, 1, 1, 1, 1, 1",
+     "1000, 100, 1000, 100, 0, 0"
+    ],
+    "explain": "Both the creating page and the profiles page say a good set of starting values is 1000, 100, 1000, 100, 0, 0."
+   },
+   {
+    "q": "When are Position Strength and Velocity Strength used?",
+    "choices": [
+     "Always",
+     "Only for non-local simulation",
+     "Only when Is Local Simulation is enabled",
+     "Only for kinematic bodies"
+    ],
+    "explain": "The Tools and Profiles page says Position Strength and Velocity Strength are only used for non-local simulation."
+   },
+   {
+    "q": "Why does the applying page change the Skeletal Mesh Component collision to ignore Pawn?",
+    "choices": [
+     "To reduce draw calls",
+     "To let projectiles pass through",
+     "So the mesh stops trying to eject itself from the collision capsule",
+     "Because profiles need it to compile"
+    ],
+    "explain": "The page says ignoring Pawn fixes the mesh trying to push itself out of the Pawn capsule. Use a custom Object Type if you need pawn-vs-pawn hits."
+   },
+   {
+    "q": "What is the first node after Event BeginPlay in the applying graph?",
+    "choices": [
+     "Set All Bodies Below Simulate Physics",
+     "Apply Physical Animation Profile Below",
+     "Set Skeletal Mesh Component on the Physical Animation Component",
+     "Set Constraint Profile for All"
+    ],
+    "explain": "The Physical Animation Component must first be told which Skeletal Mesh Component to drive. Then the profile is applied and simulation is turned on."
+   },
+   {
+    "q": "You apply the profile below spine_01 and want spine_01 itself included. What do you set?",
+    "choices": [
+     "Clear Not Found",
+     "Include Self",
+     "New Simulate",
+     "Default if Not Found"
+    ],
+    "explain": "Include Self is checked so the named bone is included with the bones below it. Body names match bone names in the physics asset."
+   },
+   {
+    "q": "A newly created profile uses which settings?",
+    "choices": [
+     "The values of the last profile you edited",
+     "The Engine ragdoll preset",
+     "Random values",
+     "It is empty and uses default settings"
+    ],
+    "explain": "The profiles page says new profiles are initialized empty, meaning they use default settings until you edit them."
+   },
+   {
+    "q": "In the Physics Graph, how can you tell which bodies are assigned to the Current Profile?",
+    "choices": [
+     "Assigned nodes show their fill color; unassigned nodes are shaded",
+     "Assigned nodes are red",
+     "Assigned nodes are hidden",
+     "There is no visual difference"
+    ],
+    "explain": "The page says assigned nodes change from shaded to their fill color, and unassigned nodes stay shaded."
+   }
+  ]
+ },
+ "AQ79": {
+  "checklist": [
+   "Export one animation from your DCC tool (Blender, Maya or 3ds Max) with the Animations checkbox enabled. Export only the skeleton, and put one animation in each file.",
+   "In the Content Browser, go to the folder where the animation should be stored. Click Import and pick the FBX file.",
+   "In the FBX Import Options, set Skeleton to your existing Skeleton. For the UE5 mannequins this is the asset named SK_Mannequin. Do not create a new one.",
+   "Open the Animation section. Set Animation Length to Animated Time, and turn off Use Default Sample Rate so that the frame rate is read from the file.",
+   "Type a name in Override Animation Name, for example A_Wave. Then click Import.",
+   "Import a second animation, but this time use Set Range and import only the first 20 frames. Compare the two Animation Sequences.",
+   "Open each sequence in the Animation Sequence Editor. Check the number of frames, and check that the Skeleton is the one you chose."
+  ]
+ },
+ "AQ13": {
+  "checklist": [
+   "Open a run animation of the mannequin. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser.",
+   "In Asset Details, set Rate Scale to 0.5 and press play to see the animation at half speed. Then set it back to 1. Also read the values of Number of Sampled Frames and Target Frame Rate.",
+   "Find the setting Additive Anim Type and read its options. Leave it on No additive.",
+   "Find the setting Enable Root Motion. In the Asset Details panel it is written as one word, EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock.",
+   "Select a bone in the Skeleton Tree and rotate it a little in the viewport. Press Key in the Toolbar and see the additive track appear in the timeline. Then undo the change.",
+   "In the timeline, open the menu of the Curves track and choose Add Curve..., then Create Curve, and name the curve TestCurve. Open Window > Anim Curves to see it. Delete the curve afterwards and save the Skeleton."
+  ],
+  "done_when": "Send a screenshot of the editor with the six areas labeled, and a screenshot of Asset Details that shows Rate Scale, Additive Anim Type and Enable Root Motion (EnableRootMotion). Add one line that says what the Key button does."
+ },
+ "AQ21": {
+  "checklist": [
+   "Open an Animation Sequence that moves the character forward, such as a roll, a vault or a walk with root movement. Give it a clear name, or write down the name it has.",
+   "In the viewport, open the Character menu, go to Bones, then Bone Drawing, and choose All Hierarchy so that all bones are drawn. Watch the red root bone and its red line while the animation plays.",
+   "In the Character menu, go to Animation, then Root Motion, and try the options Ignore, Loop, and Loop and Reset. Note what each option does to the preview.",
+   "In the Asset Details panel, check Enable Root Motion on the sequence. The panel writes it as one word, EnableRootMotion. Then create a montage from the sequence and name it AM_Roll.",
+   "Open the Animation Blueprint and click Class Defaults in the toolbar. Set Root Motion Mode to Root Motion from Montages Only.",
+   "In the Character Blueprint, play AM_Roll when a key is pressed. Play in the editor and press the key while the character is standing still.",
+   "Open the console with the backtick key and type show collision. You can now see the capsule, the collision shape of the character, move together with the mesh."
+  ]
+ },
+ "AQ27": {
+  "checklist": [
+   "Enable the Motion Warping plugin. Pick an animation with root motion, such as a vault, a mantle or a punch. Open it and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion.",
+   "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage.",
+   "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target.",
+   "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget.",
+   "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it.",
+   "On an input action, do three things in this order: get the location of the Target Point, call Add or Update Warp Target from Transform with the Name VaultTarget, and then use Play Montage to play AM_Vault.",
+   "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare the result."
+  ]
+ },
+ "AQ34": {
+  "checklist": [
+   "Spawn 50 or more copies of BP_CrowdCharacter, each with an Animation Blueprint. Type stat unit in the console to show the frame times, and note the game thread time.",
+   "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon.",
+   "Enable the Animation Budget Allocator plugin. Set the Mesh Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play.",
+   "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh.",
+   "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level. Each level has its own section, so you write four sections: [ViewDistanceQuality@0], [ViewDistanceQuality@1], [ViewDistanceQuality@2] and [ViewDistanceQuality@3], each with its own a.Budget.BudgetMs line below it. Test two of the levels.",
+   "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD.",
+   "Compare stat unit before and after your changes, and write the numbers down."
+  ]
+ },
+ "AQ43": {
+  "checklist": [
+   "From your Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save.",
+   "In the AnimGraph, add a Slot node after the State Machine and set its Slot Name to FullBody.",
+   "Add a second Slot node and set it to UpperBody. Connect it to a Layered blend per bone node that uses a Branch Filter on spine_01, so that only the upper body plays the slot animation.",
+   "Select the FullBody Slot node and enable Always Update Source Pose in its Details panel. With this setting on, the pose that goes into the Slot node keeps updating while a montage plays over it. With it off, that source pose is not updated during the montage. Write down in one line which behavior you need for your character.",
+   "Make two montages, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops.",
+   "In a Level Sequence, add your character and an Animation track. Right-click the animation section, open Properties, find Slot Name and type FullBody."
+  ],
+  "done_when": "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short GIF or two screenshots of AM_Emote interrupting AM_Reload."
+ },
+ "AQ66": {
+  "checklist": [
+   "In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root.",
+   "Turn on Enable Debug Draw. In the preview, move the Effector Location, shown in red, and the Joint Target Location, shown in green. Watch the knee point toward the green target.",
+   "Set Effector Location Space to World. In the Event Graph, do a Line Trace from foot_l down to the floor, and store the hit location in a Vector variable named FootTarget_L. Connect this variable to Effector Location.",
+   "Select the Two Bone IK node. In its Details panel, set Joint Target Location Space to Bone Space and choose calf_l as the Joint Target bone. Then type a small value, for example 30, into one axis of Joint Target Location and watch the green target in the preview. Use the axis that moves the green target in front of the knee, so that the knee bends forward in a natural way.",
+   "Place BP_ThirdPersonCharacter on a low step or a slope and press Play. Add a Float variable named FootAlpha and connect it to the Alpha of the node, so that you can blend the effect off.",
+   "Enable Allow Stretching with Start Stretch Ratio 0.9 and Max Stretch Scale 1.2. Move the target too far away and note how the leg stretches.",
+   "Do the same for foot_r. You can also duplicate the setup and rename the variables."
+  ]
+ },
+ "AQ4": {
+  "checklist": [
+   "Pick one source animation. Also pick a second character that has a different skeleton from the first one.",
+   "In the Content Browser, right-click the source animation and choose Retarget Animations. The Retarget Animations window opens. Set Target Preview Mesh to the Skeletal Mesh of the second character and leave Auto Generate Retargeter turned on, so that Unreal sets up the retarget for you. Select your animation in the list, click Export Animations, and pick a folder for the new animation.",
+   "In the same window, click Export Retarget Assets to save the IK Rig assets and the IK Retargeter asset that Unreal generated. Open them and fix one problem that you can see, for example in the feet, the hands or the root."
+  ]
+ },
+ "AQ5": {
+  "checklist": [
+   "In the Content Browser, right-click the Skeletal Mesh of your character and choose Create, then Control Rig. Double-click the new asset to open the Control Rig Editor.",
+   "In the Rig Hierarchy tab, right-click the upper arm bone and choose New Element, then New Control. Select the new control and press Shift+P to unparent it from the bones. Do the same for the lower arm and the hand. Then drag each control into the Rig Graph and choose Get Control, drag its bone into the graph and choose Set Bone, and connect the Transform pin of the Get node to the Value pin of the Set node. Connect the Forwards Solve node to the Set nodes one after the other, so that the bones follow when you move a control.",
+   "Move and rotate the controls in the viewport to pose the arm. Clicking Compile puts the controls back in their starting position, so take your screenshot before you compile again."
+  ]
+ },
+ "AQ7": {
+  "checklist": [
+   "In the Content Browser, click Add, then Animation, then Blend Space, and pick the Skeleton of your character. Open the new asset. In Asset Details, under Axis Settings, open Horizontal Axis, name it Speed, and set Maximum Axis Value to the Max Walk Speed of your character. You find Max Walk Speed on the Character Movement component in the Blueprint of the character.",
+   "Drag an idle animation, a walk animation and a run animation from the Asset Browser onto the bottom line of the grid. Put each one at the speed it was authored for, which means the speed the animation was made to move at: idle at 0, and walk and run at their own speeds. Hold Ctrl and move the mouse over the grid to preview the blend.",
+   "Make a copy of the AnimBP: right-click it and choose Duplicate. In the copy, select the Blend Space Player node and pick your blend space in its Details panel. Select the Mesh in the Blueprint of your character and set Anim Class to the copy. Play in the editor (PIE) and check whether the feet slide."
+  ],
+  "done_when": "Send a screenshot of the blend space grid, and two screenshots from PIE: one of the character at walk speed and one at run speed. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "AQ8": {
+  "checklist": [
+   "Aim poses must be additive. Open each aim pose animation and, in Asset Details, set Additive Anim Type to Mesh Space and choose an idle pose as the base pose. Then click Add, then Animation, then Aim Offset in the Content Browser, and pick the Skeleton of your character. In the new asset, set the horizontal axis to Yaw and the vertical axis to Pitch, both from -90 to 90, and drag each aim pose onto the grid at the direction it aims in.",
+   "In the AnimBP, read the pitch and the yaw from the control rotation: use Get Control Rotation on the owning Pawn and take the difference with the rotation of the Actor (the Delta Rotator node does this). Store the result in two variables named Pitch and Yaw. Pitch is looking up and down, yaw is looking left and right, and the control rotation is the direction the player is looking.",
+   "In the AnimGraph, add an Aim Offset Player node for your asset. Connect the locomotion pose, which is the walking and running animation, to its Base Pose pin, connect the Pitch and Yaw variables, and connect the result to Output Pose. Then test looking up, down and to the sides."
+  ],
+  "done_when": "Send three screenshots from PIE that show the character walking while it aims up, down and to one side. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "AQ3": {
+  "done_when": "Send two screenshots from PIE that show the character pulling the lever, one before and one after, and a screenshot of the lever graph. A short GIF also works in place of the two screenshots."
+ },
+ "AQ6": {
+  "done_when": "Send two screenshots from PIE, or a short GIF, that show the lever moving on the notify frame and not at the end of the animation. Also send a screenshot of the montage that shows where the notify is placed."
+ },
+ "AQ35": {
+  "checklist": [
+   "Enable the Control Rig Modules plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Create CR_Modular_Hero: in the Add menu choose Animation, then Control Rig, then Control Rig, and choose ModularRig. Set the Preview Mesh to your character.",
+   "Drag the Spine module onto the unresolved socket. Then add Neck, both Legs, both Feet, Shoulders and Arms. For the fingers, select all finger sockets at once and drop one Finger module on them.",
+   "Delete the modules of the left arm. Build them again by selecting the modules of the right arm and using Mirror in the Module Hierarchy.",
+   "Make one connector unresolved on purpose, for example by renaming a bone or removing a socket. Then fix it with Use Selected or with the hierarchy dropdown. Take a screenshot of the red none before the fix and another one after the fix.",
+   "Create your own module. Make a new Control Rig, choose Switch to Rig Module, and set its Name, Icon and Description. Add one Secondary connector with a Type Rule, and then add your module to CR_Modular_Hero.",
+   "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and take a screenshot of each pose."
+  ],
+  "done_when": "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module. Also send the screenshots of your 3 poses in Sequencer, or a short GIF of them. Add 4 lines about what your module does and how its connectors resolve."
+ },
+ "AQ38": {
+  "checklist": [
+   "Use a character whose cape, skirt or coat has its own material section. If you have none, add a simple cape mesh to SK_ClothCharacter and import it.",
+   "In the Skeletal Mesh Editor, click Section Selection and select the cape section. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character, which is used for collision.",
+   "Right-click the section again and choose Apply Clothing Asset, then CA_Cape. Open Window > Clothing and click Activate Cloth Paint.",
+   "Create a Max Distance mask. Paint the value 0 along the shoulders, so the cloth stays fixed there. Then use the Gradient tool to go down to a large value at the hem, the bottom edge of the cape. Hold H to preview the cloth.",
+   "Add a Backstop Distance mask so that the cape cannot pass into the back of the character. Then tune these Config values: Damping, Gravity Scale and Collision Thickness. Set Wind Method to Accurate.",
+   "Play the character with a run animation and a turn for about 20 seconds, and take screenshots or record a short GIF of the cloth moving. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh.",
+   "Read the overview page of the Panel Cloth Editor. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
+  ],
+  "done_when": "Send screenshots of the Clothing panel with your masks and of the Config values you changed. Also send two screenshots or a short GIF of the cloth moving while the character runs and turns, and you can paste a link to a longer video. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
+ }
+}

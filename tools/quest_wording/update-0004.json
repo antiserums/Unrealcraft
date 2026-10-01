@@ -1,0 +1,378 @@
+{
+ "SQ13": {
+  "checklist": [
+   "Use the High Resolution Screenshot tool once. To open it, click Viewport Options, the menu button in the top left corner of the viewport, and choose High Resolution Screenshot. The tool takes a picture of the viewport at a higher resolution than your screen.",
+   "Take one screenshot of the editor in which a graph or the Details panel can still be read at the size of a phone screen, and attach it."
+  ]
+ },
+ "SQ15": {
+  "checklist": [
+   "Find the pinned bad example in #help-desk and rewrite it so that it follows the template. If you cannot find the pinned example, rewrite this one: \"my door doesnt work pls help\". A good help post says what you want to happen, what happens instead, what you already tried, and which engine version you use. Paste your rewritten post as your proof."
+  ]
+ },
+ "LDQ62": {
+  "checklist": [
+   "Open the Plugins window (Edit > Plugins) and look in the Gameplay category. Enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Then restart the editor.",
+   "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_Bench. Open it and add two Slots.",
+   "Create an Actor Blueprint named BP_SO_Bench. Give it a Static Mesh of a bench and a Smart Object component. On the component, set Definition Asset to SO_Definition_Bench.",
+   "Open BP_SO_Bench and move the two slots so that each one sits on one seat of the bench and faces forward.",
+   "Place three BP_SO_Bench actors in a small plaza blockout. Add a NavMeshBoundsVolume around the plaza.",
+   "Optional: follow the Quick Start guide to make an AI agent claim a slot and use it."
+  ]
+ },
+ "LDQ111": {
+  "quiz": [
+   {
+    "q": "What stops two agents from using the same Smart Object slot at the same time?",
+    "choices": [
+     "A collision volume",
+     "The reservation system: an agent claims the object and others cannot use it until it is free again",
+     "The NavMesh cost",
+     "A Blackboard bool on each agent"
+    ],
+    "explain": "Smart Objects use a reservation system. An agent reserves (claims) a Smart Object so no other agent can use it until it becomes available."
+   },
+   {
+    "q": "Which three plugins does the guide enable?",
+    "choices": [
+     "Smart Objects, AI Behaviors, Gameplay Behavior Smart Objects",
+     "Smart Objects, Mass AI, State Tree",
+     "Gameplay Abilities, Smart Objects, EQS",
+     "AI Behaviors, Niagara, Smart Objects"
+    ],
+    "explain": "In the Plugins window, in the Gameplay category, the guide enables Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects."
+   },
+   {
+    "q": "Why does the behavior use Play Montage instead of Play Anim Montage?",
+    "choices": [
+     "Play Anim Montage is deprecated",
+     "Play Montage has On Completed and On Interrupted pins, so End Behavior fires only when the animation ends and the object stays occupied until then",
+     "Play Montage is faster",
+     "Play Anim Montage cannot target a Skeletal Mesh"
+    ],
+    "explain": "The On Completed and On Interrupted pins are connected to End Behavior. This keeps the Smart Object occupied until the montage finishes."
+   },
+   {
+    "q": "Where do you define the Slots and their default behavior?",
+    "choices": [
+     "In the AI Controller",
+     "In the Behavior Tree Root node",
+     "In the Blackboard",
+     "In the Smart Object Definition Data Asset"
+    ],
+    "explain": "The Smart Object Definition Data Asset holds the Slots and, per slot, the Default Behavior Definitions such as the Gameplay Behavior Smart Object Behavior Definition."
+   },
+   {
+    "q": "What connects a placed Actor to a Smart Object Definition?",
+    "choices": [
+     "A Smart Object component with its Definition Asset set",
+     "An Actor Tag",
+     "A Nav Modifier component",
+     "A Data Layer"
+    ],
+    "explain": "The guide adds a Smart Object component to the Actor Blueprint and sets its Definition Asset."
+   },
+   {
+    "q": "Which Blackboard key type stores the result of Claim?",
+    "choices": [
+     "Object",
+     "Vector",
+     "SO Claim Handle",
+     "Name"
+    ],
+    "explain": "The Blackboard key ClaimHandle uses the SO Claim Handle type. The Use task reads it back with Get Value as SOClaim Handle."
+   },
+   {
+    "q": "The Find task adds and subtracts 2000 on X, Y and Z from the pawn location. What is that for?",
+    "choices": [
+     "Setting the montage length",
+     "Making the Query Box for Find Smart Objects, a 4000 x 4000 unit search area",
+     "Scaling the Smart Object",
+     "Setting the NavMesh bounds"
+    ],
+    "explain": "Make Box uses those two points as Min and Max. That creates a 40 x 40 meter search box around the agent."
+   },
+   {
+    "q": "In the guide's tree, when does the agent wait 5 seconds?",
+    "choices": [
+     "After every montage",
+     "Before possessing the pawn",
+     "When the player is seen",
+     "When the Sequence fails, for example when no Smart Object was found or claimed"
+    ],
+    "explain": "The Wait node sits right of the Sequence under a Selector. It runs only if the Sequence fails, so the agent waits before searching again."
+   }
+  ]
+ },
+ "LDQ63": {
+  "checklist": [
+   "The Environment Query System is part of UE5 and needs no setup. If you do not find Environment Query in the Add menu under Artificial Intelligence, open Edit > Plugins and enable Environment Query Editor. Then build a small arena that has a NavMesh and 5 to 8 cover blocks.",
+   "Create an Environment Query asset named EQS_Cover. In it, add a Points: Grid generator around the Querier. The Querier is the character that runs the query.",
+   "Add a Trace test on the grid, with the Querier as its context. Set Test Purpose to Filter so that only points that cannot be seen from the querier remain. Change Bool Match if the result is the wrong way around.",
+   "Add a Distance test and set its Test Purpose to Score, so that points nearer to the querier get a higher score.",
+   "Create a Blueprint named BP_EQSTestPawn from the EQSTestingPawn class. Place it in the arena and set its Query Template to EQS_Cover.",
+   "Move the pawn around the arena and watch the spheres change. Then move one cover block so that a bad cover spot becomes a good one."
+  ]
+ },
+ "LDQ68": {
+  "checklist": [
+   "Open your blockout. Click Viewport Options, the menu button in the top left corner of the viewport, and choose High Resolution Screenshot. In older versions this button is a small arrow.",
+   "Click Specify Region and drag a box around the area that you want reviewed. Set the Screenshot Size Multiplier to 2.",
+   "Press the capture button, which has a camera icon. Then click the message that appears in the lower right corner to open the folder with the image.",
+   "Start PIE and press ~ to open the console. Run the command HighResShot 2. Then run the command Shot, or press F9, for a capture at normal size.",
+   "Pick one capture and mark it up in any image editor. Draw circles on problems, draw arrows on the path you want players to take, and add short labels.",
+   "Save the image with your notes next to the original, in the folder Saved\\Screenshots\\Windows."
+  ]
+ },
+ "LDQ74": {
+  "checklist": [
+   "Place three Player Start actors in your blockout: one at the entrance, one in the mid room and one in the final arena. Rotate each one so that its arrow points at the next landmark, because the player faces that way on spawn.",
+   "Select each Player Start and set its Player Start Tag in the Details panel to Start_Entrance, Start_Mid and Start_Arena. If a Player Start shows a BADsize label, move it until its capsule no longer overlaps any geometry.",
+   "Create a Blueprint named BP_GM_Test with Game Mode Base as its parent class. Add a Name variable called DebugStartTag and turn on Instance Editable. In World Settings, set the GameMode Override of the level to BP_GM_Test.",
+   "A Game Mode does not receive key presses, so put the debug key in your character Blueprint or your Player Controller. Add a keyboard event for a key such as R. From it, call Get Game Mode and cast the result to BP_GM_Test. On the Game Mode, call Find Player Start with Player set to Get Player Controller and Incoming Name set to DebugStartTag. Then call Restart Player at Player Start with the same Player Controller and the result as the Start Spot.",
+   "Add three Target Point actors named TP_Pickup_1 to TP_Pickup_3. Create BP_PickupSpawner with an Instance Editable array of Target Point references. On BeginPlay, loop over the array and use Spawn Actor from Class to spawn a pickup or a simple cube at the transform of each Target Point.",
+   "Test it: set DebugStartTag to Start_Arena, press the debug key, and confirm that you respawn in the arena and face the right way. Then set the Play Options to spawn at the current camera location and start PIE from the mid room."
+  ]
+ },
+ "LDQ76": {
+  "checklist": [
+   "Create BP_GS_Checkpoints with Game State Base as its parent class, and give it a Vector variable CheckpointLocation and a Boolean variable HasCheckpoint. Create BP_GM_Checkpoints with Game Mode Base as its parent class and set its Game State Class to BP_GS_Checkpoints. Set the GameMode Override of the level to BP_GM_Checkpoints.",
+   "Create an Actor Blueprint named BP_Checkpoint with a Box Collision and a flag mesh. When the player overlaps it, use Get Game State, cast it to BP_GS_Checkpoints, set CheckpointLocation to the location of the actor, and set HasCheckpoint to true. Also change the material of the flag, so the player sees that the checkpoint is active.",
+   "Place a Player Start next to each checkpoint, with at least three checkpoints. In BP_GM_Checkpoints, override the function FindPlayerStart. If HasCheckpoint is true, return the Player Start that is closest to CheckpointLocation. Otherwise, call the parent function.",
+   "Create a Save Game Blueprint named SG_Checkpoint with the same two variables. In BP_Checkpoint, after you set the Game State, create or load the Save Game object and copy the values into it. Then call Save Game to Slot with the slot name Checkpoint and user index 0.",
+   "The Game Mode chooses the Player Start before its BeginPlay runs, so load the save inside your FindPlayerStart function, at its very start. Check Does Save Game Exist for the slot Checkpoint. If it exists, call Load Game from Slot, cast the result to SG_Checkpoint, and write the values into the Game State. The rest of the function then picks the right Player Start.",
+   "Test it: reach checkpoint 2, stop PIE, and start PIE again. Confirm that you spawn at the Player Start next to checkpoint 2. Then find the .sav file in the Saved/SaveGames folder of the project."
+  ]
+ },
+ "LDQ79": {
+  "checklist": [
+   "Create an Actor Blueprint named BP_Elevator with a platform mesh and a Scene component named CabRoot. Add a Timeline named LiftTimeline with a float track named Height that has keys at 0,0 and 4,1 with Auto interpolation. Add a Float variable named FloorHeight, turn on Instance Editable, and set its default to 400.",
+   "On the Update pin of the Timeline, set the relative Z location of the platform to Height multiplied by FloorHeight. On the Finished pin, print the Direction output (Forward means the cab arrived at the top, Backward means it arrived at the bottom) and open a Gate node.",
+   "Add two Custom Events named CallUp and CallDown. CallUp goes through the Gate and calls Play on the Timeline. CallDown goes through the same Gate and calls Reverse. Close the Gate when either one starts, so that the cab ignores calls while it is moving.",
+   "Create an Actor Blueprint named BP_CallButton with a Box Collision, a Boolean named IsUpButton, and an Instance Editable reference to BP_Elevator. When the player overlaps it, it calls CallUp or CallDown. Place one button at each floor.",
+   "Add an emergency stop. Add a third Custom Event named EmergencyStop to BP_Elevator, and a third button on the cab that calls it. Connect the event to the Stop input of the Timeline, which freezes the cab where it is. After a short Delay node, connect to the Set New Time input with New Time set to 0, which puts the cab back at the bottom, and open the Gate again. Check with your Print String that Finished does not fire when Stop is called. That is why you must open the Gate here yourself.",
+   "Ride the elevator in PIE between two rooms of your blockout. Confirm that you do not slide off the platform, and that pressing both buttons quickly does not restart the ride in the middle."
+  ]
+ },
+ "LDQ89": {
+  "checklist": [
+   "Open one of your blockout levels, or make a new one with a corridor and one room.",
+   "Place 6 Point Lights or Spot Lights in the corridor. Set the Mobility of all of them to Stationary.",
+   "In the viewport, open the View Mode menu, then Optimization Viewmodes, and choose Stationary Light Overlap. Find the lights that show a red X, which means too many Stationary lights overlap there.",
+   "Fix the overlap. Change some lights to Movable, or move the lights further apart, until no red X is left.",
+   "Pick one light that only marks a door. Set it to Movable and turn off Cast Shadows. Read the Movable Lights page that is linked on this quest, find what it says about the cost of a Movable light with and without shadows, and note it.",
+   "Write 3 lines in a text note inside the level, with a Text Render or a note actor. Say which light is Static, which is Stationary, which is Movable, and why."
+  ]
+ },
+ "LDQ94": {
+  "checklist": [
+   "Build a space with a high walkway and a low pit. Place an Exponential Height Fog actor, which you find in the Place Actors panel under Visual Effects.",
+   "Move the actor up or down (on the Z axis) and adjust Fog Density and Fog Height Falloff until the pit is foggy and the walkway is clear.",
+   "Enable Second Fog Data and give it a Fog Height Offset, so that a thin second layer of fog sits only in the pit.",
+   "Set Start Distance so that the area right in front of the player stays clear. Read the Exponential Height Fog page that is linked on this quest, find what it says about Start Distance and performance, and note it.",
+   "Enable Volumetric Fog on the fog actor. Aim a Spot Light through a doorway and raise its Volumetric Scattering Intensity, so that the beam marks the exit.",
+   "If any flickering light leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
+  ]
+ },
+ "LDQ102": {
+  "checklist": [
+   "Enable the Geometry Script plugin and restart the editor.",
+   "Create a Blueprint named BP_Tool_Ramp with GeneratedDynamicMeshActor as its parent class. Add the Instance Editable variables Width, Length, Height and Steps.",
+   "In the event Event On Rebuild Generated Mesh, append boxes that use the variables, so that the actor builds a ramp or a stair block. If you need a temporary mesh, use Request and Release Mesh for it.",
+   "Place three BP_Tool_Ramp actors in the level. Change their variables in the Details panel so that they fit your metrics gym, the test level where you check sizes and distances.",
+   "Add an event named Bake with Call In Editor turned on. It copies the dynamic mesh to a Static Mesh asset. The Geometry Script library has two functions for this: Create New Static Mesh Asset from Mesh makes a new asset at the path you give it, for example /Game/Blockout/SM_Ramp_Baked, and Copy Mesh to Static Mesh writes into an asset that already exists. Use the first one the first time.",
+   "Replace one ramp with a Static Mesh Actor that uses the baked asset. Move the tool actor below the level and keep it there as the template."
+  ]
+ },
+ "LDQ28": {
+  "checklist": [
+   "Open your character Blueprint. From the Capsule and Character Movement components, write down the capsule radius and half-height, Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle.",
+   "Use the metrics gym level L_MetricsGym from quest LDQ11, or build a small gym in a new level with that name. It needs ledges every 25 cm up to 250 cm, gaps every 50 cm, and ramps at 30°, 45° and 50°.",
+   "Start PIE and record the real numbers: the highest ledge you can jump onto, the widest gap you can jump over, and the steepest ramp you can walk up.",
+   "Add rules for spaces: door width and height, corridor width (for 1 player and for 2 players), cover height, and stair step size.",
+   "Put everything in a sheet that you can share, such as a spreadsheet or a document. Write the engine version at the top and share the link."
+  ]
+ },
+ "LDQ18": {
+  "quiz": [
+   {
+    "q": "Why check readability in the Lighting Only view mode?",
+    "choices": [
+     "It removes material color so you see only light and value contrast",
+     "It's faster",
+     "It's what players see",
+     "It bakes lighting"
+    ],
+    "explain": "If the route reads without textures, it will read with them."
+   },
+   {
+    "q": "Which area should usually be the brightest?",
+    "choices": [
+     "A dead end",
+     "The goal or the next place you want the player to go",
+     "The ceiling",
+     "Behind the player"
+    ],
+    "explain": "Players move toward light. Put the brightest spot where you want them to go."
+   },
+   {
+    "q": "An enemy blends into a dark wall. Which fix helps most?",
+    "choices": [
+     "More fog",
+     "Lower all lights",
+     "Turn off shadows",
+     "Light the wall behind it or add rim light so its silhouette separates"
+    ],
+    "explain": "Combat readability comes from silhouette against background, not overall brightness."
+   },
+   {
+    "q": "Why keep exposure locked while doing this pass?",
+    "choices": [
+     "Lumen requires it",
+     "Auto exposure would brighten dark routes and hide the problem",
+     "It raises frame rate",
+     "It enables shadows"
+    ],
+    "explain": "WL-03 again. Locked exposure shows the real brightness difference between routes."
+   },
+   {
+    "q": "Six colored lights in one room, none meaning anything. The issue?",
+    "choices": [
+     "Performance only",
+     "They cancel out",
+     "Visual noise that competes with your guidance cues",
+     "No issue"
+    ],
+    "explain": "Light color should support your color rule from quest LDQ15, not compete with it."
+   }
+  ]
+ },
+ "LDQ34": {
+  "checklist": [
+   "In L_Arena_01, add a Nav Mesh Bounds Volume that covers the whole arena. Press P to show the NavMesh, and fix any gaps near cover and doorways.",
+   "Create a Blueprint named BP_Enemy with Character as its parent class. Set its Auto Possess AI property to 'Placed in World or Spawned', so that the enemy always gets an AI controller.",
+   "Give the enemy a simple loop that uses AI MoveTo to walk between two target points. If you would rather use a Behavior Tree, which is an asset that describes what an AI decides to do, follow the Create an Enemy tutorial or the Behavior Trees page linked on this quest.",
+   "If you use a Behavior Tree, open it and write one line for each node that says what the node does.",
+   "Place 3 spawn points that the player cannot see from the entry. Mark each one with a simple arrow or billboard that is visible in the editor.",
+   "Play in the editor (PIE) and watch each enemy reach its first position. Fix any enemy that gets stuck."
+  ],
+  "done_when": "Send a screenshot with the NavMesh shown (press P) and the spawn points visible, and two screenshots from PIE, or a short GIF, of the enemies moving into position."
+ },
+ "LDQ37": {
+  "done_when": "Send your marked screenshot from above, and two or three screenshots from PIE of a crossing in which the player is not seen. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "LDQ38": {
+  "done_when": "Send a screenshot of the arena from the side, and two screenshots from PIE, or a short GIF, of moving between the levels."
+ },
+ "LDQ29": {
+  "done_when": "Send three screenshots from PIE that show the locked feedback, the key pickup and the door opening, and a screenshot of the door's graph. A short GIF of less than 30 seconds also works in place of the three screenshots."
+ },
+ "LDQ1": {
+  "checklist": [
+   "Open Edit > Plugins, search for Water, enable the Water plugin and restart the editor.",
+   "Open the Place Actors panel (Window > Place Actors), search for Water Body, and drag a Water Body Lake or a Water Body River into L_Terrain_01. A water body is shaped by a spline, a line with points you can move: select the water, then click and move its points to change the outline.",
+   "Use the water as a boundary that the path runs beside. It should not be a blocker that the player cannot understand."
+  ]
+ },
+ "LDQ2": {
+  "checklist": [
+   "In L_Routes_01, select the Exponential Height Fog actor in the Outliner. If the level has none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog.",
+   "In the Place Actors panel, search for Local Fog Volume and drag one over one dead end. Scale it so that it covers the dead end, and raise its fog density values in the Details panel until the dead end feels less inviting.",
+   "Check that you can still see the goal and the landmark clearly through the fog."
+  ]
+ },
+ "LDQ3": {
+  "checklist": [
+   "Open the Place Actors panel, search for Decal, and drag a Decal Actor onto a floor or wall in your level. In its Details panel, set Decal Material to a decal material from the Starter Content. You can also make a simple one: create a material, set its Material Domain to Deferred Decal and its Blend Mode to Translucent, and connect a color and an opacity.",
+   "Use 3 to 4 decals, such as scuffs, arrows or stains, to lead toward one route entrance. Hold Alt and drag a decal to copy it. A decal only shows where its box touches a surface, so rotate and move each one until you see it."
+  ]
+ },
+ "LDQ4": {
+  "checklist": [
+   "Select all the actors of a small blockout room. Right-click the selection, open Level and choose Create Level Instance. Click OK in the window that opens and save the new level file, for example as L_Room_Instance.",
+   "Place the instance two more times in the level, so that you have three. Hold Alt and drag the instance to make a copy.",
+   "Select one copy and click Edit in the Details panel. Change something, for example move a wall. Then select the Level Instance in the Outliner and click Commit Changes in the Details panel. Confirm that the change shows up in all three copies."
+  ]
+ },
+ "LDQ5": {
+  "checklist": [
+   "In L_Terrain_01, open Landscape Mode, go to the Manage tab and select the Splines tool.",
+   "Hold Ctrl and click on the landscape to place control points along your ramped path.",
+   "Deform the landscape to the spline, so that the path sits flat and is walkable: in the settings of the Splines tool, under Deform Landscape to Splines, click All Splines. If the path is too narrow, select the control points and raise their Width in the Details panel, then click the button again."
+  ]
+ },
+ "LDQ6": {
+  "checklist": [
+   "Open Edit > Plugins, enable the Procedural Content Generation Framework (PCG) plugin and restart the editor. Right-click in the Content Browser, open PCG and choose PCG Graph. The graph holds the rules. Then drag a PCG Volume from the Place Actors panel onto the landscape, and set Graph on its PCG component in the Details panel. The volume is the box that marks where the graph works.",
+   "Open the graph. Add a Get Landscape Data node, a Surface Sampler node and a Static Mesh Spawner node, and connect them in that order. In the Static Mesh Spawner, add one entry under Mesh Entries and pick one rock mesh. Select the PCG Volume and click Generate in the Details panel. The rocks appear on the landscape inside the volume.",
+   "Move the volume away from your path, so that the scattered rocks do not block it."
+  ]
+ },
+ "LDQ7": {
+  "checklist": [
+   "Duplicate L_Routes_01 and name the copy L_Routes_01_Night.",
+   "Select the Directional Light, which is the sun. Rotate it until it sits low over the horizon, lower its Intensity until the level is dim, and set its Light Color to a cool blue so that it reads as moonlight. Keep the exposure locked.",
+   "Add local lights so that every route entrance and the goal are still easy to see."
+  ]
+ },
+ "LDQ8": {
+  "checklist": [
+   "Drag a looping sound from the Content Browser into the level, near the goal. This creates an Ambient Sound actor. The Starter Content has looping sounds in its Audio folder that you can use.",
+   "Select the Ambient Sound actor. In the Details panel, under Attenuation, turn on Override Attenuation. Attenuation is how a sound gets quieter with distance. Set Inner Radius and Falloff Distance so that the player can hear the sound from the route entrances, and so that it is louder near the goal.",
+   "In the Place Actors panel, open Volumes and drag an Audio Volume around one room. In its Details panel, under Reverb, turn on Apply Reverb and pick a Reverb Effect. Walk into the room in PIE and listen to the change."
+  ]
+ },
+ "LDQ9": {
+  "checklist": [
+   "Follow the Grass Quick Start guide that is linked on this quest, on L_Terrain_01. It has you create one Landscape Grass Type asset, add a grass mesh to it, and connect it in the Landscape Material with a Landscape Grass Output node.",
+   "Paint a path layer that has no grass, so that the route stays clear. The grass only grows where its own layer is painted, so painting another layer, such as dirt, along the route removes the grass there."
+  ]
+ },
+ "LDQ10": {
+  "checklist": [
+   "Switch the editor to Modeling Mode with the mode dropdown in the main toolbar. If Modeling is not in the list, enable the Modeling Tools Editor Mode plugin in Edit > Plugins. Block out 3 landmark options with the shape tools, such as Box and Cylinder, and make them about the same height.",
+   "Look at each one from a distance against the sky. Open the view mode menu of the viewport, which shows Lit by default, and choose Unlit or Lighting Only, so that you judge only the shape.",
+   "Keep the one that you recognize the fastest, and note why."
+  ]
+ },
+ "LDQ21": {
+  "checklist": [
+   "Build an Actor Blueprint named BP_Platform with a Static Mesh for the floor piece. Add two Vector variables named PointA and PointB and turn on Instance Editable for both, so that you can set them on each copy in the level. In the Event Graph, add a Timeline with one float track that goes from 0 to 1 and back to 0, and turn on Loop. Connect BeginPlay to Play. On Update, use a Lerp (Vector) node from PointA to PointB with the track as Alpha, and connect the result to Set Relative Location on the mesh.",
+   "Ride the platform in PIE and check that you do not slide off."
+  ],
+  "done_when": "Send two screenshots from PIE that show you riding the platform at two different positions, and a screenshot of the graph. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "LDQ22": {
+  "checklist": [
+   "Add one trap to your level, such as spikes or fire. The quick way is a Pain Causing Volume: drag one from the Place Actors panel, under Volumes, and set Damage Per Sec in its Details panel. The other way is a Blueprint with a Box Collision that calls Apply Damage on the Other Actor when something overlaps it. Your character only loses health if its Blueprint handles Event AnyDamage.",
+   "Warn the player. Make the trap visible before it hurts them."
+  ]
+ },
+ "LDQ23": {
+  "checklist": [
+   "Add a checkpoint trigger that stores a respawn transform. A transform is the location and rotation where the player will appear again. Make an Actor Blueprint named BP_Checkpoint with a Box Collision. When the player overlaps it, cast Other Actor to your character and store the transform of the checkpoint in a Transform variable named RespawnTransform on the character.",
+   "Make a fall send the player back. Kill Z, the height in the World Settings below which actors are destroyed, removes the character and does not bring it back, so build your own kill volume above that height. Make an Actor Blueprint named BP_KillZone with a large Box Collision under the level. When the player overlaps it, cast Other Actor to your character and call Set Actor Transform with RespawnTransform, which moves the player back to the last checkpoint."
+  ],
+  "done_when": "Send three screenshots from PIE that show you reaching the checkpoint, falling, and standing at the checkpoint again after the respawn. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "LDQ24": {
+  "checklist": [
+   "Make a Widget Blueprint named WBP_Prompt: in the Content Browser click Add, then User Interface, then Widget Blueprint, and choose User Widget. Open it, drag a Text widget from the Palette into the designer, and type a single line such as Press E to use.",
+   "Show the widget on Begin Overlap when the player is near an interactable (an object the player can use), and hide it on End Overlap. In the Blueprint of the interactable, on Begin Overlap call Create Widget with the class WBP_Prompt, store the result in a variable, and call Add to Viewport. On End Overlap, call Remove from Parent on that variable."
+  ]
+ },
+ "LDQ25": {
+  "checklist": [
+   "Build a pressure plate that opens a gate only while a physics cube sits on it. Make an Actor Blueprint named BP_PressurePlate with a flat mesh and a Box Collision just above it. On Begin Overlap, open the gate, and on End Overlap, close it again. For the cube, place a cube mesh, set its Mobility to Movable, and turn on Simulate Physics and Generate Overlap Events in its Details panel. Without Generate Overlap Events the plate does not notice the cube.",
+   "Filter the plate so that only the cube counts, or only the player counts. One way is to give the cube an Actor Tag such as Cube, and check Actor Has Tag on Other Actor before you open the gate. Decide which one counts, and say why."
+  ],
+  "done_when": "Send two screenshots from PIE that show the puzzle before and after it is solved, and add one line that says what the plate reacts to and why. A short GIF also works, and you can paste a link to a longer video."
+ },
+ "LDQ26": {
+  "checklist": [
+   "Open the Blueprint of one door or lever. After the event that uses it, add a Play Sound at Location node. Pick a sound in its Sound pin and connect Get Actor Location to its Location pin. You can also add an Audio Component and call Play on it.",
+   "Use one sound for when it is locked and a different sound for when it opens."
+  ],
+  "done_when": "Send a screenshot of the graph that shows both sound nodes. A screenshot has no audio, so if you can, also paste a link to a short video with sound."
+ }
+}

@@ -1,0 +1,282 @@
+{
+ "EAQ36": {
+  "checklist": [
+   "Make a new level and choose Empty Level. Then place a Directional Light and a Sky Atmosphere from the Place Actors panel.",
+   "Select the Directional Light and enable Atmosphere Sun Light in its Details panel. This tells the sky to use this light as the sun. Check that Atmosphere Sun Light Index is 0.",
+   "Hold Right Ctrl + L and move the mouse to rotate the sun. Find a low sun angle that looks like a sunset, and a high sun angle that looks like noon.",
+   "On the Directional Light, turn on Use Temperature. Try a Temperature of 6500 K and then 3000 K, and note how the color of the light changes.",
+   "Turn on the Shadow Frustums view: in the viewport, open Show, then Advanced, and enable Shadow Frustums. Look at the rays of the light and notice that they are parallel, which is how sunlight behaves.",
+   "Select the Sky Atmosphere and change Mie Scattering Scale up and down. Then set Mie Anisotropy to 0 and to 0.9 and watch the glow around the sun. Reset the values to their defaults when you are done.",
+   "Add a second Directional Light and set its Atmosphere Sun Light Index to 1. Make it dim and blue so it works as a moon, and rotate it so it points the opposite way to the sun."
+  ]
+ },
+ "EAQ57": {
+  "checklist": [
+   "Create a material named M_Blend_Test with a colored Base Color. This is the opaque starting point that you copy in the next steps. Place four spheres in front of a wall, one for each blend mode you will try.",
+   "Duplicate the material and name the copy M_Blend_Masked. Set its Blend Mode to Masked. Connect a striped texture to Opacity Mask and try two different Opacity Mask Clip Values. Apply it to the first sphere.",
+   "Duplicate M_Blend_Test again and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity. Apply it to the second sphere.",
+   "Duplicate again to make M_Blend_Additive, with Blend Mode Additive, and M_Blend_Modulate, with Blend Mode Modulate, set to Unlit, and with the color connected to Emissive. Apply them to the third and fourth sphere. Move two spheres so that they overlap, and look at the area where they overlap.",
+   "On M_Blend_Translucent, open the Translucency section in the Details panel. Place a Point Light nearby and compare these three Lighting Mode values: Volumetric NonDirectional, Surface TranslucencyVolume and Surface ForwardShading.",
+   "Take one screenshot with all four blend modes visible, and one screenshot with the three lighting modes side by side."
+  ]
+ },
+ "EAQ64": {
+  "checklist": [
+   "Open a level with several textured props. Open the Build menu in the main menu bar and run Build Texture Streaming.",
+   "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips.",
+   "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change.",
+   "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green.",
+   "Type r.Streaming.PoolSize 50 in the console, play again, and look for blurry textures. Then set the value back to what it was before.",
+   "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it. Only note where it is."
+  ]
+ },
+ "EAQ68": {
+  "checklist": [
+   "Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input.",
+   "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input.",
+   "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library.",
+   "Click Apply, and then save the asset.",
+   "Open one of your materials, such as M_Ground. Find MF_DirtMask in the Palette under your category and drag it into the graph. Move the mouse over the node and check that your description appears as the tooltip.",
+   "Place a second copy in another way. Hold F and left-click in the graph to make an Unspecified Function node, and then assign MF_DirtMask to it in the Details panel.",
+   "Change something inside MF_DirtMask, for example the default value of Contrast, and click Apply. Confirm that both copies in M_Ground update."
+  ]
+ },
+ "EAQ86": {
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering, and find the Direct Lighting section. Enable MegaLights, and accept the prompt that asks to enable Support Hardware Ray Tracing. Restart the editor.",
+   "Build a dark hall with a floor, walls and pillars. Place at least 20 Movable local lights: Point Lights, Spot Lights, and 2 Rect Lights with a Source Texture. Turn Cast Shadows on for all of them.",
+   "Add a Post Process Volume with Infinite Extent turned on. Use its MegaLights setting to turn MegaLights off, and read the number from stat GPU. Then turn MegaLights on again and compare the number.",
+   "Open View Modes, then MegaLights, then Light Complexity. Move the mouse over a wall between many lights, and take a screenshot of the list of lights and their weight ratios.",
+   "Find one light that is partly inside a wall or reaches very far. Make its Source Width, Source Height, cone angle or Attenuation Radius smaller until it no longer shines through geometry.",
+   "On one Spot Light, set MegaLights Shadow Method to Virtual Shadow Maps. Compare the shadow detail on a Nanite prop with the shadow from a Ray Tracing light next to it.",
+   "Open one prop in the Static Mesh Editor. Under Nanite Settings, set Fallback Target to Fallback Relative Error (some versions show this option as Relative Error), lower the Fallback Relative Error value, and click Apply Changes. See if its shadow gets more accurate."
+  ]
+ },
+ "EAQ92": {
+  "checklist": [
+   "Pick a dense prop with 100k triangles or more, such as a rock or statue from Fab or Megascans. Duplicate it and name the copy SM_Fallback_Test. In the Static Mesh Editor, under Nanite Settings, turn on Enable Nanite Support.",
+   "In the Static Mesh Editor, press Ctrl + N to switch between the full Nanite mesh and the fallback mesh. Write down the triangle count of each.",
+   "Set Fallback Target to Fallback Relative Error (some versions show this option as Relative Error). Try the value 1.0 and then 0.1. Click Apply Changes each time and compare the triangle count of the fallback mesh.",
+   "Set Keep Triangle Percent to 50 and Trim Relative Error to 0.05, and click Apply. Compare the Resource Size in the asset details before and after.",
+   "Place the prop in a level. In the console, type r.Nanite 0 to see the fallback mesh drawn in the level. Type r.Nanite 1 to go back.",
+   "Type NaniteStats in the console and read the information on screen. Then open View Modes, then Nanite Visualization, then Mask. Nanite meshes are green and meshes without Nanite are red."
+  ]
+ },
+ "EAQ113": {
+  "checklist": [
+   "Place 100 copies of one book mesh or brick mesh as separate Static Mesh Actors. In the console, type stat unit and stat rhi, and note the number of draw calls.",
+   "Select all 100 actors. Open Actor, then Merge Actors, then Merge Actor Settings. Choose the Batch method and click Merge Actors. Note the draw calls again.",
+   "Open the Details panel of the new actor. Click one instance and confirm that you can only edit its transform. Then change the material on the component and see all instances update.",
+   "Create a Blueprint named BP_Shelf with an Instanced Static Mesh component. Set its Static Mesh, and add 10 instances with the + button in the Instances category.",
+   "Duplicate BP_Shelf and name the copy BP_Shelf_HISM. Use a Hierarchical Instanced Static Mesh component in it. Write two lines: which component you would use for 5000 static pebbles, and which one for a project that uses only Nanite.",
+   "On the ISM, enable Per Instance Custom Data by setting Num Custom Data Floats to 1. Use this value in the material to control the color, so that two shelves can look different without a new material instance."
+  ],
+  "quiz": [
+   {
+    "q": "What is the main performance reason to use an Instanced Static Mesh component?",
+    "choices": [
+     "It reduces texture memory",
+     "It combines draw calls of identical meshes and lowers UObject memory",
+     "It bakes lighting faster",
+     "It enables Nanite on any mesh"
+    ],
+    "explain": "An ISM combines the draw calls of identical static meshes. The page also gives a GPU example: a primitive uses about 672 bytes versus 64 bytes for an instance."
+   },
+   {
+    "q": "You click one instance of an ISM in the Details panel. What can you edit?",
+    "choices": [
+     "Only its transform",
+     "Its material and collision",
+     "Its LOD settings",
+     "Its shadow settings"
+    ],
+    "explain": "Only the transform is available per instance. Materials, collision and shadows are component-level and shared by all instances."
+   },
+   {
+    "q": "Your project uses only Nanite meshes. Which component does the page say to choose?",
+    "choices": [
+     "HISM, because of its static hierarchy",
+     "ISM, because Nanite has its own culling and LOD system",
+     "Either, there is no difference with Nanite",
+     "Neither, use separate actors"
+    ],
+    "explain": "If the project only uses Nanite, ISM is always the choice. HISMs are for projects with Nanite and fallback meshes when appropriate."
+   },
+   {
+    "q": "When is a HISM described as the better choice?",
+    "choices": [
+     "When instances move every frame",
+     "When you need per-instance materials",
+     "When you have thousands of instances that do not move, so a static hierarchy accelerates culling and LOD",
+     "When the mesh has many triangles and per-instance LOD matters"
+    ],
+    "explain": "HISMs can be better with thousands of static instances. Non-static instances can cause errors with HISMs, and HISM groups LODs so it suits low-triangle meshes."
+   },
+   {
+    "q": "You batch a selection that contains three different static mesh assets with Merge Actors (Batch). What do you get?",
+    "choices": [
+     "One ISM component with all three meshes",
+     "One instanced static mesh component per unique static mesh asset",
+     "One merged static mesh asset",
+     "Three separate actors"
+    ],
+    "explain": "When grouping multiple unique static meshes into one actor, an ISM component is created per unique static mesh asset."
+   },
+   {
+    "q": "Which menu path does the page give for batching actors into ISMs?",
+    "choices": [
+     "Actor > Merge Actors > Merge Actor Settings, then Batch",
+     "Edit > Batch Instances",
+     "Window > ISM Editor",
+     "Build > Build Instances"
+    ],
+    "explain": "Select the actors, open Actor > Merge Actors > Merge Actor Settings, change the method to Batch and click Merge Actors."
+   },
+   {
+    "q": "What does creating a Packed Level Actor do to the selected actors' meshes?",
+    "choices": [
+     "Converts them to Nanite",
+     "Bakes them into one static mesh asset",
+     "Groups them automatically into a HISM inside a Blueprint actor",
+     "Turns them into foliage"
+    ],
+    "explain": "The page says actors are automatically grouped into a HISM when you use Create Packed Level Actor. Edit the Blueprint to change component properties."
+   },
+   {
+    "q": "How can you vary the look of individual instances without creating a new dynamic material instance per mesh?",
+    "choices": [
+     "Give each instance its own material slot",
+     "Use Per Instance Custom Data or Custom Primitive Data read in the material",
+     "Paint vertex colors per instance",
+     "Use a Material Parameter Collection per instance"
+    ],
+    "explain": "Custom Primitive Data and Per Instance Custom Data pass float data to the material without a new material instance, which keeps draw calls low."
+   }
+  ]
+ },
+ "EAQ98": {
+  "checklist": [
+   "In Modeling Mode, make three kit pieces with sizes that fit a grid of 100: SM_Kit_Wall (400 long, 20 thick and 400 high), SM_Kit_Corner (20 x 20 and 400 high) and SM_Kit_Floor (400 x 400 and 20 thick). Use Edit Pivot to set the pivot of each piece to a bottom back corner.",
+   "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size and note how the Drag Grid dropdown in the viewport toolbar changes. Then turn it off again, because this kit is built on a grid of 100.",
+   "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100 and the rotation to 90. Build a closed room from at least 12 pieces.",
+   "Hold V while you drag one wall so that its pivot snaps to a vertex, a corner point, of the wall next to it. Look at the seam from close up.",
+   "Open SM_Kit_Wall in the Static Mesh Editor and open Window > Socket Manager. Create a socket named Lamp and set its Relative Location to the center of the wall at head height.",
+   "In the level, place a Point Light and right-click it. Choose Attach To, pick SM_Kit_Wall and then the Lamp socket. Reset the Location of the light so it snaps to the socket. Repeat this on two more walls."
+  ]
+ },
+ "EAQ99": {
+  "checklist": [
+   "Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. Make a material named M_Trim from it, and also prepare a checkerboard material for testing.",
+   "Take a kit piece with a flat face and a trim edge, from quest EAQ98 or a new one. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard.",
+   "Open UVs, then XFormUV. Scale and move each island so that the main face sits on the stone strip of T_Trim and the trim edge sits on the metal strip. Hold Shift to move several islands together.",
+   "Open UVs, then Layout. Set Layout Type to Stack for islands that should share the same strip. Set Layout Type to Transform when you need to scale or move all UVs together.",
+   "Assign M_Trim and check the mesh in the level. If an island looks stretched, fix it with Unwrap.",
+   "Open the Static Mesh Editor and look at the list of UV channels. Note which channel holds your trim UVs."
+  ]
+ },
+ "EAQ101": {
+  "checklist": [
+   "Place a Post Process Volume named PPV_Bloom with Infinite Extent enabled. Put one strong emissive object or light source in view.",
+   "Open Lens, then Bloom, and keep Method on Standard. Try Intensity at 0, 1 and 5. Then set a Threshold so that only your bright source glows.",
+   "Switch Method to Convolution. Assign the default kernel texture, or your own, and compare the shape of the glow.",
+   "Open the kernel texture. Check that Mip Gen Settings is set to No Mipmaps and that Never Stream is enabled.",
+   "Enable Dirt Mask Texture and assign a small dirt texture. The documentation recommends a size that is not a power of two, for example 960 x 540, because Unreal then makes no mipmaps for it and does not stream it. Set Dirt Mask Intensity so that the dirt only shows near the bright source.",
+   "Switch back to Standard and use stat gpu to note the difference in frame time between the two methods."
+  ]
+ },
+ "EAQ105": {
+  "checklist": [
+   "Open your environment scene. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console.",
+   "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each.",
+   "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent.",
+   "Open Show, then Visualize, and enable Temporal Upscaler I/O. This is the VisualizeTemporalUpscaler view. Take a screenshot of the view that shows the input and the output.",
+   "Open Settings, then Engine Scalability Settings, and switch the Anti-Aliasing group between Medium and Epic. Look at the same thin geometry each time, such as a fence, wires or foliage.",
+   "Open the file Engine/Config/BaseScalability.ini and find the AntiAliasingQuality sections. Note two r.TSR variables that change between the quality levels."
+  ],
+  "done_when": "Send a screenshot of the Temporal Upscaler I/O view. Add a small table that lists, for screen percentage 100, 66 and 50, the TSR feed, the TSR 1spp and the GPU cost."
+ },
+ "EAQ14": {
+  "checklist": [
+   "Make 4 swatches: a rough dielectric, a glossy dielectric, a rough metal and a polished metal.",
+   "Keep the Base Color values of each swatch in a plausible range. Do not use pure black or pure white.",
+   "Add a normal map to one swatch. A normal map is a texture that fakes small bumps on the surface. Compare the swatch with and without it.",
+   "Check each swatch under the lighting you built in the earlier quests."
+  ]
+ },
+ "EAQ17": {
+  "checklist": [
+   "Build a landscape material that has 3 layers. Use a Landscape Layer Blend node, which is the node that mixes the layers based on where you paint.",
+   "Create the layer info objects, which are small assets that store where each layer is painted. Then paint all 3 layers on the landscape you made in the earlier quests.",
+   "Stand at the height of a player and look at the ground. Keep the tiling scale sensible, so that the texture is not too large and not too small from there."
+  ]
+ },
+ "EAQ30": {
+  "checklist": [
+   "Grade the scene in a Post Process Volume. Start with the white balance, then change the global settings, and then the shadows, midtones and highlights.",
+   "Now grade with a LUT. Take a screenshot of the scene without a grade. Download the neutral LUT image, a LUT that changes nothing yet (256 x 16 pixels), from the Epic documentation page about color grading with Look-Up Tables. Open both in an image editor, apply the same color adjustments to the screenshot and to the LUT image, and save the LUT image. Import it into Unreal, open the texture, and set Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps. In the Post Process Volume, open Color Grading, then Misc, and assign it as the Color Grading LUT.",
+   "Compare the manual grade with the LUT grade.",
+   "Keep one screenshot without any grade for reference."
+  ]
+ },
+ "EAQ5": {
+  "checklist": [
+   "Select the Exponential Height Fog actor in your scene. If there is none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog. Aim a Directional Light or a Spot Light through a window into a darker room, and adjust the scene until you can see light shafts coming through the window.",
+   "Select the light and change Volumetric Scattering Intensity in its Details panel, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
+  ]
+ },
+ "EAQ6": {
+  "checklist": [
+   "In the Place Actors panel, search for Local Fog Volume and drag 2 of them into your scene. Scale and move them so that they separate the foreground from the background, for example one behind the main subject and one far away. Change the two Extinction values in the Details panel to make the fog thicker or thinner.",
+   "Take one screenshot with the volumes and one screenshot without them, from the same view."
+  ]
+ },
+ "EAQ7": {
+  "checklist": [
+   "Render the same view at 3 sun angles and with 2 Source Angle values for each, so that you get 6 renders. Select the Directional Light and rotate it to change the sun angle. Source Angle is in its Details panel, under Light: a small value gives sharp shadows and a large value gives soft shadows. Take each render from the same camera bookmark.",
+   "Pick the render where the shapes are the easiest to read, and write one line that says why."
+  ]
+ },
+ "EAQ19": {
+  "checklist": [
+   "Make a material that uses a world-aligned texture: add the WorldAlignedTexture node, connect a Texture Object node with your texture to its TextureObject input, and connect its XYZ Texture output to Base Color. Apply the material to blockout meshes that you have scaled to different sizes. The pattern keeps the same size on all of them.",
+   "Make a second material that uses a normal Texture Sample node, which follows the UVs of the mesh. Apply it to the same meshes, and compare the two results. Look at how the pattern stretches on the scaled meshes."
+  ]
+ },
+ "EAQ20": {
+  "checklist": [
+   "In your landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick a Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears.",
+   "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
+  ]
+ },
+ "EAQ21": {
+  "checklist": [
+   "Make an emissive screen or sign. In its material, multiply a color or a texture by a Scalar Parameter named Intensity and connect the result to Emissive Color. Make a Material Instance, so that you can change how strong the glow is, and try the values 1, 10 and 50.",
+   "With Lumen on, check how much the glow lights the surfaces near it. Work out in which cases you would still need a real light."
+  ]
+ },
+ "EAQ32": {
+  "checklist": [
+   "Make a PCG graph that scatters debris or rocks on a surface. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Right-click in the Content Browser, open PCG and choose PCG Graph. In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick your mesh under Mesh Entries. Place a PCG Volume in the level, set Graph on its PCG component, and click Generate.",
+   "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, for example a Density Filter node after the Surface Sampler. It can also be an exclusion rule, which removes objects from an area, for example a Difference node that subtracts the points near a spline along the path."
+  ]
+ },
+ "EAQ33": {
+  "checklist": [
+   "Add a small lake or a river to your scene with the Water system. Enable the Water plugin in Edit > Plugins and restart the editor. Then search for Water Body in the Place Actors panel and drag a Water Body Lake or a Water Body River into the level.",
+   "Tune the color and the scattering of the water until it matches your mood target. Select the water body and find Water Material in its Details panel. Make a copy of that Material Instance for your scene, assign the copy, and change its Absorption and Scattering values. Scattering controls how light spreads inside the water, which changes how clear or murky it looks."
+  ]
+ },
+ "EAQ34": {
+  "checklist": [
+   "Set up a Procedural Foliage Volume with 2 species. First open Edit > Editor Preferences, find the Experimental section and enable Procedural Foliage. Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the forest edge, and click Resimulate in its Details panel.",
+   "Tune the spacing settings in the two Static Mesh Foliage assets, such as Shade Radius, Initial Seed Density and Average Spread Distance, and click Resimulate after each change. Continue until the edge of the forest looks natural and not uniform."
+  ]
+ },
+ "LDQ2": {
+  "checklist": [
+   "In L_Routes_01, select the Exponential Height Fog actor in the Outliner. If the level has none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog.",
+   "In the Place Actors panel, search for Local Fog Volume and drag one over one dead end. Scale it so that it covers the dead end, and raise its two Extinction values in the Details panel, which make the fog thicker, until the dead end feels less inviting.",
+   "Check that you can still see the goal and the landmark clearly through the fog."
+  ]
+ }
+}

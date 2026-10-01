@@ -22,7 +22,7 @@ quests:
       - "Switch to the Shader Complexity view mode, which colors each surface by how expensive its material is to draw. Find the most expensive color on the screen and note which object it is."
       - "Switch to the Light Complexity view mode. Note which surface is affected by the most lights."
       - "When you are done, switch the viewport back to Lit."
-    done_when: "Send one image that shows 6 labeled views from the same camera (Lit, Unlit, Wireframe, Detail Lighting, Shader Complexity and Light Complexity). Add one line about the most expensive object you found."
+    done_when: "Send one image that shows 7 labeled views from the same camera (Lit, Unlit, Wireframe, Detail Lighting, Lighting Only, Shader Complexity and Light Complexity). Add one line about the most expensive object you found."
     xp: 30
     verify_type: screenshot
     quiz:
@@ -284,13 +284,13 @@ quests:
       - "Select 3 or more assets in the Content Browser."
       - "In the Python console, type this line and press Enter: print([a.get_name() for a in unreal.EditorUtilityLibrary.get_selected_assets()])"
       - "Save the same code in a file named list_selected.py inside the Content/Python folder of your project. Add the line import unreal at the top of the file."
-      - "Run the file with File > Execute Python Script, and check the result in the Output Log."
+      - "Run the file with Tools > Execute Python Script, and check the result in the Output Log. The documentation page lists this command under the File menu, where it was in older versions."
     done_when: "Send a screenshot of the Output Log that shows your Hello line and the list of selected asset names. Also add the text of list_selected.py."
     xp: 110
     verify_type: screenshot
     quiz:
       - q: "Which plugin gives the Unreal Editor its Python support?"
-        choices: ["Python Editor Script Plugin", "Niagara", "Modeling Tools Editor Mode", "Remote Control API"]
+        choices: ["Tools > Execute Python Script", "Niagara", "Modeling Tools Editor Mode", "Remote Control API"]
         answer_index: 0
         explain: "Python support comes from the Python Editor Script Plugin. The docs also recommend Editor Scripting Utilities."
       - q: "What is the only way to run Python code line by line?"
@@ -599,10 +599,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-ui-reference-for-niagara-effects-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Niagara/SetNiagaraVariable_Float"
     checklist:
-      - "Make a Niagara system named NS_Fountain from a simple emitter template. For example, use Fountain, or Simple Sprite Burst with a Spawn Rate module added."
+      - "Make a Niagara system named FXS_Fountain from a simple emitter template. For example, use Fountain, or Simple Sprite Burst with a Spawn Rate module added."
       - "In the Parameters panel, add a User parameter of type float named SpawnRate, and a User parameter of type Linear Color named TintColor."
       - "Link the Spawn Rate module to User SpawnRate, and link the particle Color to User TintColor. Give both parameters sensible default values."
-      - "Place NS_Fountain in a level. Select it and check that both values show in the Details panel under Override Parameters."
+      - "Place FXS_Fountain in a level. Select it and check that both values show in the Details panel under Override Parameters."
       - "Make a Blueprint named BP_FountainController that has a Niagara component, or a reference to the system you placed. On a key press, call Set Niagara Variable (Float) for SpawnRate and Set Niagara Variable (LinearColor) for TintColor."
       - "Start Play in Editor and press the key. Confirm that the effect changes its rate and color, and that you did not have to edit the Niagara asset."
     done_when: "Send two PIE screenshots, one from before the key press and one from after. Also send one screenshot of the Blueprint graph with the Set Niagara Variable nodes."
@@ -794,7 +794,7 @@ quests:
     checklist:
       - "Build a material named M_Master_Prop with clear parameters, such as a color tint, a roughness value, and a texture switch or a scale. Put the parameters in groups and give them names that artists will understand."
       - "Make at least 3 Material Instances from it, with names that start with MI_, that look clearly different. Use them on props in one small scene."
-      - "Build one Niagara system, with a name that starts with NS_, that has at least one User parameter (for example SpawnRate or TintColor). You may drive it from an MPC value instead. MPC is short for Material Parameter Collection."
+      - "Build one Niagara system, with a name that starts with FXS_, that has at least one User parameter (for example SpawnRate or TintColor). You may drive it from an MPC value instead. MPC is short for Material Parameter Collection."
       - "Make one Blueprint, with a name that starts with BP_, that changes that value during play. It can use a key press, a trigger or a timer."
       - "If you use an MPC, let the same value also change M_Master_Prop, so that the props and the effect react together."
       - "Write a short usage note for artists. It should list each parameter, its safe range, and which Blueprint call drives the effect."
@@ -826,7 +826,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/emitter-settings-reference-for-niagara-effects-in-unreal-engine"
     checklist:
-      - "Make a Niagara system named NS_BouncingSparks that uses a fountain emitter. Place it above a floor and a box in a test level."
+      - "Make a Niagara system named FXS_BouncingSparks that uses a fountain emitter. Place it above a floor and a box in a test level."
       - "In the Particle Update group, click the + button and choose Collision, then Collision, to add the Collision module. Keep it right before the solver module in the stack."
       - "Set Bounce Restitution to about 0.4 and Friction to about 0.2. Restitution controls how much speed a particle keeps after a bounce. Check that the sparks bounce off the floor."
       - "Duplicate the emitter. On the copy, open Emitter Properties and set Sim Target to GPU. Keep the first emitter on CPU."
@@ -889,7 +889,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/render-module-reference-for-niagara-effects-in-unreal-engine"
     checklist:
-      - "In the Content Drawer, choose FX, then Niagara System, then New system from selected emitters, and pick Simple Sprite Burst. Name the system NS_RibbonTrail and drag it into a level."
+      - "In the Content Drawer, choose FX, then Niagara System, then New system from selected emitters, and pick Simple Sprite Burst. Name the system FXS_RibbonTrail and drag it into a level."
       - "In the Render group, delete the Sprite Renderer and add a Ribbon Renderer. Pick DefaultRibbonMaterial as its material. To find this material, turn on Show Engine Content and Show Plugin Content."
       - "In the Emitter Update group, set the Life Cycle Mode of Emitter State to System. Then add a Spawn Rate module with a rate of about 100."
       - "In the Particle Spawn group, set Lifetime, Color and Ribbon Width. Add a Shape Location module set to Ring / Disk and an Add Velocity module set to From Point, so that the ribbon spirals."
@@ -953,7 +953,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-material-editor-ui"
     checklist:
       - "Make a new material named M_TA_CustomBlur. Add a Custom node to the graph. You can find it with the right-click search or in the Custom category of the Palette."
-      - "Select the Custom node. In its Inputs array, add four inputs named Tex, UV, r and dist. Set Output Type to a 3-channel float. Paste the blur code from the documentation page into the Code field."
+      - "Select the Custom node. In its Inputs array, add four inputs named Tex, UV, r and dist. Set Output Type to a 3-channel float. Copy the blur code from the Custom Material Expressions page that is linked on this quest, and paste it into the Code field."
       - "Connect a Texture Object node to Tex, a TexCoord node to UV, and two Scalar Parameters to r and dist. Set Description to 'Box Blur' so that the title of the node is clear."
       - "Add one extra output to the node with Additional Outputs, for example a luminance (brightness) value, and use it somewhere in the graph."
       - "Build a second, simple effect two times: once in a Custom node and once with built-in nodes (for example Sin, Multiply by a parameter, and Add). Compare the two instruction counts in the Stats panel. A lower count means a cheaper material."
@@ -1100,9 +1100,9 @@ quests:
       - "In the Content Browser, create a Niagara module script named NMS_TA_PullToPoint. Open it in the Script Editor."
       - "Add two Module Inputs named TargetPosition and Strength. Read Particle.Position, calculate the direction to the target and store it in a Module Local (a value that exists only inside this module), and then write a new Particle.Velocity."
       - "In Script Details, set Module Usage Bitmask to the particle scripts, and fill in a Category, a Description and Keywords. Turn on Expose to Library so the module shows up when you add modules. Then click Compile."
-      - "Add the module to the Particle Update group of a system named NS_TA_PullTest. Check that the particles move toward the target."
+      - "Add the module to the Particle Update group of a system named FXS_TA_PullTest. Check that the particles move toward the target."
       - "In the module script, click Versioning and enable it. Mark version 1.0 as the exposed version."
-      - "Add a new minor version. In it, add an input named Falloff and write a Change Description. Then set this version as exposed and visible. In NS_TA_PullTest, switch the module to the new version from the Selection panel."
+      - "Add a new minor version. In it, add an input named Falloff and write a Change Description. Then set this version as exposed and visible. In FXS_TA_PullTest, switch the module to the new version from the Selection panel."
     done_when: "Send a screenshot of the module graph with Script Details visible, a screenshot of the Versioning panel that shows both versions, and a screenshot of the effect running in the viewport."
     xp: 180
     verify_type: screenshot
@@ -2520,7 +2520,7 @@ quests:
       - "Switch to Modeling Mode with Shift+5. If the mode is missing, enable the Modeling Tools Editor Mode plugin first. Find the four panels: Tool Category, Tool Palette, Tool Properties and Quick Settings."
       - "Choose Create, then Box. Set Output Type to Static Mesh and click in the level to place the box. Name the asset SM_ModelTest."
       - "Choose Model, then PolyGroup Edit. Select one face and Extrude it, which pushes the face outward. Then Bevel one edge, which cuts the sharp edge into a small slope. Click Accept. Press Ctrl+Z once and see what is undone."
-      - "Place a second copy of any Starter Content prop and use XForm > Duplicate on it. Then run Mesh > Simplify on the copy to reduce it to about half the triangles, and click Accept."
+      - "Place any Starter Content prop in the level and select it. Choose XForm, then Duplicate, and click Accept. This makes a new mesh asset that is a copy, so the original prop stays as it is. With the copy selected, choose Mesh, then Simplify, reduce it to about half the triangles, and click Accept."
       - "In the viewport, turn on Show > Advanced > Mesh Edges. Use Attribs > Inspect on the simplified copy and look at the result. Then use Attribs > Inspect Collision."
       - "Open Quick Settings and turn off Combined Gizmo. Note how the gizmo changes."
     done_when: "Send a screenshot of SM_ModelTest after PolyGroup Edit with the extrude and the bevel visible. Also send a screenshot of the simplified prop with Mesh Edges on and the triangle count visible."
@@ -2742,7 +2742,7 @@ quests:
       - "Open M_Chair from the Starter Content. Find the mask texture T_Chair_M and see how each channel (R, G, B, A) drives a different part of the chair."
       - "In an image tool, paint four black-and-white masks for one of your own meshes. Put one mask in each channel and export them as one file named T_MyProp_Masks."
       - "Import T_MyProp_Masks. Open it in the Texture Editor, uncheck sRGB, and set Compression Settings to Masks."
-      - "Create a material named M_MyProp. Add a Texture Sample node for the mask texture and set its Sampler Type to Linear Color."
+      - "Create a material named M_MyProp. Add a Texture Sample node for the mask texture and check that its Sampler Type is Masks. This matches the Masks compression setting of the texture, and the editor usually sets it for you. With any other Sampler Type the material shows an error."
       - "Use the R channel as a metal mask and the G channel as an emissive (glow) mask. Use the B channel as the Alpha of a Lerp node that blends between two Vector Parameters for the color."
       - "Make a Material Instance named MI_MyProp_Red and change only the color parameters in it. Apply it to the mesh."
     done_when: "Send a screenshot of the M_MyProp graph that shows the one mask Texture Sample feeding Metallic, Emissive and a color Lerp. Also send a viewport screenshot of MI_MyProp_Red on the mesh."
@@ -3167,18 +3167,18 @@ quests:
     required_spine: false
     required: false
     title: Sparks
-    brief: "A good spark effect is not one emitter but several that work together. An emitter is the part of a Niagara system that creates one kind of particle. Here you combine three: soft smoke, a bright flash at the center, and fast sparks that fly out, fall and bounce. In this quest you build a system with these three emitters, starting from a smoke emitter you made in an earlier quest."
+    brief: "A good spark effect is not one emitter but several that work together. An emitter is the part of a Niagara system that creates one kind of particle. Here you combine three: soft smoke, a bright flash at the center, and fast sparks that fly out, fall and bounce. In this quest you build a system with these three emitters, starting from the smoke emitter of quest TAQ56."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-smoke-effect-using-sprite-particles-in-niagara-for-unreal-engine"
     checklist:
-      - "Duplicate the FX_Smoke emitter from the sprite smoke quest, move the copy to a new folder, and rename it FX_Sparks_Smoke. Right-click it and choose Create Niagara System. Name the system SparksSystem and drag it into your level."
+      - "Duplicate the FX_Smoke emitter asset that you saved in quest TAQ56, move the copy to a new folder, and rename it FX_Sparks_Smoke. Right-click it and choose Create Niagara System. Name the system SparksSystem and drag it into your level."
       - "In FX_Sparks_Smoke, find Emitter State and set Life Cycle Mode to System, and set Spawn Rate to 20. In Initialize Particle, make the lifetime random from 2 to 3 and make the color dark gray (0.3). Make Add Velocity point mostly upward, with Z from 25 to 35, and set the sphere radius of Shape Location to 5."
       - "In the Particle Update group of the smoke emitter, open Scale Color. Turn off Scale RGB, and give Scale Alpha the Smooth Ramp Down shape so the smoke fades out. Set Acceleration Force to Z 20."
-      - "Add a second emitter from the Simple Sprite Burst template and name it FX_SparkBurst. In the Render group, set the material to M_Spark. Delete Sprite Burst Instantaneous, set Life Cycle Mode to System, add a Spawn Rate of 50, set Lifetime to 0.2, and set the RGB of Scale Color to 2, 6, 25."
-      - "Add a third Simple Sprite Burst emitter and name it FX_Sparks_Radial. Set the material to M_Radial_Gradient and set Alignment to Velocity Aligned, so each spark points the way it moves. Use a Spawn Rate of 500, a random lifetime from 0.2 to 0.7, and Add Velocity with a random range where Z goes from 300 to 500."
+      - "Add a second emitter from the Simple Sprite Burst template and name it FX_SparkBurst. In the Render group, set the material to M_Spark, which is in the Starter Content under Particles, then Materials. Delete Sprite Burst Instantaneous, set Life Cycle Mode to System, add a Spawn Rate of 50, set Lifetime to 0.2, and set the RGB of Scale Color to 2, 6, 25."
+      - "Add a third Simple Sprite Burst emitter and name it FX_Sparks_Radial. Set the material to M_Radial_Gradient, from the same Starter Content folder, and set Alignment to Velocity Aligned, so each spark points the way it moves. Use a Spawn Rate of 500, a random lifetime from 0.2 to 0.7, and Add Velocity with a random range where Z goes from 300 to 500."
       - "In the Particle Update group of FX_Sparks_Radial, add Gravity Force with Z -4500, Drag with 1.7, and Collision with Restitution 0.4 and Friction 0.2. Remove Scale Color, and add Scale Sprite Size by Speed with a Velocity Threshold of 2000."
       - "Look at the effect in the level and adjust one value that you do not like, for example the gravity or the spawn rate of the radial emitter."
     done_when: "Send one screenshot of the Niagara System Overview that shows all three emitters (FX_Sparks_Smoke, FX_SparkBurst and FX_Sparks_Radial). Also send one screenshot of the effect in your level with sparks bouncing on the floor."
@@ -3275,14 +3275,14 @@ quests:
     required_spine: false
     required: false
     title: Steam
-    brief: "You do not have to build every effect from zero. If you copy an emitter that already works and change a few values, you get a new effect in much less time. In this quest you copy the smoke emitter from the sprite smoke quest and change its speed, color, size and forces until it looks like steam."
+    brief: "You do not have to build every effect from zero. If you copy an emitter that already works and change a few values, you get a new effect in much less time. In this quest you copy the smoke emitter from quest TAQ56 and change its speed, color, size and forces until it looks like steam."
     time_min: 35
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-steam-effect-in-niagara-for-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-smoke-effect-using-sprite-particles-in-niagara-for-unreal-engine"
     checklist:
-      - "Right-click the FX_Smoke emitter asset from the sprite smoke quest and choose Duplicate Emitter. Move the copy to a new folder and rename it FX_Steam."
+      - "Right-click the FX_Smoke emitter asset from quest TAQ56 and choose Duplicate Emitter. Move the copy to a new folder and rename it FX_Steam."
       - "Right-click FX_Steam and choose Create Niagara System. This makes a new system that already contains the emitter. Name the system Steam and drag it into your level."
       - "In Emitter Update, find Emitter State and set Life Cycle Mode to System. Then set Spawn Rate to 30."
       - "In Initialize Particle, set the lifetime range to 3 to 7, the color to white (1, 1, 1) and the sprite size to 100 to 200. Set Add Velocity so that it pushes the particles sideways and up (X 16 to 32, Y -5 to 5, Z 35 to 50). Set the sphere radius to 20."
@@ -3601,14 +3601,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/emitter-settings-reference-for-niagara-effects-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
     checklist:
-      - "Create a Niagara Emitter asset named NE_TA_HitBase (the Fountain template is fine). Set a Spawn Rate, a Lifetime range and a Sprite Size range that you like, and save it."
-      - "Open NE_TA_HitBase. In Emitter Properties, under Asset Options, set Library Visibility so that the emitter shows in the library, and give it a Category named TA Hits."
-      - "Right-click NE_TA_HitBase in the Content Browser and choose Create Niagara System. Name the system NS_TA_HitVariants."
-      - "In NS_TA_HitVariants, right-click the System Overview and choose Add Emitter. Add NE_TA_HitBase two more times, so the system has three emitters. Rename the three emitters to Concrete, Glass and Wood."
+      - "Create a Niagara Emitter asset named FXE_TA_HitBase (the Fountain template is fine). Set a Spawn Rate, a Lifetime range and a Sprite Size range that you like, and save it."
+      - "Open FXE_TA_HitBase. In Emitter Properties, under Asset Options, set Library Visibility so that the emitter shows in the library. Categories in the Niagara Asset Browser come from tags, so create a Niagara Asset Tag Definitions asset with a tag named TA Hits. Then right-click the emitter in the Content Browser, choose Manage Tags, and give it that tag."
+      - "Right-click FXE_TA_HitBase in the Content Browser and choose Create Niagara System. Name the system FXS_TA_HitVariants."
+      - "In FXS_TA_HitVariants, right-click the System Overview and choose Add Emitter. Add FXE_TA_HitBase two more times, so the system has three emitters. Rename the three emitters to Concrete, Glass and Wood."
       - "In Glass, override the color in Initialize Particle. In Wood, add a Gravity Force module. Leave Concrete unchanged."
-      - "Open NE_TA_HitBase again and change its Spawn Rate. Go back to NS_TA_HitVariants and confirm that all three children picked up the new rate but kept their own overrides."
+      - "Open FXE_TA_HitBase again and change its Spawn Rate. Go back to FXS_TA_HitVariants and confirm that all three children picked up the new rate but kept their own overrides."
       - "In one child, click the reset arrow next to an overridden value to set it back to the value of the parent."
-    done_when: "Send a screenshot of NS_TA_HitVariants with the three child emitters visible and one override arrow visible in the stack. Also send a second screenshot of the Niagara Asset Browser Details panel that shows NE_TA_HitBase in your TA Hits category."
+    done_when: "Send a screenshot of FXS_TA_HitVariants with the three child emitters visible and one override arrow visible in the stack. Also send a second screenshot of the Niagara Asset Browser that shows FXE_TA_HitBase with your TA Hits tag."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -3664,7 +3664,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-a-sparks-effect-in-niagara-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-niagara-effects-for-unreal-engine"
     checklist:
-      - "Create a Niagara System named NS_TA_Embers from the Fountain template and drag it into your level."
+      - "Create a Niagara System named FXS_TA_Embers from the Fountain template and drag it into your level."
       - "In Particle Spawn, open Initialize Particle. Enable Sprite Rotation and set the mode to Direct Angle (Degrees). Then click the dropdown arrow next to the value, choose Dynamic Inputs, then Random Range Float, and set the range from -10 to 30."
       - "In Add Velocity, click the dropdown arrow next to the value and choose Dynamic Inputs, then Random Range Vector. Give it a small range for X and Y and a larger range for Z."
       - "In Particle Update, open Scale Color. Turn off Scale RGB, and apply the Smooth Ramp Down template to the Scale Alpha curve so each particle fades out over its life."
@@ -3727,7 +3727,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-event-handler-group-reference-for-niagara-effects-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/emitter-settings-reference-for-niagara-effects-in-unreal-engine"
     checklist:
-      - "Create a Niagara System named NS_TA_Fireworks with an emitter named Rocket (CPU sim, from the Sprite Burst or Fountain template). Give the rockets a lifetime of about 2 s and a strong upward velocity."
+      - "Create a Niagara System named FXS_TA_Fireworks with an emitter named Rocket (CPU sim, from the Sprite Burst or Fountain template). Give the rockets a lifetime of about 2 s and a strong upward velocity."
       - "In the Rocket emitter, open Emitter Properties and enable Requires Persistent ID. Events need this so that each particle can be identified."
       - "In the Particle Update group of Rocket, click the + button. Under Events, add Generate Location Event and Generate Death Event."
       - "Add a second emitter named Trail. Click the + button next to Emitter Properties and add an Event Handler. Set Source to the location event of Rocket, set Execution Mode to Spawned Particles and set Spawn Number to 3. Then add a Receive Location Event module."
@@ -3790,7 +3790,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-use-a-solid-mesh-to-create-a-balloon-effect-in-niagara-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/render-module-reference-for-niagara-effects-in-unreal-engine"
     checklist:
-      - "Create a Niagara System named NS_TA_MeshSpawn from the Fountain template. Remove the modules Add Velocity in Cone and Shape Location."
+      - "Create a Niagara System named FXS_TA_MeshSpawn from the Fountain template. Remove the modules Add Velocity in Cone and Shape Location."
       - "In Particle Spawn, add a Static Mesh Location module. Set its Static Mesh data interface to a Starter Content mesh (Shape_Sphere is fine). Confirm that particles appear on the surface of the mesh."
       - "Add a second emitter. In its Particle Spawn group, add a Skeletal Mesh Location module and point the data interface at a skeletal mesh from your project (the mannequin works). Try both bone/socket sampling and surface sampling."
       - "In the second emitter, replace the Sprite Renderer with a Mesh Renderer, which draws each particle as a 3D mesh. Set Particle Mesh to a small mesh. Enable Override Materials and add a material that has the Niagara Mesh Particles flag checked."
@@ -3854,7 +3854,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/niagara-fluids-in-unreal-engine"
     checklist:
       - "Open Edit > Plugins and search for Niagara. Enable Niagara Fluids, accept the Beta warning and restart the editor."
-      - "Right-click in the Content Drawer and choose Niagara System. Under Niagara Fluids, then 3D Gas, pick Grid3D_Gas_Explosion. Name the system NS_TA_GasExplosion and drag it into the level."
+      - "Right-click in the Content Drawer and choose Niagara System. Under Niagara Fluids, then 3D Gas, pick Grid3D_Gas_Explosion. Name the system FXS_TA_GasExplosion and drag it into the level."
       - "Select the system in the level. In the Details panel, under Override Parameters, set WorldSpaceSize to 300, 300, 600 and ResolutionMaxAxis to 300. Turn ShowOverlays off and on again to restart the explosion."
       - "Add a Sphere above the explosion, inside the bounds of the simulation. Add an actor tag named collider to the sphere, and watch the gas flow around it."
       - "Open the system. In Grid3D_Gas_CONTROLS_Emitter, open Emitter Summary. Set Density Dissipation to 3.0, Temperature Dissipation to 1.5, Velocity Dissipation to 0.8 and Temperature Buoyancy to 3.5. Dissipation is how fast a value fades away, and buoyancy makes hot gas rise."
@@ -3915,13 +3915,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/niagara-lightweight-emitters-overview"
     checklist:
-      - "Create a Niagara System named NS_Fountain from the Default System and add the Fountain emitter to it. Rename the emitter to Fountain-R."
-      - "Create a second system from the FountainLightweight template and name it NS_Fountain_LW. Rename its emitter to Fountain-LW, set Spawn Rate to 300 and set Scale Color to red."
-      - "Make a new Basic level named NiagaraLWTest. Place NS_Fountain in a grid of 20 by 20 copies, and then place NS_Fountain_LW in a second grid of 20 by 20 copies."
+      - "Create a Niagara System named FXS_Fountain from the Default System and add the Fountain emitter to it. Rename the emitter to Fountain-R."
+      - "Create a second system from the FountainLightweight template and name it FXS_Fountain_LW. Rename its emitter to Fountain-LW, set Spawn Rate to 300 and set Scale Color to red."
+      - "Make a new Basic level named NiagaraLWTest. Place FXS_Fountain in a grid of 20 by 20 copies, and then place FXS_Fountain_LW in a second grid of 20 by 20 copies."
       - "Open Tools, then Debug, then Niagara Debugger. In the HUD section, enable Show Overview, and set the Debug Overview dropdown to Performance."
       - "Select each system in the Outliner. Write down the Game Thread Average for the regular version and for the lightweight version."
       - "Turn the overlay off and run the console command stat UNIT. Compare the Frame and Draw values for both grids."
-      - "In NS_Fountain_LW, try to add a dynamic input to a module, and note what happens."
+      - "In FXS_Fountain_LW, try to add a dynamic input to a module, and note what happens."
     done_when: "Send two screenshots of the Niagara Debugger Performance overlay (one for each system) with the Game Thread Average readable. Write your stat UNIT Frame and Draw numbers in the message."
     xp: 60
     verify_type: screenshot
@@ -3978,7 +3978,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/particle-spawn-group-reference-for-niagara-effects-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-niagara-effects-for-unreal-engine"
     checklist:
-      - "Create a Niagara System named NS_TA_Scratch from the Fountain template and drag it into the level."
+      - "Create a Niagara System named FXS_TA_Scratch from the Fountain template and drag it into the level."
       - "In Particle Update, click the + button and choose New Scratch Pad Module. Confirm that the Scratch Pad panel opens and that an empty module is already in your stack."
       - "In the scratch module, add a float input named Strength. Read Particles.Position, push the particle sideways by Strength * Particles.NormalizedAge, and write the result back to Particles.Position. Click Apply and watch the viewport."
       - "Now open Window > Scratch Pad. Click the + button next to Dynamic Inputs and make a scratch dynamic input that returns a float from a sine of Engine.Time. Attach it to Sprite Size in Initialize Particle."
@@ -4167,10 +4167,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scalability-reference-for-unreal-engine"
     checklist:
       - "Open an expensive material that you already have. If you have none, build one named M_TA_Tiered with a detail normal, a parallax-style UV trick and two extra texture layers."
-      - "Add a QualitySwitch node before the Normal input. Connect the full detail network to High, a cheaper version (base normal only) to Default, and a flat normal constant to Low."
+      - "Add a QualitySwitch node before the Normal input. Connect the full detail network to High, a cheaper version (base normal only) to Default, and a flat normal constant to Low. Leave the Medium and Epic inputs empty. An empty input uses what is connected to Default."
       - "Add a second QualitySwitch node on Base Color. Here High keeps all layers, and Low uses only one texture sample."
       - "Add a FeatureLevelSwitch node on the whole Base Color result. Connect a single static texture to ES3.1 and connect the switched network to Default."
-      - "In the viewport, open the Performance and Scalability menu and change Material Quality Level between Low, Medium and High. Take a screenshot of the same mesh at each level."
+      - "In the viewport, open the Performance and Scalability menu and change Material Quality Level between Low, Medium and High. In older versions this setting is under Settings in the main toolbar. Take a screenshot of the same mesh at each level."
       - "Open the Stats panel and write down the instruction count that the editor shows. Write one line about which branch you think the editor preview is showing."
     done_when: "Send a screenshot of the graph with both QualitySwitch nodes and the FeatureLevelSwitch node, plus three viewport screenshots of the same mesh at Low, Medium and High Material Quality Level. Add one line that says what changed visually between Low and High."
     xp: 60
@@ -4787,8 +4787,8 @@ quests:
       - "In the function, use Get Selection Set to get the selected actors, loop over them, and set the material on their Static Mesh Component. Also handle the case where the material input is empty."
       - "Open Class Defaults and add Static Mesh Actor to Supported Classes, so that the action does not appear on lights or cameras."
       - "Add a Custom Event named 'Snap To Ground' with Call In Editor checked. It does a line trace (an invisible ray) down from each selected actor and moves the actor to the point that the ray hits."
-      - "Compile and save. Then select 3 Static Mesh Actors in the viewport, right-click them, and run both actions from the Scripted Actions sub-menu."
-    done_when: "Send a screenshot of the Scripted Actions sub-menu on a selected actor, a screenshot of the input popup window for Set Material Slot 0, and a screenshot of the actors after both actions ran."
+      - "Compile and save. Then select 3 Static Mesh Actors in the viewport, right-click them, and run both actions from the Scripted Actor Actions sub-menu. The documentation page calls this menu Scripted Actions."
+    done_when: "Send a screenshot of the Scripted Actor Actions sub-menu on a selected actor, a screenshot of the input popup window for Set Material Slot 0, and a screenshot of the actors after both actions ran."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -5585,7 +5585,7 @@ quests:
     checklist:
       - "Open Edit > Plugins, look in the Animation section, and enable the Skeletal Mesh Editing Tools plugin. Restart the editor."
       - "Pick a simple static mesh prop that should bend, for example an antenna, a lamp arm or a tall cylinder made in Modeling Mode. Right-click it in the Content Browser, choose Convert to Skeletal Mesh, and pick Create New for the Skeleton. Name the result SK_Antenna."
-      - "Open the new Skeleton, click Editing Tools in the toolbar and choose the Skeleton mode. With the Edit Skeleton tool in Add mode (N), select the root bone and drag three new bones up the prop, one after the other. Click Accept."
+      - "Open the new Skeletal Mesh SK_Antenna, not the Skeleton asset. In the toolbar of the Skeletal Mesh Editor, click Editing Tools and choose the Skeleton mode. With the Edit Skeleton tool in Add mode (N), select the root bone and drag three new bones up the prop, one after the other. Click Accept."
       - "Select the three new bones together and rename the first one to seg_##1, so that they become seg_001, seg_002 and seg_003. In Edit mode, use Orient with Primary X and Orient Children turned on, so that all bones point the same way."
       - "Switch to the Skin mode and run Bind Skin with Binding Type set to Geodesic Voxel and Max Influences set to 4. Then open Edit Weights, select a bone, and paint with the Brush in Add mode. Hold Shift to Relax (smooth) the weights where two bones meet, and click Accept."
       - "Test the rig: select seg_002 in the Skeleton Tree, rotate it with the gizmo, and check that the prop bends smoothly. If the bend looks bad, go back and paint the weights again."
@@ -5642,14 +5642,14 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-modifiers-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Create a Blueprint Class with the parent Animation Modifier (search for it under All Classes) and name it AM_BoneHeightCurve."
+      - "Create a Blueprint Class with the parent Animation Modifier (search for it under All Classes) and name it BP_BoneHeightCurveModifier."
       - "Add two variables and mark both as Instance Editable: BoneName (type Name) and CurveName (type Name, with the default value BoneHeight)."
       - "Implement the OnApply event with nodes from the Animation Blueprint Library. First add a Curve track with CurveName, and then loop over the frames of the sequence. For each frame, call Get Bone Pose for Frame with BoneName, read the Z of the location, convert the frame to a time with Get Time at Frame, and add a float curve key at that time."
       - "Implement the OnRevert event so that it removes the curve track again."
-      - "Open a walk or jump Animation Sequence, go to Window > Animation Data Modifiers, click Add Modifier and pick AM_BoneHeightCurve. Set BoneName to a bone whose parent is the root (for example pelvis), because Get Bone Pose returns values in local space, which means relative to the parent bone."
+      - "Open a walk or jump Animation Sequence, go to Window > Animation Data Modifiers, click Add Modifier and pick BP_BoneHeightCurveModifier. Set BoneName to a bone whose parent is the root (for example pelvis), because Get Bone Pose returns values in local space, which means relative to the parent bone."
       - "Right-click the modifier and choose Apply Modifier. Check that the BoneHeight curve now appears in the sequence. Then choose Revert, and confirm that the curve is gone."
       - "Add the same modifier to the Skeleton asset and apply it there. Open a second sequence and confirm that the curve was added to it too."
-    done_when: "Send one screenshot of the OnApply graph of AM_BoneHeightCurve, and one screenshot of an Animation Sequence that shows the BoneHeight curve with the Animation Data Modifiers tab open. The modifier must be applied and not marked Out of Date."
+    done_when: "Send one screenshot of the OnApply graph of BP_BoneHeightCurveModifier, and one screenshot of an Animation Sequence that shows the BoneHeight curve with the Animation Data Modifiers tab open. The modifier must be applied and not marked Out of Date."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -5704,7 +5704,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/vehicles-in-unreal-engine"
     checklist:
-      - "Open Settings, then Plugins, look in the Physics category, enable ChaosVehiclesPlugin and restart the editor. Get a vehicle skeletal mesh that has wheel bones: the Buggy from the Vehicle Game sample (in the Launcher under Learn) or a free vehicle from Fab."
+      - "Open Edit > Plugins, look in the Physics category, enable ChaosVehiclesPlugin and restart the editor. Get a vehicle skeletal mesh that has wheel bones. The documentation uses the Buggy from the Vehicle Game sample and says to find it in the Epic Games Launcher under Learn. In newer Launchers the sample projects are on the Samples tab. A free vehicle from Fab also works."
       - "Create two Blueprints from the class ChaosVehicleWheel. Name one BP_WheelFront, with Affected by Steering on and Axle Type set to front. Name the other BP_WheelRear, with Affected by Handbrake and Affected by Engine on. Set Wheel Radius to match the size of the visible wheel in cm (58 for the Buggy)."
       - "Create the physics asset: right-click the skeletal mesh, choose Create, then Physics Asset, then Create and Assign, with Single Convex Hull. In the Physics Asset Editor, select all wheel bones, set Primitive Type to Sphere and click Re-generate Bodies. Then select the suspension bones and choose Collision, then No Collision."
       - "Create a Curve Float asset named TorqueCurve (under Miscellaneous, then Curve). Give it the shape of an upside-down U, where X is the engine RPM and Y is the torque, the turning force of the engine."
@@ -5829,7 +5829,7 @@ quests:
     checklist:
       - "Open Edit > Plugins, look in the Animation section, enable the Deformer Graph plugin and restart. Use the mannequin from the Third Person template."
       - "Select the character in the level. In the Details panel, enable Mesh Deformer and create a new Deformer Graph asset named DG_Twist. Open the asset and set its Mesh property to the mannequin."
-      - "In the Update Graph, add a Skeletal Mesh Component Binding node. Connect these nodes to it: Write Skinned Mesh, Execute Skinned Mesh (with Domain set to Vertex), Scene Data (for Time) and Skinned Mesh (for Position, Tangent X and Tangent Y)."
+      - "In the Update Graph, add a Skeletal Mesh Component Binding node. Connect these nodes to it: Write Skinned Mesh, Execute Skinned Mesh (with Domain set to Vertex), Scene Data (for Time) and Skinned Mesh (for Position, Tangent X and Tangent Z)."
       - "Add a Custom Compute Kernel node. In its Details panel, add the inputs Num Threads (Int Vector 3, Parameter), Twist, Start, End and Time (Float, Parameter), Position (Vector 3, Vertex x1), and Tangent X and Tangent Y (Vector 4, Vertex x1). Add the outputs Out Position (Vector 3) and OutTangentX and OutTangentZ (Vector 4), all set to Vertex x1. Set Execution Domain to Vertex, then click Save and Compile."
       - "Check that the Declarations tab lists ReadPosition, ReadTwist and WriteOutPosition. Then paste the HLSL twist program from the page into the Shader Text tab."
       - "Connect the read nodes to the inputs of the kernel, and connect the outputs of the kernel to Write Skinned Mesh. Add three Float Constant nodes: Twist 180, Start 0 and End 100. Click Save and Compile, and watch the character twist in the viewport and in the level."
@@ -6080,7 +6080,7 @@ quests:
       - "Open Project Settings, then Plugins, then RenderDoc, and enable Auto attach on startup. Restart the editor and find the RenderDoc icon in the upper-right corner of the Level Viewport."
       - "Open a level that has at least 20 meshes and one Niagara system. Run the console command stat unit and write down the GPU time in ms."
       - "Click the RenderDoc Capture button in the Level Viewport. Open the capture in RenderDoc and find the event list, which shows the draw events of the frame."
-      - "Find the three most expensive events in the capture. Note which pass each one belongs to (base pass, shadows, post process, and so on). A pass is one stage of drawing the frame."
+      - "In the Event Browser of RenderDoc, click the clock button to show the duration of each event, because the times are hidden at first. Find the three most expensive events in the capture. Note which pass each one belongs to (base pass, shadows, post process, and so on). A pass is one stage of drawing the frame."
       - "Write a short table with the pass name, the time, and which content in your level causes it."
       - "Turn Auto attach on startup off again if you do not need it every day."
     done_when: "Send a screenshot of RenderDoc that shows the event list of your capture, plus your table with the three most expensive passes and the GPU time from stat unit."
@@ -6144,7 +6144,7 @@ quests:
       - "Switch the viewport to the Performance Overview view mode. Find the pixels that trace their own reflection rays."
       - "In a Post Process Volume, lower Max Roughness To Trace, and watch how the Lumen Reflections time changes."
       - "Try r.Lumen.Reflections.DownsampleFactor 2, and note the change in the timing and in the image."
-      - "Set sg.GlobalIlluminationQuality and sg.ReflectionQuality to 2 (High), and then to 1 (Medium). Record the Lumen totals for each setting."
+      - "Set sg.GlobalIlluminationQuality and sg.ReflectionQuality to 3 (Epic), then to 2 (High), and then to 1 (Medium). Record the times of the three Lumen passes for each setting."
     done_when: "Send a short table with the three Lumen pass times at Epic, High and Medium, measured with async compute off, plus a screenshot of the Performance Overview view mode."
     xp: 65
     verify_type: writeup
@@ -6328,9 +6328,9 @@ quests:
       - "In the console, set r.DynamicRes.OperationMode 1 and r.DynamicRes.FrameTimeBudget 16.6, and then play. Read the primary and secondary screen percentages on the DynRes line."
       - "Run stat raw. Watch the curve of the primary screen percentage drop during a camera cut or a big effect."
       - "Stop playing. Move the Screen Percentage slider of the editor viewport to 50, and look closely at a thin object such as a fence or a grill."
-      - "Enable Temporal Upsampling (with r.TemporalAA.Upsampling 1 or with the project setting). Compare the same object at 50 percent."
+      - "Compare the same object at 50 percent with and without a temporal upscaler. In UE5 the default anti-aliasing method, Temporal Super Resolution (TSR), is the temporal upscaler. Type r.AntiAliasingMethod 1 in the console to switch to FXAA, which has no temporal upscaling, and take a screenshot. Then type r.AntiAliasingMethod 4 to go back to TSR and take a second one. The older command r.TemporalAA.Upsampling only applies to the TAA method."
       - "Run profileGPU once at 100 percent and once at 50 percent. Note which passes get cheaper."
-    done_when: "Send a screenshot of stat unitgraph that shows the DynRes line with a changing primary screen percentage, plus two viewport screenshots of a thin object at 50 percent, one with temporal upsample and one without it."
+    done_when: "Send a screenshot of stat unitgraph that shows the DynRes line with a changing primary screen percentage, plus two viewport screenshots of a thin object at 50 percent, one with the temporal upscaler (TSR) and one without it (FXAA)."
     xp: 60
     verify_type: screenshot
     quiz:

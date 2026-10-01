@@ -23,7 +23,7 @@ quests:
       - "Select the Directional Light and enable Atmosphere Sun Light in its Details panel. This tells the sky to use this light as the sun. Check that Atmosphere Sun Light Index is 0."
       - "Hold Right Ctrl + L and move the mouse to rotate the sun. Find a low sun angle that looks like a sunset, and a high sun angle that looks like noon."
       - "On the Directional Light, turn on Use Temperature. Try a Temperature of 6500 K and then 3000 K, and note how the color of the light changes."
-      - "Turn on Show > Shadow Frustum for the light. Look at the rays and notice that they are parallel, which is how sunlight behaves."
+      - "Turn on the Shadow Frustums view: in the viewport, open Show, then Advanced, and enable Shadow Frustums. Look at the rays of the light and notice that they are parallel, which is how sunlight behaves."
       - "Select the Sky Atmosphere and change Mie Scattering Scale up and down. Then set Mie Anisotropy to 0 and to 0.9 and watch the glow around the sun. Reset the values to their defaults when you are done."
       - "Add a second Directional Light and set its Atmosphere Sun Light Index to 1. Make it dim and blue so it works as a moon, and rotate it so it points the opposite way to the sun."
     done_when: "Send two screenshots of the same view: one at sunset with a low sun, and one at noon with a high sun. In one of them, the Details panel of the Directional Light must be visible with Atmosphere Sun Light enabled."
@@ -1170,10 +1170,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lit-translucency-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
     checklist:
-      - "Create a material named M_Blend_Test with a colored Base Color. Place four spheres in front of a wall, and give each sphere a Material Instance of this material."
-      - "For the first sphere, set the Blend Mode of the parent material to Masked. Connect a striped texture to Opacity Mask and try two different Opacity Mask Clip Values."
-      - "Duplicate the material and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity."
-      - "Duplicate again to make M_Blend_Additive, with Blend Mode Additive, and M_Blend_Modulate, with Blend Mode Modulate, set to Unlit, and with the color connected to Emissive. Overlap two spheres and look at the area where they overlap."
+      - "Create a material named M_Blend_Test with a colored Base Color. This is the opaque starting point that you copy in the next steps. Place four spheres in front of a wall, one for each blend mode you will try."
+      - "Duplicate the material and name the copy M_Blend_Masked. Set its Blend Mode to Masked. Connect a striped texture to Opacity Mask and try two different Opacity Mask Clip Values. Apply it to the first sphere."
+      - "Duplicate M_Blend_Test again and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity. Apply it to the second sphere."
+      - "Duplicate again to make M_Blend_Additive, with Blend Mode Additive, and M_Blend_Modulate, with Blend Mode Modulate, set to Unlit, and with the color connected to Emissive. Apply them to the third and fourth sphere. Move two spheres so that they overlap, and look at the area where they overlap."
       - "On M_Blend_Translucent, open the Translucency section in the Details panel. Place a Point Light nearby and compare these three Lighting Mode values: Volumetric NonDirectional, Surface TranslucencyVolume and Surface ForwardShading."
       - "Take one screenshot with all four blend modes visible, and one screenshot with the three lighting modes side by side."
     done_when: "Send two screenshots: one with the four blend modes labeled, and one with the three translucency lighting modes labeled. Add one line that says which mode showed a specular highlight."
@@ -1554,7 +1554,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/building-texture-streaming-data-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-configuration-in-unreal-engine"
     checklist:
-      - "Open a level with several textured props. Click the dropdown next to the Build button and run Build Texture Streaming."
+      - "Open a level with several textured props. Open the Build menu in the main menu bar and run Build Texture Streaming."
       - "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips."
       - "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change."
       - "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green."
@@ -1770,7 +1770,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-functions-in-unreal-engine"
     checklist:
-      - "Right-click in the Content Browser, open Materials and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input."
+      - "Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input."
       - "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input."
       - "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library."
       - "Click Apply, and then save the asset."
@@ -2897,7 +2897,7 @@ quests:
       - "Open View Modes, then MegaLights, then Light Complexity. Move the mouse over a wall between many lights, and take a screenshot of the list of lights and their weight ratios."
       - "Find one light that is partly inside a wall or reaches very far. Make its Source Width, Source Height, cone angle or Attenuation Radius smaller until it no longer shines through geometry."
       - "On one Spot Light, set MegaLights Shadow Method to Virtual Shadow Maps. Compare the shadow detail on a Nanite prop with the shadow from a Ray Tracing light next to it."
-      - "Open one prop in the Static Mesh Editor. Under Nanite Settings, set Fallback Target to Relative Error, lower Fallback Relative Error, and click Apply Changes. See if its shadow gets more accurate."
+      - "Open one prop in the Static Mesh Editor. Under Nanite Settings, set Fallback Target to Fallback Relative Error (some versions show this option as Relative Error), lower the Fallback Relative Error value, and click Apply Changes. See if its shadow gets more accurate."
     done_when: "Send a screenshot of the lit hall and a screenshot of the Light Complexity view with the list of lights visible. Also write the two stat GPU numbers in your post, one with MegaLights off and one with MegaLights on."
     xp: 65
     verify_type: screenshot
@@ -3087,8 +3087,8 @@ quests:
     checklist:
       - "Open an outdoor level that has a low area. Place an Exponential Height Fog, enable Volumetric Fog on it, and keep the Fog Density low. Give the Directional Light a Volumetric Scattering Intensity of 1."
       - "Create a material named M_FogSphere and set Material Domain to Volume. Make a SphereMask that compares Absolute World Position with Particle Position and takes its radius from Particle Radius. Multiply it by a tiling noise texture and connect the result to Extinction. Connect a constant 1 to Albedo."
-      - "Create a simple Niagara sprite system named NS_LowFog with a few large, slow particles. Assign M_FogSphere in its Sprite Renderer. Place the system in the low area."
-      - "Save a camera bookmark. Take a screenshot of the valley with NS_LowFog hidden and another with it visible, both from that same bookmark."
+      - "Create a simple Niagara sprite system named FXS_LowFog with a few large, slow particles. Assign M_FogSphere in its Sprite Renderer. Place the system in the low area."
+      - "Save a camera bookmark. Take a screenshot of the valley with FXS_LowFog hidden and another with it visible, both from that same bookmark."
       - "Place a Spot Light in the fog. Turn Cast Volumetric Shadow off and on, and read stat GPU or profilegpu for both cases."
       - "Set Scattering Distribution on the fog to 0.9. Look toward the sun and then away from it. Then set it back to the default."
       - "Add a light that flickers, driven by a Blueprint or by Sequencer. If it leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
@@ -3277,7 +3277,7 @@ quests:
     checklist:
       - "Pick a dense prop with 100k triangles or more, such as a rock or statue from Fab or Megascans. Duplicate it and name the copy SM_Fallback_Test. In the Static Mesh Editor, under Nanite Settings, turn on Enable Nanite Support."
       - "In the Static Mesh Editor, press Ctrl + N to switch between the full Nanite mesh and the fallback mesh. Write down the triangle count of each."
-      - "Set Fallback Target to Fallback Relative Error. Try the value 1.0 and then 0.1. Click Apply Changes each time and compare the triangle count of the fallback mesh."
+      - "Set Fallback Target to Fallback Relative Error (some versions show this option as Relative Error). Try the value 1.0 and then 0.1. Click Apply Changes each time and compare the triangle count of the fallback mesh."
       - "Set Keep Triangle Percent to 50 and Trim Relative Error to 0.05, and click Apply. Compare the Resource Size in the asset details before and after."
       - "Place the prop in a level. In the console, type r.Nanite 0 to see the fallback mesh drawn in the level. Type r.Nanite 1 to go back."
       - "Type NaniteStats in the console and read the information on screen. Then open View Modes, then Nanite Visualization, then Mask. Nanite meshes are green and meshes without Nanite are red."
@@ -3651,9 +3651,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-sockets-with-static-meshes-in-unreal-engine"
     checklist:
-      - "In Modeling Mode, make three kit pieces with sizes that fit the grid: SM_Kit_Wall (400 x 400 x 20), SM_Kit_Corner (20 x 20 x 400) and SM_Kit_Floor (400 x 400 x 20). Use Edit Pivot to set the pivot of each piece to a bottom back corner."
-      - "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size. Note how the Drag Grid dropdown in the viewport toolbar changes."
-      - "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100, or to the nearest power of two, and set the rotation to 90. Build a closed room from at least 12 pieces."
+      - "In Modeling Mode, make three kit pieces with sizes that fit a grid of 100: SM_Kit_Wall (400 long, 20 thick and 400 high), SM_Kit_Corner (20 x 20 and 400 high) and SM_Kit_Floor (400 x 400 and 20 thick). Use Edit Pivot to set the pivot of each piece to a bottom back corner."
+      - "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size and note how the Drag Grid dropdown in the viewport toolbar changes. Then turn it off again, because this kit is built on a grid of 100."
+      - "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100 and the rotation to 90. Build a closed room from at least 12 pieces."
       - "Hold V while you drag one wall so that its pivot snaps to a vertex, a corner point, of the wall next to it. Look at the seam from close up."
       - "Open SM_Kit_Wall in the Static Mesh Editor and open Window > Socket Manager. Create a socket named Lamp and set its Relative Location to the center of the wall at head height."
       - "In the level, place a Point Light and right-click it. Choose Attach To, pick SM_Kit_Wall and then the Lamp socket. Reset the Location of the light so it snaps to the socket. Repeat this on two more walls."
@@ -3716,7 +3716,7 @@ quests:
       - "Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. Make a material named M_Trim from it, and also prepare a checkerboard material for testing."
       - "Take a kit piece with a flat face and a trim edge, from quest EAQ98 or a new one. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard."
       - "Open UVs, then XFormUV. Scale and move each island so that the main face sits on the stone strip of T_Trim and the trim edge sits on the metal strip. Hold Shift to move several islands together."
-      - "Use UVs, then Layout, with Layout Type set to Stack for islands that should share the same strip. Use Transform when you need to move all UVs together."
+      - "Open UVs, then Layout. Set Layout Type to Stack for islands that should share the same strip. Set Layout Type to Transform when you need to scale or move all UVs together."
       - "Assign M_Trim and check the mesh in the level. If an island looks stretched, fix it with Unwrap."
       - "Open the Static Mesh Editor and look at the list of UV channels. Note which channel holds your trim UVs."
     done_when: "Send a screenshot of the textured kit piece in the level, and a screenshot of the Preview UV Layout panel that shows the islands on the strips. Add one line that says which Layout Type you used and why."
@@ -3843,7 +3843,7 @@ quests:
       - "Open Lens, then Bloom, and keep Method on Standard. Try Intensity at 0, 1 and 5. Then set a Threshold so that only your bright source glows."
       - "Switch Method to Convolution. Assign the default kernel texture, or your own, and compare the shape of the glow."
       - "Open the kernel texture. Check that Mip Gen Settings is set to No Mipmaps and that Never Stream is enabled."
-      - "Enable Dirt Mask Texture and assign a small dirt texture with a non-power-of-two size. Set Dirt Mask Intensity so that the dirt only shows near the bright source."
+      - "Enable Dirt Mask Texture and assign a small dirt texture. The documentation recommends a size that is not a power of two, for example 960 x 540, because Unreal then makes no mipmaps for it and does not stream it. Set Dirt Mask Intensity so that the dirt only shows near the bright source."
       - "Switch back to Standard and use stat gpu to note the difference in frame time between the two methods."
     done_when: "Send three screenshots of the same view: Standard bloom, Convolution bloom, and Convolution with the Dirt Mask. Add one line with the two stat gpu numbers."
     xp: 60
@@ -4091,10 +4091,10 @@ quests:
       - "Open your environment scene. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console."
       - "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each."
       - "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent."
-      - "Open Show, then Visualize, then VisualizeTemporalUpscaler. Take a screenshot of the view that shows the input and the output."
+      - "Open Show, then Visualize, and enable Temporal Upscaler I/O. This is the VisualizeTemporalUpscaler view. Take a screenshot of the view that shows the input and the output."
       - "Open Settings, then Engine Scalability Settings, and switch the Anti-Aliasing group between Medium and Epic. Look at the same thin geometry each time, such as a fence, wires or foliage."
       - "Open the file Engine/Config/BaseScalability.ini and find the AntiAliasingQuality sections. Note two r.TSR variables that change between the quality levels."
-    done_when: "Send a screenshot of the VisualizeTemporalUpscaler view. Add a small table that lists, for screen percentage 100, 66 and 50, the TSR feed, the TSR 1spp and the GPU cost."
+    done_when: "Send a screenshot of the Temporal Upscaler I/O view. Add a small table that lists, for screen percentage 100, 66 and 50, the TSR feed, the TSR 1spp and the GPU cost."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4588,7 +4588,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
     checklist:
       - "Place 100 copies of one book mesh or brick mesh as separate Static Mesh Actors. In the console, type stat unit and stat rhi, and note the number of draw calls."
-      - "Select all 100 actors. Open Actor, then Merge Actors, then Merge Actors Settings. Choose the Batch method and click Merge Actors. Note the draw calls again."
+      - "Select all 100 actors. Open Actor, then Merge Actors, then Merge Actor Settings. Choose the Batch method and click Merge Actors. Note the draw calls again."
       - "Open the Details panel of the new actor. Click one instance and confirm that you can only edit its transform. Then change the material on the component and see all instances update."
       - "Create a Blueprint named BP_Shelf with an Instanced Static Mesh component. Set its Static Mesh, and add 10 instances with the + button in the Instances category."
       - "Duplicate BP_Shelf and name the copy BP_Shelf_HISM. Use a Hierarchical Instanced Static Mesh component in it. Write two lines: which component you would use for 5000 static pebbles, and which one for a project that uses only Nanite."
@@ -4618,9 +4618,9 @@ quests:
         answer_index: 1
         explain: "When grouping multiple unique static meshes into one actor, an ISM component is created per unique static mesh asset."
       - q: "Which menu path does the page give for batching actors into ISMs?"
-        choices: ["Actor > Merge Actors > Merge Actors Settings, then Batch", "Edit > Batch Instances", "Window > ISM Editor", "Build > Build Instances"]
+        choices: ["Actor > Merge Actors > Merge Actor Settings, then Batch", "Edit > Batch Instances", "Window > ISM Editor", "Build > Build Instances"]
         answer_index: 0
-        explain: "Select the actors, open Actor > Merge Actors > Merge Actors Settings, change the method to Batch and click Merge Actors."
+        explain: "Select the actors, open Actor > Merge Actors > Merge Actor Settings, change the method to Batch and click Merge Actors."
       - q: "What does creating a Packed Level Actor do to the selected actors' meshes?"
         choices: ["Converts them to Nanite", "Bakes them into one static mesh asset", "Groups them automatically into a HISM inside a Blueprint actor", "Turns them into foliage"]
         answer_index: 2

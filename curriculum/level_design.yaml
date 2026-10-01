@@ -1184,7 +1184,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---quick-start"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine"
     checklist:
-      - "Open the Plugins window (Settings > Plugins) and look in the Gameplay category. Enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Then restart the editor."
+      - "Open the Plugins window (Edit > Plugins) and look in the Gameplay category. Enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Then restart the editor."
       - "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_Bench. Open it and add two Slots."
       - "Create an Actor Blueprint named BP_SO_Bench. Give it a Static Mesh of a bench and a Smart Object component. On the component, set Definition Asset to SO_Definition_Bench."
       - "Open BP_SO_Bench and move the two slots so that each one sits on one seat of the bench and faces forward."
@@ -1239,7 +1239,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/eqs-node-reference-tests-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-query-system-overview-in-unreal-engine"
     checklist:
-      - "Enable the Environment Query System in Project Settings. Then build a small arena that has a NavMesh and 5 to 8 cover blocks."
+      - "The Environment Query System is part of UE5 and needs no setup. If you do not find Environment Query in the Add menu under Artificial Intelligence, open Edit > Plugins and enable Environment Query Editor. Then build a small arena that has a NavMesh and 5 to 8 cover blocks."
       - "Create an Environment Query asset named EQS_Cover. In it, add a Points: Grid generator around the Querier. The Querier is the character that runs the query."
       - "Add a Trace test on the grid, with the Querier as its context. Set Test Purpose to Filter so that only points that cannot be seen from the querier remain. Change Bool Match if the result is the wrong way around."
       - "Add a Distance test and set its Test Purpose to Score, so that points nearer to the querier get a higher score."
@@ -1512,7 +1512,7 @@ quests:
     backup_url: null
     extra_urls: []
     checklist:
-      - "Open your blockout. Click Viewport Options, the arrow at the top left of the viewport, and choose High Resolution Screenshot."
+      - "Open your blockout. Click Viewport Options, the menu button in the top left corner of the viewport, and choose High Resolution Screenshot. In older versions this button is a small arrow."
       - "Click Specify Region and drag a box around the area that you want reviewed. Set the Screenshot Size Multiplier to 2."
       - "Press the capture button, which has a camera icon. Then click the message that appears in the lower right corner to open the folder with the image."
       - "Start PIE and press ~ to open the console. Run the command HighResShot 2. Then run the command Shot, or press F9, for a capture at normal size."
@@ -1859,7 +1859,7 @@ quests:
       - "Place three Player Start actors in your blockout: one at the entrance, one in the mid room and one in the final arena. Rotate each one so that its arrow points at the next landmark, because the player faces that way on spawn."
       - "Select each Player Start and set its Player Start Tag in the Details panel to Start_Entrance, Start_Mid and Start_Arena. If a Player Start shows a BADsize label, move it until its capsule no longer overlaps any geometry."
       - "Create a Blueprint named BP_GM_Test with Game Mode Base as its parent class. Add a Name variable called DebugStartTag and turn on Instance Editable. In World Settings, set the GameMode Override of the level to BP_GM_Test."
-      - "In BP_GM_Test, react to a debug key (for example the E key on the Player Controller, or a Custom Event that you call from the console). Call FindPlayerStart with Incoming Name set to DebugStartTag, and then call Restart Player at Player Start with the result as the Start Spot."
+      - "A Game Mode does not receive key presses, so put the debug key in your character Blueprint or your Player Controller. Add a keyboard event for a key such as R. From it, call Get Game Mode and cast the result to BP_GM_Test. On the Game Mode, call Find Player Start with Player set to Get Player Controller and Incoming Name set to DebugStartTag. Then call Restart Player at Player Start with the same Player Controller and the result as the Start Spot."
       - "Add three Target Point actors named TP_Pickup_1 to TP_Pickup_3. Create BP_PickupSpawner with an Instance Editable array of Target Point references. On BeginPlay, loop over the array and use Spawn Actor from Class to spawn a pickup or a simple cube at the transform of each Target Point."
       - "Test it: set DebugStartTag to Start_Arena, press the debug key, and confirm that you respawn in the arena and face the right way. Then set the Play Options to spawn at the current camera location and start PIE from the mid room."
     done_when: "Send a screenshot of PIE after the debug respawn at Start_Arena, with the player facing the landmark. Also send a screenshot of the Outliner that shows the three tagged Player Starts and the three Target Points."
@@ -1986,7 +1986,7 @@ quests:
       - "Create an Actor Blueprint named BP_Checkpoint with a Box Collision and a flag mesh. When the player overlaps it, use Get Game State, cast it to BP_GS_Checkpoints, set CheckpointLocation to the location of the actor, and set HasCheckpoint to true. Also change the material of the flag, so the player sees that the checkpoint is active."
       - "Place a Player Start next to each checkpoint, with at least three checkpoints. In BP_GM_Checkpoints, override the function FindPlayerStart. If HasCheckpoint is true, return the Player Start that is closest to CheckpointLocation. Otherwise, call the parent function."
       - "Create a Save Game Blueprint named SG_Checkpoint with the same two variables. In BP_Checkpoint, after you set the Game State, create or load the Save Game object and copy the values into it. Then call Save Game to Slot with the slot name Checkpoint and user index 0."
-      - "In BP_GM_Checkpoints, on BeginPlay, check Does Save Game Exist for the slot Checkpoint. If it exists, call Load Game from Slot, cast the result to SG_Checkpoint, and write the values into the Game State before the player spawns."
+      - "The Game Mode chooses the Player Start before its BeginPlay runs, so load the save inside your FindPlayerStart function, at its very start. Check Does Save Game Exist for the slot Checkpoint. If it exists, call Load Game from Slot, cast the result to SG_Checkpoint, and write the values into the Game State. The rest of the function then picks the right Player Start."
       - "Test it: reach checkpoint 2, stop PIE, and start PIE again. Confirm that you spawn at the Player Start next to checkpoint 2. Then find the .sav file in the Saved/SaveGames folder of the project."
     done_when: "Send two screenshots: one of PIE after the restart with the player standing at checkpoint 2 and not at the entrance, and one of the Saved/SaveGames folder that shows Checkpoint.sav. Add one line that says how you reset the save for a fresh run."
     xp: 65
@@ -2177,7 +2177,7 @@ quests:
       - "On the Update pin of the Timeline, set the relative Z location of the platform to Height multiplied by FloorHeight. On the Finished pin, print the Direction output (Forward means the cab arrived at the top, Backward means it arrived at the bottom) and open a Gate node."
       - "Add two Custom Events named CallUp and CallDown. CallUp goes through the Gate and calls Play on the Timeline. CallDown goes through the same Gate and calls Reverse. Close the Gate when either one starts, so that the cab ignores calls while it is moving."
       - "Create an Actor Blueprint named BP_CallButton with a Box Collision, a Boolean named IsUpButton, and an Instance Editable reference to BP_Elevator. When the player overlaps it, it calls CallUp or CallDown. Place one button at each floor."
-      - "Add a Stop input. This is a third button on the cab that calls Stop on the Timeline, and then uses Set New Time and Play from Start to return the cab to the bottom. Check that Finished does not fire when Stop is called."
+      - "Add an emergency stop. Add a third Custom Event named EmergencyStop to BP_Elevator, and a third button on the cab that calls it. Connect the event to the Stop input of the Timeline, which freezes the cab where it is. After a short Delay node, connect to the Set New Time input with New Time set to 0, which puts the cab back at the bottom, and open the Gate again. Check with your Print String that Finished does not fire when Stop is called. That is why you must open the Gate here yourself."
       - "Ride the elevator in PIE between two rooms of your blockout. Confirm that you do not slide off the platform, and that pressing both buttons quickly does not restart the ride in the middle."
     done_when: "Send a short video, or two screenshots, of the cab at each floor with the printed Direction message. Add one line that says how you stopped double calls."
     xp: 60
@@ -2811,7 +2811,7 @@ quests:
       - "Place 6 Point Lights or Spot Lights in the corridor. Set the Mobility of all of them to Stationary."
       - "In the viewport, open the View Mode menu, then Optimization Viewmodes, and choose Stationary Light Overlap. Find the lights that show a red X, which means too many Stationary lights overlap there."
       - "Fix the overlap. Change some lights to Movable, or move the lights further apart, until no red X is left."
-      - "Pick one light that only marks a door. Set it to Movable and turn off Cast Shadows. Read what the documentation says about the cost of such a light and note it."
+      - "Pick one light that only marks a door. Set it to Movable and turn off Cast Shadows. Read the Movable Lights page that is linked on this quest, find what it says about the cost of a Movable light with and without shadows, and note it."
       - "Write 3 lines in a text note inside the level, with a Text Render or a note actor. Say which light is Static, which is Stationary, which is Movable, and why."
     done_when: "Send two screenshots: one of the Stationary Light Overlap view with no red X, and one of the Lit view with your 3-line note visible."
     xp: 60
@@ -3117,7 +3117,7 @@ quests:
       - "Build a space with a high walkway and a low pit. Place an Exponential Height Fog actor, which you find in the Place Actors panel under Visual Effects."
       - "Move the actor up or down (on the Z axis) and adjust Fog Density and Fog Height Falloff until the pit is foggy and the walkway is clear."
       - "Enable Second Fog Data and give it a Fog Height Offset, so that a thin second layer of fog sits only in the pit."
-      - "Set Start Distance so that the area right in front of the player stays clear. Read what the documentation says about its effect on performance and note it."
+      - "Set Start Distance so that the area right in front of the player stays clear. Read the Exponential Height Fog page that is linked on this quest, find what it says about Start Distance and performance, and note it."
       - "Enable Volumetric Fog on the fog actor. Aim a Spot Light through a doorway and raise its Volumetric Scattering Intensity, so that the beam marks the exit."
       - "If any flickering light leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
     done_when: "Send two screenshots: one of the pit with layered fog seen from the walkway, and one of the light beam that marks the exit."
@@ -3611,7 +3611,7 @@ quests:
       - "Create a Blueprint named BP_Tool_Ramp with GeneratedDynamicMeshActor as its parent class. Add the Instance Editable variables Width, Length, Height and Steps."
       - "In the event Event On Rebuild Generated Mesh, append boxes that use the variables, so that the actor builds a ramp or a stair block. If you need a temporary mesh, use Request and Release Mesh for it."
       - "Place three BP_Tool_Ramp actors in the level. Change their variables in the Details panel so that they fit your metrics gym, the test level where you check sizes and distances."
-      - "Add an event named Bake with Call In Editor turned on. It copies the dynamic mesh to a new Static Mesh asset. Search the Geometry Script library for the function that copies a mesh to a static mesh."
+      - "Add an event named Bake with Call In Editor turned on. It copies the dynamic mesh to a Static Mesh asset. The Geometry Script library has two functions for this: Create New Static Mesh Asset from Mesh makes a new asset at the path you give it, for example /Game/Blockout/SM_Ramp_Baked, and Copy Mesh to Static Mesh writes into an asset that already exists. Use the first one the first time."
       - "Replace one ramp with a Static Mesh Actor that uses the baked asset. Move the tool actor below the level and keep it there as the template."
     done_when: "Send one screenshot of the BP_Tool_Ramp graph with On Rebuild Generated Mesh. Also send one viewport screenshot with three ramps of different sizes and the baked Static Mesh asset visible in the Content Browser."
     xp: 65
@@ -4181,7 +4181,7 @@ quests:
       - q: "Which three plugins does the guide enable?"
         choices: ["Smart Objects, AI Behaviors, Gameplay Behavior Smart Objects", "Smart Objects, Mass AI, State Tree", "Gameplay Abilities, Smart Objects, EQS", "AI Behaviors, Niagara, Smart Objects"]
         answer_index: 0
-        explain: "In Settings > Plugins > Gameplay, the guide enables Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects."
+        explain: "In the Plugins window, in the Gameplay category, the guide enables Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects."
       - q: "Why does the behavior use Play Montage instead of Play Anim Montage?"
         choices: ["Play Anim Montage is deprecated", "Play Montage has On Completed and On Interrupted pins, so End Behavior fires only when the animation ends and the object stays occupied until then", "Play Montage is faster", "Play Anim Montage cannot target a Skeletal Mesh"]
         answer_index: 1

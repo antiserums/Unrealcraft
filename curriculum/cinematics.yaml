@@ -168,7 +168,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-animate-cinematic-cameras-in-unreal-engine"
     checklist:
       - "In the main toolbar, click the Cinematics dropdown and choose Add Level Sequence. Name it LS_FirstMove and save it in a folder named Sequences."
-      - "Sequencer opens. Click the Create New Camera button in the Sequencer toolbar. Notice that the viewport now pilots the new Cine Camera Actor, which means you look through it."
+      - "Sequencer opens. Click the Camera button in the Sequencer toolbar, which creates a new camera. Notice that the viewport now pilots the new Cine Camera Actor, which means you look through it."
       - "At frame 0, frame a wide view of your level. Select the Transform track of the camera and press Enter to set a key."
       - "Drag the playhead, the marker that shows the current time, to about 5 seconds. Move the camera to a new position. Select the Transform track and press Enter again."
       - "Press Play in Sequencer. Then drag the playhead back and forth to check the move."
@@ -185,7 +185,7 @@ quests:
         choices: ["Window > Levels > New Level", "Right-click the viewport and choose Add Sequence", "Click the Cinematics dropdown in the main toolbar and choose Add Level Sequence", "Edit > Project Settings > Sequencer"]
         answer_index: 2
         explain: "The Cinematics dropdown in the Level Editor toolbar has Add Level Sequence. You can also right-click in the Content Browser and choose Cinematics > Level Sequence."
-      - q: "You click Create New Camera in the Sequencer toolbar. What happens?"
+      - q: "You click the Camera button in the Sequencer toolbar. What happens?"
         choices: ["A Camera Actor is placed at the world origin, nothing else", "A Cine Camera Actor is created as a spawnable and the viewport starts piloting it", "The current viewport view is saved as a bookmark", "A Level Sequence Actor is created"]
         answer_index: 1
         explain: "The button creates a Cine Camera Actor as a spawnable for the sequence and updates the viewport to the camera's perspective (piloting)."
@@ -221,8 +221,8 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-camera-cuts-using-sequencer-in-unreal-engine"
     checklist:
       - "Create a Level Sequence named LS_ThreeCuts. Add a moving object so that there is action to cut on. A cube with two Transform keys is enough."
-      - "Click Create Camera. This makes a Cine Camera Actor and a Camera Cuts track. Frame a wide shot at frame 0."
-      - "Move the playhead to the time where you want the first cut. Click Create Camera again to make camera 2, and frame a closer shot."
+      - "Click the Camera button in the Sequencer toolbar. This makes a Cine Camera Actor and a Camera Cuts track. Frame a wide shot at frame 0."
+      - "Move the playhead to the time where you want the first cut. Click the Camera button again to make camera 2, and frame a closer shot."
       - "On the Camera Cuts track, click Add Camera (+) and pick camera 2 under New Binding or Existing Bindings. A cut appears at the playhead."
       - "Do the same for a third camera. Then drag the edges where two cut sections touch to change the timing of the cuts."
       - "Enable the Camera Lock button on the Camera Cuts track and press Play to watch the cuts. Then right-click the track, enable Can Blend, and make two sections overlap to try a blend."
@@ -1166,7 +1166,7 @@ quests:
       - "Right-click the spawnable track, open the Spawnable category and set Spawned Object Owner to External. Play again and confirm that the actor stays after the sequence ends. Then set it back to This Sequence."
       - "On the Spawn track, trim the section so that the actor spawns 1 second after the sequence starts."
       - "Right-click a possessable track and open Assign Actor. Use Replace with Selected to bind the track to a different actor of the same class."
-      - "Extra: use Convert Selected Binding(s) To and choose Replaceable from Director Blueprint, then Quick Bind, then Resolve to Player Pawn. Test it in Play In Editor."
+      - "Extra: make a track follow the real player. Right-click the track of a character, open Convert Selected Binding(s) To, then Replaceable from Director Blueprint, then Quick Bind, and choose Resolve to Player Pawn. Unreal now creates a small function in the Director Blueprint of the sequence that finds the player pawn when the sequence plays. Test it in Play In Editor."
     done_when: "Send a screenshot of Sequencer that shows one possessable track and one spawnable track (with the lightning bolt visible), the Spawnable properties panel open, and the Outliner during playback. Add three sentences: one case where you would use a possessable, one case where you would use a spawnable, and what changes when Spawned Object Owner is set to External."
     xp: 170
     verify_type: screenshot
@@ -1742,7 +1742,7 @@ quests:
       - "Make a folder named Content/ShotKit with the subfolders Cameras, Rigs, Presets and Docs."
       - "Create at least three Camera Animation Sequences, which are reusable camera moves. In the Content Browser, choose Animation, then Camera Animation Sequence. Name them CAS_PushIn, CAS_Handheld and CAS_Orbit. Make CAS_Handheld additive (set Blend Type to Additive) so that it can be layered on any camera."
       - "Build two reusable rig Blueprints: BP_RigRail, a Camera Rig Rail with a Cine Camera attached, and BP_RigCrane, a Camera Rig Crane with a Cine Camera. Expose the useful values as variables."
-      - "In MRQ, save two presets. MPC_Final is a Movie Pipeline Master Config with EXR, tone curve off, Spatial 1, Temporal 8, AA None and Burn In. MPC_Preview uses PNG, 1 and 1 samples, and half resolution. Also save one Shot config named MPS_HeroDoF for a shot that needs more spatial samples."
+      - "In MRQ, save two presets. MPC_Final is a Movie Pipeline Primary Config with EXR, tone curve off, Spatial 1, Temporal 8, AA None and Burn In. MPC_Preview uses PNG, 1 and 1 samples, and half resolution. Also save one Shot config named MPS_HeroDoF for a shot that needs more spatial samples."
       - "Create SEQ_KitDemo with Add Level Sequence with Shots, with 3 shots. Use a different kit item in each shot: a rig, a Camera Animation Sequence through the Template Sequence track, and CAS_Handheld layered on a rail move. Render it with MPC_Preview, and then render one shot with MPC_Final."
       - "Write Docs/README as a text or markdown file. It says what each asset is, how to add it to a shot, the naming rule from CQ25, which preset to use when, and the expected seconds per frame for each preset on your machine."
       - "Ask another member to follow the README and build one new shot with the kit without your help. Add their feedback and fix the README."
@@ -2547,7 +2547,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-reference-the-player-in-unreal-engine-cinematics"
     checklist:
-      - "In a Third Person project, create a Level Sequence named LS_Intro. Click the Camera button to get a spawnable Cine Camera Actor and a Camera Cuts track, and name the camera CAM_Intro. Frame a wide shot of the start area."
+      - "In a Third Person project, create a Level Sequence named LS_Intro. Click the Camera button in the Sequencer toolbar to get a spawnable Cine Camera Actor and a Camera Cuts track, and name the camera CAM_Intro. Frame a wide shot of the start area."
       - "Right-click the Camera Cuts track and enable Can Blend. Drag the upper corner of the cut section at its start and at its end, to create a blend in and a blend out of about one second each."
       - "Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer. This creates a spawnable proxy, a stand-in for the player. Key a short walk. Right-click its track, open Tags, and add the tag Player."
       - "Place a Level Sequence Actor for LS_Intro and create a reference to it in the Level Blueprint. Add Get Player Pawn and Set Binding by Tag. Set Binding Tag to Player, connect Get Player Pawn to Actors, and turn Allow Bindings from Asset off. Then call Play."
@@ -2610,10 +2610,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-camera-system-overview"
     checklist:
-      - "Make a Third Person project. In Settings > Plugins, enable Gameplay Cameras and restart the editor. Create a Basic level."
+      - "Make a Third Person project. In Edit > Plugins, enable Gameplay Cameras and restart the editor. Create a Basic level."
       - "Right-click in the Content Browser and choose Gameplay, then Camera Asset. Pick Blueprint Camera Director. Name the asset CA_PlayerCameras."
       - "In Rigs, rename the default rig to FirstPerson. Add a Sequence node, a Boom Arm node with Boom Offset 50, 0, 50, and a Field of View node set to 100."
-      - "Add a rig named ThirdPerson. Give it a Sequence node, a Boom Arm with Boom Offset -500, 0, 50, an Input Axis Binding 2D with IA_Look (Clamp Y from -80 to 10, Revert Axis Y), a Field of View node, a Dampen Position node with Forward Damping Factor 5, and an Occlusion Material. Expose Boom Offset as a Camera Rig Parameter. Then add a rig named TopDown with Boom Offset -1000, 0, 0."
+      - "Add a rig named ThirdPerson. Give it a Sequence node, a Boom Arm with Boom Offset -500, 0, 50, an Input Axis Binding 2D with IA_Look (Clamp Y from -80 to 10, and the Revert Axis Y checkbox turned on, which flips the up and down direction), a Field of View node, a Dampen Position node with Forward Damping Factor 5, and an Occlusion Material. Expose Boom Offset as a Camera Rig Parameter. Then add a rig named TopDown with Boom Offset -1000, 0, 0."
       - "In Transitions of each rig, add an Exit Transition with Smooth Blend. In the Director tab, click + to make CDE_PlayerCameras, and click Build."
       - "In BP_ThirdPersonCharacter, delete CameraBoom and FollowCamera. Add a GameplayCamera component, set Camera to CA_PlayerCameras, and set Auto Activate for Player to Player 0. Make the keys 1, 2 and 3 set an integer variable named ActiveCameraRig."
       - "In CDE_PlayerCameras, add Find Evaluation Context Owner Actor (set to BP_ThirdPersonCharacter). From it, get Active Camera Rig, connect it to a Switch on Int, and call Activate Camera Rig for each rig. Press Play and switch rigs with 1, 2 and 3."
@@ -2679,7 +2679,7 @@ quests:
       - "Under Output Providers, click + and pick the Viewport Output Provider. Turn on Is Active and set Target Viewport. Enable Use Override Resolution and set 1280 x 720. Then turn Is Active off and on again."
       - "In the Content Browser, enable Show Plugin Content and open Engine > Plugins > VirtualCamera Content > Modifiers. Add two of these modifiers to the Modifier Stack and swap their order."
       - "Enable Disable Component when Spawned by Sequencer. Add a second provider, Pixel Streaming, and give it a unique Streamer Id."
-      - "Optional, if you have an iOS device: connect the Live Link VCAM app and enable Auto Set Live Link Subject on the Pixel Streaming provider."
+      - "Optional, if you have a supported phone or tablet: connect the Unreal VCam app and enable Auto Set Live Link Subject on the Pixel Streaming provider. The documentation page of this component still uses the older app name, Live Link VCAM."
     done_when: "Send one screenshot of the component hierarchy with the VCam Component under the CameraComponent, and one screenshot of the Details panel that shows the Output Providers list and the Modifier Stack. Add one line that says why the resolution override needed the Is Active toggle."
     xp: 60
     verify_type: screenshot
@@ -2926,7 +2926,7 @@ quests:
     checklist:
       - "Open a project made from the Third Person template and open ABP_Manny. In Window > Anim Slot Manager, add a slot named CineSlot and save."
       - "In the AnimGraph, add a Slot node and set its Slot Name to CineSlot. Connect it directly before the Output Pose node."
-      - "Create a Level Sequence named LS_Intro. Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer to make a spawnable proxy, a stand-in for the player. Add a short animation and a camera with a Camera Cut."
+      - "Create a Level Sequence named LS_Outro. Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer to make a spawnable proxy, a stand-in for the player. Add a short animation and a camera with a Camera Cut."
       - "Open the Properties of the animation section and set Slot Name to CineSlot. Drag a blend-out at the end of the section. On the transform section, set When Finished to Keep State."
       - "On the Camera Cut track, enable Can Blend and add a blend-out region. On the Cine Camera, disable Constrain Aspect Ratio."
       - "Right-click the character track and add the tag Player. In the Level Blueprint, call Set Binding by Tag with Get Player Pawn, then Play the sequence."
@@ -3175,7 +3175,7 @@ quests:
       - "In the Physics panel, turn on Enable Simulation. Note which Niagara Solver is chosen and the value of Sub Steps."
       - "Raise Air Drag, then lower Bend Stiffness a little. Drag the playhead or play while the character walks, and compare the hair before and after."
       - "In the LOD panel, set Simulation to Disable on the last LOD."
-      - "In the level, select the Groom component. Enable Override Settings and Debug Simulation to see the simulated strands. Play LS_Hair, a sequence with a turn animation and a close camera."
+      - "Create a short Level Sequence named LS_Hair: add the character with a turn animation, and add a camera that is close to the head. In the level, select the Groom component. Enable Override Settings and Debug Simulation to see the simulated strands. Then play LS_Hair."
     done_when: "Send a screenshot of the Physics panel of the Groom Asset Editor with Enable Simulation on and your changed values. Also send a screenshot of the shot with the Debug Simulation strands visible."
     xp: 60
     verify_type: screenshot
@@ -3349,7 +3349,7 @@ quests:
     required_spine: false
     required: false
     title: "Presets you can share: master, shot, queue"
-    brief: "By default, the settings of a render job in Movie Render Queue are lost when you close the editor. A preset saves them as an asset that a whole team can reuse. There are three kinds: a master config for a whole job, a shot config for one shot inside a job, and a queue asset that saves the full list of jobs. In this quest you create one of each and learn the difference between editing a job's copy of a preset and editing the asset itself."
+    brief: "By default, the settings of a render job in Movie Render Queue are lost when you close the editor. A preset saves them as an asset that a whole team can reuse. There are three kinds: a primary config (called a master config in older versions) for a whole job, a shot config for one shot inside a job, and a queue asset that saves the full list of jobs. In this quest you create one of each and learn the difference between editing a job's copy of a preset and editing the asset itself."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-render-settings-and-formats-in-unreal-engine"
     backup_url: null
@@ -3358,7 +3358,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/movie-render-queue-in-runtime-in-unreal-engine"
     checklist:
       - "Open Window > Cinematics > Movie Render Queue. Add a job for a Level Sequence that has at least 2 shots. Check the Map field in Job Details and type your name in Author."
-      - "Click Settings for the job. Add EXR Sequence and Anti-Aliasing with Temporal 4. Click Load/Save Preset and choose Save As Preset. Save it as MPC_Final, which is a Movie Pipeline Master Config asset."
+      - "Click Settings for the job. Add EXR Sequence and Anti-Aliasing with Temporal 4. Click Load/Save Preset and choose Save As Preset. Save it as MPC_Final, which is a Movie Pipeline Primary Config asset."
       - "Expand the job to see its shots and click Edit on one shot. Add Anti-Aliasing with Temporal 8. Try to add an Export setting and notice that you cannot. Use Save As Preset and name it MPSC_Hero, which is a Movie Pipeline Shot Config asset."
       - "Add a second job with another sequence. In its Settings dropdown, pick MPC_Final. Then click Unsaved Queue, choose Save Queue As, and save the queue as MPQ_Weekly."
       - "Click the name MPC_Final in the Settings column, change Output Directory, and close the window. Then double-click MPC_Final in the Content Browser and see that the change is not there. Set the directory in the asset editor and click Save."
@@ -3375,7 +3375,7 @@ quests:
       - q: "What is a Master preset meant for?"
         choices: ["The top-level job, so its settings propagate to the camera cuts beneath it", "One single camera only", "The editor viewport Quick Render", "Runtime builds only"]
         answer_index: 0
-        explain: "Master presets are applied to the top-level job and propagate their settings to the camera cuts (shots) below it. They are saved as Movie Pipeline Master Config assets."
+        explain: "Master presets are applied to the top-level job and propagate their settings to the camera cuts (shots) below it. They are saved as Movie Pipeline Primary Config assets (formerly Master Config)."
       - q: "Which of these can you NOT do in a Shot preset?"
         choices: ["Add an Anti-Aliasing setting", "Add a Console Variables setting", "Add an Export category setting or change the output directory", "Add a Camera setting"]
         answer_index: 2
@@ -3864,12 +3864,12 @@ quests:
     checklist:
       - "Place a Post Process Volume named PPV_Shot. In its Details panel, set Priority to 10 and leave Infinite Extent (Unbound) off. Place a second one named PPV_World with Infinite Extent on and Priority 0."
       - "Open a Level Sequence named SEQ_Grade that has a Cine Camera and a Camera Cuts track. Select PPV_Shot and add it with Add Track (+), then Actor To Sequencer."
-      - "On the PPV_Shot track, click Add Track (+), open Components and add the Settings component. On that component track, add the property tracks Vignette Intensity, Bloom Intensity and Saturation (found under Color Grading > Global)."
+      - "On the PPV_Shot track, click Add Track (+) and open Settings. This submenu lists the post process settings of the volume. Add the property tracks Vignette Intensity, Bloom Intensity and Saturation (found under Color Grading > Global)."
       - "Key Vignette Intensity with the value 0 at frame 0 and 0.8 at the last frame. Key Bloom Intensity so that it is highest in the middle of the shot. Right-click each float section, open Display and choose Show Curve."
       - "Key Saturation (under Color Grading > Global) so that the picture goes from full color to almost gray over the shot. Drag the playhead to check that the values change smoothly between the keys."
       - "Add PPV_World to the sequence too. Key its Blend Weight from 1 to 0 across the shot. Drag the playhead and watch which volume wins at each point."
       - "Play the shot. Write a short text that says which property tracks changed smoothly between keys and which did not."
-    done_when: "Send a screenshot of SEQ_Grade that shows the Settings component of PPV_Shot with at least three keyed property tracks and one curve drawn inside its track. Also send a viewport frame from the middle of the shot."
+    done_when: "Send a screenshot of SEQ_Grade that shows the PPV_Shot track with at least three keyed property tracks from its Settings, and one curve drawn inside its track. Also send a viewport frame from the middle of the shot."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4437,8 +4437,8 @@ quests:
     checklist:
       - "Create a project from the First Person template with Starter Content. Click Add, then Audio, then MetaSound Source, and name the asset MSS_Bomb."
       - "Click the Source button. In Attenuation Settings, create a new Sound Attenuation asset named SA_Bomb."
-      - "Build the graph. Connect On Play to a Wave Player (Mono) that loops Fire_Sparks01, and connect it to a Mono Mixer (2). Connect the Stop pin to a second Wave Player. Feed the Play pin of the second Wave Player from a Random Get (WaveAsset:Array) node that holds Explosion01 and Explosion02."
-      - "Promote the Next pin to a graph input and rename it Explode. Play the MetaSound and press the Execute arrow on the Explode node to hear the random explosion."
+      - "Build the graph. Drag from the On Play input and create a Wave Player (Mono) node. Set its Wave Asset to Fire_Sparks01 and turn on Loop. This is the sizzle. Connect its Out Mono pin to a Mono Mixer (2) node, and connect the Out pin of the mixer to the Out Mono output. Add a second Wave Player (Mono) for the explosion, and connect its Out Mono pin to the second input of the mixer and its On Finished pin to the On Finished output. Add a Random Get (WaveAsset:Array) node and connect its Value pin to the Wave Asset pin of the second Wave Player. Connect its On Next pin to the Play pin of the second Wave Player and to the Stop pin of the first one, so that the sizzle stops when the explosion starts. Drag from its In Array pin, choose Promote to Graph Variable, and add Explosion01 and Explosion02 to the array."
+      - "Drag from the Next pin of the Random Get node, choose Promote to Graph Input, and rename the new input Explode. Play the MetaSound and press the Execute arrow on the Explode node to hear the random explosion."
       - "Open BP_FirstPersonProjectile. From Event BeginPlay, call Spawn Sound Attached with MSS_Bomb and attach it to Sphere. From Event Destroyed, call Execute Trigger Parameter with In Name set to Explode. Test it in Play In Editor."
       - "Create MSS_Wind. Remove the UE.Source.OneShot interface and set Output Format to Stereo. Build a graph that goes from Noise to a One-Pole Low Pass Filter to a Stereo Mixer. Put an LFO on the cutoff (0.1 Hz, range 20 to 80), and put a float input named PawnSpeed on the gain."
       - "In the Level Blueprint, call Spawn Sound 2D with MSS_Wind on BeginPlay. On Tick, take the length of the pawn velocity, pass it through Map Range Clamped (200 to 1000 into 0 to 1), and send it to Set Float Parameter with the name PawnSpeed."
@@ -4565,7 +4565,7 @@ quests:
     checklist:
       - "Open Edit > Plugins and enable Subtitles and Closed Captions. Restart the editor."
       - "Pick a dialogue Sound Wave. You can record one with Take Recorder or import a short .wav file. Right-click it and choose Scripted Actions, then Sound, then Add Blank Subtitle."
-      - "Open the new subtitle asset. Set Text to your line (press Shift + Enter to start a second line), set Subtitle Type to Subtitle and Priority to 1. Add a second subtitle with a Start Offset for the second sentence."
+      - "Open the new subtitle asset. Set Text to your line (press Shift + Enter to start a second line), set Subtitle Type to Subtitle and Priority to 1. Look at Duration Type: Use Sound Duration ends the subtitle when the sound ends, and Use Duration Property shows it for the number of seconds you type in Duration. Pick one. Add a second subtitle with a Start Offset for the second sentence."
       - "Open your shot sequence and drag the subtitle asset onto a subtitle track. Trim the section so that it ends when the spoken line ends. Drag the playhead and watch the text appear."
       - "Open Edit > Project Settings > Game > Subtitles and Closed Captions. Open DefaultSubtitleWidget and change the font size and the color of the subtitles. Play in the editor and check the new look."
       - "In Movie Render Queue, add the Burn In setting to the job and render 48 frames. Open a frame and read the job name, level name, camera focal length and frame numbers in the burn-in."
