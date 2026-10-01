@@ -1,0 +1,137 @@
+{
+ "EAQ8": {
+  "brief": "A Landscape is the terrain actor that Unreal uses for outdoor ground with hills and valleys. You shape it with brush tools in Landscape Mode, a little like pushing and pulling clay. Not every level is flat, so you need to know how to make ground that the player can walk on. In this quest you sculpt a small patch with a hill, a hollow and a path, and then you walk on it to test it.",
+  "checklist": [
+   "Create a new level named L_Terrain_01. Open Landscape Mode, go to the Manage tab and choose New. Keep the landscape small: the default size or less is plenty.",
+   "Select the Sculpt tool and raise one hill. Then hold Shift while you sculpt to dig one hollow, because Shift makes the tool push the ground down.",
+   "Use the Smooth tool over the edges until nothing looks like a spike.",
+   "Use the Ramp tool to make one path from the low ground to the top of the hill. The Ramp tool builds a straight, even slope between two points that you place.",
+   "Place a Player Start in the level and set the GameMode to the Third Person GameMode. Then walk the path in PIE, which means Play In Editor.",
+   "Find every place where the character slides back or gets stuck. Smooth or flatten the ground there."
+  ],
+  "done_when": "Send a screenshot taken at eye level on the path, and one overview screenshot of the whole patch."
+ },
+ "EAQ9": {
+  "brief": "Unreal has several types of lights, and each one sends out light in a different shape. A Point Light shines in all directions like a bulb, a Spot Light shines in a cone, and a Rect Light shines from a rectangle like a window. Lumen is the system in Unreal Engine 5 that calculates bounced light while the game runs. In this quest you place the three light types in a room, change their settings, and watch Lumen bounce light.",
+  "checklist": [
+   "Open Project Settings and go to the Rendering section. Confirm that Dynamic Global Illumination Method is set to Lumen.",
+   "In L_Room_01, place one Point Light, one Spot Light and one Rect Light. Set the Mobility of all three to Movable, which means the light is fully dynamic and can change while the game runs.",
+   "Change the Intensity, the Attenuation Radius (how far the light reaches) and the color of each light. For the Spot Light, also change the cone angles.",
+   "Aim the Rect Light at a wall. Watch how Lumen bounces the color of the wall onto the floor.",
+   "Change the Mobility of one light to Static, and note what the tooltip or the warning says."
+  ],
+  "done_when": "Send one screenshot with all three lights visible, and add one line for each light that says what you would use it for."
+ },
+ "EAQ10": {
+  "brief": "Exposure is how bright the camera makes the picture. By default Unreal uses auto exposure, which slowly changes the brightness like your eyes do when you enter a dark room. This hides lighting problems and makes every screenshot look different. In this quest you lock the exposure to one fixed value with a Post Process Volume, so that you see the real brightness of your room.",
+  "checklist": [
+   "In L_Room_01, add a Post Process Volume and tick Infinite Extent (Unbound). This makes the volume apply everywhere, no matter where the camera is.",
+   "Start PIE and walk from the bright doorway into a dark corner. Watch how auto exposure slowly changes the brightness.",
+   "In the Exposure section of the volume, set Metering Mode to Manual. Then adjust Exposure Compensation until you can see the room clearly.",
+   "Walk the same path again. The brightness should now stay the same.",
+   "Save a camera bookmark, and take a screenshot from it before the lock and after the lock."
+  ],
+  "done_when": "Send before and after screenshots taken from the same bookmark, and a screenshot of the Details panel with the Exposure settings visible."
+ },
+ "EAQ11": {
+  "brief": "Foliage means plants, rocks and other small meshes that you paint onto the ground in large numbers with Foliage Mode. Foliage makes a space feel real, but it must not stand in the way of the player. In this quest you paint two foliage types along your path and make sure that nothing blocks the route.",
+  "checklist": [
+   "In L_Terrain_01, open Foliage Mode and add two foliage types: one bush, and one small grass mesh or rock mesh.",
+   "Paint both types along the edges of your ramped path. Hold Shift and paint to erase anything that lands on the path.",
+   "Open the bush foliage type and lower its Density. Stop when you can still see clearly where the edges of the path are.",
+   "Set the Collision Preset of the grass type to NoCollision, so that the player walks through it.",
+   "Walk the path in PIE. Nothing on the path should stop you or catch you."
+  ],
+  "done_when": "Send a screenshot taken at eye level that shows the path with foliage on both sides and the path itself clear."
+ },
+ "LDQ11": {
+  "brief": "Metrics are the numbers that describe what the player character can do: how wide it is, how high it can step and how far it can jump. Every space in a level is built around these numbers. A metrics gym is a test level with steps, ledges, gaps and doors of known sizes, where you measure these limits. In this quest you read the character settings, build a gym, and test every piece.",
+  "checklist": [
+   "Open BP_ThirdPersonCharacter and select the Capsule Component, the invisible shape that collides with the world. Write down its Capsule Radius and Capsule Half Height.",
+   "Select the Character Movement component. Write down Max Step Height, Walkable Floor Angle, Jump Z Velocity and Gravity Scale.",
+   "Create a new level named L_MetricsGym. Build a row of steps (15, 30, 45 and 60 cm high), a row of ledges (from 100 to 250 cm, 25 cm apart) and a row of gaps (from 100 to 500 cm, 50 cm apart).",
+   "Build three doorways. Make the first as wide as the capsule diameter, the second as wide as the diameter + 40 cm, and the third a width that feels comfortable to you.",
+   "Start PIE and test every piece. Note the highest step you can walk up, the highest ledge you can jump onto, and the widest gap you can jump over.",
+   "Put a Text Render actor next to each piece as a label, so that the numbers are visible in screenshots."
+  ],
+  "done_when": "Send a screenshot of the gym with its labels, and a list of your metrics: capsule size, step height, jump height, jump distance and door width."
+ },
+ "LDQ12": {
+  "brief": "A blockout is a rough version of a level made from simple shapes, so that you can test the space before you spend time on art. Unreal gives you three common ways to build one: scaled cubes, geometry brushes, and the CubeGrid tool in Modeling Mode. In this quest you build the same small room with each tool and find out which one is the fastest to change.",
+  "checklist": [
+   "Create a new level named L_Toolkit. You will build the same small room three times, with a floor, walls and one doorway.",
+   "Build version A from cubes that you take from the Place Actors panel and scale to the right size.",
+   "Build version B with geometry brushes. Use one additive box for the room, and one subtractive box that cuts out the doorway.",
+   "Build version C with the CubeGrid tool in Modeling Mode. Set the grid to a size that matches your metrics.",
+   "Change the width of the doorway in all three versions. Time how long each change takes.",
+   "Write down which tool you would use for a quick room, which for a big irregular shape, and which for a piece you want to use again."
+  ],
+  "done_when": "Send a writeup of 3 to 5 lines that says which tool you would pick for which job and why, and one screenshot of the three rooms."
+ },
+ "LDQ13": {
+  "brief": "A route is one way for the player to get from the start to the goal. When a level offers several routes that are clearly different, the player has a real choice and does not feel stuck. In this quest you block out three routes between a start and a goal, connect them, and walk each one to test it.",
+  "checklist": [
+   "Create a new level named L_Routes_01. Place a start and a goal about 40 to 60 m apart. A lit box is fine as the goal.",
+   "Build three routes to the goal. Each one must be different in one clear way: short and exposed, long and covered, or high and requiring a jump.",
+   "Build every route to the metrics you measured in your metrics gym (quest LDQ11). Do not guess any step heights.",
+   "Connect at least two of the routes somewhere in the middle, so that the player can switch from one to the other.",
+   "Start PIE and walk each route from the start to the goal. Fix anything that stops you."
+  ],
+  "done_when": "Send a top-down screenshot with the three routes drawn on it in different colors, and one screenshot taken at eye level from the start."
+ },
+ "LDQ14": {
+  "brief": "People find their way by what they can see. A sightline is a clear line of view from where the player stands to something in the distance. A landmark is a large object with a shape that is easy to recognize, which tells the player where they are and where to go. In this quest you add a landmark near your goal, check where it can be seen from, and build a reveal, a moment where a hidden view opens up.",
+  "checklist": [
+   "In L_Routes_01, add one landmark near the goal. It should be tall and have a unique silhouette (outline), for example a tower, a big arch or a dead tree.",
+   "Check that the landmark is visible from the start and from at least one point on every route. Check this in PIE at eye height, not with the flying editor camera.",
+   "Block one sightline on purpose with a wall. Then open the view again at a corner to make a reveal.",
+   "Save a bookmark at each point where the landmark first comes into view."
+  ],
+  "done_when": "Send screenshots taken at eye level from the start and from each route that show the landmark, and one before and after pair of the reveal."
+ },
+ "LDQ15": {
+  "brief": "Players follow light, color and shape more than they follow signs. You can use these three things as quiet hints that tell the player where to go and what they can use. In this quest you choose one guidance color, light the route entrances, add a shape hint, and check every junction in your level.",
+  "checklist": [
+   "Pick one guidance color, for example yellow = climbable or usable. Make a Material Instance for it, with a name that starts with MI_, and use it only for that meaning.",
+   "Apply it to every ledge the player can jump onto and to every usable object in L_Routes_01. Nothing else gets that color.",
+   "Light the entrance of each route so that it is slightly brighter than the walls around it.",
+   "Give one route a shape cue, which is a shape that points the way: an arch, a gap in a wall, or a line of pillars that points toward the route.",
+   "Start PIE and stop at each junction. Ask yourself what tells you to go this way. Fix every junction where you have no answer."
+  ],
+  "done_when": "Send two screenshots taken at eye level at a junction that show the color, light and shape cues, and add one line that states your color rule."
+ },
+ "LDQ16": {
+  "brief": "Verticality means using height in a level, with places above and below the main floor. Height adds new routes and good views, but only when the character can really climb it. In this quest you raise one of your routes with a ramp, stairs and a ledge, and you size every piece from your measured metrics.",
+  "checklist": [
+   "In L_Routes_01, raise the high route by 3 to 4 m. Use a ramp, a staircase and one ledge that the player must jump up onto.",
+   "Make each stair riser (the height of one stair) lower than your measured step height. Make the ramp less steep than your walkable angle.",
+   "Size the ledge and any gap with a margin. They should be noticeably below your maximum jump, not right at it.",
+   "Add a way back down from the high point, such as a drop or stairs, so that it is not a trap.",
+   "Start PIE and climb every piece three times. If you miss even once, the piece is too close to the limit."
+  ],
+  "done_when": "Send a side-view screenshot of the vertical route with the heights labelled, and one PIE screenshot taken from the top."
+ },
+ "LDQ17": {
+  "brief": "It is hard to see problems in a level that you have just built, because you already know where everything is. A review with fresh eyes means that you take a break and then look at the level as if you were a new player. If you do the review the same way every time, you can compare the results. In this quest you save review bookmarks, play the level once, note where you hesitate, and fix the two worst problems.",
+  "checklist": [
+   "Before you start this quest, take a break of at least one hour away from L_Routes_01.",
+   "Save review bookmarks with Ctrl+1 to Ctrl+5: one at the start, one at each route entrance, and one at the goal.",
+   "At each bookmark, press G to turn on Game View, which hides the editor icons, and take a screenshot.",
+   "Play the whole level once in PIE as if you had never seen it. Write a note every time you hesitate, look around or get lost.",
+   "Pick the two worst notes and fix those problems. Then take new screenshots from the same bookmarks."
+  ],
+  "done_when": "Send a writeup with your hesitation notes and your two fixes, and before and after screenshots taken from the same bookmarks."
+ },
+ "LDQ18": {
+  "brief": "The first job of lighting in a level is to show the player the route and the dangers. Looking pretty comes second. The Lighting Only view mode shows the level with light but without textures, so you can judge the brightness alone. In this quest you check the lighting of your routes, make the goal the brightest point, and make sure an enemy would stand out against the background.",
+  "checklist": [
+   "In L_Routes_01, confirm that the unbound Post Process Volume with locked exposure (from quest EAQ10) is in place.",
+   "Switch the viewport to the Lighting Only view mode. Check that each route entrance is brighter than the walls around it.",
+   "Light the goal area so that it is the brightest point in the level.",
+   "Place a mannequin where an enemy might stand. Adjust the lights until its silhouette (outline) is easy to see against the background.",
+   "Remove or dim any light that pulls attention toward a dead end.",
+   "Switch back to Lit mode and check the level again from the bookmarks you saved in quest LDQ17."
+  ],
+  "done_when": "Send Lit and Lighting Only screenshots taken from the same 2 bookmarks, and one screenshot of the mannequin silhouette."
+ }
+}

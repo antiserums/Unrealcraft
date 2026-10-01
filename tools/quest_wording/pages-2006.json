@@ -1,0 +1,157 @@
+{
+ "CQ61": {
+  "brief": "A path-traced image is noisy (grainy) until it has many samples, and many samples take a long time. A denoiser is a tool that removes the noise from an image with few samples, so a frame can finish much faster. Unreal has a spatial denoiser that cleans each frame on its own (NNE with Open Image Denoise) and a temporal one that also looks at the frames before and after (NFOR). In this quest you try both, compare how much the result flickers, and compare the render times.",
+  "checklist": [
+   "Open Edit > Plugins and confirm that NFORDenoise and NNEDenoiser are enabled. Open Project Settings > NNE Denoiser. Pick an Open Image Denoise asset (balanced) and set Runtime Type to RDG. If no assets show, tick Show Engine Content and Show Plugin Content in the browse settings.",
+   "Set the viewport to Path Tracing. In your Post Process Volume, enable Denoiser. Run r.PathTracing.Denoiser.Name NNEDenoiser in the console. Then compare the fast and the high quality OIDN assets on one still image.",
+   "In MRG_PT, select the Path Traced Renderer node. Under Denoiser, enable Denoiser Type and set it to Temporal. Set Frame Count to 2. Render a camera move of 48 frames, and search the Output Log for LogNFORDenoise.",
+   "Render the same shot with Frame Count 0. Compare the flicker between frames in a viewer.",
+   "Now do it the legacy way. In an MRQ config, add Console Variables with r.PathTracing.SpatialDenoiser.Type 1 and r.NFOR.FrameCount 2, and enable Denoiser in the Post Process Volume. Look at the first and the last frames of the shot.",
+   "Enable Reference Motion Blur with Temporal 8. Compare the render time with the time when Reference Motion Blur is off.",
+   "Write 5 lines that say which setup was cleanest, which was fastest, and what the log line showed."
+  ],
+  "done_when": "Send a screenshot of the Path Traced Renderer node with Denoiser Type set to Temporal and Frame Count 2, the Output Log line from LogNFORDenoise, and two frames that compare spatial and temporal denoising."
+ },
+ "CQ62": {
+  "brief": "Overscan means rendering extra pixels around the edges of the frame. Compositors use this border for lens effects and for steadying a shaky picture. A tiled render splits one very large image into several pieces that are rendered one by one, because a poster-size frame is too big for the graphics card to draw at once. In this quest you render with overscan, render a 4K frame in tiles, and render from two cameras into separate folders.",
+  "checklist": [
+   "Make a job for a shot of 12 frames. Add the Camera setting with Overscan Percentage 0.1 and export EXR. Render. Open a frame in a viewer that shows the EXR data window, and note the pixel size.",
+   "Render the same job to PNG. Compare the image size and the framing with the EXR.",
+   "Remove the overscan from MRQ. Set the Overscan property on the Cine Camera Actor itself, render again, and confirm that the value was passed through. Then set a different value in MRQ and see which one wins.",
+   "Add High Resolution with Output 3840x2160, Tile Count 2, Overlap Ratio 0.1 and Texture Sharpness Bias -1. Render with depth of field on. Watch the preview window during the render.",
+   "Put a character with subsurface skin (skin that lets light pass a little way into it) in the shot. Enable Override Sub Surface Scattering and raise Burley Sample Count. Compare the skin at a tile seam, the line where two tiles meet.",
+   "Add a second Cine Camera to the shot. In the Camera setting, enable Render All Cameras, and set Output Directory so that it ends with {camera_name}/. Render.",
+   "Add {overscan_percentage} and {tile_count} to the File Name Format. Then switch the job to Movie Render Graph and check if a High Resolution node exists."
+  ],
+  "done_when": "Send a screenshot of the output folders for both cameras, one overscanned EXR open with its data window visible, and a 4K tiled frame with a note that says where the tile seam was."
+ },
+ "CQ63": {
+  "brief": "A color grade does not have to stay the same for a whole shot. The picture can slowly lose its color or get darker at the edges as part of the story. Sequencer can key almost any setting of a Post Process Volume, the actor that controls the look of the image. In this quest you add a Post Process Volume to a sequence and animate its vignette, bloom and saturation over the shot.",
+  "checklist": [
+   "Place a Post Process Volume named PPV_Shot. In its Details panel, set Priority to 10 and leave Infinite Extent (Unbound) off. Place a second one named PPV_World with Infinite Extent on and Priority 0.",
+   "Open a Level Sequence named SEQ_Grade that has a Cine Camera and a Camera Cuts track. Select PPV_Shot and add it with Add Track (+), then Actor To Sequencer.",
+   "On the PPV_Shot track, click Add Track (+), open Components and add the Settings component. On that component track, add the property tracks Vignette Intensity, Bloom Intensity and Saturation (found under Color Grading > Global).",
+   "Key Vignette Intensity with the value 0 at frame 0 and 0.8 at the last frame. Key Bloom Intensity so that it is highest in the middle of the shot. Right-click each float section, open Display and choose Show Curve.",
+   "Key Saturation (under Color Grading > Global) so that the picture goes from full color to almost gray over the shot. Drag the playhead to check that the values change smoothly between the keys.",
+   "Add PPV_World to the sequence too. Key its Blend Weight from 1 to 0 across the shot. Drag the playhead and watch which volume wins at each point.",
+   "Play the shot. Write a short text that says which property tracks changed smoothly between keys and which did not."
+  ],
+  "done_when": "Send a screenshot of SEQ_Grade that shows the Settings component of PPV_Shot with at least three keyed property tracks and one curve drawn inside its track. Also send a viewport frame from the middle of the shot."
+ },
+ "CQ64": {
+  "brief": "A LUT (lookup table) is a small texture that remaps every color of the picture to another color. You can build a look in an image editor and bring it into Unreal as a LUT, which is the fastest way to try a look. A LUT has limits, though, so the final grade is better made with the Color Grading settings of Unreal. In this quest you make a LUT, apply it, and then rebuild the same look in the Color Grading panel.",
+  "checklist": [
+   "Take a high-resolution screenshot of your shot. Open it in an image editor such as Photoshop or GIMP. Add adjustment layers, for example Vibrance and Brightness/Contrast, until you like the look.",
+   "Open a neutral LUT image of 256x16 pixels (a 16x16x16 table laid out flat). Drag your adjustment layers onto it and save it as T_LUT_ShotLook.png. Import the file into the project.",
+   "Open T_LUT_ShotLook in the Texture Editor. Set Mip Gen Settings to NoMipMaps and Texture Group to Color Lookup Table.",
+   "On PPV_Shot, go to Color Grading > Global and enable Color Grading LUT. Assign the texture and set Color Grading LUT Intensity to 1. Compare this with an intensity of 0.5.",
+   "Open Window > Color Grading and select PPV_Shot in the Object Mixer panel. Rebuild the same look with the Shadows, Midtones and Highlights wheels. Then set LUT Intensity back to 0.",
+   "Create a Color Grading collection named ShotA and add PPV_Shot and your Cine Camera to it. Use the Solo icon (headphones) to check the camera on its own.",
+   "Write three lines that say what the LUT gave you quickly, and why the documentation says to finish with the Color Grading properties."
+  ],
+  "done_when": "Send two viewport frames of the same shot: one with the LUT at intensity 1, and one with the grade made with the wheels and the LUT intensity at 0. Also send a screenshot of the Color Grading panel with your ShotA collection visible, and your three lines."
+ },
+ "CQ65": {
+  "brief": "Three-point lighting is a classic setup with a key light (the main light), a fill light (a weaker light that softens the shadows) and a rim light (a light from behind that outlines the subject). The Light Mixer is a panel that lists all lights of the level in one table, so you can tune them next to each other. In this quest you build a three-point rig in the Light Mixer, group it in a collection, and key all three lights with one track in Sequencer.",
+  "checklist": [
+   "Open Window > Light Mixer. Use its Add button to place three Spot Lights around a character or prop, and name them SL_Key, SL_Fill and SL_Rim. Aim them like a three-point rig.",
+   "Hover over a column header and click the three-dot Overflow Menu. Add the columns Intensity, Light Color and Attenuation Radius. Set the intensity of the fill light to about half of the key light, directly in the panel.",
+   "Select SL_Key, SL_Fill and SL_Rim with Ctrl-click. Right-click, choose Select or Add Collection, and name the collection ShotA_Rig. Click the collection tab and confirm that only the three lights show.",
+   "Solo SL_Rim with the dash icon under the Headphones column, so that only this light is on. Take a viewport frame. Then click the headphones icon to bring the other lights back.",
+   "Open Window > Env. Light Mixer and set Property Details to Normal. Tune the intensity of the sun (the Directional Light) so that your rig is still clearly visible.",
+   "In a Level Sequence, add SL_Key to Sequencer. Then select all three lights, right-click the binding, open Assign Actor and choose Add Selected. Key one dip of Intensity on this track, which now controls all three lights.",
+   "Write two lines about when you would mute lights (eye icon) and when you would solo them (headphones) while you light a shot."
+  ],
+  "done_when": "Send a screenshot of the Light Mixer that shows the ShotA_Rig collection tab with three lights and your added columns, a viewport frame with SL_Rim soloed, and a screenshot of the Sequencer track with the yellow multi-binding chevron and [3]."
+ },
+ "CQ66": {
+  "brief": "Light that changes over time sets the mood of a scene. A lamp that fades, a color that turns from warm to cold, or a sign that flickers can change a shot more than a new asset. In Sequencer you can key a light by hand or let a noise function drive it with random values. In this quest you animate one light with keys and one with noise.",
+  "checklist": [
+   "Place a Point Light named PL_Lamp and a Spot Light named SL_Sign in a dark room. Open a Level Sequence named SEQ_Lights and add both lights with Add Track (+), then Actor To Sequencer.",
+   "Make a fade. Select the Intensity track of PL_Lamp and press Enter at frame 0. Move the playhead to the end and type a new intensity value in the track, which makes the second key.",
+   "Animate the color. Select the Light Color track and press Enter. Double-click the key and pick a warm color. Add a second color key later in the shot and pick a cold color.",
+   "Make a flicker. On SL_Sign, right-click the Intensity track and choose Override with Double Perlin Noise. Right-click again, open Double Perlin Noise Parameters, and set Frequency and Amplitude until it looks like a broken neon sign.",
+   "The noise moves up and down around 0. Add a base section with a fixed intensity and put the noise on an additive section, so that the light never goes fully dark.",
+   "Enable Volumetric Fog on the Exponential Height Fog. Play the flicker and look for trails of light in the fog. Then set Volumetric Scattering Intensity of SL_Sign to 0 and compare.",
+   "Write two lines that say which light you keyed by hand, which one uses noise, and why."
+  ],
+  "done_when": "Send a screenshot of SEQ_Lights that shows PL_Lamp with Intensity and Light Color keys and SL_Sign with a Perlin noise Intensity channel. Also send a short video or two frames that show the flicker, and your two lines."
+ },
+ "CQ67": {
+  "brief": "Fog gives a picture depth and mood. Unreal has two fog tools that matter for shots. A Local Fog Volume is a cheap ball of fog that you place where you need it. Volumetric Fog is a more expensive option of the Exponential Height Fog that lets lights cast visible beams and shadows in the fog. In this quest you use both, measure the cost, and animate the fog in a sequence.",
+  "checklist": [
+   "Open a level that has an Exponential Height Fog. Place two Local Fog Volumes from the Place Actors panel, or from Create, then Visual Effects. Name them LFV_Ground and LFV_Beam. Put LFV_Ground low behind your subject and LFV_Beam near a lamp. Only scale them equally on all axes.",
+   "On LFV_Ground, set a small Radial Fog Density and a larger Height Fog Density. Adjust Height Fog Falloff and Height Fog Offset until the fog sits on the floor.",
+   "On LFV_Beam, set Fog Albedo to a warm color and add a small Fog Emissive. Compare Scattering Distribution 0 and 0.8 while you look toward the lamp and away from it.",
+   "Make the two volumes overlap. Set Fog Sort Priority so that LFV_Ground is drawn behind LFV_Beam. Take a frame.",
+   "Enable Volumetric Fog on the Exponential Height Fog. Note what happens to the sorting. On your lamp, set Volumetric Scattering Intensity to 2 and turn on Cast Volumetric Shadow. Take a second frame.",
+   "Run the console command profilegpu once with the volumetric shadow on and once with it off. Write the two costs in a text note.",
+   "Add both fog volumes to a Level Sequence. Key the Radial Fog Density of LFV_Beam from 0 to its full value during the shot."
+  ],
+  "done_when": "Send two frames of the same shot (one with only the Local Fog Volumes, and one with Volumetric Fog and the volumetric shadow), a screenshot of the Sequencer track with the keyed density, and your note with the two GPU costs."
+ },
+ "CQ68": {
+  "brief": "The sharp part of a picture tells the viewer where to look. A rack focus is a move where the focus shifts from one subject to another during the shot, and it is a classic way to tell a story with the camera. How much of the picture is blurred depends on the aperture (the f-stop number) and the focal length. In this quest you compare f-stops, look at the depth of field layers, and key a rack focus in Sequencer.",
+  "checklist": [
+   "Place a Cine Camera Actor named CC_Focus with two subjects: one near, at about 3 m, and one far, at about 10 m. Pilot the camera from the Perspective menu of the viewport.",
+   "In Lens Settings, set Min FStop to 1.4, Max FStop to 8.0 and Diaphragm Blade Count to 5. Set Current Focal Length to 75 mm. Try Current Aperture 1.4, 2.8 and 5.6, and take a frame of each.",
+   "Set Focus Method to Manual and enable Draw Debug Focus Plane. Move Manual Focus Distance from the near subject to the far one. Turn the debug plane off before you take the final frames.",
+   "In the viewport, open Show > Visualize > Depth of Field Layers. Find the green, black and blue areas in your shot.",
+   "Add CC_Focus to a Level Sequence. Key Manual Focus Distance so that the focus moves from near to far over 2 seconds. Enable Smooth Focus Changes and test two values of Focus Smoothing Interp Speed.",
+   "Switch Focus Method to Tracking and pick the far subject as the tracked actor. Move the actor and watch the focus follow it.",
+   "Write three lines that give the f-stop you chose for the final rack focus and say why the bokeh (the shape of blurred bright spots) looked like a polygon at one setting."
+  ],
+  "done_when": "Send three frames at f/1.4, f/2.8 and f/5.6, one frame of the Depth of Field Layers view, a screenshot of the Sequencer track with the Focus Distance keys, and your three lines."
+ },
+ "CQ69": {
+  "brief": "Real lenses are not perfect. Bright lights glow (bloom), throw streaks and ghost shapes (lens flare), and show smudges on the glass (dirt). Adding these effects makes a render look like it was filmed with a camera, but each effect costs render time and needs the right setting. In this quest you set up bloom in two ways, add a dirt mask and a lens flare, and measure the cost.",
+  "checklist": [
+   "Put a bright emissive sign or a strong lamp in a dark shot. On PPV_Shot, open Lens, then Bloom. Compare Intensity 0, 1 and 5 with the Standard method, and take frames.",
+   "Set Threshold to -1 and look at the whole image. Then raise Threshold until only the sign blooms. Note both values.",
+   "Switch Method to Convolution. Import or create a kernel texture named T_BloomKernel, the image that gives the bloom its shape. An .exr file with a bright center works well. In the Texture Editor, set Mip Gen Settings to NoMipmaps and turn on Never Stream.",
+   "Assign the kernel as Convolution Kernel. Try Convolution Scale 1.0 and 0.5 and note the change.",
+   "Enable Dirt Mask Texture and use a smudge texture named T_DirtMask whose size is not a power of two. Adjust Dirt Mask Intensity and Dirt Mask Tint so that the smudge only shows near the sign.",
+   "Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the sign makes a flare. Change one Tints entry, where RGB is the color and Alpha is the position.",
+   "Add Chromatic Aberration Intensity and Vignette Intensity as the final touch. Run profilegpu once with Convolution on and once with Standard, and write three lines about what each lens effect cost you."
+  ],
+  "done_when": "Send frames of the shot with Standard bloom, Convolution bloom, the dirt mask and the lens flare. Also send your note with the two profilegpu numbers and the two Threshold values."
+ },
+ "CQ70": {
+  "brief": "Color management makes sure that a color looks the same in Unreal, on your monitor, and in the other programs of a film production. OpenColorIO, or OCIO, is the standard system for this. In Unreal you create an OCIO configuration asset that lists the color spaces you need, and you apply it to the viewport and to renders. In this quest you set up one configuration, use it in the viewport and in Movie Render Queue, and compare renders with and without it.",
+  "checklist": [
+   "Open Edit > Plugins and check that OpenColorIO is enabled. Open Edit > Project Settings > Rendering > Working Color Space and write down the current value. Leave it at the default.",
+   "In the Content Browser, right-click and choose Miscellaneous, then OpenColorIO Configuration. Name it OCIO_Shot. Open it and keep Configuration File at ocio://default.",
+   "Under Desired Color Spaces, click Add (+) and pick a linear working space and a display view, for example an sRGB monitor output. Add only what you need. Save the asset.",
+   "In the level viewport, click View Mode and choose OCIO Display. Select OCIO_Shot, set the source and the destination, and click Enable Display. Take one frame with it on and one with it off.",
+   "In Movie Render Queue, add the Color Output setting. Assign OCIO_Shot and the same source and destination. Render 10 frames of your shot as EXR.",
+   "Render the same 10 frames again with Color Output removed. Open one frame from each render side by side.",
+   "Write three lines that say what changed between the two renders, and where the documentation says the viewport inserts the OCIO conversion."
+  ],
+  "done_when": "Send a screenshot of OCIO_Shot with your color spaces, a viewport frame with OCIO Display enabled, a screenshot of the MRQ Color Output setting with OCIO_Shot assigned, and your three lines."
+ },
+ "CQ71": {
+  "brief": "When every step of a character plays the same sound, the ear notices it quickly and the scene sounds cheap. A Sound Cue is an asset where you connect nodes to change how sounds play. With a few nodes it can pick a random footstep each time and change its pitch a little. In this quest you build such a Sound Cue, make it get quieter with distance, and attach it to a character in a sequence.",
+  "checklist": [
+   "Import 3 short footstep .wav files, or use 3 Sound Waves from Starter Content. Create a Sound Cue named SC_Footsteps with Add, then Sounds, then Sound Cue.",
+   "In the Sound Cue Editor, add a Random node. Click Add input until it has 3 pins and connect one Wave Player to each pin. Enable Randomize Without Replacement, which plays all sounds once before any sound repeats.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9 and Pitch Max to 1.1. Keep Volume Min and Volume Max at the same value.",
+   "Create a Sound Attenuation asset named SA_Footsteps, which controls how the sound gets quieter with distance. Set Attenuation Function to Logarithmic, Shape to Sphere, Inner Radius to 200 and Falloff Distance to 1500. Add an Attenuation node before the Output node and set it to SA_Footsteps.",
+   "Press Play Cue several times. Watch the wires turn red and check that a different footstep plays each time.",
+   "Open your shot sequence. Under the character track, add SC_Footsteps to an Audio Track, so that the sound is attached to the character. Drag the playhead through the sequence and listen while the camera moves away."
+  ],
+  "done_when": "Send a screenshot of the SC_Footsteps graph with the Random, Modulator, Attenuation and Output nodes visible. Also send a screenshot of the sequence with the audio section under the character. Add one line that says which attenuation function you chose and why."
+ },
+ "CQ72": {
+  "brief": "MetaSounds is the modern sound system of UE5. A MetaSound Source is a sound that is built from a graph of nodes, so it can create and change audio while the game runs. With it you can make effects and background sound for your shots yourself. In this quest you build two MetaSounds: a bomb that sizzles and then plays a random explosion, and a wind sound that gets stronger when the player moves faster.",
+  "checklist": [
+   "Create a project from the First Person template with Starter Content. Click Add, then Audio, then MetaSound Source, and name the asset MSS_Bomb.",
+   "Click the Source button. In Attenuation Settings, create a new Sound Attenuation asset named SA_Bomb.",
+   "Build the graph. Connect On Play to a Wave Player (Mono) that loops Fire_Sparks01, and connect it to a Mono Mixer (2). Connect the Stop pin to a second Wave Player. Feed the Play pin of the second Wave Player from a Random Get (WaveAsset:Array) node that holds Explosion01 and Explosion02.",
+   "Promote the Next pin to a graph input and rename it Explode. Play the MetaSound and press the Execute arrow on the Explode node to hear the random explosion.",
+   "Open BP_FirstPersonProjectile. From Event BeginPlay, call Spawn Sound Attached with MSS_Bomb and attach it to Sphere. From Event Destroyed, call Execute Trigger Parameter with In Name set to Explode. Test it in Play In Editor.",
+   "Create MSS_Wind. Remove the UE.Source.OneShot interface and set Output Format to Stereo. Build a graph that goes from Noise to a One-Pole Low Pass Filter to a Stereo Mixer. Put an LFO on the cutoff (0.1 Hz, range 20 to 80), and put a float input named PawnSpeed on the gain.",
+   "In the Level Blueprint, call Spawn Sound 2D with MSS_Wind on BeginPlay. On Tick, take the length of the pawn velocity, pass it through Map Range Clamped (200 to 1000 into 0 to 1), and send it to Set Float Parameter with the name PawnSpeed."
+  ],
+  "done_when": "Send two screenshots: the MSS_Bomb graph with the Explode trigger input, and the MSS_Wind graph with the LFO and the PawnSpeed input. Add one line that says what happened to the wind when you sprinted."
+ }
+}

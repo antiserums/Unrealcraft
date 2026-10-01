@@ -1,0 +1,147 @@
+{
+ "CQ1": {
+  "brief": "Before you can film anything in Unreal, you need to move the view of the editor quickly and exactly. A viewport bookmark is a saved view that you can jump back to with one key. Piloting means that you look through a camera and move it with the normal viewport controls. In this quest you practice camera speed, orbiting and bookmarks, and you pilot your first Cine Camera Actor, the camera type used for filming.",
+  "checklist": [
+   "Open a level that has a few meshes in it. Hold RMB (the right mouse button) and scroll the mouse wheel to change the camera speed. Find a speed that feels good for close work.",
+   "Select one mesh and press F to focus the view on it. Hold Alt + LMB and drag to orbit around it. Then try Alt + RMB, which moves the view closer or farther (dolly), and Alt + MMB, which slides the view sideways or up and down (track).",
+   "Find three nice views of the level. Save each one as a viewport bookmark with Ctrl + 1, Ctrl + 2 and Ctrl + 3. Then press 1, 2 and 3 to jump between them.",
+   "Place a Cine Camera Actor in the level. You find it in the Place Actors panel under Cinematic. Right-click it in the viewport and choose Pilot CineCameraActor, then move the view with the normal controls.",
+   "Click the eject icon to stop piloting. Select the camera again and press Ctrl + Shift + P to pilot it with the keyboard shortcut.",
+   "Press G to turn Game View on and off. Game View shows the shot without the editor icons."
+  ],
+  "done_when": "Send one screenshot of the viewport while you pilot the Cine Camera Actor. The pilot bar must be visible at the top of the viewport. Add one line that says which camera speed you chose."
+ },
+ "CQ2": {
+  "brief": "The Cine Camera Actor is the camera you will use to film everything in Unreal. It copies a real film camera: the Filmback is the sensor inside the camera body, and the lens settings control how wide the view is and what is sharp. In this quest you place one, look at its small preview window, and try its main settings.",
+  "checklist": [
+   "Add a Cine Camera Actor to the level from the Place Actors panel. Open Window > Place Actors and look under Cinematic.",
+   "Select the camera. Look at the Picture-in-Picture (PIP) window in the bottom right of the viewport, which shows what the camera sees. Click the pin so that it stays visible.",
+   "In the Details panel, open Filmback. Change the Filmback preset, for example to a 16:9 one, and watch Sensor Width, Sensor Height and Sensor Aspect Ratio change.",
+   "Open Lens Settings and pick a lens preset. Then set Current Focal Length to 24 mm, then to 85 mm, and compare what the PIP shows each time.",
+   "In Camera Options, enable Constrain Aspect Ratio. Notice the black bars that appear in the PIP.",
+   "Set Focus Method to Manual. Click the eyedropper next to Manual Focus Distance and then click one object, so the camera focuses on that object."
+  ],
+  "done_when": "Send one screenshot with the Cine Camera Actor selected. It must show the Details panel with Filmback and Lens Settings, and the pinned PIP window."
+ },
+ "CQ3": {
+  "brief": "A high-resolution screenshot is an image that Unreal saves at a larger size than your screen, so it stays sharp when people zoom in. It is the quickest way to show your work, and most portfolios use this kind of image. In this quest you take screenshots with the High Resolution Screenshot tool in four different ways and compare the results.",
+  "checklist": [
+   "Frame a shot in the viewport. Open Viewport Options and choose High Resolution Screenshot.",
+   "Set the Screenshot Size Multiplier to 2 and click the camera icon. Then click the message that appears in the bottom right to open the Saved/Screenshots folder.",
+   "Click Specify Region and drag a rectangle in the viewport. Take a second screenshot, which will contain only that region.",
+   "Select one mesh and enable Render CustomDepth Pass in its Details panel. In the screenshot tool, enable Use custom depth as mask and capture again. The mask keeps only the objects that have this option turned on.",
+   "Start Play In Editor. Press the ~ key to open the console and type HighResShot 3840x2160. Find the new file in the same folder.",
+   "Compare the file sizes and the pixel sizes of the four images."
+  ],
+  "done_when": "Send one high-resolution screenshot of your shot taken at 2x or larger. Also send one screenshot of the Saved/Screenshots folder that shows your files with their pixel sizes."
+ },
+ "CQ4": {
+  "brief": "A Level Sequence is the asset that holds a cinematic in Unreal. You edit it in Sequencer, a timeline editor where each track animates one thing over time. A keyframe, or key, stores a value at one moment, and Unreal fills in the movement between two keys. In this quest you create a Level Sequence, add a camera, and make a simple camera move with two keys.",
+  "checklist": [
+   "In the main toolbar, click the Cinematics dropdown and choose Add Level Sequence. Name it LS_FirstMove and save it in a folder named Sequences.",
+   "Sequencer opens. Click the Create New Camera button in the Sequencer toolbar. Notice that the viewport now pilots the new Cine Camera Actor, which means you look through it.",
+   "At frame 0, frame a wide view of your level. Select the Transform track of the camera and press Enter to set a key.",
+   "Drag the playhead, the marker that shows the current time, to about 5 seconds. Move the camera to a new position. Select the Transform track and press Enter again.",
+   "Press Play in Sequencer. Then drag the playhead back and forth to check the move.",
+   "Select the Level Sequence Actor in the Outliner. In the Details panel, enable Auto Play. Press Play In Editor and watch the move run."
+  ],
+  "done_when": "Send one screenshot of Sequencer that shows LS_FirstMove with a Cine Camera Actor track, at least two Transform keyframes, and the Camera Cuts track. Add one line that says how long your move is."
+ },
+ "CQ5": {
+  "brief": "A cut is the moment when the picture changes from one camera to another. In Sequencer, the Camera Cuts track decides which camera the viewer sees at each moment. In this quest you build a sequence with three cameras, cut between them, and try a blend, which is a smooth change from one camera to the next.",
+  "checklist": [
+   "Create a Level Sequence named LS_ThreeCuts. Add a moving object so that there is action to cut on. A cube with two Transform keys is enough.",
+   "Click Create Camera. This makes a Cine Camera Actor and a Camera Cuts track. Frame a wide shot at frame 0.",
+   "Move the playhead to the time where you want the first cut. Click Create Camera again to make camera 2, and frame a closer shot.",
+   "On the Camera Cuts track, click Add Camera (+) and pick camera 2 under New Binding or Existing Bindings. A cut appears at the playhead.",
+   "Do the same for a third camera. Then drag the edges where two cut sections touch to change the timing of the cuts.",
+   "Enable the Camera Lock button on the Camera Cuts track and press Play to watch the cuts. Then right-click the track, enable Can Blend, and make two sections overlap to try a blend."
+  ],
+  "done_when": "Send one screenshot of Sequencer that shows the Camera Cuts track with three sections bound to three different cameras, with the thumbnails visible. Add one line that says at which frame each cut is and why you put it there."
+ },
+ "CQ6": {
+  "brief": "A key says where the camera is at one moment. The curve between two keys says how the camera gets from one to the other, for example at a steady speed or with a soft start and stop. The shape of the curve at a key is controlled by its tangent, a small handle you can drag. In this quest you add keys in several ways, try the tangent types, and edit a curve in the Curve Editor.",
+  "checklist": [
+   "Open LS_FirstMove, or a new sequence, that has a camera move with at least two Transform keys.",
+   "Move the playhead to a new time, select the camera in the viewport and press S. Check that a full Transform key was added. Then try Shift + W, which keys only the Location.",
+   "Enable Auto Key. Move the playhead, move the camera, and watch keys appear by themselves. Then open the keyframe options and set them to Key Changed.",
+   "Select the last key. Press 4 for Linear, then 5 for Constant, then 1 for Cubic (Auto). Drag the playhead through the move each time and notice the difference.",
+   "Open the Curve Editor from the Sequencer toolbar. Select the Location Z curve and press F to frame it. Drag a tangent handle so that the move slows down at the end (an ease-out).",
+   "Click the curve with MMB (the middle mouse button) to add a key. Then hold Ctrl and click with MMB to add a key that does not change the shape of the curve. Compare the two."
+  ],
+  "done_when": "Send one screenshot of the Curve Editor that shows your camera curve with at least three keys and one edited tangent. Add one line that names the tangent type you used for the final key and says why."
+ },
+ "CQ7": {
+  "brief": "Three lens settings give a picture its film look. Focal length decides how wide or how zoomed in the view is. Aperture, written as an f-stop number, decides how much of the picture is sharp. Focus distance decides which object is sharp. In this quest you change all three on a Cine Camera Actor and watch what each one does to the picture.",
+  "checklist": [
+   "Place a Cine Camera Actor in front of a subject, with something in the foreground and something in the background. Pilot the camera so that you look through it.",
+   "Set Current Focal Length to 35 mm, then to 85 mm. Notice how the field of view and the blur of the background change.",
+   "Set Focus Method to Manual. Click the eyedropper on Manual Focus Distance and pick the subject. Enable Draw Debug Focus Plane, which shows a colored plane at the distance that is in focus.",
+   "Set Current Aperture to 1.4, then to 5.6. Take a screenshot of both.",
+   "Set Focus Method to Tracking and set Actor to Track to the subject. Move the subject and check that the focus follows it. Then enable Smooth Focus Changes.",
+   "Set Diaphragm Blade Count to 5, then to 12. Look at the bokeh shapes, the shapes that small bright spots in the blurred background take."
+  ],
+  "done_when": "Send two screenshots of the same framing, one at f/1.4 and one at f/5.6, both with the subject in focus. Add one line with your focal length and focus method."
+ },
+ "CQ8": {
+  "brief": "A camera rig is a helper actor that carries the camera and moves it in a smooth, physical way. The Camera Rig Rail works like a dolly on a track, and the Camera Rig Crane works like a long arm that lifts and swings the camera. Moves like these are hard to get by keying the camera by hand. In this quest you attach a camera to each rig and animate both rigs in Sequencer.",
+  "checklist": [
+   "In the Place Actors panel, under Cinematic, find Camera Rig Rail and drag it into the level. Move its two spline points so that the track passes by your subject. Right-click the spline and use Add Spline Point Here to add a curve to the track.",
+   "Place a Cine Camera Actor and position it near the dolly, the small cart on the rail. In the Outliner, drag the camera onto the Camera Rig Rail to attach it.",
+   "Create a Level Sequence named LS_Rigs. Add the rail and the camera to Sequencer. On the rail track, click + Track, open Properties, and add Current Position on Rail.",
+   "Key Current Position on Rail with the value 0 on frame 0 and the value 1 at the end. Then enable Lock Orientation to Rail and compare how the camera turns.",
+   "Place a Camera Rig Crane and attach a second Cine Camera Actor to it. Add the crane to Sequencer, and add the tracks Crane Pitch, Crane Yaw and Crane Arm Length.",
+   "Key a crane move that starts low and rises. Then add both cameras to the Camera Cuts track, with the rail shot first and the crane shot second."
+  ],
+  "done_when": "Send one screenshot of Sequencer that shows the Camera Rig Rail track with a keyed Current Position on Rail, and the Camera Rig Crane track with a keyed Pitch or Arm Length. Also send one short clip of the crane shot, or two frames of it (the start and the end)."
+ },
+ "CQ9": {
+  "brief": "A shot board is one page that shows a few still images in order, so that together they tell a small story. Making one shows that you can frame, light and focus a shot. In this quest you plan three shots of one small set, take them as high-resolution screenshots from three cameras, and put them together on one board.",
+  "checklist": [
+   "Pick a small set, such as one room or one outdoor spot. Do a simple lighting pass: one key light (the main light), one fill light or sky light, and a clear subject.",
+   "Plan three shots on paper: a wide establishing shot that shows the whole place, a medium shot, and a close-up. Write one line for each shot that says what the viewer should notice.",
+   "Place three Cine Camera Actors and name them CAM_Wide, CAM_Medium and CAM_Close. Give each one a different focal length and a focus setting that matches its subject.",
+   "Save a viewport bookmark at each camera position so that you can return to it. Turn on the Cinematic Viewport and use the Grid (3x3) overlay to check your framing.",
+   "Take a high-resolution screenshot from each camera, with a multiplier of 2 or more. Name the files Shot01_Wide, Shot02_Medium and Shot03_Close.",
+   "Put together a one-page board. It shows the three stills in order, and each still has its one-line description, focal length and aperture."
+  ],
+  "done_when": "Send one board image with the three stills in order, each with a one-line description, its focal length and its f-stop. Also send one screenshot of the level that shows the three named cameras and your lights. A mentor reviews your work."
+ },
+ "CQ10": {
+  "brief": "A camera shake is a small, fast movement added on top of the camera, for example when something explodes nearby. In Unreal a shake is an asset built on the class CameraShakeBase, and its shake pattern decides what kind of movement it makes. In this quest you make two shakes with different patterns, play one in Sequencer, and place a shake source in the level that shakes cameras that come near it.",
+  "checklist": [
+   "In the Content Browser, add a Blueprint Class and choose CameraShakeBase as its parent. Name it CS_Rumble.",
+   "Set Root Shake Pattern to Perlin Noise Camera Shake Pattern. Give Rotation Pitch and Yaw an Amplitude of about 2 and a Frequency of about 20. Set Duration to 1.5 and Blend In/Out to 0.2.",
+   "Open a Level Sequence that has a Cine Camera Actor. On the camera track, click + Track, then Camera Shake, and pick CS_Rumble. Play the sequence.",
+   "Make a second shake named CS_Sway that uses the Wave Oscillator pattern. Give it a low amplitude and a low frequency, and set Duration to 0. Notice how different it feels from CS_Rumble.",
+   "Place a Camera Shake Source actor in the level. Set Camera Shake to CS_Sway and enable Auto Start. Set Inner and Outer Attenuation Radius, for example to 200 and 1000, which controls how the shake gets weaker with distance.",
+   "Open Window > Camera Shake Previewer and enable Allow Camera Shakes in the viewport options. Press Play Selected, then move the editor camera toward the source."
+  ],
+  "done_when": "Send one screenshot of the CS_Rumble Blueprint details with the pattern and the timing visible, and one screenshot of Sequencer with the Camera Shake section on the camera track. Add one line that says when you would use Perlin and when you would use Wave."
+ },
+ "CQ11": {
+  "brief": "A long cinematic is not built as one big sequence. It is built from shots, where each shot is its own small Level Sequence placed on a Shots track inside a main sequence. This lets you trim and reorder shots, and lets several people work on the same cinematic. In this quest you build a main sequence with three shots, make a second take (a copy for experiments) of one shot, and tidy up the result.",
+  "checklist": [
+   "In the Content Browser, click Add, then Cinematics, then Level Sequence. Name the new Level Sequence LS_Master.",
+   "Open LS_Master. Click Tracks (+) and choose Shots Track. Then click (+) Shot and choose Insert Shot, and do this three times. Keep the default shot names.",
+   "Double-click each shot to open it. Add a Cine Camera and a small camera move in each one. Use the breadcrumbs, the path shown at the top of Sequencer, to go back to LS_Master.",
+   "Trim the three shots so that they play one after another with no gaps. Give each shot a different Color Tint: right-click the shot, open Properties, and set Color Tint.",
+   "Right-click shot 2 and choose New Take. Change the camera move in the new take. Then switch between Take 1 and Take 2 from the Takes menu.",
+   "Right-click shot 1 and choose Edit Meta Data. Enter your name and a one-line note.",
+   "Add a Folder track and move any loose tracks into it, so that the root sequence is tidy."
+  ],
+  "done_when": "Send a screenshot of LS_Master that shows the Shots track with 3 colored shots, the Takes menu open on shot 2 with two takes (a star marks the active one), and the meta-data tooltip on shot 1."
+ },
+ "CQ12": {
+  "brief": "A cutscene is only useful in a game when the game can start it at the right moment, let the player skip it, and leave the world in the correct state when it ends. You control this from Blueprint through the Sequence Player, the part of a Level Sequence Actor that plays the sequence. In this quest you start a cutscene when the player walks into a trigger, let the player skip it with the F key, and make a light stay on after the cutscene.",
+  "checklist": [
+   "Place a Box Trigger in your level. Create a Level Sequence named LS_Cutscene with one camera move and a Point Light whose Intensity goes from 0 to a bright value.",
+   "Open the Level Blueprint. Add the event OnActorBeginOverlap for the trigger. Create a reference to the LS_Cutscene actor, and call Play on its Sequence Player.",
+   "Add a Set Playback Position node with position 0 before Play. This rewinds the cutscene so that it can play again when you enter the trigger a second time.",
+   "Add an F key event. Connect it to a Branch that checks Is Playing, and when that is true, call Go to End and Stop. Test that the F key skips the cutscene.",
+   "Right-click the Intensity track of the light, open Properties, and set When Finished to Keep State. Also check that Restore State is turned off on the Level Sequence Actor.",
+   "Play in Editor. Enter the trigger and watch the cutscene. Leave the trigger and enter it again, then skip the cutscene with F."
+  ],
+  "done_when": "Send a screenshot of the Level Blueprint graph that shows the overlap event going to Set Playback Position and then Play, and the F key going to Branch and then Go to End and Stop. Also send a screenshot taken in Play In Editor after you skipped the cutscene, which shows that the light is still on."
+ }
+}

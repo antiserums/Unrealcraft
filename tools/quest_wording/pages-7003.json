@@ -1,0 +1,146 @@
+{
+ "TAQ25": {
+  "brief": "Scalability settings are the quality levels of a game, from Low to Epic. They let the same game run on weak and strong computers by changing things like shadow quality, foliage density and texture detail. A game that only looks right on your own PC is not finished, so the low levels must still look acceptable. In this quest you compare one scene on Low and on Epic, change a quality group in a config file, and make a material cheaper on Low.",
+  "checklist": [
+   "Pick one finished scene. Save a camera bookmark, which is a stored camera position, so that every capture uses the same view.",
+   "Open Settings > Engine Scalability Settings. Capture the view on Low and on Epic, with stat unit visible in both captures.",
+   "Create the file Config/DefaultScalability.ini in your project. In it, override one quality group, for example the sections [FoliageQuality@0] to [FoliageQuality@2]. Restart the editor and check that the change works.",
+   "If you use foliage, turn on Enable Density Scaling on the foliage types. Then compare the console commands sg.FoliageQuality 0 and sg.FoliageQuality 3.",
+   "In one expensive master material, add a Quality Switch node that removes one costly branch on Low. Check the result with the Shader Complexity view mode.",
+   "Type the name of one sg.* setting in the console with no value after it. Note the current value that it prints and where that value was set."
+  ],
+  "done_when": "Send the Low and Epic screenshots from the same bookmark with stat unit visible, and the block you wrote in DefaultScalability.ini. Add 3 to 5 lines that say what changed most between Low and Epic, and what you would fix before you ship Low."
+ },
+ "TAQ26": {
+  "brief": "Interchange is the system Unreal uses to import files such as meshes and textures. Each import goes through a pipeline stack, which is an ordered list of pipelines, and each pipeline can change how the asset is created. If you add your own pipeline, your team's rules are applied to every import, and nobody has to fix each asset by hand. In this quest you write a Blueprint pipeline that enforces one rule and add it to your project's import stack.",
+  "checklist": [
+   "Open Project Settings and go to Engine, then Interchange. Take a screenshot of the pipeline stack that is used for Import Content.",
+   "Create a Blueprint class with the parent class InterchangePipelineBase. Name it BP_IP_StudioRules.",
+   "Override the function Scripted Execute Pipeline or the function Scripted Execute Post Import Pipeline. Make it enforce one rule, for example a name prefix such as SM_, or a fixed LOD Group.",
+   "Add BP_IP_StudioRules to the pipeline stack of your project. Put it after the default pipelines.",
+   "Import 3 test meshes. Use Preview in the import window to check the assets before you click Import.",
+   "Change one of the source files and reimport it. Check that the same stack and options come back."
+  ],
+  "done_when": "Send screenshots of the pipeline stack with your pipeline in it, the override graph, and the Content Browser after the import with the rule applied. Add 2 to 3 lines on what happened when you reimported."
+ },
+ "TAQ27": {
+  "brief": "Nanite is the system that lets Unreal draw meshes with very many triangles, and Virtual Shadow Maps (VSM) is the shadow system made to work with it. VSM saves time by caching: it keeps shadow pages that have not changed and does not draw them again. Things that move, such as foliage with a wind material that uses World Position Offset (WPO), make the cached pages invalid, and then the frame cost rises. In this quest you find what breaks the shadow cache in a test level, fix one cause, and measure the difference.",
+  "checklist": [
+   "Build a test level with Nanite rock and building meshes, one mesh that is not Nanite, and a foliage mesh with a WPO wind material. Use one Directional Light.",
+   "Keep the camera still. Switch the viewport to View Modes > Virtual Shadow Map > Cached Page. Take a screenshot of the red areas, which are the pages that are not cached.",
+   "Use the Shadow Casters view to find what invalidates the pages. Fix one cause: either set World Position Offset Disable Distance, or change Shadow Cache Invalidation Behavior.",
+   "Run the console commands r.ShaderPrintEnable 1 and r.Shadow.Virtual.Stats 1. Note the numbers of Allocated, Cached and Invalidated pages before and after your fix.",
+   "Open the Nanite Visualization menu. Check the Overdraw view and the Evaluate WPO view on your foliage.",
+   "Capture a short Unreal Insights trace. Find the Shadow Depths cost for VSM before and after your fix."
+  ],
+  "done_when": "Send the Cached Page screenshots from before and after, and the VSM stats numbers from before and after. Add 4 to 6 lines that say what caused the invalidations, what you changed, and how the Shadow Depths time changed."
+ },
+ "TAQ28": {
+  "brief": "Substrate is the newer material system in Unreal that replaces the fixed shading models. In Substrate you build a material from Slabs, where a Slab describes one layer of matter such as metal or a clear coat. You can put Slabs on top of each other or mix them side by side. This gives real layering, but each extra Slab costs more to light. In this quest you build one layered material and one blended material, read their cost in the Substrate panel, and try a cheaper way to blend.",
+  "checklist": [
+   "Use a test project that has Substrate turned on. In Project Settings > Rendering, check which GBuffer format it uses.",
+   "Create a material named M_Sub_CarPaint. Use a metal Slab as the base and put a clear coat Slab on top of it with a Substrate Vertical Layer node. Expose Top Thickness as a parameter.",
+   "Create a material named M_Sub_WetGround. Mix two Slabs side by side with a Substrate Horizontal Blend node, and drive the mix with a mask texture.",
+   "In the Material Editor, open Window > Substrate and read the stats for both materials. Note the bytes per pixel and any simplification that is reported.",
+   "Turn on Use Parameter Blending on the last operator node before the root node. Compare the stats and the look with the earlier result.",
+   "In the level, put both materials on screen. Check the view modes View Modes > Substrate > Material Count and Material Classification."
+  ],
+  "done_when": "Send screenshots of both graphs, the Substrate panel with and without parameter blending, and the Material Classification view. Add 3 to 5 lines that say which version you would ship and why."
+ },
+ "TAQ29": {
+  "brief": "The most useful work of a technical artist is often a tool or a library that other people use every day. This quest brings your skills together in one finished piece that someone else can install and use. You choose between an import or naming tool and a library of material functions, write the documentation, let another person test it, and check how a scene that uses it holds up on Low and Epic quality.",
+  "checklist": [
+   "Pick one path. Path A is an import or naming tool: an Interchange pipeline, an Editor Utility Widget (EUW_), or a validator based on EditorValidatorBase. Path B is a library of at least 6 material functions with names that start with MF_.",
+   "Write short documentation. It should say what the piece does, how to install it, its rules or inputs, and one known limit.",
+   "For Path A, make the tool report clear errors in the Message Log, and run it on a full folder. For Path B, build 3 materials from the library and document the inputs of each function.",
+   "Give it to at least one other person. They use it on their own assets and send you feedback.",
+   "Fix at least one problem they found, and write the change down in a change log.",
+   "Do a scalability check. Take one scene that uses your work, capture it on Low and on Epic from the same camera bookmark with stat unit visible, and note the biggest difference."
+  ],
+  "done_when": "Send a writeup that contains a link to the tool or library and its documentation, a clip or screenshots of it running, the other person's feedback and your fix, and the Low and Epic screenshots with 2 to 3 lines on the result. A mentor must approve it."
+ },
+ "TAQ30": {
+  "brief": "Texture streaming is the system that loads only the texture detail that is needed for what the camera sees. It works inside a fixed amount of memory called the streaming pool. When the pool is too small, the streamer loads lower detail versions (mips) of some textures, and those surfaces look blurry. In this quest you read the streaming numbers of a level, make the pool too small on purpose, find one object that wastes or lacks texture detail, and fix it.",
+  "checklist": [
+   "Open a level that uses many textures. Run Build > Build Texture Streaming.",
+   "Start PIE and run the console command STAT STREAMING. Write down the values of Streaming Pool, Required Pool and Wanted Mips.",
+   "Lower the value of r.Streaming.PoolSize until Required Pool goes over 100%. Take a screenshot that shows which surfaces go blurry first.",
+   "Check the view modes Mesh UV Density Accuracy and Material Texture Scale Accuracy. Find one object that is shown in red or green.",
+   "Fix one cause. For example, change the Streaming Distance Multiplier on a mesh, or fix a texture that is far too big for its size on the screen.",
+   "Set the pool back to its old value. Compare the STAT STREAMING numbers from before and after your fix."
+  ],
+  "done_when": "Send STAT STREAMING screenshots from before and after, and one screenshot of an accuracy view mode with the problem object marked. Add 3 to 4 lines on what you changed and why."
+ },
+ "TAQ31": {
+  "brief": "A real project can have thousands of assets, so you need fast ways to find the right one. The Content Browser gives you filters, which show only some asset types, a search bar that understands simple rules, and Collections, which are named lists of assets that you choose. In this quest you use type filters, search by a number, save your own custom filter, and make a Collection.",
+  "checklist": [
+   "Open the Content Browser. Click the Filters drop-down and add the Static Mesh filter. Then add the Material filter. Note that you now see both types.",
+   "In the search bar, type Triangles>1500 and see which meshes remain. Then try the search Type==Blueprint.",
+   "Create a custom filter: open Filters, then Custom Filter, and click Create New Filter. Name it HeavyMeshes, pick a color, and enter Triangles>5000 as the Filter String.",
+   "In the Collections panel, click Add (+) and choose Local Collection. Name the collection Col_Hero_Props.",
+   "Add at least 3 assets to the collection. You can right-click an asset and choose Manage Collections, or you can drag the assets onto the collection.",
+   "Right-click a filter in the Filters area and try Enable Only This. Then use Disable All Filters."
+  ],
+  "done_when": "Send one screenshot of the Content Browser that shows your HeavyMeshes custom filter active and the Col_Hero_Props collection selected with at least 3 assets in it."
+ },
+ "TAQ32": {
+  "brief": "Assets in Unreal depend on each other. For example, a material uses textures, and a mesh uses materials. The Reference Viewer is a window that draws these links as a graph, so you can see what an asset uses and what uses it. You should check this before you delete, rename or change an asset. In this quest you open the Reference Viewer for a Material Instance and learn its main controls.",
+  "checklist": [
+   "In the Content Browser, right-click a Material Instance and choose Reference Viewer.",
+   "Read the graph. The assets on the left reference your asset, which means they use it. The assets on the right are referenced by your asset.",
+   "Press D once to increase the dependency search depth, so the graph shows one more step to the right. Press R once to increase the referencer search depth on the left.",
+   "Press H to hide hard references, and then press H again to show them. Press S to do the same with soft references.",
+   "Right-click the node of your asset and use Copy Referencing Objects List. Paste the text into a notepad.",
+   "Right-click the node again and choose Make Collection With to create a collection of the assets that reference it."
+  ],
+  "done_when": "Send one screenshot of the Reference Viewer for your asset with the depth set to 2, and add the pasted text list of referencing objects."
+ },
+ "TAQ33": {
+  "brief": "Every game has limits for its size on disk and for the memory it uses. The Size Map is a window that shows an asset and everything it references as boxes, where a larger box means a larger asset. This makes it easy to see where the space goes. In this quest you open the Size Map for a level or a Blueprint and find the largest asset in it.",
+  "checklist": [
+   "In the Content Browser, right-click a Level asset, or a Blueprint that has meshes and materials, and choose Size Map.",
+   "Read the boxes. A bigger box means a bigger asset. A box inside another box means that the outer asset references the inner one.",
+   "Use the mouse wheel to zoom. Double-click the biggest box so that it fills the window.",
+   "Switch the size type between disk size and memory size, and note that the numbers are different.",
+   "Find the single largest asset in the map. Right-click its box to browse to it or to open it.",
+   "Open a Static Mesh in the Static Mesh Editor. Use Asset > Size Map (Alt + Shift + M) to see the size map of that mesh too."
+  ],
+  "done_when": "Send one screenshot of the Size Map for your level or Blueprint, and add a short note that names the largest asset and its size."
+ },
+ "TAQ34": {
+  "brief": "Asset Audit is a window that lists assets in one table with their sizes and other details, so you can compare them side by side. It can also list chunks, which are the packages that the game's content is split into when it is shipped. Before a release, a team needs real numbers like these and not guesses. In this quest you fill the Asset Audit window with chunks and assets and export the list to a file.",
+  "checklist": [
+   "Open the Asset Audit window with Window > Developer Tools > Asset Audit. The window is empty when it opens.",
+   "Click Add Chunks to fill the window with a summary of the chunks in your project.",
+   "Select a Texture in the Content Browser, right-click it, and open the Reference Viewer. Right-click the node there and choose Audit Assets to add it to the audit.",
+   "Add 5 or more textures or meshes to the audit and compare their rows.",
+   "Open the Settings menu, which is the gear icon at the top right, and export the list to a .csv file.",
+   "Right-click a chunk row and open its Size Map."
+  ],
+  "done_when": "Send one screenshot of the Asset Audit window with at least 5 assets or chunks listed. Also send the exported .csv file opened in any text or spreadsheet program."
+ },
+ "TAQ35": {
+  "brief": "Sometimes you want to use an asset from one project in another project. If you copy the files by hand, the links between assets break, because a material also needs its textures and a Blueprint also needs its meshes. The Migrate command copies an asset together with everything it depends on. In this quest you migrate a Material Instance and a Blueprint into a second project and check that they still work.",
+  "checklist": [
+   "Create a second, empty project. This is your target project. Close it after it has been created.",
+   "In your main project, select a Material Instance and a Blueprint that uses a mesh. Hold Ctrl while you click to select both.",
+   "Right-click one of the selected assets and choose Asset Actions, then Migrate.",
+   "Read the Asset Report window. Count how many extra assets it will copy, such as textures, meshes and parent materials.",
+   "Click OK. Then select the Content folder of the target project and click Select Folder.",
+   "Open the target project and confirm that the material and the Blueprint look correct."
+  ],
+  "done_when": "Send one screenshot of the Asset Report window before you click OK, and one screenshot of the migrated assets open in the target project."
+ },
+ "TAQ36": {
+  "brief": "When you move or rename an asset, Unreal leaves a small hidden file called a redirector in the old place. It tells other assets where the asset went. Redirectors add up over time without any sign and can cause strange errors months later, so it is good to fix them as you work. In this quest you create a redirector on purpose, make it visible, and remove it with Fixup.",
+  "checklist": [
+   "Create a folder named Content/Test_Redirect. In it, make a Material named M_RedirectTest and a Material Instance named MI_RedirectTest that is based on that material.",
+   "Move M_RedirectTest to a new folder named Content/Test_Redirect/Moved.",
+   "In the Content Browser, open Filter, then Other Filters, and enable Show Redirectors. Find the redirector that was left in the old location.",
+   "Switch to Filter, then Miscellaneous, then Redirectors. Note that now only redirectors are shown.",
+   "Right-click the redirector and choose Fixup. Check that the redirector disappears and that MI_RedirectTest still works.",
+   "Write one sentence about what happened to the packages (the asset files) that pointed to the redirector."
+  ],
+  "done_when": "Send two screenshots: one with the redirector visible after the move, and one of the same folder after Fixup with the redirector gone. Add your one-sentence note."
+ }
+}

@@ -1,0 +1,148 @@
+{
+ "PQ43": {
+  "brief": "A Child Actor Component is a component that spawns a whole other Actor and keeps it attached to its owner. With it you can reuse one Actor, such as a torch, as a part of a bigger Actor, such as a wall with torches on it. In this quest you build a torch, put two of them on a wall with Child Actor Components, and see how the wall and the torches know about each other.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Torch with a Static Mesh and a Point Light. On BeginPlay, print 'Torch BeginPlay' plus the display name you get from Get Parent Actor.",
+   "Make an Actor Blueprint named BP_Wall with a Static Mesh cube scaled to 4 x 0.2 x 2. Add two Child Actor Components and set the Child Actor Class of each to BP_Torch. Move them to the left end and the right end of the wall.",
+   "Place BP_Wall in the level and press Play. Read the Output Log: each torch prints the wall as its parent actor.",
+   "In BP_Wall, add an event for the T key. Call Get All Child Actors with Include Descendants turned on, and print the length of the result. You should see 2.",
+   "Make BP_Torch2, a child Blueprint of BP_Torch that has a different light color. In BP_Wall, add an event for the C key that calls Set Child Actor Class on the first Child Actor Component with BP_Torch2.",
+   "In BP_Torch, also print the value of Is Child Actor on BeginPlay. Drag one BP_Torch directly into the level and compare what it prints with what the wall torches print."
+  ],
+  "done_when": "Send a screenshot in Play mode of the wall with two torches and the Output Log that shows the parent actor names. Also send a screenshot of the Details of a Child Actor Component with Child Actor Class set."
+ },
+ "PQ44": {
+  "brief": "An Actor Component is a piece of behavior that you can add to any Actor. It has no shape and no position in the world. It only holds data and logic, such as health or an inventory. You write it once, and every Actor that has the component gets that behavior with its own separate values. In this quest you write a health component and add it to two different Actors.",
+  "checklist": [
+   "Create a new Blueprint Class with Actor Component as the parent, and name it BPC_Health. Add a float variable named MaxHealth with the value 100, and a float variable named Health.",
+   "In BPC_Health, on Event Begin Play, set Health to the value of MaxHealth. Add a function named ApplyDamage with an input named Amount. It lowers Health, clamps it so it cannot go below 0, and prints the name of the owner plus Health. Use Get Owner to get the name.",
+   "Add BPC_Health to BP_ThirdPersonCharacter and to a new actor named BP_Barrel. Make MaxHealth Instance Editable, and set it to 30 on the barrel.",
+   "In BP_Barrel, add an event for the K key. Use Get Component by Class with BPC_Health and call ApplyDamage with 10. Press Play and watch the two actors keep separate Health values.",
+   "In BPC_Health, add an Event Dispatcher named OnDied and call it when Health reaches 0. In BP_Barrel, bind an event to it that destroys the barrel.",
+   "In the defaults of the barrel's component, turn Auto Activate off. In ApplyDamage, check Is Active and ignore the damage when the component is not active. Then call Activate from the BeginPlay of the barrel."
+  ],
+  "done_when": "Send a screenshot of the graph of BPC_Health (BeginPlay, ApplyDamage, OnDied), and a screenshot in Play mode that shows two different actors printing different Health values from the same component."
+ },
+ "PQ45": {
+  "brief": "Tick is the event that runs once every frame. Unreal sorts the ticks of all Actors into tick groups, such as Pre Physics and Post Physics, and runs the groups one after another. If two Actors tick in the wrong order, one of them uses data that is one frame old, which is a bug that is hard to see. In this quest you slow down a tick, turn it off and on, change its tick group, and make one Actor tick after another.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Ticker with a Static Mesh. On Event Tick, add Delta Seconds to a float variable named Elapsed and print it each frame.",
+   "In Class Defaults, find the Actor Tick section. Set Tick Interval to 0.5 and press Play. The print now appears twice per second. Then set it back to 0.",
+   "Add an event for the P key that calls Set Actor Tick Enabled with Enabled set to false. Add an event for the O key that sets it to true. Press Play and confirm that the print stops and starts again.",
+   "Add an event for the G key that calls Set Tick Group with Post Physics. Press Play, press G, and read the Tick Group value in the Details panel of the actor while the game is running.",
+   "Make BP_Follower with a Static Mesh. On each Tick, it sets its own location to the location of BP_Ticker plus 200 on X. Set the tick group of BP_Follower to Post Physics and the tick group of BP_Ticker to Pre Physics.",
+   "In the BeginPlay of BP_Follower, call Add Tick Prerequisite Actor with BP_Ticker. This makes the follower wait for the ticker. Write one line that says why this is not needed when the two actors are already in different tick groups."
+  ],
+  "done_when": "Send a screenshot of the Actor Tick settings of BP_Ticker and a screenshot of the graph with Set Actor Tick Enabled and Set Tick Group. Add your line about tick dependency compared with tick groups."
+ },
+ "PQ46": {
+  "brief": "Spawning and destroying many Actors every second, such as bullets, takes time and can make the game stutter. Object pooling is the standard fix: you spawn a fixed number of Actors once, hide them, and then reuse them instead of creating new ones. In this quest you first shoot bullets the simple way, then build a pool of 30 bullets, and compare the two versions with the stat game command.",
+  "checklist": [
+   "Make a Blueprint named BP_Bullet with a small sphere mesh and a Projectile Movement Component. On BeginPlay, call Set Life Span with 2.0 so that the bullet destroys itself after 2 seconds.",
+   "In the character, on the left mouse button, use Spawn Actor from Class to spawn BP_Bullet at the camera location. Make it repeat every 0.05 s while you hold the button, and hold it for 10 seconds. Open the console, run stat game, and note the lines that show the spawn cost while you shoot.",
+   "Make an Actor Blueprint named BP_BulletPool. On BeginPlay, spawn 30 BP_Bullet actors. Hide each one with Set Actor Hidden In Game, disable its collision, and set its Projectile Movement to inactive. Store them all in an array variable named Pool.",
+   "Add a function named GetBullet. It finds the first hidden bullet, unhides it, enables its collision, activates its movement, and returns it. Add a function named ReturnBullet that does the opposite.",
+   "Change BP_Bullet: remove Set Life Span. Instead, each time the bullet is taken from the pool, start a 2 s timer that calls ReturnBullet on the pool. Change the character so that it calls GetBullet instead of Spawn Actor.",
+   "Shoot for 10 seconds again with stat game open. Write three lines: what changed, why destroyed actors are not freed immediately, and one case where pooling is not worth it."
+  ],
+  "done_when": "Send two screenshots of stat game (one of the spawn and destroy version, one of the pool version) and your three lines. The Blueprint graph of GetBullet must be visible in one of the screenshots."
+ },
+ "PQ47": {
+  "brief": "Project Settings is the window that holds the settings for your whole project, such as its name, the level that opens first, and the default game rules. When something is wrong for the whole project, the fix is often here, so it helps to know where things are. In this quest you look through the categories, change a few basic settings, and find one of your changes in the text file where Unreal saves it.",
+  "checklist": [
+   "Open Edit > Project Settings. Click through the categories on the left side. Note the five that you think a programmer uses most.",
+   "Under Project, open Description. Set Project Name, Company Name and a Copyright Notice for your project.",
+   "Under Project, open Maps & Modes. Set Editor Startup Map to your test level, and set Game Default Map to the same level.",
+   "Still in Maps & Modes, check which Default GameMode is set. A GameMode is the Blueprint that holds the rules of the game. If you have your own BP_ GameMode, select it here.",
+   "Use the search box at the top to find the setting Use Borderless Window. Note which category it is in.",
+   "Click Export in the upper-right corner and save a backup file of your settings.",
+   "Open the file <ProjectDirectory>\\Config\\DefaultEngine.ini in a text editor. Find the GameDefaultMap line that you just changed."
+  ],
+  "done_when": "Send two screenshots: (1) Project Settings on the Maps & Modes page with your maps and GameMode set, and (2) DefaultEngine.ini open in a text editor with the GameDefaultMap line visible."
+ },
+ "PQ48": {
+  "brief": "Unreal saves its settings in plain text files that end in .ini, called config files. Each file has sections with a name in square brackets, and under each section there are lines in the form KEY=VALUE. Every change you make in Project Settings ends up in one of these files, so reading them lets you see and share settings exactly. In this quest you read some config files, add your own test value, and read it back in the editor.",
+  "checklist": [
+   "Close the Editor. Open the folder <ProjectDirectory>\\Config and look at its files with a text editor. List the Default*.ini files you find (DefaultEngine, DefaultGame, DefaultInput, and so on).",
+   "In DefaultEngine.ini, find the section [/Script/EngineSettings.GameMapsSettings] and, inside it, the key GameDefaultMap.",
+   "Open the engine file Engine\\Config\\BaseEngine.ini. Only read it and do not edit it. Find the same section and compare the two values.",
+   "In DefaultGame.ini, add your own section [MyTestSection] with the line MyValue=42 under it. Above it, add a comment line that starts with ; (a semicolon).",
+   "Open the Editor. In the console, type: GetIni Game:MyTestSection MyValue. Confirm that the value 42 is printed.",
+   "In Project Settings, change one setting (for example Project Name). Close the editor and check that DefaultGame.ini changed."
+  ],
+  "done_when": "Send one screenshot of DefaultGame.ini that shows your [MyTestSection], and a second screenshot of the Output Log with the GetIni result."
+ },
+ "PQ49": {
+  "brief": "A plugin is a package of code or content that adds a feature to the engine or to your project. Many engine features are plugins that are turned off until you enable them. Each plugin has a small text file ending in .uplugin that describes it. In this quest you enable a built-in plugin, read its .uplugin file, and create an empty plugin of your own.",
+  "checklist": [
+   "Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin that you want).",
+   "Enable the plugin with its checkbox. Save your work and restart the Editor when it asks you to.",
+   "In the Content Drawer, click the gear icon in the upper right and turn on Plugin Content. Then find a plugin folder in the folder tree.",
+   "On your disk, open the engine folder Engine\\Plugins and find the folder of the plugin you enabled. Open its .uplugin file in a text editor.",
+   "In the .uplugin file, find FriendlyName, Category, CanContainContent and the Modules list. Note the Type of each module (Runtime, Editor, and so on).",
+   "In the Editor, use Edit > Plugins and then New Plugin to create an empty Content Only plugin named MyToolsPlugin in your project. Find its folder under <Project>\\Plugins."
+  ],
+  "done_when": "Send one screenshot of the Plugins window with your enabled plugin, and one screenshot of a .uplugin file open in a text editor with its Modules list visible."
+ },
+ "PQ50": {
+  "brief": "Source control is a system that keeps every version of the project files and lets a team work on the same project without overwriting each other. Unreal assets cannot be merged like text, so the Editor lets you check out a file, which locks it for you while you edit it, and then submit your change. Teams depend on this, and the Editor has the buttons built in. In this quest you look at the source control settings and either do a real check out and submit, or describe the workflow in writing.",
+  "checklist": [
+   "Open Edit > Editor Preferences, then Loading & Saving, then Source Control. Read each option and note which ones are on by default.",
+   "Click the Source Control icon in the top-right of the Level Editor toolbar. In the login dialog, look at the list of providers (Perforce, Subversion, and Git if its plugin is enabled).",
+   "If you have a server (for example Perforce or a Git repo), pick the provider, enter its settings, and click Accept Settings. If you do not have one, click Run Without Source Control and continue with the writing part.",
+   "If you have a connection: right-click an asset in the Content Browser and use Check Out, then change the asset and save it. After that, use File > Submit to Source Control and write a short description.",
+   "If you have no connection: read the sections Checking Out, Submitting, Syncing and Deleting Files on the documentation page. Write 5 lines that describe that workflow in your own words.",
+   "Open Edit > Project Settings and look for the check-out indicator on the config file. Note why config files cannot be checked back in from the Editor."
+  ],
+  "done_when": "Send a screenshot of the Source Control Login dialog that shows your provider list. Also send either a screenshot of a successful Submit dialog or your 5 lines about the workflow."
+ },
+ "PQ51": {
+  "brief": "Packaging turns your project into a game that runs by itself, without the Unreal Editor. On Windows the result is a folder with an .exe file. Things that work in the Editor can break in a packaged build, so the packaged build is the real test. In this quest you package your project for Windows for the first time and run the result.",
+  "checklist": [
+   "Open Edit > Project Settings and go to Maps & Modes. Set Game Default Map to your playable level, because this is the level the packaged game opens first.",
+   "In Project Settings, open Packaging and look at the Project section. Confirm that Build Configuration is set to Development.",
+   "In the main toolbar, open the Platforms menu and choose Windows. Check that Binary Configuration shows Use Project Setting (Development).",
+   "Click Package Project. Pick or create an empty folder for the build, called the staging folder (for example D:\\Builds\\MyGame). Wait until you see the message Packaging Complete.",
+   "If packaging fails, open Window > Message Log and read the Packaging Results section. Fix the first error and try again.",
+   "Open the staging folder and run the .exe file. Then find the Pak files, which hold the game content, under [ProjectName]\\Content\\Paks.",
+   "In the running game, press the backtick key to open the console. Type quit and press Enter to close the game."
+  ],
+  "done_when": "Send one screenshot of the packaged game running in a window, and one screenshot of the staging folder that shows the .exe and the Content\\Paks folder."
+ },
+ "PQ52": {
+  "brief": "An Editor Utility Blueprint is a Blueprint that runs inside the editor, not in the game. Its functions can appear in the right-click menu of Actors or assets, where they are called Scripted Actions. They are the fastest way to build a small tool that removes repeated work. In this quest you make two Scripted Actions that work on the Actors you have selected in the level.",
+  "checklist": [
+   "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Choose ActorActionUtility as the parent class and name the asset EUB_ActorTools.",
+   "Add a function named PrintSelectedNames. Select its entry node and confirm that Call In Editor is checked.",
+   "In the function, call Get Selection Set (you find it in the Development > Editor category). Loop through the actors it returns and use Print String to print the Display Name of each actor.",
+   "Click Compile and save. Select 3 actors in the level, right-click them, open Scripted Actor Actions, and run PrintSelectedNames.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes and click Compile. Check that the action no longer shows when you right-click a Light actor.",
+   "Add a second function with a float input named NewScale. It sets Actor Scale 3D on each selected actor. Run it and type a value in the window that pops up."
+  ],
+  "done_when": "Send one screenshot of the right-click menu that shows your Scripted Actor Actions, and one screenshot of the Output Log with the printed actor names."
+ },
+ "PQ53": {
+  "brief": "When you click Compile on a Blueprint, Unreal checks the graph and writes messages in a panel named Compiler Results. An error means the Blueprint cannot work, and a warning means something looks wrong but still compiles. Each message links to the exact node that has the problem, so reading it is faster than guessing. In this quest you make an error and a warning on purpose and learn to read and fix them.",
+  "checklist": [
+   "Open any Blueprint (for example BP_TestActor). In the Blueprint Editor, open Window > Compiler Results and dock the panel under the graph.",
+   "Click Compile without changing anything. Read the success line and note the compile time in milliseconds.",
+   "Now make an error. Add a Cast To node and leave its Object pin with nothing connected. Also add a Get node for a variable, and then delete that variable. Click Compile.",
+   "Move the mouse over each message to read the extra detail. Then click a message and watch the graph jump to the node with the problem.",
+   "Fix the error. Now make a warning (for example a node with a required pin that is not connected and that only gives a warning). Click Compile and compare the colors of the two kinds of message.",
+   "Click Clear in the panel. Compile once more so that the panel is empty and the compile is green."
+  ],
+  "done_when": "Send one screenshot of the Compiler Results panel that shows at least one error with its hyperlink, and one screenshot after the fix that shows the successful compile line with the time."
+ },
+ "PQ54": {
+  "brief": "The console is a text line inside Unreal where you type commands. A console variable is a named engine setting that you can read or change there while the game runs, for example r.RefractionQuality. This is the fastest way to change how the engine behaves without closing the game. In this quest you read and change a console variable, and then use the Console Variables Editor to manage variables in a list.",
+  "checklist": [
+   "Press Play, then press the backtick key to open the console. Type r.RefractionQuality and press Enter. Read the value and the LastSetBy text, which tells you what set the value last.",
+   "Type r.RefractionQuality ? and read the help text. Then type r.RefractionQuality 0 and check the new value that is printed.",
+   "Type the first letters of a variable (for example r.Shadow) and watch the auto-complete list appear. Pick one variable and read its help by adding ? after its name.",
+   "Open Edit > Plugins and enable the Console Variables Editor plugin. Restart the editor, and then open Window > Console Variables.",
+   "Click Add Console Variable and add r.RefractionQuality. Hover the mouse over the value to see the Custom, Preset and Startup values. Also check the Source column.",
+   "Open Edit > Project Settings and go to Engine, then Console. Find Max Scrollback Size and the Auto-Complete options."
+  ],
+  "done_when": "Send one screenshot of the in-game console that shows the r.RefractionQuality output with LastSetBy, and one screenshot of the Console Variables Editor with your variable in the list."
+ }
+}

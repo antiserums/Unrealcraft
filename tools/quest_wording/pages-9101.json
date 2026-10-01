@@ -1,0 +1,122 @@
+{
+ "PQ1": {
+  "brief": "Debugging means finding out why something in your game does not work. Unreal gives you several small tools that show what the engine is doing, so you do not have to guess. In this quest you try three of them: console commands that show performance numbers, show flags that draw hidden information in the viewport, and the Print String node that writes text on the screen.",
+  "checklist": [
+   "Start Play In Editor (PIE), which means pressing Play to run the game inside the editor. Open the console with the backtick key, which on most keyboards is the key above Tab. Run the command stat fps, then stat unit, and then stat none, which hides the stats again.",
+   "Open the Show menu of the viewport and toggle two show flags, for example Collision and Bounds. A show flag turns one kind of visual information on or off. Note what each of the two shows you.",
+   "In a Blueprint, add a Print String node on the BeginPlay event, which runs when the game starts. Give the node a custom color, a Key, and a duration of 5 seconds.",
+   "Run the same Print String twice with the same Key. Note that the second message replaces the first one on the screen instead of appearing as a new line under it.",
+   "Write down 5 console commands that you would want to use in every debug session."
+  ],
+  "done_when": "Send a screenshot of PIE with stat unit visible, and add your list of 5 commands."
+ },
+ "PQ2": {
+  "brief": "The Output Log is a window where the engine and your Blueprints write messages, warnings and errors. The Blueprint debugger lets you pause a running Blueprint at a node you choose, called a breakpoint, and then look at the values of its variables. Together they tell you what really ran, which is much better than guessing. In this quest you filter the Output Log, pause a Blueprint on a breakpoint, and watch a value.",
+  "checklist": [
+   "Open Window, then Output Log. Use its filter so that it shows only warnings and errors.",
+   "Open your Blueprint from quest SQ9. Select a node and press F9 to set a breakpoint on it, which makes the game pause when that node runs. Then play in the editor (PIE) and do the action that makes the node run.",
+   "While the game is paused, press F10 two times to step over two nodes, which means running them one at a time. Then hover the mouse over a variable to read its value.",
+   "Right-click a pin and choose Watch This Value. Then open the Blueprint Debugger window and read the value there.",
+   "Remove the breakpoint. Play again and confirm that PIE now runs straight through without pausing."
+  ],
+  "done_when": "Send a screenshot of the Blueprint with execution paused on a breakpoint and a watched value visible."
+ },
+ "PQ3": {
+  "brief": "The Third Person template is a small working game that comes with Unreal. Reading how it is built teaches you faster than writing everything from nothing, because you can see how input, movement and the camera are connected. In this quest you open the template's character Blueprint, follow one input from the key press to the movement, and list the parts the character is made of.",
+  "checklist": [
+   "In a Third Person project, open the Third Person character Blueprint. Also open its GameMode, the Blueprint that sets the rules of the game and decides which character the player uses.",
+   "Follow one input through the graph. Start at the Input Action event, which is the node that fires when the player presses a key or moves a stick, and end at the node that moves the character.",
+   "List the components on the character, which are the parts shown in the Components panel. Write what each one is for.",
+   "Find where the length of the camera boom is set. The camera boom is the arm that holds the camera behind the character. Change the length once to see the effect, and then set it back to the old value."
+  ],
+  "done_when": "Send a written description of the chain from input to movement in 4 to 6 lines, and add your list of components."
+ },
+ "PQ4": {
+  "brief": "A test harness is a small, empty level that you build only for testing. When a level has nothing in it except the things you want to test, a bug is much easier to repeat and to understand. In this quest you build such a level with one labeled pad for each system you plan to test, and you make sure it always starts the same way.",
+  "checklist": [
+   "Create a level named L_TestHarness in the folder UC/Maps. Give it a flat floor, a Player Start, and one pad for each system you plan to test. A pad is just a marked area on the floor.",
+   "Add a Text Render actor next to each pad. Set its text to the name of that pad so you can read what the pad is for.",
+   "Place your interactable object from quest SQ9 on one pad. Confirm that it works in PIE (Play In Editor) and also in Simulate, the mode that runs the level without a player.",
+   "Set the GameMode Override of the level, which you find in the World Settings panel. This makes the level always start with the same GameMode, so it always starts the same way."
+  ],
+  "done_when": "Send a screenshot of the harness level taken from above that shows the pads with their labels."
+ },
+ "PQ8": {
+  "brief": "A debug room is a test level where each area shows one way to find problems. Building one proves that you can set up a space for testing and that you can explain your tests to another person. In this quest you grow your L_TestHarness level into a debug room with three pads, and you write notes so that someone else can repeat each test.",
+  "checklist": [
+   "Extend your L_TestHarness level into a debug room. It needs at least 3 pads, and each pad must show one debug technique.",
+   "Make one pad write a message to the Output Log. Make one pad use Print String with Keys. Give one pad a Blueprint that is ready for a breakpoint, which is a mark that pauses the game on a node you choose.",
+   "Write notes for each test. Say how to reproduce the test, which means the steps to run it again, and say what output you expect to see.",
+   "Run stat unit in the room and write down the numbers it shows. Add one line that says what these numbers mean.",
+   "Another option is allowed here: instead of the debug room, you may send your courtyard walk-and-note from quest LDQ19 with debug notes added to it."
+  ],
+  "done_when": "Send a screenshot of the room, and add written notes that another learner could follow to reproduce each test."
+ },
+ "PQ5": {
+  "brief": "The Unreal editor has many preferences, and a few of them save a programmer time every day. They control things like where the game window opens when you press Play and whether the editor shows the frame rate. In this quest you look at three of these settings and write down what you chose and why.",
+  "checklist": [
+   "Choose how Play In Editor (PIE) opens. You can set it to open in a New Editor Window, or you can keep it inside the viewport. Try both and note which one you prefer.",
+   "Open the Editor Preferences and find the Performance settings. Turn on Show Frame Rate and Memory, which shows these numbers in the editor at all times.",
+   "Find the source code editor setting in the Editor Preferences. This is the program that Unreal opens when you want to read or write C++ code. Note what it is set to now."
+  ],
+  "done_when": "Send a written note that lists the 3 settings you changed and says why you changed each one."
+ },
+ "PQ6": {
+  "brief": "Unreal Insights is a profiling tool, which means a tool that records where the engine spends its time. A recording is called a trace. When a game runs slowly, a trace shows you which part of the work takes too long. In this quest you record a short trace and open it to take a first look.",
+  "checklist": [
+   "Start a trace from the editor. Then play your L_TestHarness level for 10 seconds and stop.",
+   "Open the trace in Unreal Insights. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn.",
+   "Take a screenshot of the timing view of one frame."
+  ],
+  "done_when": "Send a screenshot of a trace that is open in Unreal Insights."
+ },
+ "PQ7": {
+  "brief": "You run the same few commands many times while you test, so a keyboard shortcut for each one saves many clicks. The editor lets you look up every shortcut and change it to a key that you like. In this quest you find two debug shortcuts and rebind one command that you use often.",
+  "checklist": [
+   "Open the Editor Preferences and go to Keyboard Shortcuts. Find the shortcut that toggles a breakpoint and the shortcut that starts Simulate.",
+   "Pick one command that you use often and rebind it, which means giving it a new key. Choose a key that you will remember."
+  ],
+  "done_when": "Send a written note that names the command and the new key you gave it."
+ },
+ "PQ9": {
+  "brief": "The GameMode is the Blueprint that holds the rules of the game, such as how a player wins. The GameState holds information about the match that everyone needs to know, such as the score. Keeping rules and shared information in these two known places makes a project easier to understand. In this quest you store a count in the GameState and let the GameMode declare a win when the count reaches a target.",
+  "checklist": [
+   "Create two Blueprints named BP_UUGameMode and BP_UUGameState. Assign both of them in your harness level, so the level uses them when it runs.",
+   "In the GameState, add a variable that stores a score or a count of collected items.",
+   "Make the GameMode check the count. When the count reaches a target number, the GameMode declares a win.",
+   "Print or log the win message one time only. It must not appear again on every frame.",
+   "Write 2 lines that say why the score is stored in the GameState and not in the GameMode."
+  ],
+  "done_when": "Send a clip from PIE, or screenshots, that show the win happening, and add your 2 lines."
+ },
+ "PQ10": {
+  "brief": "Enhanced Input is the system that Unreal Engine 5 uses to read what the player does on the keyboard, mouse or gamepad. An Input Action is an asset that stands for one thing the player can do, such as interact. An Input Mapping Context is an asset that says which keys start which actions. In this quest you create one action, map it to a key, and react to it on the character.",
+  "checklist": [
+   "Create an Input Action asset named IA_Interact. Add it to an Input Mapping Context, either a new one or one that already exists, and give it a key.",
+   "On the BeginPlay event, which runs when the game starts, add the mapping context to the player. Without this step the player's keys do nothing.",
+   "On the character, handle the Triggered event of IA_Interact. When it fires, write to the log which actor the character is facing.",
+   "Add one modifier or one trigger to the mapping, for example Hold, which fires only after the key is held down for a moment. Note what changes in how the action behaves."
+  ],
+  "done_when": "Send a screenshot of the input graph, and add the log output that appears when you press the key."
+ },
+ "PQ11": {
+  "brief": "Blueprints give you three ways to pack nodes into something you can use again: a function, a macro, and a custom event. They look similar, but they have different rules. For example, they differ in whether they can wait for some time and in whether other Blueprints can call them. In this quest you build the same small behavior in all three ways and compare them, so you can pick the right one later and keep your graphs easy to read.",
+  "checklist": [
+   "Choose one small behavior and build it three times in the same Blueprint: once as a function, once as a macro, and once as a custom event.",
+   "Try to add a Delay node inside each of the three. A Delay node makes the graph wait for some time. Note where the editor allows it and where it does not.",
+   "Try to call each of the three from another Blueprint. Note which ones you can reach from there.",
+   "Write a table with 3 rows, one for each of the three. In each row, say when you would pick that one."
+  ],
+  "done_when": "Send a screenshot of the graph that shows all three, and add your table with 3 rows."
+ },
+ "PQ12": {
+  "brief": "Good projects keep data, such as names and numbers, apart from logic, which is the graph that does the work. Then other people can change the values without touching your graphs. Blueprints offer three tools for this: an enum is a fixed list of named choices, a struct is a group of values kept together, and a Data Asset is a file that stores a set of values. In this quest you describe two pickups with these tools and make one pickup Blueprint read its values from a Data Asset.",
+  "checklist": [
+   "Create an enum named E_PickupType with 3 values. Then create a struct named S_PickupInfo that holds a name, a value, and a type.",
+   "Create a Data Asset class. Then create 2 Data Asset instances from it, each one describing a different pickup.",
+   "Make one pickup Blueprint read its values from a Data Asset. It must not use hardcoded variables, which are values typed directly into the Blueprint.",
+   "Place a pickup in the level and change which Data Asset it uses. Confirm that the pickup behaves differently and that you did not need to edit the graph."
+  ],
+  "done_when": "Send a screenshot of two placed pickups that use different Data Assets, and a screenshot of the Data Asset shown in the Details panel."
+ }
+}

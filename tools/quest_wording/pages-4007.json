@@ -1,0 +1,106 @@
+{
+ "LDQ113": {
+  "brief": "An Editor Utility Widget is a small panel that you build yourself and that runs inside the Unreal Editor, not in the game. You design it like any other user interface widget and give it Blueprint logic that works on the level. Metrics are the standard sizes of your game, such as the width of a door or the height of a jump. In this quest you build a panel that measures the distance between two selected actors and tells you if it fits your door width.",
+  "checklist": [
+   "In the Content Browser, right-click and choose Editor Utilities, then Editor Utility Widget. Name the new asset EUW_LDMetrics.",
+   "Add a Text block and a button named Measure to the widget. When the button is clicked, use the node Get Selection Set to read the actors that are selected in the level.",
+   "If exactly two actors are selected, calculate the distance between them and show it in the Text block.",
+   "Add three reference rows that show your metrics: door width, jump height and corridor width. Use the numbers that you use in your blockouts.",
+   "Compare the measured distance with the door width. Show OK or TOO NARROW in the Text block.",
+   "Right-click the asset and choose Run Editor Utility Widget. Dock the tab that opens next to the Details panel.",
+   "Select two blockout walls in your level and press Measure. Check that the number and the OK or TOO NARROW text update."
+  ],
+  "done_when": "Send a screenshot of the EUW_LDMetrics tab docked in the editor. It must show a measured distance and the OK or TOO NARROW text, with the two selected actors visible in the viewport."
+ },
+ "LDQ114": {
+  "brief": "A Scripted Action is a command that you write in Blueprint and that appears in the right-click menu of actors in the editor. It lets you do the same thing to many selected actors at once, for example give them all a tag or a clear name. Tags and good names make a big level easy to search and to review. In this quest you build two Scripted Actions, one that adds a tag and one that renames, and you limit them to Static Mesh Actors.",
+  "checklist": [
+   "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick ActorActionUtility as the parent class and name the asset EUB_LDActions.",
+   "Add a function named Add Tag with one String input. It must loop over the result of Get Selection Set and add the tag to each actor.",
+   "Add a second function named Rename With Prefix with one String input. It renames each selected actor to Prefix_Number, which means the prefix, an underscore and a number.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the actions only appear for static meshes.",
+   "Click Compile and Save. Select ten blockout meshes in the viewport, right-click, and run Add Tag with the value Cover.",
+   "Run Rename With Prefix with the value Cover on the same selection. Check the new names in the Outliner.",
+   "Select one actor that is not a static mesh, such as a light, and confirm that the Scripted Actions menu does not show your actions."
+  ],
+  "done_when": "Send a screenshot of the right-click Scripted Actions submenu open on a selection of Static Mesh Actors. The Outliner must show the renamed Cover_ actors, and the Details panel must show the Cover tag on one of them."
+ },
+ "LDQ115": {
+  "brief": "The Property Matrix is an editor window that shows many actors as rows in a table, with their settings as columns. In this view you can sort, compare and change one setting on many actors at the same time. It finds the one wrong setting among hundreds of actors in seconds. In this quest you open a set of blockout meshes in the Property Matrix, find the ones with the wrong Mobility, and fix them in one edit.",
+  "checklist": [
+   "Open a level that has many blockout meshes. In the Outliner, select all Static Mesh Actors of one kit.",
+   "Right-click the selection and choose Edit Selection in Property Matrix.",
+   "In the Pinned Columns panel, pin Mobility, Cast Shadow and Actor Tags so that they show as columns. Remove one of the automatic columns by clicking its header with the middle mouse button.",
+   "Sort the Mobility column. Find every actor that is Movable by mistake, select them, and set them all to Static in one edit.",
+   "Select five rows with Ctrl+click and turn Cast Shadow off for all of them at once.",
+   "Hover the mouse over a column header to read the path of the property. Note it for your text.",
+   "Click the save icon in the Property Matrix, and then save the level."
+  ],
+  "done_when": "Send a screenshot of the Property Matrix with at least three pinned columns, one sorted column with its arrow visible, and several selected rows. Add one line that names the property path you read from a header."
+ },
+ "LDQ116": {
+  "brief": "A Level Snapshot saves the state of all actors in a level at one moment, such as their positions and settings. Later you can restore the whole level, or only some actors, to that state. This lets you try a change to the layout and jump back without making a copy of the level. In this quest you take two snapshots of a blockout, restore one, and use a filter to restore only the actors that have a certain tag.",
+  "checklist": [
+   "Enable the Level Snapshots plugin and restart the editor.",
+   "Open your blockout level. Click the Level Snapshot button in the main toolbar. Name the snapshot Base_v1 and add a description.",
+   "Move five cover meshes, delete one, and add a new one. Then take a second snapshot named Variant_Open.",
+   "Open the Level Snapshots window, select Base_v1, and click Restore Level Snapshot. Check that all your changes are reverted.",
+   "Undo the restore. Then give two cover actors the tag KeepMe.",
+   "Add a Filter Group with the filter Actor Has Tag, set to KeepMe. Click Refresh Results and restore only those actors from Base_v1.",
+   "Negate the filter by clicking its green bar, which makes it select the opposite. Note for your text what the result list shows now."
+  ],
+  "done_when": "Send a screenshot of the Level Snapshots window with two named snapshots, one Filter Group that contains Actor Has Tag, and the results list. Add one line that says what changed when you negated the filter."
+ },
+ "LDQ117": {
+  "brief": "Python is a programming language that the Unreal Editor can run to automate editor work. Python scripts only work in the editor, not in the game. A short script can count and measure everything in a level in a moment, which replaces a long time of counting by hand. In this quest you write a small script that reports how many actors of each class are in your level and how big your cover objects are.",
+  "checklist": [
+   "Enable the Python Editor Script Plugin and the Editor Scripting Utilities plugin. Restart the editor.",
+   "In the Output Log, switch the console input from Cmd to Python. Type import unreal, and then print(unreal.__doc__), to test that Python works.",
+   "Create a file named level_report.py in the folder YourProject/Content/Python. The script must import unreal and get all actors of the level.",
+   "Make the script count the actors per class and print one line for each class, sorted by count. Also print the total number.",
+   "Make the script print the size of the bounding box of every actor that has the tag Cover, in meters. The bounding box is the smallest box that fits around the actor.",
+   "Run the file with File > Execute Python Script. Then run it again from the list of Recent Python scripts.",
+   "Open Project Settings, go to Plugins, then Python, and add the script to Startup scripts. Restart the editor and check the Output Log."
+  ],
+  "done_when": "Send a screenshot of the Output Log that shows the counts per class and the Cover sizes from your script, and a screenshot of the Startup scripts setting with your file listed. Attach the text of the script."
+ },
+ "LDQ118": {
+  "brief": "Sequencer is the tool in Unreal for making camera shots and cutscenes, and a Level Sequence is the asset that stores them. A flythrough is a camera move that travels through the level and shows it in the order you want. Because it plays the same way every time, reviewers always see the space as you intended. In this quest you make a flythrough of your blockout with keyframes at four landmarks and with labelled marks on the timeline.",
+  "checklist": [
+   "Click the cinematics icon in the main toolbar and choose Add Level Sequence. Name the sequence LS_Flythrough_Blockout.",
+   "In Sequencer, click Create Camera. This makes a Cine Camera Actor and a Camera Cut Track, the track that decides which camera is shown.",
+   "Enable Camera Lock on the Camera Cut Track, so that the viewport looks through the camera. Fly the camera to the entrance of your level and add a key for its transform at frame 0. A key stores a value at one point in time.",
+   "Add keys for the camera at three more landmarks: the place where the route splits, the main arena, and the exit. Make each move between landmarks 3 to 5 seconds long.",
+   "At each landmark, right-click the time bar and choose Add Mark. Give each mark a Label with the name of the landmark, and a Color.",
+   "Move to the last key and press the ] hotkey to set the End Time of the sequence there. Play the sequence with looping turned on.",
+   "Open the Curve Editor and smooth one camera move that looks too harsh."
+  ],
+  "done_when": "Send a screenshot of Sequencer with LS_Flythrough_Blockout open. It must show the Camera Cut Track, at least four transform keys, and labelled colored marks on the time bar, and the viewport must look through the cine camera."
+ },
+ "LDQ119": {
+  "brief": "Movie Render Queue is the tool that turns a Level Sequence into image or video files on your disk. It renders every frame at full quality, even when your computer cannot play the sequence smoothly in the editor. A rendered flythrough is the easiest thing to attach when you ask others to review your level. In this quest you render your flythrough as a series of PNG images and save the settings so that you can render again after each change.",
+  "checklist": [
+   "Open Edit > Plugins, find Movie Render Queue in the Rendering section, enable it, and restart the editor.",
+   "Open Window > Cinematics > Movie Render Queue. Click + Render and pick your flythrough sequence. You can use the one from quest LDQ118 or any other level sequence.",
+   "Check that the Map field in Job Details points to your blockout level.",
+   "Click Unsaved Config to open the settings. Delete the entry .jpg Sequence [8bit] and add .png Sequence [8bit]. Keep Deferred Rendering.",
+   "In Output, set the Output Directory to a folder named Review_Flythrough, and set the resolution to 1280x720.",
+   "Click Render (Local) and wait until the preview window closes. Then open the output folder with the Output link of the job.",
+   "Save the job list as a Queue Preset named MPQ_LevelReview, so that you can render again after each change to the blockout."
+  ],
+  "done_when": "Send a screenshot of the Movie Render Queue window with your job and the saved queue name in the toolbar, together with a file explorer window that shows the .png frames in Review_Flythrough."
+ },
+ "LDQ120": {
+  "brief": "The Collab Viewer is a project template from Epic for looking at a 3D space together with other people. Several people can join the same session, walk around, measure distances, and leave notes in the world. A shared walk like this is the closest thing to standing in the level together. In this quest you package the template as a program, run a review session, add measurements and notes, and save the session.",
+  "checklist": [
+   "Create a new project from the Collab Viewer template and open it in the editor.",
+   "Package the project for Windows into a folder named CollabReview. To do this, open the Platforms menu, choose Windows, and click Package Project.",
+   "Run the packaged .exe file. Enter a display name and start with Host a session, or with Single Session if you are alone.",
+   "Press Spacebar to open the menu, choose Measurement, then Add, and measure a doorway. Hold Shift when you place the second point to snap the line to an axis.",
+   "Choose Annotation, then Annotate Text, and place three labels with review notes. Then paint one stroke around a problem area.",
+   "Use the Save button to save the session as Review_01. Quit the program and start it again, and then load Review_01 from the menu next to Save.",
+   "Optional: ask one member to join your session on the same network and add one note."
+  ],
+  "done_when": "Send a screenshot from the packaged Collab Viewer that shows one measurement with its value, at least three text labels, one paint stroke, and the loaded session name Review_01. Add one line that says if a second person joined."
+ }
+}

@@ -1,0 +1,149 @@
+{
+ "PQ91": {
+  "brief": "Data Validation is an editor system that checks assets against rules, for example a naming rule, and reports the ones that break a rule. A validator is one such rule. It runs when an asset is saved or when you ask for a check, so broken data is caught before it reaches a build or another person. In this quest you write a validator in an Editor Utility Blueprint that checks the names of Static Meshes.",
+  "checklist": [
+   "Open Edit > Plugins. Search for Data Validation and confirm that the plugin is enabled.",
+   "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick EditorValidatorBase as the parent class and name the asset EUB_Validate_StaticMeshNames.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is a Static Mesh.",
+   "Override the function Validate Loaded Asset. If the name of the asset does not start with SM_, call Asset Fails with a clear message. In every other case, call Asset Passes.",
+   "Make a Static Mesh named BadName. Right-click it and choose Asset Actions, then Validate Assets. Read the Message Log.",
+   "Run Tools > Validate Data... on the whole project and count the failures. Rename the bad asset and validate again."
+  ],
+  "done_when": "Send a screenshot of the Message Log that shows your failure message, and one screenshot after the fix that shows the asset passes."
+ },
+ "PQ92": {
+  "brief": "The Unreal Editor can run Python scripts, which is very useful for work on many assets at once, such as renaming hundreds of meshes. A safe tool does three things: it wraps its changes in a transaction so that one Undo reverts everything, it shows a progress window that can be canceled, and it writes what it did to the log. In this quest you write a rename script with all three, and a startup script that runs each time the editor opens.",
+  "checklist": [
+   "Enable the plugins Python Editor Script Plugin and Editor Scripting Utilities, and restart the editor. Create the folder Content/Python in your project.",
+   "Write a script named rename_meshes.py. It gets all Static Mesh assets in a folder with unreal.EditorAssetLibrary, and adds the prefix SM_ to every name that does not have it yet. Rename with the Unreal API and never with os.rename.",
+   "Wrap the loop in unreal.ScopedEditorTransaction(\"Prefix meshes\") and in unreal.ScopedSlowTask, so that the editor shows a progress dialog with a Cancel button.",
+   "Log each rename with unreal.log and each skipped asset with unreal.log_warning. Run the script from the File > Execute Python Script menu.",
+   "Open Edit > Undo History and check that it shows one entry named Prefix meshes. Undo it and confirm that the old names come back.",
+   "Create the file Content/Python/init_unreal.py and make it print a message with unreal.log. Restart the editor and find the message in the Output Log."
+  ],
+  "done_when": "Send a screenshot of the Output Log with your log lines and the startup message, and a screenshot of the Undo History entry."
+ },
+ "PQ93": {
+  "brief": "An Automation Spec is a way to write C++ tests so that they read like sentences: you Describe a thing and then say what It should do. Each It block shows up as its own test in the Automation tab, so a failure points at the exact case that broke. In this quest you write a spec for one small C++ function, run it, make it fail on purpose and fix it.",
+  "checklist": [
+   "Pick a small pure C++ function of your own (for example a damage formula in a static library). If you have none, write FDamageCalc::Apply(int32 Base, float Multiplier).",
+   "Create the file Source/YourModule/Private/Tests/DamageCalc.spec.cpp. Use BEGIN_DEFINE_SPEC and END_DEFINE_SPEC, with a member variable for the object under test and the flags ProductFilter | ApplicationContextMask.",
+   "In Define(), add Describe(\"Apply()\") with at least three It() blocks whose names start with the word should. Use TestEqual and TestTrue to check the results.",
+   "Add a BeforeEach() block that resets the member before each test. Also add a loop over an array of inputs that creates 3 It() blocks, one for each input.",
+   "Build the project. Open Tools > Session Frontend, go to Automation, and run your group of tests. Make one expectation fail on purpose, and then fix it.",
+   "Disable one block by changing it to xIt(), and confirm that it disappears from the run."
+  ],
+  "done_when": "Send a screenshot of the Automation tab with your Describe and It tree all green, and one screenshot of the failing run before the fix."
+ },
+ "PQ94": {
+  "brief": "A log category is a name that groups your log lines, such as LogInventory. Verbosity is the level of detail of a line, from Error and Warning down to Verbose and VeryVerbose. You can set, for each category, which levels are shown, and you can change this while the game runs. This keeps logs quiet by default and detailed when you ask for it. In this quest you make your own category and change its verbosity in three different ways.",
+  "checklist": [
+   "Declare a category named LogInventory with DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All) in a header, and with DEFINE_LOG_CATEGORY(LogInventory) in a .cpp file.",
+   "In one function, write four UE_LOG lines at the levels Display, Log, Verbose and VeryVerbose. Play and note which of the four lines appear in the Output Log.",
+   "In the console, type: log LogInventory verbose. Play again and compare. Then try veryverbose.",
+   "In DefaultEngine.ini, add the section [Core.Log] with the line LogInventory=Warning. Restart and show that the Display and Log lines are gone.",
+   "Include Logging/StructuredLog.h and rewrite one line with UE_LOGFMT. Use the named fields {ItemName} and {Count}.",
+   "Start the editor once with -LogCmds=\"LogInventory VeryVerbose\" on the command line, and confirm that every line appears."
+  ],
+  "done_when": "Send three screenshots of the Output Log: one with the defaults, one after the console command, and one after the override in the .ini file. Your UE_LOGFMT line must also be visible."
+ },
+ "PQ95": {
+  "brief": "In a multiplayer game the server holds the true state and copies some variables to the clients. This copying is called replication. A replication condition limits who receives a variable, for example only the client that owns the actor, so you send less data and private values stay private. In this quest you make a C++ actor with two replicated variables, one of them only for the owner, and you watch a client get told when a value changes.",
+  "checklist": [
+   "In a C++ project, make a class named ANetCrate with Actor as the parent. In the constructor, set bReplicates = true.",
+   "Add UPROPERTY(ReplicatedUsing=OnRep_Health) int32 Health and UPROPERTY(Replicated) int32 SecretCode. Include Net/UnrealNetwork.h in the .cpp file.",
+   "Override GetLifetimeReplicatedProps. Call Super first, and then add DOREPLIFETIME(ANetCrate, Health) and DOREPLIFETIME_CONDITION(ANetCrate, SecretCode, COND_OwnerOnly).",
+   "Write the function OnRep_Health(int32 LastHealth), which runs on clients when Health changes. Add a UE_LOG in it that prints the old value and the new value.",
+   "Add a function named DamageCrate that runs only on the server and lowers Health by 10. Call it from a key press in a Blueprint child named BP_NetCrate, but only on the Authority pin of a Switch Has Authority node.",
+   "Set Play In Editor to 2 players and Play As Listen Server. Press the key in the server window. Check the Output Log of the client for the OnRep line with the old and new values.",
+   "Write 3 sentences that say why SecretCode never reaches the second client, and what NotReplicated would be used for."
+  ],
+  "done_when": "Send one screenshot of NetCrate.cpp that shows GetLifetimeReplicatedProps with both macros, and one screenshot of the Output Log with the OnRep_Health line printed on a client. Add your 3 sentences."
+ },
+ "PQ96": {
+  "brief": "An RPC (Remote Procedure Call) is a function that you call on one computer and that runs on another. A Server RPC lets a client ask the server to do something. A Client RPC lets the server run something on one client only. A Multicast RPC lets the server run something on all clients, which is good for effects. In this quest you write all three kinds in C++ and one in Blueprint, and you see in which window each one runs.",
+  "checklist": [
+   "In a C++ Character class, add UFUNCTION(Server, Reliable, WithValidation) void ServerFire(int32 Ammo). Write ServerFire_Implementation and ServerFire_Validate, and make the validate function return false when Ammo < 0.",
+   "Add UFUNCTION(NetMulticast, Unreliable) void MulticastFireFX(). In its _Implementation function, spawn a sound or a particle effect at the actor.",
+   "Add UFUNCTION(Client, Reliable) void ClientShowHit(). In its _Implementation function, print a message on the screen.",
+   "In ServerFire_Implementation, call MulticastFireFX and ClientShowHit. Bind ServerFire to an input key on the owning client, the client that controls this character.",
+   "In a Blueprint child, add a Custom Event named Multicast_Cheer. In its Details, set Replicates to Multicast and leave it unreliable. Call it from a second key.",
+   "Test with 2 players and Play As Listen Server. Press both keys in the client window. Note which window plays the effect and which window shows the hit message.",
+   "Call ServerFire with Ammo = -1 from the client and watch what happens to that client."
+  ],
+  "done_when": "Send a screenshot of the header with the three UFUNCTION lines, and a screenshot of both Play In Editor windows after the client fired. Add 2 sentences about what happened with Ammo = -1."
+ },
+ "PQ97": {
+  "brief": "In a network game each copy of an actor has a role. The role says if this copy has the authority to change the actor, if it is the copy that a player controls from a client, or if it only shows what the server sends. The local role is the role on this machine, and the remote role is the role on the other side of the connection. In this quest you build a small label that shows both roles above each actor, and you compare what the server and a client see.",
+  "checklist": [
+   "Make an Actor Component named BP_RoleLabel. On Begin Play, it adds a Text Render component above the owner. Then, every 0.5 s with a timer, it sets the text to the Get Local Role and Get Remote Role of the owner.",
+   "Add BP_RoleLabel to BP_ThirdPersonCharacter. Also place a replicated BP_NetCrate (with Replicates on) and a BP_Rock that is not replicated in the level, and add the component to both.",
+   "Play with 3 players and Play As Listen Server. In the server window, read the labels on your own pawn, on another pawn, on the crate and on the rock.",
+   "Open a client window and read the same four labels. Write them into a small table with the columns actor, window, local role and remote role.",
+   "While the game is running, select the crate in the server world. In its Details panel, find the Role and Remote Role values and compare them with your text.",
+   "Lower Net Update Frequency on BP_NetCrate to 1 and move the crate with a timeline on the server. Watch how the movement looks on the client."
+  ],
+  "done_when": "Send a screenshot of a client window with at least three role labels visible, and your table with the four actors in the server window and in a client window."
+ },
+ "PQ98": {
+  "brief": "You can test multiplayer inside the editor with Play In Editor (PIE). A listen server is one player who is also the server. A dedicated server is a server with no player on it, and every player is a client. The editor can also simulate a bad network connection, so you can find bugs that only show up with delay. In this quest you try both server types, turn on network emulation, and debug one client world.",
+  "checklist": [
+   "Open the Play drop-down in the Level Editor toolbar. Set Number of Players to 3 and Net Mode to Play As Listen Server. Press Play and note the title of each window.",
+   "Stop the game. Set Net Mode to Play As Client with Number of Players 1 and play again. Write one sentence that says what is different and where the server is.",
+   "Open Editor Preferences and go to Level Editor, then Play. Turn on Enable Network Emulation, set Emulation Target to Everyone, and choose the profile Bad. Play as a client, walk around, and note how it feels.",
+   "Set the profile to Custom with 250 ms for the minimum and maximum latency and 10% packet loss in both directions. Play again with a replicated crate from an earlier quest and watch how it updates.",
+   "In BP_ThirdPersonCharacter, add a breakpoint on Begin Play. In the debug world drop-down of the Blueprint Editor, pick Client 1 only. Play with 2 players and count how many times the breakpoint hits.",
+   "Turn off Run Under One Process, play with 2 players, and compare the start time with the earlier run. Then turn the setting back on."
+  ],
+  "done_when": "Send two screenshots: (1) the Play In settings page with your network emulation values, and (2) the debug world drop-down of the Blueprint Editor set to a client world while the game is stopped at the breakpoint. Add your sentence about Play As Client."
+ },
+ "PQ99": {
+  "brief": "In a network game your own character must react at once, but the server still has the final say. The Character Movement Component solves this with prediction and correction: the client moves first, tells the server, and the server checks the move and corrects the client if they do not agree. This is why your own character feels instant while other players lag a little. In this quest you watch this happen, try to cheat with the speed, and draw the steps as a diagram.",
+  "checklist": [
+   "Play the Third Person template with 2 players, Play As Listen Server, and the network emulation profile Bad on Everyone. Move the client character and watch it in the server window.",
+   "In BP_ThirdPersonCharacter, print Get Local Role each second. Confirm which window is the autonomous proxy, which is the authority and which is the simulated proxy for that character.",
+   "Make BP_Rock, an Actor with a Static Mesh and with Replicates on. Move it with a Timeline on Begin Play, but only on the Authority pin. Play and note if the client sees it move. Then turn Replicate Movement on and compare.",
+   "In BP_ThirdPersonCharacter, set Max Walk Speed to 3000 on Begin Play, but only when Has Authority is false. Play with emulation on and describe what the server does to the client pawn.",
+   "Read the Movement Replication Summary table on the documentation page. Draw the 9 steps as a small diagram on paper or in a drawing tool, with three columns: autonomous proxy, server and simulated proxy.",
+   "Write 3 sentences that say why ServerMove is an unreliable RPC and what ClientAdjustPosition does."
+  ],
+  "done_when": "Send a photo or screenshot of your diagram with the 9 steps, and a screenshot of the client window after the speed change. Add your 3 sentences."
+ },
+ "PQ100": {
+  "brief": "In a network game an actor can have an owner, and through its owner it belongs to the connection of one player. This is called the owning connection. A client may only call a Server RPC on an actor that its own connection owns, and ownership also decides who receives private data. In this quest you try to toggle a lantern from a client before and after the client becomes its owner, and you see the difference.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Lantern with Replicates on and Replicate Movement on. Add a Custom Event named Server_Toggle and set it to Run on Server and Reliable. It flips a replicated bool named bLit, and the OnRep function of bLit updates a point light.",
+   "Place one BP_Lantern in the level. In BP_ThirdPersonCharacter, on the E key, get the nearest BP_Lantern and call Server_Toggle on it. Play with 2 players and press E in the client window. Note if the light changes.",
+   "Add a second key, F, that calls a Server event named Server_Pickup on the character. On the server, this event calls Set Owner on the lantern with the character as the new owner, and attaches the lantern to the hand.",
+   "After the pickup, press E again from the client. Note the difference, and explain it with the owning connection rule.",
+   "On Begin Play of the lantern, start printing Get Owner every second. Compare what the server window and the client windows print before and after the pickup.",
+   "Write 3 sentences: who owns a pawn on the server, how an actor component finds its owning connection, and why a lantern with no owner cannot run a Server RPC from a client."
+  ],
+  "done_when": "Send a screenshot of the lantern graph with Server_Toggle and its Replicates settings, and a screenshot of the client window after the pickup with the light toggled. Add your 3 sentences."
+ },
+ "PQ101": {
+  "brief": "A server does not send every actor to every client all the time. Relevancy decides, for each client, if an actor matters to that client at all, for example because it is close enough. Dormancy puts an actor to sleep on the network, so the server stops checking it for changes until you wake it. These are the two main ways to keep the server cost and the amount of sent data low. In this quest you test both on two simple actors.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Beacon with Replicates on and a Static Mesh that has collision. In Class Defaults, in the Replication section, set Net Cull Distance Squared to 90000 (3 m squared).",
+   "Spawn one BP_Beacon on the server while the game runs. Play with 2 players and walk the client away from the beacon. Note the distance at which it disappears on the client, and check that it still exists in the server window.",
+   "Turn on Always Relevant on BP_Beacon and do the test again. Then turn on Only Relevant To Owner and do it once more.",
+   "Make an Actor Blueprint named BP_Sign with Replicates on, a replicated string named Message, and a text render that is updated in OnRep. Set Net Dormancy to Initial in Class Defaults and place the sign in the level.",
+   "Add a key on the server that sets Message with a normal Set node, and watch the client. Then call Flush Net Dormancy on the sign before the Set node and watch again.",
+   "Write 4 sentences: what relevancy does to a dynamic actor on the client, what dormancy does instead, and which of your two actors is a good candidate for each."
+  ],
+  "done_when": "Send two screenshots: the client window with the beacon gone while the server window still shows it, and the Class Defaults of BP_Sign with Net Dormancy set. Add your 4 sentences."
+ },
+ "PQ102": {
+  "brief": "The Network Profiler is a separate program that comes with the engine. It reads a recording of the network traffic of your game and shows how many bytes each actor, property and RPC used. You cannot lower the amount of data your game sends until you can see what is sending it. In this quest you record a short multiplayer session, open the file in the Network Profiler, and find the biggest users.",
+  "checklist": [
+   "Play with 2 players and Play As Listen Server. In the server window, open the console and run netprofile enable. Move both characters and fire your RPCs from earlier quests for about 30 seconds. Then run netprofile disable.",
+   "Find the .nprof file in the folder <Project>/Saved/Profiling/. Note the pattern of its name.",
+   "Start the program Engine/Binaries/DotNET/NetworkProfiler.exe from your engine folder. Click Open File and load the .nprof file.",
+   "On the All Actors tab, sort the list by Total Size and write down the top 3 actor classes. Do the same on the All RPCs tab and the All Properties tab.",
+   "On the Chart, Filters, Details tab, click one frame that has a spike. Open Actors and expand your character to see its properties and their bytes.",
+   "Type the class name of your character in the actor filter, click Apply Filters, and compare the chart.",
+   "Write 3 sentences: which actor or RPC used the most bandwidth, one idea to reduce it, and why a recording made on a client shows less detail."
+  ],
+  "done_when": "Send a screenshot of the Network Profiler with the All Actors tab sorted by Total Size, and a screenshot of the Chart view with one frame selected and your character expanded in Actors. Add your 3 sentences."
+ }
+}

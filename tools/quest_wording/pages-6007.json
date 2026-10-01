@@ -1,0 +1,104 @@
+{
+ "PQ103": {
+  "brief": "Unreal Insights is a separate program that reads a trace, which is a recording of what the engine did in each frame. Its Timing Insights window shows how long each frame took and which functions used that time. With it, a general complaint such as \"the game hitches\" becomes one named function that you can fix. In this quest you cause a slow frame on purpose, record it, and find the work that made it slow.",
+  "checklist": [
+   "Make an actor named BP_SlowSpawner that spawns 200 actors in one frame when you press a key.",
+   "Record a trace of a Play In Editor (PIE) session in which you press the key. Open the trace in Unreal Insights and go to the Timing Insights window.",
+   "In the Frames panel, click the tall bar that belongs to the spawn frame. Then look at the track of the Game thread in the Timing panel.",
+   "Open the Timers panel and set the Modes dropdown to Instance. Sort the list by Inclusive time and find the spawn work.",
+   "Double-click the spawn timer to plot it in the main graph. Then select it and read the Callers and Callees panels, which show what calls it and what it calls.",
+   "Use the Log panel to find your own UE_LOG line from the spawn frame. Click the line to jump to that moment.",
+   "Write down the name of the timer, its Inclusive time and Exclusive time, and one caller."
+  ],
+  "done_when": "Send a screenshot of Timing Insights that shows the Frames panel with the spike selected and the Timers panel with your spawn timer highlighted. Add a short note with the timer name, the Inclusive and Exclusive times, and one caller."
+ },
+ "PQ104": {
+  "brief": "A stat command is a console command that shows live numbers about the running game on the screen, such as the time spent in ticks. The stats are sorted into groups, and you can also record them into a file and study them later. They are the fastest way to see what your game is doing right now. In this quest you try several stat groups, record a stat file, and open it in the Profiler.",
+  "checklist": [
+   "Start Play In Editor (PIE), open the console and run stat Help. Then run stat List Groups and note three groups that you did not know.",
+   "Run stat Game, stat TickGroups and stat Dumpticks. Find the tick of your own BP_ actor in the output.",
+   "Run stat Levels in a level that has at least one streaming sub-level. Note the colour of each level in the list.",
+   "Run stat StartFile to start a recording, play for 20 seconds, and then run stat StopFile.",
+   "Open Tools > Session Frontend and go to the Profiler tab. Click Load and open the .uestats file from the folder Saved/Profiling/UnrealStats.",
+   "Find the most expensive Game thread stat in the capture and write it down."
+  ],
+  "done_when": "Send two screenshots: the Editor viewport with stat Game and stat Levels visible, and the Profiler in the Session Frontend with your .uestats capture loaded. Add the name of the most expensive stat."
+ },
+ "PQ105": {
+  "brief": "The Visual Logger records what your actors do during play, so that you can go back in time after a bug happened. From C++ you can send it text and also shapes, such as arrows and cones, which it draws in the level at the moment they were logged. This makes rare bugs much easier to find. In this quest you add Visual Logger calls to a C++ actor and look at the recording.",
+  "checklist": [
+   "In a C++ actor (for example AProjectileTurret), add IVisualLoggerDebugSnapshotInterface to the list of classes that it inherits from.",
+   "Override GrabDebugSnapshot and put it inside #if ENABLE_VISUAL_LOG. In it, add one category with two values: the target name and the cooldown.",
+   "In your fire function, call UE_VLOG with your log category and the verbosity Verbose to log the target and its location.",
+   "Add UE_VLOG_LOCATION for the target point, and UE_VLOG_ARROW to draw an arrow from the muzzle to the target.",
+   "Add UE_VLOG_CONE for the detection cone. It takes the origin, direction, length, angle and colour.",
+   "Open Windows > Developer Tools > Visual Logger. Play in PIE and fire. Then stop and drag the timeline to move through the recording.",
+   "Select your actor in the Actor list and expand your snapshot category."
+  ],
+  "done_when": "Send a screenshot of the Visual Logger with your actor selected, your snapshot category expanded, and the arrow and cone shapes visible in the viewport at the time you moved to."
+ },
+ "PQ106": {
+  "brief": "The Gameplay Debugger is the overlay that shows live data about a selected actor during play. It sorts its data into categories, such as Navmesh and Basic, and it also works on clients in a network game. With C++ you can add a category that shows your own data. In this quest you add one category named MyData that shows a single value.",
+  "checklist": [
+   "Add the GameplayDebugger module to the dependency modules in the Build.cs file of your project.",
+   "In PIE, point at an AI pawn and press the apostrophe key to open the Gameplay Debugger. Use the numeric keys to switch categories on and off.",
+   "Follow the documentation page: create a component class that derives from the Gameplay Debugger component class. It collects one replicated float value.",
+   "Create the HUD component class and override its drawing function, so that it prints your value with a colour tag such as {red}.",
+   "Add the category view with GetKeyboardDesc, so that the category shows as MyData in the category list.",
+   "Register both classes in DefaultEngine.ini, under the GameplayDebuggingReplicator section.",
+   "Open Project Settings, go to Gameplay Debugger, and look at the Input section to see the activation key."
+  ],
+  "done_when": "Send a screenshot taken in Play mode with the Gameplay Debugger overlay that shows your MyData category and your value in colour. Also send a screenshot of your lines in DefaultEngine.ini."
+ },
+ "PQ107": {
+  "brief": "A memory leak is memory that the game takes and never gives back. You do not see it until the game runs out of memory and crashes. Memory Insights is the part of Unreal Insights that records every allocation (each time memory is taken) and shows which code made it and when. In this quest you write an actor that holds on to a lot of memory, record a memory trace, and find that actor in the results.",
+  "checklist": [
+   "Make a C++ actor named ALeakyCache that allocates a large TArray in BeginPlay and does not free it until EndPlay.",
+   "Start UnrealInsights.exe from the folder Engine/Binaries/Win64 before you run the game.",
+   "Run your project from a command prompt, with the memory trace channel active from the start of the process.",
+   "Load a level with 20 ALeakyCache actors and wait a moment. Then open a different level and stop the session.",
+   "Open the .utrace file and select Menu > Memory Insights. Read the Total Allocated Memory graph.",
+   "In the Investigation panel, run a Memory Leaks query. Put the markers A and B around the first level, and the marker C after the level change.",
+   "Group the result by Alloc Callstack and find the allocation of your ALeakyCache."
+  ],
+  "done_when": "Send a screenshot of Memory Insights with the Total Allocated Memory graph and the query result table that shows your ALeakyCache callstack. Write one sentence that says what you would change."
+ },
+ "PQ108": {
+  "brief": "Unreal does its work for each frame on several threads: the Game thread runs gameplay logic, the Draw (render) thread prepares what to draw, and the GPU draws it. A frame is only as fast as the slowest of them, which is called the bottleneck. Before you optimise anything, you must know which one is late. In this quest you read the stat Unit numbers in two tests and decide for each test if it is limited by the CPU or by the GPU.",
+  "checklist": [
+   "Make a test level with an actor named BP_HeavyTick that runs a big loop on Tick. Add a switch that spawns 50 of them.",
+   "In the viewport menu, enable Show FPS. Then open Stat, then Engine, and enable FPS and Unit.",
+   "Run stat Unit and stat UnitGraph. Read the values Frame, Game, Draw, GPU and RHIT before you spawn the actors and after.",
+   "Run stat Hitches and stat DumpHitches. Set t.HitchFrameTimeThreshold and cause a spike. Find the HITCH line in the Output Log.",
+   "Now replace the heavy actors with 500 high-poly meshes and repeat the test. Compare which thread time grows.",
+   "Write a short table with these columns: test, Frame ms, Game ms, Draw ms, GPU ms, and your verdict (CPU-bound or GPU-bound)."
+  ],
+  "done_when": "Send a screenshot of stat Unit and stat UnitGraph in the heavy tick test, a screenshot of a HITCH log line, and your table with the verdict (CPU-bound or GPU-bound) for both tests."
+ },
+ "PQ109": {
+  "brief": "Blueprint code runs slower than C++ code, but in most cases the difference is too small to matter. It matters mainly in heavy loops and when many actors tick every frame. For this reason you should measure before you convert anything to C++, because slow Blueprint logic is often a design problem and not a language problem. In this quest you run the same heavy loop in Blueprint, in C++ and on a timer, and compare the three numbers in Unreal Insights.",
+  "checklist": [
+   "Make BP_MathWorker. On Tick, it loops 10,000 times and adds up vector distances. Spawn 20 of them.",
+   "Make AMathWorkerCpp, which runs the same loop in its C++ Tick. Spawn 20 of them in a second test.",
+   "Run the game with -trace=default,AssetLoadTime -statnamedevents, so that the Blueprint names show in Insights.",
+   "Record a trace for each test. In Timing Insights, with the Game Frame mode, compare the timers of the Game thread.",
+   "Rewrite BP_MathWorker so that the loop runs on a Timer every 0.5 s and not on Tick. Measure again.",
+   "Use Blueprint Header View to generate a .h file from BP_MathWorker, and compare it with your C++ class.",
+   "Write down the three numbers (Blueprint tick, C++ tick, Blueprint timer) and your rule for when to convert."
+  ],
+  "done_when": "Send a screenshot of the Timers panel for the Blueprint test and for the C++ test with the timer rows visible. Add your three numbers and a rule of two sentences for when you would convert Blueprint to C++."
+ },
+ "PQ110": {
+  "brief": "Garbage collection (GC) is the engine system that finds objects that nothing uses any more and frees their memory. It runs from time to time, and when it has a lot to clean it can cause a short hitch. It also only knows about references that are marked with UPROPERTY, so other pointers can end up pointing at objects that are gone. In this quest you cause GC spikes, tune a setting, and test which kinds of C++ pointer are safe after an object is destroyed.",
+  "checklist": [
+   "Make BP_Churn. In a loop, it spawns 500 small actors and destroys them 2 seconds later.",
+   "Run stat GC and stat UnitGraph in PIE. Watch for the spike when the collector runs.",
+   "Open Project Settings and go to Engine, then Garbage Collection. Lower Time Between Purging Pending Kill Objects and compare the size of the spike.",
+   "In a C++ class, hold one object in a raw pointer and one object in a TObjectPtr that is marked with UPROPERTY. Destroy the object and log both pointers.",
+   "Replace the raw pointer with a TWeakObjectPtr, and check IsValid after the destroy.",
+   "Add a Collect Garbage call at a loading screen or at a level change, and confirm that the spike moves to that moment.",
+   "Write down the size of the spike before and after the tuning, and which pointer became null."
+  ],
+  "done_when": "Send a screenshot of stat GC with the spike in the UnitGraph, a screenshot of the Garbage Collection settings that you changed, and a short note with your numbers before and after and the result of the raw pointer compared with the UPROPERTY pointer."
+ }
+}

@@ -1,0 +1,75 @@
+{
+ "CQ73": {
+  "brief": "Movie Render Queue normally gives you a folder of single images, but clients usually want one video file. The Command Line Encoder is an MRQ setting that starts an outside program, FFmpeg, at the end of the render to join the images and the sound into one movie. FFmpeg is a free tool that converts video and audio. In this quest you connect FFmpeg to Unreal and render a sequence directly to a video file.",
+  "checklist": [
+   "Install FFmpeg on your PC. Note the full path to the file ffmpeg.exe.",
+   "Open Edit > Project Settings > Plugins > Movie Pipeline CLI Encoder. Set Executable Path to your ffmpeg.exe.",
+   "In the Output Log, run MovieRenderPipeline.DumpCLIEncoderCodecs and find the codec names. A codec is the method used to compress video or audio. Set Video Codec to libvpx-vp9, Audio Codec to libvorbis, and Output File Extension to mkv. This is the example from the documentation page.",
+   "Set Encode Settings High to -crf 20 -b:v 0. Leave the Command Line Format and the input formats at their defaults.",
+   "Open Movie Render Queue and add your sequence. In Settings, add .jpg Sequence [8bit], WAV Audio and Command Line Encoder. Set Quality to High. Leave Delete Source Files off.",
+   "Click Render (Local). Open the .mkv file and check that the picture and the audio play together.",
+   "Extra: set File Name Format Override on the encoder to {sequence_name}_master, so that one movie is made even when the shots go to separate folders. Render again with Delete Source Files on."
+  ],
+  "done_when": "Send a screenshot of the Movie Pipeline CLI Encoder project settings, a screenshot of the MRQ settings list with the three exports, and a screenshot of the output folder that shows the .mkv file (and the .wav file). Add one line with the exact codec names you used."
+ },
+ "CQ74": {
+  "brief": "Spoken lines in a cinematic often need subtitles, the text that shows what is said. Review renders need a burn-in, which is information such as the shot name and frame number printed on the picture. Unreal has both built in: a Subtitles plugin with its own Sequencer track, and a Burn In setting in Movie Render Queue. In this quest you add subtitles to a line of dialogue and render frames with a burn-in.",
+  "checklist": [
+   "Open Edit > Plugins and enable Subtitles and Closed Captions. Restart the editor.",
+   "Pick a dialogue Sound Wave. You can record one with Take Recorder or import a short .wav file. Right-click it and choose Scripted Actions, then Sound, then Add Blank Subtitle.",
+   "Open the new subtitle asset. Set Text to your line (press Shift + Enter to start a second line), set Subtitle Type to Subtitle and Priority to 1. Add a second subtitle with a Start Offset for the second sentence.",
+   "Open your shot sequence and drag the subtitle asset onto a subtitle track. Trim the section so that it ends when the spoken line ends. Drag the playhead and watch the text appear.",
+   "Open Edit > Project Settings > Game > Subtitles and Closed Captions. Open DefaultSubtitleWidget and change the font size and the color of the subtitles. Play in the editor and check the new look.",
+   "In Movie Render Queue, add the Burn In setting to the job and render 48 frames. Open a frame and read the job name, level name, camera focal length and frame numbers in the burn-in."
+  ],
+  "done_when": "Send a screenshot of the sequence with the subtitle track and the text visible in the viewport, and one rendered frame that shows the burn-in. Add one line that says which Duration Type you used and why."
+ },
+ "CQ75": {
+  "brief": "Most cinematics are finished in an editing program such as DaVinci Resolve, Premiere or Final Cut. For a clean hand-off, the editor needs movie files in a good format and a file that describes the order and length of the shots. In this quest you render each shot as an Apple ProRes movie, export a Final Cut Pro XML file with the cut information, and load both into editing software.",
+  "checklist": [
+   "Open Edit > Plugins, go to Media Players, and enable Apple ProRes Media. Restart the editor.",
+   "Open a sequence that has at least 3 shots in a Shot track. Add it as a job in Movie Render Queue. In Settings, add Apple ProRes [10-12bit] with the codec Apple ProRes 422 HQ, and add WAV Audio.",
+   "Add Final Cut Pro XML and set Data Source to Sequence Data. In Output, set File Name Format to {sequence_name}/{shot_name}, so that every shot gets its own file.",
+   "Click Render (Local). Check the output folder: it should hold one .mov file for each shot, a .wav file and the .xml file.",
+   "Import the XML file into your editing software (DaVinci Resolve, Premiere or Final Cut). Confirm that the shots are in the right order and have the right lengths.",
+   "Extra: use the older Render Movie dialog with Output Format set to Video Sequence, {shot} in the file name, and Write Edit Decision List turned on. Import the EDL (edit decision list) and the clips into your editor. Change one cut and export an EDL. Then right-click the Shot track in Sequencer and choose Import EDL."
+  ],
+  "done_when": "Send a screenshot of the MRQ settings list (ProRes, WAV Audio, Final Cut Pro XML) and the output folder, and a screenshot of the timeline in your editing software with the shots loaded. Add one line that says which ProRes codec you chose and why."
+ },
+ "CQ76": {
+  "brief": "A real production records many takes of the same line, with the actor's voice and with timecode. Timecode is a clock value stored with each frame so that picture and sound from different devices can be lined up later. Take Recorder can record a microphone, name the files by rule, and save your list of sources as a preset. In this quest you set up Take Recorder for dialogue, record two takes, and read the timecode and other data of a take.",
+  "checklist": [
+   "Open Window > Cinematics > Take Recorder and click the Settings (gear) button. In User Settings, set Countdown to 3 and turn Auto Lock off. In the Take Recorder settings, turn Record Timecode on and keep Record Sources Into Sub Sequences on.",
+   "Add these sources: your character (with From Actor), Camera Cuts, and Microphone Audio. In the microphone source, set Audio Asset Name to {slate}_T{take} and Audio Sub Directory to Audio.",
+   "Click Presets in the Sources panel and choose Save As Preset. Name the preset TP_Dialogue.",
+   "Set the Slate to Line01 and add a short description. Press Play, then press Record. Speak one line while you move the character, and press Esc to stop.",
+   "Record a second take. Then try to set the take number back to 1, and click the warning to see it correct the number.",
+   "Click Review Last Recording. Double-click the subscene of the character, open the Properties of a section and find the timecode under Section Range Start. Then open the Takes Browser in columns view and read the metadata."
+  ],
+  "done_when": "Send a screenshot of Take Recorder with the three sources and the TP_Dialogue preset. Also send a screenshot of the reviewed take that shows the recorded audio track and the timecode in the properties of a section."
+ },
+ "CQ77": {
+  "brief": "Live Link is the Unreal system that receives live data, such as camera tracking or motion capture, from outside devices. Live Link Hub is a separate application that collects these sources in one place and sends them to one or more editors at once. In this quest you connect a live source through the Hub, let it drive a camera with a Live Link Controller component, save the setup as a preset, and record the data with Take Recorder.",
+  "checklist": [
+   "Open Edit > Plugins and make sure that Live Link and Live Link Hub are enabled. Restart the editor. Open Tools > Live Link Hub. Confirm that your editor is listed in the Clients panel and that the editor shows the green Live Link Connected banner.",
+   "Open Window > Live Link. If no Live Link Hub source is listed, add it with + Add Source.",
+   "In Live Link Hub, click + Add Source and connect a real-time source that you have, such as the Unreal VCam app from CQ30, a face app on a phone, or a motion capture tool. Confirm that the subject appears in the Subjects panel of the Hub and in the Live Link panel of the editor with a green light.",
+   "Place a Cine Camera Actor and add a Live Link Controller component to it. Set Subject Representation to your subject and check which Component to Control was chosen. Move the source and watch the camera move.",
+   "In the Live Link panel, click Presets and choose Save As Preset. Name it LLP_Shot. Then open Edit > Project Settings > Plugins > Live Link and set Default Live Link Preset to LLP_Shot.",
+   "Open Take Recorder. Click + Source and choose From Live Link, set the Subject Name, and enable Use Source Timecode. Record a take of 10 seconds and review it in Sequencer."
+  ],
+  "done_when": "Send a screenshot of Live Link Hub with your client and subject, a screenshot of the Live Link panel of the editor with a green light, a screenshot of the Live Link Controller details of the camera, and a screenshot of the recorded take in Sequencer. Add one line that says which source you used."
+ },
+ "CQ78": {
+  "brief": "A review of a shot usually happens with other people. Multi-User Editing lets several Unreal Editors join one shared session on the same project, so everyone sees the same level, the same changes and the same sequence playback at the same moment. In this quest you start a session, join it from a second editor, review a shot together, and save the changes of the session into the project.",
+  "checklist": [
+   "Open Edit > Plugins, go to Editor, and enable Multi-User Editing. Restart the editor. In Project Settings > Plugins > Multi-User Editing, turn on Enable Multi-User Toolbar Button and set a Display Name and an Avatar Color. Restart again.",
+   "Click the Multi-User button in the toolbar (it says Browse). In the Multi-User Browser, click Launch to start a server. Click Create a New Session, name it ShotReview and confirm.",
+   "Open a second Unreal Editor on the same project. This can be a teammate on the same network, or a second editor on your own PC. Set a different Display Name and color, open the Multi-User Browser, and join ShotReview.",
+   "Open the same Level Sequence in both editors. Press Play in one editor and watch it play in the other. Try to stop it from the other editor and note what happens.",
+   "In one editor, move a light in the shot. In the other editor, see the change and the new entry in the change history of the session. Then right-click the sequence asset, open Multi-User and choose Lock Asset(s). Try to save the asset from the other editor.",
+   "In the first editor, click the arrow of the Source Control button and choose Persist Session Changes. Check the modified files and apply. Then leave the session and delete it from the Multi-User Browser."
+  ],
+  "done_when": "Send a screenshot of the Multi-User Browser with both clients connected and the change history visible, and a screenshot of the Persist & Submit Files window. Add three lines that say what happened when you tried to stop the playback, save the locked asset, and delete the session from the second editor."
+ }
+}

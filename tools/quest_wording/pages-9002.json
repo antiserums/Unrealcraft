@@ -1,0 +1,115 @@
+{
+ "EAQ17": {
+  "brief": "A landscape is the large terrain actor that Unreal uses for outdoor ground, and the ground is most of what you see outside. A landscape material holds several layers, such as grass, dirt and rock, and you paint these layers onto the terrain with a brush. In this quest you build a landscape material with three layers and paint all of them on your landscape.",
+  "checklist": [
+   "Build a landscape material that has 3 layers. Use a Landscape Layer Blend node, which is the node that mixes the layers based on where you paint.",
+   "Create the layer info objects, which are small assets that store where each layer is painted. Then paint all 3 layers on your R1 landscape.",
+   "Stand at the height of a player and look at the ground. Keep the tiling scale sensible, so that the texture is not too large and not too small from there."
+  ],
+  "done_when": "Send a screenshot of the painted landscape, and also a screenshot of the layer blend graph."
+ },
+ "EAQ18": {
+  "brief": "A decal is a material that is projected onto surfaces, like a sticker or a stain. Decals let you add detail such as dirt, cracks or signs without making new meshes. In this quest you make a decal material, place three decals, and fix any stretching.",
+  "checklist": [
+   "Create a decal material. To do this, set the Material Domain of the material to Deferred Decal.",
+   "Place 3 decals in your scene: one of grime, one stain, and one directional marker such as an arrow.",
+   "Look at each decal from a low angle and check if it looks stretched. If it does, fix the size of the decal box, which is the box that shows how far the decal projects."
+  ],
+  "done_when": "Send a screenshot that shows the 3 decals in place."
+ },
+ "EAQ24": {
+  "brief": "A scene that you walk through at eye level shows problems that a still render hides, such as gaps, stretched textures and places where you get stuck. A master material is one material with many parameters, and the surfaces in the scene use instances of it. In this quest you make your diorama walkable, build one master material for its surfaces, and fix what looks wrong when you walk around.",
+  "checklist": [
+   "Make your diorama from quest EAQ12 walkable. Add a Player Start, make sure the meshes have collision so that you cannot walk through them, and leave no dead ends.",
+   "Build one master material named M_Master_Surface. Put its parameters in groups, as you did in quest EAQ16.",
+   "Use instances of this material on at least 5 surfaces in the scene.",
+   "Paint a 3-layer landscape material (from quest EAQ17), and place decals that each have a purpose (from quest EAQ18).",
+   "Walk through the scene in PIE, which means Play In Editor. Fix anything that looks wrong at eye level.",
+   "Write a short note that lists the parameters of the master material and says what each one is for."
+  ],
+  "done_when": "Send 3 PIE screenshots taken at eye level, a screenshot of the master material graph, the list of instances, and your note about the parameters."
+ },
+ "EAQ19": {
+  "brief": "Normally a texture follows the UVs of a mesh, so the texture stretches when you scale the mesh. World-aligned texturing projects the texture from the world instead, so it keeps the same size on every mesh, at any scale. This is useful for blockout meshes, the simple shapes you use to plan a level, when their UVs are not good enough yet. In this quest you try it and compare it with normal UV texturing.",
+  "checklist": [
+   "Apply a world-aligned texture to blockout meshes that you have scaled to different sizes.",
+   "Apply normal UV-based texturing to the same meshes, and compare the two results."
+  ],
+  "done_when": "Send a before and after screenshot."
+ },
+ "EAQ20": {
+  "brief": "Placing grass by hand over a large landscape takes a long time. A landscape material can place grass meshes for you, on every spot where one paint layer is painted. In this quest you connect grass to one layer and check that the grass follows your painting.",
+  "checklist": [
+   "In your landscape material, add a Landscape Grass Output node. Set it up so that one paint layer controls where the grass appears.",
+   "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
+  ],
+  "done_when": "Send a screenshot that shows grass following a painted layer."
+ },
+ "EAQ21": {
+  "brief": "An emissive material is a material that glows, such as a screen, a sign or a lamp. Lumen is the lighting system in Unreal Engine 5 that calculates bounced light, and with Lumen a glowing surface can light the things near it. This does not always give enough light, so sometimes you still need a real light. In this quest you make a glowing surface and find out where that limit is.",
+  "checklist": [
+   "Make an emissive screen or sign. Give its material an intensity parameter, so that you can change how strong the glow is.",
+   "With Lumen on, check how much the glow lights the surfaces near it. Work out in which cases you would still need a real light."
+  ],
+  "done_when": "Send a screenshot, and add one line that says when you would add a real light."
+ },
+ "EAQ25": {
+  "brief": "A Static Switch Parameter is an on or off switch in a material that turns a part of the graph on or off for each instance. Switches are cheap for one instance, but every different combination makes Unreal compile another version of the shader, called a shader permutation. Too many permutations make compile times and memory use grow. In this quest you add switches to your master material, count the permutations, and remove a switch that is not worth its cost.",
+  "checklist": [
+   "Extend M_Master_Surface with Static Switch Parameters: one for the detail normal and one for emissive.",
+   "Create instances that use different combinations of the switches.",
+   "Write down how many shader permutations your switches can create.",
+   "Remove one switch that is not worth its cost, and explain why you removed it."
+  ],
+  "done_when": "Send a writeup with the number of permutations, a screenshot of the graph, and the name of the switch you removed."
+ },
+ "EAQ26": {
+  "brief": "A Material Function is a small piece of material graph that you save as its own asset and can use in many materials. It stops you from building the same group of nodes again and again, and when you fix the function, every material that uses it is fixed too. In this quest you move one repeated part of your master material into a function and use it in two materials.",
+  "checklist": [
+   "Find one group of nodes in your master material that is repeated, for example the detail normal blending. Move it into a Material Function named MF_DetailNormal.",
+   "Give the function inputs with clear names and default values. Also write a description for it.",
+   "Use the function in 2 different materials."
+  ],
+  "done_when": "Send a screenshot of the function graph, and screenshots of both materials that use it."
+ },
+ "EAQ27": {
+  "brief": "Every vertex (corner point) of a mesh can store a color, and a material can read that color. If you paint these colors in the level, you can blend a second surface, such as moss or grime, over the base surface on one mesh at a time. This is a cheap way to make copies of the same mesh look different. In this quest you add this blend to a material and paint it on a mesh.",
+  "checklist": [
+   "Add a Vertex Color blend to a material, so that red paint puts moss or grime over the base surface.",
+   "Use Mesh Paint mode to paint it on a mesh that is placed in the level. The mesh needs enough vertices, because the paint is stored on the vertices.",
+   "Add a height-based blend, which uses a height texture to decide where the second surface appears first. This makes the edge look sharp and natural and not like a soft smear."
+  ],
+  "done_when": "Send before and after screenshots of the painted mesh, and also a screenshot of the blend graph."
+ },
+ "EAQ28": {
+  "brief": "Nanite is the system in Unreal Engine 5 that lets you use meshes with millions of triangles, because it only draws the detail that the screen can show. It changes how many polygons are too many, but it has limits and it does not support every kind of material. Displacement means that a texture moves the surface of the mesh in and out to add real detail. In this quest you enable Nanite on a mesh, look at how it works, and write down when you would use it.",
+  "checklist": [
+   "Enable Nanite on a high-poly mesh, which is a mesh with a very large number of triangles. Inspect it with the Nanite visualization modes Triangles, Clusters and Overdraw.",
+   "On the Nanite documentation page, read the list of things that Nanite does not support. Note which of your materials would be affected.",
+   "Try Nanite displacement on one mesh if your engine version and your project support it. If they do not, write what you would need to enable.",
+   "Write 3 lines: when you would use Nanite, when you would not use it, and one cost to watch."
+  ],
+  "done_when": "Send a screenshot of a visualization mode, and add your 3-line writeup."
+ },
+ "EAQ29": {
+  "brief": "The eye of a viewer goes first to the brightest spot with the most contrast. A hero area is the most important place in your scene, the place you want people to look at. Lighting artists often use three lights for it: the key light is the main light, the fill light softens the shadows, and the rim light comes from behind to separate the subject from the background. In this quest you light one hero area on purpose, check what the extra lights cost, and ask another person where they look first.",
+  "checklist": [
+   "Pick one hero area in your scene. It can be an entrance, a landmark, or a focal prop (the object the viewer should notice).",
+   "Set the direction of the key, fill and rim light on purpose. Use physical units for all of them.",
+   "Check the Lumen reflections and the GI (global illumination, which is bounced light) in the area. Use the Lumen visualization modes for this.",
+   "Run the console command stat unit before and after you add your lights. It shows how long each frame takes. Note the cost of your extra lights.",
+   "Ask one peer to look at the image and say where their eye goes first."
+  ],
+  "done_when": "Send before and after stills taken from the same Cine Camera, the stat numbers, and the comment from your peer."
+ },
+ "EAQ30": {
+  "brief": "Color grading means changing the colors and contrast of the final image, like editing a photo. In Unreal you do this in a Post Process Volume. A LUT (lookup table) is a small texture that stores a color grade made in an image editor, so that you can apply it in the engine. Grading finishes an image, but it cannot fix bad lighting. In this quest you grade your scene by hand, grade it again with a LUT, and compare the two.",
+  "checklist": [
+   "Grade the scene in a Post Process Volume. Start with the white balance, then change the global settings, and then the shadows, midtones and highlights.",
+   "Export a screenshot together with a neutral LUT, which is a LUT that changes nothing yet. Grade it in an image editor, import the graded LUT again, and apply it as a LUT in the Post Process Volume.",
+   "Compare the manual grade with the LUT grade.",
+   "Keep one screenshot without any grade for reference."
+  ],
+  "done_when": "Send three stills taken from the same camera: one without a grade, one with the manual grade, and one with the LUT grade."
+ }
+}

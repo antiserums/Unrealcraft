@@ -1,0 +1,154 @@
+{
+ "LDQ77": {
+  "brief": "A timer in Blueprint is a way to run an event after a number of seconds, or again and again at a fixed interval. A gate that stays open for only a short time, with a countdown the player can see, turns a simple corridor into a decision: run now, or explore and lose the gate. In this quest you build a gate that opens from a switch, counts down on a text above the door, and closes when the time is over.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_TimedGate. Give it a door mesh, a Box Collision at the exit, and a Text Render component above the door. Add a Float variable named OpenSeconds, turn on Instance Editable, and set its default to 10.",
+   "Add a Custom Event named OpenGate. It moves the door mesh up, with Set Relative Location or with a Timeline. Then it calls Set Timer by Event with a Custom Event named CloseGate, with Time set to OpenSeconds and Looping turned off. Store the handle that the node returns in a variable named GateHandle, so you can refer to this timer later.",
+   "Call a second Set Timer by Event with a Custom Event named Tick1s, with Time set to 1 and Looping turned on, and store its handle in a variable named TickHandle. In Tick1s, read Get Timer Remaining Time by Handle for GateHandle, round the value, and set it as the text of the Text Render.",
+   "In CloseGate, move the door back down, and call Clear and Invalidate Timer by Handle for TickHandle to stop the countdown. Set the text of the Text Render to CLOSED.",
+   "Create an Actor Blueprint named BP_GateSwitch with a Box Collision and an Instance Editable reference to BP_TimedGate. When the player overlaps it, it calls OpenGate. Place the switch far enough away that the run to the gate takes about 7 seconds.",
+   "In BP_TimedGate, on the Begin Overlap event of the exit Box Collision, clear both timers and print Made it. Test a fast run and a slow run. Then add a pause volume that calls Pause Timer by Handle on GateHandle, and confirm that the countdown freezes."
+  ],
+  "done_when": "Send a screenshot of PIE that shows the open gate with the Text Render countdown in the middle of a run. Add a short note with the OpenSeconds value you decided on and why."
+ },
+ "LDQ78": {
+  "brief": "A door in a game is not only open or closed. It can also be locked until the player has a key, or sealed until the story allows it. If the door shows its state clearly, for example with a color, the player knows what to do next before touching it. In this quest you build a door Blueprint with three states, stored in an Enum, which is a variable type that holds one value from a fixed list of names.",
+  "checklist": [
+   "Build BP_DoorV2 by following the Opening Doors page. Use DoorFrame as the root, a Door mesh with a Y location of 45, and a Box Collision. Add a Timeline named DoorTimelineComponent with a float track named DoorRotationZ that has keys at 0,0 and 5,90 with Auto interpolation.",
+   "Create an Enum named E_DoorState with the values Free, Locked and Sealed. Add an Instance Editable variable named DoorState of that type. Also add a Boolean named UseKey and a Name variable named RequiredKey, both in the category Setup.",
+   "In the Construction Script, use Switch on E_DoorState to set a different material color on the Door mesh: green for Free, red for Locked, and grey for Sealed. Check that the color changes in the level when you edit the variable.",
+   "On the Begin Overlap event of the Box, add a Switch on DoorState. Free plays the Timeline. Locked checks UseKey and RequiredKey against the player (through an interface or a cast) and plays a short deny sound if the key is missing. Sealed does nothing.",
+   "On the End Overlap event of the Box, call Reverse on the Timeline, but only if the door is Free. Use the Finished pin of the Timeline to play a click sound, and read the Direction output to print Opening or Closing.",
+   "Add a Custom Event named Unseal that sets DoorState to Free and runs the color logic again. Place three doors in your blockout, one for each state, and call Unseal on the sealed door from a pacing trigger. Test all three doors in PIE."
+  ],
+  "done_when": "Send a screenshot of the three colored doors in the level with their DoorState values visible in the Details panel. Also send a PIE screenshot of the sealed door standing open after Unseal."
+ },
+ "LDQ79": {
+  "brief": "An elevator is a useful pacing tool, because it forces a short pause and lets you change the space on either side of the ride. In Blueprint, you can move a platform smoothly with a Timeline, a node that changes a value over time. In this quest you build an elevator that travels between two floors, with call buttons, and with a Gate node that makes it ignore new calls while it is moving.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Elevator with a platform mesh and a Scene component named CabRoot. Add a Timeline named LiftTimeline with a float track named Height that has keys at 0,0 and 4,1 with Auto interpolation. Add a Float variable named FloorHeight, turn on Instance Editable, and set its default to 400.",
+   "On the Update pin of the Timeline, set the relative Z location of the platform to Height multiplied by FloorHeight. On the Finished pin, print the Direction output (Forward means the cab arrived at the top, Backward means it arrived at the bottom) and open a Gate node.",
+   "Add two Custom Events named CallUp and CallDown. CallUp goes through the Gate and calls Play on the Timeline. CallDown goes through the same Gate and calls Reverse. Close the Gate when either one starts, so that the cab ignores calls while it is moving.",
+   "Create an Actor Blueprint named BP_CallButton with a Box Collision, a Boolean named IsUpButton, and an Instance Editable reference to BP_Elevator. When the player overlaps it, it calls CallUp or CallDown. Place one button at each floor.",
+   "Add a Stop input. This is a third button on the cab that calls Stop on the Timeline, and then uses Set New Time and Play from Start to return the cab to the bottom. Check that Finished does not fire when Stop is called.",
+   "Ride the elevator in PIE between two rooms of your blockout. Confirm that you do not slide off the platform, and that pressing both buttons quickly does not restart the ride in the middle."
+  ],
+  "done_when": "Send a short video, or two screenshots, of the cab at each floor with the printed Direction message. Add one line that says how you stopped double calls."
+ },
+ "LDQ80": {
+  "brief": "A hazard is an area or object that hurts the player, such as a poison pool or an exploding barrel. A hazard works well when the player can see it and understand it before it does damage, because then walking through it is a choice. In this quest you set up damage on your character, try the built-in Pain-Causing Volume, build your own hazard zone and exploding barrel, and balance a safe path against a fast path.",
+  "checklist": [
+   "Give your test character a Float variable named Health with the value 100. On Event AnyDamage, subtract Damage from Health and print the new value. When Health reaches zero, respawn the character or print Dead.",
+   "Place a Pain-Causing Volume over a poison pool. Set Damage Per Sec, Pain Interval and Entry Pain in its Details panel, and write down the values. Add a hint that the player can see: a Niagara steam effect or a green decal that covers the same area.",
+   "Create an Actor Blueprint named BP_HazardZone that combines a Box Collision, the visual effect and the damage, so you have one actor that you can move and duplicate. Use a looping Set Timer by Event to call Apply Damage on the overlapping actors every Interval seconds (make Interval Instance Editable). Also apply Entry damage on Begin Overlap.",
+   "Create an Actor Blueprint named BP_ExplodingBarrel with a mesh and a Box Collision. When it receives Event AnyDamage, it calls Apply Radial Damage with Base Damage 60, Damage Radius 400 and Damage Causer set to self. Then it spawns a Niagara burst and calls Destroy Actor. Place a wall between the barrel and a second barrel to test if the wall blocks the damage.",
+   "Place one BP_HazardZone and two barrels in your blockout, in a way that lets the player see the hazard before they can touch it. Build a safe path past the hazard that costs time, and a fast path that costs health.",
+   "Playtest and record how much health you lose on each path. Adjust the Instance Editable values until the fast path is tempting but still has a cost."
+  ],
+  "done_when": "Send a screenshot of the hazard area in PIE with the visual hint visible and the Print String health numbers on screen. Add a note of 3 lines with the damage values you chose for the volume, the zone and the barrel."
+ },
+ "LDQ81": {
+  "brief": "World Partition splits a large world into a grid of cells and loads only the cells near the player. Two settings control this: Cell Size is how big each cell is, and Loading Range is how far around the player cells are loaded. Together they decide how far the player can see and how much memory the world uses. In this quest you read these settings, change them, and watch the effect on a long line of cubes.",
+  "checklist": [
+   "Open a World Partition level (File > New Level and then Open World works) and save it as L_WP_Grid. Place 30 cubes in a straight line, one every 50 m, so that the line is about 1.5 km long. Add a Player Start at one end.",
+   "Open World Settings and find World Partition Setup. Turn on Preview Grids. Write down the Grid Name, Cell Size and Loading Range of the default grid.",
+   "Start Play In Editor. Open the console and run wp.Runtime.ToggleDrawRuntimeHash2D, which draws a small map of the cells. Count how many cells are loaded around the player and take a screenshot.",
+   "In the same session, run wp.Runtime.OverrideRuntimeSpatialHashLoadingRange -grid=0 -range=25600. Watch how many cells are loaded now and take a second screenshot.",
+   "Stop the game. In World Settings, set Loading Range to half of its old value. Play again and walk along the line of cubes. Note the moment when cubes appear.",
+   "Select two cubes far from the start and set their Runtime Grid property to None on purpose. Then turn off Is Spatially Loaded on one of them. Play and check which of the two is always there.",
+   "In World Settings, go to World Partition and then Advanced, and enable Dynamic Loading Range Scaling. Set Initial to 25 percent, Delay to 2 seconds and Duration to 10 seconds. Start Play In Editor and watch the loaded area grow during the first seconds."
+  ],
+  "done_when": "Send two Play In Editor screenshots with wp.Runtime.ToggleDrawRuntimeHash2D turned on: one at the default Loading Range and one with the override. Add three lines: the Cell Size you chose, the Loading Range you chose, and what the player saw with the smaller range."
+ },
+ "LDQ82": {
+  "brief": "In a World Partition level, only the area around the player is loaded. If you teleport the player to a far place, that place is not loaded yet, and the player may fall through a floor that does not exist. A streaming source is something that tells World Partition to load the cells around it, and you can add one as a component to any actor. In this quest you use a streaming source to load a teleport target before the player arrives.",
+  "checklist": [
+   "In a World Partition level with streaming enabled, build two small platforms about 2 km apart: Pad_A near the Player Start and Pad_B far away. Put a few cubes and a light around Pad_B, so that you can see when it is loaded.",
+   "Make an Actor Blueprint named BP_StreamAnchor and add a World Partition Streaming Source component to it. Turn Streaming Source Enabled off, set Target State to Activated, and pick a Debug Color. Place one anchor on Pad_B.",
+   "Make an Actor Blueprint named BP_TeleportPad with a Box collision. Add two editable variables: Destination of the type Actor, and Anchor of the type BP_StreamAnchor. Place it on Pad_A and set both variables.",
+   "On Begin Overlap by the player, call Enable Streaming Source on the component of the Anchor. Then start a looping timer of 0.2 seconds that checks Is Streaming Completed. When it returns true, use Set Actor Location to move the player to the Destination, and then call Disable Streaming Source.",
+   "Start Play In Editor and run wp.Runtime.ToggleDrawRuntimeHash2D. Step on Pad_A and watch the cells load around Pad_B before you jump. Take a screenshot while both areas are loaded.",
+   "Now test the wrong way: disconnect Enable Streaming Source so that you teleport at once. Write down what you see at Pad_B in the first second.",
+   "Open the anchor and set Priority to 10. Read the tooltips of Shapes and Target Grid, and write one line that says when you would use each."
+  ],
+  "done_when": "Send a screenshot of the event graph of BP_TeleportPad, and a Play In Editor screenshot where the runtime hash debug view shows loaded cells at both pads. Add two lines that say what happened when you teleported without the anchor."
+ },
+ "LDQ83": {
+  "brief": "Big worlds repeat content, such as camps, houses or checkpoints. A Level Instance saves a group of actors as its own small level that you can place many times, and when you edit one copy, every copy is updated. In a World Partition level these copies also load and unload like normal actors. In this quest you build one camp, place it twelve times, edit all of them at once, and put some of them on a Data Layer.",
+  "checklist": [
+   "In a World Partition level, build a small camp from 6 blockout meshes, one Point Light and one Trigger Box. Select all of them, right-click, open Level, and choose Create Level Instance. Keep External Actors on, set Pivot Type to Center Min Z, and save it as LI_Camp.",
+   "Copy LI_Camp until you have 12 camps spread over about 2 km. Check the Outliner: the actors of each camp are children of its Level Instance Actor, and you cannot select them on their own.",
+   "Edit one camp (right-click, open Level, then choose Edit). Look at the Actor Editor Context widget in the bottom-right of the viewport, which shows what you are editing. Add a barrel mesh and click Commit Changes. Confirm that all 12 camps got the barrel.",
+   "Make a Runtime Data Layer asset named DL_Camps, and make an instance of it in the Data Layer Outliner. Assign 4 of the camps to DL_Camps. Click the eye icon and confirm that the whole camp, including the light and the trigger, follows the layer.",
+   "Start Play In Editor and run wp.Runtime.ToggleDrawRuntimeHash2D. Walk away from a camp until its cell unloads, and then come back. Notice that the camp streams like normal actors, which is called Embedded Mode.",
+   "Select one camp and use Break Level Instance. Read the warning. Write down what stayed in the Content Browser and what changed in the level.",
+   "Write 3 lines: when you would use a Level Instance, when you would use a Packed Level Actor, and why a Level Instance without OFPA (One File Per Actor) streams differently."
+  ],
+  "done_when": "Send a screenshot of the Outliner with 12 LI_Camp actors and the Data Layer Outliner showing DL_Camps with 4 camps, and add your 3 lines of text."
+ },
+ "LDQ84": {
+  "brief": "HLOD, short for Hierarchical Level of Detail, replaces far away actors with cheap stand-in meshes called proxies, so that a distant town stays visible while its real cells are unloaded. An HLOD Layer is the asset that holds the settings for how the proxies are built. One layer can have a parent layer, which builds an even simpler proxy for even larger distances. In this quest you set up a town layer with a horizon layer as its parent, and compare the world with and without HLODs.",
+  "checklist": [
+   "In a World Partition level, create two HLOD Layer assets: HLOD_Town with Layer Type Merged Mesh, and HLOD_Horizon with Layer Type Simplified Mesh. In HLOD_Horizon, turn on Always Loaded and note which settings disappear.",
+   "In HLOD_Town, set Parent Layer to HLOD_Horizon. Set its Loading Range to about twice the Loading Range of your grid.",
+   "In World Settings, set Default HLOD Layer to HLOD_Town. Place 40 building blocks (boxes with 2 or 3 materials) in 4 groups, all with Mobility set to Static. Do not set the HLOD property on them, because they should use the default layer.",
+   "Open the Build menu and run Build HLODs. In the viewport, open Level of Detail Coloration and choose Hierarchical LOD Coloration. Move far away until the proxies are shown in blue.",
+   "In HLOD_Horizon, open Proxy Settings and set Merge Distance to 300. Build the HLODs again. Compare the far proxy before and after: small gaps such as doorways should now be closed.",
+   "Start Play In Editor and walk far away. Run wp.Runtime.HLOD 0 and then wp.Runtime.HLOD 1 to see the world without HLODs and with HLODs. Take a screenshot of each.",
+   "Write 3 lines: which layer is the child, which layer is always loaded, and why the horizon layer does not need a Loading Range."
+  ],
+  "done_when": "Send two Play In Editor screenshots taken from far away, one with wp.Runtime.HLOD 0 and one with HLODs on. Also send a screenshot of the HLOD_Town asset that shows Parent Layer, and add your 3 lines."
+ },
+ "LDQ85": {
+  "brief": "Before World Partition, large levels were split by hand into sublevels, which are smaller levels that are loaded into one main level called the persistent level. Many games still work this way. A Level Streaming Volume is a box that loads a sublevel when the player's view enters it and unloads the sublevel when the view leaves. In this quest you set up three sublevels with volumes and adjust them so that the player does not notice the loading.",
+  "checklist": [
+   "Make a level without World Partition named L_Trail_P, with a Player Start. Make three small levels named L_Cave, L_Ridge and L_Village, each with a few blockout meshes. In Window > Levels, use Add Existing to add all three as sublevels with the streaming type Blueprint.",
+   "Place three Level Streaming Volumes in L_Trail_P, the persistent level, one for each sublevel. Make each volume larger than the walkable area it covers. Open the Level Details of each sublevel, add its volume under Streaming Volumes, and uncheck Initially Loaded and Initially Visible.",
+   "In the viewport, open Show, then Advanced, and turn on Level Coloration. Give each sublevel its own Level Color. Take a screenshot that shows all three colors.",
+   "Start Play In Editor and run the console command stat streaming. Walk across the borders of the volumes and watch the stats named Streaming Volumes and Volume Streaming Tick.",
+   "Stand on the border of the L_Cave volume and step in and out several times. Then open the Level Details of L_Cave and set Min Time Between Volume Unload Requests to 5 seconds. Repeat the test and write down the difference.",
+   "Set the Streaming Usage of the L_Ridge volume to SVB Visibility Blocking on Load and test again. Then run the level as a Standalone Game and note where you first see a level appear.",
+   "Set the L_Village volume to Editor Pre Vis Only. Fly the editor camera in and out of the volume, and then play. Write one line that says what changed."
+  ],
+  "done_when": "Send a screenshot of the Levels window with the three sublevels and their volumes, and a Play In Editor screenshot with stat streaming visible. Add 3 lines: the value you chose for the unload delay (the hysteresis), what Standalone showed that PIE did not, and what Editor Pre Vis Only did."
+ },
+ "LDQ86": {
+  "brief": "A Data Layer is a named group of actors in a World Partition level that can be loaded and unloaded together while the game runs. With Data Layers, one place can have several states without a copy of the level, for example a camp before and after a battle. This is how progress in a story can change the world. In this quest you build two stages of a camp on two Data Layers and switch between them with a trigger.",
+  "checklist": [
+   "In a World Partition level, create three Data Layer assets of the type Runtime: DL_Stage1, DL_Stage2 and DL_Stage2_Props. Drag DL_Stage1 and DL_Stage2 into the Data Layer Outliner to make instances. Then drag DL_Stage2_Props onto the DL_Stage2 instance, so that it becomes a child of it.",
+   "Set the Initial Runtime State of DL_Stage1 to Activated and of DL_Stage2 to Unloaded. Right-click DL_Stage1 and choose Make Current Data Layer, so that new actors go into it. Place a camp with a closed gate. Check that the Actor Editor Context widget shows DL_Stage1.",
+   "Now make DL_Stage2 the current layer and place the same camp as it looks after a battle, with an open gate and burned tents. Put loot props in DL_Stage2_Props. Clear the current Data Layer when you are done.",
+   "Make an Actor Blueprint named BP_StageTrigger with a Box collision and two editable variables of the type Data Layer Asset, named LayerOff and LayerOn. On overlap by the player, get the Data Layer Subsystem and call Set Data Layer Instance Runtime State twice: once to set LayerOff to Unloaded and once to set LayerOn to Activated.",
+   "Place the trigger at the exit of the camp, with LayerOff set to DL_Stage1 and LayerOn set to DL_Stage2. Start Play In Editor, run wp.Runtime.ToggleDrawDataLayers, and walk through the trigger.",
+   "Test the states. In the console, run wp.Runtime.SetDataLayerRuntimeState Loaded DL_Stage2 and look at the camp. Then set it to Activated. Write one line about the difference.",
+   "Run wp.DumpDatalayers and read the log. Then rename DL_Stage2_Props in the Content Browser and confirm that the actors still belong to it."
+  ],
+  "done_when": "Send a screenshot of the Data Layer Outliner that shows the hierarchy and the Initial Runtime States. Also send two Play In Editor screenshots with wp.Runtime.ToggleDrawDataLayers turned on, one before and one after the trigger. Add one line about Loaded compared with Activated."
+ },
+ "LDQ87": {
+  "brief": "Normally a level is one file, so only one person can change it at a time. One File Per Actor, or OFPA, saves every actor of the level in its own small file, called an external actor. This lets several people work on the same map at once. World Partition levels use it by default, but you can also turn it on for older levels. In this quest you convert an old level to OFPA and look at what changes when you save.",
+  "checklist": [
+   "Duplicate a level that does not use World Partition (L_Trail_P from quest LDQ85, or any old blockout) and name the copy L_Legacy_OFPA. Open it.",
+   "Open Window > World Settings. In the World section, check Use External Actors. Click Yes in the convert dialog, and save the level.",
+   "Move one cube and use File > Save All. Write down what the list of files to save shows. Then check the Levels window and notice that the sublevels are still not converted.",
+   "Load one sublevel, make it the current level, and enable Use External Actors for it too. Write one line that says why the commandlet (a command line tool of the editor) with -convertsublevels would be faster on a big map.",
+   "Select four meshes, right-click, open Level, and choose Create Level Instance. Look at the External Actors checkbox in the dialog and leave it on. Save it as LI_Legacy.",
+   "If your project uses Perforce, open the View Changelist window and look at how the external actor files are shown. If it does not, write two lines about what that window would show you and why the file names look strange on disk.",
+   "Write 3 lines: what OFPA changes for a team, what happens to external actors when the game is cooked, and one risk when you submit only some of the files."
+  ],
+  "done_when": "Send a screenshot of World Settings with Use External Actors checked, and add your 3 lines of text and your note about the save list."
+ },
+ "LDQ88": {
+  "brief": "On a very large map you cannot find places by flying around, so you navigate with the World Partition window, which shows the whole world from above. A minimap is a top-down picture of your level that Unreal can build and show in that window. Together with named regions it turns the window into a real map of your level. In this quest you build the minimap, measure and load regions with the mouse, and write the command that rebuilds the minimap from a command prompt.",
+  "checklist": [
+   "Open your biggest World Partition level (the one from quest LDQ81 or LDQ84 works). Make sure it has at least three landmarks with different colors that you can see from above.",
+   "Open Window > World Partition > World Partition Editor. Then open the Build menu and run Build Minimap. If the map stays blank, go to Edit > Project Settings, enable virtual texture support, and build again.",
+   "In the World Partition window, hold the middle mouse button and drag (MMB+Drag) between two landmarks, and write down the distance in Unreal units. Then use Shift+Drag to select a region that snaps to the runtime grid.",
+   "Hold Ctrl and double-click a landmark (Ctrl+Double Click) to load the region around it. Then use Shift+Double Click on a different spot and confirm that Play In Editor starts there.",
+   "Place three Location Volumes named LV_North, LV_Camp and LV_Coast around your zones, and save. Find their named regions in the window, and load two of them at once with Ctrl+Click.",
+   "Read the World Partition Builder Commandlet Reference. Write the full command line that you would use to rebuild the minimap for your map from a command prompt.",
+   "Write 2 lines: name one tool from the builder list that you would run at night on a build machine, and say why."
+  ],
+  "done_when": "Send a screenshot of the World Partition window that shows the minimap, your three named Location Volume regions and a measured distance. Add your command line and your 2 lines."
+ }
+}

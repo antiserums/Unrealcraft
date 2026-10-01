@@ -14,7 +14,7 @@ A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Eve
              "done_when": "What the member sends as proof, reworded.",
              "quiz": [ {"q": "...", "choices": ["...", "..."], "explain": "..."} ] } }
 
-Only text changes. The steps keep their number and order (and any `check:` they carry), the quiz keeps its answers
+Only text changes. A checklist written on one line (`checklist: ["a", "b"]`) is handled too. The steps keep their number and order (and any `check:` they carry), the quiz keeps its answers
 and the order of its choices. `apply` parses the result and compares it with the original: if anything other than
 that text differs, or a list has a different length, the quest is left as it was and reported.
 """
@@ -77,6 +77,8 @@ def index(lines: list[str]) -> dict[str, dict]:
             key = m.group(1)
             if key in ("title", "brief", "done_when"):
                 cur[key] = n
+            elif key == "checklist" and line.rstrip().endswith("]"):
+                cur["inline"] = n                                 # the whole list on one line: checklist: ["a", "b"]
         elif key == "checklist" and ITEM_RE.match(line):
             cur["items"].append(n)
         elif key == "quiz" and Q_RE.match(line):
@@ -109,7 +111,15 @@ def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict
         if "done_when" not in at:
             return None
         repl[at["done_when"]] = f"    done_when: {s(w['done_when'].strip())}"
-    if w.get("checklist") is not None:
+    if w.get("checklist") is not None and "inline" in at:
+        try:
+            old = yaml.safe_load(lines[at["inline"]])["checklist"]
+        except (yaml.YAMLError, TypeError, KeyError):
+            return None
+        if len(old) != len(w["checklist"]) or not all(isinstance(it, str) for it in old):
+            return None
+        repl[at["inline"]] = f"    checklist: [{', '.join(s(str(t).strip()) for t in w['checklist'])}]"
+    elif w.get("checklist") is not None:
         if len(w["checklist"]) != len(at["items"]):
             return None
         for n, text in zip(at["items"], w["checklist"]):
@@ -157,6 +167,8 @@ def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
         trial = [repl.get(n, line) for n, line in enumerate(lines)]
         for n in sorted(ins, reverse=True):
             trial.insert(n + 1, ins[n])
+        if trial == lines:
+            continue                                          # already has this wording
         try:
             after = {q["id"]: q for q in (yaml.safe_load("\n".join(trial)) or {}).get("quests") or []}
         except yaml.YAMLError:
@@ -165,9 +177,8 @@ def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
         if after.keys() != before.keys() or any(skeleton(after[k]) != skeleton(before[k]) for k in before):
             skipped.append(qid)
             continue
-        if trial != lines:
-            lines, done = trial, done + 1
-            quests = index(lines)                             # an inserted line moves everything after it
+        lines, done = trial, done + 1
+        quests = index(lines)                                 # an inserted line moves everything after it
     if done:
         path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
     return done, skipped

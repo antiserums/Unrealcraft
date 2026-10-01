@@ -1,0 +1,146 @@
+{
+ "TAQ37": {
+  "brief": "A Static Mesh is a 3D model that does not bend or deform, such as a chair, a rock or a wall. When you double-click one, it opens in the Static Mesh Editor, where you can see its triangle count, its UV channels, its collision and its LODs. Every prop in a game passes through this editor, so it helps to know where things are. In this quest you take a tour of the editor and replace the collision of a mesh.",
+  "checklist": [
+   "Open SM_Chair from the Starter Content, or any other prop mesh, in the Static Mesh Editor.",
+   "Read the stats text in the corner of the viewport: LOD count, Triangles, Vertices, UV channels and Num Collision Primitives. Write these numbers down.",
+   "Click UV in the toolbar. Show UV Channel 0 in the viewport, and then UV Channel 1. A UV channel is a flat layout of the mesh surface that tells textures where to go.",
+   "Open the Collision menu and choose Remove Collision. Then add an 18DOP Simplified Collision from the same menu. Turn Show > Simple Collision on and off to see the new shape.",
+   "In the Details panel, find LOD Settings and the Number of LODs value. Set the LOD picker to LOD 0.",
+   "Open Window > Socket Manager, and note that this panel is not shown by default. Then save the mesh."
+  ],
+  "done_when": "Send one screenshot of the Static Mesh Editor that shows the stats overlay, the 18DOP collision, and UV channel 0."
+ },
+ "TAQ38": {
+  "brief": "A socket is a named point on a mesh where you can attach other things. For example, a door frame can have one socket for a door and one for a torch. When the mesh moves, everything attached to its sockets moves with it. In this quest you add two sockets to a door frame and attach a fire effect and a door to them in a level.",
+  "checklist": [
+   "Open SM_DoorFrame from the Starter Content in the Static Mesh Editor. Then open Window > Socket Manager.",
+   "Click Create Socket and name the socket Fire. Set its Relative Location Z to 115 so that it sits in the doorway.",
+   "Create a second socket named Door and set its Relative Location Y to 42. Save the mesh.",
+   "Place SM_DoorFrame in a level. Also place P_Fire, or any Niagara or particle asset, in the level.",
+   "Right-click the fire actor, choose Attach To, then SM_DoorFrame, and then pick the socket Fire. In the Details panel, reset the Location of the fire actor so that it snaps to the socket.",
+   "Place SM_Door in the level and attach it to the Door socket in the same way. Move the door frame and check that both attached actors move with it."
+  ],
+  "done_when": "Send one screenshot of the Socket Manager that shows both sockets, and one screenshot of the level with the fire and the door attached to the frame."
+ },
+ "TAQ39": {
+  "brief": "Models are usually made in another 3D program and saved as an FBX file, a common file format for 3D models. When you import the file into Unreal, the import options decide things like the scale, the normals (which control how light shades the surface) and the collision. A bad import makes every later step harder. In this quest you import the same mesh two times with different options and compare the results.",
+  "checklist": [
+   "Get an FBX file of a simple prop. If you have no modeling program, right-click SM_Chair in the Starter Content, choose Asset Actions, then Export, and save it as FBX.",
+   "In the Content Browser, click Add/Import, then Import, and pick the FBX file. Do not press Import yet. Take a screenshot of the FBX Import Options dialog.",
+   "In the dialog, find the options Combine Meshes, Generate Lightmap UVs, Auto Generate Collision, Normal Import Method and Convert Scene Unit. Write one line for each that says what it does.",
+   "Set Normal Import Method to Import Normals and turn Generate Lightmap UVs on. Then import the mesh with the name SM_ImportTest.",
+   "Open SM_ImportTest in the Static Mesh Editor. Check the triangle count, the number of UV channels and the material slots. Turn on the collision display.",
+   "Import the same FBX file a second time with the name SM_ImportTest_Combine. This time turn Combine Meshes on and set Normal Import Method to Compute Normals. Compare the two results."
+  ],
+  "done_when": "Send a screenshot of the FBX Import Options dialog and a screenshot of SM_ImportTest in the Static Mesh Editor with collision shown. Add one or two lines that say what changed between your two imports."
+ },
+ "TAQ40": {
+  "brief": "Collision is the invisible shape that the game uses to decide what an object blocks. Simple collision is made of a few basic shapes such as boxes, and it is fast. Complex collision uses the real triangles of the mesh, so it is exact but more expensive. With the wrong collision, players walk through walls or get stuck on invisible boxes. In this quest you try several collision shapes on a chair and test how objects land on them.",
+  "checklist": [
+   "Duplicate SM_Chair from the Starter Content, name the copy SM_Chair_Col, and open it in the Static Mesh Editor. Open the Collision menu and choose Remove Collision.",
+   "In the Collision menu, try Add Box Simplified Collision, and then Add 26DOP Simplified Collision. Look at how each one covers the seat. Then remove them again.",
+   "Choose Collision > Auto Convex Collision. Raise Hull Count and Hull Precision, click Apply, and compare the result with what the default values give.",
+   "Make a second copy of the chair named SM_Chair_Complex. In the Details panel, in the Collision section, set Collision Complexity to Use Complex Collision As Simple.",
+   "Place both chairs in a level. Drop a physics cube (a cube with Simulate Physics turned on) onto the seat of each chair and press Play. Note where the cube lands.",
+   "Select one chair actor in the level and open Collision Presets in the Details panel. Switch it to Custom and set Pawn to Overlap. Press Play and walk into the chair."
+  ],
+  "done_when": "Send two screenshots: one of the Static Mesh Editor that shows your Auto Convex collision on SM_Chair_Col, and one of the level with both chairs and where the cube landed on each. Add one line on the difference."
+ },
+ "TAQ41": {
+  "brief": "A lightmap is a texture that stores baked light and shadow for a mesh. Baked means the lighting is calculated once in the editor and saved. To use a lightmap, the mesh needs a lightmap UV, which is a flat layout of its surface where no two parts overlap and there is some empty space (padding) between the parts. Bad lightmap UVs cause dark lines, spots and light leaks after a light build. In this quest you let Unreal generate lightmap UVs and see how one setting changes the padding.",
+  "checklist": [
+   "Duplicate a Starter Content prop, for example SM_Shelf, name the copy SM_Shelf_LM, and open it in the Static Mesh Editor. Turn on the UV display and look at UV channel 0 and UV channel 1.",
+   "In the Details panel, open LOD0 and then Build Settings. Enable Generate Lightmap UVs. Set Min Lightmap Resolution to 32, Source Lightmap Index to 0 and Destination Lightmap Index to 1. Click Apply Changes.",
+   "Look at UV channel 1 again. Take a screenshot of the packed lightmap UV.",
+   "In General Settings, set Lightmap Resolution to 64 and Lightmap Coordinate Index to 1.",
+   "Change Min Lightmap Resolution to 128 and click Apply Changes again. Compare the padding between the UV charts (the separate pieces of the layout) with your first screenshot.",
+   "Write two lines: one that says why the padding changed, and one that says why a texture UV may overlap but a lightmap UV may not."
+  ],
+  "done_when": "Send two screenshots of UV channel 1, one with Min Lightmap Resolution 32 and one with 128, and a screenshot of the Build Settings panel. Add your two lines."
+ },
+ "TAQ42": {
+  "brief": "The pivot is the point of a mesh that it moves, rotates and scales around. Unreal measures distance in centimeters, and Z is the up direction. These basics decide if a prop snaps to the grid, turns around the right point and collides correctly. In this quest you practice with the transform tools, move the pivot of a chair to its bottom, and bake a scale into a mesh.",
+  "checklist": [
+   "Place SM_Chair in a level. Press W, E and R to switch between the move, rotate and scale gizmos (the colored handles), and press Space to cycle through them. In the Details panel under Transform, type the Location 0, 0, 100 and note that Z is up.",
+   "Set Scale to 1, 1, 2 and rotate the chair 45 degrees on Z. Switch between the World and Local transform modes and drag the Z arrow in each mode. Note the difference.",
+   "Click the Lock Scale button and drag one scale handle. Then hold Alt and middle-click a translation handle to move the pivot for a short time, and rotate the chair around the new pivot.",
+   "Duplicate the chair asset and name the copy SM_Chair_Pivot. Open Modeling Mode (Shift+5), choose XForm, then Edit Pivot, click the Bottom preset, and click Accept. Place the mesh in the level and see that it now sits on the floor at Z = 0.",
+   "Scale an actor in the level to 2, 2, 2. Then use XForm > Bake Transform on it, and check the Transform values after baking.",
+   "Write two lines that say why a mesh built with a Scale that is not 1 causes problems. Think of collision shapes and of units in cm."
+  ],
+  "done_when": "Send a screenshot of SM_Chair_Pivot with the pivot at the bottom, with the gizmo visible on the floor. Also send a screenshot of the Transform panel after Bake Transform, and add your two lines."
+ },
+ "TAQ43": {
+  "brief": "Modeling Mode is a set of tools inside the Unreal editor for creating and changing meshes. With it you can make small fixes, such as adding a shape or lowering the triangle count, and you do not have to go back to a separate modeling program. In this quest you create a box mesh, edit its faces, simplify a prop, and inspect the results.",
+  "checklist": [
+   "Switch to Modeling Mode with Shift+5. If the mode is missing, enable the Modeling Tools Editor Mode plugin first. Find the four panels: Tool Category, Tool Palette, Tool Properties and Quick Settings.",
+   "Choose Create, then Box. Set Output Type to Static Mesh and click in the level to place the box. Name the asset SM_ModelTest.",
+   "Choose Model, then PolyGroup Edit. Select one face and Extrude it, which pushes the face outward. Then Bevel one edge, which cuts the sharp edge into a small slope. Click Accept. Press Ctrl+Z once and see what is undone.",
+   "Place a second copy of any Starter Content prop and use XForm > Duplicate on it. Then run Mesh > Simplify on the copy to reduce it to about half the triangles, and click Accept.",
+   "In the viewport, turn on Show > Advanced > Mesh Edges. Use Attribs > Inspect on the simplified copy and look at the result. Then use Attribs > Inspect Collision.",
+   "Open Quick Settings and turn off Combined Gizmo. Note how the gizmo changes."
+  ],
+  "done_when": "Send a screenshot of SM_ModelTest after PolyGroup Edit with the extrude and the bevel visible. Also send a screenshot of the simplified prop with Mesh Edges on and the triangle count visible."
+ },
+ "TAQ44": {
+  "brief": "Nanite is a system in Unreal Engine 5 that can draw meshes with a very high number of triangles. It adjusts the detail by itself, so you do not have to make LODs by hand for those meshes. It only works with some kinds of meshes and materials, so you turn it on for each mesh. In this quest you enable Nanite on a rock and use a view mode to check which meshes use it.",
+  "checklist": [
+   "Duplicate SM_Rock from the Starter Content and name the copy SM_Rock_Nanite. Open it, and in the Details panel under Nanite Settings, check Enable Nanite Support. Then click Apply.",
+   "Place 30 copies of SM_Rock_Nanite and 30 copies of the original SM_Rock in a level.",
+   "In the viewport, open View Modes, then Nanite Visualization, and choose Mask. Note which rocks are green and which are red.",
+   "Try the Triangles visualization and the Clusters visualization. Take a screenshot of one of them.",
+   "Select three other meshes in the Content Browser. Right-click them and use Nanite > Enable to turn on Nanite for all of them at once.",
+   "Open the Output Log and search for 'Nanite'. Write one line about any warning you see, or note that there is none."
+  ],
+  "done_when": "Send a screenshot of the Nanite Visualization > Mask view with both green and red rocks visible. Also send a screenshot of the Nanite Settings section with Enable Nanite Support checked."
+ },
+ "TAQ45": {
+  "brief": "Each separate object on screen needs at least one draw call, which is one drawing command sent to the graphics card. Many small actors mean many draw calls, and that makes a level slower to render. The Merge Actors tool can turn a group of actors into one mesh or into instances. In this quest you try three of its methods, Merge, Simplify and Batch, on the same group of props and compare the results.",
+  "checklist": [
+   "Build a small group of props from the Starter Content, close together: 4 SM_Chair, 2 SM_Table and 3 SM_Lamp_Ceiling.",
+   "Select all of them. Open Actor > Merge Actors > Merge Actor Settings. Turn off Replace Source Actors and turn on Pivot Point at Zero. Run Merge and save the result as SM_Cluster_Merge.",
+   "Open SM_Cluster_Merge. Count its material slots and its triangles, and compare them with the source actors.",
+   "Select the same actors again. Run Simplify (Proxy) and save the result as SM_Cluster_Simplify. Open it and count its materials and triangles.",
+   "Select only the 4 chairs and run Batch. Look in the Outliner to see what was created and which component type it uses.",
+   "Write three lines, one each for Merge, Simplify and Batch. Each line should say how many draw calls the method gives and whether the UVs are kept."
+  ],
+  "done_when": "Send a screenshot of SM_Cluster_Merge and SM_Cluster_Simplify side by side in the Static Mesh Editor, with the material count and the triangle count visible. Add your three lines."
+ },
+ "TAQ46": {
+  "brief": "Foliage Mode is a tool for painting many copies of a mesh onto the ground with a brush. It is made for grass and trees, but it works with any Static Mesh, such as rocks. The copies are drawn as instances, which is much cheaper than placing each one as its own actor. In this quest you paint rocks, erase some, and set the distance at which they stop being drawn.",
+  "checklist": [
+   "Open a level that has a Landscape or a large floor mesh. Switch to Foliage Mode with Shift+3.",
+   "Drag SM_Rock from the Starter Content into the Mesh List of the Foliage panel. Select it, and in the Painting section set Density to 100 and Radius to 50.",
+   "Under Placement, set Scale X Min to 0.3 and Max to 1.2, and turn on Align to Normal so the rocks follow the slope of the surface. Set Brush Size to 512 and paint a patch of rocks.",
+   "Hold Shift and paint to erase part of the patch. Then try the Single tool and the Fill tool once each.",
+   "Set End Cull Distance to 3000 and move the camera away until the rocks disappear. Then set Start Cull Distance to 2000, and note what the material would need so that the rocks fade out.",
+   "Open the Outliner and find the actor that holds your foliage instances. Note its component type. If you like, run stat unit and compare the Draw time with 200 rocks that are placed as separate actors."
+  ],
+  "done_when": "Send a screenshot of the painted rocks with the Foliage panel open, so that your Density, Radius and Scale settings are visible. Add one line that names the actor and the component that hold the instances."
+ },
+ "TAQ47": {
+  "brief": "An image file has four channels: red, green, blue and alpha. A mask is a black-and-white image that marks which areas of a surface get a certain property, and it needs only one channel. So you can store four different masks in one texture, one in each channel. This is called channel packing, and it saves memory and texture samples. In this quest you make a packed mask texture and use three of its channels in one material.",
+  "checklist": [
+   "Open M_Chair from the Starter Content. Find the mask texture T_Chair_M and see how each channel (R, G, B, A) drives a different part of the chair.",
+   "In an image tool, paint four black-and-white masks for one of your own meshes. Put one mask in each channel and export them as one file named T_MyProp_Masks.",
+   "Import T_MyProp_Masks. Open it in the Texture Editor, uncheck sRGB, and set Compression Settings to Masks.",
+   "Create a material named M_MyProp. Add a Texture Sample node for the mask texture and set its Sampler Type to Linear Color.",
+   "Use the R channel as a metal mask and the G channel as an emissive (glow) mask. Use the B channel as the Alpha of a Lerp node that blends between two Vector Parameters for the color.",
+   "Make a Material Instance named MI_MyProp_Red and change only the color parameters in it. Apply it to the mesh."
+  ],
+  "done_when": "Send a screenshot of the M_MyProp graph that shows the one mask Texture Sample feeding Metallic, Emissive and a color Lerp. Also send a viewport screenshot of MI_MyProp_Red on the mesh."
+ },
+ "TAQ48": {
+  "brief": "UVs are the coordinates that tell a material where each part of a texture goes on a surface. If you change the UVs over time, the texture slides or turns on the surface. This is the cheapest way to add motion to a material, and water, fire, smoke and holograms all start with it. In this quest you make a texture scroll with a Panner node, turn with a Rotator node, and control the speed with parameters.",
+  "checklist": [
+   "Create a material named M_Flow. Drag the Starter Content texture T_Fire_Tiled_D into the graph.",
+   "Hold P and left-click in the graph to add a Panner node, which slides UVs over time. Connect its output to the UVs input of the Texture Sample. Set Speed X to 0.1 and watch the preview move.",
+   "Add three Scalar Parameters named Tiling, SpeedX and SpeedY. Multiply a TextureCoordinate node by Tiling and connect the result to the Coordinate input of the Panner. Use the two speed parameters for the pan speed.",
+   "Select all the nodes and press Ctrl+D to duplicate them. Give the copy a different speed and scale, and connect it to Emissive Color.",
+   "Add a Rotator node to a second Texture Sample. Set CenterX and CenterY to 0.5 so it turns around the middle, and give it a small Speed.",
+   "Make a Material Instance named MI_Flow_Fast from M_Flow and change only the speed parameters. Apply it to a plane in the level."
+  ],
+  "done_when": "Send a screenshot of the M_Flow graph with the Panner, the Rotator and the three parameters visible. Add a short note that says which speed values you used in MI_Flow_Fast."
+ }
+}

@@ -1,0 +1,148 @@
+{
+ "AQ45": {
+  "brief": "A game does its work on several threads, which are lines of work that run at the same time. Normal Blueprint logic runs on the main Game Thread, so animation logic placed there slows the whole game when there are many characters. Thread safe animation logic is allowed to run on other threads. In this quest you move the update logic of an Animation Blueprint into a thread safe function, read values with Property Access nodes, and check that your nodes use the Fast Path, the cheapest way for a node to get its values.",
+  "checklist": [
+   "Open the Animation Blueprint of your character (its name starts with ABP_). In the My Blueprint panel, go to Functions, open the Override dropdown, and choose Blueprint Thread Safe Update Animation.",
+   "Create a function named UpdateMovement and enable Thread Safe in its Details panel. Inside the function, add a Property Access node and bind it to this path: Try Get Pawn Owner, then Get Movement Component, then Velocity.",
+   "From the velocity, use Vector Length XY and promote the result to a variable named Speed. Make a bool variable named ShouldMove that is true when Speed >= 0.1. Also read IsFalling into a bool variable.",
+   "Call UpdateMovement from Blueprint Thread Safe Update Animation. Then delete the old Update Animation event logic from the Event Graph.",
+   "Select your Aim Offset node. In its Details panel, under Functions, bind On Update to a new function that sets Yaw and Pitch. Use the Context and Node pins of that function.",
+   "Enable Warn About Blueprint Usage in Class Settings and compile. Fix every warning until the lightning icon, which means Fast Path, shows on your blend nodes."
+  ],
+  "done_when": "Send a screenshot of the Thread Safe function graph with the Property Access node, a screenshot of the Blueprint Thread Safe Update Animation graph that calls it, and a screenshot of the Compiler Results with no Blueprint Usage warnings."
+ },
+ "AQ46": {
+  "brief": "A Linked Anim Graph lets you put a piece of animation logic into its own Animation Blueprint and then use it as one node inside another. A Template Animation Blueprint goes one step further: it is not tied to any skeleton, so many different characters can use it. Both keep a growing project from becoming one very large Blueprint. In this quest you build a small sway graph, link it into your main Animation Blueprint, and create and link a template.",
+  "checklist": [
+   "Create an Animation Blueprint named ABP_Sway for your Mannequin skeleton. In its AnimGraph, add an Input Pose node from the Misc category and rename it Source. Send it through an Apply Additive node with a small idle sway additive animation. Add a float variable named SwayAlpha and make it Instance Editable.",
+   "In your main Animation Blueprint, right-click the AnimGraph, open Linked Anim Blueprints and choose Linked Anim Graph. Set its Instance Class to ABP_Sway. Connect your locomotion to the Source pin and set SwayAlpha on the node.",
+   "Create a Template Animation Blueprint named ABPT_SinglePlay. In the creation window, choose Template and do not pick a Skeleton. Add a Sequence Player. On its Sequence property, choose Bind, then Expose As Pin, and promote the pin to a public variable.",
+   "Link ABPT_SinglePlay in your main Animation Blueprint, and set the exposed Sequence variable to an animation.",
+   "On the Linked Anim Graph node, enable Receive Notifies from Linked Instances. Test it with a Skeleton Notify placed inside ABP_Sway.",
+   "Double-click the Linked Anim Graph node to jump into the linked asset, and confirm that it opens."
+  ],
+  "done_when": "Send a screenshot of the main AnimGraph with the Linked Anim Graph node, showing the Source pin and SwayAlpha, and the linked template node. Also send a screenshot of the creation dialog of the template Animation Blueprint, or of its Sequence Player with the exposed pin."
+ },
+ "AQ47": {
+  "brief": "Sequencer is the timeline tool of Unreal, used for cinematics and for animating by hand. A Control Rig gives a character controls that you can move, and a keyframe (or key) saves the position of a control at one moment in time. Unreal fills in the movement between the keys. In this quest you put a Control Rig in a level and set keys to make the character raise and lower an arm. Later Sequencer quests build on this skill.",
+  "checklist": [
+   "Open a project that has a Control Rig asset for the mannequin. For example, use CR_Mannequin_Body from the Third Person template, or your own asset whose name starts with CR_.",
+   "Drag the Control Rig asset from the Content Browser into the level. Notice that a new Level Sequence opens with a Skeletal Mesh track and a Control Rig track. Save it as LS_WaveTest.",
+   "Expand the Control Rig track. Click one control in the track list, and confirm that the same control is selected in the viewport.",
+   "At frame 0, select the hand and arm controls and press S in the viewport to set a key on them. Move the playhead to frame 30, raise the arm, and press S again. Do the same at frame 60 to bring the arm back down.",
+   "Add a second character: place a Skeletal Mesh Actor and add it to the sequence. On its track, click Add Track (+), then Control Rig, then Control Rig Classes. Hide one rig with the eye icon in the Anim Outliner, and then show it again.",
+   "Play the sequence. Adjust any key so that the motion has a clear start, a clear highest point and a clear return."
+  ],
+  "done_when": "Send one screenshot of Sequencer with the expanded Control Rig track showing keys at three different frames, together with the viewport showing the character in the middle of the wave. The sequence must be named LS_WaveTest."
+ },
+ "AQ48": {
+  "brief": "Animation Mode is a mode of the level editor that shows the panels an animator needs, such as a list of the rig controls and their values. It also contains the Poses tool, which saves a pose so you can paste it again later, or paste it mirrored on the other side of the body. In this quest you enter Animation Mode, look at its panels, and save, mirror and blend a pose.",
+  "checklist": [
+   "Open LS_WaveTest, or any sequence with a Control Rig track. Switch to Animation Mode with the Mode dropdown. Then leave it with Shift+1 and enter it again with Shift+7.",
+   "In the Anim Outliner, which lists the controls of the rig, select a hand control. In Anim Details, read its transform values and note that they are relative to the initial values of the control.",
+   "Enable the Select tool in the Animation panel. Try to click the character mesh in the viewport, and confirm that you can only select controls.",
+   "Pose the left arm and the left hand. Select those controls and click Create Pose in the Poses tool. Name the pose Pose_ArmRaise_L and capture a thumbnail, the small preview image.",
+   "Reset the pose. Select the controls of the right side, enable Mirror in the Poses tool and paste the pose. Check that the naming fields match the names in your rig, for example _l_ and _r_.",
+   "Enable Key in the Poses tool. On a new frame, set the Blend Pose slider to 0.5 to apply half of the pose."
+  ],
+  "done_when": "Send two screenshots. The first shows Animation Mode active with the Anim Outliner and Anim Details panels visible. The second shows the Poses tool with Pose_ArmRaise_L, and the mirrored pose applied on the other arm in the viewport."
+ },
+ "AQ49": {
+  "brief": "Animation Mode has small tools that save a lot of manual work. Tweens create an in-between key, a key placed between two other keys, with one slider. The Snapper makes one object follow another for a range of frames, for example a hand that holds a ball. Motion Trails draw the path of a control in the viewport so you can see and edit the movement. In this quest you try each of these tools, and also the Pivot tool, on your wave sequence.",
+  "checklist": [
+   "In LS_WaveTest, set a key on a hand control at frame 0 and at frame 40, with a clear difference between the two poses. Put the playhead at frame 20.",
+   "Open Tweens from the Animation panel. Set the mode to Tween (TW), drag the slider to -0.5 and look at the new in-between key. Undo, switch to Push Pull (PP) and try the value 1.",
+   "Place a static mesh in the level, for example a ball named SM_Ball, and add it to the sequence. Open Snapper. Select the hand control and click Children, then select SM_Ball and click Parent.",
+   "Set the snap range to frames 10 to 30. Enable Keep Offset and Snap Position, and then click Snap Animation. Move the playhead through the range and confirm that keys were baked (created on every frame) on the hand.",
+   "Open Trails. Enable Show Trails and Show Keys for the hand control. Drag one key along the curve in the viewport. Turn on Show Marks and read where the motion is fast: the marks are far apart there.",
+   "Use the Pivot tool: click Edit, move the pivot to the area of the elbow, click Pose, and rotate the hand around that point."
+  ],
+  "done_when": "Send two screenshots. The first shows the Tween Controller open with a value set and the in-between key visible in Sequencer. The second shows the viewport with a motion trail, keys and timing marks on the hand control."
+ },
+ "AQ50": {
+  "brief": "In Sequencer, a character can play ready-made animations on an Animation track. Each animation on the track is a section, also called a clip. Most shots are made from such clips, so you need to know how to blend one into the next, change their speed, and line them up so the character does not jump. In this quest you overlap a walk clip and a run clip, blend them, change their timing, and match their positions.",
+  "checklist": [
+   "Create a Level Sequence named LS_ClipBlend and add the mannequin Skeletal Mesh Actor to it. On its Animation track, add a walk clip at frame 0 and a run clip, placed so that the two sections overlap by about 15 frames.",
+   "Drag the blend handle on the overlap. Right-click the blend curve and change the shape of the curve under Options. Play the sequence and watch the blend.",
+   "Expand the Animation track. Set keys on the Weight of the run section so that it goes from 0 to 1 across the overlap.",
+   "Hold Ctrl on the right edge of the walk clip and drag to change its Play Rate. Then right-click the clip and use Edit, then Auto Size, to restore its length. Split a clip in two with Ctrl+/.",
+   "Put the playhead at the start of the run clip. Right-click the run clip, choose Match With This Bone In Previous Clip, and pick a foot bone or the pelvis bone. Then enable Show Root Motion Trail on the track.",
+   "Right-click a section, open Properties, and set When Finished to Keep State. Check what is different when the sequence ends."
+  ],
+  "done_when": "Send one screenshot of Sequencer that shows two overlapping animation sections with a visible blend curve, a Weight channel with keys, and the viewport with the root motion trail drawn. Add two lines that say which bone you matched and why."
+ },
+ "AQ51": {
+  "brief": "Setting keys quickly and shaping the curves between them is everyday work for an animator. A curve shows how a value changes between two keys, and a tangent is the handle on a key that controls the shape of that curve. In this quest you practice the keyboard shortcuts for keys, try Auto Key (which sets keys for you when you move something), change tangent types, and edit a curve in the Curve Editor. You do all of this on a simple crate.",
+  "checklist": [
+   "Create a Level Sequence named LS_KeyDrill with a static mesh prop named SM_Crate. With the actor selected, press S to create a Transform track and a full key. Move the playhead to other frames and use Shift+W to key the location only and Shift+E to key the rotation only.",
+   "Enable Auto Key. Open Keyframe Options and choose Key Changed. Move the crate on the X axis only, and check which channels received keys. Then switch to Key Group and compare.",
+   "Select all keys by dragging a selection box (a marquee) around them. Press 4 to make them Linear, and then 1 to make them Cubic (Auto). Hold Alt and drag a key to duplicate it. Use Ctrl+] to select all keys to the right of the playhead.",
+   "Turn on Layer Bars and Key Bars in View Options. Scale the whole animation by dragging the edge of the Layer Bar, and change the timing of one pair of keys with a Key Bar.",
+   "Open the Curve Editor and select the Location Z curve. Enable Weighted Tangents on one key and stretch a tangent. Buffer the curve, which stores a copy of it, then change the curve, and then apply the buffered curve back.",
+   "On a curve with many keys, open the Filter Tool and use Simplify. Note how many keys were removed."
+  ],
+  "done_when": "Send two screenshots. The first shows Sequencer with a Transform track that has keys with at least two different tangent types, with Layer Bars visible. The second shows the Curve Editor with a weighted tangent and the faint copy of a buffered curve."
+ },
+ "AQ52": {
+  "brief": "Animation looks fake very quickly when a hand does not stay on the object it holds, or when the eyes do not look at their target. A constraint solves this: it makes one control follow another object without any change to the rig. Space switching is a related tool that changes what a control moves relative to, for example the body or the world. In this quest you constrain a hand to a cup, make the head look at the cup, and switch the space of the other hand.",
+  "checklist": [
+   "Open LS_WaveTest in Animation Mode. Place a prop named SM_Cup in the level and add it to the sequence.",
+   "Select the IK control of the hand, click Add Constraint (+), choose Parent, and pick SM_Cup with the eyedropper. Move the playhead and confirm that the hand follows the cup. Look at the Constraints section, and at the compensating keys that were created in Sequencer to keep the hand in place.",
+   "Move the cup after the constraint exists, so that the hand jumps suddenly. Put the playhead on the constraint key, right-click the constraint and choose Compensate Key. Confirm that the jump is gone.",
+   "Add a LookAt constraint from the head control to the cup. Edit the Axis in the context menu of the constraint so that the face points at the cup correctly.",
+   "Select the control of the other hand. With the Spaces section open, press Tab in the viewport and switch the control to World at frame 20. Move the body control and confirm that this hand stays in place.",
+   "Click Bake... in Spaces and bake the hand back to Parent with Reduce Keys turned on. Then right-click the parent constraint and choose Bake for it as well."
+  ],
+  "done_when": "Send two screenshots. The first shows the Animation panel with the Constraints list containing a Parent and a LookAt constraint, and the hand holding the cup. The second shows the track of the hand control with the colored space keys before baking. Add one line that says why you compensated a key."
+ },
+ "AQ53": {
+  "brief": "In real projects, most animation fixes are small changes on top of an existing animation, not new animations. Sequencer can create an FK Control Rig for any skeletal mesh, which gives you one control for each bone. In Additive mode, your keys are added on top of the animation that is already playing. In this quest you add a small head tilt over a walk, bake an animation to a rig to fix one frame, and save the result as a new Animation Sequence.",
+  "checklist": [
+   "Open LS_ClipBlend, the sequence with the walk and run clips on the mannequin. On the character track, click Add (+) Track, then Control Rig, then FK Control Rig.",
+   "Right-click the FK Control Rig track and enable Additive. Select the head bone in the viewport and set a key at frame 0, then a key with a small head tilt at frame 20, and a key back at the first pose at frame 40. Play the sequence: the tilt is added on top of the walk.",
+   "Right-click the FK track and use Select Bones Or Curves To Animate. Hide every bone except the spine, the neck, the head and the arms.",
+   "Duplicate the character in a second sequence named LS_BakeFix. Right-click the Skeletal Mesh track and choose Edit With FK Control Rig. Enable Reduce Keys with a small Tolerance, and click Create.",
+   "Fix one bad frame on the baked FK rig, for example an elbow that jumps. Then right-click the Skeletal Mesh track and choose Bake Animation Sequence. Save the result as AS_Walk_Fixed.",
+   "In LS_WaveTest, convert your Control Rig track to a layered track: right-click it and choose Convert To Layered. Check that your keys are now applied on top of an animation clip."
+  ],
+  "done_when": "Send two screenshots. The first shows LS_ClipBlend with the Additive FK Control Rig track and the head tilt keys over the walk clip. The second shows the Content Browser with AS_Walk_Fixed next to the source clip. Add one line about additive and bake, and when you would choose each."
+ },
+ "AQ54": {
+  "brief": "Animators often polish animation in another 3D program, called a DCC (digital content creation tool), such as Blender or Maya. FBX is the file format that carries animation between Unreal and those programs. Sequencer can export a sequence to FBX and import the edited keys back, so the Unreal scene stays the main version of your work. In this quest you export a sequence, change it in another program, and import the changes.",
+  "checklist": [
+   "Open LS_KeyDrill. It must be a source Level Sequence, not a shot inside a master sequence. Select the crate actor and use Actions, then Export... Read every option in the FBX Export Options window, and then export with the default settings.",
+   "Export again with nothing selected. This time the whole sequence is exported. Compare the sizes of the two files.",
+   "Open the FBX file in any DCC or FBX viewer you have. Blender is fine. Set the time rate of the DCC to match the frame rate of the sequence. Move the keys of the crate, and then export the FBX with Z as the up axis.",
+   "Back in Sequencer, right-click the crate track and choose Import. Look at the options Force Front XAxis and Create Cameras in the Import FBX window, and then import. Confirm that the keys changed.",
+   "Also try the import from the Actions menu with nothing selected. Note how Unreal matches objects by their names.",
+   "For a sequence with a character, right-click the Skeletal Mesh track and use Bake Animation Sequence to make an asset named AS_Export_Test. Open it in the Animation Sequence editor."
+  ],
+  "done_when": "Send a short text of 6 to 10 lines that covers the FBX Export options you used, the DCC you edited in and its time setting, what changed after the import, and one warning from the documentation page that applies to your sequence. Attach one screenshot of the keys after you imported them again."
+ },
+ "AQ55": {
+  "brief": "Every Control Rig is built from three kinds of elements: Bones, which come from the skeleton and move the mesh, Controls, which are the shapes an animator selects and moves, and Nulls, which are invisible helper points used to group or offset other elements. FK means Forward Kinematics, where you rotate each joint directly, from the shoulder down to the hand. In this quest you build a simple FK rig for both arms, group the controls under a Null, and limit how far one control can rotate.",
+  "checklist": [
+   "Right-click the mannequin skeletal mesh, choose Create, then Control Rig. Rename the new asset CR_Manny_FKArm.",
+   "In the Rig Hierarchy, select the bones upperarm_l, lowerarm_l and hand_l. Right-click and choose New, then Add Controls For Selected.",
+   "Select the bones of the right arm, hold Alt and use the same command again. Holding Alt opens a dialog. In it, set Output Format to Hierarchy and Suffix to _ctrl.",
+   "Create a Null named arms_grp. Drag the top control of each arm onto it, so that both become its children.",
+   "Select hand_l_ctrl. In the Details panel, set Value Type to Rotator, so that this control can only rotate.",
+   "Select upperarm_l_ctrl. Under Transform, click Min and Max, enable the Z rotation channel, and set the limits to -50 and 50. Enable Draw Limits to see them in the viewport.",
+   "In the graph, add a Set Transform node for each bone and connect a Get Transform node of its control to it. Connect all of them in a chain that starts at Forwards Solve. Move a control in the viewport to test the rig."
+  ],
+  "done_when": "Send two screenshots. The first shows the Rig Hierarchy with arms_grp and the six _ctrl controls under it. The second shows the viewport with an arm control moved, the arm following, and the drawn limits visible on upperarm_l_ctrl."
+ },
+ "AQ56": {
+  "brief": "Each control in a Control Rig has a shape and a color that the animator sees in the viewport. Clear shapes and a color rule, such as blue for the left side and red for the right side, make a rig easy to read for anyone who uses it. The shapes come from a shape library, an asset that lists the available shapes. In this quest you give your controls shapes and colors, and add your own arrow shape to a copy of the library.",
+  "checklist": [
+   "Open a Control Rig that has at least four controls, for example CR_Manny_FKArm from quest AQ55.",
+   "Select each control in turn. In the Details panel, under Control Shape, pick a different Shape. Set the controls of the left side to blue and the controls of the right side to red.",
+   "In the Settings of the Content Browser, enable Show Engine Content and Show Plugin Content. Find the shape library in this folder: Engine, then Plugins, then Control Rig Content, then Controls.",
+   "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRGL_Project, and open it.",
+   "Model or export a simple .fbx shape, such as a flat arrow or a ring. Import it with Import Textures turned off and Material Import Method set to Do Not Create Material. Name it SM_CtrlArrow.",
+   "In CRGL_Project, add an element to Gizmos. Set Gizmo Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin.",
+   "In your Control Rig, open Class Settings and set Gizmo Library to CRGL_Project. Then set the Shape of one control to Arrow."
+  ],
+  "done_when": "Send two screenshots. The first shows CRGL_Project open with the Gizmos array and your Arrow entry. The second shows the Control Rig viewport with the Arrow shape on one control, and the blue and red colors on the other controls."
+ }
+}

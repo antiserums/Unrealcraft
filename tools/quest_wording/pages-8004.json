@@ -1,0 +1,154 @@
+{
+ "TAQ92": {
+  "brief": "A proxy mesh is one simple mesh with one material that stands in for a whole group of meshes when the player sees them from far away. It replaces many objects and materials with one cheap object. The Merge Actors tool can build a proxy in two ways: Simplify, which reduces the existing meshes, and Approximate, which builds a new mesh around them and also works with very dense Nanite meshes. In this quest you build a proxy with each method and compare them.",
+  "checklist": [
+   "Build a small structure out of 10 or more static meshes, and make some of them Nanite meshes. Note how many triangles and how many materials it has.",
+   "Select the actors and open Actor, then Merge Actors, then Merge Actor Settings. Run Simplify with Screen Size set for a view from far away. Save the result as SM_Proxy_Simplify.",
+   "Run Approximate with Output Type set to Mesh and Materials and Simplify Method set to Fixed Triangle Count. Save the result as SM_Proxy_Approx.",
+   "In the Approximate settings, enable Base Capping (Convex Solid) and Fill Gaps, and run it again. Compare the result with the one before.",
+   "Try the Ground Clipping option Cut And Fill With ZPlane, so that no part of the proxy hangs below the ground.",
+   "Open both proxies in the Static Mesh Editor. Compare their triangle count, material count and texture quality.",
+   "Write a short note that says which method you would use for this set of meshes and why."
+  ],
+  "done_when": "Send a screenshot of the Merge Actor Settings for Approximate, and a side-by-side screenshot of the two proxies in the Static Mesh Editor with the triangle and material counts visible. Include your note of one paragraph."
+ },
+ "TAQ93": {
+  "brief": "An Instanced Static Mesh component, or ISM, draws many copies of the same mesh as one object, which is the cheapest way to show many copies. Each copy is called an instance. Every instance can carry a few numbers of its own, called custom data, that a material can read to make the copies look different. In this quest you build a shelf of books with one ISM, tint each book through custom data, and turn separate actors into instances with the editor tools.",
+  "checklist": [
+   "Make a Blueprint named BP_ShelfBooks with an Instanced Static Mesh component. In the Construction Script, add N instances in a row, each with a small random tilt.",
+   "Set Num Custom Data Floats to 1 on the component. Write a random value for each instance with the Set Custom Data Value node.",
+   "Make a material named M_Book that reads PerInstanceCustomData at index 0 and uses it to tint each book. Apply the material to the ISM.",
+   "Place 30 copies of a prop in the level as separate actors. Open Modeling Mode, go to the XForm category, and use Harvest Instances to combine them into one ISM.",
+   "Use the ISM Editor tool to move some instances, and replace one instance with another mesh. Note what happens to the list of components.",
+   "Select another group of actors and run Actor, then Merge Actors, then Batch. Compare the result with Harvest Instances.",
+   "Compare the stat unit values and the draw counts before and after you batch the actors."
+  ],
+  "done_when": "Send a screenshot of BP_ShelfBooks in the level with the tint of each instance visible, and a screenshot of its Construction Script. Also send a screenshot of the Details panel after Harvest Instances that shows one actor with an ISM component."
+ },
+ "TAQ94": {
+  "brief": "Unreal stores every mesh as triangles, which are hard to edit one by one. A PolyGroup is a set of triangles that you treat as one face, for example the two triangles that form one side of a cube. The PolyGroup Edit tool in Modeling Mode lets you extrude, inset and bevel these faces, much like box modeling in other 3D programs. In this quest you set up PolyGroups on a cube and shape it with these tools.",
+  "checklist": [
+   "Import or create a plain cube. Use Tri Select to put the two triangles of each side into one PolyGroup, so that each side becomes a quad (a face with four corners).",
+   "Set Face Color Mode to By Group, which colors each group differently, and check that the groups are correct.",
+   "Open PolyGroup Edit. Use Extrude on the top face to pull it out, then use Inset on it to make a smaller face inside, and then use Bevel on the edges to make them less sharp.",
+   "Use Insert Edge Loop with Position Mode set to Even and Number of Loops set to 2. Then try the Distance Offset mode.",
+   "Merge two side faces into one PolyGroup. Then use Decompose to split it back into one group per triangle.",
+   "Run Simplify by Groups and check the result in the wireframe.",
+   "In the UVs section, use Planar Projection on one face, and check it with the checkerboard material."
+  ],
+  "done_when": "Send a screenshot of the edited mesh in PolyGroup Edit with Face Color Mode set to By Group and Show Wireframe on. It must show the extrusion, the inset, the bevel and the inserted loops."
+ },
+ "TAQ95": {
+  "brief": "To rig a mesh means to give it bones, and to skin it means to decide how much each bone moves each vertex. That amount is called a skin weight. This work is normally done in another 3D program (often called a DCC, a digital content creation tool), but Unreal has its own tools for simple cases. In this quest you turn a static prop into a Skeletal Mesh, add three bones, paint the skin weights and test the bend, all inside the editor.",
+  "checklist": [
+   "Open Edit > Plugins, look in the Animation section, and enable the Skeletal Mesh Editing Tools plugin. Restart the editor.",
+   "Pick a simple static mesh prop that should bend, for example an antenna, a lamp arm or a tall cylinder made in Modeling Mode. Right-click it in the Content Browser, choose Convert to Skeletal Mesh, and pick Create New for the Skeleton. Name the result SK_Antenna.",
+   "Open the new Skeleton, click Editing Tools in the toolbar and choose the Skeleton mode. With the Edit Skeleton tool in Add mode (N), select the root bone and drag three new bones up the prop, one after the other. Click Accept.",
+   "Select the three new bones together and rename the first one to seg_##1, so that they become seg_001, seg_002 and seg_003. In Edit mode, use Orient with Primary X and Orient Children turned on, so that all bones point the same way.",
+   "Switch to the Skin mode and run Bind Skin with Binding Type set to Geodesic Voxel and Max Influences set to 4. Then open Edit Weights, select a bone, and paint with the Brush in Add mode. Hold Shift to Relax (smooth) the weights where two bones meet, and click Accept.",
+   "Test the rig: select seg_002 in the Skeleton Tree, rotate it with the gizmo, and check that the prop bends smoothly. If the bend looks bad, go back and paint the weights again."
+  ],
+  "done_when": "Send two screenshots: one of the Skeleton Tree that shows the root plus seg_001, seg_002 and seg_003, and one of the viewport with seg_002 rotated so that the prop bends without broken vertices."
+ },
+ "TAQ96": {
+  "brief": "An Animation Modifier is a small Blueprint that changes animation assets for you, for example by adding a curve to an Animation Sequence. A curve is a value that changes over the time of the animation. You write the modifier once and then apply it to one sequence or to every sequence of a Skeleton with one click. In this quest you write a modifier that records the height of one bone into a curve, and you apply it and revert it.",
+  "checklist": [
+   "Create a Blueprint Class with the parent Animation Modifier (search for it under All Classes) and name it AM_BoneHeightCurve.",
+   "Add two variables and mark both as Instance Editable: BoneName (type Name) and CurveName (type Name, with the default value BoneHeight).",
+   "Implement the OnApply event with nodes from the Animation Blueprint Library. First add a Curve track with CurveName, and then loop over the frames of the sequence. For each frame, call Get Bone Pose for Frame with BoneName, read the Z of the location, convert the frame to a time with Get Time at Frame, and add a float curve key at that time.",
+   "Implement the OnRevert event so that it removes the curve track again.",
+   "Open a walk or jump Animation Sequence, go to Window > Animation Data Modifiers, click Add Modifier and pick AM_BoneHeightCurve. Set BoneName to a bone whose parent is the root (for example pelvis), because Get Bone Pose returns values in local space, which means relative to the parent bone.",
+   "Right-click the modifier and choose Apply Modifier. Check that the BoneHeight curve now appears in the sequence. Then choose Revert, and confirm that the curve is gone.",
+   "Add the same modifier to the Skeleton asset and apply it there. Open a second sequence and confirm that the curve was added to it too."
+  ],
+  "done_when": "Send one screenshot of the OnApply graph of AM_BoneHeightCurve, and one screenshot of an Animation Sequence that shows the BoneHeight curve with the Animation Data Modifiers tab open. The modifier must be applied and not marked Out of Date."
+ },
+ "TAQ97": {
+  "brief": "A drivable vehicle in Unreal is made of several parts that work together. It needs a Skeletal Mesh with a bone for each wheel, a physics asset that gives the body and wheels their collision shapes, an Animation Blueprint that turns the wheel bones, and a vehicle Blueprint that holds the engine and wheel settings. Chaos is the physics system of Unreal Engine 5, and its vehicle plugin provides these building blocks. In this quest you set up the whole chain and drive the vehicle.",
+  "checklist": [
+   "Open Settings, then Plugins, look in the Physics category, enable ChaosVehiclesPlugin and restart the editor. Get a vehicle skeletal mesh that has wheel bones: the Buggy from the Vehicle Game sample (in the Launcher under Learn) or a free vehicle from Fab.",
+   "Create two Blueprints from the class ChaosVehicleWheel. Name one BP_WheelFront, with Affected by Steering on and Axle Type set to front. Name the other BP_WheelRear, with Affected by Handbrake and Affected by Engine on. Set Wheel Radius to match the size of the visible wheel in cm (58 for the Buggy).",
+   "Create the physics asset: right-click the skeletal mesh, choose Create, then Physics Asset, then Create and Assign, with Single Convex Hull. In the Physics Asset Editor, select all wheel bones, set Primitive Type to Sphere and click Re-generate Bodies. Then select the suspension bones and choose Collision, then No Collision.",
+   "Create a Curve Float asset named TorqueCurve (under Miscellaneous, then Curve). Give it the shape of an upside-down U, where X is the engine RPM and Y is the torque, the turning force of the engine.",
+   "Create an Animation Blueprint named ABP_Vehicle with the parent class VehicleAnimationInstance and the Skeleton of the vehicle. In the AnimGraph, connect Mesh Space Ref Pose to Wheel Controller for WheeledVehicle, then to Component To Local, then to Output Pose. If the mesh has suspension bones, add Look At nodes so that they follow the wheel joints.",
+   "Create a Blueprint named BP_Vehicle from WheeledVehiclePawn. Set the Skeletal Mesh and the Anim Class, and turn on Simulate Physics. On the Vehicle Movement Component, fill Wheel Setups with a Wheel Class and a Bone Name for each wheel (FL, FR, BL, BR), and set the Torque Curve External Curve to TorqueCurve. Add a Spring Arm and a Camera.",
+   "Make a Game Mode with BP_Vehicle as the Default Pawn, and set it as GameMode Override in World Settings. Connect your input to Set Throttle Input and Set Steering Input, and press Play. Watch the wheels spin and steer."
+  ],
+  "done_when": "Send a screenshot of the Physics Asset Editor with sphere bodies on the wheels, a screenshot of the ABP_Vehicle AnimGraph with the Wheel Controller node, and a screenshot taken in Play In Editor (PIE) with the vehicle moving."
+ },
+ "TAQ98": {
+  "brief": "A morph target is a saved second shape of a mesh in which some vertices sit in a different place. You blend between the normal shape and the morph target with a value from 0 to 1. It is the standard way to move vertices without bones, for example for faces, muscles and damage. Morph targets are made in a 3D program (a DCC, short for digital content creation tool), where they are also called blend shapes. In this quest you make one morph target, import it into Unreal and control it from an Animation Blueprint.",
+  "checklist": [
+   "In your DCC (Maya, 3ds Max or Blender), take a simple skinned mesh and duplicate it. Move some vertices on the copy (for example an Inflate or a Wink shape) and create a blend shape or morph channel from the copy. In Maya, the name in Unreal will be [BlendShapeNode]_[BlendShape]. In 3ds Max, it is the name of the Morpher channel, and the Morpher must sit before Skin in the stack.",
+   "Export the base mesh and its joints to an FBX file. In the export dialog, enable Animations and all the Deformed Models options (in Maya) or the Deformations options (in Max).",
+   "Import the file into Unreal with Import Morph Targets enabled, and name the result SK_MorphTest. Open it and drag the weight from 0 to 1 in the Morph Target Previewer.",
+   "Open Show, then Mesh Overlay, and turn on Selected MorphTarget Vertices. Select the morph target to see which vertices it moves. Then right-click it and use Copy Morph Target Names.",
+   "Create an Animation Blueprint named ABP_MorphTest. In the Event Graph, add a float variable named Amount and call Set Morph Target on each update, with Target set to self, Morph Target Name set to the name you copied, and Value set to Amount. Assign the Animation Blueprint to a mesh in the level and change Amount in the Details panel.",
+   "Open Project Settings, then Rendering, then Optimizations, and find Use GPU for computing morph targets. Write one line about when you would turn it on."
+  ],
+  "done_when": "Send a screenshot of the Morph Target Previewer with the weight at 1 and the vertex overlay on, plus a screenshot of the Set Morph Target node in ABP_MorphTest. Add your one-line note about GPU morph targets."
+ },
+ "TAQ99": {
+  "brief": "A Deformer Graph is an asset that changes the shape of a mesh on the GPU, the graphics card, after the bones have moved it. It lets you add your own deformation without changing any animation. The work is done by a compute kernel, a small program written in HLSL, the shader language that Unreal uses. In this quest you build a Deformer Graph with a custom kernel that twists the mannequin around its up axis.",
+  "checklist": [
+   "Open Edit > Plugins, look in the Animation section, enable the Deformer Graph plugin and restart. Use the mannequin from the Third Person template.",
+   "Select the character in the level. In the Details panel, enable Mesh Deformer and create a new Deformer Graph asset named DG_Twist. Open the asset and set its Mesh property to the mannequin.",
+   "In the Update Graph, add a Skeletal Mesh Component Binding node. Connect these nodes to it: Write Skinned Mesh, Execute Skinned Mesh (with Domain set to Vertex), Scene Data (for Time) and Skinned Mesh (for Position, Tangent X and Tangent Y).",
+   "Add a Custom Compute Kernel node. In its Details panel, add the inputs Num Threads (Int Vector 3, Parameter), Twist, Start, End and Time (Float, Parameter), Position (Vector 3, Vertex x1), and Tangent X and Tangent Y (Vector 4, Vertex x1). Add the outputs Out Position (Vector 3) and OutTangentX and OutTangentZ (Vector 4), all set to Vertex x1. Set Execution Domain to Vertex, then click Save and Compile.",
+   "Check that the Declarations tab lists ReadPosition, ReadTwist and WriteOutPosition. Then paste the HLSL twist program from the page into the Shader Text tab.",
+   "Connect the read nodes to the inputs of the kernel, and connect the outputs of the kernel to Write Skinned Mesh. Add three Float Constant nodes: Twist 180, Start 0 and End 100. Click Save and Compile, and watch the character twist in the viewport and in the level.",
+   "Replace the Twist constant with a Deformer Graph Variable named TwistAmount, so that the value can be changed from outside the graph. Set it to 45 and compare."
+  ],
+  "done_when": "Send a screenshot of the full Update Graph of DG_Twist with the Custom Compute Kernel connected, and a screenshot of the mannequin visibly twisted in the level or in the preview viewport."
+ },
+ "TAQ100": {
+  "brief": "Cloth simulation makes a cape, a flag or a skirt move by physics while the game runs. Since Unreal Engine 5.3 you can build cloth as its own Cloth Asset, which is separate from the character and can be used on other characters too. You build it in the Chaos Cloth Panel node editor with a Dataflow graph, a graph of nodes where each step can be changed later without starting again. In this quest you model a cape, turn it into a Cloth Asset and test it on a character.",
+  "checklist": [
+   "In your DCC (your 3D modeling program), import the skeletal mesh of your character and model a simple cape or flag over it. Make two separate static meshes: a render mesh that the player sees, and a simulation mesh with fewer polygons that the physics uses. Export both as FBX files.",
+   "Import both static meshes into Unreal. Create a new Cloth Asset named CA_Cape from the meshes with a new Dataflow graph, and open it in the Chaos Cloth Panel node editor.",
+   "Build the node graph step by step, so that the asset is generated in a non-destructive way. Transfer the skin weights from the skeletal mesh of the character onto the cloth mesh, so the cloth follows the bones.",
+   "Configure the cloth settings. Add at least one weight map on the cloth mesh, which is a map you paint to give each area its own value. For example, paint a max-distance style map with 0 at the shoulders and a high value at the lower edge.",
+   "Set the Physics Asset of the character on the cloth asset, so that the cloth collides with the body.",
+   "Open the character Blueprint, add a Chaos Cloth Component and assign CA_Cape to it. Test the simulation in Play In Editor (PIE) with a run animation.",
+   "Write 3 short lines: what the panel workflow gives you that the legacy Clothing Tool does not, and what it costs at render time."
+  ],
+  "done_when": "Send a screenshot of the Dataflow graph in the Chaos Cloth Panel editor, a PIE screenshot with the cape moving on the character, and your 3-line note."
+ },
+ "TAQ101": {
+  "brief": "A groom is a hair asset in Unreal that is made of many thousands of single strands. Strands look very good but are one of the most expensive things to draw. LOD means level of detail: when the hair is far from the camera, the engine switches to a cheaper version with fewer strands, or to flat hair cards or a simple mesh. In this quest you set up three LODs on a groom and see how each one changes the hair and its cost.",
+  "checklist": [
+   "Use a groom asset (a MetaHuman hair or a free groom from Fab) and open it in the Groom Asset Editor. In the Show menu, turn on Vis. Clusters and then Hair CVs, and look at the strands.",
+   "In the LOD panel, set LOD Mode to Manual. For the first hair group, click the Add (+) button until you have three LOD entries. LOD0 keeps the full strands. LOD1 has Curve Decimation and Vertex Decimation around 0.5 and a Screen Size around 0.5. LOD2 has stronger decimation, a Screen Size around 0.2 and Simulation set to Disable.",
+   "On LOD1 and LOD2, raise Thickness Scale a little, so that the hair does not look thin after strands were removed.",
+   "Use the LODs dropdown in the viewport to step through LOD0, LOD1 and LOD2. Read the stats for each one: geometry type, curves and points.",
+   "Switch LOD Mode to Auto. Then change Auto LOD Bias and zoom the camera out slowly. Note where you start to see that strands are removed.",
+   "If your groom has a card mesh, add an entry in the Cards panel with Guide Type set to Generated, Group Index 0 and LOD Index 2, and then set the Geometry Type of LOD2 to Cards. If it has no card mesh, write one line about why cards or meshes would be used for the far LOD."
+  ],
+  "done_when": "Send a screenshot of the LOD panel with three LOD entries in Manual mode, and a screenshot of the viewport at LOD2 that shows the LOD stats. Add your one-line note if you had no cards."
+ },
+ "TAQ102": {
+  "brief": "A groom, the strand hair asset of Unreal, must follow the head when the character moves. This is done by a binding to the Skeletal Mesh. Only a small number of strands, called guides, are moved directly, and all other strands copy the nearest guides. The hair material can read data from each strand, such as how far along the strand a point is, through the Hair Attributes node. In this quest you look at the guides and the binding of a groom, and you build a hair material that goes from a root color to a tip color.",
+  "checklist": [
+   "Place a character with a groom that is bound to its skeletal mesh in a level. In the View Modes menu of the viewport, choose Groom, then Guides, and after that Groom, then Strands Guides Influences. Take a screenshot of the clumps.",
+   "Open the groom in the Groom Asset Editor. In the Interpolation panel, read the settings Interpolation Quality and Interpolation Distance. Enable Randomize Guide and note how long the rebuild takes.",
+   "Enable RBF Interpolation in the Interpolation panel. In the level, use Lit, then Groom, then Root Bindings to see the RBF samples. Play a strong animation (a big head turn or a crouch) with RBF on and with RBF off, and compare.",
+   "In the LOD panel, set RBF Interpolation to Disable on the last LOD only.",
+   "Create a material named M_Hair_TA. Set the Shading Model to Hair, and check that Use with Hair Strands is enabled in the Usage section. Add a Hair Attributes node. Use a Lerp node to blend from a root color to a tip color with the U output, and use Seed to change the color of each strand a little.",
+   "Add a slot in the Materials panel of the groom asset and assign M_Hair_TA to it. Then override that slot on the Groom component in the level with a second instance, and confirm that the override works."
+  ],
+  "done_when": "Send a screenshot of the Strands Guides Influences view, a screenshot of the M_Hair_TA graph with the Hair Attributes node connected, and a screenshot of the groom in the level with your material."
+ },
+ "TAQ103": {
+  "brief": "RenderDoc is a free program that records everything the GPU, the graphics card, does to draw one single frame. You can then look at each step in order and see which part of the rendering takes the most time. This replaces guessing with facts. Unreal has a plugin that adds a capture button to the viewport. In this quest you capture one frame of your level and find its three most expensive steps.",
+  "checklist": [
+   "Install RenderDoc from renderdoc.org. Confirm that the RenderDoc plugin is enabled in your project (it is on by default).",
+   "Open Project Settings, then Plugins, then RenderDoc, and enable Auto attach on startup. Restart the editor and find the RenderDoc icon in the upper-right corner of the Level Viewport.",
+   "Open a level that has at least 20 meshes and one Niagara system. Run the console command stat unit and write down the GPU time in ms.",
+   "Click the RenderDoc Capture button in the Level Viewport. Open the capture in RenderDoc and find the event list, which shows the draw events of the frame.",
+   "Find the three most expensive events in the capture. Note which pass each one belongs to (base pass, shadows, post process, and so on). A pass is one stage of drawing the frame.",
+   "Write a short table with the pass name, the time, and which content in your level causes it.",
+   "Turn Auto attach on startup off again if you do not need it every day."
+  ],
+  "done_when": "Send a screenshot of RenderDoc that shows the event list of your capture, plus your table with the three most expensive passes and the GPU time from stat unit."
+ }
+}

@@ -1,0 +1,150 @@
+{
+ "AQ9": {
+  "brief": "A Skeletal Mesh is a 3D model that has bones inside it, so it can be animated. An Animation Sequence is one recorded movement, such as a run or an idle, that plays on those bones. In this quest you place a mannequin in a level and make it play one animation in a loop. This is the simplest way to see an animation in Unreal, and you do not need any Blueprint for it.",
+  "checklist": [
+   "Open a project made from the Third Person template. In the Content Browser, the panel that shows all your project files, find the asset named SKM_Quinn or SKM_Manny.",
+   "Drag the Skeletal Mesh from the Content Browser into the Level Viewport. Unreal creates a Skeletal Mesh Actor for you. Move it to an empty spot in the level.",
+   "With the actor selected, look at the Details panel and find the Animation section. Set Animation Mode to Use Animation Asset, which means the actor plays one animation that you choose.",
+   "Set Anim to Play to one animation from the folder Content/Characters/Mannequins/Animations. For example, you can pick an idle or a run.",
+   "Turn on Looping so the animation repeats. Then press Play and watch the mesh animate in the level.",
+   "Try one more thing: drag a different Material onto the actor. If the mesh looks wrong, open that Material and enable the option Used with Skeletal Mesh."
+  ],
+  "done_when": "Send a screenshot taken in Play mode that shows your Skeletal Mesh Actor in the middle of the animation. Also send a second screenshot of its Details panel that shows Animation Mode and Anim to Play."
+ },
+ "AQ10": {
+  "brief": "An animated character in Unreal is made of three different assets that work together. The Skeleton holds the list of bones, the Skeletal Mesh holds the visible 3D model that is attached to those bones, and the Animation Sequence holds a movement recorded for that Skeleton. Many animation problems happen because people mix these up. In this quest you open all three assets and see how they point to each other.",
+  "checklist": [
+   "In a Third Person project, open the folder Content/Characters/Mannequins. Find the Skeleton asset, one Skeletal Mesh (its name starts with SKM_) and one Animation Sequence.",
+   "Double-click the Skeleton asset to open it. Look at the Skeleton Tree, which is the list of all bones. Find the root bone, the pelvis bone and one hand bone.",
+   "Open the Skeletal Mesh asset. In its Asset Details panel, find the Skeleton property. Notice that it points to the same Skeleton asset you just opened.",
+   "Open the Animation Sequence. In its Asset Details panel, find the Skeleton property again and see which Skeleton it uses.",
+   "Write 3 short lines: one that says what the Skeletal Mesh holds, one that says what the Skeleton holds, and one that says what the Animation Sequence holds.",
+   "Bonus: in the Skeleton Editor, open Window > Anim Notifies or Window > Anim Curves. Notice that this data is stored on the Skeleton."
+  ],
+  "done_when": "Send a screenshot of the Skeleton Tree with the three bones named, and add your 3 lines that say what each asset holds and how the assets are linked."
+ },
+ "AQ11": {
+  "brief": "The mannequins are the two test characters that come with Unreal, named Quinn and Manny. Almost every tutorial uses them, so it helps to know where their meshes, animations and other parts are stored in the project. In this quest you look through the mannequin folders and change the player character from Quinn to Manny.",
+  "checklist": [
+   "Create a new project from the Third Person template (choose Games, then Third Person). Press Play once and move around with the WASD keys and Space.",
+   "Open the folder Content/Characters. Find the UE5 mannequins Quinn and Manny, and note which one the template uses by default.",
+   "Open the folder Content/Characters/Mannequins/Animations. Count how many animation sets there are, and open one animation from each set.",
+   "Open the Blueprint Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter. Select the Mesh component, and change its Skeletal Mesh property to SKM_Manny.",
+   "In the Animation section, set Animation Mode to Use Animation Blueprint and set Anim Class to ABP_Manny. Click Compile, save the Blueprint, and press Play.",
+   "Open the Rigs folder and find the assets CR_Mannequin_Body and CR_Mannequin_BasicFootIK. Read on the documentation page what each one is used for."
+  ],
+  "done_when": "Send a screenshot taken in Play mode with Manny as the player character, and a screenshot of the Animations folder. Add one line that names the two Control Rig assets in the Rigs folder."
+ },
+ "AQ12": {
+  "brief": "Characters are usually made in another 3D program and saved as an FBX file, a common file format for 3D models and animations. To use the character in Unreal you import that file, and the import settings decide things like its size and which Skeleton it uses. Wrong settings can cause problems that you only notice much later. In this quest you import a mesh and an animation, and you see when Unreal creates a new Skeleton and when it reuses one.",
+  "checklist": [
+   "Get an FBX file of a rigged character (a character that has bones) and one animation for it. If you have none, export one from Unreal: right-click SKM_Manny, choose Asset Actions, then Export, and export one animation the same way.",
+   "Make a folder named Content/Import_Test. Click Import in the Content Browser and pick the mesh FBX file.",
+   "In the FBX Import Options window, leave Skeleton empty and keep Create Physics Asset turned on. Check the settings Import Uniform Scale and Convert Scene Unit, then click Import.",
+   "Open the new Skeletal Mesh in the editor. Check that its size matches the mannequin, and check the list of bones in the Skeleton Tree.",
+   "Now import the animation FBX file on its own. This time set Skeleton to the Skeleton you just created. Confirm that an Animation Sequence asset appears.",
+   "Import the mesh a second time into another folder, but now select the existing Skeleton in the dropdown. Notice that Unreal does not create a new Skeleton asset this time."
+  ],
+  "done_when": "Send a screenshot of the Content Browser that shows the imported Skeletal Mesh, Skeleton, Physics Asset and Animation Sequence. Also send a screenshot of the imported mesh standing next to the mannequin in a level at the correct size."
+ },
+ "AQ13": {
+  "brief": "When you double-click an Animation Sequence, it opens in its own editor. This is where you look closely at one animation and change the settings that decide how it behaves in the game, such as its speed and whether it moves the character forward. In this quest you take a tour of that editor and try its main settings on a run animation.",
+  "checklist": [
+   "Open a run animation of the mannequin. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser.",
+   "In Asset Details, set Rate Scale to 0.5 and press play to see the animation at half speed. Then set it back to 1. Also read the values of Number of Sampled Frames and Target Frame Rate.",
+   "Find the setting Additive Anim Type and read its options. Leave it on No additive.",
+   "Find the setting EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock.",
+   "Select a bone in the Skeleton Tree and rotate it a little in the viewport. Press Key in the Toolbar and see the additive track appear in the timeline. Then undo the change.",
+   "In the timeline, open the menu of the Curves track and choose Add Curve..., then Create Curve, and name the curve TestCurve. Open Window > Anim Curves to see it. Delete the curve afterwards and save the Skeleton."
+  ],
+  "done_when": "Send a screenshot of the editor with the six areas labeled, and a screenshot of Asset Details that shows Rate Scale, Additive Anim Type and EnableRootMotion. Add one line that says what the Key button does."
+ },
+ "AQ14": {
+  "brief": "An Animation Blueprint is an asset that decides which animation a character plays at each moment. It has two main graphs: the AnimGraph, which builds the final pose of the character, and the Event Graph, which holds normal Blueprint logic. Every animated character in a game uses one. In this quest you create your first Animation Blueprint, make it play one animation, and assign it to a mesh in the level.",
+  "checklist": [
+   "In the Content Browser, click Add (+), then Animation, then Animation Blueprint. Pick the mannequin Skeleton and name the new asset ABP_First.",
+   "Open ABP_First. Find these panels in the editor: Toolbar, Viewport, My Blueprint, Graph, Details and Anim Preview Editor.",
+   "In the AnimGraph, drag an idle Animation Sequence from the Asset Browser into the graph. This creates a Sequence Player node. Connect it to the Output Pose node and click Compile.",
+   "Watch the link between the two nodes pulse, which shows that the pose is flowing. Change the sequence to a run animation and click Compile again.",
+   "Open the Event Graph and look at the events that are already there. Do not add any logic yet.",
+   "Place a Skeletal Mesh Actor in the level. In its Details panel, set Animation Mode to Use Animation Blueprint and set Anim Class to ABP_First. Then press Play."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph with the Sequence Player connected to Output Pose and a green compile icon. Also send a screenshot in Play mode that shows the actor animated by ABP_First."
+ },
+ "AQ15": {
+  "brief": "A state machine is a way to organize animations into states, such as Idle and Walk, with rules that say when to change from one state to another. This is how characters switch smoothly between standing and moving. In this quest you build the smallest useful state machine: two states and two transitions that depend on how fast the character moves.",
+  "checklist": [
+   "Open ABP_First (from quest AQ14), or make a new Animation Blueprint for the mannequin Skeleton and name it ABP_Locomotion.",
+   "In the AnimGraph, right-click and choose State Machines, then Add New State Machine. Name it Locomotion and connect it to the Output Pose node.",
+   "Double-click the state machine to open it. Drag from the Entry node and choose Add State, and name the state Idle. Open the state, put the idle animation inside, and connect it to the state's Output Pose.",
+   "Add a second state named Walk that contains a walk or run animation. Create one transition from Idle to Walk and one transition from Walk to Idle, because each transition only goes in one direction.",
+   "In the Event Graph, start from Event Blueprint Update Animation. Get the owning actor, cast it to your character, get Character Movement, get Velocity, and then use Vector Length XY. Promote the result to a variable named Speed.",
+   "Open the transition rule from Idle to Walk and make it true when Speed > 10. Make the rule from Walk to Idle true when Speed <= 10. Then click Compile.",
+   "Assign the Animation Blueprint to the Mesh component of BP_ThirdPersonCharacter, using the Anim Class property. Press Play and walk around. Then set the Duration of the Idle to Walk transition to 0.2 and compare how the change looks."
+  ],
+  "done_when": "Send a screenshot of the state machine graph that shows Idle, Walk and both transitions, and a screenshot of one transition rule that uses Speed. Also send a short clip, or two screenshots, of the character idle and walking in Play mode."
+ },
+ "AQ16": {
+  "brief": "A socket is a named point that you add to a bone of a skeleton. Anything attached to the socket follows that bone, so it is the standard way to put a weapon or tool in a hand, or a hat on a head. In this quest you add a socket to the right hand of the mannequin and attach a prop to it.",
+  "checklist": [
+   "Open the mannequin Skeleton asset. In the Skeleton Tree, right-click the bone hand_r and choose Add Socket. Name the socket hand_rSocket.",
+   "In the Viewport menu, go to Character, then Bones, and enable Sockets so that you can see the socket. Move and rotate the socket until it sits in the palm of the hand. Save the Skeleton.",
+   "Right-click the socket, choose Add Preview Asset, and pick a simple prop mesh such as a cube or a Starter Content prop. Adjust the socket until the prop looks like the hand is holding it.",
+   "In BP_ThirdPersonCharacter, add a Static Mesh component that uses the same prop. Drag it onto the Mesh component to make it a child of the Mesh. Then set its Parent Socket property to hand_rSocket.",
+   "In the Event Graph, add a key press event that calls Attach Component To Component (or Detach From Component). Give it the socket name and use the Snap to Target rules. Test it in Play mode.",
+   "Copy the socket, select the bone hand_l, and use Paste Sockets To Selected Bone. Compare the two sockets."
+  ],
+  "done_when": "Send a screenshot of the Skeleton Tree with hand_rSocket under hand_r, a screenshot of the Blueprint component with Parent Socket set, and a screenshot in Play mode with the prop held in the hand."
+ },
+ "AQ17": {
+  "brief": "A test stage is a small, simple level with objects of known sizes, such as a step, a ledge and a gap. Animators use a stage like this to check that a character moves at the right scale and that the motion is easy to see. In this quest you build your own stage, light it, place two animated mannequins on it and record a short clip.",
+  "checklist": [
+   "Make a new level named L_MotionStage. Build a flat floor of about 20 by 20 meters and one long wall. You can use simple geometry or the Level Prototyping meshes.",
+   "Add objects that show real sizes: a step of about 20 cm, a ledge of about 1 m, and a gap of about 2 m. Put a Text Render actor next to each one that shows its size.",
+   "Light the stage with one Directional Light, one Sky Light, and one extra light that makes the mannequin easy to see from the front.",
+   "Place a Skeletal Mesh Actor (Quinn or Manny). Set Animation Mode to Use Animation Asset, choose a run or walk sequence, and enable Looping.",
+   "Place a second mannequin and set its Anim Class to ABP_Manny or ABP_Quinn. This lets the mentor compare a looping animation asset with an Animation Blueprint.",
+   "Add a Camera Actor that frames the whole stage. Record a clip of 10 to 20 seconds that shows the looping mannequin and the size marks. Recording the window with a capture tool is fine.",
+   "Write 5 lines that say which sequence loops, how you checked the size of the mesh against the marks, and one thing you would change."
+  ],
+  "done_when": "Send a short clip of the stage with the looping mannequin, two screenshots (one of the marks with their labels, one of the lighting from the front), and your 5 lines. A mentor reviews your work."
+ },
+ "AQ18": {
+  "brief": "A Physics Asset gives a Skeletal Mesh simple collision shapes, called bodies, that are attached to its bones and linked by joints called constraints. Unreal uses it for character collision, hit reactions and ragdolls, where the character goes limp and falls under physics. In this quest you explore the mannequin's Physics Asset and then make the character fall as a ragdoll when you press a key.",
+  "checklist": [
+   "In the Content Browser, find the mannequin Physics Asset next to SKM_Manny. Its name starts with PA_. Double-click it to open the Physics Asset Editor.",
+   "Look at the bodies and constraints on the mannequin. Select the shoulder body and count the bodies that are below it in the hierarchy.",
+   "Open the Simulation dropdown, which is the arrow next to the Simulate button in the toolbar. Try Simulation first. Then try No Gravity and hold Ctrl while you click bodies to poke them. Then select the shoulder and try Selected Simulation.",
+   "In the Content Browser, right-click SKM_Manny and choose Create, then Physics Asset, then Create. Accept the default settings and compare the new asset with the original one.",
+   "In BP_ThirdPersonCharacter, add a key press event. On the Mesh component, call Set Simulate Physics with the value true, and set its Collision Enabled to Physics Only or Collision Enabled. Set the collision of the Capsule to No Collision.",
+   "Press Play, press the key, and watch the character fall as a ragdoll. Take a screenshot while it is falling."
+  ],
+  "done_when": "Send a screenshot of the Physics Asset Editor with the mannequin bodies visible, a screenshot of the Blueprint nodes that start the ragdoll, and a screenshot in Play mode of the ragdoll on the floor."
+ },
+ "AQ19": {
+  "brief": "An Animation Montage is an asset that joins several animations into one sequence that gameplay code can start at any time, for example an attack. You can split a montage into named sections and jump between them while the game runs. A montage plays through a Slot, which is a named place in the Animation Blueprint where the montage is allowed to take over the pose. In this quest you build a montage with three sections, give it a Slot, and control it from the Character Blueprint.",
+  "checklist": [
+   "In the Content Browser, right-click an attack or interact Animation Sequence and choose Create, then Create AnimMontage. Name the new asset AM_Attack.",
+   "Open the montage. Drag two more Animation Sequences from the Asset Browser into the same Slot track, so that the three animations play one after the other.",
+   "Right-click the Montage track and create three Montage Sections named Start, Loop and End. Place one section header at the start of each animation.",
+   "In the Montage Sections panel, click Clear to remove the existing links. Then link Start to Loop, and link Loop to Loop, so that the middle part repeats.",
+   "Open Window > Anim Slot Manager. Add a Slot named FullBody, and set the Slot track of the montage to DefaultGroup.FullBody. Save the Skeleton, because Slots are stored on it.",
+   "In the AnimGraph of your Animation Blueprint, add a Slot node after the locomotion state machine. Set its Slot Name to FullBody.",
+   "In the Character Blueprint, use a Play Montage node to play AM_Attack when a key is pressed. On a second key, call Montage Jump to Section with the Section Name set to End."
+  ],
+  "done_when": "Send two screenshots: one of the Montage Sections panel that shows the links from Start to Loop and from Loop to Loop, and one of the Blueprint graph with Play Montage and Montage Jump to Section. Add one sentence that says what happens when you press the second key."
+ },
+ "AQ20": {
+  "brief": "Sometimes a character must do two things at once, such as walk and wave. The Layered blend per bone node makes this possible: it takes one pose as the base and replaces only part of the body, starting from a bone you choose, with a second pose. In this quest you set it up so that the legs keep playing the walk animation while the upper body plays a montage.",
+  "checklist": [
+   "In the Anim Slot Manager, add a Slot named UpperBody. Set your attack or wave montage (AM_UpperWave) to use the slot DefaultGroup.UpperBody.",
+   "In the AnimGraph, drag from the output of your locomotion state machine and add a New Save cached pose node. Name it LocomotionCache. A cached pose stores a result so that you can use it in more than one place.",
+   "Add a Layered blend per bone node. Add a Use cached pose LocomotionCache node and connect it to the Base Pose input.",
+   "Add a second Use cached pose LocomotionCache node and connect it to a Slot node that is set to DefaultGroup.UpperBody. Connect the Slot node to the Blend Poses 0 input.",
+   "Select the Layered blend per bone node. In its Details panel, expand Layer Setup and add one entry with Bone Name spine_01 and Blend Depth 1. Also check Mesh Space Rotation Blend.",
+   "In the Character Blueprint, add a key press event. First check Montage Is Playing, and then call Montage Play with AM_UpperWave only if the montage is not already playing.",
+   "Play in the editor, walk, and press the key. The legs should keep walking while the upper body plays the montage."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph that shows the cached pose, the Slot node, and the Layered blend per bone node with its Layer Setup visible. Also send a short clip or GIF of the character walking while the upper body plays the montage."
+ }
+}

@@ -14,6 +14,7 @@ quests:
     required_spine: false
     required: true
     title: Sculpt a walkable patch
+    brief: "A Landscape is the terrain actor that Unreal uses for outdoor ground with hills and valleys. You shape it with brush tools in Landscape Mode, a little like pushing and pulling clay. Not every level is flat, so you need to know how to make ground that the player can walk on. In this quest you sculpt a small patch with a hill, a hollow and a path, and then you walk on it to test it."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-quick-start-guide-in-unreal-engine"
     backup_url: TODO_URL
@@ -21,13 +22,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-sculpt-mode-in-unreal-engine"
     checklist:
-      - "New level L_Terrain_01. Landscape Mode → Manage → New. Keep it small (the default size or less is plenty)."
-      - "Sculpt tool: raise one hill and hold Shift to dig one hollow."
-      - "Smooth tool over the edges until nothing looks like a spike."
-      - "Ramp tool: make one path from the low ground to the top of the hill."
-      - "Drop in a Player Start and the Third Person GameMode, then walk the path in PIE."
-      - "Anywhere the character slides back or gets stuck, smooth or flatten it."
-    done_when: "Eye-level screenshot on the path plus one overview screenshot of the patch."
+      - "Create a new level named L_Terrain_01. Open Landscape Mode, go to the Manage tab and choose New. Keep the landscape small: the default size or less is plenty."
+      - "Select the Sculpt tool and raise one hill. Then hold Shift while you sculpt to dig one hollow, because Shift makes the tool push the ground down."
+      - "Use the Smooth tool over the edges until nothing looks like a spike."
+      - "Use the Ramp tool to make one path from the low ground to the top of the hill. The Ramp tool builds a straight, even slope between two points that you place."
+      - "Place a Player Start in the level and set the GameMode to the Third Person GameMode. Then walk the path in PIE, which means Play In Editor."
+      - "Find every place where the character slides back or gets stuck. Smooth or flatten the ground there."
+    done_when: "Send a screenshot taken at eye level on the path, and one overview screenshot of the whole patch."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -64,6 +65,7 @@ quests:
     required_spine: false
     required: true
     title: Light types and Lumen
+    brief: "Unreal has several types of lights, and each one sends out light in a different shape. A Point Light shines in all directions like a bulb, a Spot Light shines in a cone, and a Rect Light shines from a rectangle like a window. Lumen is the system in Unreal Engine 5 that calculates bounced light while the game runs. In this quest you place the three light types in a room, change their settings, and watch Lumen bounce light."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/light-types-and-their-mobility-in-unreal-engine"
     backup_url: TODO_URL
@@ -72,12 +74,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
     checklist:
-      - "Open Project Settings → Rendering and confirm Dynamic Global Illumination Method is Lumen."
-      - "In L_Room_01 place one each: Point, Spot and Rect Light. Set all three to Movable."
-      - "Change each light's Intensity, Attenuation Radius and color. For the Spot, change the cone angles."
-      - "Aim the Rect Light at a wall and watch Lumen bounce color onto the floor."
-      - "Toggle one light's mobility to Static and note what the tooltip or warning says."
-    done_when: "One screenshot with all three lights visible, plus one line per light on what you'd use it for."
+      - "Open Project Settings and go to the Rendering section. Confirm that Dynamic Global Illumination Method is set to Lumen."
+      - "In L_Room_01, place one Point Light, one Spot Light and one Rect Light. Set the Mobility of all three to Movable, which means the light is fully dynamic and can change while the game runs."
+      - "Change the Intensity, the Attenuation Radius (how far the light reaches) and the color of each light. For the Spot Light, also change the cone angles."
+      - "Aim the Rect Light at a wall. Watch how Lumen bounces the color of the wall onto the floor."
+      - "Change the Mobility of one light to Static, and note what the tooltip or the warning says."
+    done_when: "Send one screenshot with all three lights visible, and add one line for each light that says what you would use it for."
     xp: 70
     verify_type: screenshot
     quiz:
@@ -114,6 +116,7 @@ quests:
     required_spine: false
     required: true
     title: Lock exposure for honest review
+    brief: "Exposure is how bright the camera makes the picture. By default Unreal uses auto exposure, which slowly changes the brightness like your eyes do when you enter a dark room. This hides lighting problems and makes every screenshot look different. In this quest you lock the exposure to one fixed value with a Post Process Volume, so that you see the real brightness of your room."
     time_min: 30
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
     backup_url: TODO_URL
@@ -122,12 +125,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "In L_Room_01 add a Post Process Volume and tick Infinite Extent (Unbound)."
-      - "Walk from the bright doorway into a dark corner in PIE. Watch auto exposure adapt."
-      - "Exposure → set Metering Mode to Manual, then adjust Exposure Compensation until the room reads clearly."
-      - "Walk the same path again. Brightness should now stay put."
-      - "Save a camera bookmark and screenshot it before and after the lock."
-    done_when: "Before/after screenshots from the same bookmark, plus the Exposure settings visible in Details."
+      - "In L_Room_01, add a Post Process Volume and tick Infinite Extent (Unbound). This makes the volume apply everywhere, no matter where the camera is."
+      - "Start PIE and walk from the bright doorway into a dark corner. Watch how auto exposure slowly changes the brightness."
+      - "In the Exposure section of the volume, set Metering Mode to Manual. Then adjust Exposure Compensation until you can see the room clearly."
+      - "Walk the same path again. The brightness should now stay the same."
+      - "Save a camera bookmark, and take a screenshot from it before the lock and after the lock."
+    done_when: "Send before and after screenshots taken from the same bookmark, and a screenshot of the Details panel with the Exposure settings visible."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -165,17 +168,18 @@ quests:
     required: true
     taster_for: [level_design, gameplay_design]
     title: Foliage that doesn't block routes
+    brief: "Foliage means plants, rocks and other small meshes that you paint onto the ground in large numbers with Foliage Mode. Foliage makes a space feel real, but it must not stand in the way of the player. In this quest you paint two foliage types along your path and make sure that nothing blocks the route."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-mode-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 foliage mode paint erase density beginner"
     checklist:
-      - "In L_Terrain_01 open Foliage Mode and add two foliage types: one bush and one small grass or rock mesh."
-      - "Paint both along the edges of your ramped path. Hold Shift to erase anything that lands on it."
-      - "Open the bush foliage type and lower Density until the path edges still read."
-      - "Set the grass type's Collision Preset to NoCollision so the player walks through it."
-      - "Walk the path in PIE. Nothing on it should stop or snag you."
-    done_when: "Eye-level screenshot of the path with foliage on both sides and the path itself clear."
+      - "In L_Terrain_01, open Foliage Mode and add two foliage types: one bush, and one small grass mesh or rock mesh."
+      - "Paint both types along the edges of your ramped path. Hold Shift and paint to erase anything that lands on the path."
+      - "Open the bush foliage type and lower its Density. Stop when you can still see clearly where the edges of the path are."
+      - "Set the Collision Preset of the grass type to NoCollision, so that the player walks through it."
+      - "Walk the path in PIE. Nothing on the path should stop you or catch you."
+    done_when: "Send a screenshot taken at eye level that shows the path with foliage on both sides and the path itself clear."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -214,6 +218,7 @@ quests:
     required_spine: false
     required: true
     title: Build a metrics gym
+    brief: "Metrics are the numbers that describe what the player character can do: how wide it is, how high it can step and how far it can jump. Every space in a level is built around these numbers. A metrics gym is a test level with steps, ledges, gaps and doors of known sizes, where you measure these limits. In this quest you read the character settings, build a gym, and test every piece."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-01-project-setup-and-level-blockout-in-unreal-engine"
     backup_url: TODO_URL
@@ -222,13 +227,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-character-in-unreal-engine"
     checklist:
-      - "Open BP_ThirdPersonCharacter. Write down Capsule Radius and Capsule Half Height from the Capsule Component."
-      - "From Character Movement write down Max Step Height, Walkable Floor Angle, Jump Z Velocity and Gravity Scale."
-      - "New level L_MetricsGym. Build a row of steps (15, 30, 45, 60 cm), a row of ledges (100–250 cm, 25 cm apart) and a row of gaps (100–500 cm, 50 cm apart)."
-      - "Build three doorways: capsule diameter, diameter + 40 cm, and your comfortable width."
-      - "PIE and test every piece. Note the highest step you walk up, the highest ledge you jump onto and the widest gap you clear."
-      - "Label each piece with a Text Render actor so the numbers are visible in screenshots."
-    done_when: "Screenshot of the labelled gym plus a metrics list (capsule, step, jump height, jump distance, door width)."
+      - "Open BP_ThirdPersonCharacter and select the Capsule Component, the invisible shape that collides with the world. Write down its Capsule Radius and Capsule Half Height."
+      - "Select the Character Movement component. Write down Max Step Height, Walkable Floor Angle, Jump Z Velocity and Gravity Scale."
+      - "Create a new level named L_MetricsGym. Build a row of steps (15, 30, 45 and 60 cm high), a row of ledges (from 100 to 250 cm, 25 cm apart) and a row of gaps (from 100 to 500 cm, 50 cm apart)."
+      - "Build three doorways. Make the first as wide as the capsule diameter, the second as wide as the diameter + 40 cm, and the third a width that feels comfortable to you."
+      - "Start PIE and test every piece. Note the highest step you can walk up, the highest ledge you can jump onto, and the widest gap you can jump over."
+      - "Put a Text Render actor next to each piece as a label, so that the numbers are visible in screenshots."
+    done_when: "Send a screenshot of the gym with its labels, and a list of your metrics: capsule size, step height, jump height, jump distance and door width."
     xp: 70
     verify_type: screenshot
     quiz:
@@ -266,6 +271,7 @@ quests:
     required_spine: false
     required: true
     title: Blockout toolkit
+    brief: "A blockout is a rough version of a level made from simple shapes, so that you can test the space before you spend time on art. Unreal gives you three common ways to build one: scaled cubes, geometry brushes, and the CubeGrid tool in Modeling Mode. In this quest you build the same small room with each tool and find out which one is the fastest to change."
     time_min: 50
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
     backup_url: TODO_URL
@@ -275,13 +281,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-brush-actors-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
     checklist:
-      - "New level L_Toolkit. Build the same small room (floor, walls, one doorway) three times."
-      - "Version A: scaled cubes from Place Actors."
-      - "Version B: geometry brushes, one additive box plus a subtractive box for the doorway."
-      - "Version C: Modeling Mode CubeGrid, grid set to a size that matches your metrics."
-      - "Change the doorway width in all three. Time how long each change takes."
-      - "Write down which tool you'd use for a quick room, a big irregular shape, and a reusable piece."
-    done_when: "Writeup (3–5 lines) naming which tool you'd pick for what and why, plus one screenshot of the three rooms."
+      - "Create a new level named L_Toolkit. You will build the same small room three times, with a floor, walls and one doorway."
+      - "Build version A from cubes that you take from the Place Actors panel and scale to the right size."
+      - "Build version B with geometry brushes. Use one additive box for the room, and one subtractive box that cuts out the doorway."
+      - "Build version C with the CubeGrid tool in Modeling Mode. Set the grid to a size that matches your metrics."
+      - "Change the width of the doorway in all three versions. Time how long each change takes."
+      - "Write down which tool you would use for a quick room, which for a big irregular shape, and which for a piece you want to use again."
+    done_when: "Send a writeup of 3 to 5 lines that says which tool you would pick for which job and why, and one screenshot of the three rooms."
     xp: 60
     verify_type: writeup
     quiz:
@@ -318,17 +324,18 @@ quests:
     required_spine: false
     required: true
     title: Three routes
+    brief: "A route is one way for the player to get from the start to the goal. When a level offers several routes that are clearly different, the player has a real choice and does not feel stuck. In this quest you block out three routes between a start and a goal, connect them, and walk each one to test it."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "level design multiple routes critical path loops blockout"
     checklist:
-      - "New level L_Routes_01. Place a start and a goal (a lit box is fine) about 40–60 m apart."
-      - "Build three routes to the goal, each different in one clear way: short and exposed, long and covered, or high and requiring a jump."
-      - "Build every route to your LD-01 metrics. No guessed step heights."
-      - "Connect at least two routes somewhere in the middle so the player can switch."
-      - "PIE and walk each route start to goal. Fix anything that stops you."
-    done_when: "Top-down screenshot with the three routes drawn on it in different colors, plus one eye-level shot from the start."
+      - "Create a new level named L_Routes_01. Place a start and a goal about 40 to 60 m apart. A lit box is fine as the goal."
+      - "Build three routes to the goal. Each one must be different in one clear way: short and exposed, long and covered, or high and requiring a jump."
+      - "Build every route to the metrics you measured in your metrics gym (quest LDQ11). Do not guess any step heights."
+      - "Connect at least two of the routes somewhere in the middle, so that the player can switch from one to the other."
+      - "Start PIE and walk each route from the start to the goal. Fix anything that stops you."
+    done_when: "Send a top-down screenshot with the three routes drawn on it in different colors, and one screenshot taken at eye level from the start."
     xp: 80
     verify_type: screenshot
     quiz:
@@ -365,6 +372,7 @@ quests:
     required_spine: false
     required: true
     title: Sightlines and landmarks
+    brief: "People find their way by what they can see. A sightline is a clear line of view from where the player stands to something in the distance. A landmark is a large object with a shape that is easy to recognize, which tells the player where they are and where to go. In this quest you add a landmark near your goal, check where it can be seen from, and build a reveal, a moment where a hidden view opens up."
     time_min: 45
     official_url: TODO_URL
     backup_url: TODO_URL
@@ -372,11 +380,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     checklist:
-      - "In L_Routes_01 add one landmark near the goal: tall, with a unique silhouette (a tower, a big arch, a dead tree)."
-      - "Check it's visible from the start and from at least one point on every route. Check in PIE at eye height, not the flying camera."
-      - "Block one sightline on purpose with a wall, then open it at a corner to make a reveal."
+      - "In L_Routes_01, add one landmark near the goal. It should be tall and have a unique silhouette (outline), for example a tower, a big arch or a dead tree."
+      - "Check that the landmark is visible from the start and from at least one point on every route. Check this in PIE at eye height, not with the flying editor camera."
+      - "Block one sightline on purpose with a wall. Then open the view again at a corner to make a reveal."
       - "Save a bookmark at each point where the landmark first comes into view."
-    done_when: "Eye-level screenshots from the start and from each route showing the landmark, plus one before/after of the reveal."
+    done_when: "Send screenshots taken at eye level from the start and from each route that show the landmark, and one before and after pair of the reveal."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -413,6 +421,7 @@ quests:
     required_spine: false
     required: true
     title: Guiding the player
+    brief: "Players follow light, color and shape more than they follow signs. You can use these three things as quiet hints that tell the player where to go and what they can use. In this quest you choose one guidance color, light the route entrances, add a shape hint, and check every junction in your level."
     time_min: 45
     official_url: TODO_URL
     backup_url: TODO_URL
@@ -421,12 +430,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
     checklist:
-      - "Pick one guidance color (for example yellow = climbable or usable). Make an MI_ for it and use it only for that."
-      - "Apply it to every jumpable ledge and usable object in L_Routes_01. Nothing else gets that color."
-      - "Light the entrance of each route slightly brighter than the walls around it."
-      - "Give one route a shape cue: an arch, a gap in a wall or a line of pillars pointing toward it."
-      - "Ask yourself at each junction, in PIE, what tells you to go this way. Fix any junction with no answer."
-    done_when: "Two eye-level screenshots at a junction showing the color, light and shape cues, plus one line naming your color rule."
+      - "Pick one guidance color, for example yellow = climbable or usable. Make a Material Instance for it, with a name that starts with MI_, and use it only for that meaning."
+      - "Apply it to every ledge the player can jump onto and to every usable object in L_Routes_01. Nothing else gets that color."
+      - "Light the entrance of each route so that it is slightly brighter than the walls around it."
+      - "Give one route a shape cue, which is a shape that points the way: an arch, a gap in a wall, or a line of pillars that points toward the route."
+      - "Start PIE and stop at each junction. Ask yourself what tells you to go this way. Fix every junction where you have no answer."
+    done_when: "Send two screenshots taken at eye level at a junction that show the color, light and shape cues, and add one line that states your color rule."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -464,6 +473,7 @@ quests:
     required_spine: false
     required: true
     title: Verticality within metrics
+    brief: "Verticality means using height in a level, with places above and below the main floor. Height adds new routes and good views, but only when the character can really climb it. In this quest you raise one of your routes with a ramp, stairs and a ledge, and you size every piece from your measured metrics."
     time_min: 50
     official_url: TODO_URL
     backup_url: TODO_URL
@@ -472,12 +482,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cubegrid-tool-in-unreal-engine"
     checklist:
-      - "In L_Routes_01, raise the high route by 3–4 m using a ramp, a staircase and one jump-up ledge."
-      - "Build stair risers below your measured step height and the ramp below your walkable angle."
-      - "Size the ledge and any gap with margin: noticeably below your max jump, not right at it."
-      - "Add a way back down from the high point (a drop or stairs) so it's not a trap."
-      - "PIE and climb every piece three times. Any miss means the piece is too close to the limit."
-    done_when: "Side-view screenshot of the vertical route with the heights labelled, plus one PIE screenshot from the top."
+      - "In L_Routes_01, raise the high route by 3 to 4 m. Use a ramp, a staircase and one ledge that the player must jump up onto."
+      - "Make each stair riser (the height of one stair) lower than your measured step height. Make the ramp less steep than your walkable angle."
+      - "Size the ledge and any gap with a margin. They should be noticeably below your maximum jump, not right at it."
+      - "Add a way back down from the high point, such as a drop or stairs, so that it is not a trap."
+      - "Start PIE and climb every piece three times. If you miss even once, the piece is too close to the limit."
+    done_when: "Send a side-view screenshot of the vertical route with the heights labelled, and one PIE screenshot taken from the top."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -515,6 +525,7 @@ quests:
     required_spine: false
     required: true
     title: Fresh-eyes review
+    brief: "It is hard to see problems in a level that you have just built, because you already know where everything is. A review with fresh eyes means that you take a break and then look at the level as if you were a new player. If you do the review the same way every time, you can compare the results. In this quest you save review bookmarks, play the level once, note where you hesitate, and fix the two worst problems."
     time_min: 40
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     backup_url: TODO_URL
@@ -523,12 +534,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
     checklist:
-      - "Take a break of at least an hour away from L_Routes_01 before this quest."
-      - "Save review bookmarks with Ctrl+1 to Ctrl+5: start, each route entrance and the goal."
-      - "Press G for Game View at each bookmark and screenshot it."
-      - "PIE the whole level once as if you'd never seen it. Write a note every time you hesitate, look around or get lost."
-      - "Pick the two worst notes and fix them. Re-screenshot the same bookmarks."
-    done_when: "Writeup with your hesitation notes and the two fixes, plus before/after screenshots from the same bookmarks."
+      - "Before you start this quest, take a break of at least one hour away from L_Routes_01."
+      - "Save review bookmarks with Ctrl+1 to Ctrl+5: one at the start, one at each route entrance, and one at the goal."
+      - "At each bookmark, press G to turn on Game View, which hides the editor icons, and take a screenshot."
+      - "Play the whole level once in PIE as if you had never seen it. Write a note every time you hesitate, look around or get lost."
+      - "Pick the two worst notes and fix those problems. Then take new screenshots from the same bookmarks."
+    done_when: "Send a writeup with your hesitation notes and your two fixes, and before and after screenshots taken from the same bookmarks."
     xp: 60
     verify_type: writeup
     quiz:
@@ -565,6 +576,7 @@ quests:
     required_spine: false
     required: true
     title: Lighting for readability
+    brief: "The first job of lighting in a level is to show the player the route and the dangers. Looking pretty comes second. The Lighting Only view mode shows the level with light but without textures, so you can judge the brightness alone. In this quest you check the lighting of your routes, make the goal the brightest point, and make sure an enemy would stand out against the background."
     time_min: 50
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
     backup_url: TODO_URL
@@ -573,13 +585,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
     checklist:
-      - "In L_Routes_01, confirm the unbound Post Process Volume with locked exposure from WL-03 is in place."
-      - "Switch the viewport to Lighting Only. Check each route entrance is brighter than the walls around it."
-      - "Light the goal area as the brightest point in the level."
-      - "Place a mannequin where an enemy might stand. Adjust lights until its silhouette reads against the background."
+      - "In L_Routes_01, confirm that the unbound Post Process Volume with locked exposure (from quest EAQ10) is in place."
+      - "Switch the viewport to the Lighting Only view mode. Check that each route entrance is brighter than the walls around it."
+      - "Light the goal area so that it is the brightest point in the level."
+      - "Place a mannequin where an enemy might stand. Adjust the lights until its silhouette (outline) is easy to see against the background."
       - "Remove or dim any light that pulls attention toward a dead end."
-      - "Check in Lit mode again from your LD-07 bookmarks."
-    done_when: "Lit and Lighting Only screenshots from the same 2 bookmarks, plus one of the mannequin silhouette."
+      - "Switch back to Lit mode and check the level again from the bookmarks you saved in quest LDQ17."
+    done_when: "Send Lit and Lighting Only screenshots taken from the same 2 bookmarks, and one screenshot of the mannequin silhouette."
     xp: 70
     verify_type: screenshot
     quiz:
@@ -617,6 +629,7 @@ quests:
     required: true
     capstone: true
     title: Three-route courtyard
+    brief: "A courtyard is an open space with walls around it, and it is a good size for a first complete level. This quest brings together what you practiced in the earlier level design quests: metrics, routes, a landmark, guidance and readable lighting. You build one small courtyard with three routes to a goal, review it, and send screenshots, a map and a short writeup."
     time_min: 180
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
     backup_url: TODO_URL
@@ -625,14 +638,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/taking-screenshots-in-unreal-engine"
     checklist:
-      - "New level L_Courtyard. Enclosed courtyard, one entrance and one goal, all built to your LD-01 metrics."
-      - "Three routes to the goal that differ in a clear way. At least one uses height (LD-06). At least two connect."
-      - "One landmark visible from the entrance and from each route (LD-04). Follow your color rule (LD-05)."
-      - "Readability lighting pass with locked exposure: goal brightest, dead ends dim (WL-03, LD-08)."
-      - "Save 3 review bookmarks (entrance, one mid-route point, goal) and screenshot each in Game View."
-      - "Take a top-down orthographic screenshot and draw the three routes on it in different colors."
-      - "Self-playtest once with fresh eyes (LD-07) and fix the worst problem."
-    done_when: "Posted together: 3 bookmark screenshots, a top-down map with the route overlay, and a 5–8 line writeup (how the routes differ, what guides the player, what you fixed after the playtest)."
+      - "Create a new level named L_Courtyard. Build an enclosed courtyard with one entrance and one goal, and build everything to the metrics you measured in quest LDQ11."
+      - "Build three routes to the goal that differ in a clear way. At least one route must use height (as in quest LDQ16), and at least two routes must connect."
+      - "Add one landmark that is visible from the entrance and from each route (as in quest LDQ14). Follow your color rule (from quest LDQ15)."
+      - "Do a lighting pass for readability with locked exposure. The goal must be the brightest point and the dead ends must be dim (as in quests EAQ10 and LDQ18)."
+      - "Save 3 review bookmarks: one at the entrance, one at a point in the middle of a route, and one at the goal. Take a screenshot of each in Game View."
+      - "Take a top-down screenshot in the orthographic Top view, which shows the level from above without perspective. Draw the three routes on it in different colors."
+      - "Play the level once yourself with fresh eyes (as in quest LDQ17), and fix the worst problem you find."
+    done_when: "Send these together: your 3 bookmark screenshots, a top-down map with the routes drawn on it, and a writeup of 5 to 8 lines that says how the routes differ, what guides the player, and what you fixed after the playtest."
     xp: 200
     verify_type: screenshot
     quiz:
@@ -671,15 +684,16 @@ quests:
     required: false
     taster: true
     title: Walk-and-note a courtyard
+    brief: "Level designers check a space by walking through it as a player and noting how it feels. The places where you hesitate show where the space did not guide you. In this quest you walk through a small courtyard, write three notes about what you notice, and take a screenshot of each spot."
     time_min: 25
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/playing-and-simulating-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "level design playtest notes walkthrough beginner"
     checklist:
-      - "Open the Third Person template map, or block a quick courtyard next to L_Room_01 (floor, walls, 2 exits)."
-      - "PIE and walk it. Write 3 notes: where you hesitated, what drew your eye, one place the space felt too tight or too big."
-      - "Press F8 to eject and screenshot the spot for each note."
-    done_when: "3 notes with a screenshot each."
+      - "Open the Third Person template map. If you prefer, block out a quick courtyard next to L_Room_01 with a floor, walls and 2 exits."
+      - "Start PIE and walk through the space. Write 3 notes: where you hesitated, what drew your eye, and one place where the space felt too tight or too big."
+      - "For each note, press F8 to eject, which lets you leave the character and fly the camera freely while the game runs. Take a screenshot of the spot."
+    done_when: "Send your 3 notes with one screenshot for each note."
     xp: 40
     verify_type: writeup
     quiz:
@@ -709,15 +723,16 @@ quests:
     subjects: [water]
     required: false
     title: A water body as a route edge
+    brief: "The Water plugin gives Unreal ready-made lakes, rivers and oceans that you can place in a level. In level design, water is a useful edge: it shows the player where the route ends without a wall. In this quest you add a lake or a river to your terrain and let your path run beside it."
     time_min: 30
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-system-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 water system lake river beginner"
     checklist:
-      - "Enable the Water plugin and restart the editor."
-      - "Add a Water Body Lake or River to L_Terrain_01."
-      - "Use it as a boundary the path runs beside, not a blocker the player can't read."
-    done_when: "Eye-level screenshot of the path beside the water."
+      - "Enable the Water plugin in the Plugins window and restart the editor."
+      - "Add a Water Body Lake or a Water Body River to L_Terrain_01."
+      - "Use the water as a boundary that the path runs beside. It should not be a blocker that the player cannot understand."
+    done_when: "Send a screenshot taken at eye level that shows the path beside the water."
     xp: 30
     verify_type: screenshot
     quiz: []
@@ -729,6 +744,7 @@ quests:
     subjects: [fog, mood, guidance]
     required: false
     title: Fog for mood and guidance
+    brief: "Fog changes the mood of a level, and it can also guide the player. Places with thick fog feel less inviting, so players tend to go toward the clear areas. In this quest you turn on Volumetric Fog, which is fog that reacts to light in 3D, and you place a Local Fog Volume, a small area of fog, over a dead end."
     time_min: 30
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/local-fog-volumes-in-unreal-engine"
     backup_url: TODO_URL
@@ -736,10 +752,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/volumetric-fog-in-unreal-engine"
     checklist:
-      - "Enable Volumetric Fog on the Exponential Height Fog in L_Routes_01."
+      - "In L_Routes_01, select the Exponential Height Fog actor and enable Volumetric Fog on it."
       - "Add a Local Fog Volume over one dead end to make it feel less inviting."
-      - "Check the goal and landmark still read through the fog."
-    done_when: "Before/after screenshots from the same bookmark."
+      - "Check that you can still see the goal and the landmark clearly through the fog."
+    done_when: "Send before and after screenshots taken from the same bookmark."
     xp: 30
     verify_type: screenshot
     quiz: []
@@ -751,14 +767,15 @@ quests:
     subjects: [decals, guidance]
     required: false
     title: Decals as guidance
+    brief: "A decal is a material that is projected onto surfaces, like a sticker, a stain or a painted arrow. A line of small decals on the ground can lead the eye of the player toward a route, without any text or sign. In this quest you place a few decals that lead toward one route entrance."
     time_min: 25
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 decal actor beginner"
     checklist:
-      - "Place a Decal Actor using a Starter Content or simple decal material."
-      - "Use 3–4 decals (scuffs, arrows, stains) to lead toward one route entrance."
-    done_when: "Eye-level screenshot showing the decal trail."
+      - "Place a Decal Actor in your level. Give it a decal material from the Starter Content or another simple decal material."
+      - "Use 3 to 4 decals, such as scuffs, arrows or stains, to lead toward one route entrance."
+    done_when: "Send a screenshot taken at eye level that shows the trail of decals."
     xp: 25
     verify_type: screenshot
     quiz: []
@@ -770,15 +787,16 @@ quests:
     subjects: [level-instancing, reuse]
     required: false
     title: Reuse a room with Level Instances
+    brief: "A Level Instance is a group of actors saved as its own small level, which you can place many times in a bigger level. When you edit one copy, all the copies change. This saves a lot of work when a level uses the same room or building several times. In this quest you turn a blockout room into a Level Instance, place more copies, and check that an edit shows up in all of them."
     time_min: 35
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 level instance create from selection beginner"
     checklist:
-      - "Select a small blockout room and create a Level Instance from the selection."
-      - "Place the instance twice more in the level."
-      - "Edit one copy and confirm the change shows up in all of them."
-    done_when: "Screenshot showing three instances after the shared edit."
+      - "Select all the actors of a small blockout room and create a Level Instance from the selection."
+      - "Place the instance two more times in the level, so that you have three."
+      - "Edit one copy, and confirm that the change shows up in all of them."
+    done_when: "Send a screenshot that shows the three instances after the shared edit."
     xp: 35
     verify_type: screenshot
     quiz: []
@@ -790,15 +808,16 @@ quests:
     subjects: [landscape, splines, paths]
     required: false
     title: Landscape spline path
+    brief: "A landscape spline is a curved line that you draw on a landscape with control points. Unreal can then shape the ground to follow that line, which is a fast way to make roads and paths. In this quest you draw a spline along your ramped path and flatten the landscape under it so that the path is easy to walk."
     time_min: 35
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-splines-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 landscape splines road path beginner"
     checklist:
-      - "In L_Terrain_01 open Landscape Mode → Manage → Splines."
-      - "Ctrl+click to lay control points along your ramped path."
-      - "Deform the landscape to the spline so the path sits flat and walkable."
-    done_when: "Screenshot of the spline path plus one PIE screenshot walking it."
+      - "In L_Terrain_01, open Landscape Mode, go to the Manage tab and select the Splines tool."
+      - "Hold Ctrl and click on the landscape to place control points along your ramped path."
+      - "Deform the landscape to the spline, so that the path sits flat and is walkable."
+    done_when: "Send a screenshot of the spline path, and one PIE screenshot of you walking on it."
     xp: 35
     verify_type: screenshot
     quiz: []
@@ -810,6 +829,7 @@ quests:
     subjects: [pcg, scatter]
     required: false
     title: PCG scatter, first look
+    brief: "PCG means Procedural Content Generation. It is a system in Unreal where you build a graph of rules, and the graph places many objects for you. To scatter means to spread objects over an area. In this quest you take a first look at PCG: you scatter one rock mesh inside a volume and keep it away from your path."
     time_min: 40
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview"
     backup_url: TODO_URL
@@ -817,10 +837,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-framework-in-unreal-engine"
     checklist:
-      - "Enable the PCG plugin. Create a PCG Graph and a PCG Volume."
-      - "Scatter one rock mesh on the landscape inside the volume."
-      - "Move the volume away from your path so the scatter doesn't block it."
-    done_when: "Screenshot of the graph and the scattered result."
+      - "Enable the PCG plugin. Then create a PCG Graph, which holds the rules, and a PCG Volume, which is the box that marks where the graph works."
+      - "Set up the graph so that it scatters one rock mesh on the landscape inside the volume."
+      - "Move the volume away from your path, so that the scattered rocks do not block it."
+    done_when: "Send a screenshot of the graph and a screenshot of the scattered result."
     xp: 40
     verify_type: screenshot
     quiz: []
@@ -832,15 +852,16 @@ quests:
     subjects: [lighting, night, readability]
     required: false
     title: Night readability variant
+    brief: "A level that is easy to read in daylight can become confusing at night. The same rules still apply: the player must be able to see the route entrances and the goal. In this quest you make a night copy of your routes level and use local lights, such as Point Lights and Spot Lights, to keep it readable."
     time_min: 40
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/directional-lights-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 night lighting readable level design moonlight"
     checklist:
-      - "Duplicate L_Routes_01 as L_Routes_01_Night."
-      - "Lower the sun to a dim, cool moonlight and keep exposure locked."
-      - "Use local lights so every route entrance and the goal still read."
-    done_when: "Day and night screenshots from the same 3 bookmarks."
+      - "Duplicate L_Routes_01 and name the copy L_Routes_01_Night."
+      - "Lower the sun and change it to a dim, cool moonlight. Keep the exposure locked."
+      - "Add local lights so that every route entrance and the goal are still easy to see."
+    done_when: "Send day and night screenshots taken from the same 3 bookmarks."
     xp: 40
     verify_type: screenshot
     quiz: []
@@ -852,15 +873,16 @@ quests:
     subjects: [audio, ambience]
     required: false
     title: Ambient sound that pulls
+    brief: "Sound can guide a player just like light can. A sound that gets louder as you get closer pulls the player toward its source. Attenuation is the setting that controls how a sound gets quieter with distance, and reverb is the echo of a room. In this quest you place a looping sound near your goal, set how far it reaches, and change the reverb of one room."
     time_min: 25
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "unreal engine 5 ambient sound actor attenuation audio volume beginner"
     checklist:
-      - "Place an Ambient Sound near the goal (Starter Content has usable loops)."
-      - "Set attenuation so it's audible from the route entrances and louder near the goal."
+      - "Place an Ambient Sound actor near the goal. The Starter Content has looping sounds that you can use."
+      - "Set the attenuation so that the player can hear the sound from the route entrances, and so that it is louder near the goal."
       - "Add an Audio Volume to one room and change its reverb."
-    done_when: "Writeup: where the sound is and how it pulls the player."
+    done_when: "Send a writeup that says where the sound is and how it pulls the player."
     xp: 25
     verify_type: writeup
     quiz: []
@@ -872,14 +894,15 @@ quests:
     subjects: [grass, landscape]
     required: false
     title: Landscape grass quick start
+    brief: "A Landscape Grass Type is an asset that lets the landscape material place grass by itself, on the layers you choose. The Grass Quick Start is the page in the Unreal documentation that shows how to set this up. In this quest you follow that guide on your terrain and keep the path free of grass."
     time_min: 35
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/grass-quick-start-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 landscape grass type quick start"
     checklist:
-      - "Follow the Grass Quick Start on L_Terrain_01 with one Landscape Grass Type."
-      - "Paint a path layer with no grass so the route stays clear."
-    done_when: "Eye-level screenshot of grass framing a clear path."
+      - "Follow the Grass Quick Start guide on L_Terrain_01. Use one Landscape Grass Type."
+      - "Paint a path layer that has no grass, so that the route stays clear."
+    done_when: "Send a screenshot taken at eye level that shows grass on both sides of a clear path."
     xp: 35
     verify_type: screenshot
     quiz: []
@@ -891,15 +914,16 @@ quests:
     subjects: [landmarks, silhouette]
     required: false
     title: Landmark silhouette study
+    brief: "A silhouette is the outline of an object when you see it as one dark shape. From far away, fine detail disappears and only the silhouette is left, so a good landmark needs an outline that is easy to recognize. In this quest you block out three landmark ideas and compare their silhouettes against the sky."
     time_min: 30
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "level design landmark silhouette readability study"
     checklist:
-      - "Block out 3 landmark options in Modeling Mode."
-      - "View each at distance against the sky in Unlit or Lighting Only view mode."
-      - "Keep the one you recognize fastest and note why."
-    done_when: "One screenshot with all 3 silhouettes plus a line on the winner."
+      - "Block out 3 landmark options with the tools in Modeling Mode."
+      - "Look at each one from a distance against the sky. Use the Unlit or the Lighting Only view mode, so that you judge only the shape."
+      - "Keep the one that you recognize the fastest, and note why."
+    done_when: "Send one screenshot that shows all 3 silhouettes, and add one line about the one you chose."
     xp: 25
     verify_type: screenshot
     quiz: []

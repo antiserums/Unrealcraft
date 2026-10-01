@@ -1,0 +1,154 @@
+{
+ "AQ33": {
+  "brief": "Retargeting means taking animations made for one skeleton and playing them on a character with a different skeleton. An IK Rig describes each skeleton as chains of bones, and an IK Retargeter is the asset that maps the chains of the source character to the chains of the target character. It uses a list of operations, called ops, to copy and correct the motion. Doing this for one animation is easy. In this quest you set up a retargeter properly and then convert ten or more animations in one batch.",
+  "checklist": [
+   "Pick a source character, for example the UE5 Mannequin, and a target character that has a different skeleton. Create one IK Rig for each and name them IKR_Source and IKR_Target.",
+   "In each IK Rig, run Auto Create Retarget Chains and Set Pelvis. Read the notification that appears, and fix by hand any chain that the tool got wrong.",
+   "Create an IK Retargeter named RTG_SourceToTarget: in the Add menu choose Animation, then IK Rig, then IK Retargeter. Click Add Default Ops. Check the chain mapping with Map All (Fuzzy), which matches chains by similar names, and fix any wrong chain.",
+   "If the two characters stand in different reference poses, for example an A-pose and a T-pose, create a new retarget pose and use Auto Align. Do not edit the Default Pose.",
+   "Preview 3 animations in the Asset Browser. Fix one problem you can see by changing an op setting. For example, change FK Chains Rotation Mode on the fingers, or add a Pin Bones op for a weapon bone.",
+   "Now retarget a batch. In the Content Browser, select 10 or more source Animation Sequences, right-click them and choose Retarget Animation Assets. Turn off Auto Generate Retargeter, pick RTG_SourceToTarget, use Add Suffix so the new files get a clear name, and export.",
+   "Create one Override Set, for example IsHoldingWeapon, that changes one property of an op. Show it on the Retarget Pose From Mesh node."
+  ],
+  "done_when": "Send screenshots of the chain mapping, the op stack, and the batch export options, and a screenshot of the exported folder in the Content Browser. Add 5 lines that say which chain the auto tool got wrong, which op fixed your worst problem, and what the override set changes."
+ },
+ "AQ34": {
+  "brief": "Every animated character costs a little computer time on each frame. With fifty characters on screen, this cost can become larger than the time you have for one frame, and the game slows down. An animation budget is a time limit that you set on purpose, and Unreal has tools that keep animation work inside it. In this quest you measure a crowd of 50 characters, make their Animation Blueprint cheaper, turn on the Animation Budget Allocator, set up LODs (simpler versions of the mesh for far distances), and compare the numbers before and after.",
+  "checklist": [
+   "Spawn 50 or more copies of BP_CrowdCharacter, each with an Animation Blueprint. Type stat unit in the console to show the frame times, and note the game thread time.",
+   "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon.",
+   "Enable the Animation Budget Allocator plugin. Set the Mesh Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play.",
+   "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh.",
+   "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level, under the sections [ViewDistanceQuality@0..3]. Test two of the levels.",
+   "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD.",
+   "Compare stat unit before and after your changes, and write the numbers down."
+  ],
+  "done_when": "Send screenshots of the budget graph with the overlay, of the Compiler Results with no Blueprint usage warnings, and of the LOD settings, and a table with the stat unit numbers before and after. Add 5 lines about what gave the biggest improvement and one thing you would not do on a hero character."
+ },
+ "AQ35": {
+  "brief": "A Control Rig gives a character controls that an animator can grab and move. Building one by hand takes a long time. A Modular Control Rig is built from ready-made parts called modules, such as a spine, an arm or a leg, that you drop onto the skeleton. Each module connects to a socket, a point on the skeleton where it attaches. In this quest you build a full rig from modules, repair a broken connection, and create a module of your own.",
+  "checklist": [
+   "Enable the Control Rig Modules plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Create CR_Modular_Hero: in the Add menu choose Animation, then Control Rig, then Control Rig, and choose ModularRig. Set the Preview Mesh to your character.",
+   "Drag the Spine module onto the unresolved socket. Then add Neck, both Legs, both Feet, Shoulders and Arms. For the fingers, select all finger sockets at once and drop one Finger module on them.",
+   "Delete the modules of the left arm. Build them again by selecting the modules of the right arm and using Mirror in the Module Hierarchy.",
+   "Make one connector unresolved on purpose, for example by renaming a bone or removing a socket. Then fix it with Use Selected or with the hierarchy dropdown. Take a screenshot of the red none before the fix and another one after the fix.",
+   "Create your own module. Make a new Control Rig, choose Switch to Rig Module, and set its Name, Icon and Description. Add one Secondary connector with a Type Rule, and then add your module to CR_Modular_Hero.",
+   "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and record a short clip."
+  ],
+  "done_when": "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module, and send the Sequencer clip. Add 4 lines about what your module does and how its connectors resolve."
+ },
+ "AQ36": {
+  "brief": "A kit is a folder that holds everything another person needs to animate a character: the mesh, the skeleton, the rig, the retargeter and a set of animations, with a short guide. The real test is that someone else can use it without your help. In this quest you build such a kit for a character that is not the Mannequin, give it to another member to try, and collect their feedback.",
+  "checklist": [
+   "Pick a character that is not the Mannequin. It can be your own or a free one. Build CR_Kit_Character as a Modular Control Rig that contains at least one custom module you made yourself.",
+   "Build IKR_Kit_Character and RTG_MannequinToKit. Retarget at least 12 Mannequin animations in one batch, including idle, walk, run, jump and two montages. Give the new files a clear suffix.",
+   "Fix the three worst retarget problems with ops, such as the retarget pose, Pin Bones or the FK Chains modes. Record a clip before and after each fix.",
+   "Put everything in one folder named Content/Kits/<CharacterName>: the mesh, the skeleton, the rigs, the retargeter and the animations. Nothing in the folder may use assets from outside the folder, except assets that come with the engine.",
+   "Write a file named README_Kit.md inside the folder. It explains how to open the rig, how to retarget more animations with the retargeter, and the known limits. Include one screenshot for each step.",
+   "Give the folder to another member. They must play one retargeted animation and set a key for one pose on the rig in Sequencer without asking you a question. Collect their feedback.",
+   "Record a clip of 60 seconds. It shows the rig posed in Sequencer, and then two retargeted animations playing in a level."
+  ],
+  "done_when": "Send the kit folder (or a zip file made with Migrate), the file README_Kit.md, the 60 second clip, the before and after clips of the three fixes, and the written feedback of your tester. A mentor reviews your work."
+ },
+ "AQ37": {
+  "brief": "The ML Deformer uses machine learning to give a game character detailed muscle and skin movement, like in films, at a cost that a game can afford. You train it with examples: an animation of many different poses, and a Geometry Cache, a file that stores how the high quality mesh should look in every one of those poses. The trained model then corrects the normal mesh while the game runs. In this quest you train a small model, test it, reduce its memory use, and add it to a character.",
+  "checklist": [
+   "Enable the two plugins ML Deformer Framework and ML Deformer Neural Morph Model, and restart the editor.",
+   "Get training data: an Animation Sequence of random poses and a matching Geometry Cache (an .abc file). If you have no data from Maya, use the ML Deformer Sample from Fab.",
+   "If you import an Alembic file yourself, use these settings: set Import Type to Geometry Cache, turn Flatten Tracks off, set Compressed Position Precision to 0.001, and turn Store Imported Vertex Numbers on.",
+   "Create MLD_Character with the Neural Morph Model: in the Add menu choose Animation, then Deformers, then ML Deformer. Assign the Skeletal Mesh, the Anim Sequence and the Geometry Cache. Enable Draw Deltas and move through 10 frames to check that the two meshes line up.",
+   "In Network Inputs, click Add All Animated Bones, and then remove the twist, roll and helper bones. Set Mode to Local. Train first with a small Num Iterations, between 1000 and 3000.",
+   "Switch to Testing mode. Compare Weight 0 with Weight 1, and show the Activations heat map. Then raise Delta Zero Threshold until the value GPU Memory (Morph Targets) drops and you still see no loss in quality.",
+   "In BP_MLCharacter, add an MLDeformer component and assign MLD_Character to it. Set the Mesh Deformer of the mesh to DefaultMLDeformerGraph. You must enable Show Engine and Plugin Content to find this asset."
+  ],
+  "done_when": "Send screenshots of the deltas debug view, of the heat map in Testing mode, of the Statistics section before and after your Delta Zero Threshold change, and of the Blueprint components. Add 5 lines that say which bones you removed and why, and give one case where you would NOT use the ML Deformer."
+ },
+ "AQ38": {
+  "brief": "Cloth simulation makes a cape, a skirt or a coat move by physics, so that it swings and follows the character. Unreal does this with its Chaos Cloth system. You control the cloth by painting masks on the mesh: values that say how far each point of the cloth is allowed to move. Good masks and good collision keep the cloth from passing through the body. In this quest you turn a cape into cloth, paint its masks, tune the settings, and fix one clipping problem.",
+  "checklist": [
+   "Use a character whose cape, skirt or coat has its own material section. If you have none, add a simple cape mesh to SK_ClothCharacter and import it.",
+   "In the Skeletal Mesh Editor, click Section Selection and select the cape section. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character, which is used for collision.",
+   "Right-click the section again and choose Apply Clothing Asset, then CA_Cape. Open Window > Clothing and click Activate Cloth Paint.",
+   "Create a Max Distance mask. Paint the value 0 along the shoulders, so the cloth stays fixed there. Then use the Gradient tool to go down to a large value at the hem, the bottom edge of the cape. Hold H to preview the cloth.",
+   "Add a Backstop Distance mask so that the cape cannot pass into the back of the character. Then tune these Config values: Damping, Gravity Scale and Collision Thickness. Set Wind Method to Accurate.",
+   "Play the character with a run animation and a turn, and record a clip of 20 seconds. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh.",
+   "Read the overview page of the Panel Cloth Editor. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
+  ],
+  "done_when": "Send screenshots of the Clothing panel with your masks and of the Config values you changed, and send the 20 second clip. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
+ },
+ "AQ39": {
+  "brief": "A Blend Space is an asset that mixes several animations based on one or two values. In a 2D Blend Space you place animations on a graph with two axes, here Direction and Speed, and Unreal blends the nearest ones for any point on the graph. Almost every character movement system is built on one. In this quest you create a 2D Blend Space, let Unreal place the animations by analysis, and tune its smoothing.",
+  "checklist": [
+   "Create a 2D Blend Space asset named BS_Strafe for your Mannequin skeleton. To do this, click Add, then Animation, then Blend Space.",
+   "In Asset Details, name the horizontal axis Direction with a range from -180 to 180. Name the vertical axis Speed with a range from 0 to 600.",
+   "Set both Axis Functions to Locomotion. Choose Rightward Speed for the horizontal axis and Forward Speed for the vertical axis. Set Bone/Socket 1 and Bone/Socket 2 to the two foot bones.",
+   "Drag idle, walk and run animations onto the graph and watch the analysis place them. If you see red triangles, which are very thin, fix them by moving the samples.",
+   "On the Speed axis, set Smoothing Time to 0.2 and Smoothing Type to Spring Damper. Hold Ctrl and move the mouse in the graph, and watch the second crosshair follow with a delay.",
+   "Set Notify Trigger Mode to Highest Weighted Animation, so that only the strongest animation fires its notifies.",
+   "In the Animation Blueprint of your character (its name starts with ABP_), add BS_Strafe as a Blendspace Player node. Drive its Direction and Speed inputs from variables."
+  ],
+  "done_when": "Send a screenshot of the Blend Graph with Show Triangulation turned on and your samples placed. Also send a screenshot of Asset Details that shows the axis names, Smoothing Time and Notify Trigger Mode."
+ },
+ "AQ40": {
+  "brief": "An Aim Offset lets a character look or aim in any direction without a separate animation for each angle. It is a kind of Blend Space made of additive poses, which are poses stored as a difference from a base pose and then added on top of other animations. With the Mesh Space setting, the aim direction stays correct even when the body below is leaning. In this quest you prepare 9 aim poses, build an Aim Offset from them, and use it in an Animation Blueprint.",
+  "checklist": [
+   "Prepare 9 aim poses: center, up, down, left, right and the 4 corners. Open the Animation Sequence of each pose.",
+   "In each sequence, set Additive Anim Type to Mesh Space and set Base Pose Type to Selected animation frame. Set Base Pose Animation to your idle that aims forward, and set Ref Frame Index to 0.",
+   "Create an Aim Offset named AO_Aim for the same skeleton. To do this, click Add, then Animation, then Aim Offset. Set Preview Base Pose to the idle that aims forward.",
+   "Set both Axis Functions to Orientation. For the horizontal axis choose Axis Yaw, and for the vertical axis choose Axis Pitch. Set Bone/Socket to the bone of the hand that holds the weapon, set Bone Facing Axis to +X and Bone Right Axis to +Y.",
+   "Drag the 9 poses into the graph and let the analysis place them. If needed, correct the axis ranges so that they go from -90 to 90.",
+   "In the Animation Blueprint of your character (its name starts with ABP_), add AO_Aim as a player node after the State Machine. Drive its Yaw and Pitch inputs with property access from the base aim rotation of the pawn.",
+   "Set LOD Threshold on the Aim Offset node to 2, so the node stops running on the simpler, far away versions of the mesh."
+  ],
+  "done_when": "Send a screenshot of the Aim Offset graph with all 9 samples placed, and a screenshot of the AnimGraph that shows the Aim Offset node with Yaw and Pitch bound and LOD Threshold set."
+ },
+ "AQ41": {
+  "brief": "Characters often need a different pose depending on a value, for example crouched or not, or which weapon they hold. The Blend Poses nodes do this: they take a bool (true or false), an int (a whole number) or an enum (a list of named options) and blend to the pose that matches the value. In this quest you add these nodes to an Animation Blueprint, set how long each blend takes, and watch the poses switch in the preview.",
+  "checklist": [
+   "In the Animation Blueprint of your character (its name starts with ABP_), create an enum named E_Stance with the values Unarmed, Rifle and Pistol. Then create a variable named Stance of that type.",
+   "Add a Blend Poses by Enum node after your locomotion State Machine. Connect Stance to Active Enum Value. Add a pose input for each stance by right-clicking the node and choosing Add Blend Pin.",
+   "In the Details panel, show the Blend Time pins, and set a different Blend Time for each pose: 0.1, 0.3 and 0.5.",
+   "Add a Blend Poses by bool node for IsCrouched. Place an Inertialization node after it, close to the Output Pose.",
+   "Add a Blend Multi node with three inputs, and drive it with a float variable named Alpha.",
+   "In the Anim Preview Editor, change Stance and IsCrouched. Watch how the pulsing pose links change to show which pose is active."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph that shows the Blend Poses by Enum, Blend Poses by bool and Inertialization nodes with their pins connected. Also send a screenshot of the Details panel of one blend node that shows the Blend Time values."
+ },
+ "AQ42": {
+  "brief": "A Blend Mask is a list of values from 0 to 1 for each bone, which says how much of an animation is applied to that bone. With it you can play an animation on the upper body only. A Blend Profile is a similar list that makes some bones blend faster or slower than others during a transition. Both are saved on the Skeleton, so you can use them again in many places. In this quest you create one of each and use them in an Animation Blueprint.",
+  "checklist": [
+   "Open your Mannequin Skeletal Mesh. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody.",
+   "Right-click the bone spine_01 and use Recursively Set Blend Scales to set it and all the bones below it to 1. Set the pelvis and the leg bones to 0.",
+   "In the Animation Blueprint of your character, add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect your locomotion as the base pose, and connect a Slot that plays an upper body montage as the blend pose.",
+   "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it BP_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5.",
+   "In your State Machine, select the transition rule from Idle to Walk and set its Blend Profile to BP_LegsFast. Also set the same profile on a Blend Poses by bool node.",
+   "Play in the editor. Compare how the character stops with the profile and without it."
+  ],
+  "done_when": "Send a screenshot of the Skeleton Tree that shows the Blend column with the BM_UpperBody values, a screenshot of the Details panel of the Layered blend per bone node with Blend Mode set to Blend Mask, and a screenshot of the Details panel of a transition rule with BP_LegsFast assigned."
+ },
+ "AQ43": {
+  "brief": "A Slot is a named place in the AnimGraph where a montage, or an animation from a cinematic, can take over the pose. Slots belong to groups, and the group matters: when a new montage starts in a group, the montage that was already playing in that group stops. In this quest you organize slots into a group, limit one slot to the upper body, test how one montage interrupts another, and send an animation from Sequencer into a slot.",
+  "checklist": [
+   "From your Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save.",
+   "In the AnimGraph, add a Slot node after the State Machine and set its Slot Name to FullBody.",
+   "Add a second Slot node and set it to UpperBody. Connect it to a Layered blend per bone node that uses a Branch Filter on spine_01, so that only the upper body plays the slot animation.",
+   "Enable Always Update Source Pose on the FullBody slot. Read in the documentation what difference this setting makes, and note it.",
+   "Make two montages, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops.",
+   "In a Level Sequence, add your character and an Animation track. Right-click the animation section, open Properties, find Slot Name and type FullBody."
+  ],
+  "done_when": "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short clip or screenshot of AM_Emote interrupting AM_Reload."
+ },
+ "AQ44": {
+  "brief": "When a character's pose looks wrong, you need to find which node in the AnimGraph caused it. Unreal has tools for this, so you do not have to guess. A Pose Watch draws the pose at one node as a colored skeleton in the viewport. The Rewind Debugger records the game, so you can go back in time and see what the Animation Blueprint was doing on each frame. In this quest you use both tools and two console commands.",
+  "checklist": [
+   "Enable the Animation Insights plugin in Edit > Plugins, and restart the editor.",
+   "In the Animation Blueprint of your character, right-click two nodes, for example the State Machine and the Aim Offset, and choose Toggle Pose Watch on each. Open Window > Pose Watch Manager and give each pose watch a different color.",
+   "Open Tools > Debug > Rewind Debugger and also Tools > Debug > Rewind Debugger Details. Press Play, click Record, move around, and then pause.",
+   "Pick your character with the Dropper tool. Select the Animation Blueprint track, and drag the red playhead to move through the recording.",
+   "Double-click the Animation Blueprint in the Object Outliner. It opens linked to the recording. Watch the nodes, the variables and the state machine change while you move the playhead.",
+   "During a PIE (Play In Editor) session, type ShowDebug ANIMATION in the console and take a screenshot. Also try the command DisplayAll with the class of your Animation Blueprint and one variable."
+  ],
+  "done_when": "Send a screenshot of the Rewind Debugger timeline with the tracks of your character and the attached Animation Blueprint showing a state from the recording. Also send a screenshot with two Pose Watch colors visible in the viewport."
+ }
+}

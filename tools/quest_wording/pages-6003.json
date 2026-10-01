@@ -1,0 +1,149 @@
+{
+ "PQ55": {
+  "brief": "The Visual Logger is a tool in the editor that records what Actors do while the game runs. After the recording you can move through time and look at the state of each Actor at any moment. This helps a lot when a bug happens only once and you cannot repeat it. In this quest you record a short session of an AI character walking and look at the recording.",
+  "checklist": [
+   "Open a level that has a NavMeshBoundsVolume, the volume that tells AI where it can walk. Add one AI Character named BP_VLogBot that uses AI Move To on BeginPlay to walk toward a target point.",
+   "Open Windows > Developer Tools > Visual Logger.",
+   "Start recording in the Visual Logger, and then press Play to start Play In Editor (PIE). Let the bot walk for 10 to 20 seconds, and then stop PIE.",
+   "In the Actor list of the Visual Logger, search for the AI controller of the bot and select it.",
+   "Drag the timeline scrubber, the bar that marks the current time, to a moment when the bot was moving. Look at the snapshot area and the text window.",
+   "Write one sentence that says what changes in the snapshot when you move the scrubber."
+  ],
+  "done_when": "Send one screenshot of the Visual Logger window with an actor selected in the Actor list, the timeline scrubber at a time bigger than 0, and the snapshot area visible."
+ },
+ "PQ56": {
+  "brief": "The Gameplay Debugger is an overlay that Unreal draws on top of the running game. It shows live information about a selected Actor, such as what an AI is doing and where it can walk. You do not need to add any code to use it. In this quest you open the overlay, select an AI pawn, and turn some of its information categories on and off.",
+  "checklist": [
+   "Open a level that has a NavMeshBoundsVolume and one AI pawn. You can reuse BP_VLogBot or any AI that moves.",
+   "Press Play to start Play In Editor (PIE). Press the apostrophe (') key to open the Gameplay Debugger.",
+   "Point the camera at the AI pawn and press the apostrophe key again to select it.",
+   "Use the keys of the numeric keypad to turn the Navmesh category on and off. Also turn on the Basic category.",
+   "Open Edit > Project Settings, go to Gameplay Debugger, and look at the Input section. Do not change anything there.",
+   "Type ToggleDebugCamera in the console (or press ;) to get a free debug camera, and orbit around the pawn."
+  ],
+  "done_when": "Send one screenshot taken in Play mode with the Gameplay Debugger overlay visible, the AI pawn selected, and at least two categories shown (for example Basic and Navmesh)."
+ },
+ "PQ57": {
+  "brief": "A breakpoint is a mark that you put on a node. When the game reaches that node, it pauses, and you can look at the values at that exact moment. The call stack is a list that shows which function is running now and which functions called it. Together they let you see what your Blueprint really does. In this quest you put a breakpoint inside a function that calls itself and read the call stack.",
+  "checklist": [
+   "In BP_Debug (any actor Blueprint), make a function named CountDown that takes an integer. It prints the number and then calls itself again with the number minus one, until the number reaches 0.",
+   "Call CountDown with the value 3 from BeginPlay. Place the actor in the level.",
+   "Right-click the Print String node inside CountDown and choose Add Breakpoint.",
+   "Open Tools > Blueprint Debugger and press Play. When the game pauses, look at the Call Stack. CountDown should appear in it more than once.",
+   "Use Resume and the step button to move through the calls one by one. Watch the Execution Trace list while you do this.",
+   "Right-click the breakpoint and choose Disable Breakpoint. Press Play again and confirm that the game does not pause."
+  ],
+  "done_when": "Send one screenshot taken while the game is paused at the breakpoint (with the red arrow on the node), where the Call Stack of the Blueprint Debugger shows CountDown at least twice."
+ },
+ "PQ58": {
+  "brief": "Print String is the node that shows a line of text while the game runs. It can show the text on the screen, write it to the log, or both. The log is the text record of everything the engine reports, and it is also saved as a file. Screen text is fast to read, and the log is what you send to a teammate after something breaks. In this quest you try both outputs and find your message in the log file.",
+  "checklist": [
+   "In BP_Debug, add a Print String on Tick that prints the frame time. Turn Print to Screen on and Print to Log off.",
+   "Press Play and watch the screen fill with lines. Then stop.",
+   "Set the Key input of the Print String to FrameTime. Press Play again and see that only one line stays on the screen and updates.",
+   "Add a second Print String on BeginPlay, with Print to Log on and Print to Screen off. Open Window > Output Log and find the line.",
+   "Open the Saved/Logs folder of your project and open the newest .txt log file. Find the same BeginPlay message in it.",
+   "Write two sentences: one that says when you would use screen output, and one that says when you would use the log."
+  ],
+  "done_when": "Send one screenshot that shows the Output Log with your BeginPlay message and the game view with a single on-screen line that updates. Add your two sentences."
+ },
+ "PQ59": {
+  "brief": "Watching a pin means asking the Blueprint Editor to show the value of that pin while the game runs. You see the value next to the node and in the Blueprint Debugger, so you do not need to add Print String nodes and remove them later. In this quest you watch a value on one of two Actor copies and look inside an array in the Data Flow tab.",
+  "checklist": [
+   "In BP_Debug, add an integer array variable named Scores with 3 default values, and a float variable named Speed. On Tick, add Delta Seconds to Speed and set Speed to the result.",
+   "Place two copies of BP_Debug in the level. In the Blueprint Editor, use the Debug Object dropdown to pick one of the two copies, so the editor knows which one to show.",
+   "Right-click the output pin of the Add node and choose Watch this value.",
+   "Press Play. Look at the wires that pulse, which shows they are active. Hover the mouse over a pin that has not run yet and read its message.",
+   "Open Tools > Blueprint Debugger and go to the Data Flow tab. Filter the list to BP_Debug and expand the Scores array to see its items.",
+   "Put a breakpoint on the Set Speed node so that the game pauses there. Compare the watched value with the value in the tooltip."
+  ],
+  "done_when": "Send one screenshot of the Data Flow tab with the Scores array expanded and the Speed value visible for the selected instance."
+ },
+ "PQ60": {
+  "brief": "An automation test is a small check that Unreal can run by itself to confirm that something still works. The editor has a window that lists the tests, runs the ones you select, and shows which passed and which failed. Running tests before you send a build to someone tells you that the project still works. In this quest you enable a test plugin, run some tests, and export the results.",
+  "checklist": [
+   "Open Edit > Plugins and select the Testing filter on the left. Enable at least one automation test plugin and restart the editor.",
+   "Open Tools > Session Frontend and go to the Automation tab. If the list is empty, select your machine in the Session Browser.",
+   "In the Test Name list, expand Project and enable the tests under it. Do not enable everything in the list.",
+   "Click Start Tests. Watch the Test Name column and the results panel while the tests run.",
+   "Use the Errors and Warnings filter buttons to see only the tests that failed.",
+   "Use the Export drop-down to save the results as a CSV file, or use Copy to copy the result lines."
+  ],
+  "done_when": "Send one screenshot of the Automation tab after a run, where the results panel shows at least one finished test and the number of tests that ran."
+ },
+ "PQ61": {
+  "brief": "A Functional Test is a special Actor that you place in a level to check one thing, for example that a pickup exists. It starts your test logic and then reports that the test passed or failed. Once it exists, Unreal can run it at any time without you. In this quest you make a small test level, write one Functional Test in the Level Blueprint, and run it from the Automation tab.",
+  "checklist": [
+   "Make a small level named L_Test_Pickup with a floor and one BP_Pickup actor.",
+   "Place a Functional Test actor in the level and name it FT_PickupExists.",
+   "Keep the test actor selected and open the Level Blueprint. Add the OnTestStart event of the test actor to the graph.",
+   "From OnTestStart, call Get All Actors Of Class with BP_Pickup. Add a Branch that checks if the array length is > 0. Call Finish Test with Succeeded on the true side and with Failed on the false side.",
+   "On the test actor, set an Observation Point actor. The player is moved to that actor when the test starts, so choose a place with a good view.",
+   "Open Tools > Session Frontend and go to Automation. Click Run Level Test (or find the test under Project) and run it."
+  ],
+  "done_when": "Send two screenshots: one of the Level Blueprint graph from OnTestStart to Finish Test, and one of the Automation tab that shows FT_PickupExists passed."
+ },
+ "PQ62": {
+  "brief": "When Unreal crashes, it saves a crash report. The report holds a callstack, which is the list of functions that were running at the moment of the crash, and a copy of the log. Unreal also writes a log file every time it runs, with warnings and errors. These files already tell you where things went wrong, so you only have to open them. In this quest you read a log, find a crash report, and write down what it says.",
+  "checklist": [
+   "Open the Saved/Logs folder of your project and open the newest .txt log file. Find three lines that contain Warning or Error and write down what they say.",
+   "Open the Saved/Crashes folder. If it is empty, cause a crash yourself: in BP_Debug, get an invalid object from an empty array and call a function on it in a loop, or use a null reference in C++ with check().",
+   "Open one crash folder and find the callstack text and the copy of the log inside it.",
+   "Open Editor Preferences, go to Privacy, then Bug Reports, and read the options. Do not change them unless you want to.",
+   "Open Project Settings, go to Project, then Packaging, then the Advanced part, and find Include Crash Reporter. Leave it as it is.",
+   "Write 5 lines that say what crashed, which function is at the top of the callstack, and where you found the report."
+  ],
+  "done_when": "Send a short text with the three log lines, the top of the crash callstack, and the folder path where you found the crash report."
+ },
+ "PQ63": {
+  "brief": "You already know that a Blueprint Interface lets different Actors answer the same call. Interface functions can also return values, so one system can ask many kinds of Actors the same question, such as \"Can I use you?\", without any Cast node. In this quest you build a Usable interface with functions that return data, implement it in a parent, a child and an unrelated Actor, and call it from the player.",
+  "checklist": [
+   "Create a Blueprint Interface named BPI_Usable with three functions: CanUse with a Boolean output, GetPrompt with a Text output, and Use with an input named Instigator of the type Actor Object Reference. Set a default value for Instigator.",
+   "Make an Actor Blueprint named BP_UsableBase that implements BPI_Usable. Implement CanUse so that it returns true, and GetPrompt so that it returns the text Use. Click Compile.",
+   "Make BP_Chest as a child of BP_UsableBase. Open the inherited GetPrompt function, right-click its entry node and choose Add Call to Parent Function. Append the word Chest to the text that the parent returns. Then override CanUse so that it returns false after the first Use.",
+   "Make an Actor Blueprint named BP_Vendor that has no parent Blueprint and also implements BPI_Usable. Make it return a different prompt and print a line in Use.",
+   "In the player, on overlap, call Does Object Implement Interface with BPI_Usable. If the result is true, call CanUse and GetPrompt with the Interface call type and show the prompt with Print String. On the E key, call Use (Message) with the player as Instigator.",
+   "Place BP_Chest, BP_Vendor and a plain cube in the level and press Play. The cube should give no prompt, the chest prompt should show the parent text plus Chest, and after one Use the chest should report CanUse = false.",
+   "Open Class Settings on BP_Chest and take a screenshot of the Inherited Interfaces list."
+  ],
+  "done_when": "Send a screenshot of the GetPrompt graph of BP_Chest with the Parent call node, and a screenshot in Play mode that shows the prompt text and the CanUse result after the first Use."
+ },
+ "PQ64": {
+  "brief": "An event bus is one central object that holds Event Dispatchers for the whole game. Any Actor can announce an event through the bus, and any other Actor can listen to it, so the Actors do not need direct links to each other. A dispatcher can also carry data, called a payload, such as the new score. In this quest you build a bus with two dispatchers that carry data, and connect coins, a scoreboard and the Level Blueprint to it.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_EventBus with two Event Dispatchers. OnScoreChanged has the inputs NewScore (Integer) and Delta (Integer). OnItemPicked has the inputs ItemName (Name) and Picker (Actor Object Reference). Set a Category and a Tooltip on both.",
+   "Add a custom event named ReportScore with the same two inputs as OnScoreChanged. Select OnScoreChanged and use Copy Signature from to copy the inputs from ReportScore. Compare the result with the inputs you made by hand.",
+   "Make an Actor Blueprint named BP_Coin. On overlap, find the placed BP_EventBus with Get Actor of Class. Call OnItemPicked with the name of the coin and the overlapping actor, and then destroy the coin.",
+   "Make BP_ScoreBoard, an Actor with a Text Render component. On BeginPlay, bind a custom event to OnItemPicked that adds 10 to a Score variable and then calls OnScoreChanged on the bus with the new score and the delta. Bind a second custom event to OnScoreChanged that writes the score to the text.",
+   "Select the placed BP_EventBus in the level, open the Level Blueprint and drag the bus into the graph. Use Bind Event to OnScoreChanged with an event that prints the Delta.",
+   "In BP_ScoreBoard, on Event End Play, use Unbind Event for both dispatchers. Write one line that says what would break if a bound object was destroyed without unbinding.",
+   "Place the bus, the scoreboard and 5 coins in the level. Press Play and collect all the coins."
+  ],
+  "done_when": "Send a screenshot of the Details panel of a dispatcher in BP_EventBus with both inputs visible, and a screenshot in Play mode that shows the scoreboard text and the print from the Level Blueprint."
+ },
+ "PQ65": {
+  "brief": "A Scene Component is a component that has a transform, which means a position, rotation and scale, but no visible shape. Other components can be attached under it and then follow it. When you write your own Scene Component, you can pack movement or placement logic into a part that any Actor can reuse. In this quest you write a component that moves in a circle around its parent, and you use it to make spheres orbit each other.",
+  "checklist": [
+   "Create a Blueprint Class with Scene Component as the parent and name it BPC_Orbit. Add the float variables Radius (150), Speed (90) and Angle.",
+   "In BPC_Orbit, on Event Tick, add Speed times Delta Seconds to Angle. Then call Set Relative Location with (cos(Angle) * Radius, sin(Angle) * Radius, 0). This makes the component move itself in a circle around its parent.",
+   "Make an Actor Blueprint named BP_Planet with a Static Mesh sphere as the root. Add BPC_Orbit as a child of the root, and add a second, smaller sphere Static Mesh as a child of BPC_Orbit. Press Play and check that the small sphere orbits.",
+   "Add a second BPC_Orbit under the first small sphere, with a third mesh under it. Notice that the tree now goes root, Orbit, mesh, Orbit, mesh, and that each orbit uses the transform of its parent.",
+   "Add an event for the T key that calls Set Component Tick Enabled (false) on the first BPC_Orbit, and an event for the Y key that sets it to true. Press Play and confirm that the outer orbit stops and starts again.",
+   "Add an event for the A key that spawns a new BP_Planet. Use Attach Component to Component (or Attach Actor to Component) to attach it under the outer mesh while the game runs. Confirm that it follows.",
+   "Write three lines: why BPC_Orbit must be a Scene Component and not an Actor Component, why the mesh needs BPC_Orbit as its parent, and one thing that would need a Primitive Component instead."
+  ],
+  "done_when": "Send a screenshot of the Components tree of BP_Planet that shows both BPC_Orbit levels, a screenshot in Play mode of the orbiting spheres, and your three lines."
+ },
+ "PQ66": {
+  "brief": "A pure function is a helper that only calculates and returns a value and does not change anything in the game. The Math Expression node lets you type a formula as text, and Unreal builds the math nodes for you. Functions also have access rules (Public, Protected, Private) that decide which Blueprints may call them. In this quest you build a small library of helpers, write formulas with Math Expression, and test the access rules.",
+  "checklist": [
+   "Create a Blueprint Function Library named BFL_Gameplay. Add a Pure function named MapRange01 with the float inputs Value, InMin and InMax and a float output named Alpha. Build it with one Math Expression node that has this formula: clamp((value-inMin)/(inMax-inMin),0,1).",
+   "Add a Pure function named RingPosition with the inputs Center (Vector), Radius (float) and AngleDeg (float), and a Vector output named Pos. Use a Math Expression with vector(...) and sin/cos. Double-click the node and take a screenshot of the sub-graph that Unreal generated.",
+   "Add an impure function (not Pure) named ApplyKnockback with the inputs Target (Actor) and Force (Vector). Give it the Category Gameplay and a Description. It calls Add Impulse on the root of the target if the root simulates physics.",
+   "Add a function named TallyHits with an Integer input that is passed by reference. To do this, expand the input and tick Pass-by-Reference. The function adds 1 to the input. Call it three times from one actor and print the variable.",
+   "Make an Actor Blueprint named BP_Turret with a function named Aim that is Protected and a function named Fire that is Private. Make BP_TurretChild as a child of it and try to call both functions from its graph. Note which call compiles.",
+   "In BP_TurretChild, call RingPosition on Tick for 8 angles and use Draw Debug Sphere at each result. Press Play and check that the spheres form a ring."
+  ],
+  "done_when": "Send a screenshot of the Math Expression sub-graph for RingPosition and a screenshot in Play mode of the debug ring. Add one line that says which turret function the child could call."
+ }
+}

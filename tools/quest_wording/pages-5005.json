@@ -1,0 +1,153 @@
+{
+ "EAQ84": {
+  "brief": "Lumen does not light the real scene directly. It builds a simpler copy called the Lumen Scene, and it stores the look of each surface in a Surface Cache. When a mesh is missing from this cache, it shows as pink in the debug view, and the bounced light around it looks wrong. In this quest you use the Lumen view modes to find those pink areas in your own level and fix one of them.",
+  "checklist": [
+   "Open one of your interior levels that has Lumen turned on. Open View Mode, then Lumen, then Surface Cache. Take a screenshot and circle every pink area on it.",
+   "Open one pink prop (an SM_ mesh) in the Static Mesh Editor. In Build Settings, raise Max Lumen Mesh Cards from 12 to 24 and click Apply Changes. Then check the Surface Cache view again.",
+   "In the console, run r.Lumen.Visualize.CardPlacement 1 and look at the cards on that mesh. Cards are the flat pieces Lumen uses to capture a surface. Set the value back to 0.",
+   "Open Show, then Visualize, then Mesh DistanceFields. Find one thin wall or window mesh that looks like a soft blob. In its Build Settings, set Distance Field Resolution Scale to 2.0 and click Apply Changes. Compare the result.",
+   "In your Post Process Volume, set Lumen Scene View Distance to a small value and look at a far corner. Then set it back to the default.",
+   "Open Show, then Lumen, and untick Screen Traces. Take a screenshot of the same view with Screen Traces and without them.",
+   "Open Project Settings, then Engine, then Rendering. Write down whether Support Hardware Ray Tracing and Use Hardware Ray Tracing when available are turned on, and which Software Ray Tracing Mode is set."
+  ],
+  "done_when": "Send three screenshots: the Surface Cache view before your fix, the Surface Cache view after your fix, and the Mesh DistanceFields view of the mesh you changed. Add three lines that say what was pink, what you changed, and whether the project uses Hardware or Software Ray Tracing."
+ },
+ "EAQ85": {
+  "brief": "Virtual Shadow Maps split shadows into small squares called pages, and Unreal keeps finished pages in a cache so it does not have to draw them again. In the Cached Page view, green pages come from the cache and red pages had to be drawn again this frame. Drawing pages again is what makes shadows expensive, so fewer red pages means better performance. In this quest you find out what causes red pages in a level and reduce them.",
+  "checklist": [
+   "Open a level that has a Directional Light, some static props, a few foliage meshes with a wind material (one that uses World Position Offset), and one large building mesh without Nanite.",
+   "Open View Modes, then Virtual Shadow Map, then Cached Page. Keep the camera still and take a screenshot. Red pages that appear while the camera is still are cache invalidations, which means cached pages were thrown away.",
+   "Switch to the Shadow Casters visualization and find which objects cause the red pages. Check that their bounds, the invisible boxes around them, are not much bigger than the meshes.",
+   "Select the foliage meshes. In the Details panel, set Shadow Cache Invalidation Behavior to Rigid and check the Cached Page view again. Then set World Position Offset Disable Distance to a distance where you can no longer see the wind.",
+   "In the console, run r.ShaderPrintEnable 1 and then r.Shadow.Virtual.Stats 1. Write down the values Allocated, Cached and Invalidated. Rotate the Directional Light a little and watch Invalidated jump up.",
+   "Enable Nanite on the large building mesh. Move the camera slowly and compare the stats and the Cached Page view with before.",
+   "Write three lines: what caused most of the invalidations, what you changed, and what you would never do to a Directional Light while the game runs."
+  ],
+  "done_when": "Send two screenshots of the Cached Page view, one before and one after your fixes, with the VSM stats visible on screen. Add your three lines."
+ },
+ "EAQ86": {
+  "brief": "Lights that cast shadows are expensive, so in the past a scene could only have a few of them. MegaLights is a newer feature of Unreal Engine 5 that makes it possible to use many shadow-casting lights at the same time. It has limits, and you should know them before you depend on it. In this quest you turn MegaLights on, light a hall with at least 20 shadowed lights, measure the cost, and fix a light that wastes performance.",
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering, and find the Direct Lighting section. Enable MegaLights, and accept the prompt that asks to enable Support Hardware Ray Tracing. Restart the editor.",
+   "Build a dark hall with a floor, walls and pillars. Place at least 20 Movable local lights: Point Lights, Spot Lights, and 2 Rect Lights with a Source Texture. Turn Cast Shadows on for all of them.",
+   "Add a Post Process Volume with Infinite Extent turned on. Use its MegaLights setting to turn MegaLights off, and read the number from stat GPU. Then turn MegaLights on again and compare the number.",
+   "Open View Modes, then MegaLights, then Light Complexity. Move the mouse over a wall between many lights, and take a screenshot of the list of lights and their weight ratios.",
+   "Find one light that is partly inside a wall or reaches very far. Make its Source Width, Source Height, cone angle or Attenuation Radius smaller until it no longer shines through geometry.",
+   "On one Spot Light, set MegaLights Shadow Method to Virtual Shadow Maps. Compare the shadow detail on a Nanite prop with the shadow from a Ray Tracing light next to it.",
+   "Open one prop in the Static Mesh Editor. Under Nanite Settings, set Fallback Target to Relative Error, lower Fallback Relative Error, and click Apply Changes. See if its shadow gets more accurate."
+  ],
+  "done_when": "Send a screenshot of the lit hall and a screenshot of the Light Complexity view with the list of lights visible. Also write the two stat GPU numbers in your post, one with MegaLights off and one with MegaLights on."
+ },
+ "EAQ87": {
+  "brief": "An IES profile is a small file from a lamp manufacturer that describes how a real lamp spreads its light and how bright it is. Brightness in these files is measured in candelas. When you assign a profile to a light in Unreal, the light gets the realistic shape of that lamp on walls and floors. In this quest you import an IES profile, use it on three kinds of lights, and see how the cone of a Spot Light can cut part of it off.",
+  "checklist": [
+   "Download one free IES profile from the website of a lighting manufacturer. The documentation page names Lithonia and Philips. Import it with the Add button of the Content Browser, or drag and drop the file.",
+   "Open the imported IES asset in the Texture Editor. Write down its Brightness, which is given in candelas, and the read-only value Texture Multiplier.",
+   "In a dark room, place a Point Light, a Spot Light and a Rect Light on the same wall. Under Light Profiles, assign the same IES Texture to each of them. Take a screenshot of all three.",
+   "Set the Outer Cone Angle of the Spot Light to 30, and then to 80. Watch where the profile is cut off.",
+   "On the Point Light, enable Use IES Intensity. Try IES Intensity Scale at 1.0 and at 0.25. Then disable Use IES Intensity and compare with the light's own Intensity.",
+   "In the Texture Editor, set Brightness to 0 and save. Look at the Point Light with Use IES Intensity turned on. Put the original value back afterwards.",
+   "Make one Light Function material that imitates the same shape and put it on a fourth light. Note in one line which is the cheaper way to shape a light."
+  ],
+  "done_when": "Send one screenshot of the three lights with the same IES profile (Point, Spot and Rect), and one screenshot of the Texture Editor that shows Brightness. Add two lines: the candela value you used, and which light type lost part of the profile."
+ },
+ "EAQ88": {
+  "brief": "Volumetric Cloud is an actor that draws real 3D clouds in the sky. The look of the clouds comes from a cloud material, and you can change how much of the sky they cover, how thick they are and how the wind moves them. The clouds can also cast moving shadows on the ground. In this quest you add clouds to a sky, shape them in a Material Instance, turn on cloud shadows, and make a storm version.",
+  "checklist": [
+   "Start from a level that has a Directional Light with Atmosphere Sun Light turned on, a Sky Atmosphere, and a Sky Light with Real Time Capture turned on. Open Window > Env. Light Mixer and use it to add a Volumetric Cloud.",
+   "In the Content Browser, enable Show Engine Content and find the folder Engine/EngineSky/VolumetricClouds. Make a Material Instance of the cloud material in your own Content folder, and name it MI_Clouds_01. Assign it to the Volumetric Cloud component.",
+   "In MI_Clouds_01, change Layout_GlobalCoverage, the Layout_CloudType channels and Cloud_GlobalDensity until you have a sky that is partly cloudy. Add a little wind with Layout_WindControls.",
+   "On the Directional Light, enable Cast Cloud Shadows. Try a small and a large Cloud Shadow Extent, and try Cloud Shadow Map Resolution Scale at 0.5 and at 2. Take a screenshot of the cloud shadows on the ground.",
+   "On the Sky Light, open Atmosphere and Cloud and raise the strength of Cloud Ambient Occlusion. Compare how the bottoms of the clouds look.",
+   "In the console, try r.VolumetricRenderTarget.Mode 0, 1 and 2 while you fly near a tall mesh that reaches into the cloud layer. Note which mode does not cut into the mesh. Then set it back to the default.",
+   "Turn Storm_Clouds up in MI_Clouds_01 and take one screenshot of the storm look."
+  ],
+  "done_when": "Send two screenshots: one of your partly cloudy sky with cloud shadows on the ground, and one of the storm version. Add one line that names the r.VolumetricRenderTarget.Mode you would use in a finished game seen from the ground, and why."
+ },
+ "EAQ89": {
+  "brief": "Volumetric Fog is fog that exists as real 3D volume in the scene, so lights can shine through it and form visible beams. Height fog covers the whole level, but you can also add fog in one place only. You do this with particles that use a special Volume material, which add density to the fog where they are. In this quest you put a patch of fog into a low valley with a Niagara particle system and measure what volumetric shadows cost.",
+  "checklist": [
+   "Open an outdoor level that has a low area. Place an Exponential Height Fog, enable Volumetric Fog on it, and keep the Fog Density low. Give the Directional Light a Volumetric Scattering Intensity of 1.",
+   "Create a material named M_FogSphere and set Material Domain to Volume. Make a SphereMask that compares Absolute World Position with Particle Position and takes its radius from Particle Radius. Multiply it by a tiling noise texture and connect the result to Extinction. Connect a constant 1 to Albedo.",
+   "Create a simple Niagara sprite system named NS_LowFog with a few large, slow particles. Assign M_FogSphere in its Sprite Renderer. Place the system in the low area.",
+   "Save a camera bookmark. Take a screenshot of the valley with NS_LowFog hidden and another with it visible, both from that same bookmark.",
+   "Place a Spot Light in the fog. Turn Cast Volumetric Shadow off and on, and read stat GPU or profilegpu for both cases.",
+   "Set Scattering Distribution on the fog to 0.9. Look toward the sun and then away from it. Then set it back to the default.",
+   "Add a light that flickers, driven by a Blueprint or by Sequencer. If it leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
+  ],
+  "done_when": "Send two screenshots from the same bookmark, one with the fog particles hidden and one with them visible. Add the GPU cost with Cast Volumetric Shadow off and on, and one line on what the noise texture did to the edge of the fog."
+ },
+ "EAQ90": {
+  "brief": "Baking means that Unreal calculates the lighting once in the editor and stores it in textures, so the game does not have to calculate it while it runs. This is cheaper than Lumen and is still needed on weak hardware. GPU Lightmass is the plugin that does this calculation on the graphics card. In this quest you set up a copy of a level for baking, bake it in two ways, and compare the result with the Lumen version.",
+  "checklist": [
+   "Duplicate your diorama level and name the copy L_Bake_01. Set the Directional Light and the Sky Light to Stationary, and the local lights to Static. Open Project Settings, then Rendering, and check that Allow Static Lighting is on.",
+   "Open Edit > Plugins, go to Built-In, then Editor, and enable GPU Lightmass. Before you restart, open Project Settings and enable Support Hardware Ray Tracing, Enable Virtual Texture Support and Enable Virtual Texture Lightmaps. Under Platforms, then Windows, set Default RHI to DirectX 12. Then restart.",
+   "Open Build > GPU Lightmass. Pick Bake What You See, keep the viewport in Realtime, and click Build Lighting. Move a prop while it bakes and watch the tiles update. Click Save, and then Cancel.",
+   "Now choose Full Bake. Turn Realtime off in the viewport with Ctrl+R and click Build Lighting. Write down how long it took.",
+   "Find one prop whose shadows look blotchy. Raise its Lightmap Resolution in the Details panel, bake again, and compare.",
+   "Take a screenshot of the baked level and one of the Lumen version from the same view. Write two lines on what each one does better."
+  ],
+  "done_when": "Send two screenshots from the same bookmark, one baked and one with Lumen. Add the time the Full Bake took and two lines that compare them. Also send a screenshot of the GPU Lightmass panel with your settings."
+ },
+ "EAQ91": {
+  "brief": "Auto exposure changes the brightness of the picture as the camera moves between dark and bright places. On its own it can jump too much or make every place look equally bright. Unreal gives you tools to calm it down: a curve that adjusts exposure for dark and bright scenes, a mask that tells the camera which part of the screen to measure, and Local Exposure. In this quest you set up all three on a level with a dark room and a bright doorway. Brightness here is measured in EV100, a camera unit for how bright a scene is.",
+  "checklist": [
+   "Open a level that has a dark interior and a door to a bright exterior. In the global Post Process Volume, set Metering Mode to Auto Exposure Histogram.",
+   "Open Project Settings, then Rendering, then Default Settings, and enable Extend default luminance range in Auto Exposure settings. Note that Min Brightness and Max Brightness are now shown in EV100.",
+   "Turn on Show > Visualize > HDR (Eye Adaptation). Stand outside and then inside, and write down the Average Scene EV100 for both places.",
+   "Create a Curve Float asset named CF_ExposureComp (click Add, then Miscellaneous, then Curve). Add a key at your outdoor EV100 with the value -0.5, and a key at your indoor EV100 with the value +0.5. Assign the asset to Exposure Compensation Curve, and watch Exposure Compensation (Curve) change as you walk.",
+   "Make a small grayscale texture named T_MeteringMask that is bright in the center and dark at the edges. Assign it to Exposure Metering Mask. Look at the bright door from the side, so that it sits at the edge of the screen, and compare how stable the exposure is.",
+   "Open Lens, then Local Exposure, and set Highlight Contrast to 0.8, Shadow Contrast to 0.8 and Blurred Luminance Blend to 0.5. Turn on Show > Visualization > Local Exposure and take a screenshot.",
+   "Add a Post Process Volume named PPV_Interior around the room, with Blend Radius 300 and its own Exposure Compensation. Play in the editor, walk through the door and check the transition."
+  ],
+  "done_when": "Send a screenshot of the HDR (Eye Adaptation) view that shows your curve values, and one of the Local Exposure visualization. Add your indoor and outdoor EV100 numbers and the curve keys you used."
+ },
+ "EAQ92": {
+  "brief": "Nanite lets Unreal draw meshes with millions of triangles. Every Nanite mesh also contains a second, simpler version called the fallback mesh. Unreal uses the fallback for things like collision and ray tracing, and on platforms that cannot run Nanite. In this quest you look at the fallback mesh of a dense prop and learn the settings that control how detailed it is.",
+  "checklist": [
+   "Pick a dense prop with 100k triangles or more, such as a rock or statue from Fab or Megascans. Duplicate it and name the copy SM_Fallback_Test. In the Static Mesh Editor, under Nanite Settings, turn on Enable Nanite Support.",
+   "In the Static Mesh Editor, press Ctrl + N to switch between the full Nanite mesh and the fallback mesh. Write down the triangle count of each.",
+   "Set Fallback Target to Fallback Relative Error. Try the value 1.0 and then 0.1. Click Apply Changes each time and compare the triangle count of the fallback mesh.",
+   "Set Keep Triangle Percent to 50 and Trim Relative Error to 0.05, and click Apply. Compare the Resource Size in the asset details before and after.",
+   "Place the prop in a level. In the console, type r.Nanite 0 to see the fallback mesh drawn in the level. Type r.Nanite 1 to go back.",
+   "Type NaniteStats in the console and read the information on screen. Then open View Modes, then Nanite Visualization, then Mask. Nanite meshes are green and meshes without Nanite are red."
+  ],
+  "done_when": "Send two screenshots of the Static Mesh Editor, one of the full Nanite mesh and one of the fallback mesh, both with the triangle counts visible. Add one line with the Fallback Relative Error you kept and why."
+ },
+ "EAQ93": {
+  "brief": "A height texture, also called a displacement map, stores how far each part of a surface should stick out. With Nanite you can bake this texture into a mesh: Unreal builds a new, more detailed mesh once, in the editor, with the bumps as real geometry. This gives real surface detail from a simple source mesh. In this quest you bake a displacement map into a Nanite prop and look at the new triangles.",
+  "checklist": [
+   "Take a simple prop that has Nanite enabled and one material slot, such as a brick block or a stone slab. Name it SM_Disp_Test. Get a height (displacement) texture for its surface, for example from a Fab surface.",
+   "Open the prop in the Static Mesh Editor. Under Nanite Settings, set Trim Relative Error to 0.04.",
+   "Expand Displacement Maps and add one element (Index 0). Set its Texture to your height map, and set Magnitude to a small value. Start with 2. Click Apply Changes.",
+   "Check that Displacement UV Channel matches the UV channel your height map was made for. Then place the prop in a level.",
+   "Open View Modes, then Nanite Visualization, then Triangles. Compare the mesh with Magnitude 0 and with your Magnitude.",
+   "This step is optional. On a copy of the material, check Enable Tessellation under Nanite in the material Details, connect the height texture to Displacement, and set Magnitude and Center. Compare this tessellation, which happens while the game runs, with the baked result."
+  ],
+  "done_when": "Send before and after screenshots of the prop, in the Lit view and in the Nanite Triangles view. Also send a screenshot of the Nanite Settings with Trim Relative Error, Displacement Maps and Magnitude visible."
+ },
+ "EAQ94": {
+  "brief": "Nanite is the system that draws very detailed meshes efficiently, and it is the normal choice for most props in Unreal Engine 5. The older method is LODs, which are simpler versions of a mesh that Unreal shows at a distance. Nanite does not help every kind of mesh, for example some meshes with see-through leaf cards or very simple shapes. In this quest you look at four different props and decide for each one whether it should use Nanite or classic LODs.",
+  "checklist": [
+   "Collect four props in a test level: a dense scanned rock, a tree made of masked leaf cards, a sky sphere or another big simple mesh, and a modular wall piece that you place 50 times.",
+   "For each prop, write one line that says Nanite or classic LODs. Give the reason from the Nanite documentation page, such as triangle count, instance count, occluder, VSM shadows or material type.",
+   "Enable Nanite on the props you chose. Open View Modes, then Nanite Visualization, then Mask, to confirm which are green (Nanite) and which are red (not Nanite).",
+   "Open the Overdraw visualization. Look at the tree and at any kit pieces that are stacked on each other, and note the brightest areas.",
+   "Open the rock in the Static Mesh Editor and compare its vertex count with its triangle count. If the vertex count is 2 times the triangle count or more, note that the normals are probably faceted, which means each triangle looks flat.",
+   "Type r.Nanite 0 and then r.Nanite 1 in the console, and watch stat unit each time. Add the result to your notes."
+  ],
+  "done_when": "Send a short text with the four props and your decision for each one with the reason. Also send one screenshot of the Nanite Mask visualization."
+ },
+ "EAQ95": {
+  "brief": "The usual way to paint on a placed mesh is vertex painting, which stores color on the corner points of the mesh. This does not work on Nanite meshes. Texture Color painting solves this: your paint is stored in a small texture for each placed copy of the prop, and the material reads that texture. In this quest you prepare a Nanite prop and a material for this method and paint dirt on one copy.",
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering, and enable Virtual Textures. Restart the editor if it asks you to.",
+   "Pick a Nanite prop named SM_PaintTest. In the Static Mesh Editor, open the UV dropdown and check whether UV 0 overlaps or repeats. If it does, expand LOD 0, then Build Settings, enable Generate Lightmap UVs with Destination Lightmap Index 1, and click Apply Changes.",
+   "Under General Settings, set Mesh Paint Texture Coordinate Index to the UV channel you will paint on, for example 1.",
+   "Make a material named M_PaintTint. Add a Texture Sample with a MeshPaintTextureObject node connected to its Tex input, and set its UVs to the same index. Multiply its RGB with your base color texture. Then send both paths through a MeshPaintTextureReplace node into Base Color.",
+   "Place the prop in the level and enter Mesh Paint Mode. Open the Texture Color tab and click Add. Paint dirt or moss on the lower part of the prop.",
+   "Set Mesh Paint Texture Resolution on the asset, for example to 512. Click Fix on the instance and check how the paint changes."
+  ],
+  "done_when": "Send a screenshot of the painted prop in the level, and a screenshot of M_PaintTint with the MeshPaintTextureObject and MeshPaintTextureReplace nodes. Add one line with the UV index you used."
+ }
+}

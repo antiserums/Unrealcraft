@@ -1,0 +1,156 @@
+{
+ "TAQ68": {
+  "brief": "A level often has hundreds of small effects, and each normal Niagara emitter costs a little CPU time every frame. A lightweight emitter, also called a stateless emitter, is a simpler kind of emitter that needs almost no work per frame. The price is that it can only use a fixed set of modules. In this quest you place 400 normal fountains and 400 lightweight fountains and measure the difference with the Niagara Debugger.",
+  "checklist": [
+   "Create a Niagara System named NS_Fountain from the Default System and add the Fountain emitter to it. Rename the emitter to Fountain-R.",
+   "Create a second system from the FountainLightweight template and name it NS_Fountain_LW. Rename its emitter to Fountain-LW, set Spawn Rate to 300 and set Scale Color to red.",
+   "Make a new Basic level named NiagaraLWTest. Place NS_Fountain in a grid of 20 by 20 copies, and then place NS_Fountain_LW in a second grid of 20 by 20 copies.",
+   "Open Tools, then Debug, then Niagara Debugger. In the HUD section, enable Show Overview, and set the Debug Overview dropdown to Performance.",
+   "Select each system in the Outliner. Write down the Game Thread Average for the regular version and for the lightweight version.",
+   "Turn the overlay off and run the console command stat UNIT. Compare the Frame and Draw values for both grids.",
+   "In NS_Fountain_LW, try to add a dynamic input to a module, and note what happens."
+  ],
+  "done_when": "Send two screenshots of the Niagara Debugger Performance overlay (one for each system) with the Game Thread Average readable. Write your stat UNIT Frame and Draw numbers in the message."
+ },
+ "TAQ69": {
+  "brief": "A Niagara module is a small script that changes particle values, such as position or size. The Scratch Pad lets you write your own module or dynamic input inside the system you are working on, so you can test an idea at once without making a new asset. When the idea works, you can turn it into a real asset that other systems can use. In this quest you write a scratch module that pushes particles sideways, and then you save it as an asset.",
+  "checklist": [
+   "Create a Niagara System named NS_TA_Scratch from the Fountain template and drag it into the level.",
+   "In Particle Update, click the + button and choose New Scratch Pad Module. Confirm that the Scratch Pad panel opens and that an empty module is already in your stack.",
+   "In the scratch module, add a float input named Strength. Read Particles.Position, push the particle sideways by Strength * Particles.NormalizedAge, and write the result back to Particles.Position. Click Apply and watch the viewport.",
+   "Now open Window > Scratch Pad. Click the + button next to Dynamic Inputs and make a scratch dynamic input that returns a float from a sine of Engine.Time. Attach it to Sprite Size in Initialize Particle.",
+   "Right-click the scratch module in the Scratch Script Selector and choose Create Asset. Name the asset NMS_TA_SidePush.",
+   "Delete the scratch version from the stack and add the NMS_TA_SidePush asset from the library in its place. Confirm that the effect looks the same.",
+   "Add a Set new or existing parameter directly item to the stack. Use it to create a new Particle float parameter that stores the push amount."
+  ],
+  "done_when": "Send a screenshot of the Scratch Pad panel with your module graph and the stack that shows the scratch module and the scratch dynamic input. Also send a screenshot of the Content Browser that shows NMS_TA_SidePush."
+ },
+ "TAQ70": {
+  "brief": "Sequencer is the timeline editor of Unreal that you use to make cinematics. An effect in a cinematic must look the same every time you play it, and it must follow the timeline when you scrub, which means dragging the playhead back and forth. By default a Niagara system does neither of these things. In this quest you put a Niagara system on a Sequencer timeline and set it up so that it scrubs, repeats and starts already running.",
+  "checklist": [
+   "Enable the Niagara MRQ Support plugin and the Niagara SIM Caching plugin, and restart the editor.",
+   "Create a Level Sequence named LS_TA_FXShot with a Cine Camera and a Camera Cuts track. Place any looping Niagara system (a fountain is fine) where the camera can see it.",
+   "Drag the system from the Outliner into Sequencer. Add a Niagara Component track, and then a Niagara System Life Cycle Track. Set the Section Range so that the red bar starts about one second into the shot.",
+   "Scrub back and forth with the default mode. Then right-click the Life Cycle track, set Age Update Mode to Desired Age, and scrub again. Note the difference.",
+   "Open the system and turn on Determinism in the Emitter Properties of each emitter. This makes the random values the same every time. Scrub again and confirm that the simulation repeats.",
+   "Set a Warmup Time on the system instance, so that the fountain is already flowing on the first frame of the Life Cycle track.",
+   "Add a User Parameter track under the Niagara Component track. Add keys to it so that the value changes during the shot."
+  ],
+  "done_when": "Send a screenshot of Sequencer that shows the Niagara Component track, the Life Cycle track in Desired Age mode and a keyed User Parameter track, with the fountain visible in the viewport at a scrubbed frame."
+ },
+ "TAQ71": {
+  "brief": "A Material Function is a piece of material graph that you save once and use in many materials. Its Function Inputs are the pins where another material sends data in, and its Function Outputs are the pins where the result comes out. If the inputs have clear names, types, defaults and descriptions, other people can use your function without asking you how it works. In this quest you build a wear function with a well planned set of inputs and test it in a material.",
+  "checklist": [
+   "Create a Material Function named MF_TA_Wear. It should make a surface darker and rougher where a mask says so. Plan the interface first: before you place a node, write the list of inputs on paper with a name, a type and a default for each one.",
+   "Add these Function Inputs: BaseColor (Vector3), Roughness (Scalar), WearMask (Texture Object), WearAmount (Scalar) and UseDetail (Static Bool). Give every input a Description and a Sort Priority, so that they appear in the order you planned.",
+   "Set a Preview Value on WearAmount and turn on Use Preview Value As Default. Leave BaseColor without a default, so that anyone who uses the function must connect it.",
+   "Inside the function, connect WearMask to a Texture Sample node, because a Texture Object cannot be sampled by itself. Use a StaticSwitch node that is driven by the UseDetail input to add or skip an extra detail texture.",
+   "Add two Function Outputs named Color and Roughness, and give them Descriptions and Sort Priorities. Click Apply, and then save.",
+   "In a test material named M_TA_WearTest, hold F and left-click to place an Unspecified Function node, and assign MF_TA_Wear to it. Hover over each pin to read your tooltips. Connect nothing to WearAmount and confirm that the preview default is used.",
+   "Connect a Scalar (a value with 1 channel) to the BaseColor input and note what the compiler says. Then fix the connection."
+  ],
+  "done_when": "Send a screenshot of MF_TA_Wear that shows the Details panel of one Function Input with Input Type, Preview Value, Use Preview Value As Default and Sort Priority filled in. Also send a screenshot of M_TA_WearTest with the function node and a tooltip visible. Add one line that says what happened when you connected the wrong type."
+ },
+ "TAQ72": {
+  "brief": "Players run a game on computers of very different power, so a material should be able to become cheaper on weak hardware. The QualitySwitch node lets one material hold several versions of a part of its graph, and the engine picks one of them based on the Material Quality Level setting. The FeatureLevelSwitch node does the same based on the graphics feature level of the device, for example ES3.1 on mobile. In this quest you add both switches to an expensive material and compare the results.",
+  "checklist": [
+   "Open an expensive material that you already have. If you have none, build one named M_TA_Tiered with a detail normal, a parallax-style UV trick and two extra texture layers.",
+   "Add a QualitySwitch node before the Normal input. Connect the full detail network to High, a cheaper version (base normal only) to Default, and a flat normal constant to Low.",
+   "Add a second QualitySwitch node on Base Color. Here High keeps all layers, and Low uses only one texture sample.",
+   "Add a FeatureLevelSwitch node on the whole Base Color result. Connect a single static texture to ES3.1 and connect the switched network to Default.",
+   "In the viewport, open the Performance and Scalability menu and change Material Quality Level between Low, Medium and High. Take a screenshot of the same mesh at each level.",
+   "Open the Stats panel and write down the instruction count that the editor shows. Write one line about which branch you think the editor preview is showing."
+  ],
+  "done_when": "Send a screenshot of the graph with both QualitySwitch nodes and the FeatureLevelSwitch node, plus three viewport screenshots of the same mesh at Low, Medium and High Material Quality Level. Add one line that says what changed visually between Low and High."
+ },
+ "TAQ73": {
+  "brief": "A material is calculated in two stages. The vertex shader runs once for each vertex (corner point) of the mesh, and the pixel shader runs once for each pixel on screen, which is usually far more often. Customized UVs are extra pins on a material that let you move UV math, the math that decides where a texture is placed, into the cheaper vertex shader. This only gives a correct result for some kinds of math. In this quest you move UV math into Customized UVs, compare the cost, and see where it stops working.",
+  "checklist": [
+   "Create a material named M_TA_CustomUV. Select the main material node and set Num Customized UVs to 2. Two CustomizedUV pins appear on the node.",
+   "Build two UV setups. The first is a tiling setup: a TexCoord node multiplied by a Scalar Parameter named Tiling. The second is a world-space mapping: the Y and Z of WorldPosition divided by a scale. Plug the tiling into CustomizedUV0 and the world mapping into CustomizedUV1.",
+   "Add two Texture Sample nodes. Leave the first one with no UV input, because it then reads TexCoord 0. Give the second one a TexCoord node with index 1. Blend the two samples into Base Color.",
+   "Duplicate the material as M_TA_PixelUV. In the copy, move the same UV math into the UV inputs of the Texture Sample nodes, so that it runs in the pixel shader. Compare the instruction counts in the Stats panel of both materials.",
+   "Now add a non-linear operation (a Sine of the UV) to CustomizedUV0. Apply the material to a 1x1 plane and to a subdivided plane, which is a plane with many more vertices, and compare the result.",
+   "Write two lines: which math you would keep in Customized UVs and which math you would not, and why."
+  ],
+  "done_when": "Send a screenshot of M_TA_CustomUV with the two CustomizedUV pins connected and the Stats panel visible, plus a side-by-side image of the Sine test on a low-poly plane and a high-poly plane. Add your two lines of reasoning."
+ },
+ "TAQ74": {
+  "brief": "Substrate is the newer material system of Unreal Engine 5. The older, legacy system describes a surface with Base Color, Metallic and Roughness. Substrate describes it with a building block called a Slab, which uses inputs such as Diffuse Albedo (the diffuse color) and F0 (how strongly the surface reflects when you look straight at it). Old materials do not have to be built again, because they can be converted. In this quest you convert a legacy copper material, build the same copper by hand in Substrate, and compare the two.",
+  "checklist": [
+   "In a test project with Substrate enabled, duplicate an old Base Color / Metallic / Roughness material and name the copy M_TA_LegacyCopper. Right-click its root node and choose Convert to Substrate. Look at the Slab node that appears and at how the old inputs were connected to it.",
+   "Build a material named M_TA_SubCopper by hand. Use a Substrate Slab, and set Diffuse Albedo and F0 from the copper values in the F0 table on the page (F0 linear is about 0.95, 0.64, 0.54).",
+   "Make a third material named M_TA_SubHelper and add a Substrate Metalness-To-DiffuseAlbedo-F0 helper node to it. Feed your old Base Color, Specular and Metallic into the node and connect its outputs to the Slab. Compare the result with the version you built by hand.",
+   "On M_TA_SubCopper, add a Second Roughness and set Second Roughness Weight to 0.5. Then make a copy, try Fuzz Amount 0.3 on it, and see which of the two looks like fabric.",
+   "Set the Sub-Surface Type on a Slab to Diffusion, and then to Simple Volume. Read the tag at the bottom of the Slab node each time.",
+   "Open Window > Substrate and read whether any of your materials was simplified. Switch the GBuffer format of the project to the other option, restart, and check again.",
+   "Write three lines: which legacy inputs map to which Slab inputs, and which feature disappeared in Blendable GBuffer."
+  ],
+  "done_when": "Send screenshots of M_TA_LegacyCopper after the conversion and of M_TA_SubCopper with the Slab inputs visible, plus a screenshot of the Substrate window for one of them. Add your three lines of mapping notes."
+ },
+ "TAQ75": {
+  "brief": "A Material Instance is a copy of a material in which you can change parameters, such as colors and numbers, without building the material again. An instance can also be the child of another instance, so a chain of instances can share values. If the parameters in the parent material are sorted into named groups in a clear order, the instance is easy for artists to fill in. In this quest you put the parameters of your master material into groups, build a chain of instances, and learn how overrides behave.",
+  "checklist": [
+   "Open your master material (M_Master_Prop or similar). In the Details panel of every parameter, set a Group: 00_Base, 01_Surface or 02_UVs. Set Sort Priority on the UV tiling and offset parameters so that they sit next to each other.",
+   "Deselect all nodes. In the Details panel of the material, expand Group Sorting, then Parameter Group Data, and set Group Sort Priority so that the groups are in the same order as the pins of the main node.",
+   "Create an instance named MI_Prop_Metal from the master. Then create MI_Prop_Metal_Rusty as a child of MI_Prop_Metal, which makes it an instance of an instance. In the child, override only the rust parameters.",
+   "Open MI_Prop_Metal_Rusty and click the Hierarchy button in the toolbar. Read the Parent Chain and open the parent from that menu.",
+   "In the child, set Two Sided under Material Property Overrides. Confirm that the parent and the other instances of the same parent did not change.",
+   "Change a value in a parameter field that is not checked, close the editor, open it again, and note what happened. Then set a custom preview mesh and reopen the editor to confirm that it was saved.",
+   "If your master has a static switch, press the Show Hidden Parameters button and note what appears."
+  ],
+  "done_when": "Send a screenshot of MI_Prop_Metal_Rusty with the Hierarchy menu open that shows the parent chain, plus a screenshot of the Details panel with your ordered groups and Two Sided overridden. Add one line that says what happened to the unchecked value."
+ },
+ "TAQ76": {
+  "brief": "Custom Primitive Data, or CPD, is a way to store a few numbers, such as a color, on each object in the level. A material can read these numbers, so many objects can share one material and still look different. The older way is to give each object its own Dynamic Material Instance (MID), but that stops the engine from drawing the objects together in one step. Each such step is called a draw call, and fewer draw calls mean better performance. In this quest you build both versions and compare their draw calls.",
+  "checklist": [
+   "Create a material named M_TA_CPD with a Vector Parameter named ColorParam and a Scalar Parameter named EmissivePower. Select each one and enable Use Custom Primitive Data. Give ColorParam the Primitive Data Index 0, and give EmissivePower the index 4, because the vector uses the indices 0 to 3.",
+   "In the Material Editor, open Window > Custom Primitive Data and confirm that both parameters are listed with their indices.",
+   "Place 25 copies of one Static Mesh that uses M_TA_CPD. On each actor, expand Custom Primitive Data Defaults on the Static Mesh Component, and set a different color on a few of the actors.",
+   "Make a Blueprint named BP_TA_CPDProp with a Static Mesh Component. On Begin Play, call Set Custom Primitive Data Vector (Data Index 0) and Set Custom Primitive Data Float (Data Index 4) with random values. Place 25 of these in the level too.",
+   "Make a second Blueprint named BP_TA_MIDProp that does the same thing with Create Dynamic Material Instance and Set Vector Parameter Value. Place 25 of these.",
+   "Press G to switch to Game View, run the console command stat scenerendering, and write down the Mesh draw calls. Then run r.MeshDrawCommand.DynamicInstancing 0, read the number again, and set the variable back to 1.",
+   "Write two lines that compare the draw-call numbers of the CPD group and the MID group."
+  ],
+  "done_when": "Send a screenshot of a parameter node that shows Custom Primitive Data and its index, plus two stat scenerendering screenshots (one with dynamic instancing on and one with it off) with your draw-call numbers. Add your two lines of comparison."
+ },
+ "TAQ77": {
+  "brief": "A static switch is a material parameter that turns a part of the material on or off when the shader is compiled, so the unused part costs nothing while the game runs. The cost is that every different combination of switch values needs its own compiled shader, called a permutation. Too many permutations make compiling and cooking slow and use more memory. In this quest you add static switches to your master material, check its instances with the Material Analyzer, and lower the number of permutations.",
+  "checklist": [
+   "In your master material, add three StaticSwitchParameter nodes named UseDetailNormal, UseEmissive and UseWear. Add one StaticComponentMaskParameter that picks the channel of a packed mask texture, which is a texture that stores a different mask in each color channel. Give them all a Group.",
+   "Find any place where you multiplied a mask texture by a Vector Parameter to pick a channel, and replace it with the StaticComponentMaskParameter.",
+   "Create eight instances. Make half of them share the same switch values, and give the other half unique combinations. Also give each instance a different color.",
+   "Open Tools, then Audit, then Material Analyzer. Pick your master in Material to Analyze, and read the instance list and the Static Switch Parameters column.",
+   "Read the suggestion list below the hierarchy. Click Create Local Collection on one suggestion, and open the collection in the Content Browser.",
+   "Create one new intermediate instance that holds the shared switch values, and reparent the grouped instances to it. Then remove the static overrides from the children, and run the analyzer again.",
+   "Write two lines: how many permutations you had before and after. Count them by counting the unique switch combinations."
+  ],
+  "done_when": "Send a screenshot of the Material Analyzer that shows your master, the Static Switch Parameters column and the suggestion list, plus a screenshot of one reparented child instance with no static overrides. Add two lines with your permutation count before and after."
+ },
+ "TAQ78": {
+  "brief": "Every pixel that a material covers costs some GPU time, and this cost depends on how many instructions and texture samples the material uses. Much of that cost comes from simple settings and habits, not from complex math. The Shader Complexity view mode colors the scene from green (cheap) to red and white (expensive), so you can find the worst material fast. In this quest you find your most expensive material, make it cheaper without changing how it looks, and measure the result.",
+  "checklist": [
+   "Pick a small scene that has 5 or more of your materials. Press Alt+8 (or run viewmode shadercomplexity) and take a screenshot. Find the most expensive material on screen.",
+   "Open that material. Open Window > Stats and Window > Platform Stats, and write down the instruction counts and the number of texture samplers.",
+   "With the main node selected, look at the Usage flags in the Details panel. Turn off any Used with flag that this material does not need (for example Used with Mesh Particles). Note that Automatically Set Usage in Editor is on by default.",
+   "If the material is matte (its roughness is near 1 everywhere), enable Fully Rough and read the Stats again. Compare the look in the viewport.",
+   "Duplicate the material and try one more change: remove a Transform node if you also use VertexColor, or replace a runtime channel multiply with a static mask. Compare the Stats before and after.",
+   "Open Window, then Shader Code, then HLSL Code for your platform. Find the line that samples your biggest texture, just to see the code that the editor generates.",
+   "Take the Shader Complexity screenshot again. Write three lines: what you changed, how many instructions you saved, and what you refused to change because the look would suffer."
+  ],
+  "done_when": "Send two Shader Complexity screenshots (before and after), a screenshot of the Stats panel of the optimized material, and your three lines of notes."
+ },
+ "TAQ79": {
+  "brief": "An Editor Utility Widget is a tool panel that you build yourself and that runs inside the Unreal Editor, not in the game. You design it like a normal UMG widget (UMG is the user interface system of Unreal) and give it Blueprint logic that can work with the actors in your level. In this quest you build a panel that lists the selected actors and selects actors by name, and a second small panel that opens the first one.",
+  "checklist": [
+   "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Widget. Name it EUW_SelectionInspector.",
+   "In the Designer, add a Vertical Box. Put a Text Block for a title, a Button named Btn_Refresh, and a Scroll Box for the results inside it.",
+   "When Btn_Refresh is clicked, get the selected Level Actors. For each actor, add a Text Block with its label and class name to the Scroll Box.",
+   "Add a second button named Btn_SelectAll. It selects every actor whose label starts with the text that is typed in an Editable Text Box.",
+   "Right-click the asset and choose Run Editor Utility Widget. Dock the panel next to a Level Editor tab, and confirm that it now appears under Tools > Editor Utility Widgets.",
+   "Create a second widget named EUW_Launcher with one button. When the button is clicked, get the Editor Utility Subsystem and call Spawn And Register Tab with EUW_SelectionInspector, so that the panel can be opened from another tool.",
+   "Note which Editor Scripting nodes you could NOT find when you searched for them from a normal Actor Blueprint."
+  ],
+  "done_when": "Send a screenshot of EUW_SelectionInspector docked in the editor, where it lists at least 3 selected actors with label and class. Also send a screenshot of the EUW_Launcher graph that opens it through the Editor Utility Subsystem."
+ }
+}

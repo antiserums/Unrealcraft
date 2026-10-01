@@ -1,0 +1,146 @@
+{
+ "LDQ65": {
+  "brief": "Play In Editor, often shortened to PIE, lets you test your level without leaving the editor. By default you start at the Player Start actor, but you can also start exactly where the editor camera is, which saves time when the spot you want to test is far away. You can also start with more than one player to test multiplayer. In this quest you try the different start locations and run a session with two players.",
+  "checklist": [
+   "Open one of your blockout levels. Fly the editor camera to a room that is far from the Player Start.",
+   "Open the Play dropdown, the small menu next to the Play button. Under Start Location, pick Camera Location. Press Play (Alt + P) and note where you spawn, which means where your character appears.",
+   "Stop the game. Right-click the floor in another room and choose Play From Here. Note where you spawn this time.",
+   "Open the Play dropdown again. Set Number of Players to 2 and set Net Mode to Play As Listen Server.",
+   "Press Play. You get one player in the viewport and a second player in a new window. Press Shift + F1 to get the mouse back from the game.",
+   "Open the Play dropdown, choose Advanced Settings, and find New Viewport Resolution. Set a smaller size for the extra window."
+  ],
+  "done_when": "Send one screenshot of a PIE session with 2 players, showing the viewport and the new window. Add one line that says which Start Location you now use for quick tests and why."
+ },
+ "LDQ66": {
+  "brief": "Simulate is a way to run your level inside the editor without a player character. Physics, AI and Blueprints all run, but you keep the editor camera and all the editor tools, so you can select and move things while the game is running. In this quest you watch a physics ball fall, step through it one frame at a time, and keep a change that you made during the simulation.",
+  "checklist": [
+   "In a test level, place a Static Mesh sphere above a set of stairs and name it SM_SimBall. In the Details panel, enable Simulate Physics so the sphere can fall.",
+   "Press Alt + S to start Simulate. Watch the ball fall down the stairs. Press Esc to stop.",
+   "Start Simulate again and pause at once. Then click Frame Skip a few times to step through the fall one frame at a time.",
+   "While the simulation runs, select SM_SimBall and move it to a better start spot. Right-click it and choose Keep Simulation Changes, or press K.",
+   "Stop the simulation. Check that the new position of the ball stayed in the editor level.",
+   "Start Simulate again, and then click Possess to switch to Play In Editor and take control of a player. Note where the player spawns."
+  ],
+  "done_when": "Send a screenshot of the editor while it is simulating, with SM_SimBall selected and the Possess button visible in the toolbar. Add one line that says which change you kept with Keep Simulation Changes."
+ },
+ "LDQ67": {
+  "brief": "The Cinematic Viewport is a special viewport mode for looking through a camera in Sequencer, the tool Unreal uses for cutscenes and camera shots. It can draw overlays on the picture, such as a grid and safe area frames, which help you judge how a view is framed. This turns a feeling about a view into a check that you can repeat. In this quest you frame the most important view of your level and check it with the overlays.",
+  "checklist": [
+   "Create a Level Sequence named LS_ReviewShots and open it in Sequencer.",
+   "Add a Cine Camera Actor to the sequence. Use it to frame your most important vista, which is the first view a player gets of a goal.",
+   "Open the viewport view type menu, the button that says Perspective, and enable Cinematic Viewport.",
+   "In Film Overlays, turn on Grid (3x3) and Title Safe. Check that the goal sits on a grid line and inside the safe area.",
+   "Press G for Game View, which hides the editor icons. Press F11 for immersive mode if you want to check the view in full screen.",
+   "If you have a second viewport, turn off Allow Cinematic Control on it, so that only the main viewport follows the camera."
+  ],
+  "done_when": "Send a screenshot of the Cinematic Viewport that shows the 3x3 grid and the Title Safe overlay on your vista. Add one line that says what you moved so the goal is easier to see."
+ },
+ "LDQ68": {
+  "brief": "When you ask someone to review your level, a large screenshot with notes drawn on it explains a layout problem faster than a paragraph of text. Unreal has a High Resolution Screenshot tool that captures the viewport at a larger size than your screen. In this quest you take captures from the editor and from the console, and you mark one of them up for a reviewer.",
+  "checklist": [
+   "Open your blockout. Click Viewport Options, the arrow at the top left of the viewport, and choose High Resolution Screenshot.",
+   "Click Specify Region and drag a box around the area that you want reviewed. Set the Screenshot Size Multiplier to 2.",
+   "Press the capture button, which has a camera icon. Then click the message that appears in the lower right corner to open the folder with the image.",
+   "Start PIE and press ~ to open the console. Run the command HighResShot 2. Then run the command Shot, or press F9, for a capture at normal size.",
+   "Pick one capture and mark it up in any image editor. Draw circles on problems, draw arrows on the path you want players to take, and add short labels.",
+   "Save the image with your notes next to the original, in the folder Saved\\Screenshots\\Windows."
+  ],
+  "done_when": "Send the capture with your notes on it (at least three notes), and a screenshot of the Screenshots folder that shows the original files."
+ },
+ "LDQ69": {
+  "brief": "A level that is still being built is full of helper objects, such as trigger volumes, notes and editor icons. When you send a screenshot for review, the reviewer should see the space and not these helpers. In this quest you put your helpers into layers, hide them together with some viewport options, and take a clean capture of a room.",
+  "checklist": [
+   "Open Window > Layers. Select all your trigger volumes and helper actors, right-click in the Layers panel, and choose Add Selected Actors to New Layer. Rename the new layer to Review_Helpers.",
+   "Create a second layer named Blockout_Notes. Drag your note actors or text actors from the Outliner into it.",
+   "Take a capture of a room with everything visible.",
+   "Click the eye icon on both layers to hide them. In the Show menu of the viewport, turn off Grid. If collision is shown, press Alt + C to hide it.",
+   "Press G for Game View, which hides the editor icons, and take the same capture again.",
+   "Double-click Review_Helpers to select all its actors. Confirm the number of actors in the contents bar."
+  ],
+  "done_when": "Send two screenshots of the same room, one before and one after you hid the layers and show flags. Also send a screenshot of the Layers panel that shows both named layers."
+ },
+ "LDQ70": {
+  "brief": "Every level has its own Level Blueprint, a Blueprint graph that belongs to that one level and can refer directly to the actors placed in it. It is the fastest place to build a small test that you only need once, because you do not have to make a new Blueprint class. In this quest you use it to make a light switch on and off when the player walks through a door.",
+  "checklist": [
+   "Place a Trigger Volume at a door in your blockout and name it TV_TestDoor. A Trigger Volume is an invisible box that notices when something enters it. Place a Point Light behind the door and name it PL_TestDoor.",
+   "Click the Blueprints button in the Level Editor toolbar and choose Open Level Blueprint.",
+   "Right-click TV_TestDoor in the level. In the Level Blueprint submenu, add the OnActorBeginOverlap event, which fires when something enters the volume.",
+   "Select PL_TestDoor in the Outliner. Then right-click in the graph and choose Create a reference to PL_TestDoor. Connect a Toggle Visibility node for the light to the event.",
+   "Add a Print String node with the text Reached door to the same event. Then click Compile.",
+   "Press Play, walk through the door, and check that the light switches and the message is printed on screen."
+  ],
+  "done_when": "Send a screenshot of the Level Blueprint graph that shows the event, the actor reference, Toggle Visibility and Print String. Also send a PIE screenshot with the printed message on screen."
+ },
+ "LDQ71": {
+  "brief": "The console is a text line inside the running game where you can type commands. Some of these commands are cheats that let you slow down time, fly through walls, teleport or take no damage. They let you skip the parts of a playtest that you already trust, so you can look closely at the part you want to check. In this quest you try five console commands while you play your blockout.",
+  "checklist": [
+   "Play your blockout in the viewport. Press ~ to open the console. Type stat FPS and press Enter to show the frame rate counter.",
+   "Type slomo 0.25 to slow the game down, and walk through your hardest jump. Then type slomo 1 to return to normal speed.",
+   "Look at a ledge on the other side of a gap and type teleport. Check that you landed on the surface you were looking at.",
+   "Type ghost and fly through a wall to check the far side. Then type walk to return to normal movement.",
+   "Type god, and then walk into a trap or a kill volume to confirm that you take no damage.",
+   "Write down which command saved you the most time and where you used it."
+  ],
+  "done_when": "Send a PIE screenshot with the stat FPS counter visible and the console open. Add a short text of 3 to 5 lines that lists each command you used and what it helped you test."
+ },
+ "LDQ72": {
+  "brief": "While you build a level you often want to leave a note at an exact spot, for example at a jump that is too hard. A note that stands in the level as 3D text is seen by everyone who plays it, and not only by people who read a separate document. In this quest you enable the Text 3D plugin and place three notes at real problem spots in your level.",
+  "checklist": [
+   "Go to Edit > Plugins, open the Text tab, and enable Text 3D. Accept the warning that the plugin is experimental, and restart the editor.",
+   "In the Place Actors panel, choose All Classes and drag a Text 3D actor next to a problem spot. Name it T3D_Note_01.",
+   "Set the Text property to a short note, for example NOTE 1, and add a second line with Shift + Enter. Set Extrude, the thickness of the letters, to a low value so the text is easy to read.",
+   "Set Horizontal Alignment to Center. Give the Front Material a bright unlit material, so that the note is visible from far away.",
+   "Duplicate the note for two more problem spots, name the copies T3D_Note_02 and T3D_Note_03, and change their text.",
+   "Put all three notes in a layer named Blockout_Notes, so that you can hide them when you want clean captures."
+  ],
+  "done_when": "Send a screenshot of the level that shows all three Text 3D notes placed at real problem spots, and a screenshot of the Layers panel with the Blockout_Notes layer."
+ },
+ "LDQ73": {
+  "brief": "A pacing beat is a moment in a level where something changes for the player, for example a light turns on, a sound plays or a door opens. Beats are usually started by trigger boxes that the player walks through. If a beat fires at the wrong time, fires twice, or does not fire at all, the pacing you planned is broken. In this quest you build one reusable trigger actor and place it three times, with rules for how often and in which order the beats may fire.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_PacingBeat with a Box Collision component. Add a Name variable called BeatName and turn on Instance Editable, so you can set it for each copy in the level. Add a Boolean variable called FireOnce with the default value true.",
+   "On the event On Component Begin Overlap, check that the other actor is the player, and then run the execution through a DoOnce node, which lets it pass only one time. Add a Branch on FireOnce, so that the DoOnce can be reset when FireOnce is false.",
+   "Add a Custom Event named FireBeat with one String input, and call it from the DoOnce. Inside FireBeat, use Print String to print the BeatName, and change one thing in the level: toggle a Point Light, play a sound, or open a door.",
+   "Place three BP_PacingBeat actors along the route of your blockout and name them Beat_Calm, Beat_Tension and Beat_Reveal. Scale each box so that it covers the whole width of the corridor and the player cannot walk around it.",
+   "Add a Gate node in front of the action of Beat_Reveal, so that it stays closed until Beat_Tension has fired. To do this, call Open on the gate from Beat_Tension. Test that Beat_Reveal does nothing when you skip Beat_Tension.",
+   "Play in PIE and walk the route in order. Then walk it out of order. Check that the log shows the beats in the right order and that nothing fires twice."
+  ],
+  "done_when": "Send a screenshot of the level with the three BP_PacingBeat boxes visible and the Output Log showing the three beat names printed in order. Add a short note of 3 lines that says what each beat changes for the player."
+ },
+ "LDQ74": {
+  "brief": "A Player Start is the actor that marks where the player appears in a level and which way the player looks. This is the first pacing decision in any level, because it decides the first thing the player sees. When a level has several Player Starts, you can give each one a tag and choose between them by name. In this quest you place tagged Player Starts, build a debug respawn that sends you to the one you choose, and spawn pickups at Target Points.",
+  "checklist": [
+   "Place three Player Start actors in your blockout: one at the entrance, one in the mid room and one in the final arena. Rotate each one so that its arrow points at the next landmark, because the player faces that way on spawn.",
+   "Select each Player Start and set its Player Start Tag in the Details panel to Start_Entrance, Start_Mid and Start_Arena. If a Player Start shows a BADsize label, move it until its capsule no longer overlaps any geometry.",
+   "Create a Blueprint named BP_GM_Test with Game Mode Base as its parent class. Add a Name variable called DebugStartTag and turn on Instance Editable. In World Settings, set the GameMode Override of the level to BP_GM_Test.",
+   "In BP_GM_Test, react to a debug key (for example the E key on the Player Controller, or a Custom Event that you call from the console). Call FindPlayerStart with Incoming Name set to DebugStartTag, and then call Restart Player at Player Start with the result as the Start Spot.",
+   "Add three Target Point actors named TP_Pickup_1 to TP_Pickup_3. Create BP_PickupSpawner with an Instance Editable array of Target Point references. On BeginPlay, loop over the array and use Spawn Actor from Class to spawn a pickup or a simple cube at the transform of each Target Point.",
+   "Test it: set DebugStartTag to Start_Arena, press the debug key, and confirm that you respawn in the arena and face the right way. Then set the Play Options to spawn at the current camera location and start PIE from the mid room."
+  ],
+  "done_when": "Send a screenshot of PIE after the debug respawn at Start_Arena, with the player facing the landmark. Also send a screenshot of the Outliner that shows the three tagged Player Starts and the three Target Points."
+ },
+ "LDQ75": {
+  "brief": "When a player falls off the level, something has to happen, and you should be the one who decides what. Kill Z is a height in World Settings below which actors are destroyed, and a Kill Z Volume does the same inside a box. A blocking volume is an invisible wall. In this quest you set these up, and you build a catcher that takes some health and puts the player back at the last safe spot, so that a fall costs something but does not end the game.",
+  "checklist": [
+   "In your blockout, make one pit that the player can fall into and one cliff edge. Open Window > World Settings and search for Kill Z. Set it a little below the lowest floor, so that nothing that should stay in the level falls past it.",
+   "Place a Kill Z Volume in the pit. In PIE, drop a physics cube (a cube with Simulate Physics turned on) into the pit and confirm that the cube is destroyed. Note what the Output Log says when this happens.",
+   "Create an Actor Blueprint named BP_FallCatcher with a large flat Box Collision. Place it under the cliff, above the Kill Z height. On Begin Overlap with the player, call Apply Damage with 25, and then teleport the player to a Vector variable named LastSafeSpot that is Instance Editable.",
+   "Create an Actor Blueprint named BP_SafeSpot with a Box Collision. When the player overlaps it, it writes the location of the player into the LastSafeSpot variable of BP_FallCatcher. Use an Instance Editable actor reference to reach BP_FallCatcher.",
+   "Add a Camera Blocking Volume along one decorated wall, and a Blocking Volume across a gap that looks like the player can jump it but cannot. Check in PIE that the camera no longer goes into the wall.",
+   "Playtest it: fall from the cliff and confirm that you return to the last safe spot with less health. Then fall into the pit and confirm that the Kill Z Volume handles it."
+  ],
+  "done_when": "Send a screenshot of the level with Volumes visible that shows the Kill Z Volume, BP_FallCatcher and at least one Blocking Volume or Camera Blocking Volume. Add a note of 3 lines that says what the player loses on each kind of fall."
+ },
+ "LDQ76": {
+  "brief": "A checkpoint remembers how far the player has come, so that the player starts again from there and not from the beginning. To still work after the game is closed, the checkpoint must be written to a save file on disk. In Unreal you do this with a Save Game object. In this quest you build checkpoints that store their location in the Game State, the object that holds shared information about the running game, and that also save it to a file and load it again on the next start.",
+  "checklist": [
+   "Create BP_GS_Checkpoints with Game State Base as its parent class, and give it a Vector variable CheckpointLocation and a Boolean variable HasCheckpoint. Create BP_GM_Checkpoints with Game Mode Base as its parent class and set its Game State Class to BP_GS_Checkpoints. Set the GameMode Override of the level to BP_GM_Checkpoints.",
+   "Create an Actor Blueprint named BP_Checkpoint with a Box Collision and a flag mesh. When the player overlaps it, use Get Game State, cast it to BP_GS_Checkpoints, set CheckpointLocation to the location of the actor, and set HasCheckpoint to true. Also change the material of the flag, so the player sees that the checkpoint is active.",
+   "Place a Player Start next to each checkpoint, with at least three checkpoints. In BP_GM_Checkpoints, override the function FindPlayerStart. If HasCheckpoint is true, return the Player Start that is closest to CheckpointLocation. Otherwise, call the parent function.",
+   "Create a Save Game Blueprint named SG_Checkpoint with the same two variables. In BP_Checkpoint, after you set the Game State, create or load the Save Game object and copy the values into it. Then call Save Game to Slot with the slot name Checkpoint and user index 0.",
+   "In BP_GM_Checkpoints, on BeginPlay, check Does Save Game Exist for the slot Checkpoint. If it exists, call Load Game from Slot, cast the result to SG_Checkpoint, and write the values into the Game State before the player spawns.",
+   "Test it: reach checkpoint 2, stop PIE, and start PIE again. Confirm that you spawn at the Player Start next to checkpoint 2. Then find the .sav file in the Saved/SaveGames folder of the project."
+  ],
+  "done_when": "Send two screenshots: one of PIE after the restart with the player standing at checkpoint 2 and not at the entrance, and one of the Saved/SaveGames folder that shows Checkpoint.sav. Add one line that says how you reset the save for a fresh run."
+ }
+}

@@ -1,0 +1,151 @@
+{
+ "CQ37": {
+  "brief": "A sequence with many tracks becomes hard to read very quickly. The left side of Sequencer, called the outliner, lists all tracks, and you can tidy it with folders, colors, pinning and filters. A tidy outliner lets a teammate open your sequence and understand it. In this quest you organize a sequence of at least eight tracks into colored folders and filter the list.",
+  "checklist": [
+   "Open a sequence that has at least eight tracks, such as cameras, lights, meshes and audio. If you do not have one, add actors until you have eight tracks.",
+   "Select all camera tracks and press Ctrl + G to put them in a new folder. Press F2 and rename the folder to Cameras. Do the same to make folders named Lights and Props.",
+   "Right-click each folder, choose Set Color, and pick a different color for each one. Then right-click the Cameras folder and choose Add Folder to make a subfolder named Rigs.",
+   "Drag a track into the wrong folder. Then right-click it and choose Move to Folder to fix it. Take one track out of its folder with Remove from Folder.",
+   "Open View Options and choose Sort All Nodes, then look at what changed. Then press Shift + V on a folder to expand it together with its children.",
+   "Pin the Cameras folder: right-click it and choose Pinned. Then use the search field and the Filters button to show only camera tracks.",
+   "Open Actions and choose Open Sequencer Group Manager. Look at what it shows for your sequence."
+  ],
+  "done_when": "Send one screenshot of the Sequencer outliner that shows three colored folders, one subfolder, the pinned folder at the top, and an active filter (a red dot on Filters). Add one line with your folder naming rule."
+ },
+ "CQ38": {
+  "brief": "Sequencer has settings in three places: its own toolbar, the Editor Preferences, and the Project Settings. A few of them decide how keys are made, how time is shown and counted, and which changes are recorded. In this quest you change one setting after another, watch what it does to your work, and write down where each setting is found.",
+  "checklist": [
+   "Open a sequence. In the Frames Per Second menu, set Show Time As to Timecode, then to Frames. Turn on Lock to Display Rate at Runtime. Note the options under Clock Source.",
+   "In Playback Options, turn on Game View (Clean Playback Mode) and set Jump Frame Increment to 10. Test it with Shift + Right Arrow.",
+   "In Keyframe Options, choose Key Group and set the default tangent to Linear. Turn on Auto Key. Move a mesh that already has a key and see what gets keyed.",
+   "In Edit Options, choose Allow Sequencer Edits Only. Move an actor in the level that is not in the sequence, and look for the Autotracked Changes folder in Sequencer.",
+   "Open the Snapping menu and turn off Snap to the Pressed Key. Then hold Shift and click a key to move the playhead exactly onto it.",
+   "Open Edit > Editor Preferences > Level Sequence Editor. Turn on Auto Set Track Defaults and Create Spawnable Cameras. Click Create Camera and check that the new camera is a spawnable.",
+   "Open Edit > Project Settings > Engine > Level Sequence and set Default Display Rate to 24 fps. Create a new sequence and confirm that it uses 24 fps."
+  ],
+  "done_when": "Send a writeup of 8 to 12 lines. For each setting you changed, it says where the setting is found (toolbar, Editor Preferences or Project Settings) and what changed in your work. Also send one screenshot of the new sequence that shows 24 fps in the toolbar."
+ },
+ "CQ39": {
+  "brief": "The aspect ratio is the shape of the picture: its width divided by its height. On a Cine Camera Actor the shape comes from the sensor size in Filmback, and Crop Settings can cut the picture to a different shape, such as the wide 2.39 format of cinema films. You should set this before you compose a shot. In this quest you try crops, make the camera preview larger, and use the Cine Capture component to send the camera picture into a texture.",
+  "checklist": [
+   "Place a Cine Camera Actor named CAM_Frame in front of a prop. Pick a Filmback preset and write down its Sensor Width and Sensor Height. Enable Constrain Aspect Ratio in Camera Options.",
+   "In Crop Settings, choose 2.39. Then choose Custom and type 1.5 into Cropped Aspect Ratio. Compare the black bars in the Picture-in-Picture (PIP) window each time.",
+   "Go to Edit > Editor Preferences > Level Editor. Set Camera Preview Size to 8 and check that the PIP gets larger. Pin the PIP so that it stays visible.",
+   "In the Post Process settings of the camera, set Vignette Intensity to 0.8. Set Post Process Blend Weight to 0, then to 1, and pilot the camera to see the difference. Also enable Use Field Of View for LOD.",
+   "Go to Edit > Plugins, search for CineCameraCapture, enable the plugin and restart the editor. Select CAM_Frame, click Add in the Details panel, and add a Cine Capture Component 2D. Drag it under the CineCameraComponent so that it becomes its child.",
+   "Create a Render Target asset, a texture that a camera can draw into. Set it as the Texture Target of the capture component and set Render Target Highest Dimension to 1000. Open the Render Target to see the captured view."
+  ],
+  "done_when": "Send one screenshot of the pinned PIP with crop bars and the Details panel showing Crop Settings. Also send one screenshot of the Cine Capture Component 2D under the CineCameraComponent with its Render Target open. Add one line with your sensor size and the render target size you got."
+ },
+ "CQ40": {
+  "brief": "A good camera move should be built once and then used on any camera. A Camera Animation Sequence is an asset that stores a camera move on its own, without a level. You apply it to a camera in a Level Sequence with a Template Sequence track, or play it from Blueprint. In this quest you build two reusable moves, apply them to two cameras, change their strength, and play one from a Blueprint.",
+  "checklist": [
+   "Right-click in the Content Browser and choose Animation, then Camera Animation Sequence. Name it CAS_PushIn. Open it and notice that a Cine Camera Actor is already bound as a Spawnable.",
+   "Key a slow push in: the Transform Location X goes from 0 to 150 over 3 seconds. Right-click the section and set Blend Type to Additive, so that the move is added on top of the position of any camera.",
+   "Make a second asset named CAS_Orbit with a Rotation Yaw turn from 0 to 40 over 5 seconds. Set it to Additive too.",
+   "Create a Level Sequence named LS_Reuse with two Cine Camera Actors. On the first camera track, click + Track, then Template Sequence, and pick CAS_PushIn. On the second camera, pick CAS_Orbit.",
+   "Right-click the CAS_PushIn section and open Property Multipliers. Add the Transform multiplier. Expand the track and set the multiplier to 0.5. Then key it from 0 to 2 over the shot and watch the difference.",
+   "Make a Blueprint named BP_CamPlayer. Add a Create Template Sequence Player node with CAS_PushIn. Call Set Binding with the Out Actor and a Cine Camera Actor in the level, then call Play. Test it in Play In Editor."
+  ],
+  "done_when": "Send one screenshot of LS_Reuse that shows two Template Sequence tracks, one of them expanded with a keyed Property Multiplier. Also send one screenshot of the BP_CamPlayer graph with Create Template Sequence Player, Set Binding and Play."
+ },
+ "CQ41": {
+  "brief": "A camera shake made from noise is fast to set up, but it is random. When you need a shake with one exact feel, such as a single hard hit, you can animate it by hand in a Camera Animation Sequence and use that as the shake. In this quest you build shakes from hand-made animations, combine two patterns in one shake, and play the shakes in Sequencer and from a shake source in the level.",
+  "checklist": [
+   "Create a Camera Animation Sequence named CAS_Impact that is about 0.5 seconds long. Animate a sharp dip of Rotation Pitch that settles back to 0. Leave the blend type of the section as it is.",
+   "Make a Blueprint Class from CameraShakeBase and name it CS_Impact. Set Root Shake Pattern to Sequence Camera Shake Pattern, set Sequence to CAS_Impact, and set Play Rate to 1 and Scale to 1.",
+   "Create CAS_Rumble with 10 seconds of noisy handheld keys. Make a shake named CS_Rumble with the Sequence pattern. Enable Random Segment and set Random Segment Duration to 1.0, so that each time a random part of the animation plays.",
+   "Make a shake named CS_Combo with Root Shake Pattern set to Composite Camera Shake Pattern. Add two Child Patterns: a Perlin Noise pattern with a low amplitude, and a Sequence pattern that uses CAS_Impact. Enable Single Instance.",
+   "In a sequence named LS_Shakes, go to the frame of the hit. On the Cine Camera Actor track, click + Track, then Camera Shake, then CS_Impact. Right-click the section and open Properties. Set Play Scale to 0.5 and Play Space to World, then compare it with Camera Local.",
+   "Place a Camera Shake Source and set its Camera Shake to CS_Rumble, its Attenuation to Linear, and enable Auto Start. Open Window > Camera Shake Previewer, enable Allow Camera Shakes and press Play Selected."
+  ],
+  "done_when": "Send one screenshot of the CS_Combo details that shows the Composite pattern with its two child patterns, and one screenshot of the properties of the shake section in Sequencer with Play Scale and Play Space visible. Add one line that says why you turned on Random Segment for CS_Rumble."
+ },
+ "CQ42": {
+  "brief": "Most cinematics in a game start from gameplay and return to gameplay. If the view jumps suddenly to the cinematic camera, it feels like a hard cut. Sequencer can blend the view smoothly from the gameplay camera into the cinematic camera and back. In this quest you add these blends to an intro sequence and make the sequence animate the real player character by using a tag.",
+  "checklist": [
+   "In a Third Person project, create a Level Sequence named LS_Intro. Click the Camera button to get a spawnable Cine Camera Actor and a Camera Cuts track, and name the camera CAM_Intro. Frame a wide shot of the start area.",
+   "Right-click the Camera Cuts track and enable Can Blend. Drag the upper corner of the cut section at its start and at its end, to create a blend in and a blend out of about one second each.",
+   "Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer. This creates a spawnable proxy, a stand-in for the player. Key a short walk. Right-click its track, open Tags, and add the tag Player.",
+   "Place a Level Sequence Actor for LS_Intro and create a reference to it in the Level Blueprint. Add Get Player Pawn and Set Binding by Tag. Set Binding Tag to Player, connect Get Player Pawn to Actors, and turn Allow Bindings from Asset off. Then call Play.",
+   "Play in Editor. The view should blend from the gameplay camera into CAM_Intro, and back to gameplay at the end.",
+   "Right-click the cut section, open Properties and enable Lock Previous Camera. Then open Thumbnails and enable Draw Single Thumbnail. Notice how the height of the track changes."
+  ],
+  "done_when": "Send one screenshot of the Camera Cuts track with the blend handles and the section Properties visible, and one screenshot of the Level Blueprint with Set Binding by Tag. Add one line that says what Lock Previous Camera protects you from."
+ },
+ "CQ43": {
+  "brief": "The camera that follows the player during the game is a camera too, and it needs design. The Gameplay Camera System is a plugin that lets you build such cameras from nodes. A camera rig is one camera behavior, such as first person or top down, and a Camera Director decides which rig is active. In this quest you build three rigs and switch between them with the keys 1, 2 and 3.",
+  "checklist": [
+   "Make a Third Person project. In Settings > Plugins, enable Gameplay Cameras and restart the editor. Create a Basic level.",
+   "Right-click in the Content Browser and choose Gameplay, then Camera Asset. Pick Blueprint Camera Director. Name the asset CA_PlayerCameras.",
+   "In Rigs, rename the default rig to FirstPerson. Add a Sequence node, a Boom Arm node with Boom Offset 50, 0, 50, and a Field of View node set to 100.",
+   "Add a rig named ThirdPerson. Give it a Sequence node, a Boom Arm with Boom Offset -500, 0, 50, an Input Axis Binding 2D with IA_Look (Clamp Y from -80 to 10, Revert Axis Y), a Field of View node, a Dampen Position node with Forward Damping Factor 5, and an Occlusion Material. Expose Boom Offset as a Camera Rig Parameter. Then add a rig named TopDown with Boom Offset -1000, 0, 0.",
+   "In Transitions of each rig, add an Exit Transition with Smooth Blend. In the Director tab, click + to make CDE_PlayerCameras, and click Build.",
+   "In BP_ThirdPersonCharacter, delete CameraBoom and FollowCamera. Add a GameplayCamera component, set Camera to CA_PlayerCameras, and set Auto Activate for Player to Player 0. Make the keys 1, 2 and 3 set an integer variable named ActiveCameraRig.",
+   "In CDE_PlayerCameras, add Find Evaluation Context Owner Actor (set to BP_ThirdPersonCharacter). From it, get Active Camera Rig, connect it to a Switch on Int, and call Activate Camera Rig for each rig. Press Play and switch rigs with 1, 2 and 3."
+  ],
+  "done_when": "Send one screenshot of the node graph of the ThirdPerson rig, one screenshot of the CDE_PlayerCameras graph, and one Play In Editor screenshot from each of the three rigs (three images or one combined image)."
+ },
+ "CQ44": {
+  "brief": "The ready-made VCam Actor is a normal Cine Camera with a VCam Component added to it. The component has two kinds of parts: Modifiers, which change how the camera behaves, and Output Providers, which decide where the camera picture is shown. When you know these parts, you can build a virtual camera for your own way of working. In this quest you build one by hand from a Cine Camera Actor.",
+  "checklist": [
+   "Enable the VirtualCamera and Live Link plugins and restart the editor. This is the same setup as in the Live Link virtual camera quest.",
+   "Place a Cine Camera Actor named CAM_VCam. In the Details panel, click Add and add a VCam Component. Drag it onto the CameraComponent so that it is a direct child of it.",
+   "Under Output Providers, click + and pick the Viewport Output Provider. Turn on Is Active and set Target Viewport. Enable Use Override Resolution and set 1280 x 720. Then turn Is Active off and on again.",
+   "In the Content Browser, enable Show Plugin Content and open Engine > Plugins > VirtualCamera Content > Modifiers. Add two of these modifiers to the Modifier Stack and swap their order.",
+   "Enable Disable Component when Spawned by Sequencer. Add a second provider, Pixel Streaming, and give it a unique Streamer Id.",
+   "Optional, if you have an iOS device: connect the Live Link VCAM app and enable Auto Set Live Link Subject on the Pixel Streaming provider."
+  ],
+  "done_when": "Send one screenshot of the component hierarchy with the VCam Component under the CameraComponent, and one screenshot of the Details panel that shows the Output Providers list and the Modifier Stack. Add one line that says why the resolution override needed the Is Active toggle."
+ },
+ "CQ45": {
+  "brief": "A set of still images from fixed cameras is a fast way to review a scene, a prop or a lighting change. Unreal has a small tool, StillRenderSetupAutomation, that makes a one-frame sequence for every camera and adds them all to Movie Render Queue. In this quest you place four cameras around a prop and render a still from each one in a single run.",
+  "checklist": [
+   "Place four Cine Camera Actors around one prop and name them CAM_Front, CAM_Side, CAM_Top and CAM_Detail. Give each one a different focal length.",
+   "In the Content Browser, open the settings and enable Show Engine Content and Show Plugin Content. Go to MovieRenderPipeline Content > Editor > Stills. Right-click StillRenderSetupAutomation and choose Run Editor Utility Widget.",
+   "Set Sequence Creation Path to a folder named Stills in your project. Enable Automatically Add Jobs to Movie Queue. Enable Override Movie Resolution and set 1920 x 1080.",
+   "Click Create Sequence For All Cameras. Open Movie Render Queue and confirm that four jobs are listed.",
+   "In the job preset, open Anti-Aliasing and set Engine Warm Up to 64. Enable Use Map as Output Prefix. Then click Render (Local).",
+   "Select only CAM_Front and CAM_Detail in the level and click Create Sequence For Selected. Note how many new sequences appear."
+  ],
+  "done_when": "Send one screenshot of the Still Image Setup tool with your settings, one screenshot of Movie Render Queue with the four jobs, and the four rendered stills (four images or one contact sheet)."
+ },
+ "CQ46": {
+  "brief": "The person who holds a virtual camera is called the operator. The Unreal VCam app gives the operator tools to change how far the camera moves for each real step (scale), how much shaky motion is smoothed (stabilization), and which object the camera rides on (parenting). In this quest you try these tools on a phone or tablet, save bookmarks, and record and rate a take.",
+  "checklist": [
+   "Connect the Unreal VCam app to a VCam Actor, as in the Live Link virtual camera quest. You need a supported phone or tablet for this quest.",
+   "Tap the Wrench icon to open Tools, then open Scale and Gain. Set Axis to Planar and Scale to 2, then lower Joystick Rotation Gain. Walk a few steps and compare the result with Scale 1.",
+   "Tap Stabilization. Try Rotation Stabilization at 0x and at 100x while you do a slow pan. Then enable Kill Roll and Local Space Flight Mode, and fly with the left joystick while you look down.",
+   "In the editor, place a Cine Camera Attach Mount and name it AM_Hero. Set its Target Actor to a character that moves (use a walk in Sequencer or Play In Editor). In the app, tap the parenting dropdown and attach the camera to AM_Hero.",
+   "Create three bookmarks from different positions and move through them with Bookmark Navigation. Check Re-inherit Camera Settings and jump to a bookmark that has a different focal length.",
+   "Tap Take Recorder and record a take of 10 seconds. Open the Take Viewer, give the take two stars and a flag, and try the smoothing slider. Then open the Takes Browser and filter by flagged."
+  ],
+  "done_when": "Send one screenshot of the app HUD that shows the Scale and Stabilization values and the parent dropdown set to AM_Hero, and one screenshot of the Takes Browser with your flagged take. Add one line that says which stabilization value felt best and why."
+ },
+ "CQ47": {
+  "brief": "A Control Rig is a set of handles, called controls, placed on a character so that you can pose it directly in Unreal. In Sequencer you can key these controls to fix a pose or add a gesture inside the shot, without going back to another animation program. In this quest you key a hand control on the mannequin, save and apply a pose, try the Tweens tool, and add a second, layered Control Rig track.",
+  "checklist": [
+   "Open a project made from the Third Person template. In the Content Browser, find the Control Rig asset of the mannequin, for example CR_Mannequin_Body.",
+   "Drag the Control Rig asset into the level. A new Level Sequence opens with a Control Rig track, and Animation Mode turns on. Rename the sequence to LS_CRPose.",
+   "In the Anim Outliner, select a hand control. Move it in the viewport and press S to key it. Move the playhead 24 frames forward, move the hand again, and press S.",
+   "Open Poses in the Animation panel. Select several controls and click Create Pose. Name the pose P_Wave. Move the playhead to a later time and double-click the pose to apply it.",
+   "Open Tweens. Put the playhead between two keys of the hand control and drag the slider to -0.5 and then to 0.5. Watch how the pose between the keys changes.",
+   "Add a second Control Rig track on the same Skeletal Mesh track: click Add (+), then Control Rig, and make sure Layered is checked. Set its Order to 200. Note the default Order value of the first track.",
+   "Press Shift + 1 to leave Animation Mode and Shift + 7 to return to it."
+  ],
+  "done_when": "Send a screenshot of Sequencer with two Control Rig tracks (one of them Layered) and keyed controls. The Animation panel must be open and show your saved pose P_Wave in the Poses tool."
+ },
+ "CQ48": {
+  "brief": "When a cutscene ends, the game gives the character and the camera back to the player. If the pose or the view jumps at that moment, players see a pop. To avoid it, the cutscene animation plays through a Slot in the same Animation Blueprint the character uses in gameplay, and both the animation and the camera blend out at the end. In this quest you set up that Slot, the blends and the player binding, and check the end of the cutscene for a pop.",
+  "checklist": [
+   "Open a project made from the Third Person template and open ABP_Manny. In Window > Anim Slot Manager, add a slot named CineSlot and save.",
+   "In the AnimGraph, add a Slot node and set its Slot Name to CineSlot. Connect it directly before the Output Pose node.",
+   "Create a Level Sequence named LS_Intro. Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer to make a spawnable proxy, a stand-in for the player. Add a short animation and a camera with a Camera Cut.",
+   "Open the Properties of the animation section and set Slot Name to CineSlot. Drag a blend-out at the end of the section. On the transform section, set When Finished to Keep State.",
+   "On the Camera Cut track, enable Can Blend and add a blend-out region. On the Cine Camera, disable Constrain Aspect Ratio.",
+   "Right-click the character track and add the tag Player. In the Level Blueprint, call Set Binding by Tag with Get Player Pawn, then Play the sequence.",
+   "On the Level Sequence Actor, enable Disable Movement Input and Disable Look at Input. Play in the editor and check if there is a pop at the end."
+  ],
+  "done_when": "Send a short video or a set of screenshots that shows the Slot node in ABP_Manny, the Properties of the animation section with Slot Name, and the Level Blueprint with Set Binding by Tag. Add one line that says if the blend at the end looked smooth."
+ }
+}

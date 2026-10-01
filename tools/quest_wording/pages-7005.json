@@ -1,0 +1,87 @@
+{
+ "TAQ49": {
+  "brief": "The Blend Mode of a material decides how its surface mixes with what is behind it. Opaque is solid, Masked cuts holes in the surface, and Translucent, Additive and Modulate let the background show through in different ways. This choice sets what the material can do and what it costs, before you add any nodes. In this quest you make four materials with different blend modes and compare them side by side.",
+  "checklist": [
+   "Place a wall in a level and place a sphere in front of it. Create a material named M_BlendTest with a texture connected to Base Color, and have a black-and-white stripe texture ready.",
+   "Set Blend Mode to Masked and connect the stripes to Opacity Mask. Change the Opacity Mask Clip Value, which is the limit below which a pixel is not drawn, and watch which stripes disappear.",
+   "Turn on Two Sided, which makes the material draw on the back of each surface too. Look inside the sphere and note the change.",
+   "Duplicate the material and name the copy M_BlendTest_Trans. Set its Blend Mode to Translucent, connect a gradient to Opacity, and note that the reflections are gone.",
+   "Make two more copies, one with the Additive blend mode and one with Modulate. Put all four spheres in a row in front of the wall.",
+   "For each blend mode, write down whether it supports lighting and what happens where two spheres overlap."
+  ],
+  "done_when": "Send one screenshot of the four spheres in front of the wall, each labeled with its blend mode, and add your lighting notes."
+ },
+ "TAQ50": {
+  "brief": "Every material is turned into shader code, and more code means more work for the graphics card. The Stats panel in the Material Editor shows how many instructions and texture samplers a material uses. You cannot make a material cheaper if you cannot measure it, so this is the first number to read. In this quest you read the stats of a material, look at the code Unreal generates, and make one expensive material cheaper.",
+  "checklist": [
+   "Open a material that has several texture samples, for example M_Chair from the Starter Content. If the Stats panel is hidden, open it from the Window menu.",
+   "Write down the instruction count and the number of texture samplers.",
+   "Add three Texture Sample nodes and do not connect them to anything. Check the Stats panel again. Then click the Clean Up button in the toolbar to remove the unconnected nodes.",
+   "Open Window > Platform Stats and compare the cost of the material for two different renderers.",
+   "Open Window > Shader Code > HLSL Code, which shows the shader code that Unreal made from your graph. Find where one of your texture samples appears in that code.",
+   "In the level viewport, press Alt+8 to switch to the Shader Complexity view mode. Find the object that is the most red and open its material. Remove or simplify one expensive part, and then compare the color again."
+  ],
+  "done_when": "Send two screenshots of the Stats panel, one from before and one from after your change, with the instruction counts visible. Also send a Shader Complexity screenshot of the object you improved."
+ },
+ "TAQ51": {
+  "brief": "A material graph is read many more times than it is written, by you and by other people. The Material Editor has tools that keep a graph easy to read: comment boxes that group nodes, Reroute nodes that guide wires, and Named Reroutes that replace long wires with a name. In this quest you clean up a messy material with these tools.",
+  "checklist": [
+   "Open a messy material of your own. If you have none, duplicate M_Chair and name the copy M_Chair_Clean.",
+   "Select each group of related nodes and press C to make a comment box around it. Give each box a name, and give it a color in the Details panel.",
+   "Add a comment bubble to one node, and pin it so that it stays readable when you zoom out.",
+   "Double-click a long wire to add a Reroute node, which is a small point that the wire passes through. Drag it to lead the wire around other nodes.",
+   "Right-click a reroute and choose Convert to Named Reroute. Give the Declaration node a clear name, for example GlobalUVs. Then add a second Usage node for it from the right-click menu.",
+   "Use Align Left and Distribute Vertically on one column of nodes. Then collapse one group of nodes that repeats, and rename the collapsed node."
+  ],
+  "done_when": "Send a before screenshot and an after screenshot of the whole graph. The after image must show at least two comment boxes, one Named Reroute and one collapsed node."
+ },
+ "TAQ52": {
+  "brief": "Every material ends at the Main Material Node, the large node with inputs such as Base Color, Metallic and Roughness. Each input is called a pin. Which pins you can use depends on settings such as Blend Mode and Shading Model, and the pins you cannot use are shown in gray. In this quest you connect simple values to the pins and change those settings to see which pins turn on and off.",
+  "checklist": [
+   "Create a material named M_Pins. Click the background of the graph so that the properties of the Main Material Node show in the Details panel.",
+   "Connect a Constant3Vector with the value (1,0,0) to Base Color. Then connect Constants with the values 0, 0.5 and 0.5 to Metallic, Specular and Roughness. Confirm that the preview does not change, because these are the default values.",
+   "Change Roughness to 0.07 and note the difference. Then change Metallic to 1 and note the difference.",
+   "Switch Blend Mode to Translucent, then to Masked, and then back to Opaque. Each time, write down which pins turn white (enabled) or gray (disabled).",
+   "Switch Shading Model to Clear Coat and then to Unlit. Note which extra pins appear or disappear.",
+   "Leave a Constant connected to Opacity while the material is in Opaque mode. Compile the material and confirm that the Constant has no effect."
+  ],
+  "done_when": "Send a short table of the pins that are enabled for Opaque with Default Lit, for Translucent, for Masked and for Clear Coat. Also send a screenshot of your M_Pins graph."
+ },
+ "TAQ53": {
+  "brief": "When you build a material, you change it and look at the result many times. The Material Editor has a preview viewport with tools that let you check your work fast: you can preview a single node, change the preview shape, and change the preview light. In this quest you use these tools and then apply your material to actors in a level in two different ways.",
+  "checklist": [
+   "Open a material that has a Fresnel node, or add one to a material named M_Preview. Right-click the Fresnel node and choose Start Previewing Node. Then stop previewing it.",
+   "Switch the preview shape between cylinder, sphere, plane and cube. Then select one of your Static Meshes in the Content Browser and click the teapot icon to preview the material on that mesh.",
+   "Open Window > Preview Scene Settings. Change the light direction, the light intensity and the background. Hold L and drag in the viewport to rotate the light.",
+   "Click Apply and then Save. Drag the material from the Content Browser onto an actor in the level.",
+   "Select a second actor. In the Materials section of its Details panel, click the Use Selected Asset from Content Browser button to apply the same material to one material slot.",
+   "Add a Vector Parameter to the material. While the material is applied in the level, change the parameter value inside the Material Editor, and watch the level viewport update without a recompile."
+  ],
+  "done_when": "Send a screenshot of the Material Editor that previews the material on your custom mesh with changed Preview Scene Settings. Also send a level screenshot with the material on two actors."
+ },
+ "TAQ54": {
+  "brief": "A texture is stored with mips, which are smaller copies of the image that are used when it is far away. LOD Bias tells Unreal to skip the largest mips, so the texture uses less memory. A Texture Group applies settings like this to all the textures of one kind at once. Together they let you shrink hundreds of textures with one setting, and you do not have to import them again. In this quest you change these settings on one texture and write down what each change does.",
+  "checklist": [
+   "Open a 2048 texture, for example T_Test_2k, in the Texture Asset Editor. Write down the values of Imported, Max In-Game, Combined LOD Bias, Number of Mips and Method (streamed or not).",
+   "Enable the Mip Level selector in the toolbar and step through the mips. Note how the Displayed size changes.",
+   "Set Maximum Texture Size to 1024 and note the new Max In-Game value. Then set it back to 0.",
+   "Set LOD Bias to -1 and then to 2. Note Combined LOD Bias and Max In-Game each time.",
+   "Change the Texture Group to UI and then to World. Check the Filter and the Number of Mips each time.",
+   "Enable Never Stream and check the Method field. Then set Mip Gen Settings to NoMipMaps and see what happens to Number of Mips."
+  ],
+  "done_when": "Send a short table with Max In-Game, Combined LOD Bias, Number of Mips and Method for each setting you tried. Also send one screenshot of the Details panel of the Texture Editor."
+ },
+ "TAQ55": {
+  "brief": "A good spark effect is not one emitter but several that work together. An emitter is the part of a Niagara system that creates one kind of particle. Here you combine three: soft smoke, a bright flash at the center, and fast sparks that fly out, fall and bounce. In this quest you build a system with these three emitters, starting from a smoke emitter you made in an earlier quest.",
+  "checklist": [
+   "Duplicate the FX_Smoke emitter from the sprite smoke quest, move the copy to a new folder, and rename it FX_Sparks_Smoke. Right-click it and choose Create Niagara System. Name the system SparksSystem and drag it into your level.",
+   "In FX_Sparks_Smoke, find Emitter State and set Life Cycle Mode to System, and set Spawn Rate to 20. In Initialize Particle, make the lifetime random from 2 to 3 and make the color dark gray (0.3). Make Add Velocity point mostly upward, with Z from 25 to 35, and set the sphere radius of Shape Location to 5.",
+   "In the Particle Update group of the smoke emitter, open Scale Color. Turn off Scale RGB, and give Scale Alpha the Smooth Ramp Down shape so the smoke fades out. Set Acceleration Force to Z 20.",
+   "Add a second emitter from the Simple Sprite Burst template and name it FX_SparkBurst. In the Render group, set the material to M_Spark. Delete Sprite Burst Instantaneous, set Life Cycle Mode to System, add a Spawn Rate of 50, set Lifetime to 0.2, and set the RGB of Scale Color to 2, 6, 25.",
+   "Add a third Simple Sprite Burst emitter and name it FX_Sparks_Radial. Set the material to M_Radial_Gradient and set Alignment to Velocity Aligned, so each spark points the way it moves. Use a Spawn Rate of 500, a random lifetime from 0.2 to 0.7, and Add Velocity with a random range where Z goes from 300 to 500.",
+   "In the Particle Update group of FX_Sparks_Radial, add Gravity Force with Z -4500, Drag with 1.7, and Collision with Restitution 0.4 and Friction 0.2. Remove Scale Color, and add Scale Sprite Size by Speed with a Velocity Threshold of 2000.",
+   "Look at the effect in the level and adjust one value that you do not like, for example the gravity or the spawn rate of the radial emitter."
+  ],
+  "done_when": "Send one screenshot of the Niagara System Overview that shows all three emitters (FX_Sparks_Smoke, FX_SparkBurst and FX_Sparks_Radial). Also send one screenshot of the effect in your level with sparks bouncing on the floor."
+ }
+}

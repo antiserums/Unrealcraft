@@ -1,0 +1,90 @@
+{
+ "TAQ104": {
+  "brief": "Lumen is the system in Unreal Engine 5 that calculates bounced light (global illumination, or GI) and reflections while the game runs. It looks very good, but it is often the largest GPU cost in a scene. When a frame takes too long, the Lumen settings are among the first things to adjust. In this quest you measure the three Lumen passes, which are the stages of the frame that Lumen uses, and see how a few settings change their cost.",
+  "checklist": [
+   "Open a level that uses Lumen GI and Lumen reflections. Add a few smooth surfaces with low roughness, for example a floor with a roughness of 0.2.",
+   "Run the console command stat GPU. Write down the times of the three Lumen passes: Lumen Scene Lighting, Lumen Screen Probe Gather and Lumen Reflections.",
+   "Run r.Lumen.AsyncCompute 0 and read the Lumen timings again. Note the difference. With this setting off, the numbers show the cost of Lumen alone.",
+   "Switch the viewport to the Performance Overview view mode. Find the pixels that trace their own reflection rays.",
+   "In a Post Process Volume, lower Max Roughness To Trace, and watch how the Lumen Reflections time changes.",
+   "Try r.Lumen.Reflections.DownsampleFactor 2, and note the change in the timing and in the image.",
+   "Set sg.GlobalIlluminationQuality and sg.ReflectionQuality to 2 (High), and then to 1 (Medium). Record the Lumen totals for each setting."
+  ],
+  "done_when": "Send a short table with the three Lumen pass times at Epic, High and Medium, measured with async compute off, plus a screenshot of the Performance Overview view mode."
+ },
+ "TAQ105": {
+  "brief": "Nanite is the system in Unreal Engine 5 that draws very detailed meshes and picks the right amount of detail by itself, so you do not have to make LODs by hand. It is not free, though. Overdraw (drawing the same pixel more than once), streaming (loading mesh data when it is needed) and disk size still cost time and memory. In this quest you use the Nanite view modes and the NaniteStats command to see these costs in your own level.",
+  "checklist": [
+   "Open a level that has many Nanite meshes. If you have none, select 10 or more meshes in the Content Browser, right-click them, and choose Nanite, then Enable.",
+   "In the View Modes menu of the viewport, open Nanite Visualization. Look at the modes Overview, Mask, Triangles, Clusters and Overdraw.",
+   "Stack several small Nanite props close together. Compare their Overdraw with the Overdraw of one large prop.",
+   "Run the console command NaniteStats and read the overlay in the top-right corner. Then run NaniteStats List, and then NaniteStats VirtualShadowMaps.",
+   "Open Show, then Nanite, and turn off Streaming Geometry. Take a screenshot of the quality that is always kept in memory.",
+   "Run r.Nanite 0 and take a screenshot of the same view, which now shows the fallback meshes. Then run r.Nanite 1 to turn Nanite on again.",
+   "Pick one heavy mesh and try Keep Triangle Percent 50 on it. Compare the disk size in the tooltip of the asset before and after."
+  ],
+  "done_when": "Send three screenshots: the Overdraw visualization, the NaniteStats overlay, and the view with Streaming Geometry off. Also write the disk size of your trimmed mesh before and after."
+ },
+ "TAQ106": {
+  "brief": "Before the GPU can draw something with a certain material for the first time, the engine must prepare a Pipeline State Object, or PSO. Creating a PSO in the middle of the game can take long enough to cause a short freeze, which players call a hitch. PSO precaching prepares these objects early, in the background, so the hitch does not happen. In this quest you read how the system works, turn on its statistics, and check how many PSOs were ready in time in your own project.",
+  "checklist": [
+   "Read the PSO Caches overview page, and then the PSO Precaching page. Write two lines: what a PSO is, and how precaching is different from a bundled cache.",
+   "Set r.PSOPrecache.Validation=1 in the file DefaultEngine.ini, or set it in the console at startup. This turns on the statistics.",
+   "Package or launch a Development build of your project with -clearPSODriverCache on the command line. This clears the cache of the graphics driver, so you see what a first-time player sees.",
+   "Play a level that has many different materials. Run stat PSOPrecache and take a screenshot of the numbers for Missed, Too late, Hit and Precached.",
+   "Set r.PSOPrecache.ProxyCreationDelayStrategy 1 and play the same level again. Note where you see the default (grey) material for a moment.",
+   "Write down what your loading screen should wait for before it hides."
+  ],
+  "done_when": "Send a screenshot of stat PSOPrecache from a build that was launched with -clearPSODriverCache, plus your notes on the delay strategy and on the rule for the loading screen."
+ },
+ "TAQ107": {
+  "brief": "Screen percentage is the resolution at which the 3D scene is drawn, compared to the resolution of the screen. Dynamic resolution lowers this value by itself when the GPU is too slow, and raises it again when there is time left. Temporal upsampling then uses data from earlier frames to scale the image up to the full screen size, so it still looks sharp. Games use both to keep a steady frame rate on weak hardware. In this quest you turn both on and look at their effect.",
+  "checklist": [
+   "Open a heavy level. Run the console commands stat unit and stat unitgraph. Confirm that the DynRes line says that dynamic resolution is off.",
+   "In a Blueprint (for example in the Level Blueprint on BeginPlay), call Get Game User Settings and then Set Dynamic Resolution Enabled with the value true.",
+   "In the console, set r.DynamicRes.OperationMode 1 and r.DynamicRes.FrameTimeBudget 16.6, and then play. Read the primary and secondary screen percentages on the DynRes line.",
+   "Run stat raw. Watch the curve of the primary screen percentage drop during a camera cut or a big effect.",
+   "Stop playing. Move the Screen Percentage slider of the editor viewport to 50, and look closely at a thin object such as a fence or a grill.",
+   "Enable Temporal Upsampling (with r.TemporalAA.Upsampling 1 or with the project setting). Compare the same object at 50 percent.",
+   "Run profileGPU once at 100 percent and once at 50 percent. Note which passes get cheaper."
+  ],
+  "done_when": "Send a screenshot of stat unitgraph that shows the DynRes line with a changing primary screen percentage, plus two viewport screenshots of a thin object at 50 percent, one with temporal upsample and one without it."
+ },
+ "TAQ108": {
+  "brief": "VRAM is the memory of the graphics card. Textures, meshes and other render data are stored there, and the amount is limited. When it is full, textures become blurry or the game can crash. The Render Resource Viewer is a tool that lists every resource in GPU memory with its size and its owner, so you can see what uses the memory. In this quest you use it together with the stat streaming command to find the largest users of memory in your level.",
+  "checklist": [
+   "Open a level with several skeletal meshes and static meshes. Then open Tools > Render Resource Viewer.",
+   "Sort the list by Size. Note the five largest resources, their type and their Owner.",
+   "Search for the path of one skeletal mesh (for example SKM_Quinn) and record the total size of all its resources. Note the LOD index that is shown at the end of the owner path.",
+   "Tick the Transient filter. Compare the totals with the filter on and with the filter off.",
+   "Select an entry and press Ctrl+B to jump to the asset in the Content Browser.",
+   "Run the console command stat streaming. Write down the values of Texture Pool, Streaming Pool, Required Pool, Wanted Mips and Cached Mips.",
+   "Place 10 more props with high-resolution textures in view. Click Refresh in the viewer, and read both sets of numbers again."
+  ],
+  "done_when": "Send a screenshot of the Render Resource Viewer sorted by size with your search applied, plus the stat streaming values before and after you added the props."
+ },
+ "TAQ109": {
+  "brief": "Culling means that the engine does not draw objects that the camera cannot see. An object can be skipped because it is too far away, because it is outside the view of the camera, or because it is hidden behind something else, which is called occlusion. Every object that is not drawn costs nothing, so good culling is one of the cheapest ways to make a level faster. In this quest you build two rooms and use stat commands and view tools to see what the engine culls.",
+  "checklist": [
+   "Build a small interior: two rooms with a wall and a door between them. Put 30 or more props in the far room.",
+   "Play in the editor and run the console command stat initviews. Record the values of Processed Primitives, Frustum Culled Primitives, Occluded Primitives, Occlusion Queries and Visible Static Mesh Elements.",
+   "Run r.VisualizeOccludedPrimitives 1. Confirm that green boxes appear around the props that are fully hidden.",
+   "Stand in the doorway and run FreezeRendering, which stops the engine from updating what it draws. Then walk into the far room and take a screenshot of what is missing.",
+   "Add a Cull Distance Volume around the map, with a small size and a short distance. Read stat initviews again from far away.",
+   "Select one prop and set its Bounds Scale to 3. Explain in one line why this can hurt culling and shadows."
+  ],
+  "done_when": "Send a screenshot of stat initviews taken from the doorway, a screenshot with r.VisualizeOccludedPrimitives 1 active, and your stat numbers before and after you added the Cull Distance Volume."
+ },
+ "TAQ110": {
+  "brief": "A normal texture is loaded into memory as a whole, even when only a small part of it is on screen. A virtual texture is split into small tiles, and the engine loads only the tiles that the visible pixels need. This lets you use very large textures without paying for all of them in memory. In this quest you convert the textures of a ground material to virtual textures and measure what changes.",
+  "checklist": [
+   "Enable Virtual Textures in Project Settings if it is not enabled yet. Pick a material named M_Ground that has three 4K textures (base color, normal and mask) that use the same UVs.",
+   "Select the three textures in the Content Browser, right-click them, and choose Convert to Virtual Texture. Confirm that the Texture Sample nodes in the material now show VT and a Virtual sampler type.",
+   "Open M_Ground and read the Stats panel. Count the texture fetches, which are the texture reads of the material. Then give the mask a different UV tiling and read the count again.",
+   "In the level, run the console commands stat virtualtexturing and stat virtualtexturememory. Take a screenshot of both.",
+   "Run r.VT.Borders 1. Move the camera close and far, and look at the grid of tiles. Turn it off again with r.VT.Borders 0.",
+   "Compare the Streaming Pool value of stat streaming before and after the conversion."
+  ],
+  "done_when": "Send screenshots of the material with the VT samples, of the Stats panel fetch counts with the same UVs and with different UVs, and of stat virtualtexturememory."
+ }
+}

@@ -1,0 +1,146 @@
+{
+ "PQ79": {
+  "brief": "A struct groups several values into one data type, and an enum is a list of named choices, such as Common, Rare and Epic. In Unreal C++ you mark them with the macros USTRUCT and UENUM so that the engine knows about them. If you also add BlueprintType, you can use them in Blueprints. In this quest you write one enum and one struct in C++ and use both in a Blueprint.",
+  "checklist": [
+   "In your C++ project, add a header file named ItemTypes.h. It does not need a class. You can use the Class Wizard with the parent None, or create the file by hand.",
+   "Declare UENUM(BlueprintType) enum class EItemRarity : uint8 with the values Common, Rare and Epic. Give Epic the text UMETA(DisplayName=\"Legendary\"), which changes the name shown in the editor. Add one more value and mark it with UMETA(Hidden).",
+   "Declare USTRUCT(BlueprintType) struct FItemRow. Put GENERATED_BODY() on its first line. Then add these UPROPERTY fields: FName Id, int32 Stack and EItemRarity Rarity. Mark each of them with EditAnywhere, BlueprintReadWrite.",
+   "On a C++ actor named AItemChest, add a UPROPERTY of the type TArray<FItemRow> named Items. Compile, and make a Blueprint named BP_ItemChest from the actor.",
+   "In BP_ItemChest, fill in two rows of Items in the Details panel. In the Event Graph, use the Make FItemRow and Break FItemRow nodes and print the Rarity of one row.",
+   "Check the dropdown of the enum in the editor. The DisplayName should show, and the Hidden value should not show."
+  ],
+  "done_when": "Send a screenshot of the header with the UENUM and the USTRUCT, and a screenshot of BP_ItemChest that shows the rows in the Details panel and a Break FItemRow node with the Rarity pin."
+ },
+ "PQ80": {
+  "brief": "Unreal C++ has three main container types. TArray is an ordered list, TMap stores pairs of a key and a value, and TSet stores unique values with no order. Each one is fast at different things, so the choice affects how fast and how safe your gameplay code is. In this quest you try the main functions of all three and write the results to the log.",
+  "checklist": [
+   "Make a C++ actor named AContainerLab. In BeginPlay, build a TArray<FString> and add items with Emplace. Then Sort it with a predicate (a small function that compares two items) that sorts by the length of the string.",
+   "Use Find to get the index of an item, and FindByPredicate to get a pointer to an item. Log both results with UE_LOG. Also log what Find returns for a value that is not in the array.",
+   "Remove one element with RemoveAt and one with RemoveAllSwap. Log the array after each removal, so that you can see how the order changes.",
+   "Make a TMap<int32, FString>. Add three entries, and then call Add again with a key that already exists. Log Num() before and after.",
+   "On a key that does not exist, use Find (and check the pointer it returns), FindRef and FindOrAdd. Log each result and log Num() after them.",
+   "Make a TSet<FString>, Add the same value twice, and log Num(). Then mark the TMap with UPROPERTY(EditAnywhere) and edit it from the Details panel in BP_ContainerLab."
+  ],
+  "done_when": "Send a screenshot of the Output Log that shows the sorted array, the Find results (also the one for the missing value), the map counts after the duplicate key, and the set count after the duplicate. Also send a screenshot of the map being edited in the Details panel."
+ },
+ "PQ81": {
+  "brief": "A delegate is a variable that holds a link to a function, so that one piece of code can call a function in another object without knowing its class. Unreal C++ has three main kinds: a single delegate calls one function, a multicast delegate calls many, and a dynamic multicast delegate can also be used from Blueprints. This is how C++ systems talk to each other without depending on each other. In this quest you declare and use all three kinds in one actor.",
+  "checklist": [
+   "Make a C++ actor named AAlarmActor. In its header, declare a single delegate with DECLARE_DELEGATE_OneParam(FOnAlarmMessage, FString), and add a member variable of that type.",
+   "In BeginPlay, bind the delegate to a member function with BindUObject and call it with ExecuteIfBound. Then call Unbind and call ExecuteIfBound again. Log that nothing happened the second time.",
+   "Declare a multicast delegate with DECLARE_MULTICAST_DELEGATE_OneParam(FOnAlarmLevel, int32). Add two listeners, one with AddUObject and one with AddLambda, and then call Broadcast. Write a log line from both listeners.",
+   "Declare DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlarmTriggered, int32, Level) and add a member of that type marked with UPROPERTY(BlueprintAssignable), so that Blueprints can bind to it.",
+   "Make a Blueprint named BP_Alarm from the actor. In the Blueprint, bind an event to OnAlarmTriggered and print the Level. Trigger the Broadcast from a timer or from a key press.",
+   "Also bind the dynamic delegate from C++, in a second actor. Use AddDynamic to bind it to a function that is marked with UFUNCTION."
+  ],
+  "done_when": "Send a screenshot of the header with the three DECLARE_ macros, and a screenshot in Play mode where the Blueprint event and the C++ log both react to the same Broadcast."
+ },
+ "PQ82": {
+  "brief": "A timer calls a function after a delay, once or again and again. In C++ you set timers through the FTimerManager of the world, and you keep an FTimerHandle so that you can pause or clear the timer later. Timers replace many Tick functions and make delays and repeats cheap and easy to read. In this quest you build a gas room in C++ that ticks once per second, can be paused, and stops itself.",
+  "checklist": [
+   "Make a C++ actor named AGasRoom. Give it a member FTimerHandle DamageTimerHandle and a function ApplyGasTick() that is marked with UFUNCTION.",
+   "In BeginPlay, call GetWorldTimerManager().SetTimer(DamageTimerHandle, this, &AGasRoom::ApplyGasTick, 1.0f, true, 2.0f). This starts the timer after 2 s and repeats it every second.",
+   "In ApplyGasTick, count down an int named TicksRemaining. When it reaches 0, call ClearTimer with the same handle and log that the room is safe.",
+   "Add two functions marked UFUNCTION(BlueprintCallable), named PauseGas() and ResumeGas(), that call PauseTimer and UnPauseTimer. Call them from BP_GasRoom on key presses.",
+   "On each tick, log GetTimerElapsed and GetTimerRemaining for the handle. Check that the two values add up to the rate of the timer.",
+   "In BeginPlay, use SetTimerForNextTick with a lambda (a small function written in place) to log one line on the next frame."
+  ],
+  "done_when": "Send a screenshot of the Output Log that shows the ticks with the elapsed and remaining values, a pause and a resume, and the final clear message. The SetTimer line from your .cpp file must also be in the screenshot."
+ },
+ "PQ83": {
+  "brief": "An interface is a list of functions that different classes agree to provide. With an interface, actors that have nothing else in common can respond to the same call, and the caller does not need to cast to each class. In Unreal you can declare an interface in C++ and let both C++ classes and Blueprints implement it. In this quest you write such an interface, implement it once in C++ and once in a Blueprint, and call it from a trigger zone.",
+  "checklist": [
+   "Use the C++ Class Wizard with the class type Unreal Interface to create ReactToTrigger. You get two classes: UReactToTrigger (the UINTERFACE) and IReactToTrigger.",
+   "Mark the UINTERFACE with Blueprintable. In the I-class, add UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool ReactToTrigger();.",
+   "Make a C++ actor named ATrapActor that inherits from AActor and IReactToTrigger. Implement ReactToTrigger_Implementation so that it writes a log line and returns true.",
+   "Make a Blueprint actor named BP_PointsPickup. Add the ReactToTrigger interface in its Class Settings and implement the event in the Blueprint.",
+   "Make ATriggerZone with a box that detects overlaps. On overlap, check Implements<UReactToTrigger>() on the other actor and call IReactToTrigger::Execute_ReactToTrigger(OtherActor).",
+   "Also try Cast<IReactToTrigger>(OtherActor) on both actors, and log which one returns null."
+  ],
+  "done_when": "Send a screenshot of the interface header, and a screenshot in Play mode where the log shows both the C++ trap and the Blueprint pickup reacting through Execute_, and the Cast result for the Blueprint actor."
+ },
+ "PQ84": {
+  "brief": "A subsystem is a class that Unreal creates and destroys for you together with a bigger object, such as the Game Instance, which lives as long as the game runs. It is a clean place for systems that the whole game uses, such as stats, and Blueprints can reach it without a cast. In this quest you write a Game Instance Subsystem that counts resources and use it from C++ and from a Blueprint.",
+  "checklist": [
+   "Create a C++ class named UStatsSubsystem that inherits from UGameInstanceSubsystem.",
+   "Override Initialize(FSubsystemCollectionBase&) and Deinitialize(). Write a log line in both, so that you can see when they run.",
+   "Add UFUNCTION(BlueprintCallable) void IncrementResourceStat(FName Resource) and UFUNCTION(BlueprintPure) int32 GetResourceStat(FName Resource) const. Store the values in a TMap<FName, int32>.",
+   "In a C++ actor, get the subsystem with the line GetGameInstance()->GetSubsystem<UStatsSubsystem>(). Then increment a stat on BeginPlay.",
+   "In a Blueprint, right-click in the graph and search for 'Stats Subsystem'. Use the node that Unreal generated for you (no cast is needed) to read the stat and print it.",
+   "Stop Play In Editor and start it again. Confirm in the log that Deinitialize ran and that Initialize then ran again."
+  ],
+  "done_when": "Send a screenshot of the subsystem header, a screenshot of the Blueprint graph that uses the subsystem node without a cast, and a screenshot of the Output Log that shows Initialize, Deinitialize and the stat value."
+ },
+ "PQ85": {
+  "brief": "A module is a separate block of C++ code inside a project, with its own folder and its own Build.cs file that tells the build tool what the module needs. A new project has one module. When you split the code into more modules, it stays separated and builds faster as the project grows. In this quest you add a second runtime module by hand and create a class inside it.",
+  "checklist": [
+   "In the Source folder of your project, create a folder named GameCore with two subfolders named Private and Public.",
+   "Add the file GameCore.Build.cs with a class that derives from ModuleRules. Put Core, CoreUObject and Engine in PrivateDependencyModuleNames.",
+   "Add the file Private/GameCoreModule.cpp. It contains #include \"Modules/ModuleManager.h\" and the line IMPLEMENT_MODULE(FDefaultModuleImpl, GameCore);.",
+   "Register the module in the Modules list of the .uproject file with the Type Runtime. Then add \"GameCore\" to PublicDependencyModuleNames in the Build.cs file of the primary module.",
+   "Generate the project files again: right-click the .uproject file and choose Generate Visual Studio project files. Then compile.",
+   "In the editor, add a new C++ Actor class. Pick GameCore (Runtime) in the module dropdown, set Class Type to Public, and name the class ModuleActorBase. Make BP_ModuleActor from it and place it in the level."
+  ],
+  "done_when": "Send screenshots of the Source folder tree with both modules, the contents of GameCore.Build.cs, the Modules list in the .uproject file, and the New C++ Class dialog with GameCore (Runtime) selected."
+ },
+ "PQ86": {
+  "brief": "Live Coding compiles your C++ changes and patches them into the editor while it is still running, so you do not need to restart. It cannot patch every kind of change safely. Reinstancing is the feature that replaces existing objects when the layout of a class changes, for example when you add a variable. If you know what Live Coding can and cannot patch, you avoid crashes and lost time. In this quest you look at the Live Coding settings and test several kinds of change.",
+  "checklist": [
+   "Open Editor Preferences and go to General, then Live Coding. Take a screenshot of the General section and of the Modules section.",
+   "Add the second module of your project (or your primary module) to Preload Named Modules. Restart the editor and note the difference in startup time.",
+   "Place BP_GasRoom (or any actor based on C++) in the level. In the .cpp file, change a default value in the constructor. Press Ctrl+Alt+F11 to start Live Coding, and check if the placed instance updates.",
+   "Now change the same default value in the .h file instead. Run Live Coding again and compare the result.",
+   "Add a completely new UFUNCTION and a new UPROPERTY to the class. Run Live Coding with Enable Reinstancing on, and confirm that the new property shows in the Details panel.",
+   "Open the Live Coding console and take a screenshot of the log from a successful patch."
+  ],
+  "done_when": "Send screenshots of the Live Coding preferences and of the Live Coding console after a successful build. Add a short text that says which change of the default value updated the placed instance (.h or .cpp) and why."
+ },
+ "PQ87": {
+  "brief": "A Data Asset is an asset that holds only data, such as the name and damage of a weapon, in fields that you define in a class. Designers can then create and edit items in the editor without touching code. A Primary Data Asset is a Data Asset that the Asset Manager can find and load by an id. In this quest you write a Primary Data Asset class in C++, create a few assets from it, and print their ids.",
+  "checklist": [
+   "Open Tools > New C++ Class. Pick PrimaryDataAsset as the parent and name the class UWeaponDefinition. Build the project.",
+   "Add these members marked with UPROPERTY(EditAnywhere): FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Build again.",
+   "In the Content Browser, right-click and choose Miscellaneous, then Data Asset. Choose WeaponDefinition as the class. Make two assets named DA_Sword and DA_Bow, and fill in their values.",
+   "Make a Blueprint child of WeaponDefinition named BP_WeaponBase. Then make a Data Only Blueprint child of BP_WeaponBase named BP_WeaponFire, and change one value in this child.",
+   "In any Blueprint, call Get Primary Asset Id on DA_Sword and show the result with Print String. Do the same for BP_WeaponFire.",
+   "Write 3 lines that answer this: when do you pick a Data Asset instance, and when do you pick a Data Only Blueprint?"
+  ],
+  "done_when": "Send a screenshot of the Output Log that shows the two printed Primary Asset Ids, and add your 3 lines."
+ },
+ "PQ88": {
+  "brief": "The Asset Manager is the engine system that knows about your Primary Assets and loads them when you ask, by id. You tell it which asset types exist and in which folders to look. An Asset Bundle is a named group of extra assets, such as meshes, that belong to a Primary Asset and can be loaded together with it. Loading only what you need, when you need it, keeps the start of the game fast. In this quest you register your weapon assets, list them, and load one in the background.",
+  "checklist": [
+   "Use the UWeaponDefinition class from PQ87 (or make one now). Put all weapon Data Assets in one folder: Content/Data/Weapons.",
+   "Open Project Settings and go to Game, then Asset Manager. Under Primary Asset Types to Scan, add a type named WeaponDefinition with the base class WeaponDefinition and the directory /Game/Data/Weapons.",
+   "In the header, add meta=(AssetBundles=\"Visual\") to the UPROPERTY of the Mesh member, so that the mesh goes into a bundle named Visual.",
+   "In a GameMode or a Blueprint Function Library, ask the Asset Manager for all Primary Asset Ids of the type WeaponDefinition and print them. In Blueprint the node is Get Primary Asset Id List.",
+   "Load one weapon asynchronously (in the background) by its Primary Asset Id. In Blueprint use Async Load Primary Asset, and in C++ use LoadPrimaryAsset. Print its DisplayName in the completion callback, the code that runs when the load is finished.",
+   "Load it again with the bundle list [Visual] and confirm that the mesh is now loaded. To check, print Is Valid on the object that the soft pointer resolves to."
+  ],
+  "done_when": "Send a screenshot of the Asset Manager settings page, and a screenshot of the Output Log with the list of ids and the loaded DisplayName."
+ },
+ "PQ89": {
+  "brief": "A Data Table is an asset that works like a spreadsheet: each row has a name and the same set of columns. The columns come from a struct that you define, and the rows can be imported from a CSV file, a plain text file that spreadsheet programs can save. Designers can then tune numbers in a spreadsheet while the code stays the same. In this quest you define the row struct in C++, import a CSV file as a Data Table, and read one row from C++.",
+  "checklist": [
+   "In C++, declare USTRUCT(BlueprintType) FLevelUpRow : public FTableRowBase with the members int32 XPtoLvl, int32 AdditionalHP and TSoftObjectPtr<UTexture> Icon. Build the project.",
+   "Write a file named LevelUp.csv. Its first column must be named Name, and after that it has one column for each member of the struct. Add 5 rows.",
+   "Import the CSV file in the Content Browser. Choose DataTable and the row type LevelUpRow. Name the asset DT_LevelUp.",
+   "Add a UPROPERTY(EditAnywhere) FDataTableRowHandle LevelRow to an actor. In BeginPlay, call LevelRow.FindRow<FLevelUpRow>() and write the XPtoLvl value to the log with UE_LOG.",
+   "Edit one number in the CSV file. Right-click DT_LevelUp and choose Reimport. Play again and confirm that the log shows the new number.",
+   "Also import the same CSV file once as a CurveTable to see the difference, and then delete that asset."
+  ],
+  "done_when": "Send a screenshot of DT_LevelUp open in the editor, and a screenshot of the Output Log line with the value that was read from C++."
+ },
+ "PQ90": {
+  "brief": "Config files are the .ini text files where Unreal keeps its settings. A C++ class can mark some of its variables as Config, and the engine then fills them from an .ini file when the class loads. This lets you change behavior per project, per platform or per machine without building the code again. In this quest you read values from an .ini file in three ways and override one of them from the command line.",
+  "checklist": [
+   "Make a C++ class UGameTuning : public UObject and mark it with UCLASS(config=Game). Add UPROPERTY(Config) int32 StartingLives and UPROPERTY(Config) float RespawnDelay.",
+   "In the file Config/DefaultGame.ini of your project, add a section named [/Script/YourModule.GameTuning] and set both values in it. Replace YourModule with the name of your module.",
+   "In BeginPlay of any actor, read the value with GetDefault<UGameTuning>()->StartingLives and write it to the log with UE_LOG. Run the game and confirm that the value from the .ini file appears.",
+   "Add a section [MyTuning] with the line Difficulty=2 to DefaultGame.ini. Read it with GConfig->GetInt(TEXT(\"MyTuning\"), TEXT(\"Difficulty\"), Value, GGameIni) and log the value.",
+   "In the console, run: GetIni Game:/Script/YourModule.GameTuning StartingLives. Compare the result with your log.",
+   "Start the editor once with -ini:Game:[/Script/YourModule.GameTuning]:StartingLives=9 on the command line. Show that the log now says 9."
+  ],
+  "done_when": "Send a screenshot of the Output Log with the values from the .ini file, from GConfig and from the command-line override. Also send your section of DefaultGame.ini."
+ }
+}

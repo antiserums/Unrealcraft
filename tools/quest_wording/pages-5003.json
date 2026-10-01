@@ -1,0 +1,148 @@
+{
+ "EAQ60": {
+  "brief": "A texture is an image that a material uses, for example for the color or the roughness of a surface. Unreal stores each texture together with smaller copies of itself called mips, which it uses when the surface is far away to save memory and avoid shimmering. Mips work best when the image size is a power of two, such as 1024 or 2048. In this quest you import a small set of textures and read what Unreal did with them.",
+  "checklist": [
+   "Prepare three images for one surface: a color image, a normal image and a roughness image. Use a power-of-two size such as 1024x1024, and save them as .png or .tga files.",
+   "Also prepare one image whose size is not a power of two, for example 1000x700.",
+   "Import all four images with the Import button in the Content Browser, or drag them in from your file explorer. Name them T_Wood_BC, T_Wood_N, T_Wood_R and T_Test_NPOT.",
+   "Double-click T_Wood_BC to open the Texture Asset Editor. In the Details panel, read the values Imported, Displayed, Max In-Game and Number of Mips.",
+   "Enable the Mip Level checkbox in the toolbar and step through the mips one by one. Watch the Displayed size change.",
+   "Open T_Test_NPOT and check which value Mip Gen Settings was given at import. Write the value down."
+  ],
+  "done_when": "Send one screenshot of the Texture Asset Editor for T_Wood_BC with the texture information visible (Imported size and Number of Mips). Add one line that says which Mip Gen Settings value T_Test_NPOT got at import."
+ },
+ "EAQ61": {
+  "brief": "Textures usually take more memory and disk space than anything else in a project, so Unreal compresses them. There are several compression formats, such as BC1 and BC7, and each one gives a different balance between size and quality. In this quest you look at the compression of a texture, compare two formats, and use the Oodle panel to see how large the texture will be on disk.",
+  "checklist": [
+   "Open T_Wood_BC, or any other color texture, in the Texture Asset Editor. Find the Compression category in the Details panel.",
+   "Note the value of Compression Settings, and the Format shown in the texture information at the top. Write down the Resource Size.",
+   "Open a packed mask texture, which is a texture that stores a different mask in each color channel, or import one. Change Compression Settings to BC7 and compare the Resource Size before and after.",
+   "Open the Oodle panel. Enable On-disk Sizes and read the values Uncompressed Size and Compressed Size (Estimate).",
+   "In the Oodle panel, enable Try Encodings and test the RDO Lambda values 0, 30 and 100. Look in the viewport for artifacts, which are small errors in the image caused by compression.",
+   "Open Project Settings, then Engine, then Texture Encoding, and find the Fast and Final settings. Do not change them."
+  ],
+  "done_when": "Send one screenshot of the Oodle panel with On-disk Sizes enabled. Add a short table (two lines are enough) with the Resource Size of the same texture for BC1/AutoDXT and for BC7."
+ },
+ "EAQ62": {
+  "brief": "A normal map is a texture that tells the light which way each small part of a surface faces. It makes a flat surface look like it has bumps and grooves without adding geometry. Different programs save normal maps in two different ways, and if you use the wrong one the bumps look pushed in instead of raised. In this quest you test a normal map on a cube and learn the texture settings that fix it.",
+  "checklist": [
+   "Import a normal map and name it T_Brick_N. Open it in the Texture Asset Editor and confirm that Compression Settings is set to Normalmap.",
+   "Make a material named M_NormalTest. Connect T_Brick_N to the Normal input, and apply the material to a cube in a level that has one directional light.",
+   "In the Texture Asset Editor, turn Flip Green Channel on and off and watch the cube. Note which setting makes the bumps look raised and not sunken.",
+   "Enable Normalize after making Mips. Move the camera far away from the cube and compare the surface with the setting turned off.",
+   "Open a roughness texture. Set Composite Texture to T_Brick_N and set Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power at 1 and at 4."
+  ],
+  "done_when": "Send two screenshots of the lit cube: one with Flip Green Channel off and one with it on. Add one line that says which one is correct for your normal map."
+ },
+ "EAQ63": {
+  "brief": "A decal is a material that is projected onto other surfaces, like a sticker or a stain. Artists use decals to add cracks, dirt and damage to walls and floors without making new meshes or textures for them. In this quest you make a decal material, project it on a wall with a Decal Actor, and learn how to control which decal is on top and which meshes receive it.",
+  "checklist": [
+   "Create a material named M_Decal_Crack. In the Details panel, set Material Domain to Deferred Decal and Blend Mode to Translucent.",
+   "Add a crack texture or a dirt texture to the graph. Connect its color to Base Color and its mask to Opacity. If you like, also connect a normal map to Normal.",
+   "Place a Decal Actor from the Visual Effects category of the Place Actors panel. Assign M_Decal_Crack to Decal Material, and rotate the actor so its arrow points at a wall.",
+   "Scale the Decal Actor with the scale tool, using a different amount on each axis. Watch how the projection fades at the edges of the box.",
+   "Place a second decal that overlaps the first one. Change Sort Order on one of them so that it draws on top of the other.",
+   "Put a Static Mesh inside the box of the decal and turn off Receives Decals on that mesh. Confirm that the decal no longer shows on it.",
+   "Switch the viewport to the Shader Complexity view mode. Look at the cost in the area where the two decals overlap."
+  ],
+  "done_when": "Send one screenshot of the two overlapping decals on the wall, with the Sort Order values visible in the Details panel. Also send one screenshot of the same view in the Shader Complexity view mode."
+ },
+ "EAQ64": {
+  "brief": "Texture streaming is the system that loads only the texture sizes the camera needs at the moment, to save memory. It has a fixed memory budget called the pool. When the pool is too small, textures stay blurry, which is a common problem in finished games. In this quest you watch the streamer work with a stat command and a view mode, and you make the pool too small on purpose to see the result.",
+  "checklist": [
+   "Open a level with several textured props. Click the dropdown next to the Build button and run Build Texture Streaming.",
+   "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips.",
+   "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change.",
+   "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green.",
+   "Type r.Streaming.PoolSize 50 in the console, play again, and look for blurry textures. Then set the value back to what it was before.",
+   "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it. Only note where it is."
+  ],
+  "done_when": "Send one screenshot of STAT STREAMING on screen while you play. Also send one screenshot of the Primitive Distance Accuracy view mode, with a short line about what the colors on your meshes mean."
+ },
+ "EAQ65": {
+  "brief": "When a player stands very close to a wall, the wall texture often looks blurry because there are not enough pixels. A detail texture is a second, small texture that repeats many times over the surface and adds fine detail up close. In this quest you build a wall material that uses the DetailTexturing material function, which is a ready-made group of nodes that comes with Unreal.",
+  "checklist": [
+   "In a project that has the Starter Content, create a material named M_DetailWall. Drag in the textures T_Brick_Clay_Old_D, T_Brick_Clay_Old_N, T_Ground_Gravel_D and T_Ground_Moss_N.",
+   "Add the DetailTexturing material function, which is in the Misc category. Then right-click the gravel texture and the moss texture and choose Convert To Texture Object for each.",
+   "Connect the brick textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal.",
+   "Add three Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, and set each one to 1. Connect them to the function.",
+   "Make a Material Instance named MI_DetailWall. Try Scale at 1, 5 and 10, and look at a wall from very close each time.",
+   "Add a TextureCoordinate node in front of the brick textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
+  ],
+  "done_when": "Send two close-up screenshots of the wall in the level, one with Scale 1 and one with Scale 10. Also send one screenshot of the M_DetailWall graph."
+ },
+ "EAQ66": {
+  "brief": "A virtual texture is a very large texture that Unreal cuts into small tiles, so that it only loads the tiles the camera can see. This lets a project use huge textures without using a huge amount of memory. There are two kinds: Streaming Virtual Textures (SVT), which are loaded from disk, and Runtime Virtual Textures (RVT), which are created while the game runs. In this quest you convert a large texture to a virtual texture and look at its tiles.",
+  "checklist": [
+   "On the Virtual Texturing documentation page, read the table that compares Runtime Virtual Textures with Streaming Virtual Textures. Write one sentence about each.",
+   "Import a large color texture with a power-of-two size (4096x4096 is enough) and name it T_Big_BC. Use it in a material named M_BigTest and put that material on a plane.",
+   "In the Content Browser, right-click T_Big_BC and choose Convert to Virtual Texture. Read the list of materials in the Convert To window and click Ok.",
+   "Open M_BigTest. Confirm that the Texture Sample node now shows VT in its corner and uses a Virtual sampler type.",
+   "Play in the editor. In the console, type stat virtualtexturing, and then r.VT.Borders 1. Move around and look at the grid. Turn the grid off with r.VT.Borders 0."
+  ],
+  "done_when": "Send one screenshot of the plane with r.VT.Borders 1 active and stat virtualtexturing on screen. Add your two sentences about RVT and SVT."
+ },
+ "EAQ67": {
+  "brief": "Fab is the online store of Epic Games for 3D content, and you can open it inside the Unreal editor. Megascans is a large library of surfaces and objects that were scanned from the real world, and many of them are free on Fab. A scanned surface is a quick way to get a material that looks real. In this quest you find a free Megascans surface in Fab, add it to your project, and apply it in your level.",
+  "checklist": [
+   "Open the Fab window with Window > Fab, which is in the Get Content section, or with the Fab button next to Add+ in the Content Drawer. If it is missing, open Edit > Plugins and enable the Fab plugin.",
+   "Open the Account menu and choose Fab settings. Under Megascans, read the Preferred Quality Tier, and set it to Medium if it is not already.",
+   "Use the Price filter to show only free products, and use the product type panel to show surfaces. Pick one Quixel surface, open its preview, and read its license and the formats it includes.",
+   "Click Add to My Library. Then open My Library and click the + icon on the tile of the surface to download it into your project.",
+   "Find the new assets in the Content Browser. Open the material instance and note which textures it uses, such as color, normal and packed mask.",
+   "Apply the surface to a plane or a cube in your level."
+  ],
+  "done_when": "Send one screenshot of the surface applied in the level, and one screenshot of the Content Browser that shows the imported texture set."
+ },
+ "EAQ68": {
+  "brief": "A Material Function is a group of material nodes saved as one asset, so you can use the same logic in many materials. When you change the function, every material that uses it changes too. You can also publish a function to the Palette, the list of nodes in the Material Editor, so that other people can find it easily. In this quest you build a small function, publish it to the Palette under your own category, and use it in a material.",
+  "checklist": [
+   "Right-click in the Content Browser, open Materials and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input.",
+   "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input.",
+   "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library.",
+   "Click Apply, and then save the asset.",
+   "Open one of your materials, such as M_Ground. Find MF_DirtMask in the Palette under your category and drag it into the graph. Move the mouse over the node and check that your description appears as the tooltip.",
+   "Place a second copy in another way. Hold F and left-click in the graph to make an Unspecified Function node, and then assign MF_DirtMask to it in the Details panel.",
+   "Change something inside MF_DirtMask, for example the default value of Contrast, and click Apply. Confirm that both copies in M_Ground update."
+  ],
+  "done_when": "Send two screenshots: one of the MF_DirtMask function graph with the Details panel showing Description, Library Categories Text and Expose to Library turned on, and one of M_Ground with the function placed and its tooltip visible. Add one line that says which category you used."
+ },
+ "EAQ69": {
+  "brief": "A layered material combines two or more complete surfaces, such as chrome and snow, inside one material. Each surface is built in its own Material Function, and a blend node decides where each one shows. In this quest you build a chrome layer and a snow layer and blend them with a rule that puts the snow on every face that points up, so the snow stays on top even when you rotate the object.",
+  "checklist": [
+   "Create a Material Function named MF_Layer_Chrome. Add a Make Material Attributes node, which packs all material inputs into one wire, and connect it to Output Result. Build a chrome look with Metallic 1 and a low roughness, and add a Vector3 Function Input named Tint.",
+   "Create a second function named MF_Layer_Snow in the same way, with Make Material Attributes connected to Output Result. Give it a pale blue tint, make it non-metallic, and use a medium roughness.",
+   "Create a material named M_SnowyChrome. Click the background of the graph and turn on Use Material Attributes in the Details panel.",
+   "Drag both functions into the graph. From the Palette, add the nodes MatLayerBlend_Simple and WorldAlignedBlend.",
+   "Connect the chrome function to the Base input of MatLayerBlend_Simple and the snow function to its Top input. Connect WorldAlignedBlend to its Alpha input. Set Blend Sharpness to 10, and add a scalar parameter named BlendBias on Blend Bias.",
+   "Save the material. Create a Material Instance named MI_SnowyChrome and apply it to a prop. Rotate the prop to confirm that the snow stays on the faces that point up.",
+   "This step is optional. In one layer, replace Make Material Attributes with Set Material Attributes and add only the attributes you need."
+  ],
+  "done_when": "Send a screenshot of the M_SnowyChrome graph that shows both layer functions, MatLayerBlend_Simple and WorldAlignedBlend. Also send a viewport screenshot of the rotated prop with the snow still on top. Add one line with your BlendBias value."
+ },
+ "EAQ70": {
+  "brief": "Material Layers are a newer way to stack surfaces such as metal and rust. Each surface is a Material Layer asset, and a Material Layer Blend asset decides where one layer covers another. The stack is edited in the Layer Parameters tab of a Material Instance, so people can build new variants without opening a node graph. In this quest you make two layers and one blend, and you stack them in a Material Instance.",
+  "checklist": [
+   "In the Content Browser, under Materials, create a Material Layer asset named ML_Metal and another one named ML_Rust. In each one, build the surface with Set Material Attributes, and add a Vector Parameter for the color and a Scalar Parameter for the roughness.",
+   "Create a Material Layer Blend asset named MLB_Mask. In its graph, connect a mask texture parameter to the Alpha of the BlendMaterialAttributes node that is already there.",
+   "Create the base material and name it M_Layered. Select the Main Material Node and enable Use Material Attributes. Add a Material Attribute Layers node and connect it to the output.",
+   "Select the Material Attribute Layers node. In the Details panel, set the Background layer to ML_Metal.",
+   "Create a Material Instance named MI_Layered from M_Layered. Open it and go to the Layer Parameters tab. Add ML_Rust as a second layer and assign MLB_Mask as its blend.",
+   "In the Layer Parameters tab, override the color and the roughness of the rust layer. Click the Eye icon on the rust layer to hide and show it, and watch the metal show through.",
+   "Apply MI_Layered to a prop and take screenshots."
+  ],
+  "done_when": "Send a screenshot of the Layer Parameters tab of MI_Layered that shows the Background layer, the rust layer, its blend asset and one overridden parameter. Also send a viewport screenshot of the prop with the rust blend visible."
+ },
+ "EAQ71": {
+  "brief": "A Material Parameter Collection is an asset that holds a list of values which any material can read. When you change a value in the collection, every material that uses it changes at the same moment. This makes it the right place for things that affect a whole scene, such as how wet or dusty everything is. In this quest you make a collection with a Wetness value, use it in two materials, and change it with a key press.",
+  "checklist": [
+   "Right-click in the Content Browser, open Material and create a MaterialParameterCollection. Name it MPC_Scene.",
+   "Add a Scalar Parameter named Wetness with a default of 0, and a Vector Parameter named DirtTint. Save the asset.",
+   "Open two of your existing environment materials. In each one, add a CollectionParameter node (search for 'collection'), and pick MPC_Scene and the Wetness parameter on it.",
+   "Use Wetness to lower the roughness and darken the base color, for example with a Lerp between the dry value and the wet value. Save both materials.",
+   "Apply the materials, or their instances, to different props in one level. Open MPC_Scene, change Wetness to 1, and watch every prop change at once.",
+   "In the Level Blueprint, add a Set Scalar Parameter Value node with Collection set to MPC_Scene and Parameter set to Wetness. Trigger it from a key press, then press Play and test it."
+  ],
+  "done_when": "Send two viewport screenshots, one with Wetness 0 and one with Wetness 1, where at least two different materials react. Also send a screenshot of the CollectionParameter node in one material graph."
+ }
+}

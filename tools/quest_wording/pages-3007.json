@@ -1,0 +1,77 @@
+{
+ "GDQ83": {
+  "brief": "In a multiplayer game it matters which class holds each value. The Game Mode holds the rules and exists only on the server, the Game State holds data that every player must see, such as a team score, and the Player State holds the data of one player, such as that player's own score. A score in the wrong class is a mistake that you only notice with two players. In this quest you store a personal score and a team score in the right classes and show them in both player windows.",
+  "checklist": [
+   "Create BP_PS_Score with the parent Player State and an Integer variable Score. Create BP_GS_Score with the parent Game State and the variables TeamScore (Integer), TargetScore (Integer, default 10) and bGameOver (Boolean). Assign both classes in the Class Defaults of your Game Mode.",
+   "In the Game Mode, create a function named AddScore with the inputs Controller and Amount. It adds Amount to Score on the Player State of that controller, and to TeamScore on the Game State. Never write these values from the pickup itself.",
+   "Make a Blueprint named BP_ScoreOrb. When a pawn overlaps it, get the Game Mode and call AddScore with the Controller of the pawn and the amount 1. Then the orb destroys itself.",
+   "In AddScore, after adding, compare TeamScore with TargetScore. When the target is reached, set bGameOver to true and call End Match. If you use Game Mode Base, print WIN.",
+   "Make a small widget named WBP_Scores. It calls Get Game State, casts the result to BP_GS_Score, and loops over Player Array. It lists the Score of each player, the TeamScore, and the server world time from Get Server World Time Seconds.",
+   "Test with 2 players in Play In Editor with the Listen Server mode. Both windows must show the same TeamScore and the Score of each player.",
+   "Write 4 sentences: one each for Game Mode, Game State and Player State that says what you stored there and why, and one about what you did NOT store in the Game Mode."
+  ],
+  "done_when": "Send one screenshot of both Play windows with WBP_Scores showing matching values, and one screenshot of AddScore. Add your 4 sentences."
+ },
+ "GDQ84": {
+  "brief": "A timer calls an event after some time, or again and again. When you start a timer you get a timer handle, a reference that lets you pause, read or stop that timer later. Waves of enemies, cooldowns and round clocks all depend on timers, and handles are how you keep them under control. In this quest you build a wave director, an actor that spawns a new wave of enemies on a looping timer, and you pause, read, clear and replace that timer through its handle.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_WaveDirector. Add the variables Wave (Integer, 0), MaxWaves (Integer, 5) and WaveTime (Float, 20.0), and a Timer Handle variable named WaveHandle.",
+   "On Begin Play, use Set Timer by Event with Looping on and the time WaveTime, bound to a custom event named NextWave. Store the result in WaveHandle. NextWave adds 1 to Wave and spawns Wave x 2 enemies. Any pawn or a cube is fine as an enemy.",
+   "Add a trigger named BP_SafeZone. When the player enters it, call Pause Timer by Handle with WaveHandle. When the player leaves, call Unpause Timer by Handle. Print Get Timer Remaining Time by Handle on both events, to prove that the remaining time did not change during the pause.",
+   "Add a debug widget, or a Print String every 0.5 s, that shows Get Timer Remaining Time by Handle and Get Timer Elapsed Time by Handle. Check that elapsed plus remaining equals WaveTime.",
+   "In NextWave, when Wave reaches MaxWaves, call Clear and Invalidate Timer by Handle and print WAVES DONE. Then read Get Timer Remaining Time by Handle one more time and note what value an invalid handle returns.",
+   "Add a key that calls Set Timer by Event again with the same WaveHandle but with the time 5.0. Notice that the old 20-second timer is replaced and that you do not get two timers."
+  ],
+  "done_when": "Send one screenshot of the BP_WaveDirector graph. Also send one screenshot of the Play window that shows the remaining time printed during the pause, the WAVES DONE message, and the value returned for the invalid handle."
+ },
+ "GDQ85": {
+  "brief": "Travel means that the server and all connected players move from one map to another, for example between rounds. With seamless travel the players stay connected, and a small transition map is loaded for a moment while the big maps change. Without it, each client disconnects and connects again. In this quest you set up two arena maps and a transition map, travel between them with two players, and compare seamless travel with the other kind.",
+  "checklist": [
+   "Make two small maps named L_Arena_A and L_Arena_B. In World Settings, set GameMode Override to BP_GM_Rounds on both. Give each map a floor of a different color, so that you can tell them apart.",
+   "Make an almost empty map named L_Transition with only a floor. Open Project Settings, go to Maps & Modes, and set Transition Map to L_Transition.",
+   "In the Class Defaults of BP_GM_Rounds, turn on Use Seamless Travel.",
+   "At the end of a round, from your End Match key or your timer, run a server travel to the other map. In a Blueprint, use Execute Console Command with the text servertravel L_Arena_B, or ask a programmer to expose ServerTravel. Run it only from the server.",
+   "Play with 2 players as Listen Server and trigger the travel. Both windows must arrive in L_Arena_B, and the client must stay connected without a reconnect.",
+   "Now turn Use Seamless Travel off and play again. Describe the difference that you see in the client window.",
+   "Write 3 sentences: which travel type you used, why the transition map exists, and one thing that was kept across the travel."
+  ],
+  "done_when": "Send one screenshot of both Play windows in L_Arena_B after a seamless travel, one screenshot of the Transition Map setting in Maps & Modes, and your 3 sentences."
+ },
+ "GDQ86": {
+  "brief": "World Settings is a panel with settings that belong to one map only. There you can give a map its own Game Mode, its own gravity and its own Kill Z, the depth below which a falling actor is destroyed. These settings win over the project defaults for that map. This is the cheapest way to make two levels play differently. In this quest you make a copy of your map with a different Game Mode, lower gravity and a different Kill Z.",
+  "checklist": [
+   "Open Project Settings, go to Maps & Modes, and set Default GameMode to BP_GM_Rounds. Expand Selected GameMode and note which Default Pawn Class is shown.",
+   "Duplicate your test map and name the copy L_Moon. Open Window > World Settings and set GameMode Override to a new BP_GM_Moon. Make BP_GM_Moon a child of BP_GM_Rounds that uses a different Default Pawn Class or HUD.",
+   "In World Settings, in the Physics section, override World Gravity in L_Moon so that the jump is clearly higher. Leave the original map unchanged.",
+   "In World Settings, in the World section, change the Kill Z so that an actor that falls off the arena is destroyed quickly. Kill Z is the depth an actor can fall to before it is destroyed. Cut a hole in the floor to test it.",
+   "Use the search box of World Settings to find the Game Mode group, and confirm that your override is listed there.",
+   "Play the original map and then L_Moon. Write 3 sentences: which map used which Game Mode, which setting had priority, and what changed in the physics."
+  ],
+  "done_when": "Send one screenshot of the World Settings panel of L_Moon with GameMode Override, World Gravity and Kill Z visible, and one screenshot of Maps & Modes with the Default GameMode. Add your 3 sentences."
+ },
+ "GDQ87": {
+  "brief": "A game loop that works when you play alone in the editor can still fail in multiplayer. The host of a listen server is also the server, so the host sees values that other players may never receive. A slow or unstable network makes this worse. Unreal can run several players in the editor and can imitate a bad connection. In this quest you play your round loop with two players, as a client only, and under bad network conditions, and you list what breaks.",
+  "checklist": [
+   "Open the Play drop-down. Set Number of Players to 2 and Net Mode to Play As Listen Server. Play your round loop from quests GDQ81 to GDQ84. Note which window shows the round timer and the score correctly and which does not.",
+   "Switch Net Mode to Play As Client with Number of Players set to 1, and play again. Anything that only worked because the host was also the server will now fail. List what broke.",
+   "Open Editor Preferences, then Level Editor, then Play. These are the Play In settings. Enable Network Emulation, set Emulation Target to Everyone, and set Network Emulation Profile to Bad. Play with 2 players and watch the round timer and the score updates.",
+   "Change the profile to Custom. Set the incoming latency, which is the delay, to 200 to 400 ms, with 5 percent packet loss. Play one more time.",
+   "Open your Game Mode or Game State Blueprint. In the debug world drop-down, pick Client 1, and add a breakpoint on your score event. Confirm that the breakpoint only triggers for that world.",
+   "Write 5 sentences. Say which values must come from the Game State to look the same for both players, and what looked wrong under the Bad profile. Also write one design rule that you will follow, for example to show the timer from server time and not from a local countdown."
+  ],
+  "done_when": "Send one screenshot of the Play In settings with Network Emulation on and the Bad profile, one screenshot of both Play windows with the round timer visible, and your 5 sentences."
+ },
+ "GDQ88": {
+  "brief": "A Game Feature plugin is a separate package inside your project that holds one feature, such as a double jump. When the plugin is active, it can add its own components to existing actors, so you do not have to edit the character Blueprint. You can switch the feature on or off, or move it to another project. In this quest you put a double jump into a Game Feature plugin and add it to the character with an Add Components action.",
+  "checklist": [
+   "Open Edit > Plugins and enable Game Features and Modular Gameplay. Both are in the Gameplay category. Then restart the editor.",
+   "In the Plugins window, click Add and choose Game Feature (Content Only). Name the plugin GF_DoubleJump. Check in the Content Browser that it is stored under /Plugins/GameFeatures/.",
+   "Inside the content folder of the plugin, create a Data Asset of the class GameFeatureData. Name it GF_DoubleJump, the same name as the plugin.",
+   "Inside the plugin, create an Actor Component named BPC_DoubleJump. On Begin Play, get the owner, cast it to Character, and set Jump Max Count to 2. Keep all the logic in the component and do not edit the character.",
+   "Open the GF_DoubleJump Data Asset. In Actions, add one Add Components action. Set the Actor Class to BP_ThirdPersonCharacter, not to the base Actor class, and set the Component Class to BPC_DoubleJump. Leave Client and Server both turned on.",
+   "Restart the editor one time, because the Data Asset loads at startup. Press Play and confirm that you can double jump. Then remove the action or disable the plugin, play again, and confirm that the double jump is gone.",
+   "Write 3 sentences: why the component is stored in the plugin, why you chose the character class and not Actor, and what other Action type you could use for a debug cheat."
+  ],
+  "done_when": "Send one screenshot of the GF_DoubleJump Data Asset with the Add Components action filled in, and one screenshot of the character in the air during a second jump. Add your 3 sentences."
+ }
+}

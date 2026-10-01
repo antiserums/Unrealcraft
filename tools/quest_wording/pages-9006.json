@@ -1,0 +1,161 @@
+{
+ "GDQ1": {
+  "brief": "An Actor Blueprint is a reusable object that you build once and can place in a level many times. It is made of components (its parts, such as a mesh and a light), variables (values you can change), and two graphs. The Construction Script runs in the editor each time you change the actor, and the Event Graph runs while the game is playing. In this quest you build a lamp Blueprint and give every copy in the level its own color and height.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Lamp in the folder /Content/UC/Blueprints. Add a Static Mesh component and a Point Light component under the root component.",
+   "Add a variable of type Linear Color named LightColor and a variable of type Float named Height. Tick Instance Editable (the eye icon) on both, so that you can change them on each copy in the level.",
+   "Open the Construction Script. Set the color of the light from LightColor, and set the relative Z location of the mesh from Height.",
+   "Place 3 copies of the lamp in the level. Give each one a different color and height in the Details panel, and watch them update without pressing Play.",
+   "Open the Event Graph. On the BeginPlay event, use a Print String node to print the name of the lamp, so that you can see the part that runs during the game."
+  ],
+  "done_when": "Send a screenshot of the 3 placed lamps with different values, and a screenshot of the Construction Script graph."
+ },
+ "GDQ2": {
+  "brief": "An overlap happens when one object enters the space of another without being blocked by it. A trigger is an invisible shape that fires an event when something overlaps it, and this is how the world notices the player. Anything can overlap a trigger, so you must check who entered. In this quest you build a trigger zone that reacts only to the player, and you also try the same idea in the Level Blueprint.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_TriggerZone with a Box Collision component as its root. Use the Construction Script and a variable to make the size of the box Instance Editable, so that you can change it on each copy.",
+   "Add the On Component Begin Overlap event. Compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues.",
+   "Add the On Component End Overlap event with the same filter. After the filter, add a Print String node with the text \"left zone\".",
+   "Push a physics cube (a cube with Simulate Physics turned on) into the zone. Confirm that nothing fires.",
+   "Also place a Trigger Box from the editor in the level, and handle its overlap once in the Level Blueprint. This way you have seen both ways to do it."
+  ],
+  "done_when": "Send a screenshot of the overlap graph with the filter, and a PIE screenshot that shows the print only fired for the player."
+ },
+ "GDQ3": {
+  "brief": "A Timeline is a Blueprint node that changes a value smoothly over a set time, following a curve that you draw. It is the quickest way to make things move smoothly, such as a door that swings open. A Lerp node mixes two values, so a Timeline that goes from 0 to 1 can move the door from closed to open. In this quest you build a door that opens when the player comes near and closes again when the player leaves.",
+  "checklist": [
+   "Open BP_Door (from quest SQ9, or make a new one). Add a Timeline named TL_Open with one float track that goes from 0 to 1 over 1.0 s. Ease the curve: right-click the keys and choose Auto.",
+   "Connect the output of the track to a Lerp (Rotator) or Lerp (Vector) node. Connect the result of the Lerp to Set Relative Rotation or Set Relative Location on the door mesh.",
+   "Use the filtered overlap events from quest GDQ2. Connect Begin Overlap to the Play input of the Timeline, and End Overlap to the Reverse input.",
+   "Make the variable OpenAngle (or OpenOffset) Instance Editable, so that each door can open in a different way.",
+   "Start PIE. Step into the trigger and out again when the door is halfway through its motion. The door should reverse from where it is and not snap."
+  ],
+  "done_when": "Send a PIE clip of 10 to 20 s that shows the door opening and reversing halfway, and a screenshot of the Timeline curve and the graph."
+ },
+ "GDQ4": {
+  "brief": "Sooner or later one actor has to tell another actor to do something, for example a lever that opens a gate. One way is a direct reference: the lever stores a link to one exact type of actor. Another way is a Blueprint Interface, a list of function names that many different Blueprints can share, so the lever can send the same message to a gate, a lamp or a platform. In this quest you build the lever both ways and see what happens when the link is missing.",
+  "checklist": [
+   "Version A: in BP_Lever, add an Instance Editable variable named Target of type BP_Gate (Object Reference). When the player interacts with the lever, call the Open event of the gate.",
+   "Place a lever and a gate in the level. Select the lever, and in the Details panel use the eyedropper next to Target to pick the gate. Test it in PIE.",
+   "Version B: create a Blueprint Interface named BPI_Activatable with a function named Activate. Implement it on BP_Gate and on a second actor, such as a lamp or a platform.",
+   "Change the type of the lever's Target variable to Actor, and call Activate (Message) on it. Point one lever at the gate and another lever at the lamp.",
+   "Leave the Target of one lever empty and press Play. Read the Accessed None error in the Message Log. Then add an Is Valid check before the call, so that an empty Target does not cause an error."
+  ],
+  "done_when": "Send a screenshot of both lever graphs, and a PIE screenshot or short clip that shows one lever opening the gate and another lever switching the lamp."
+ },
+ "LDQ27": {
+  "brief": "A beat is one part of a level that has its own job, such as a calm start, a moment of pressure, or a reward. A beat chart is a small table that describes each beat before you build anything. Planning on one page first saves hours of rebuilding later. In this quest you write a beat chart with three beats, sketch the route, and post both before you open the editor.",
+  "checklist": [
+   "Before you open the editor, make a table on one page with 3 rows: Intro, Tension and Payoff.",
+   "Give the table these columns: location, player goal, what the player does (the mechanic), what they see first, the feeling you want, and intensity (from 1 to 5).",
+   "Mark where each Blueprint interaction from quests GDQ2 to GDQ4 will be placed.",
+   "Draw a simple top-down sketch of the route. A photo of a paper drawing or any drawing tool is fine.",
+   "Post it in the thread where you send your work before you build. You will compare it with the finished level in quest LDQ32."
+  ],
+  "done_when": "Send a writeup with the beat chart (as a table or an image) and the top-down sketch."
+ },
+ "LDQ28": {
+  "brief": "Metrics are the numbers that describe what the player character can do, such as how high it jumps and how steep a slope it can walk. A metrics sheet is a shared document that lists these numbers together with the sizes of doors, corridors and stairs that fit them. When everyone builds from the same sheet, spaces fit the first time. In this quest you read the character settings, measure the real limits in a test level, and write them in a sheet that you can share.",
+  "checklist": [
+   "Open your character Blueprint. From the Capsule and Character Movement components, write down the capsule radius and half-height, Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle.",
+   "Build a small metrics gym in a level named L_Metrics. Add ledges every 25 cm up to 250 cm, gaps every 50 cm, and ramps at 30°, 45° and 50°.",
+   "Start PIE and record the real numbers: the highest ledge you can jump onto, the widest gap you can jump over, and the steepest ramp you can walk up.",
+   "Add rules for spaces: door width and height, corridor width (for 1 player and for 2 players), cover height, and stair step size.",
+   "Put everything in a sheet that you can share, such as a spreadsheet or a document. Write the engine version at the top and share the link."
+  ],
+  "done_when": "Send the link to your metrics sheet, and a screenshot of your metrics gym."
+ },
+ "LDQ29": {
+  "brief": "Lock and key is a simple design pattern: the player finds a locked door, then finds a key, then comes back and opens the door. It is the simplest way to make the player visit places in a set order. A soft lock is a situation where the player can no longer finish the level, for example because the key is out of reach. In this quest you build a key and a locked door in Blueprint, place them well, and test for soft locks.",
+  "checklist": [
+   "Make BP_Key from a mesh and a sphere trigger that uses the player filter from quest GDQ2. When the player picks it up, set a boolean (true or false) variable named HasKey on the player. To reach the player, use Cast to your character or an interface. Then call Destroy Actor.",
+   "Make BP_LockedDoor. When the player overlaps it, check HasKey. If it is true, play the Timeline from quest GDQ3. If it is false, show feedback, such as a Print String, a red light, or a sound.",
+   "Place the door so that the player sees it locked BEFORE they find the key.",
+   "Put the key in a place where getting it is a small detour. It should not be a search for a hidden object.",
+   "Test for soft locks. Can the key fall out of reach? Can the player get stuck behind the door?"
+  ],
+  "done_when": "Send a PIE clip of less than 30 s that shows the locked feedback, the key pickup and the door opening, and a screenshot of the door's graph."
+ },
+ "LDQ30": {
+  "brief": "A NavMesh, short for navigation mesh, is a map of the floor areas where AI characters can walk. Unreal builds it for you inside a Nav Mesh Bounds Volume. If the NavMesh has gaps, AI characters cannot cross them, and it is better to find this out now than later during a fight. In this quest you show the NavMesh on your route, send a simple AI walker along it, and fix one gap.",
+  "checklist": [
+   "Place a Nav Mesh Bounds Volume in the level and scale it until it covers your whole route.",
+   "Press P in the viewport to show the navigation. Walkable areas turn green. Note the gaps at doors, stairs and ledges.",
+   "Create a Character Blueprint named BP_Walker and place it in the level. On BeginPlay, use an AI MoveTo node to send it to a Target Point at the end of your route. Add a Print String to both On Success and On Fail.",
+   "Start PIE and watch it walk. Fix one spot where the green area breaks: widen a door, lower a step, or add a ramp.",
+   "If your doors move, open Project Settings, go to Navigation Mesh, and set Runtime Generation to Dynamic. Then test the walker again with a door closed."
+  ],
+  "done_when": "Send a screenshot of your route with the navigation shown (P), and a note that says which gap you fixed."
+ },
+ "LDQ31": {
+  "brief": "A playtest is when another person plays your level while you watch. You cannot test your own level well, because you already know where everything is. The most useful thing you can do during a playtest is to stay silent and write down what happens. In this quest you run one playtest with a peer, take notes, and list the three biggest problems in order.",
+  "checklist": [
+   "Find one peer, for example with a post in #playtest or in a voice channel. Give them your level: share your screen while you run PIE, or send a zip file.",
+   "Tell them only what a real player would know: the controls and the goal. Say nothing about the route.",
+   "Watch silently. Use a notes template with these fields: time, where, what they did, what they said, and hesitations or backtracks (moments when they stop or go back).",
+   "If they ask for help, answer \"What would you try?\" and note the question.",
+   "After they finish, ask 3 open questions: What were you trying to do? Where did you get stuck? What stood out?",
+   "Write your top 3 issues. Rank them by how often they happened and how much they blocked progress."
+  ],
+  "done_when": "Send a writeup with your filled notes template and your ranked top 3 issues."
+ },
+ "LDQ32": {
+  "brief": "This quest brings together the earlier quests of this group: the beat chart, the metrics sheet, the Blueprint interactions and the peer playtest. Level design works in a loop: you plan the level, build it, test it with another person, and then change it. In this quest you build one small level with three beats, run a playtest, and change at least one thing because of what you saw.",
+  "checklist": [
+   "Build a level named L_Beats_01 from your beat chart from quest LDQ27. It needs an intro, a tension beat and a payoff, each in its own space.",
+   "Include at least 2 different Blueprint interactions. For example, use lock and key (from quest LDQ29) and a lever and gate that use an interface (from quest GDQ4).",
+   "Build to your metrics sheet from quest LDQ28. Every gap, ledge and door should match a number on it.",
+   "Run one peer playtest. Follow the same steps as in quest LDQ31.",
+   "Change at least one thing based on the playtest. Then update the beat chart so that it matches what you built."
+  ],
+  "done_when": "Send a writeup with a PIE clip of 60 s or less that goes through all 3 beats, the final beat chart, a link to the metrics sheet, your playtest notes, and 2 to 3 lines on what you changed and why. A peer or a mentor must approve it."
+ },
+ "LDQ21": {
+  "brief": "A moving platform is a floor piece that travels between two points, and the player can ride on it. It is a common part of platform games and a good use of a Timeline, the Blueprint node that changes a value smoothly over time. In this quest you build a platform that moves back and forth without stopping, and you test that the player stays on it.",
+  "checklist": [
+   "Build a Blueprint named BP_Platform that moves between two points on a looping Timeline. Make the two points Instance Editable, so that you can set them on each copy in the level.",
+   "Ride the platform in PIE and check that you do not slide off."
+  ],
+  "done_when": "Send a short PIE clip of you riding the platform."
+ },
+ "LDQ22": {
+  "brief": "A trap is a place in the level that hurts the player, such as spikes or fire. Unreal has a damage system for this: the Apply Damage node sends damage to an actor, and a Pain Causing Volume is a ready-made volume that damages anything inside it. A fair trap can be seen before it hurts. In this quest you add one trap and make sure the player gets a warning.",
+  "checklist": [
+   "Add one trap to your level, such as spikes or fire. Use the Apply Damage node in a Blueprint, or use a Pain Causing Volume.",
+   "Warn the player. Make the trap visible before it hurts them."
+  ],
+  "done_when": "Send a screenshot of the trap, and add one line that says how the player is warned."
+ },
+ "LDQ23": {
+  "brief": "A checkpoint is a place that the game remembers, so that the player returns there after they die or fall and does not have to start the level again. To respawn means to appear again in the level. In this quest you build a checkpoint trigger that saves a position, and you make a fall send the player back to it.",
+  "checklist": [
+   "Add a checkpoint trigger that stores a respawn transform. A transform is the location and rotation where the player will appear again.",
+   "Add a kill volume, or use Kill Z, which is the height in the World Settings below which actors are destroyed. Set it up so that falling sends the player back to the last checkpoint."
+  ],
+  "done_when": "Send a PIE clip that shows you reaching the checkpoint, falling, and respawning at the checkpoint."
+ },
+ "LDQ24": {
+  "brief": "A HUD prompt is a short text on the screen that tells the player what they can do, such as \"Press E to open\". In Unreal you build screen elements as Widget Blueprints, and their names often start with WBP_. In this quest you make a widget with one line of text and show it only while the player is near an object they can use.",
+  "checklist": [
+   "Make a Widget Blueprint named WBP_Prompt that has a single line of text.",
+   "Show the widget on Begin Overlap when the player is near an interactable (an object the player can use), and hide it on End Overlap."
+  ],
+  "done_when": "Send a screenshot of the prompt showing in PIE."
+ },
+ "LDQ25": {
+  "brief": "A pressure plate is a switch on the floor that is active only while something stands on it. Together with a physics cube that the player can push, it makes a classic small puzzle: put the cube on the plate to keep a gate open. In this quest you build the plate and the gate, and you decide which objects are allowed to press the plate.",
+  "checklist": [
+   "Build a pressure plate that opens a gate only while a physics cube sits on it.",
+   "Filter the plate so that only the cube counts, or only the player counts. Decide which one, and say why."
+  ],
+  "done_when": "Send a PIE clip that shows the puzzle being solved."
+ },
+ "LDQ26": {
+  "brief": "Sound tells the player that their action worked, or that it did not. A door that makes one sound when it opens and a different sound when it is locked is much easier to understand. In this quest you add sounds to one door or lever in your level.",
+  "checklist": [
+   "Add a Play Sound at Location node, or an Audio Component, to one door or lever.",
+   "Use one sound for when it is locked and a different sound for when it opens."
+  ],
+  "done_when": "Send a short PIE clip with audio."
+ }
+}

@@ -1,0 +1,149 @@
+{
+ "EAQ96": {
+  "brief": "A normal decal is projected onto a surface from one direction, so it stretches on curved shapes such as pipes and barrels. A mesh decal is different: it is a thin piece of geometry that sits just above the surface and uses a decal material. Because it follows the shape of the prop, details such as rust bands wrap around it without stretching. In this quest you build a mesh decal for a curved prop and compare it with a projected decal.",
+  "checklist": [
+   "Pick a prop that does not use Nanite and has a curved part, for example a pipe or a barrel. Make a copy and name it SM_Decal_Base.",
+   "In Modeling Mode, create a thin strip mesh that follows the curved surface closely, such as a bent plane a few units above the surface. Give its edges a small soft border. Name it SM_Decal_Strip.",
+   "Make a material named M_MeshDecal with Material Domain set to Deferred Decal and Blend Mode set to Translucent. Use a rust or grime texture with a soft alpha. Apply the material to SM_Decal_Strip.",
+   "Place the strip on the prop. Move the camera far away and check if the strip cuts into the base mesh.",
+   "If it cuts in, do not move the mesh. Add a small World Position Offset along the normal in M_MeshDecal, which pushes the strip slightly outward, and compare the result.",
+   "Place a normal Decal Actor with the same texture on the same curved part. Look at both from a low angle and compare how much each one stretches."
+  ],
+  "done_when": "Send two screenshots: one of the mesh decal wrapped around the curved prop, and one of the same texture as a projected Decal Actor for comparison. Add one line that says which one stretched."
+ },
+ "EAQ97": {
+  "brief": "Every separate mesh in a level costs the computer some work to draw, and each such job is called a draw call. When a group of pieces is finished and will not change again, you can use Merge Actors to combine them and lower that cost. The tool has several methods: Merge makes one mesh, Batch groups identical meshes into instances, and Approximate builds a new simple mesh for use at a distance. In this quest you try all three on a building corner and compare the results.",
+  "checklist": [
+   "Build a small corner of a building from 8 to 12 kit pieces, such as walls, a pillar and trims. Use at least two materials and include one Nanite piece. Use the same pillar mesh three times.",
+   "Select all pieces. Open Actor, then Merge Actors, then Merge Actor Settings. With the Merge method selected, turn off Pivot Point at Zero, turn on Generate Nanite Enabled Mesh, and keep Merge Materials off. Run the Merge and save the result as SM_Corner_Merge.",
+   "Open SM_Corner_Merge and count its material sections. Compare that number with the number of materials you used.",
+   "Undo the merge or place the pieces again. Select only the three identical pillars and run Batch. Look at the result in the Outliner.",
+   "Select the whole corner again and run Approximate. Save the result as SM_Corner_Approx. Open it and compare its triangle count and materials with SM_Corner_Merge.",
+   "Place the original pieces, SM_Corner_Merge and SM_Corner_Approx side by side. Compare them from close up and from far away."
+  ],
+  "done_when": "Send a screenshot of the three versions side by side. Add a short note with the number of sections in SM_Corner_Merge, what Batch produced, and which version you would use at a distance."
+ },
+ "EAQ98": {
+  "brief": "A modular kit is a set of pieces, such as walls, floors and corners, that are all built to the same grid sizes. Because the sizes match, the pieces snap together without gaps, and a level designer can build rooms very quickly. A socket is a named point on a mesh where other things, such as a lamp, can be attached. In this quest you make three kit pieces, build a closed room with grid snapping, and add a socket for lamps.",
+  "checklist": [
+   "In Modeling Mode, make three kit pieces with sizes that fit the grid: SM_Kit_Wall (400 x 400 x 20), SM_Kit_Corner (20 x 20 x 400) and SM_Kit_Floor (400 x 400 x 20). Use Edit Pivot to set the pivot of each piece to a bottom back corner.",
+   "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size. Note how the Drag Grid dropdown in the viewport toolbar changes.",
+   "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100, or to the nearest power of two, and set the rotation to 90. Build a closed room from at least 12 pieces.",
+   "Hold V while you drag one wall so that its pivot snaps to a vertex, a corner point, of the wall next to it. Look at the seam from close up.",
+   "Open SM_Kit_Wall in the Static Mesh Editor and open Window > Socket Manager. Create a socket named Lamp and set its Relative Location to the center of the wall at head height.",
+   "In the level, place a Point Light and right-click it. Choose Attach To, pick SM_Kit_Wall and then the Lamp socket. Reset the Location of the light so it snaps to the socket. Repeat this on two more walls."
+  ],
+  "done_when": "Send a screenshot of the closed room with the grid snapping settings visible in the toolbar, and a screenshot of the Socket Manager with the Lamp socket. Add one line with your grid sizes."
+ },
+ "EAQ99": {
+  "brief": "A trim sheet is one texture that holds several horizontal strips, such as a metal band, a wood plank and a stone edge. You texture a mesh by moving its UV islands, the flat pieces of its surface map, onto the strip each part should use. This way one texture can cover a whole kit of pieces. In this quest you place the UV islands of a kit piece onto the strips of a trim sheet with the UV tools in Modeling Mode.",
+  "checklist": [
+   "Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. Make a material named M_Trim from it, and also prepare a checkerboard material for testing.",
+   "Take a kit piece with a flat face and a trim edge, from quest EAQ98 or a new one. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard.",
+   "Open UVs, then XFormUV. Scale and move each island so that the main face sits on the stone strip of T_Trim and the trim edge sits on the metal strip. Hold Shift to move several islands together.",
+   "Use UVs, then Layout, with Layout Type set to Stack for islands that should share the same strip. Use Transform when you need to move all UVs together.",
+   "Assign M_Trim and check the mesh in the level. If an island looks stretched, fix it with Unwrap.",
+   "Open the Static Mesh Editor and look at the list of UV channels. Note which channel holds your trim UVs."
+  ],
+  "done_when": "Send a screenshot of the textured kit piece in the level, and a screenshot of the Preview UV Layout panel that shows the islands on the strips. Add one line that says which Layout Type you used and why."
+ },
+ "EAQ100": {
+  "brief": "OpenColorIO, or OCIO, is a standard system for managing color that many film and effects programs share. It makes sure the same picture shows the same colors in Unreal, in other programs and on the final screen. In Unreal you set it up with an OpenColorIO Configuration asset, and you can then view the viewport through it. In this quest you create that asset with two color spaces and turn the OCIO display on in the viewport.",
+  "checklist": [
+   "Check that the OpenColorIO plugin is enabled. It is on by default in new projects.",
+   "In the Content Browser, right-click and choose Miscellaneous, then OpenColorIO Configuration. Name the asset OCIO_Scene.",
+   "Open OCIO_Scene. Keep the Configuration File at ocio://default, which is the built-in ACES CG config.",
+   "Under Desired Color Spaces, add only two entries: a linear sRGB source and an sRGB monitor display view.",
+   "In the Level Viewport, open View Mode, then OCIO Display. Pick OCIO_Scene, set the source and the destination, and then click Enable Display.",
+   "Turn Enable Display on and off and compare the tone of your scene. Note what changed in the highlights, the brightest parts of the image.",
+   "This step is optional. In a camera Blueprint, add a Create In-Game OpenColorIO Display Extension node on BeginPlay and test it while playing in the editor."
+  ],
+  "done_when": "Send two screenshots of the same view, one with OCIO Display off and one with it on. Also send a screenshot of OCIO_Scene that shows its Configuration File and its Desired Color Spaces list."
+ },
+ "EAQ101": {
+  "brief": "Bloom is the soft glow that appears around very bright parts of the picture, such as lamps and glowing materials. Unreal has two methods: Standard, which is fast, and Convolution, which uses a picture called a kernel to give the glow a realistic shape but costs more. A dirt mask adds the look of dust on the lens where the glow is. In this quest you set up both bloom methods, add a dirt mask, and measure the cost.",
+  "checklist": [
+   "Place a Post Process Volume named PPV_Bloom with Infinite Extent enabled. Put one strong emissive object or light source in view.",
+   "Open Lens, then Bloom, and keep Method on Standard. Try Intensity at 0, 1 and 5. Then set a Threshold so that only your bright source glows.",
+   "Switch Method to Convolution. Assign the default kernel texture, or your own, and compare the shape of the glow.",
+   "Open the kernel texture. Check that Mip Gen Settings is set to No Mipmaps and that Never Stream is enabled.",
+   "Enable Dirt Mask Texture and assign a small dirt texture with a non-power-of-two size. Set Dirt Mask Intensity so that the dirt only shows near the bright source.",
+   "Switch back to Standard and use stat gpu to note the difference in frame time between the two methods."
+  ],
+  "done_when": "Send three screenshots of the same view: Standard bloom, Convolution bloom, and Convolution with the Dirt Mask. Add one line with the two stat gpu numbers."
+ },
+ "EAQ102": {
+  "brief": "Real camera lenses are not perfect, and their small faults are part of what makes a picture look filmed. Unreal can imitate four of them: lens flares (bright shapes caused by strong lights), chromatic aberration (color edges near the border of the image), vignette (darker corners) and film grain (fine noise). Small amounts add realism, but large amounts look like a cheap filter. In this quest you set up all four in a Post Process Volume with care.",
+  "checklist": [
+   "Use PPV_Bloom, or make a new Post Process Volume named PPV_Lens with Infinite Extent. Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the brightest light makes a flare.",
+   "Change BokehSize and BokehShape. Then edit one Tint entry and change its Alpha, which moves that flare along the screen.",
+   "Open Lens, then Chromatic Aberration. Set a small Intensity, and raise Start Offset so that the center of the image stays clean.",
+   "Open Lens, then Image Effects. Set Vignette Intensity to a low value that darkens only the corners.",
+   "Open Film Grain. Set a low Film Grain Intensity, and give the shadows more grain than the highlights.",
+   "Take one screenshot with all four effects on, and one with all four set to 0."
+  ],
+  "done_when": "Send two screenshots, one with the effects on and one with the effects off. Also send a screenshot of the Lens and Film Grain sections that shows your values."
+ },
+ "EAQ103": {
+  "brief": "Depth of field means that only things at a certain distance from the camera are sharp, and things nearer or further away are blurred. It guides the eye of the viewer to the subject. A Cine Camera Actor in Unreal controls it with real camera values: the focus distance, the focal length of the lens, and the aperture, which is the size of the lens opening written as an f-number. In this quest you focus a Cine Camera on a prop and see how each value changes the blur.",
+  "checklist": [
+   "Place a Cine Camera Actor named CineCam_DOF and pilot it, so you look through it. Put your main prop about 4 to 7 m in front of it, with other objects behind it and in front of it.",
+   "Set Focus Method to Manual and enable Draw Debug Focus Plane, which shows a colored plane at the focus distance. Change Manual Focus Distance until the plane sits on your main prop.",
+   "Set Current Focal Length to 50 mm, then 75 mm, then 100 mm. Note how the field of view and the blur of the background change.",
+   "Set Current Aperture to f/1.4, then f/2.8, then f/5.6, and compare the blur of the background.",
+   "Set Diaphragm Blade Count to 5 and Min FStop to 1.4. Look at the bokeh shape, which is the shape of a blurred point of light, on a small bright light in the background.",
+   "Open Show, then Advanced, then Depth of Field Layers. Use this view to check which areas are foreground, in focus and background.",
+   "Make sure Engine Scalability is set to Epic or Cinematic before you judge the bokeh."
+  ],
+  "done_when": "Send three screenshots from CineCam_DOF at f/1.4, f/2.8 and f/5.6 with the same focus distance, and one screenshot of the Depth of Field Layers view. List your focal length and your focus distance."
+ },
+ "EAQ104": {
+  "brief": "Motion blur smears things that move fast across the screen, the way a real camera does. A little of it makes movement look smooth, but too much makes the whole picture unclear. Unreal controls it with four main settings in a Post Process Volume: Amount, Max, Target FPS and Per Object Size. In this quest you test each setting on a moving prop and choose values that help the picture.",
+  "checklist": [
+   "Add a prop that rotates or moves. A Blueprint named BP_Fan with a Rotating Movement component is enough. Also add a Post Process Volume named PPV_Motion with Infinite Extent.",
+   "Under Motion Blur, set Amount to 0 and take a screenshot while the prop moves. Then set Amount to 0.5 and compare.",
+   "Set Max to a small value, for example 5, and then to a large value. Note how far the blur can reach across the screen.",
+   "Set Target FPS to 30, then 60, then 0. Note which value gives the most blur.",
+   "Lower Per Object Size from its default value and check whether small moving props get more blur.",
+   "Open Show, then Visualize, then Motion Blur, and take a screenshot of the velocity view."
+  ],
+  "done_when": "Send screenshots of the moving prop at Amount 0 and at Amount 0.5, and a screenshot of the Visualize > Motion Blur view. List the values of Max, Target FPS and Per Object Size that you kept."
+ },
+ "EAQ105": {
+  "brief": "Screen percentage is the size at which Unreal draws the scene, compared with the size of your screen. At 50 percent the scene is drawn with far fewer pixels, which is much faster. Temporal Super Resolution, or TSR, is the system that then scales this smaller picture up to full size and keeps it sharp by using information from earlier frames. In this quest you lower the screen percentage step by step and measure what TSR does and what it costs.",
+  "checklist": [
+   "Open your environment scene. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console.",
+   "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each.",
+   "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent.",
+   "Open Show, then Visualize, then VisualizeTemporalUpscaler. Take a screenshot of the view that shows the input and the output.",
+   "Open Settings, then Engine Scalability Settings, and switch the Anti-Aliasing group between Medium and Epic. Look at the same thin geometry each time, such as a fence, wires or foliage.",
+   "Open the file Engine/Config/BaseScalability.ini and find the AntiAliasingQuality sections. Note two r.TSR variables that change between the quality levels."
+  ],
+  "done_when": "Send a screenshot of the VisualizeTemporalUpscaler view. Add a small table that lists, for screen percentage 100, 66 and 50, the TSR feed, the TSR 1spp and the GPU cost."
+ },
+ "EAQ106": {
+  "brief": "An HDR display can show much brighter highlights and more colors than a normal display, which is called SDR. Unreal can send an HDR picture to such a display, and it uses the ACES color standard to convert the image correctly. Even if your monitor is SDR today, it helps to know which console variables control this. In this quest you read about the ACES steps, turn HDR output on with console variables, and write down what happened.",
+  "checklist": [
+   "Read the ACES Viewing Transform section of the documentation. Write the three steps LMT, RRT and ODT in your own words.",
+   "In the console, set r.AllowHDR 1. Then set r.HDR.Display.OutputDevice 3 and r.HDR.Display.ColorGamut 2. Write down what each value means.",
+   "Play in a new window and press Alt+Enter to switch to exclusive fullscreen. Set r.HDR.EnableHDROutput 1 and look at the result.",
+   "If you have an HDR display, check that its HDR mode is on and note how the highlights changed. If you do not have one, describe what you saw and why the documentation page says it may not work.",
+   "Set r.HDR.UI.CompositeMode 1 and r.HDR.UI.Level 1.5. Then look at a HUD or a menu widget to see how the user interface is shown.",
+   "Reset everything with r.HDR.EnableHDROutput 0 and r.HDR.Display.OutputDevice 0."
+  ],
+  "done_when": "Send a short text of 5 to 10 lines with your summary of the three ACES steps, the console variables you set and what they mean, and what happened on your display, whether it is HDR or not."
+ },
+ "EAQ107": {
+  "brief": "The Cinematic Viewport is a special viewport mode for camera work. It can draw helper lines over the picture, such as a 3x3 grid, safe areas and a letterbox mask, so you can see composition rules while you frame a shot. In this quest you turn the Cinematic Viewport on, use its overlays to frame a still image of a prop, and set up a second viewport that does not follow the camera.",
+  "checklist": [
+   "Create a Level Sequence named LS_Stills with a Cine Camera Actor in a Camera Cuts track. Keep Sequencer open.",
+   "In the Perspective menu of the viewport, enable Cinematic Viewport.",
+   "Open Film Overlays and turn on Grid (3x3). Frame your main prop so it sits on one of the points where the lines cross.",
+   "Turn on Action Safe and Title Safe. Change the Custom Safe percentage and give it a new color.",
+   "Enable Letterbox Mask at 2.35:1. On the camera, enable Constrain Aspect Ratio so that the mask matches the filmback, which is the sensor size of the camera.",
+   "Use the playback controls at the bottom of the viewport to move through the sequence. Read the camera and filmback information shown above them.",
+   "Open a second Perspective viewport and turn off Allow Cinematic Control on it. Confirm that only the first viewport follows the sequence camera."
+  ],
+  "done_when": "Send a screenshot of the Cinematic Viewport that shows the 3x3 grid, the safe areas and the letterbox on your framed still. Also send a screenshot of the layout with two viewports where only one follows the camera."
+ }
+}

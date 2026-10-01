@@ -1,0 +1,155 @@
+{
+ "TAQ80": {
+  "brief": "The Property Matrix is an editor window that shows many actors or assets as rows in one table, with their settings as columns. You can sort the table to find wrong values, and you can change a setting on many rows in one step. This is much safer than opening a hundred objects one by one. In this quest you use the Property Matrix to fix settings on a group of actors and on a group of textures.",
+  "checklist": [
+   "In a test level, place at least 20 Static Mesh Actors with mixed settings. For example, turn Cast Shadow off on some of them and give them different Mobility values.",
+   "Select all of them in the Outliner, right-click, and choose Edit Selection in Property Matrix.",
+   "In the Pinned Columns panel, pin Mobility and Cast Shadow so that they appear as columns in the table. Remove one column that was added automatically by clicking its header with the middle mouse button.",
+   "Sort the table by the Cast Shadow column to find the actors with the wrong value. Select those rows and set the value once, so that all selected rows change together.",
+   "Use Edit Components in the Property Matrix on the same selection to change a setting of the Static Mesh Component that the actors share.",
+   "In the Content Browser, select 10 textures. Right-click them, choose Asset Actions, then Edit Selection in Property Matrix, and set the same Texture Group on all of them.",
+   "Click the save icon in the Property Matrix and confirm that the assets are saved."
+  ],
+  "done_when": "Send a screenshot of the Property Matrix with at least 20 rows and two pinned columns, sorted by one column. Add a short note that says which values you fixed and how many rows changed."
+ },
+ "TAQ81": {
+  "brief": "The Unreal Editor can run scripts written in Python, a common programming language. A script can go through hundreds of assets and rename them or change their settings in one run, which is not practical to do by hand. You must always use the Python functions of Unreal for this, and never rename the files on disk, because assets hold references to each other that would break. In this quest you write a script that fixes asset name prefixes and a texture setting, and you run it in three different ways.",
+  "checklist": [
+   "Enable the Python Editor Script Plugin and the Editor Scripting Utilities plugin, and then restart the editor.",
+   "Create the folder Content/Python and a script in it named fix_names.py. The script imports unreal and lists all assets under /Game/Test with unreal.EditorAssetLibrary.",
+   "For each Static Mesh that does not have the SM_ prefix and each Texture that does not have the T_ prefix, rename it with EditorAssetLibrary.rename_asset. Never use os.rename, because that breaks the references between assets.",
+   "For each texture, read one setting with get_editor_property and set one setting (for example the LOD group) with set_editor_property. Then save the asset.",
+   "Run the script from the Python console in the Output Log, and check the log lines that it prints.",
+   "Create an Editor Utility Widget named EUW_PyFixer with one button. The button uses the Execute Python Script node with an input pin for the folder path and an output pin for the count of renamed assets.",
+   "Open Project Settings, then Plugins, then Python, and add fix_names.py to Startup Scripts. Restart the editor and confirm that the script runs."
+  ],
+  "done_when": "Send screenshots of the Content Browser before and after the rename, and a screenshot of the Output Log that shows the lines of the script. Also send a screenshot of the EUW_PyFixer graph with its Execute Python Script node."
+ },
+ "TAQ82": {
+  "brief": "A scripted action is a tool that you write in Blueprint and that appears in the right-click menu of actors in the level. You build it in an Editor Utility Blueprint, which is a Blueprint that only runs in the editor. If the function has inputs, the editor shows a small window that asks for them each time you run the action, so one action can serve many cases. In this quest you build two right-click actions: one that sets a material and asks which one, and one that moves actors down to the ground.",
+  "checklist": [
+   "Create an Editor Utility Blueprint named EUB_ActorActions with the parent class ActorActionUtility.",
+   "Add a function named Set Material Slot 0 with two inputs: a Material Object Reference and a Boolean named 'Only Static Meshes'. Keep Call In Editor checked.",
+   "In the function, use Get Selection Set to get the selected actors, loop over them, and set the material on their Static Mesh Component. Also handle the case where the material input is empty.",
+   "Open Class Defaults and add Static Mesh Actor to Supported Classes, so that the action does not appear on lights or cameras.",
+   "Add a Custom Event named 'Snap To Ground' with Call In Editor checked. It does a line trace (an invisible ray) down from each selected actor and moves the actor to the point that the ray hits.",
+   "Compile and save. Then select 3 Static Mesh Actors in the viewport, right-click them, and run both actions from the Scripted Actions sub-menu."
+  ],
+  "done_when": "Send a screenshot of the Scripted Actions sub-menu on a selected actor, a screenshot of the input popup window for Set Material Slot 0, and a screenshot of the actors after both actions ran."
+ },
+ "TAQ83": {
+  "brief": "Data validation is a system in the editor that checks assets against rules, for example when you save them. A validator is one such rule that you write yourself. When a rule runs on every save, nobody on the team can forget it. In this quest you write a validator in Blueprint that checks that Static Meshes and textures have the correct name prefix, and you see it pass and fail.",
+  "checklist": [
+   "Open Edit > Plugins and confirm that the Data Validation plugin is enabled.",
+   "Create an Editor Utility Blueprint named EUB_NameValidator with the parent class EditorValidatorBase.",
+   "Override the function Can Validate Asset so that it returns true only for Static Mesh and Texture2D objects.",
+   "Override the function Validate Loaded Asset. If the name starts with SM_ for a Static Mesh or T_ for a texture, call Asset Passes. If it does not, call Asset Fails with a clear message. Make sure that every path through the function calls one of the two.",
+   "Save a texture named badname. Validation runs when you save, and your message appears in the Message Log.",
+   "Right-click a test folder and choose Validate Assets in Folder. Then right-click one Blueprint, choose Asset Actions, and try Validate Assets and Dependencies.",
+   "Write down the command line for running the validation as a commandlet on a build machine. A commandlet is a small program that the engine runs without opening the editor window."
+  ],
+  "done_when": "Send a screenshot of the Message Log that shows the failure message of your validator for a wrongly named asset, plus a passing result for a correct name, and a screenshot of the EUB_NameValidator graph."
+ },
+ "TAQ84": {
+  "brief": "Some tools should run by themselves every time the editor starts, so that nobody has to remember to start them. Unreal can do this with a startup object: an Editor Utility Blueprint whose Run function the editor calls when it opens. In this quest you build a startup object that watches every asset import and prints a warning when the new asset has a wrong name. You also add a button to a normal Blueprint that runs an event in the editor.",
+  "checklist": [
+   "Create an Editor Utility Blueprint named EUB_ImportWatcher with the parent class EditorUtilityObject.",
+   "Override the Run function. In it, print a log line, and bind a custom event to the asset-imported event of the Import Subsystem, so that your event runs each time an asset is imported.",
+   "In the bound custom event, read the name of the created object. Print a warning if the name does not start with the expected prefix (SM_, T_, and so on).",
+   "Compile, save, and close the editor. Open the file Config/DefaultEditorPerProjectUserSettings.ini, or create it if it does not exist. Add the section [/Script/Blutility.EditorUtilitySubsystem] with a StartupObjects line for your class.",
+   "Restart the editor and import an FBX or PNG file with a bad name. Check the Output Log for your warning.",
+   "In a normal Actor Blueprint named BP_TestRig, add a Custom Event with Call in Editor checked and no inputs. Place the Blueprint in the level and press the button of the event in the Details panel."
+  ],
+  "done_when": "Send a screenshot of the .ini section, a screenshot of the Output Log that shows the startup line and the import warning, and a screenshot of the Details panel button on BP_TestRig."
+ },
+ "TAQ85": {
+  "brief": "A subsystem is an object that the engine creates and manages for you, and that offers a set of functions for one area. Editor subsystems give your tools access to editor features, such as the actors in the level, the assets in the project and the tool panels. You can reach them from Blueprint and from Python. In this quest you build a small panel that calls three editor subsystems, and you call one of them from Python as well.",
+  "checklist": [
+   "Create an Editor Utility Widget named EUW_SubsystemTour. In its graph, right-click and search for 'subsystems' to see the categories. Take a screenshot of the list.",
+   "Add a button that gets the Editor Actor Subsystem and prints the count of all level actors and the count of selected actors.",
+   "Add a button that gets the Editor Asset Subsystem. It checks whether an asset path that is typed in a text box exists, and prints the result.",
+   "Add a button that gets the Editor Utility Subsystem and opens another Editor Utility Widget with Spawn And Register Tab.",
+   "In the Python console, get the same editor subsystem with unreal.get_editor_subsystem(...) and call one function on it.",
+   "Write two sentences about when you would pick an Editor subsystem and when you would pick a Game Instance subsystem."
+  ],
+  "done_when": "Send a screenshot of the EUW_SubsystemTour graph with the three subsystem nodes, a screenshot of the output in the Output Log, and a screenshot of the Python console line that fetched a subsystem."
+ },
+ "TAQ86": {
+  "brief": "Every Blueprint class could also be written in C++, the programming language of the engine. In C++, a header is the file that lists the variables, functions and components of a class without the logic inside them. Unreal can show you what the header of your Blueprint would look like, which makes a later move to C++ easier to understand. In this quest you open this preview for one of your Blueprints and try its settings.",
+  "checklist": [
+   "Pick a Blueprint class that you built earlier (for example BP_ToolRig). It must have at least 4 variables, 2 functions, 1 component and 1 event dispatcher.",
+   "Right-click the Blueprint in the Content Browser and choose Preview Equivalent C++ Header.",
+   "In the C++ Header Preview window, find each of the 4 kinds of elements in the generated text. Note which macros are used for a variable and for a function.",
+   "Open Settings and switch Sort Method between None, Sort By Access Specifier and Sort For Optimal Padding. Note how the order of the variables changes.",
+   "Change the Font Size and one Style color (for example Keyword), and set a new Selection Color.",
+   "Do the same with a Blueprint Struct (an asset with the F_ prefix) and compare the output.",
+   "Write 3 sentences: which sort method you would use before you move this class to C++, and why."
+  ],
+  "done_when": "Send a screenshot of the C++ Header Preview window for your Blueprint with a Sort Method that is not the default and with your custom style, plus your 3-sentence note."
+ },
+ "TAQ87": {
+  "brief": "Geometry Script is a plugin that lets Blueprint create and change 3D meshes with nodes. A dynamic mesh is a mesh that the editor can build again each time you change a setting. With these two things you can make your own modeling tools inside the engine. In this quest you build a blockout tool, which makes simple shapes for the first rough version of a level: a box with a cylinder-shaped hole that you can resize in the level and then save as a normal Static Mesh.",
+  "checklist": [
+   "Open Edit > Plugins, enable the Geometry Script plugin, and restart the editor.",
+   "Create a Blueprint from the GeneratedDynamicMeshActor class and name it BP_GS_Blockout.",
+   "In the Event Graph, add Event On Rebuild Generated Mesh, which runs each time the actor changes. Promote its Target Mesh pin to a private variable named DynamicMesh.",
+   "Add an Append Box node, which adds a box to the mesh. Drive its size from a public Vector variable named BoxSize, with Instance Editable and Show 3D Widget turned on.",
+   "Add a Get Compute Mesh Pool node, then a Request and Release Mesh node, which gives you a temporary mesh, and then an Append Cylinder node. Store the result as BoolMesh.",
+   "Add an Apply Mesh Boolean node with DynamicMesh as Target Mesh, BoolMesh as Tool Mesh, and the operation Subtract, which cuts the cylinder out of the box. Expose BoolLocation and BoolSize as 3D widgets.",
+   "Add a function named Bake Static Mesh with Call in Editor turned on. It uses Copy Mesh to Static Mesh to write the result into a TargetMesh variable. Place the actor in a level and bake it."
+  ],
+  "done_when": "Send a screenshot of the level that shows BP_GS_Blockout with the cylinder hole cut out, its 3D widgets visible, and the Details panel with the Bake Static Mesh button. Add a second screenshot of the baked static mesh asset in the Content Browser."
+ },
+ "TAQ88": {
+  "brief": "Simplifying a mesh means lowering its number of triangles so that it is cheaper to draw. With Geometry Script, the plugin that lets Blueprint edit meshes, you can do this from a right-click action on actors in the level. The action copies the Static Mesh asset into a temporary mesh, simplifies it, and writes it back to the asset. In this quest you build that action and use it on a dense mesh.",
+  "checklist": [
+   "Create an Editor Utility Blueprint of the type Actor Action Utility and name it ActorAU_Simplify.",
+   "Add a function named Simplify Mesh with Call In Editor turned on and an integer input named Triangle Count.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the action only shows for those actors.",
+   "Use Get Selected Actors, then a For Each loop, then Cast to StaticMeshActor, then Get Static Mesh. Use Add Unique to put each mesh into a local Static Mesh array named SM_Array, so that each asset is in the list only once.",
+   "Loop over SM_Array. For each mesh, use Request and Release from Global Pool to get a temporary mesh, and then use Copy Mesh from Static Mesh to copy the asset into it.",
+   "Add an Apply Simplify to Triangle Count node. Then use Copy Mesh to Static Mesh to write the result back into the same asset.",
+   "Duplicate a Modeling Mode primitive (for example a dense sphere) and select it. Right-click it, open Scripted Actor Actions, choose Simplify Mesh, and enter a triangle count."
+  ],
+  "done_when": "Send a screenshot of the Static Mesh Editor of the simplified asset that shows the new triangle count, and a screenshot of the ActorAU_Simplify graph with the pool, copy, simplify and copy-back nodes."
+ },
+ "TAQ89": {
+  "brief": "PCG stands for Procedural Content Generation. It is a framework in Unreal where a graph of nodes places content, such as rocks and plants, in a level by following rules. A PCG graph becomes a real tool when other people can change it through parameters without opening the graph, and when they can use it inside other graphs. In this quest you build a scatter graph with parameters, make an instance of it, and use it as a subgraph, which is a graph used as one node in another graph.",
+  "checklist": [
+   "Enable the Procedural Content Generation Framework plugin, and also its Geometry Script Interop plugin.",
+   "Make a PCG graph named PCG_Scatter. It samples points and spawns two static meshes that have different Weight values, so one mesh appears more often than the other.",
+   "Add Graph Parameters for the density and for the mesh scale. Use them in the graph in place of fixed values.",
+   "Create a PCG Graph Instance of PCG_Scatter, and change a parameter on the instance only.",
+   "Use PCG_Scatter as a subgraph inside a second graph. Override a parameter through the pin on the subgraph node.",
+   "Change the Graph Settings so that Node Filter shows only the categories that your tool needs. Then mark the graph as a Template.",
+   "Select one node and press the D key to debug it, and select another node and press the E key to disable it. Take screenshots."
+  ],
+  "done_when": "Send these screenshots: the Graph Parameters panel, the graph instance with a changed parameter, the subgraph node with an override pin connected, and a viewport with the debug points visible."
+ },
+ "TAQ90": {
+  "brief": "In a large open world, a PCG graph that creates everything at once is slow and uses a lot of memory. PCG solves this by splitting the area into grid cells, and by generating content only near the camera while the game runs. Large objects can use large cells and small objects can use small cells, which is called hierarchical generation. In this quest you set up a large PCG Volume with partitioned, hierarchical and runtime generation.",
+  "checklist": [
+   "In a World Partition level, add a large PCG Volume with a graph that spawns big rocks and small grass meshes.",
+   "Enable Partitioned generation on the PCG Component, which splits the result into grid cells. Set Partition Grid Size on the PCGWorldActor.",
+   "Enable Hierarchical Generation in the graph. Put a Grid Size node with a large grid before the rock sampler, and another Grid Size node with a small grid before the grass sampler.",
+   "Use the Unbounded grid size for a mesh sampler that should run only once. Then apply grid sizes to the nodes that come after it.",
+   "Set Generation Trigger to Generate at Runtime. Set the Generation Radii for each grid size, with larger values for larger grids.",
+   "Turn on Use Frustum Culling and test with Play In Editor (PIE). Open the Debug Object Tree to see the grid sizes on the nodes.",
+   "Assign the PCG volume to a Data Layer and confirm that the generated actors are placed in the same layer."
+  ],
+  "done_when": "Send a screenshot of the graph with the Grid Size nodes and the grid sizes shown in the corners of the nodes, plus a PIE screenshot with meshes generated around the camera and the Generation Radii settings visible."
+ },
+ "TAQ91": {
+  "brief": "UVs are the 2D layout of a 3D mesh. They tell the engine which part of a texture goes on which part of the surface. A seam is a cut in that layout, and each separate piece is called an island. Unreal has its own UV Editor, so you can fix UVs without going back to another 3D program. In this quest you cut seams, unwrap a mesh, pack the islands, and try UDIMs, which are extra numbered tiles next to the normal UV square.",
+  "checklist": [
+   "Make a mesh in Modeling Mode that has PolyGroups, which are named groups of faces (a box with a few extrusions works). Name it SM_UVTest.",
+   "Right-click the mesh in the level and open the UV Editor.",
+   "Use the Seam tool in Split mode to cut seams. Then use Sew to join one seam back together.",
+   "Run Unwrap with the ExpMap method, and then with the SpectralConformal method. Compare the distortion with the help of the checker background.",
+   "Run Layout in Repack mode, which arranges the islands so they do not overlap. Then try Stack on two islands that share a texture.",
+   "In Display, enable a texture background and turn on the UDIM labels. Move one island into the tile 1002.",
+   "Add a second UV channel with Channels. Then click Apply to save the changes to the mesh."
+  ],
+  "done_when": "Send a screenshot of the UV Editor that shows the 2D viewport with repacked islands and UDIM labels visible, and the 3D viewport with the checker texture on the mesh. Add a screenshot of the Channels list with two channels."
+ }
+}

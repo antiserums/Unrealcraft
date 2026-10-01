@@ -1,0 +1,158 @@
+{
+ "AQ57": {
+  "brief": "Normally a Control Rig works forwards: you move the controls and the bones follow. This is called Forwards Solve. Backwards Solve is the opposite direction, where the bones of an existing animation move the controls. With it you can bake an animation onto your rig, which means the animation is copied to keys on the controls, and then you can edit the motion inside Unreal. In this quest you add a Backwards Solve to a rig, bake a walk animation onto it in Sequencer, and change one key.",
+  "checklist": [
+   "Open a Control Rig that drives the arms and the head of the mannequin with FK controls. CR_Manny_FKArm from quest AQ55 is fine.",
+   "Right-click the graph, open Events and add Backwards Solve. For each control, connect a Get Transform node of its bone to a Set Transform node of the control.",
+   "In the toolbar, switch Solve Direction to Backwards Solve. In Preview Scene Settings, set Preview Controller to Use Specified Animation and pick a walk animation.",
+   "Confirm that the border of the viewport is yellow and that the controls follow the animation. Then try the option Backwards and Forwards, and note the blue border.",
+   "Create a Level Sequence named LS_BakeTest. Add the mannequin to it, and add the same walk animation to its track.",
+   "Right-click the character track, choose Bake To Control Rig, and pick your rig. Enable Reduce Keys with a Tolerance of 0.1, and click Create.",
+   "Move one baked key on an arm control to change the walk. Move the playhead through the sequence to see the change."
+  ],
+  "done_when": "Send two screenshots. The first shows the Control Rig editor in Backwards Solve mode with the yellow border and the controls matching the animation. The second shows Sequencer with the Control Rig track, the baked keys, and one edited key on an arm control."
+ },
+ "AQ58": {
+  "brief": "A function is a group of nodes saved under one name, so you can use it again without building it again. In Control Rig, a function marked as Public can be used by every other Control Rig in the project. A team usually keeps such functions in one rig asset that has no mesh, called a function library. In this quest you create a library, write one function that shows or hides controls, and use it in a character rig.",
+  "checklist": [
+   "In the Content Browser, click Add, then Animation, then Control Rig. Choose ControlRig and name the asset CR_FunctionLibrary. Do not assign a skeletal mesh to it.",
+   "In the My Blueprint panel, add a function named SetControlsVisible. In the Details panel, set its Access Specifier to Public so that other rigs can use it.",
+   "Select the Entry node of the function and add two inputs. The first is named Items, with the type Rig Element Key, set as an Array. The second is named Visible, with the type Boolean, set as Single.",
+   "Inside the function, add a For Each node and a Set Control Visibility node. Connect them between the Entry node and the Return node.",
+   "In Node Settings, set Category to Team, add the Keywords 'hide show', and write a Description. Also give the node a color.",
+   "Open a character rig, such as CR_Manny_FKArm. Right-click the graph, open the Team category and choose SetControlsVisible. Connect it to Forwards Solve and give it an array of hand controls.",
+   "Right-click the shared node and choose Localize Function, which makes a local copy inside this rig. Compare the local copy with the shared version."
+  ],
+  "done_when": "Send two screenshots. The first shows CR_FunctionLibrary with the public SetControlsVisible function and the inputs of its Entry node. The second shows the graph of the character rig with the shared function node, with its folder path in the header, and a second localized copy."
+ },
+ "AQ59": {
+  "brief": "A spline is a smooth curve that passes through or near a few points. In a rig, you can place a long chain of bones, such as a tail, a rope or a tentacle, along a spline. The animator then moves only a few controls and the whole chain bends smoothly. In this quest you build a tail rig with four controls, one spline, and a node that fits the bones onto the curve.",
+  "checklist": [
+   "Use a skeletal mesh that has a long chain of bones, such as a tail, a tentacle, or a spine with at least six bones. Create a Control Rig named CR_Tail for it.",
+   "Create four controls, placed at even distances along the chain. Name them tail_ctrl_01 to tail_ctrl_04.",
+   "Add a Spline From Points node and give it four points. Connect the Translation of each control to one point, in order from the root of the chain to the tip.",
+   "Add a Draw Spline node, connect it to Forwards Solve, and connect the Spline pin. Move the controls to check that the curve follows them.",
+   "Select all the bones of the chain together, from the root to the tip. Drag them into the graph and choose Create Item Array.",
+   "Add a Fit Chain on Spline Curve node. Connect Items, the Spline and the execution line. Set Primary Axis to the direction in which the chain points.",
+   "Switch Spline Mode between Hermite and BSpline and compare the curves. Then set Alignment to Stretched and after that to Front, and compare what happens when you pull a control far away."
+  ],
+  "done_when": "Send two screenshots. The first shows the rig graph with Spline From Points, Draw Spline and Fit Chain on Spline Curve connected to Forwards Solve. The second shows the viewport with the drawn spline and the tail bones following a curved pose."
+ },
+ "AQ60": {
+  "brief": "The Control Rig Component lets you use a Control Rig inside a normal Blueprint actor while the game runs. Blueprint code can then move the controls, and other components can be made to follow parts of the rig. This is useful for machines and props, such as a crane or a lamp. In this quest you rig a simple prop, add the component to an actor, connect it to the mesh, and make a hook mesh follow one control.",
+  "checklist": [
+   "Create a Control Rig named CR_Crane for a simple skeletal prop, such as a crane arm or a lamp. Use the mannequin if you have no prop. Add a control named Tip_ctrl that drives the last bone.",
+   "Create an Actor Blueprint named BP_Crane. Add a Skeletal Mesh Component to it that uses the prop mesh.",
+   "Add a Control Rig Component, which you find in the Animation category. Set its Control Rig Class to CR_Crane, and turn off Draw Bones.",
+   "In the Details panel, click Add next to On Pre Initialize. In the event that is created, call Add Mapped Skeletal Mesh and give it your Skeletal Mesh Component. This connects the rig to the mesh.",
+   "Add a Static Mesh Component named Hook. In Mapped Elements, add an entry with these values: Component Name Hook, Element Type Control, Element Name Tip_ctrl, Direction Output.",
+   "Enable Update in Editor. Move Tip_ctrl, either with Set Control Transform from the component in the Event Graph or with a Timeline, and confirm that Hook follows it.",
+   "Turn on the option Enable Lazy Evaluation, and note the Position Threshold value that is shown."
+  ],
+  "done_when": "Send two screenshots. The first shows the components of BP_Crane and the On Pre Initialize event with Add Mapped Skeletal Mesh. The second shows the Mapped Elements entry for Hook, and the viewport with the Hook mesh following Tip_ctrl."
+ },
+ "AQ61": {
+  "brief": "A Control Rig can also run inside an Animation Blueprint, as one node in the AnimGraph. The rig then changes the pose on every frame while the game runs, and gameplay code can send values to it. Animation made this way, by logic and not by keys, is called procedural. In this quest you build a small rig that turns the head toward a target, run it in an Animation Blueprint, and make the mannequin look at the camera.",
+  "checklist": [
+   "Create a Control Rig named CR_Manny_LookAt for the mannequin. Add a Vector variable named LookTarget and a Float variable named LookWeight. Click the Eye icon next to each one in My Blueprint to make them instance-editable.",
+   "On Forwards Solve, aim the head bone at LookTarget. You can use an Aim node or your own rotation logic. Blend the result by LookWeight.",
+   "Open ABP_Manny, or make a new Animation Blueprint. In the Anim Graph, right-click, open Misc and add a Control Rig node. Place it after your locomotion pose and before the Output Pose.",
+   "In the Details panel of the node, set Control Rig Class to CR_Manny_LookAt. Under Input, enable Use Pin for LookTarget and for LookWeight.",
+   "In the Event Graph, on each update, set LookTarget to the location of the player camera and set LookWeight to 1.",
+   "Add a Float animation curve to one animation. On LookWeight, choose that curve with Use Curve and stop using the pin. Compare the result.",
+   "Disable Transfer Pose in Global Space, and check that the result is the same on this skeleton."
+  ],
+  "done_when": "Send two screenshots. The first shows the Anim Graph with the Control Rig node and its LookTarget and LookWeight pins. The second shows Play in Editor with the head of the mannequin turned toward the camera."
+ },
+ "AQ62": {
+  "brief": "A pose cache is a stored copy of the pose of a rig, saved in a variable of the type Rig Pose. The rig can later go back to that pose, or blend toward it by any amount. Many procedural rig effects are built on this. In this quest you store the starting pose of the mannequin, store a second pose for one arm only, and blend a walk animation toward the stored pose with a weight value.",
+  "checklist": [
+   "Open CR_Manny_FKArm, or any other mannequin rig. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose.",
+   "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Setup Event, so that the starting A-pose is stored.",
+   "Add a second Rig Pose variable named ArmsPose. Fill it with a Get Pose Cache node that has Element Type set to Bones, and whose Items to Set input comes from a Get Children node of the left upperarm bone.",
+   "On Forwards Solve, add an Apply Pose Cache node that reads RestPose. Add a Float variable named RestWeight and connect it to the Weight pin.",
+   "In Preview Scene Settings, set a walk animation as the Preview Controller. Change RestWeight from 0 to 1 and watch the rig blend to the A-pose.",
+   "Add a Draw Pose Cache node for ArmsPose, and confirm that only the elements of the arm are drawn.",
+   "Add a Branch node so that RestPose is only stored when a Bool variable named StorePose is true."
+  ],
+  "done_when": "Send two screenshots. The first shows the graph with Get Pose Cache on the Setup Event, and Apply Pose Cache with a Weight variable on Forwards Solve. The second shows the viewport with a walk animation playing and RestWeight at 0.5, and the axes of Draw Pose Cache on the arm."
+ },
+ "AQ63": {
+  "brief": "When a foot must step up onto something, the leg alone cannot make the pose look right. The hips have to move too, so an IK Rig has a solver (a part that calculates the pose) named Body Mover, which moves and turns the pelvis based on where the feet are, before a Limb IK solver bends each leg to reach its goal. In this quest you build an IK Rig with these solvers, put them in the right order, and also add a Pole Solver that controls the direction of a knee.",
+  "checklist": [
+   "Create an IK Rig named IK_BodyMover for the UE5 Mannequin or for your own two-legged character. To create it, click Add (+), then Animation, then IK Rig.",
+   "Select foot_l and foot_r, right-click and choose New IK Goal. When Unreal asks for a Solver, pick Limb IK. Set thigh_l and thigh_r as the root of each Limb IK: right-click the bone and choose Set Root Bone on Selected Solver.",
+   "In the Solver Stack, click Add New Solver and add Body Mover. Set pelvis as its root bone. Connect both foot goals to it: right-click each goal and choose Connect Goal to Selected Solver.",
+   "Drag Body Mover to the top of the Solver Stack, so that it is calculated first. Read the numbers next to the solver names, which show the order.",
+   "In the viewport, drag one foot goal 40 cm up and watch the pelvis move. Select Body Mover and set Rotation Alpha to 0. Compare how much the body leans before and after.",
+   "Add a Pole Solver for the left leg. Set thigh_l as its root and foot_l as its end. Then create an IK Goal on calf_l, the first child of the root, to use as the pole vector, the point that the knee turns toward. Move it and watch the knee turn.",
+   "Right-click a twist bone, for example thigh_twist_01_l, and choose Exclude Selected Bone From Solve. Note that its icon changes."
+  ],
+  "done_when": "Send two screenshots of the IK Rig editor: one of the Solver Stack with Body Mover first, two Limb IK solvers and a Pole Solver, and one of the viewport with one foot goal raised and the pelvis following. Add two lines that say what Rotation Alpha 0 on Body Mover changed, and which bone you excluded and why."
+ },
+ "AQ64": {
+  "brief": "Full Body IK, or FBIK, is a solver that reaches for several goals at the same time, for example both hands and both feet, and moves the whole body to do it. Without extra rules the result often looks wrong: the hips turn too much, or a knee bends the wrong way. Bone settings are per-bone rules, such as stiffness and rotation limits, that keep the pose believable. In this quest you build an FBIK solver inside an IK Rig and tune it with bone settings.",
+  "checklist": [
+   "Create an IK Rig named IK_FBIK for the UE5 Mannequin. In the toolbar, click Auto Create IK and look at what it made: an FBIK solver, goals and bone settings.",
+   "Delete that result and build your own. Click Add New Solver and choose Full Body IK, and set pelvis as its root. Then add IK Goals on hand_l, hand_r, foot_l and foot_r, and connect all four to the solver.",
+   "Drag the hand_r goal far to the front. The pelvis rotates too much. Select the FBIK solver, right-click pelvis and choose Add Settings to Selected Bone. Raise Rotation Stiffness until the hips stay calm.",
+   "Add bone settings on foot_l. Set the Limit of the Z axis to Limited with Min -50 and Max 40, as in the example from the documentation. Move the foot goal and check the ankle.",
+   "Add bone settings on calf_l. Enable Use Preferred Angles and raise the Z angle, so that the knee bends the right way when the foot goal comes close to the hip.",
+   "On the solver, set Root Behavior to Pin to Input, then to Pre Pull, then to Free. Note how the pelvis moves in each mode.",
+   "Raise Mass Multiplier to 5 and watch the goals stop reaching their targets. Then raise Iterations until they reach them again."
+  ],
+  "done_when": "Send screenshots of the Hierarchy that show the bone settings under pelvis, foot_l and calf_l, and of the Details of the FBIK solver. Add three lines that say which Root Behavior you kept, what Mass Multiplier did, and what the Z limit on the ankle fixed."
+ },
+ "AQ65": {
+  "brief": "An IK Rig does nothing in the game until an Animation Blueprint runs it and tells it where its goals should be. The IK Rig node does this job inside the AnimGraph. Each goal that you expose on the rig becomes a pin on the node, and you can connect a variable to it. In this quest you make the right hand of the character reach for a target actor, and blend the effect on and off.",
+  "checklist": [
+   "Open an IK Rig that has a Limb IK on the right arm. You can reuse IK_BodyMover or make a new one named IK_Reach. Select the hand_r goal and enable Expose Position and Expose Rotation.",
+   "In the Animation Blueprint of the Third Person character, right-click the AnimGraph and add an IK Rig node from the Misc category. Set its Rig Definition Asset to your IK Rig. Place the node after the locomotion logic and before Output Pose.",
+   "In the Details panel of the node, under Goals, set the hand_r goal to Manual Input with the space World. Add a Vector variable named ReachTarget and connect it to the position pin of the goal.",
+   "In BP_ThirdPersonCharacter, set ReachTarget to the world location of a target actor on every tick, or on a key press. Press Play and watch the hand follow the target.",
+   "Add a Float variable named ReachAlpha and connect it to the Position Alpha of the goal. Change it between 0 and 1, and confirm that the IK blends off and on.",
+   "Switch the space of the goal to Additive and give it a small offset. Compare this with World. Turn on Enable Debug Draw and set Debug Scale to 2 to see the goal in the viewport.",
+   "Try the Bone goal type: snap the hand goal to a socket bone such as ik_hand_r. Describe what this is useful for."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph with the IK Rig node and its exposed pins, a screenshot of the Details of the node showing the Goals section, and a short clip or screenshot of the hand reaching the target in Play mode. Add two lines about the difference you saw between World and Additive."
+ },
+ "AQ66": {
+  "brief": "When a character stands on stairs or on a slope, a normal animation puts both feet at the same height, so one foot sinks into the ground or floats in the air. Two Bone IK is a simple node that fixes this. It moves the end of a chain of three bones, such as thigh, calf and foot, to a point you give it, and bends the middle joint to fit. In this quest you find the floor under the foot with a line trace, which is an invisible ray that reports what it hits, and you place the foot there.",
+  "checklist": [
+   "In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root.",
+   "Turn on Enable Debug Draw. In the preview, move the Effector Location, shown in red, and the Joint Target Location, shown in green. Watch the knee point toward the green target.",
+   "Set Effector Location Space to World. In the Event Graph, do a Line Trace from foot_l down to the floor, and store the hit location in a Vector variable named FootTarget_L. Connect this variable to Effector Location.",
+   "Set Joint Target Location Space to Bone with Joint Target set to calf_l. Give it a small forward offset so that the knee bends in a natural way.",
+   "Place BP_ThirdPersonCharacter on a low step or a slope and press Play. Add a Float variable named FootAlpha and connect it to the Alpha of the node, so that you can blend the effect off.",
+   "Enable Allow Stretching with Start Stretch Ratio 0.9 and Max Stretch Scale 1.2. Move the target too far away and note how the leg stretches.",
+   "Do the same for foot_r. You can also duplicate the setup and rename the variables."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph with the Two Bone IK node or nodes and the Details panel. Also send a screenshot in Play mode with the character standing on a slope or step, with one foot placed lower than the other."
+ },
+ "AQ67": {
+  "brief": "CCDIK and FABRIK are two IK solvers for chains of many bones, such as a whole arm from the shoulder to a fingertip, or a tail. They bend the chain so that its tip reaches a point. CCDIK can also limit how far each joint may rotate, which stops the chain from folding in ways a real body cannot. In this quest you make the character press a button with the index finger using CCDIK, and then compare the result with FABRIK.",
+  "checklist": [
+   "Make an actor named BP_Button: a small box with a Scene component named PressPoint on top of it. Place it at hand height near the player start.",
+   "In the AnimGraph of the Animation Blueprint of the Third Person character, convert the pose to component space, add a CCDIK node, and then convert back to local space before Output Pose.",
+   "On the CCDIK node, set Tip Bone to index_03_l and Root Bone to clavicle_l. Set Effector Location Space to World Space, as in the example from the documentation.",
+   "Add a Vector variable named ButtonLocation and a Float variable named PressAlpha. When the player overlaps BP_Button, set ButtonLocation to the world location of PressPoint. Connect both variables to the node.",
+   "Turn on Enable Rotation Limit and open Rotation Limit Per Joints. Set limits on the first indices so that the finger and the wrist do not fold backwards.",
+   "Duplicate the setup with a FABRIK node that has Tip Bone hand_l and Root Bone clavicle_l. Compare the shape of the arm with CCDIK for the same target, and write the difference in one line.",
+   "On both nodes, compare Max Iterations 2 with 10, and Precision 1 with 0.1. Write down which values looked good enough."
+  ],
+  "done_when": "Send a screenshot of the AnimGraph with the space conversion nodes and the Details of the CCDIK node, showing Tip, Root and the rotation limits. Also send a screenshot in Play mode of the character touching the button with the index finger. Add two lines that compare CCDIK and FABRIK on your arm."
+ },
+ "AQ68": {
+  "brief": "Every skeleton has a reference pose, the pose in which the character was built. Some characters stand in an A-pose, with the arms pointing down at an angle, and others in a T-pose, with the arms straight out to the sides. When you retarget animation between two characters with different reference poses, the arms and shoulders come out wrong. A retarget pose fixes this by storing small rotations that make the two poses match. In this quest you create and align a retarget pose and use it in the op stack of an IK Retargeter.",
+  "checklist": [
+   "Pick a source character (the UE5 Mannequin, which is in an A-pose) and a target character with a different reference pose, for example a T-pose character from Fab. Make an IK Rig for each with Auto Create Retarget Chains, and create an IK Retargeter named RTG_PoseFix.",
+   "Click Edit Retarget Pose in the toolbar. With Target selected, click Create (+), then Create, and name the new pose Target_Aligned. Do not edit the Default Pose.",
+   "Open Auto Align and choose Align All Bones with Alignment Method set to Direction. Then click Snap Character to Ground. After that, try Mesh as the method on the arms only, with Align Selected and Children, and compare.",
+   "Turn on Edit Mode and fix one bone by hand. In the Details panel, type 0, 0, 0 to send the bone back to the reference pose, and then set a small value. Drag Retarget Pose Blend between 0 and 1 to see your changes.",
+   "Create a second pose with Create (+), then Import from Animation Sequence, using frame 0 of an idle animation. Export one pose with Export Pose Asset.",
+   "In the Op Stack, add a Retarget Pose op at the top, with Override Target Pose set to Target_Aligned. Then add an Additive Pose op at the bottom, with a small Alpha and a pose that you made.",
+   "Run the retarget and preview 3 animations. Write down which alignment method gave the best shoulders."
+  ],
+  "done_when": "Send screenshots of the target in Edit Retarget Pose mode after Auto Align, of the Retarget Pose Blend slider, and of the Op Stack with Retarget Pose first. Add three lines that give the names of the poses you created, the alignment method you kept, and what the Additive Pose op changed."
+ }
+}

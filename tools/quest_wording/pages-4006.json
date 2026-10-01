@@ -1,0 +1,150 @@
+{
+ "LDQ101": {
+  "brief": "Procedural Foliage is a tool that fills an area with trees by simulating how a forest grows: trees spread seeds, grow for some years, and compete for space and light. It fills a large area very quickly, but it does not know where your players need to walk or see. In this quest you grow a small forest with a Procedural Foliage Spawner and use blocking volumes to keep the route and the combat space free of trees.",
+  "checklist": [
+   "Open Edit > Editor Preferences, go to the Experimental section, and enable Procedural Foliage.",
+   "Create a Procedural Foliage Spawner asset named PFS_Forest. Place it over your terrain and scale it so that it covers the play area.",
+   "Create two Static Mesh Foliage assets named FT_Tree_A and FT_Tree_B. Add both to the Foliage Types array of PFS_Forest.",
+   "On FT_Tree_A, set Num Steps to 3, Initial Seed Density to 0.25 and Shade Radius to 50. On FT_Tree_B, set Overlap Priority to 1 and enable Spawns in Shade.",
+   "For both types, enable Align to Normal and Random Yaw under Placement. Then click Resimulate on the spawner to grow the forest.",
+   "Place one Procedural Foliage Blocking Volume over your main route and one over the combat space. Click Resimulate again.",
+   "Walk the route in PIE. Note any tree that still blocks a view the player needs, and fix it with the blocking volume."
+  ],
+  "done_when": "Send one editor screenshot that shows the spawner with both Foliage Types and the blocking volumes over the route. Also send one PIE screenshot taken from inside the route that shows the clear corridor."
+ },
+ "LDQ102": {
+  "brief": "A parametric block is a blockout piece whose shape is built from numbers, such as width, length and height. When you want a different size, you change a number and the mesh is rebuilt, so you do not have to model it again. Epic's sample game Lyra uses tools like this for its blockouts. In this quest you build a ramp tool with the Geometry Script plugin and then bake its result into a normal Static Mesh.",
+  "checklist": [
+   "Enable the Geometry Script plugin and restart the editor.",
+   "Create a Blueprint named BP_Tool_Ramp with GeneratedDynamicMeshActor as its parent class. Add the Instance Editable variables Width, Length, Height and Steps.",
+   "In the event Event On Rebuild Generated Mesh, append boxes that use the variables, so that the actor builds a ramp or a stair block. If you need a temporary mesh, use Request and Release Mesh for it.",
+   "Place three BP_Tool_Ramp actors in the level. Change their variables in the Details panel so that they fit your metrics gym, the test level where you check sizes and distances.",
+   "Add an event named Bake with Call In Editor turned on. It copies the dynamic mesh to a new Static Mesh asset. Search the Geometry Script library for the function that copies a mesh to a static mesh.",
+   "Replace one ramp with a Static Mesh Actor that uses the baked asset. Move the tool actor below the level and keep it there as the template."
+  ],
+  "done_when": "Send one screenshot of the BP_Tool_Ramp graph with On Rebuild Generated Mesh. Also send one viewport screenshot with three ramps of different sizes and the baked Static Mesh asset visible in the Content Browser."
+ },
+ "LDQ103": {
+  "brief": "Most levels are built from pieces that repeat, such as rows of columns, floor tiles and rings of pillars. Modeling Mode has tools that make these copies for you: Pattern places copies of a mesh along a line, in a grid or in a circle, and Duplicate makes one copy. In this quest you use these tools to build a row of columns, a plaza and a ring of pillars, and then you merge and convert the result.",
+  "checklist": [
+   "Enter Modeling Mode by pressing Shift+5. In the Create category, make a Box column that matches your metrics, for example 100 x 100 x 400.",
+   "Select the column. In the Xform category, open Pattern and tile the column along a Line, so that you get a row of 8 columns along a route.",
+   "Make a floor tile and use Pattern in Grid mode to build a plaza of 6 x 6 tiles.",
+   "Make a short pillar and use Pattern in Circle mode to put a ring of pillars around an arena. Move the pattern plane to set the position of the ring.",
+   "Use Duplicate on one column and edit the copy. Then use Merge to combine the ring pillars into one mesh.",
+   "Run Bake Transform on the merged mesh, and then use Convert to turn it into a Static Mesh. Walk across the plaza in PIE."
+  ],
+  "done_when": "Send one editor screenshot that shows the Pattern tool properties with the row of columns, the plaza and the ring visible. Also send one PIE screenshot of you walking between the columns."
+ },
+ "LDQ104": {
+  "brief": "A Landscape Spline is a path that you draw on the terrain, usually for a road or a river. It can change the terrain under it: it can raise or lower the ground to fit the path, paint a ground layer along it, and place road meshes on it. A road that shapes the ground looks planned, and it keeps players and vehicles on it. In this quest you draw a road to a landmark and set up its width, its effect on the terrain and its mesh.",
+  "checklist": [
+   "In Landscape Mode, open the Edit Layer stack and add a new Spline Edit Layer. The splines need this layer to change the terrain.",
+   "Open the Manage tab and select the Spline tool. Hold Ctrl and click to lay a road from your start area to the landmark. Use Alt+drag to extend it.",
+   "Select all control points. Set Half-Width to the width of your road, and set Side Falloff so that the edges blend into the terrain. Set Layer Name to a paint layer named Road.",
+   "On the segments that cross a dip in the ground, enable Raise Terrain. On a segment that crosses a stream, disable it and compare the two results.",
+   "Select the segments and add a Spline Mesh that uses SM_RoadSection. Enable Scale to Width and choose the correct Forward Axis.",
+   "Select a control point and use the scale tool to drag its tangents until the curve is smooth. Press End to snap the points to the landscape.",
+   "Walk or drive along the road in PIE. Check that the raised sides of the road do not block the view of the landmark."
+  ],
+  "done_when": "Send one editor screenshot that shows the Spline Edit Layer in the stack and the road with its Half-Width and Side Falloff lines visible. Also send one PIE screenshot taken from the road looking toward the landmark."
+ },
+ "LDQ105": {
+  "brief": "Each area of the NavMesh has a cost, and AI characters prefer the path with the lowest total cost. An Area Class is a type of area with its own cost and color. A Navigation Query Filter can change these costs for one kind of AI only, so different characters see the same space differently. This lets you send patrols, civilians and heavy units along different lanes without building new geometry. In this quest you make three lanes and two walkers that each choose a different lane.",
+  "checklist": [
+   "In a test level with a NavMeshBoundsVolume, place three Nav Modifier Volumes side by side as lanes. Scale each one to about X=2, Y=6, Z=1.",
+   "Create three Blueprints with the parent class Nav Area: BP_Area_Neutral, BP_Area_Lane1 and BP_Area_Lane2. Give Lane1 a blue Draw Color and Lane2 a red Draw Color.",
+   "Assign one Area Class to each volume. Press P and check that the lanes show in their Draw Colors on the NavMesh.",
+   "Create two Blueprints with the parent class Navigation Query Filter: BP_QueryFilter1 and BP_QueryFilter2. In each one, add the three Area Classes and use Travel Cost Override with a value of 100, so that a different lane is cheap in each filter.",
+   "Place two AI walkers that use Move To toward a target sphere on the far side. Set Filter Class to BP_QueryFilter1 on one walker and to BP_QueryFilter2 on the other.",
+   "Click Simulate. Confirm that each walker takes a different lane to the same target."
+  ],
+  "done_when": "Send two screenshots from Simulate: one that shows both walkers on their own lanes, and one of the Details panel of one Query Filter that shows its Areas list with the Travel Cost Override values."
+ },
+ "LDQ106": {
+  "brief": "The NavMesh is built in square pieces called tiles. A fine NavMesh is precise but slow to build, and a coarse one is fast but cannot fit through small gaps. Unreal lets you choose a resolution of Low, Default or High for each zone, so that only the tight areas pay for precision. This matters most in big worlds where the NavMesh is rebuilt while the game runs. In this quest you set different resolutions in two zones and compare the build times.",
+  "checklist": [
+   "In a level with a NavMeshBoundsVolume, select the RecastNavMesh-Default actor and enable Draw Tile Build Times. Press P to see the NavMesh and the build time of each tile.",
+   "Place a Nav Modifier Volume over an open area that covers several tiles. Set its Nav Mesh Resolution to Low. Compare the build times inside and outside the volume.",
+   "Build a tight area from three cube obstacles with small gaps between them. Cover it with a second Nav Modifier Volume and set that one to High.",
+   "On the RecastNavMesh actor, enable Draw Tile Resolutions and Draw Tile Build Times Heat Map. Check that the colors match your zones.",
+   "Make BP_NavResCarrier, an Actor Blueprint with a NavModifier component that is set to Low. Drag it across the NavMesh and watch the tiles rebuild.",
+   "Open Project Settings, go to Navigation Mesh, then Generation, and find Nav Mesh Resolution Params. Note the Cell Size of each resolution."
+  ],
+  "done_when": "Send two screenshots: one of the level with Draw Tile Resolutions on, with blue, green and yellow zones visible, and one of the same view with the build time heat map. Add one line with the Cell Size values you found for Low, Default and High."
+ },
+ "LDQ107": {
+  "brief": "By default the NavMesh is built once in the editor and does not change during play. This means AI characters do not know when a door closes or a platform moves away. Unreal can update the NavMesh while the game runs, and it has different modes for this that cost different amounts of processing. In this quest you build a rotating gate and a sliding block, and compare how the NavMesh reacts to them in two runtime modes.",
+  "checklist": [
+   "Use a level with a NavMesh and one AI walker that moves between two spheres. Open Project Settings, go to Navigation Mesh, then Runtime, and set Runtime Generation to Dynamic Modifiers Only.",
+   "Create an Actor Blueprint named BP_RotatingGate with a Cube (scale about X=4, Y=1.5, Z=1) and a Rotating Movement component. Place it on the route of the walker and click Simulate. Notice that the NavMesh does not change yet.",
+   "Add a Nav Modifier component to BP_RotatingGate. Simulate again and watch the NavMesh update as the gate turns. The tiles that are being updated are shown in red.",
+   "Create an Actor Blueprint named BP_SlidingBlock with a Sphere that moves back and forth. Drive it with a Timeline that uses Set Relative Location and a Lerp on X over a distance of about 1000.",
+   "Simulate with Dynamic Modifiers Only. Then switch Runtime Generation to Dynamic and Simulate again. Compare how the NavMesh reacts to BP_SlidingBlock in each mode.",
+   "Set the mode back to the one that your level really needs, and write down why."
+  ],
+  "done_when": "Send a screenshot from Simulate that shows the NavMesh cut around the rotating gate, with the red rebuilt tiles visible. Add a text of 3 to 5 lines that says which mode you kept and why."
+ },
+ "LDQ108": {
+  "brief": "Pathfinding on the NavMesh only steers AI characters around walls and other fixed things. It does not stop them from walking into each other. For that Unreal has two avoidance systems: RVO, which is a setting on the Character Movement component, and Detour Crowd, which you get by using a special AI Controller. A market or a hallway looks broken when characters push through each other, so choosing a system is a design decision. In this quest you send two groups through each other with no avoidance, with RVO and with Detour Crowd.",
+  "checklist": [
+   "In a Third Person project, make a flat test level with a Floor scaled to 10x10 and a NavMeshBoundsVolume. Place two Sphere actors as targets on opposite sides.",
+   "Copy BP_ThirdPersonCharacter and name the copy BP_NPC_NoAvoidance. Remove the input nodes. Add an Instance Editable Actor variable named Target, and on Begin Play call AI Move To with Pawn set to self and Target Actor set to Target.",
+   "Place two groups of 4 to 6 NPCs that face each other across the level. Each group targets the sphere on the far side. Click Simulate and watch them collide in the middle.",
+   "Duplicate the Blueprint and name it BP_NPC_RVO. On the Character Movement component, under Avoidance, enable Use RVOAvoidance and set Avoidance Consideration Radius to 100. Test the same crossing.",
+   "Duplicate the Blueprint again and name it BP_NPC_DetourCrowd. Set its AI Controller Class to DetourCrowdAIController. Test the same crossing.",
+   "Open Project Settings, go to Crowd Manager, and note the values of Max Agents and Max Agent Radius. Change one value and observe the effect."
+  ],
+  "done_when": "Send three screenshots taken in the middle of the crossing: one with no avoidance, one with RVO and one with Detour Crowd. Add 2 to 3 lines that say which one you would use for a busy town square and why."
+ },
+ "LDQ109": {
+  "brief": "A Behavior Tree is an asset that decides what an AI character does. It is a tree of nodes that Unreal reads from left to right, and the first branch whose conditions are met is the one that runs. It stores what the AI knows in a Blackboard, a small list of named values. In this quest you build an enemy that patrols to random points and switches to chasing the player when it sees them. This is the base of most guards and enemies you will place in a level.",
+  "checklist": [
+   "Create a folder named AI. In it, make Enemy_Character (a copy of BP_ThirdPersonCharacter with its script removed and Max Walk Speed set to 120) and Enemy_Controller (an AIController Blueprint). Set the AI Controller Class on Enemy_Character to Enemy_Controller.",
+   "Create a Blackboard named BB_Enemy with three keys: EnemyActor (type Object with base class Actor), HasLineOfSight (type Bool) and PatrolLocation (type Vector).",
+   "Create a Behavior Tree named BT_Enemy. Under the Root, add a Selector named AI Root. Under it, add a Sequence named Chase Player on the left, a Sequence named Patrol in the middle, and a Wait node of 1.0 on the right.",
+   "Make a task named BTT_FindRandomPatrol. From Event Receive Execute AI, call GetRandomReachablePointInRadius with a radius of 1000, then Set Blackboard Value as Vector for PatrolLocation, then Finish Execute. Under Patrol, add this task, then Move To PatrolLocation, then Wait 4.0 with Random Deviation 1.0.",
+   "Under Chase Player, add Rotate to Face BBEntry (set to EnemyActor), then BTT_ChasePlayer (a task that sets the walk speed to 500 through a function on the character), then Move To EnemyActor. Add a Blackboard decorator on Chase Player with the key HasLineOfSight and Observer aborts set to Both.",
+   "In Enemy_Controller, connect Event On Possess to Run Behavior Tree. Add an AIPerception component with an AI Sight config and turn on Detect Neutrals. On Target Perception Updated, set the Blackboard keys for actors that have the tag Player, and start a timer of 4 s that clears the keys when sight is lost.",
+   "Add the tag Player to the player character, place a NavMeshBoundsVolume, and play. Watch the tree switch branches in the Behavior Tree editor."
+  ],
+  "done_when": "Send a screenshot of BT_Enemy taken while playing, with the active branch highlighted. Also send a short clip or a second screenshot that shows the enemy chasing you after it sees you."
+ },
+ "LDQ110": {
+  "brief": "If you place enemy spawn points by hand, they fail when the player stands in a spot you did not expect, and enemies appear in plain view. EQS, the Environment Query System, can find a good spot each time: it creates many test points around the player, removes the bad ones, and scores the rest. In this quest you build a query that finds a point the player cannot see and that an AI can reach, and you test it in the editor.",
+  "checklist": [
+   "Enable the Environment Query Editor plugin if it is not enabled yet. Create EQC_PlayerContext with the parent class EnvQueryContext_BlueprintBase, and override Provide Single Actor so that it returns Get Player Character.",
+   "Create an Environment Query named EQS_SpawnPoint. Add a Points: Donut generator around EQC_PlayerContext with Inner Radius 800, Outer Radius 1600 and 3 rings. Keep Projection Data on, so that the points land on the NavMesh.",
+   "Add a Trace test with Test Purpose set to Filter Only and Context set to EQC_PlayerContext. The guide disables Bool Match to keep the points that can see the player. Flip it and compare, so that you keep the hidden points for spawns. Also add a Pathfinding test with Path Exist and Skip Unreachable.",
+   "Add a Distance test set to Score Only with a Scoring Factor of -1.0, so that hidden points that are closer get a higher score.",
+   "Create BP_EQSTestPawn from the EQS Testing Pawn class, set its Query Template to EQS_SpawnPoint, and place it in the level. Move your cover cubes until the Winner, the point with the best score, is where you want a spawn.",
+   "Optional: in a small Behavior Tree, use Run EQSQuery to write the result to a Vector key, and then use Move To to go there."
+  ],
+  "done_when": "Send a screenshot of the EQS Testing Pawn results in the editor with the scored points visible and the Winner marked. Also send a screenshot of the EQS_SpawnPoint graph that shows the three tests."
+ },
+ "LDQ111": {
+  "brief": "A Smart Object is an object in the level that AI characters can find, reserve and use, such as a bench, a terminal or a campfire. The object itself holds the behavior that runs when a character uses it, so you do not have to script every NPC separately. NPCs that really use the things around them make a place feel alive. In this quest you make a Smart Object that plays an animation montage on the character, and an AI agent that finds, claims and uses it.",
+  "checklist": [
+   "Enable the plugins Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Restart the editor if it asks you to.",
+   "Create BP_SO_Behavior_PlayMontage with the parent class Gameplay Behavior. Override OnTriggeredCharacter: get the Skeletal Mesh Component of the Avatar, call Play Montage, and connect both On Completed and On Interrupted to End Behavior.",
+   "Create BP_SO_BehaviorConfig with the parent class Gameplay Behavior Config. Set its Behavior Class to BP_SO_Behavior_PlayMontage.",
+   "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_PlayMontage. Add one Slot, and add a Gameplay Behavior Smart Object Behavior Definition that points to BP_SO_BehaviorConfig.",
+   "Create an Actor Blueprint named BP_SO_Bench with a Smart Object component, and set its Definition Asset to SO_Definition_PlayMontage. Place 3 or more of them in the level.",
+   "Create a Blackboard named BB_SO_Agent with a key of the type SO Claim Handle. Build two tasks: BTT_FindSmartObject, which uses Find Smart Objects in a box around the pawn, claims a random result and stores the handle, and BTT_UseSmartObject, which calls Use Claimed Gameplay Behavior Smart Object.",
+   "Build a Behavior Tree named BT_SO_Agent. Under a Selector, add a Sequence with Find, Use and a Wait of 2.0 with a deviation of 0.5, and next to it add a Wait of 5 as the fallback. Run the tree from the agent on Event Possessed. Add a NavMeshBoundsVolume and click Simulate."
+  ],
+  "done_when": "Send a screenshot from Simulate that shows an agent playing the montage at one of your Smart Objects, and a screenshot of the BT_SO_Agent graph."
+ },
+ "LDQ112": {
+  "brief": "AI Perception is the system that lets AI characters sense the world, for example by sight and by hearing. Each sense has settings such as how far the guard sees, how wide its view is, and how long it remembers what it saw. A stealth area is designed around what guards can and cannot sense, so you need to see these ranges to place cover in the right spots. In this quest you set up a guard with sight and hearing and look at its senses with the AI debug view.",
+  "checklist": [
+   "Make an AIController Blueprint named AIC_Guard and add an AIPerception component to it. Add an AI Sight config with Sight Radius 1500, Lose Sight Radius 2000, Peripheral Vision Half Angle 45, Detect Neutrals turned on, and Max Age 5.",
+   "Add an AI Hearing config with Hearing Range 1200 and Detect Neutrals turned on. Set Dominant Sense to Sight.",
+   "On the event On Target Perception Updated, break the AIStimulus struct and print the value of Successfully Sensed together with the name of the actor. This lets you see when something enters or leaves the guard's senses.",
+   "In the player character, add an AIPerception Stimuli Source component. Enable Auto Register as Source and add Sight to Register as Source for Senses. Give the player the tag Player.",
+   "Open Project Settings, go to Engine, then AI System, and enable Forget Stale Actors. With this, guards forget the player after the Max Age time.",
+   "Place BP_Guard, with AIC_Guard as its controller, in a stealth room that has two cover walls. Play, press the apostrophe key and then Numpad 4, and check the sight cone and the hearing circle. Sneak behind the guard and confirm that it does not detect you outside the half angle."
+  ],
+  "done_when": "Send a screenshot with the AI Perception debug view active and the sight cone visible, taken while you are hidden behind cover. Also send a screenshot of the Details panel of the Sight config that shows your radius and angle values."
+ }
+}

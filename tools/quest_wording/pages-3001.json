@@ -1,0 +1,151 @@
+{
+ "GDQ11": {
+  "brief": "How fast a character walks and how high it jumps decide how a level feels to play, long before the level has any art. In Unreal these numbers are stored on the Character Movement component, the part of the character that handles walking, jumping and falling. In this quest you change the walk speed and the jump value, test each change, and keep the values you like best.",
+  "checklist": [
+   "Create a new project from the Third Person template. In the Content Browser, open the Blueprint Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter.",
+   "In the Components panel, select the Character Movement component. Find Max Walk Speed in the Details panel and write down its current value.",
+   "Press Play and walk around. Then set Max Walk Speed to half of the value and play again, and after that set it to double and play again. Note how the level feels each time.",
+   "In the same Details panel, type Jump in the search box. Change the jump velocity value and test the jump on the stairs of the template level.",
+   "Pick the walk speed and the jump value that you like best. Write one line for each value that says what changed in the feel.",
+   "Optional: add a Float variable named SprintSpeed, and set Max Walk Speed from it when a key is pressed, like the tutorial does."
+  ],
+  "done_when": "Send a screenshot of the Character Movement details that shows the speed and jump values you chose. Add 2 lines that say how each value changed the feel."
+ },
+ "GDQ12": {
+  "brief": "You will test your game hundreds of times, and Unreal gives you several ways to do it. Play In Editor (PIE) runs the game inside the editor, Simulate runs the level without a player character, and Standalone Game runs the game in its own window outside the editor. In this quest you try each play mode and the tools for pausing and inspecting a running game.",
+  "checklist": [
+   "Open a project made from the Third Person template. Click Play, click inside the viewport, and move around. Then press Shift+F1 to get the mouse cursor back without stopping the game.",
+   "Click Pause, and then click Frame Skip a few times to move the game forward one frame at a time. Then click Eject, which lets go of the character, and select an actor in the level.",
+   "Change one value on that actor. Then right-click the actor and choose Keep Simulation Changes. Stop the game with Esc and confirm that the change is still there.",
+   "Press Alt+S to start Simulate. Notice that no player character appears in the level. Then stop.",
+   "Open the Play options, which is the button with three vertical dots next to Play. Run the level once as New Editor Window and once as Standalone Game.",
+   "While the game runs in the editor, press the tilde key to open the console, a line where you can type commands. Type stat fps to show the frame rate."
+  ],
+  "done_when": "Send a screenshot of the editor during Simulate, with no player character in the level. Add one line that names the play mode you would use to test a menu and says why."
+ },
+ "GDQ13": {
+  "brief": "A Game Mode is the class that holds the rules of a game and decides which character the player gets and which Player Controller reads the input. Every mechanic you build later connects to these few classes, so it helps to know where they are set. In this quest you find the Game Mode of the Third Person template, make your own simple Game Mode, and use it in one level.",
+  "checklist": [
+   "Open a project made from the Third Person template. Open Edit, then Project Settings, then Maps & Modes, and read which class is set as Default GameMode.",
+   "Expand Selected GameMode. Note the Default Pawn Class, which is the character the player controls, and the Player Controller Class.",
+   "Open the World Settings tab and find GameMode Override. This setting can change the Game Mode for this one level only. Note if it is set.",
+   "Create a new Blueprint Class with Game Mode Base as its parent, and name it GM_Toy. Open it and set its Default Pawn Class to BP_ThirdPersonCharacter.",
+   "In World Settings, set GameMode Override to GM_Toy. Press Play to confirm that the character still appears.",
+   "Draw a small diagram that shows this chain: Level (World Settings) leads to Game Mode, and Game Mode leads to Pawn/Character and Player Controller."
+  ],
+  "done_when": "Send a screenshot of World Settings with GM_Toy set as GameMode Override, and send your diagram as a photo or an image."
+ },
+ "GDQ14": {
+  "brief": "A variable is a named value in a Blueprint, such as the brightness of a lamp. A value is only easy to tune when a designer can change it on an object in the level without opening the Blueprint graph. Unreal calls such a variable Instance Editable. In this quest you build a lamp with two tunable variables, give them a category, a tooltip and a slider range, and set different values on three lamps.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Lamp. Add a Point Light component and a Cube mesh to it.",
+   "Add a Float variable named Intensity and a Linear Color variable named LightColor. Click the eye icon next to each variable to make it Instance Editable, which means you can change it on each lamp in the level.",
+   "Set Category to Tuning on both variables. Write a Tooltip, a short help text, for each one. Check that the eye icon turns green.",
+   "Open the Construction Script, the graph that runs when the actor is placed or changed in the editor. There, set the intensity and the color of the light from the two variables.",
+   "Select the Intensity variable. In the Details panel, set a Slider Range, for example from 0 to 5000.",
+   "Place three BP_Lamp instances in a level. In the Details panel, give each lamp a different Intensity and a different color.",
+   "Add a Boolean variable named StartOn and enable Expose on Spawn for it. Then click Compile and save the Blueprint."
+  ],
+  "done_when": "Send a screenshot of the Details panel of a BP_Lamp that you placed in the level. It must show the Tuning category with your two variables, and one tooltip must be visible."
+ },
+ "GDQ15": {
+  "brief": "Flow control nodes decide which way the logic in a Blueprint runs. Branch picks one of two paths from a true or false value, FlipFlop switches between two outputs, DoOnce lets the logic pass only one time until it is reset, and Gate lets the logic pass only while it is open. Most gameplay logic is built from these few nodes. In this quest you build a switch actor and try each node on it.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Switch with a Box Collision and a Cube mesh. Add the On Component Begin Overlap event for the box, which runs when something enters the box.",
+   "Connect the overlap event to a FlipFlop node. Make output A set the cube material to red and output B set it to blue. Press Play and walk in and out of the box.",
+   "Replace the FlipFlop with a DoOnce node. Add a second Box Collision named ResetZone, and connect its overlap event to the Reset input of the DoOnce.",
+   "Add a Branch node before the DoOnce that checks a Boolean variable named IsPowered. Make IsPowered Instance Editable, so you can change it on the actor in the level.",
+   "Add a Gate node. Connect Event Tick to Enter, the ResetZone overlap to Open, and the main overlap to Close. Connect Exit to a Print String node with the text tick.",
+   "Use a Sequence node to print A and then B from one overlap. Watch the order of the two messages in the log."
+  ],
+  "done_when": "Send a screenshot of your BP_Switch event graph that shows Branch, DoOnce (with Reset), FlipFlop and Gate all connected. Add one sentence for each node that says what it does."
+ },
+ "GDQ16": {
+  "brief": "Many game mechanics need to wait: a cooldown, a wave of enemies, a respawn, a power-up that ends. In Blueprints you can wait with a Delay node, which pauses the logic once, or with a timer, which can call an event again and again until you stop it. In this quest you build a small actor that uses a delay, starts a looping timer and then stops the timer.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Spawner. On Begin Play, add a Delay node with a Duration of 2.0, and after it a Print String node with the text ready.",
+   "Add a Custom Event named Tick2. Add a Set Timer by Event node with Time 1.0 and Looping turned on, and connect its Event pin to Tick2. Make Tick2 print a counter that goes up by one each time.",
+   "Right-click the Return Value pin of the timer node and promote it to a variable named TimerHandle. The handle is the reference you need to control the timer later.",
+   "Add a Box Collision. On its overlap event, call Clear and Invalidate Timer by Handle with TimerHandle. Play and confirm that the counter stops.",
+   "On the timer node, set Initial Start Delay to 3.0. Play and watch when the first message appears.",
+   "Try to call the Delay node twice quickly from a key press. Note what happens the second time."
+  ],
+  "done_when": "Send a screenshot of the graph with Delay, Set Timer by Event (with Looping on) and Clear and Invalidate Timer by Handle connected. Also send a screenshot of the counter on screen."
+ },
+ "GDQ17": {
+  "brief": "A pickup is an object that the player collects by walking into it, such as a coin. It is the smallest complete game mechanic: something touches the object, a number changes, and the object disappears. In this quest you build a coin that adds to a Score variable on the character and then removes itself.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_Coin. Add a Capsule Collision, and then add a Sphere mesh as a child of the capsule. Set the Collision Presets of the mesh to NoCollision, so only the capsule detects the player.",
+   "Add a Rotating Movement component so that the coin spins. Add an Integer variable named Value, set it to 1, and make it Instance Editable.",
+   "Open BP_ThirdPersonCharacter and add an Integer variable named Score.",
+   "In BP_Coin, right-click the Capsule in the Components panel, choose Add Event, and then choose On Component Begin Overlap.",
+   "Drag from the Other Actor pin and add a Cast to BP_ThirdPersonCharacter node, which checks that the thing that touched the coin is the player character. On success, set Score on the character to Score + Value.",
+   "After that, add a Print String node that shows the new Score, then a Delay of 0.2, and then a Destroy Actor node with its target set to self.",
+   "Place 5 coins in the level and give one of them a Value of 5. Press Play and collect all of them."
+  ],
+  "done_when": "Send a screenshot of the BP_Coin event graph, and a screenshot of the Score shown on screen after you collected all coins. The Score should be 9 if you used four coins with Value 1 and one coin with Value 5."
+ },
+ "GDQ18": {
+  "brief": "A number on the screen, such as a score, tells the player right away what a mechanic did. In Unreal you build screen elements with a Widget Blueprint, an asset that holds text, images and other interface parts. In this quest you make a widget that shows the Score of the character, and you add it to the screen when the game starts.",
+  "checklist": [
+   "Create a Widget Blueprint with User Widget as its parent, and name it WBP_Score. Add a Canvas Panel as the root, which is the first widget that holds all the others.",
+   "Add a Horizontal Box, anchor it to the top-left corner, and set its Position to 20,20. Inside it, add two Text widgets: one with the text Score : and one that you name txtScore.",
+   "Switch to the Graph. On Event Construct, get the player character, cast it to BP_ThirdPersonCharacter, and promote the result to a variable named MyCharacter.",
+   "Go back to the Designer and select txtScore. Next to Text, click Bind and then Create Binding. In the function that opens, return the Score of MyCharacter.",
+   "In BP_ThirdPersonCharacter, on Event BeginPlay, add a Create Widget node with the class WBP_Score. Promote its result to a variable named HUD, and then call Add to Viewport to show it on screen.",
+   "Press Play and collect the coins from quest GDQ17. The number on screen must update."
+  ],
+  "done_when": "Send a screenshot of the game with the Score number visible and changed from its start value. Also send a screenshot of the binding function graph."
+ },
+ "GDQ19": {
+  "brief": "A toy space is the smallest thing that is still a game: one action for the player, one room, and one number on screen. Building it brings together what you learned in the earlier Gameplay Design quests, from tunable variables to timers, pickups and widgets. In this quest you plan a small room around one player action, build it with simple shapes, tune it, and record one full run.",
+  "checklist": [
+   "Pick ONE player verb, which is one action the player does, such as jump, dash, collect or push. Sketch a node map on paper with 3 to 5 spaces, and write what the verb does in each space.",
+   "Graybox one room in a new level, which means you build it with basic shapes only and no art. Every space must use the verb.",
+   "Build one actor for the verb with a name that starts with BP_Toy_. It must have at least one Instance Editable Float variable in a Tuning category with a tooltip, as in quest GDQ14.",
+   "In the logic of that actor, use at least one flow node (Branch, Gate, DoOnce or FlipFlop) and one timer or delay, as in quests GDQ15 and GDQ16.",
+   "Add a pickup or a trigger that changes a variable, as in quest GDQ17. Show that number on screen with a widget, as in quest GDQ18.",
+   "Tune the speed or the jump of the character for the room, as in quest GDQ11. Test the room in PIE and one time in Standalone, as in quest GDQ12.",
+   "Record a video of 30 to 60 seconds that shows one full run. Write 5 lines that name the verb, the tunable value, and what you changed after testing."
+  ],
+  "done_when": "Send your work in a mentor session with these four things: the video, your paper node map, the tuning variable shown in the Details panel, and your 5-line note."
+ },
+ "GDQ20": {
+  "brief": "Debugging means finding out why your logic does something you did not expect, for example why a value is wrong. Blueprints have tools for this: a breakpoint pauses the game at a node you choose, a watch shows the value of a pin, and Print String writes a message on screen. In this quest you use these tools on the coin from quest GDQ17.",
+  "checklist": [
+   "Open BP_Coin from quest GDQ17. Right-click the Set Score node and choose Add Breakpoint. Press Play and walk into a coin, and the game pauses at that node.",
+   "While the game is paused, move the mouse over the Score pin and read its value. Then right-click the pin and choose Watch this value.",
+   "Open Tools > Blueprint Debugger. Look at the Call Stack and the Execution Trace, which show the path the logic took. Then resume the game.",
+   "Right-click the breakpoint and choose Disable Breakpoint. Confirm that the red octagon is now only an outline. Play again and check that the game does not pause.",
+   "Add a Print String node with a Key named score and a Duration of 5. Collect several coins and notice that the new message replaces the old one.",
+   "On one Print String node, change Print to Log to false. Then check the Output Log to see the difference."
+  ],
+  "done_when": "Send a screenshot of the editor paused on your breakpoint, with the red arrow and a watched value visible. Also send a screenshot of the Blueprint Debugger window."
+ },
+ "GDQ21": {
+  "brief": "In Unreal, a Pawn is any body in the world that can be controlled, a Character is a Pawn that already has walking movement, a capsule and a mesh, and a Controller is the unseen class that takes control of a Pawn. Taking control is called Possess. Every mechanic starts with the choice of which class owns the input, the body and the data. In this quest you build a drone Pawn and a Player Controller, and you switch control between the drone and the character.",
+  "checklist": [
+   "Read the Gameplay Framework overview page, and the pages Controllers, Pawn, Characters and Player Controllers.",
+   "In a Third Person project, make a Blueprint named BP_Drone from the Pawn class, not from Character. Add a Static Mesh and a Camera to it.",
+   "Make a Blueprint named BP_MyPlayerController from the Player Controller class. Add an Input Action that calls Possess on BP_Drone, and a second one that possesses the player Character again.",
+   "In your Game Mode, set Player Controller Class to BP_MyPlayerController.",
+   "Place one BP_Drone in the level. In Play In Editor, switch control between the Character and the Drone.",
+   "Add an Integer variable named Score to BP_MyPlayerController, and add a Score Integer to the Character too. Switch between the pawns and watch which value survives.",
+   "Write 5 lines that say which class should own the input, the score and the mesh in your game, and why."
+  ],
+  "done_when": "Send a screenshot of the game after you possessed BP_Drone, with the drone camera active. Add your 5-line note about which class owns the input, the score and the mesh."
+ },
+ "GDQ22": {
+  "brief": "Health is a number that says how much damage an actor can still take, and damage is what lowers it. Unreal has built-in nodes for this: Apply Damage sends damage to one actor, Apply Radial Damage sends it to everything inside a radius, and Event AnyDamage runs on the actor that receives it. In this quest you build a target with health, a hazard that hurts on touch, and a bomb that damages everything near it.",
+  "checklist": [
+   "Read the node pages for Apply Damage, Event AnyDamage, Event PointDamage and Apply Radial Damage.",
+   "Make a Blueprint named BP_Target from Actor and add a Static Mesh. Add a float variable Health with the value 100 and a float variable MaxHealth with the value 100.",
+   "In BP_Target, add Event AnyDamage. Subtract Damage from Health and print Health. When Health <= 0, play a sound or an effect and then call Destroy Actor.",
+   "Make a Blueprint named BP_Hazard from Actor and add a Box Collision. On overlap, call Apply Damage on the other actor with Base Damage 25, and set Damage Causer to Self.",
+   "Make a Blueprint named BP_Bomb. When it overlaps the player, call Apply Radial Damage at the location of the bomb, with Base Damage 50 and Damage Radius 400.",
+   "Place 3 BP_Target actors around BP_Bomb, and put one of them behind a wall. Press Play and check which targets take damage.",
+   "Write 3 lines that say what Event Instigator and Damage Causer mean, and which one you passed."
+  ],
+  "done_when": "Send a screenshot taken after the bomb goes off, with the Print String health values on screen. It must show at least one target destroyed and one target behind a wall still alive. Add your 3-line note."
+ }
+}

@@ -1,0 +1,156 @@
+{
+ "PQ13": {
+  "brief": "A log message is a line of text that your game writes to the Output Log window. A good warning says what went wrong and which actor it happened on, so you find a bug in seconds and not in hours. An Is Valid check tests that a reference really points to an object before you use it. In this quest you add these checks and warnings to your win loop and then break something on purpose to see the warning work.",
+  "checklist": [
+   "Take one Print String node and turn off its Print to Screen option, so that it writes only to the log. Run the game and find the message in the Output Log.",
+   "In your win loop, add an Is Valid check before every place where you use an actor reference. An actor reference is a variable that points to an actor in the level.",
+   "When a check fails, log a clear warning. Include the name of the owning actor in the message so you know where the problem is.",
+   "Break one reference on purpose, for example by leaving it empty. Run the game and confirm that the warning tells you where to look."
+  ],
+  "done_when": "Send a screenshot of your warning in the Output Log after you broke the reference on purpose."
+ },
+ "PQ19": {
+  "brief": "A game loop is the full circle of play: the player does something, the game counts it, and at some point the game says the player has won. Building a full loop proves that the separate pieces you made in earlier quests work together. In this quest you join your pickups, score, input and warnings into one small game, and then you package it, which means building a version that runs outside the editor.",
+  "checklist": [
+   "Use pickups that get their values from Data Assets, as in quest PQ12. The pickups must talk to the player through a Blueprint Interface, as in quest GDQ4. A Blueprint Interface is a list of functions that different Blueprints can share.",
+   "Keep the score in the GameState, and let the GameMode declare the win, as in quest PQ9.",
+   "For at least one pickup type, make the player interact with it through your Enhanced Input action from quest PQ10.",
+   "Add an Is Valid check and a log warning for every reference, as in quest PQ13.",
+   "When the player wins, restart the level or show a simple win message.",
+   "Package a development build, which is a version of the game that runs without the editor. Play it outside the editor one time."
+  ],
+  "done_when": "Send a zip file of the packaged build, or a clip of the packaged build running. Add a short written description of how the pieces connect."
+ },
+ "PQ14": {
+  "brief": "Actors often need to tell each other things, and Blueprints give you three main ways to do this: a direct reference that calls one known actor, an interface that is a shared list of functions any actor can answer, and an Event Dispatcher that is a signal other actors can listen to. Each way creates a different amount of coupling, which means how much one actor depends on the other. In this quest you connect two actors in all three ways and compare them.",
+  "checklist": [
+   "Connect two actors three times. First use a direct reference, then use an interface, and then use an Event Dispatcher.",
+   "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
+  ],
+  "done_when": "Send your written lines, and a screenshot of the graph of the Event Dispatcher version."
+ },
+ "PQ15": {
+  "brief": "A HUD is the information drawn on top of the game, such as the score. In Unreal you build it with a Widget Blueprint, an asset that holds text, images and other interface parts. In this quest you create a small score widget, show it on the screen, and update it only when the score changes.",
+  "checklist": [
+   "Create a Widget Blueprint named WBP_Score. On the BeginPlay event, which runs when the game starts, create the widget and add it to the viewport so it shows on the screen.",
+   "Update the widget from the GameState when the score changes. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+  ],
+  "done_when": "Send a screenshot of the HUD updating in PIE."
+ },
+ "PQ16": {
+  "brief": "A checkpoint is a place in the level where the game remembers the player's progress. A kill volume is an invisible area that ends the player's try when they touch it, for example a pit under the level. Almost every game needs this kind of respawn logic, which puts the player back in the level after they fail. In this quest you build a kill volume that sends the player back to the last checkpoint.",
+  "checklist": [
+   "Add a kill volume to your level. When the player touches it, the player must respawn, which means appear again, at the last checkpoint they reached.",
+   "Store the last checkpoint in a place where the GameMode can read it."
+  ],
+  "done_when": "Send a clip or screenshots that show the player respawning at a checkpoint."
+ },
+ "PQ20": {
+  "brief": "C++ is the programming language that Unreal Engine itself is written in, and you can write your own game code in it. To do that you need an IDE, which is the program where you write, build and debug code, such as Visual Studio. Nothing in C++ works until the IDE is set up and your project compiles, which means the code is turned into a program. In this quest you install the tools, build your project for the first time, and stop the running editor on a line of your own code.",
+  "checklist": [
+   "Install the IDE and the workloads that the documentation page lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work.",
+   "Add a C++ class to your UC_Sandbox project, or to a copy of it. When you do this, the project becomes a C++ project.",
+   "Generate the project files and open the solution in the IDE. Then build the Editor target with the configuration Development Editor.",
+   "Start the Unreal editor from the IDE with the debugger attached. The debugger is the tool that lets you pause the program and look inside it.",
+   "Set one breakpoint in your class, which is a mark on a line where the program will pause. Then make that line run so the program stops on it."
+  ],
+  "done_when": "Send a screenshot of the IDE stopped on your breakpoint. The engine version must be visible somewhere in the screenshot."
+ },
+ "PQ21": {
+  "brief": "Unreal can only show your C++ code in the editor if you mark it with special macros. UCLASS marks a class, UPROPERTY marks a variable, and UFUNCTION marks a function. This system is called reflection, and the words you put inside the macros, called specifiers, decide what the editor and Blueprints are allowed to see and change. In this quest you write a small actor with marked properties and a function, and you use them from the editor.",
+  "checklist": [
+   "Create a C++ actor class named AUUDebugActor. Give it a float variable marked with UPROPERTY, and use the specifiers EditAnywhere and BlueprintReadWrite.",
+   "Add a second property that uses the specifier VisibleAnywhere. Compile, and note what is different about this property in the Details panel.",
+   "Add a function marked with UFUNCTION(BlueprintCallable) that writes the float to the log.",
+   "Make a Blueprint that calls that function, and place the Blueprint in your L_TestHarness level.",
+   "Write a short table of the specifiers you used. For each one, say what it does."
+  ],
+  "done_when": "Send a screenshot of your properties in the Details panel, and a screenshot of the Blueprint that calls your function."
+ },
+ "PQ22": {
+  "brief": "C++ code often needs to let a Blueprint decide what happens at a certain moment. Unreal gives you two main tools for this. A BlueprintImplementableEvent is a function that C++ calls but only a Blueprint fills in. A BlueprintNativeEvent has a default version written in C++ that a Blueprint may replace. In this quest you add one of each to your actor and use both from a Blueprint child, which is a Blueprint made from your C++ class.",
+  "checklist": [
+   "Add a BlueprintImplementableEvent named OnActivated to your C++ actor. Call it from your C++ code.",
+   "Add a BlueprintNativeEvent named OnReset. Write its C++ version, which is a function with _Implementation at the end of its name, and make it write a line to the log.",
+   "Create a Blueprint child of your actor. In it, implement OnActivated and override OnReset. In the OnReset override, call the parent version one time.",
+   "Write 2 lines that say when you would use each of the two kinds of event."
+  ],
+  "done_when": "Send a screenshot of the graph of the Blueprint child, and add the log output that shows that both the C++ code and the Blueprint code ran."
+ },
+ "PQ23": {
+  "brief": "A component is a part that you add to an actor to give it a shape or a behavior, such as a mesh, a collision box, or a script that spins it. Components let you write a behavior once and reuse it on many actors. In this quest you build an actor out of components in C++, and then you write your own component that rotates the actor it is added to.",
+  "checklist": [
+   "In the constructor of your actor, create a root scene component, a static mesh, and a box collision. Use the function CreateDefaultSubobject for each one. The constructor is the function that runs when the object is created.",
+   "Attach the components to each other with SetupAttachment. Mark them with UPROPERTY(VisibleAnywhere) so that you can see them in the editor.",
+   "Write a class that is based on UActorComponent, for example UUSpinComponent. Make it tick, which means run every frame, and rotate its owner, the actor it belongs to.",
+   "Add your component to a Blueprint actor. Then change its values in the Details panel until the motion looks right."
+  ],
+  "done_when": "Send a screenshot of the Components panel of a Blueprint that uses your C++ component."
+ },
+ "PQ24": {
+  "brief": "Live Coding is a feature that compiles your C++ changes while the editor is still open, so you do not have to restart it. It is fast, but it is safe only for some kinds of changes. Other changes need you to close the editor and build again, and if you do not, you can get bugs that are very hard to understand. In this quest you try both kinds of change and write your own rule for when to restart.",
+  "checklist": [
+   "Change the body of a function, which is the code inside it. Apply the change with Live Coding by pressing Ctrl+Alt+F11.",
+   "Add a new UPROPERTY to your class and use Live Coding again. Note what happens.",
+   "Close the editor. Build the project from the IDE, and then open the editor again.",
+   "Write your rule. Say which changes are safe to apply with Live Coding and which changes need a restart."
+  ],
+  "done_when": "Send your written rule with one example of each case."
+ },
+ "PQ25": {
+  "brief": "UE_LOG is the C++ macro that writes a message to the Output Log. Every message belongs to a log category, which is a name shown in front of the message, and has a verbosity, which says how serious it is. When you create your own category, you can filter the log to see only your messages. In this quest you create a category named LogUU, write messages at three verbosity levels, and filter them.",
+  "checklist": [
+   "Declare a log category named LogUU in a header file, and define it in a .cpp file.",
+   "From your actor, write three messages with UE_LOG: one with the verbosity Log, one with Warning, and one with Error.",
+   "In the Output Log, set the filter so that it shows only the LogUU category.",
+   "Open the console and use the log command to change the verbosity of your category. Confirm that messages of the lower levels no longer appear."
+  ],
+  "done_when": "Send a screenshot of the Output Log filtered to your category."
+ },
+ "PQ26": {
+  "brief": "Most Unreal projects use C++ and Blueprint together. A common pattern is a base class in C++ that holds the core logic, and a Blueprint child where designers set values and add small changes. How you split the work decides who can change what without asking a programmer. In this quest you plan such a split for one part of your pickup and win loop, on paper.",
+  "checklist": [
+   "Read the Blueprint vs C++ documentation page again, and read your notes from quest SQ11 again.",
+   "Pick one piece of your loop from quest PQ19. Make a sketch of how you would split it into a C++ base class and a Blueprint child.",
+   "Decide which values get the specifier EditDefaultsOnly, which get BlueprintReadOnly, and which stay private. A specifier is a word in the UPROPERTY macro that controls what the editor and Blueprints can do with the value.",
+   "Expose one delegate that Blueprints can assign to, for an event that designers care about. A delegate is a signal that other code can listen to."
+  ],
+  "done_when": "Send a written description of the split, about half a page long, and a piece of a header file that shows what you expose to Blueprint."
+ },
+ "PQ30": {
+  "brief": "On a team, programmers often write a base class in C++ and other people build on it with Blueprint children, which are Blueprints made from that class. To do this well, your class must be easy to tune, must warn clearly when it is set up wrong, and must be explained in writing. In this quest you build such a base actor, make two Blueprint children from it, and show the result to a mentor.",
+  "checklist": [
+   "Write a C++ base actor, for example AUUPickupBase. Build its components in the constructor, the function that runs when the object is created.",
+   "Expose the values that people will want to tune with UPROPERTY. Add at least one BlueprintNativeEvent that has a default version in C++.",
+   "Write log messages through your LogUU category. Add clear warnings for the cases where the actor is set up badly.",
+   "Make 2 Blueprint children. They may differ only in their data and in one override. Place both of them in your L_TestHarness level.",
+   "Write a short README file. Say what is in C++, what is in Blueprint, and how a designer would add a third child.",
+   "Show a mentor how it works, step by step. You can do this live or in a recorded clip."
+  ],
+  "done_when": "Send your README and show a mentor both Blueprint children working. The quest is complete when the mentor has seen both children work, has read the README, and approves."
+ },
+ "PQ27": {
+  "brief": "The Character class in Unreal moves through a part named the Character Movement component, which has values such as walk speed and jump height. These values decide how the game feels to play. When you set them up in C++ and expose them, a Blueprint child can tune them without changing any code. In this quest you follow a guided page and then expose two movement values of your own.",
+  "checklist": [
+   "Make a copy of your project and follow the Coder 03 page in that copy.",
+   "Expose 2 movement values so that a Blueprint child, a Blueprint made from your C++ class, can tune them."
+  ],
+  "done_when": "Send a screenshot of the tuned values in a Blueprint child."
+ },
+ "PQ28": {
+  "brief": "A Data Asset is a file in the Content Browser that stores a set of values, such as the name and price of an item. When a programmer defines the Data Asset class in C++, designers can create and fill in as many item files as they need without touching code. In this quest you define an item Data Asset class in C++ and create two items from it.",
+  "checklist": [
+   "Follow the Coder 05 page and define a Data Asset class for items in C++.",
+   "In the editor, create 2 item assets from your class."
+  ],
+  "done_when": "Send a screenshot of 2 Data Assets made from your C++ class."
+ },
+ "PQ29": {
+  "brief": "Before you try to make code faster, you should measure it, because the slow part is often not where you expect. Unreal Insights is the tool that records where the engine spends its time, and a recording is called a trace. A named CPU scope is a mark that you put around a piece of your own code so that it appears under its own name in the trace. In this quest you add one scope and find it in Unreal Insights.",
+  "checklist": [
+   "In your capstone actor, add a named CPU scope around one function, so that the time spent in that function is recorded under the name you give it.",
+   "Capture a trace while the game runs. Then open it in Unreal Insights and find your scope."
+  ],
+  "done_when": "Send a screenshot of your named scope in the timing view."
+ }
+}

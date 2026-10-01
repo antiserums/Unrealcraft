@@ -1,0 +1,154 @@
+{
+ "PQ67": {
+  "brief": "A normal (hard) reference to an asset makes Unreal load that asset together with the Blueprint that uses it. A soft reference only stores the path of the asset, so the asset stays out of memory until you ask for it. Async Load Asset loads it in the background, so the game does not freeze while it loads. This decides what your game loads at the start and what it loads later. In this quest you compare hard and soft references and load a mesh and a class only when a key is pressed.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Showcase with a Static Mesh Component. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a large Starter Content mesh to HeavyMesh on that copy.",
+   "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two.",
+   "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded.",
+   "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor.",
+   "Add an event for the B key that uses Load Asset Blocking instead. Open stat unit, and press B right after you start a fresh Play In Editor session. Then start again and press L. Write one line that says which one made the game hitch.",
+   "Add a second soft mesh variable and load both meshes one after the other. Write two lines: why the loaded mesh stays in memory after Set Static Mesh, and what would happen to a loaded object that nothing holds a hard reference to."
+  ],
+  "done_when": "Send the two Reference Viewer screenshots (one with the soft reference and one with the hard reference), a screenshot in Play mode after the async load, and your three lines."
+ },
+ "PQ68": {
+  "brief": "By default the editor loads every Function Library and Macro Library in the project when it starts, which becomes slow in big projects. A Blueprint Namespace is a group name, such as Project.Combat, that you give to a library. A Blueprint then loads only the namespaces that it imports. In this quest you put two libraries into namespaces and see how a Blueprint imports them.",
+  "checklist": [
+   "Create two Blueprint Function Libraries: BFL_Combat with the functions ComputeDamage and RollCrit, and BFL_Debug with the functions DrawHitMarker and LogHit. Compile and save both.",
+   "Open BFL_Combat and click Class Settings. In Blueprint Options, set Blueprint Namespace to Project.Combat. Do the same for BFL_Debug with Project.Debug. Then try a namespace that contains # and read the validation message.",
+   "In the Content Browser, search for BlueprintNamespace=Combat and take a screenshot of the result. Hover the mouse over a library asset and read the namespace in its tooltip.",
+   "Make an Actor Blueprint named BP_Enemy. In its Class Settings, set Blueprint Namespace to Project.Combat. Compile, save and restart the editor. Open BP_Enemy again and look at the Imports section in Class Settings to see which namespaces are imported.",
+   "In the Event Graph of BP_Enemy, right-click, search for DrawHitMarker and select it. Check Imports again and note that Project.Debug was imported automatically.",
+   "Open Edit > Project Settings and go to Editor, then Blueprint Project Settings, then Experimental. Add Project.Combat to Namespaces to Always Include. Write two lines: who this setting affects, and why you would (or would not) commit it to source control."
+  ],
+  "done_when": "Send a screenshot of the Content Browser search, a screenshot of the Imports section of BP_Enemy after you selected the Debug function, and your two lines."
+ },
+ "PQ69": {
+  "brief": "A child Blueprint is a Blueprint made from another Blueprint, called its parent. The child gets all the variables, components and functions of the parent, and it can override a function, which means it replaces it with its own version. This lets one base Blueprint hold the shared logic while each child only changes what is different. In this quest you build a vehicle parent with three children and test what a child can and cannot change.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_Vehicle with a Static Mesh. Add a float variable named TopSpeed that is Instance Editable, a float variable named Secret that is Private, and a function named Honk that prints Honk. Also add a local macro named FlashLights that toggles a Point Light.",
+   "Create BP_PoliceCar and BP_FireTruck as children of BP_Vehicle. In BP_PoliceCar, override Honk so that it first calls the parent Honk and then prints Siren. In BP_FireTruck, try to override FlashLights and note what the editor offers you.",
+   "In BP_FireTruck, try to add a Get node for Secret. Write one line that says what happens and why.",
+   "Create BP_Taxi as a child of BP_Vehicle and change only TopSpeed and the mesh. Do not add any nodes. Open it and notice the compact Data-Only editor. Then add one variable and watch it become a full Blueprint.",
+   "Place one of each vehicle in the level. Add an event for the H key that uses Get All Actors of Class with BP_Vehicle and calls Honk on all of them. Watch each child answer in its own way.",
+   "In BP_Vehicle, change the type of TopSpeed from float to integer and compile. Open the children. Write one line that says what the compiler did to the instances placed in the level."
+  ],
+  "done_when": "Send a screenshot of the Honk override in BP_PoliceCar with the Parent call, a screenshot in Play mode with all three prints, and your two lines."
+ },
+ "PQ70": {
+  "brief": "Event Tick runs every frame, even when nothing needs to happen. A timer is different: it calls an event after a set time, once or again and again, and costs nothing between calls. Each timer gives you a handle, a value that you keep so you can pause or stop that timer later. In this quest you build a gas room that damages the player, first with Tick and then with timers, and you compare the cost of the two versions.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_GasRoom with a Box Collision. For version 1, on Tick, check if the player is inside and apply 1 damage per second with the help of Delta Seconds. Place 20 copies, open stat game, and note the tick cost.",
+   "For version 2, turn off Start with Tick Enabled in Class Defaults. On begin overlap, call Set Timer by Event with Time 1.0 and Looping on, connect it to a custom event named DamageTick, and store the handle in a variable. On end overlap, call Clear and Invalidate Timer by Handle.",
+   "Add an event for the P key that calls Pause Timer by Handle, and an event for the O key that unpauses it. While the timer is paused, use another timer to print Get Timer Remaining Time by Handle each second, and confirm that the value does not change.",
+   "Add a delayed start: a 3-second Set Timer by Event that does not loop and that starts the damage loop. Set its Initial Start Delay Variance to 0.5. Spawn 20 rooms and watch them start at different moments.",
+   "Make BP_Spawner. It uses a looping timer to try to find a BP_GasRoom every 1 second, and it clears its own timer when it finds one. Destroy a room while its timer is running and check the log for errors.",
+   "Write three lines: the difference in stat game between the two versions, why a timer that is not cleared is not a leak when the actor dies, and one case where Tick is still the right tool."
+  ],
+  "done_when": "Send two screenshots of stat game (one of the tick version and one of the timer version), a screenshot of the BP_GasRoom graph with the Set Timer and Clear nodes, and your three lines."
+ },
+ "PQ71": {
+  "brief": "A struct (Structure) is a custom data type that groups several values under one name, for example the name, count and weight of an item. If you put structs in an Array, you get a list of items. Almost every inventory, quest log and loadout system is built this way. In this quest you make an item struct and an inventory component that can add items, remove items and report the total weight.",
+  "checklist": [
+   "Right-click in the Content Browser and choose Blueprints, then Structure. Name it S_InventoryItem. Add the fields ItemName (Name), Count (Integer), Weight (Float) and Icon (Texture 2D soft reference).",
+   "Make an Actor Component named BP_InventoryComponent. Add a variable named Items with the type S_InventoryItem and set its container to Array.",
+   "Add a function named AddItem with the inputs Name and Count. Loop through the Items array. If an ItemName matches, use Set Members in Struct to raise only Count. If nothing matches, use Make S_InventoryItem and Add the new item to the array.",
+   "Add a function named RemoveItem with the input Name. Find the index of the item and lower its Count. Use Remove Index when Count reaches 0. Return a Boolean named Success.",
+   "Add a pure function named GetTotalWeight. It loops through Items, uses a Break node on each struct to read its fields, and adds up Count * Weight.",
+   "Add BP_InventoryComponent to the ThirdPersonCharacter. On Begin Play, call AddItem three times and use one of the names twice. Print the Length of Items and the total weight.",
+   "Select each Break S_InventoryItem node and click Hide Unconnected Pins in the Details panel, so that the graph stays clean."
+  ],
+  "done_when": "Send one screenshot of the S_InventoryItem structure asset with its four fields, one screenshot of the AddItem function graph that shows Set Members in Struct, and one screenshot of the Output Log in Play mode that shows the item count and the total weight."
+ },
+ "PQ72": {
+  "brief": "A line trace is an invisible straight line that Unreal shoots through the level to find the first object it hits. If you shoot it forward from the camera, you know what the player is looking at. Most first and third person games use this for doors, chests, NPCs and pickups. In this quest you build a component that traces every frame, remembers the object in focus if it can be used, and calls Interact on it when the player presses a key.",
+  "checklist": [
+   "Make a Blueprint Interface named BPI_Interactable with two functions: Interact with an Actor input named Instigator, and GetPrompt with a Text output.",
+   "Make an Actor Component named BP_InteractComponent. On Event Tick, run Line Trace By Channel from the camera location to the camera location + forward vector * 300. While you test, set Draw Debug Type to For One Frame so that you can see the line.",
+   "Use a Break node on the Hit Result. Store the Hit Actor in a variable named FocusedActor, but only if it implements BPI_Interactable (check this with Does Implement Interface). Clear the variable when the trace hits nothing.",
+   "Add the ThirdPersonCharacter to the Actors to Ignore of the trace, so that the trace does not hit the player.",
+   "Make BP_Chest and BP_Lever, and make both implement BPI_Interactable. Interact opens the chest or flips the lever, and GetPrompt returns a text such as Open or Pull.",
+   "Add the component to the character. On an Interact input action, call Interact (Message) on FocusedActor. On each tick where FocusedActor is valid, show the prompt on the screen with Print String.",
+   "Place both actors and a plain cube in the level. Press Play and confirm that the cube gives no prompt and that both actors respond."
+  ],
+  "done_when": "Send one screenshot of the BP_InteractComponent graph with the Line Trace By Channel node and the Does Implement Interface check, and one screenshot in Play mode with the debug line and a prompt printed while you look at the chest."
+ },
+ "PQ73": {
+  "brief": "Unreal has a built-in damage system. Apply Point Damage hurts one Actor at one exact spot, and Apply Radial Damage hurts every Actor inside a sphere, like an explosion. Each hit also carries a Damage Type, a small class that says what kind of damage it was, and a Damage Causer that says who did it. In this quest you make two damage types, a health component that listens for damage, a grenade and a shot.",
+  "checklist": [
+   "Make two Blueprint classes with DamageType as the parent, and name them DT_Fire and DT_Explosion.",
+   "Make an Actor Component named BP_HealthComponent with a Float variable named Health that has a default of 100. On Begin Play, bind an event to the OnTakeAnyDamage event of the owner and subtract Damage from Health. Print the class name of the Damage Type and the Damage Causer.",
+   "Also bind an event to OnTakePointDamage. Print the Hit Location and the Bone Name, so that you can see where the hit landed.",
+   "Make BP_Target, a cube that has the health component. Place three of them at 100, 300 and 600 units from a marker.",
+   "Make BP_Grenade. On overlap with the player, call Apply Radial Damage with Base Damage 50, Damage Radius 400, the damage type DT_Explosion and Self as Damage Causer, and then call Destroy Actor. Test it with Do Full Damage on and with it off.",
+   "In the character, on a Fire input action, do a Line Trace forward. Call Apply Point Damage on the Hit Actor and give it the Hit Result, the Hit From Direction and DT_Fire.",
+   "Add a Branch in the health component: if the Damage Type is DT_Fire, multiply the damage by 2. When Health reaches 0, kill the owner with Destroy."
+  ],
+  "done_when": "Send one screenshot of the BP_HealthComponent graph with both bound damage events, and one screenshot of the Output Log in Play mode after one grenade and one shot, which shows the damage type names and which targets took damage."
+ },
+ "PQ74": {
+  "brief": "A save slot is one named save file. A real game needs several slots, a way to check if a slot has a save in it, and a safe way to delete one. Saving and loading can also be done async, which means the work runs in the background and the game does not freeze. In this quest you build save, load and delete functions for three slots and look at the files they create.",
+  "checklist": [
+   "Make a Blueprint named SG_Profile with SaveGame as the parent. Add SaveVersion (Integer, default 1), PlayerName (String), and an array of S_InventoryItem. If you did not do PQ71, use an array of Names.",
+   "Make a Blueprint Function Library named BFL_Save. Add a function named GetSlotName with an input named Slot Index that returns the text Profile_ plus the index.",
+   "In the Game Instance, add a function named SaveToSlot with an input named Index. Use Create Save Game Object with SG_Profile, fill it with data, and then call Async Save Game to Slot. On Completed, print Success and the slot name.",
+   "Add LoadFromSlot with an input named Index. First call Does Save Game Exist. If it is false, print No save in slot. If it is true, call Async Load Game from Slot. On Completed, cast the result to SG_Profile and copy the data back.",
+   "Add DeleteSlot with an input named Index. It calls Delete Game in Slot and prints the Boolean that the node returns.",
+   "Bind the keys 1, 2 and 3 to save to slots 0, 1 and 2, and Shift+1, 2 and 3 to load them. Bind the Delete key to delete slot 0. Press Play, save to two slots, delete one, and try to load both.",
+   "Open the Saved/SaveGames folder of the project in Windows Explorer and look at the .sav files."
+  ],
+  "done_when": "Send one screenshot of the LoadFromSlot graph with Does Save Game Exist and Async Load Game from Slot, one screenshot of the Saved/SaveGames folder with your .sav files, and one screenshot of the Output Log that shows a successful load and a failed load of a deleted slot."
+ },
+ "PQ75": {
+  "brief": "Every game moves between states such as playing, paused and game over. Each state needs its own input mode, a setting that decides if the mouse and keyboard go to the game, to the menu widgets, or to both. If the input mode is wrong, menus do not react or the camera moves behind a menu. In this quest you build one function that switches between the three states and sets the pause, the menu, the cursor and the input mode for each.",
+  "checklist": [
+   "Make an Enum named E_GameFlow with the values Playing, Paused and GameOver. Add a variable named GameFlow of that type to your Player Controller BP_FlowController. Set this controller as the default controller in the GameMode.",
+   "Make two Widget Blueprints: WBP_PauseMenu with a Resume button and a Quit button, and WBP_GameOver with a Restart button.",
+   "In BP_FlowController, add a function named SetFlow with an input named New State and use a Switch on E_GameFlow. For Playing: Set Game Paused false, Set Input Mode Game Only, and hide the cursor. For Paused: create WBP_PauseMenu, Add to Viewport, Set Game Paused true, Set Input Mode UI Only with the menu as In Widget to Focus, and show the cursor.",
+   "For GameOver: create WBP_GameOver, call Set Input Mode Game And UI, and show the cursor. Keep the game running so that the camera still moves.",
+   "Bind a Pause input action. Use Is Game Paused to decide if you call SetFlow with Playing or with Paused. In the details of the input action node, set the action to execute when paused, or you cannot unpause with the same key.",
+   "Connect the Resume button to SetFlow with Playing and to Remove from Parent. Connect the Restart button to Open Level with the name of the current level.",
+   "Press Play. Pause the game, move the mouse and click Resume. Then trigger GameOver and confirm that the camera still moves and that the button works."
+  ],
+  "done_when": "Send one screenshot of the SetFlow function graph with the Switch on E_GameFlow and the three input mode nodes, and one screenshot in Play mode with the pause menu open and the cursor visible."
+ },
+ "PQ76": {
+  "brief": "There are two ways to bring the player into new content. Open Level closes the current level and loads another one, and almost everything is reset except the Game Instance, an object that lives as long as the game runs. Level streaming loads an extra level, called a sublevel, into the level you are already in, without a restart. Which one you choose decides your loading times and what data survives. In this quest you build portals that use Open Level, a trigger that streams a room in and out, and a score that survives the trip.",
+  "checklist": [
+   "Make three levels: L_Hub, L_Arena and L_ArenaStream, which is a small room. Put a Player Start in L_Hub and in L_Arena.",
+   "In your Game Instance, add a String variable named LastLevel and an Integer variable named Score.",
+   "Make BP_Portal with a Box Collision and an editable variable named Level of the type Soft Object Reference to World. On overlap with the player, store the result of Get Current Level Name (with Remove Prefix String on) in LastLevel, and then call Open Level (by Object Reference).",
+   "Make BP_ReturnPortal. It calls Open Level (by Name) with LastLevel and passes the Options text ?fromArena. In Begin Play of the hub GameMode, use Get Game Mode, read its Options and print them.",
+   "In the Levels window, add L_ArenaStream as a sublevel of L_Arena. Make BP_Streamer. On overlap it calls Load Stream Level (by Name) with Make Visible After Load on, and on end overlap it calls Unload Stream Level.",
+   "Add 10 to Score before each transition. Print Score on Begin Play of each level, to prove that the Game Instance survives Open Level.",
+   "Press Play in L_Hub. Go to the arena, walk into the streamer, and come back through the return portal."
+  ],
+  "done_when": "Send one screenshot of the BP_Portal graph with Open Level (by Object Reference) and the write to the Game Instance, one screenshot of the Levels window of L_Arena with the sublevel, and one screenshot of the Output Log in Play mode that shows Score printed after the return trip."
+ },
+ "PQ77": {
+  "brief": "Cooldowns, buffs, respawns and enemy waves are all built with timers. When you start a timer, the node returns a timer handle, a value that identifies that one timer. With the handle you can pause the timer, ask how much time is left, or stop it. In this quest you build a shield power-up that uses two timers and control them through their handles.",
+  "checklist": [
+   "Make an Actor Blueprint named BP_PowerUpManager. Add a custom event named OnShieldTick that prints Shield tick, and a custom event named OnShieldEnd.",
+   "Add a function named StartShield. Call Set Timer by Event with OnShieldTick, Time 1.0, Looping on and Initial Start Delay 0.5, and promote the returned handle to a variable named ShieldTickHandle. Call a second Set Timer by Event with OnShieldEnd, Time 10 and no looping, and store its handle as ShieldEndHandle.",
+   "In OnShieldEnd, call Clear and Invalidate Timer by Handle on ShieldTickHandle, so that the ticks stop when the shield ends.",
+   "Bind the P key to Pause Timer by Handle on both handles, and the U key to Unpause Timer by Handle. Print Is Timer Active by Handle after each key press.",
+   "On Event Tick, print Get Timer Remaining Time by Handle for ShieldEndHandle. This lets you watch the time count down and stop while the timer is paused.",
+   "Add an event for the R key that calls StartShield again while the shield is already running. Watch that the timer starts again from the beginning and that you do not get two timers.",
+   "Add an event for the K key that destroys the manager while the shield is running. Confirm that no more ticks are printed."
+  ],
+  "done_when": "Send one screenshot of the StartShield function graph with both Set Timer by Event nodes and the stored handles, and one screenshot of the Output Log in Play mode that shows the remaining time stop after P and continue after U."
+ },
+ "PQ78": {
+  "brief": "In the Enhanced Input system, an Input Action is one thing the player can do, such as Honk, and an Input Mapping Context is a list that says which keys trigger which actions. You can add and remove contexts while the game runs, so the same keys can do different things when the player is walking, driving or in a menu. In this quest you make a vehicle context and a menu context and switch them at the right moments.",
+  "checklist": [
+   "In the Third Person template, find the default Input Mapping Context that already exists. Make two new ones named IMC_Vehicle and IMC_Menu.",
+   "Make the Input Actions IA_Honk (Boolean), IA_Steer (Axis1D) and IA_MenuBack (Boolean). In IMC_Vehicle, map A and D to IA_Steer and add the Negate modifier on A, and map H to IA_Honk. In IMC_Menu, map Escape to IA_MenuBack.",
+   "Make a Pawn Blueprint named BP_Car. On Possessed, get the Enhanced Input Local Player Subsystem from the controller and call Add Mapping Context with IMC_Vehicle and Priority 1. On Unpossessed, call Remove Mapping Context.",
+   "Make BP_CarTrigger. On overlap, it makes the player possess BP_Car, which means the player takes control of it. Also let the player press a key to possess the character again.",
+   "In the Player Controller, add IMC_Menu with Priority 10 when a menu opens, and remove it when the menu closes. Also map Escape in the default context, so that you can see which context wins.",
+   "Add the IA_Steer and IA_Honk events in BP_Car. Print the Action Value of IA_Steer while you press A and D. Try the Started, Triggered and Completed pins on IA_Honk.",
+   "Press Play. Enter the car, steer, honk, open the menu, press Escape, close the menu, and leave the car."
+  ],
+  "done_when": "Send one screenshot of IMC_Vehicle that shows the key mappings with the Negate modifier on A, and one screenshot of the BP_Car graph with Add Mapping Context on Possessed and Remove Mapping Context on Unpossessed."
+ }
+}

@@ -16,6 +16,7 @@ quests:
     required_spine: false
     required: true
     title: Character anatomy
+    brief: "A playable character in Unreal is built from a few parts: a Capsule that is its real collision shape, a Mesh that is only the visible model, and a CharacterMovement component that holds numbers such as walk speed and jump strength. Every room, stair and gap in a level must fit these numbers, so you need to know them. In this quest you read the numbers of your character and test them on stairs, ramps and a ledge."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-character-in-unreal-engine"
     backup_url: TODO_URL
@@ -25,12 +26,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/collision-in-unreal-engine"
     checklist:
       - "Open your Third Person character Blueprint. In the Components panel, find the Capsule, the Mesh and CharacterMovement."
-      - "Select the Capsule and write down its Half Height and Radius. Those two numbers are your real collision size."
-      - "Select CharacterMovement and find Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle."
-      - "In a test level, build a 3-step stair (20, 40, 60 cm risers) and ramps at 30°, 45° and 55°."
-      - "PIE and note which steps and ramps you can walk up. Change Max Step Height or Walkable Floor Angle once and test again."
-      - "Double Jump Z Velocity, jump onto a ledge, then set it back. Note the ledge height you could reach at each value."
-    done_when: "Screenshot of the CharacterMovement Details with your four values, plus a 3-line note: capsule size, highest step, steepest ramp."
+      - "Select the Capsule and write down its Half Height and its Radius. These two numbers are the real collision size of your character."
+      - "Select CharacterMovement. In the Details panel, find the settings Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle."
+      - "In a test level, build a stair with 3 steps whose risers are 20, 40 and 60 cm high. A riser is the vertical front of a step. Also build three ramps with angles of 30°, 45° and 55°."
+      - "Play in the editor (PIE) and note which steps and ramps you can walk up. Then change Max Step Height or Walkable Floor Angle one time and test again."
+      - "Set Jump Z Velocity to two times its value and jump onto a ledge. Then set it back to the old value. Note the ledge height you could reach with each value."
+    done_when: "Send a screenshot of the CharacterMovement Details panel that shows your four values. Add a note of 3 lines: the capsule size, the highest step you could climb, and the steepest ramp you could walk up."
     xp: 90
     verify_type: screenshot
     quiz:
@@ -70,17 +71,18 @@ quests:
     required_spine: false
     required: true
     title: Read an Animation Blueprint
+    brief: "An Animation Blueprint, often called an AnimBP, is the asset that decides which animation a character plays at each moment. You do not need to build one to learn from it. When you can read one, you understand why a character moves the way it does and where to look when the animation is wrong. In this quest you open the Animation Blueprint of your character, read its parts, and watch it work while you play."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 animation blueprint explained state machine blendspace ground speed"
     checklist:
-      - "Find which AnimBP your character uses: select the Mesh component in the character Blueprint and check Anim Class."
-      - "Open that AnimBP. In the Event Graph, find Event Blueprint Update Animation and follow how it reads the pawn's velocity into a speed variable."
-      - "In the AnimGraph, open the locomotion state machine. List every state and click each transition to read its rule."
-      - "Open the blendspace used for idle/walk/run. Move the preview point along the speed axis and watch the blend."
-      - "PIE, then in the AnimBP pick your character in the debug object dropdown. Watch the speed variable and active state change as you run and jump."
-    done_when: "Screenshot of the AnimBP in debug mode during PIE with the speed value visible, plus a list of the states and their transition rules."
+      - "Find out which AnimBP your character uses. To do this, select the Mesh component in the character Blueprint and look at the Anim Class property."
+      - "Open that AnimBP. In the Event Graph, find the node Event Blueprint Update Animation. Follow the nodes after it to see how it reads the velocity of the pawn, which is the character, and stores it in a speed variable."
+      - "In the AnimGraph, open the locomotion state machine, which is the graph that switches between states such as idle and jump. List every state, and click each transition to read its rule."
+      - "Open the blendspace that is used for idle, walk and run. A blendspace mixes several animations based on a value such as speed. Move the preview point along the speed axis and watch the animations blend."
+      - "Play in the editor (PIE). Then, in the AnimBP, pick your character in the debug object dropdown. Watch the speed variable and the active state change while you run and jump."
+    done_when: "Send a screenshot of the AnimBP in debug mode during PIE with the speed value visible. Add a list of the states and their transition rules."
     xp: 90
     verify_type: screenshot
     quiz:
@@ -120,6 +122,7 @@ quests:
     required_spine: false
     required: true
     title: Montage on interact
+    brief: "An Animation Montage is an animation asset that gameplay code can start at any moment, for example when the player pulls a lever. A world that answers with the body of the character feels much more solid than one that only prints a message. A montage plays through a Slot node in the Animation Blueprint, and without that node nothing is shown. In this quest you build a lever that makes the character play a montage and then changes something in the level."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
     backup_url: TODO_URL
@@ -128,13 +131,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-interface-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/enhanced-input-in-unreal-engine"
     checklist:
-      - "Right-click any animation sequence on your character's skeleton → Create → Create AnimMontage. Name it AM_PullLever."
-      - "Open the character's AnimBP. If the AnimGraph has no Slot 'DefaultSlot' node before Output Pose, add one."
-      - "Build BP_Lever: a mesh, a Box collision, and an overlap check so it only works when the player is close."
-      - "On interact (an Enhanced Input action or a key event), get the player character and call Play Montage with its Mesh and AM_PullLever."
-      - "From Play Montage's On Completed pin, flip the lever and do one thing in the level (open a door, turn on a light)."
-      - "PIE and pull the lever. Then pull it while running and note what happens."
-    done_when: "Short PIE clip of the pull plus a screenshot of the lever graph."
+      - "In the Content Browser, right-click any animation sequence that uses your character's skeleton. Choose Create, then Create AnimMontage, and name the new asset AM_PullLever."
+      - "Open the AnimBP of the character. Look in the AnimGraph for a Slot 'DefaultSlot' node before the Output Pose node. If there is none, add one."
+      - "Build a Blueprint named BP_Lever. Give it a mesh and a Box collision, and add an overlap check so that the lever only works when the player is close."
+      - "When the player interacts, through an Enhanced Input action or a key event, get the player character. Then call Play Montage and give it the character's Mesh and AM_PullLever."
+      - "Connect the On Completed pin of Play Montage, which fires when the animation has finished. From this pin, flip the lever and do one thing in the level, for example open a door or turn on a light."
+      - "Play in the editor (PIE) and pull the lever. Then pull it while the character is running and note what happens."
+    done_when: "Send a short PIE clip of the character pulling the lever, and a screenshot of the lever graph."
     xp: 110
     verify_type: screenshot
     quiz:
@@ -175,6 +178,7 @@ quests:
     required_spine: false
     required: true
     title: Retarget an animation
+    brief: "Retargeting means copying an animation from one character to another character that has a different skeleton, which is a different set of bones. It lets you reuse animations and saves a lot of work. Unreal does this with IK Rig assets, which describe each skeleton, and an IK Retargeter asset, which maps one skeleton to the other. In this quest you retarget one animation and fix one problem in the result."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
     backup_url: TODO_URL
@@ -183,10 +187,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-retargeting-in-unreal-engine"
     checklist:
-      - "Pick a source animation and a second character with a different skeleton."
-      - "Retarget one animation with auto retargeting."
-      - "Open the generated IK Rigs and Retargeter and fix one visible problem (feet, hands or root)."
-    done_when: "Side-by-side screenshot of source and retargeted pose, plus one line on what you fixed."
+      - "Pick one source animation. Also pick a second character that has a different skeleton from the first one."
+      - "Retarget the animation to the second character with auto retargeting, the option where Unreal sets up the retarget for you."
+      - "Open the IK Rigs and the Retargeter that Unreal generated. Fix one problem that you can see, for example in the feet, the hands or the root."
+    done_when: "Send a screenshot that shows the source pose and the retargeted pose side by side, and add one line that says what you fixed."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -199,15 +203,16 @@ quests:
     required_spine: false
     required: true
     title: Control Rig quick start
+    brief: "A Control Rig is an asset that lets you move the bones of a character with handles called controls, directly inside Unreal. Animators use these controls to pose and animate a character without another 3D program. In this quest you create a small Control Rig, add controls for one arm, and pose the arm."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 control rig beginner create controls"
     checklist:
-      - "Create a Control Rig for your character's skeleton."
-      - "Add controls for one arm and drive the bones from them."
-      - "Pose the arm in the viewport."
-    done_when: "Screenshot of the rig graph and a posed arm."
+      - "Create a Control Rig asset for the skeleton of your character."
+      - "Add controls for one arm. In the rig graph, make the controls drive the bones, so that the bones follow when you move a control."
+      - "Use the controls to pose the arm in the viewport."
+    done_when: "Send a screenshot of the rig graph and a screenshot of the posed arm."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -220,6 +225,7 @@ quests:
     required_spine: false
     required: true
     title: Anim notifies
+    brief: "An anim notify is a marker that you place on one frame of an animation. When the animation reaches that frame, the notify tells the game to do something, such as play a sound or start an effect. This lets you match game events to the exact moment in a movement. In this quest you make your lever move at the frame where the hand grips it, and you add a sound notify to a walk animation."
     time_min: 45
     official_url: TODO_URL
     backup_url: TODO_URL
@@ -227,10 +233,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
     checklist:
-      - "Add a notify to AM_PullLever at the frame the hand grips the lever."
-      - "Handle it from Play Montage's On Notify Begin to trigger the lever at that frame."
-      - "Add a sound or footstep notify to a walk cycle."
-    done_when: "PIE clip where the lever moves on the notify frame, not at the end."
+      - "Open AM_PullLever and add a notify at the frame where the hand grips the lever."
+      - "On your Play Montage node, use the On Notify Begin pin to handle the notify. Trigger the lever from this pin, so that the lever moves at that frame."
+      - "Add a sound notify or a footstep notify to a walk cycle, which is a walk animation that loops."
+    done_when: "Send a PIE clip in which the lever moves on the notify frame and not at the end of the animation."
     xp: 80
     verify_type: screenshot
     quiz: []
@@ -243,6 +249,7 @@ quests:
     required_spine: false
     required: true
     title: Blend space from scratch
+    brief: "A blend space is an asset that mixes several animations based on a value, most often the speed of the character. With it, a character changes smoothly from idle to walk to run, with no sudden switch. If the animations sit at the wrong speeds, the feet seem to slide over the ground. In this quest you build a blend space yourself and check it for foot sliding."
     time_min: 60
     official_url: TODO_URL
     backup_url: TODO_URL
@@ -250,10 +257,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
     checklist:
-      - "Create a new blend space with a speed axis matched to your Max Walk Speed."
-      - "Place idle, walk and run samples at the speeds they were authored for."
-      - "Swap it into a copy of the AnimBP and check for foot sliding in PIE."
-    done_when: "Screenshot of the blend space grid plus a PIE clip at walk and run speed."
+      - "Create a new blend space. Give it a speed axis whose top value matches the Max Walk Speed of your character."
+      - "Place an idle sample, a walk sample and a run sample on the axis. Put each one at the speed it was authored for, which means the speed the animation was made to move at."
+      - "Make a copy of the AnimBP and use your blend space in the copy in place of the old one. Play in the editor (PIE) and check whether the feet slide."
+    done_when: "Send a screenshot of the blend space grid, and a PIE clip of the character at walk speed and at run speed."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -266,15 +273,16 @@ quests:
     required_spine: false
     required: true
     title: Aim offsets
+    brief: "An aim offset is an asset that bends the upper body of a character toward the direction the player is looking. It is made from additive poses, which are poses that are added on top of another animation and do not replace it. With it, a character can walk and aim up, down or to the side at the same time. In this quest you create an aim offset and put it on top of the walking animation."
     time_min: 60
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "unreal engine 5 aim offset setup control rotation pitch yaw"
     checklist:
-      - "Create an aim offset from additive aim poses."
-      - "Feed pitch and yaw from the control rotation in the AnimBP."
-      - "Layer it over locomotion and test looking up, down and to the sides."
-    done_when: "PIE clip of the character aiming around while walking."
+      - "Create an aim offset asset from additive aim poses."
+      - "In the AnimBP, read the pitch and the yaw from the control rotation and give them to the aim offset. Pitch is looking up and down, yaw is looking left and right, and the control rotation is the direction the player is looking."
+      - "Layer the aim offset over the locomotion, which is the walking and running animation. Then test looking up, down and to the sides."
+    done_when: "Send a PIE clip of the character aiming around while walking."
     xp: 100
     verify_type: screenshot
     quiz: []
@@ -288,6 +296,7 @@ quests:
     required_spine: false
     required: true
     title: Anatomy of a combat space
+    brief: "A combat space, or arena, is a part of a level that is built for a fight. Almost every combat game builds its arenas from the same parts: an entry, an exit, cover to hide behind, side routes called flanks, and high ground. When you can name these parts, you can give and get feedback much faster. In this quest you graybox one arena, which means building it from simple blocks, and you mark its parts on a picture."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-designer-quick-start-in-unreal-engine"
     backup_url: TODO_URL
@@ -295,12 +304,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-quick-start-in-unreal-engine"
     checklist:
-      - "New level L_Arena_01. Graybox one arena about 30 x 30 m with one entry and one exit."
-      - "Place a view point just inside the entry where the player can read the space before anyone shoots."
-      - "Add 6–10 cover pieces: some low, some full height. Leave no spot where one piece of cover is safe from everywhere."
-      - "Add at least one flank route on each side and one high-ground position with a cost (exposed stairs, little cover)."
-      - "Take a top-down orthographic screenshot and mark entry, exit, flanks, high ground and cover in any paint tool."
-    done_when: "Annotated top-down screenshot plus one eye-level screenshot from the entry."
+      - "Create a new level named L_Arena_01. Graybox one arena of about 30 x 30 m with one entry and one exit."
+      - "Place a view point just inside the entry. This is a spot where the player can stand and read the space before anyone shoots."
+      - "Add 6 to 10 cover pieces. Make some of them low and some of them full height. Make sure that no single piece of cover is safe from every direction."
+      - "Add at least one flank route on each side, which is a path that leads around the middle of the fight. Add one high-ground position that has a cost, for example exposed stairs or little cover."
+      - "Take a screenshot from above in the Top orthographic view, a flat view with no perspective. Open it in any paint tool and mark the entry, the exit, the flanks, the high ground and the cover."
+    done_when: "Send your marked screenshot from above, and one screenshot taken at eye level from the entry."
     xp: 100
     verify_type: screenshot
     quiz:
@@ -337,6 +346,7 @@ quests:
     required_spine: false
     required: true
     title: Placing threats
+    brief: "Enemies are part of the level layout, because where they start changes how the fight plays. To move on their own, enemies need a NavMesh, which is a map of the floor areas where the AI can walk, and an AI controller, which is the part that steers them. In this quest you add a NavMesh to your arena, create a simple enemy, and place hidden spawn points for it."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
     backup_url: TODO_URL
@@ -346,13 +356,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/behavior-trees-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-08-create-an-enemy-in-unreal-engine"
     checklist:
-      - "In L_Arena_01, add a Nav Mesh Bounds Volume covering the whole arena. Press P to show the NavMesh and fix any gaps near cover and doorways."
-      - "Create BP_Enemy from Character. Set Auto Possess AI to 'Placed in World or Spawned'."
-      - "Give it a simple AI MoveTo loop between two target points, or run the sample Behavior Tree linked in #epic-games-resources."
-      - "If you use the provided Behavior Tree, open it and write one line per node on what it does. No authoring needed."
-      - "Place 3 spawn points the player can't see from the entry. Mark them with a simple arrow or billboard in editor."
-      - "PIE and watch each enemy reach its first position. Fix any that get stuck."
-    done_when: "Screenshot with NavMesh shown (P) and spawn points visible, plus a PIE clip of enemies moving into position."
+      - "In L_Arena_01, add a Nav Mesh Bounds Volume that covers the whole arena. Press P to show the NavMesh, and fix any gaps near cover and doorways."
+      - "Create a Blueprint named BP_Enemy with Character as its parent class. Set its Auto Possess AI property to 'Placed in World or Spawned', so that the enemy always gets an AI controller."
+      - "Give the enemy a simple loop that uses AI MoveTo to walk between two target points. Or run the sample Behavior Tree that is linked in the #epic-games-resources channel. A Behavior Tree is an asset that describes what an AI decides to do."
+      - "If you use the provided Behavior Tree, open it and write one line for each node that says what the node does. You do not need to build anything in it yourself."
+      - "Place 3 spawn points that the player cannot see from the entry. Mark each one with a simple arrow or billboard that is visible in the editor."
+      - "Play in the editor (PIE) and watch each enemy reach its first position. Fix any enemy that gets stuck."
+    done_when: "Send a screenshot with the NavMesh shown (press P) and the spawn points visible, and a PIE clip of the enemies moving into position."
     xp: 120
     verify_type: screenshot
     quiz:
@@ -390,6 +400,7 @@ quests:
     required_spine: false
     required: true
     title: Cover and sightline metrics
+    brief: "Metrics are the measured numbers of your level, such as how high cover is and how far apart enemies and the player stand. Numbers are easier to talk about in a review than a feeling that something is wrong. A sightline is what a person can see from one place. In this quest you set two cover heights from the size of your character, measure the fighting distances in your arena, and check what each enemy can see."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     backup_url: TODO_URL
@@ -398,13 +409,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/viewport-controls-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/possessing-pawns-in-unreal-engine"
     checklist:
-      - "Using your capsule numbers from AQ1, set a low cover height (player can see over it standing) and a full cover height (hides the whole capsule)."
-      - "Resize every cover piece in L_Arena_01 to one of those two heights."
-      - "In a Top orthographic view, middle-mouse drag to measure the distances between enemy positions and player cover. Write down short, mid and long."
-      - "Place a Camera Actor at enemy eye height at each enemy position. Right-click → Pilot it and check what it can see."
-      - "Save a bookmark (Ctrl+1..9) at each enemy view and at the player entry. Fix one sightline that's too open or too closed."
-      - "Add the cover heights and engagement distances to your metrics sheet."
-    done_when: "Metrics sheet with cover heights and engagement distances, plus before/after screenshots of the sightline you fixed."
+      - "Use your capsule numbers from quest AQ1 to choose two heights. Low cover is a height the standing player can see over. Full cover is a height that hides the whole capsule."
+      - "Resize every cover piece in L_Arena_01 so that it has one of those two heights."
+      - "Switch the viewport to the Top orthographic view. Drag with the middle mouse button to measure the distances between the enemy positions and the player cover. Write down a short, a mid and a long distance."
+      - "At each enemy position, place a Camera Actor at the eye height of the enemy. Right-click the camera and choose Pilot to look through it, and check what it can see."
+      - "Save a bookmark with Ctrl+1 to Ctrl+9 at each enemy view and at the player entry. A bookmark stores a camera position so you can come back to it. Then fix one sightline that is too open or too closed."
+      - "Add the cover heights and the engagement distances, which are the distances at which the fight happens, to your metrics sheet."
+    done_when: "Send your metrics sheet with the cover heights and engagement distances, and screenshots from before and after of the sightline you fixed."
     xp: 100
     verify_type: screenshot
     quiz:
@@ -441,17 +452,18 @@ quests:
     required_spine: false
     required: true
     title: One-page GDD
+    brief: "GDD is short for game design document, a text that describes what you plan to build. A one-page version is short enough that people really read it, and it lets a team review the idea before anyone spends time building it. In this quest you write one page about your arena encounter, which is the fight that happens in your arena."
     time_min: 45
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "one page game design document encounter template"
     checklist:
-      - "Write one page for your arena encounter with these headings: Goal, Player verbs, Beats, Fail state, Tuning knobs."
-      - "Goal: one sentence on what the player should feel or learn."
-      - "Beats: 3–5 lines in order (enter, first contact, pressure, turn, exit)."
-      - "Tuning knobs: list every number you might change (enemy count, spawn delay, cover count, health) with its current value."
-      - "Add your top-down screenshot from LDQ33. Share the doc as a link anyone can view."
-    done_when: "Link to the one-page GDD with all five headings filled in."
+      - "Write one page for your arena encounter. Use these five headings: Goal, Player verbs, Beats, Fail state, Tuning knobs."
+      - "Under Goal, write one sentence that says what the player should feel or learn."
+      - "Under Beats, write 3 to 5 lines in the order they happen: enter, first contact, pressure, turn, exit. A beat is one step in how the fight goes."
+      - "Under Tuning knobs, list every number you might change, such as enemy count, spawn delay, cover count and health. Write the current value next to each one."
+      - "Add your screenshot from above from quest LDQ33. Share the document as a link that anyone can view."
+    done_when: "Send a link to your one-page GDD with all five headings filled in."
     xp: 90
     verify_type: writeup
     quiz:
@@ -489,17 +501,18 @@ quests:
     required_spine: false
     required: true
     title: The critique loop
+    brief: "A critique is feedback from other people on your work. Other people see problems that you have stopped noticing, so asking for critique is one of the fastest ways to improve a level. An iteration log is a list where you write down what feedback you got and what you did with it. In this quest you ask for critique on your arena, change something because of it, and give a critique to another person."
     time_min: 45
     official_url: "discord://#showcase"
     backup_url: TODO_URL
     backup_search: "how to give and receive game design critique"
     checklist:
-      - "Post your arena in #showcase tagged Critique-wanted: top-down, one eye-level shot, and a link to your GDD."
-      - "Ask one specific question, e.g. 'Is the left flank too safe?' Not 'thoughts?'"
-      - "Start an iteration log: date, feedback received, what you changed, what you didn't change and why."
-      - "Make at least one change based on the feedback and log it."
-      - "Give one critique on someone else's /critique post: 1 thing that works, 1 specific issue, 1 next step."
-    done_when: "Link to your /critique thread, your iteration log, and the critique you gave."
+      - "Post your arena in the #showcase channel with the tag Critique-wanted. Include a screenshot from above, one screenshot at eye level, and a link to your GDD."
+      - "Ask one specific question in your post, for example 'Is the left flank too safe?'. Do not ask a general question such as 'thoughts?'."
+      - "Start an iteration log. For each entry, write the date, the feedback you received, what you changed, and what you did not change and why."
+      - "Make at least one change that is based on the feedback, and write it in your log."
+      - "Give one critique on the /critique post of another person. Name 1 thing that works, 1 specific issue, and 1 next step."
+    done_when: "Send a link to your /critique thread, your iteration log, and the critique you gave."
     xp: 80
     verify_type: writeup
     quiz:
@@ -536,6 +549,7 @@ quests:
     required_spine: false
     required: true
     title: Readability pass 2
+    brief: "Readability means that a player can understand a space with one look: where the danger is, where to hide, and where to go. If the player cannot read the space, your design does not reach them. Color and light are your main tools for this. In this quest you choose a small color key, apply it to your arena, and test that it still works when the picture has no color."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/features-and-properties-of-lights-in-unreal-engine"
     backup_url: TODO_URL
@@ -544,12 +558,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
     checklist:
-      - "Write a 3-line color key: one color for threats, one for cover or climbable, one for objectives."
-      - "Make a Material Instance for each (MI_Read_Threat, MI_Read_Cover, MI_Read_Objective) and apply them in L_Arena_01."
-      - "Change the value (brightness) as well as the hue so the key still works in grayscale."
-      - "Light the exit and the main objective so they are the brightest things in view from the entry."
-      - "Take a screenshot from the entry bookmark, then convert it to grayscale and check that threats, cover and objectives still stand out."
-    done_when: "Color key, plus the entry screenshot in color and grayscale."
+      - "Write a color key of 3 lines: one color for threats, one color for cover or things you can climb, and one color for objectives."
+      - "Make one Material Instance for each color and name them MI_Read_Threat, MI_Read_Cover and MI_Read_Objective. A Material Instance is a copy of a material with its own values. Apply them in L_Arena_01."
+      - "Change the value, which is the brightness, as well as the hue of each color. This way the key still works in grayscale, a picture with only shades of gray."
+      - "Light the exit and the main objective so that they are the brightest things the player sees from the entry."
+      - "Take a screenshot from your entry bookmark. Then convert it to grayscale and check that threats, cover and objectives still stand out."
+    done_when: "Send your color key, and the entry screenshot both in color and in grayscale."
     xp: 100
     verify_type: screenshot
     quiz:
@@ -586,6 +600,7 @@ quests:
     required_spine: false
     required: true
     title: Designer-tunable actors
+    brief: "A designer-tunable actor is a Blueprint whose important numbers can be changed in the Details panel, without opening its graph. When you set it up this way, other people can use and adjust your actor, and each copy in the level can have its own values. In this quest you turn fixed numbers into editable variables, add helpful names, tooltips and limits, and place two copies that behave differently."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
     backup_url: TODO_URL
@@ -593,12 +608,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-class-assets-in-unreal-engine"
     checklist:
-      - "In BP_Enemy or BP_Lever, turn three hard-coded numbers into variables (e.g. MoveSpeed, WaitTime, Health)."
-      - "Tick Instance Editable (the eye icon) on each, give each a Category and a Description (the tooltip)."
-      - "Set a Slider Range and Value Range on the numeric ones so nobody types 99999."
-      - "Give one Vector variable Show 3D Widget so its target point can be dragged in the viewport."
-      - "Place two copies with different values and PIE to see both behaviors, without opening the graph."
-    done_when: "Screenshot of the Details panel showing your category, tooltips and two instances with different values."
+      - "Open BP_Enemy or BP_Lever. Turn three hard-coded numbers, which are numbers typed directly into the graph, into variables, for example MoveSpeed, WaitTime and Health."
+      - "For each variable, tick Instance Editable, which is the eye icon. Also give each one a Category and a Description, which is the text shown as its tooltip."
+      - "On the number variables, set a Slider Range and a Value Range. These limits stop people from typing a value such as 99999."
+      - "Give one Vector variable the option Show 3D Widget. This shows a handle in the viewport, so the target point can be dragged there."
+      - "Place two copies of the actor in the level and give them different values. Play in the editor (PIE) to see both behaviors, without opening the graph."
+    done_when: "Send a screenshot of the Details panel that shows your category, your tooltips, and two instances with different values."
     xp: 110
     verify_type: screenshot
     quiz:
@@ -637,6 +652,7 @@ quests:
     required: true
     capstone: true
     title: "CAPSTONE: Encounter space"
+    brief: "A capstone is a larger quest that brings together what you learned in the quests before it. Here it is one finished encounter space, a place built for one fight, with its layout, enemies, metrics, design document, critique and readability all in place. In this quest you finish the space, bring your document up to date, improve the space after feedback, and record one full run."
     time_min: 240
     official_url: "discord://#showcase"
     backup_url: TODO_URL
@@ -645,15 +661,15 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     checklist:
-      - "Finish one encounter space: entry, exit, cover to your metrics, flanks, high ground with a cost, NavMesh and 3+ enemies."
-      - "Apply your color key and lighting from LDQ36."
-      - "Update the one-page GDD so it matches the build: goal, verbs, beats, fail state, tuning knobs."
-      - text: "Post to #showcase tagged Critique-wanted, with one specific question."
+      - "Finish one encounter space. It needs an entry, an exit, cover built to your metrics, flanks, high ground with a cost, a NavMesh, and 3 or more enemies."
+      - "Apply your color key and your lighting from quest LDQ36."
+      - "Update the one-page GDD so that it matches what you built. Check the goal, the verbs, the beats, the fail state and the tuning knobs."
+      - text: "Post the space in the #showcase channel with the tag Critique-wanted, and ask one specific question."
         needs_others: true
-      - text: "Make at least one change from the feedback. Capture before/after from the same bookmark and log it."
+      - text: "Make at least one change that comes from the feedback. Take a screenshot before and after from the same bookmark, and write the change in your log."
         needs_others: true
-      - "Record a PIE clip of one full run from entry to exit."
-    done_when: "PIE clip, annotated top-down map, GDD link, and before/after screenshots of the critique iteration with the critique thread link. Approved by a mentor or two peers."
+      - "Record a PIE clip of one full run from the entry to the exit."
+    done_when: "Send a PIE clip, your marked map from above, the link to your GDD, and screenshots from before and after the change you made after critique, with the link to the critique thread. A mentor or two peers must approve your work."
     done_when_solo: "PIE clip, annotated top-down map, GDD link, and one self-review change with before/after screenshots. Approved by a mentor."
     xp: 200
     verify_type: mentor
@@ -691,12 +707,13 @@ quests:
     subjects: [smart-objects, ai]
     required: false
     title: Smart Objects quick start
+    brief: "A Smart Object is a place in the level that tells AI characters what they can do there, for example a spot to take cover or a place to stand and wait. It lets you put activities into the world, and the AI finds them and uses them. In this quest you follow the Smart Objects quick start guide and then place one Smart Object in your arena."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/smart-objects-in-unreal-engine---quick-start"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 smart objects quick start"
-    checklist: ["Follow the Smart Objects quick start in a test level.", "Place one Smart Object in your arena, such as a spot where an enemy takes cover or idles."]
-    done_when: "PIE clip of an AI using the Smart Object."
+    checklist: ["Follow the Smart Objects quick start guide in a test level.", "Place one Smart Object in your arena, for example a spot where an enemy takes cover or stands idle."]
+    done_when: "Send a PIE clip of an AI character using the Smart Object."
     xp: 60
     verify_type: screenshot
     quiz: []
@@ -708,12 +725,13 @@ quests:
     subjects: [stealth, encounter]
     required: false
     title: Stealth variant
+    brief: "In a stealth encounter the player tries to get past the enemies without being seen, so the level works in a different way from a fight. Cover must block what the enemies see, and patrols, the routes that enemies walk, must leave a path open. In this quest you copy your arena and change it into a stealth version."
     time_min: 60
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "level design stealth space sightlines patrol routes"
-    checklist: ["Duplicate L_Arena_01 as L_Arena_Stealth.", "Change cover and patrols so the player can cross without being seen.", "Mark the patrol routes and the safe path on a top-down."]
-    done_when: "Annotated top-down plus a PIE clip of an unseen crossing."
+    checklist: ["Duplicate L_Arena_01 and name the copy L_Arena_Stealth.", "Change the cover and the patrols so that the player can cross the arena without being seen.", "Take a screenshot from above and mark the patrol routes and the safe path on it."]
+    done_when: "Send your marked screenshot from above, and a PIE clip of a crossing in which the player is not seen."
     xp: 60
     verify_type: screenshot
     quiz: []
@@ -725,12 +743,13 @@ quests:
     subjects: [verticality, encounter]
     required: false
     title: Vertical arena
+    brief: "A vertical arena has several floors at different heights, so the fight also moves up and down. Every stair, ledge and drop must fit how high your character can step and jump, and the AI needs a NavMesh, the map of where it can walk, that joins the floors. In this quest you graybox an arena with two or three floors, which means building it from simple blocks, and you check it against your numbers."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/cubegrid-tool-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "level design vertical combat arena multiple floors"
-    checklist: ["Graybox a two- or three-level arena with CubeGrid.", "Check every level change against your step and jump metrics.", "Make sure NavMesh (P) connects the levels where the AI should follow."]
-    done_when: "Side-view screenshot plus a PIE clip moving between levels."
+    checklist: ["Graybox an arena with two or three levels of height. Use CubeGrid, a modeling tool in Unreal for building simple block shapes on a grid.", "Check every change of height against your step metrics and jump metrics, the numbers that say how high your character can step and jump.", "Press P to show the NavMesh. Make sure it connects the levels in the places where the AI should be able to follow the player."]
+    done_when: "Send a screenshot of the arena from the side, and a PIE clip of moving between the levels."
     xp: 70
     verify_type: screenshot
     quiz: []
@@ -742,12 +761,13 @@ quests:
     subjects: [pacing, encounter]
     required: false
     title: Pacing curve across 3 encounters
+    brief: "Pacing is how the intensity of a game rises and falls over time. If every fight is equally hard, players get tired or bored, so designers plan peaks and quiet moments, called rest beats. An intensity curve is a simple line drawing of this plan. In this quest you draw such a curve for three encounters in a row and explain it."
     time_min: 45
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "level design pacing intensity curve encounters"
-    checklist: ["Sketch an intensity curve for three encounters in a row, with rest beats between them.", "Note what changes each time: enemy count, space, or verb."]
-    done_when: "Curve image plus 3 lines explaining each peak and rest."
+    checklist: ["Sketch an intensity curve for three encounters in a row. Include rest beats, the quiet moments, between them.", "For each encounter, note what changes compared to the one before: the enemy count, the space, or the verb, which is the main action the player uses."]
+    done_when: "Send an image of your curve, and add 3 lines that explain each peak and each rest."
     xp: 50
     verify_type: writeup
     quiz: []
@@ -759,14 +779,15 @@ quests:
     subjects: [spawning, blueprint]
     required: false
     title: Spawn waves with a BP spawner
+    brief: "A spawner is an actor that creates enemies while the game runs. A wave is a group of enemies that appears together, and the next wave starts after the current one is beaten. With a spawner you can change the size and timing of a fight by changing a few numbers. In this quest you build a wave spawner Blueprint with values that can be edited in the Details panel."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/flow-control-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 blueprint wave spawner spawn ai from class"
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
-    checklist: ["Build BP_WaveSpawner with Instance Editable wave count, enemies per wave and delay.", "Start the next wave when all enemies from the current one are destroyed.", "Place spawn points out of the player's view."]
-    done_when: "PIE clip of two waves plus a screenshot of the spawner's Details panel."
+    checklist: ["Build a Blueprint named BP_WaveSpawner. Give it three Instance Editable variables, which are variables you can change in the Details panel: the wave count, the enemies per wave, and the delay.", "Make the spawner start the next wave when all enemies from the current wave are destroyed.", "Place the spawn points where the player cannot see them."]
+    done_when: "Send a PIE clip that shows two waves, and a screenshot of the Details panel of the spawner."
     xp: 70
     verify_type: screenshot
     quiz: []

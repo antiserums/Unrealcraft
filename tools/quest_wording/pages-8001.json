@@ -1,0 +1,153 @@
+{
+ "TAQ56": {
+  "brief": "A sprite is a flat 2D image that always turns to face the camera, and it is the most common kind of particle. A sprite sheet is one texture that holds many small images in a grid, and playing them one after the other makes the particle look animated. Niagara is the visual effects system of Unreal, and an emitter is the part of a Niagara System that creates particles. In this quest you build a steady column of smoke from sprites that play an 8 by 8 sprite sheet.",
+  "checklist": [
+   "Make sure your project has the Starter Content, because it holds the material M_smoke_subUV that you need. Make a folder for the effect, for example NiagaraFX/SpriteEffect.",
+   "Right-click in the Content Browser and choose FX, then Niagara System. Pick New system from selected emitters and add the Simple Sprite Burst template. Name the system SmokeSystem and rename the emitter to FX_Smoke.",
+   "In the Sprite Renderer, set the material to M_smoke_subUV and set Sub Image Size to 8 by 8, which tells the renderer how many images are in the sprite sheet. Turn on Sub UV Blending. Then drag SmokeSystem into your level.",
+   "In Emitter Update, delete Spawn Burst Instantaneous, add a Spawn Rate module and set it to 50, so the smoke comes out all the time and not in one burst. In Emitter State, set Life Cycle Mode to Self and Loop Behavior to Infinite.",
+   "In Initialize Particle, set a random lifetime (2 to 3), a random uniform sprite size (75 to 200) and a random sprite rotation (Direct Normalized Angle, 0.25 to 0.5). Add an Add Velocity module with a random range (Z 50 to 200). Add a Shape Location module that uses a sphere with a radius of 64.",
+   "Add a SubUV Animation module, which plays the images of the sprite sheet one after the other. Set its mode to Linear, Start Frame to 0 and End Frame to 63. In Particle Update, add an Acceleration Force module with Z set to 500 so the smoke keeps rising.",
+   "Click the Gear icon on the emitter and choose Create Asset From This, so that FX_Smoke becomes its own emitter asset that you can use again. Save everything."
+  ],
+  "done_when": "Send a screenshot of the Niagara Editor with the FX_Smoke stack open, where Spawn Rate, SubUV Animation and Acceleration Force are visible, and a screenshot of the smoke column in your level. Also show the FX_Smoke emitter asset in the Content Browser."
+ },
+ "TAQ57": {
+  "brief": "You do not have to build every effect from zero. If you copy an emitter that already works and change a few values, you get a new effect in much less time. In this quest you copy the smoke emitter from the sprite smoke quest and change its speed, color, size and forces until it looks like steam.",
+  "checklist": [
+   "Right-click the FX_Smoke emitter asset from the sprite smoke quest and choose Duplicate Emitter. Move the copy to a new folder and rename it FX_Steam.",
+   "Right-click FX_Steam and choose Create Niagara System. This makes a new system that already contains the emitter. Name the system Steam and drag it into your level.",
+   "In Emitter Update, find Emitter State and set Life Cycle Mode to System. Then set Spawn Rate to 30.",
+   "In Initialize Particle, set the lifetime range to 3 to 7, the color to white (1, 1, 1) and the sprite size to 100 to 200. Set Add Velocity so that it pushes the particles sideways and up (X 16 to 32, Y -5 to 5, Z 35 to 50). Set the sphere radius to 20.",
+   "In Particle Update, give Acceleration Force a random range with a minimum of X 25, Y -10, Z 15 and a maximum of X 55, Y 10, Z 25. In Scale Color, pick the Pulse Out curve shape, which makes the steam fade in and then fade out.",
+   "Add a Drag module, which slows the particles down. When the 'unmet dependencies' error appears, click Fix Issue so that Niagara moves the module to the correct place. Set Drag to 0.8."
+  ],
+  "done_when": "Send a screenshot of the Steam system in your level next to a prop (for example a pipe or a cup), and a screenshot of the Particle Update group that shows Acceleration Force, Scale Color and Drag in the correct order."
+ },
+ "TAQ58": {
+  "brief": "A beam is a line of particles that are joined together and drawn as one long strip, called a ribbon. Lasers, lightning and tesla coils are all made this way. In this quest you build a beam from a template and add fast, random movement to it so that it looks like flickering lightning.",
+  "checklist": [
+   "Create a Niagara System from the Static Beam template. Name it BeamSystem, rename the emitter to FX_Beam and drag the system into your level.",
+   "In the Render group, keep the Ribbon Renderer with DefaultRibbonMaterial. In its Tessellation section, set Curve Tension to 0.5.",
+   "In Emitter Update, give Loop Duration a Random Ranged Float from 0.1 to 0.2. In Beam Emitter Setup, enable Absolute Start and Absolute End and turn on Use Beam Tangents (both tangents point up in Z). Set Spawn Burst Instantaneous to 35.",
+   "In Particle Spawn, set Lifetime to 0.2 so the beam appears and disappears quickly. Keep the Spawn Beam module as it is. In Beam Width, choose the Ramp Up Down curve and set Scale Curve to 5.",
+   "In Particle Update, add a Jitter Position module, which moves the particles by small random amounts. Then add an Update Beam module and drag it above Jitter Position. Set Jitter Delay to -0.01 and Jitter Amount to 15.",
+   "Optional: on Beam End, make a New Dynamic Scratch Input with an Actor Component Interface, and turn it into a user parameter named Beam_End. Then select the system in the level and pick a sphere named Sphere_BeamEnd as the Source Actor, so the beam ends at that sphere."
+  ],
+  "done_when": "Send a screenshot of the lightning beam in your level and a screenshot of the Particle Update group that shows Update Beam above Jitter Position. If you did the optional step, also show the Override Parameters section with Sphere_BeamEnd."
+ },
+ "TAQ59": {
+  "brief": "Normally the CPU, the main processor of the computer, calculates how particles move. When an effect needs many thousands of particles, this becomes too slow, so you move the work to the GPU, the graphics card. A GPU emitter has one extra rule: you must give it fixed bounds, a box that tells the engine how large the effect is. In this quest you build a swirling ball of thousands of small sprites that runs on the GPU.",
+  "checklist": [
+   "Create a Niagara System from the Simple Sprite Burst template. Name it GPUSprite, rename the emitter to FX_GPUSprite and drag the system into your level.",
+   "Open Emitter Settings, then Emitter Properties, and set Sim Target to GPUComputeSim so the particles are calculated on the graphics card. Tick Fixed Bounds to clear the warning that appears.",
+   "In Emitter Update, set Life Cycle Mode to System. Set the Spawn Burst Instantaneous count to 2500, and add a Spawn Rate module set to 500.",
+   "In Initialize Particle, set Lifetime to 5 and Sprite Size to 5 by 5. Then add a Sphere Location module, which spawns the particles inside a sphere shape.",
+   "In Particle Update, add a Scale Sprite Size module and set it to Non-Uniform. For Scale Factor choose Vector2D from Float, then choose Float from Curve and pick the Ramp Up Down shape, so each particle grows and then shrinks.",
+   "Add a Curl Noise Force module (Noise Strength 72, Noise Frequency 0.02), which makes the particles swirl. Add a Point Attraction Force module (Attraction Strength 5.5, Attraction Radius 300, Falloff Exponent 0.6, Kill Radius 4 enabled), which pulls the particles toward one point.",
+   "Add a Color module and set it to Color from Curve. Build a gradient with at least four color stops, and make the alpha (the opacity) fade to 0 at the end."
+  ],
+  "done_when": "Send a screenshot of Emitter Properties that shows Sim Target set to GPUComputeSim and Fixed Bounds ticked, plus a screenshot of the swirling particle ball in your level."
+ },
+ "TAQ60": {
+  "brief": "Particles can do more than show an image: each one can also carry a small light that shines on the floor and walls around it. This makes fire, magic and sparks look like a real part of the scene. In Niagara you do this with a Light Renderer, which you add next to the normal Sprite Renderer. In this quest you build a blue fountain of particles that lights up a dark corner of your level.",
+  "checklist": [
+   "Create a Niagara System from the Fountain template. Name it ParticleLights, rename the emitter to FX_ParticleLight and drag the system into a dark part of your level.",
+   "In Emitter Update, set Life Cycle Mode to System and set Spawn Rate to 500.",
+   "In Initialize Particle, set a random lifetime (1.75 to 2.5), set the color to R 0.1, G 0.3, B 50, and set a random uniform sprite size (2.5 to 8). A color value above 1 makes the particles glow. Set the Sphere Location radius to 15.",
+   "In the Add Velocity in Cone module, set Velocity Strength to a random range of 300 to 600.",
+   "Keep Gravity Force and Drag at their default values. Add a Collision module so the particles do not fall through the floor, and click Fix Issue when the error appears.",
+   "In the Render group, add a Light Renderer, which creates a light for each particle. Set Radius Scale to 5 and set Color Add to X 0, Y 0, Z 15, which gives a strong blue light."
+  ],
+  "done_when": "Send a screenshot of the fountain in a dark area with blue light visible on the floor and walls, and a screenshot of the Render group that shows both the Sprite Renderer and the Light Renderer."
+ },
+ "TAQ61": {
+  "brief": "A console variable is a named engine setting that you can change while the editor is running, for example r.ScreenPercentage, which sets the resolution the scene is rendered at. Console variables let you test quality and performance without changing any asset. The Console Variables Editor is a panel where you can collect the variables you use often, switch them on and off, and save them as a preset. In this quest you turn on that panel, add a few variables and save your own preset.",
+  "checklist": [
+   "Enable the Console Variables Editor plugin and restart the editor. Then open the panel from Window > Console Variables.",
+   "Click Add Console Variable and add r.ScreenPercentage. Set it to 50 and watch the viewport get blurry, then set it back to 100.",
+   "Hover over the value field and read the Custom, Preset and Startup values in the tooltip. Untick the row and see the value go back to the startup value. Then tick it again.",
+   "Add the command stat unit through the same input box. This command shows frame times on screen. Then use Search All with the text lumen|screen percentage, and add one Lumen variable from the global list with Add CVAR.",
+   "Open the Presets panel and save the list as a preset named CVP_DailyCheck.",
+   "In the Show menu of the viewport, turn Particles Sprite off and on again. Then press Alt + C to turn the Collision view on and off."
+  ],
+  "done_when": "Send a screenshot of the Console Variables Editor that shows at least three rows (including r.ScreenPercentage and stat unit) and the Presets panel with CVP_DailyCheck saved."
+ },
+ "TAQ62": {
+  "brief": "Editor Preferences is the window where you set how the Unreal Editor itself behaves, such as how often it saves your work, how the camera moves and which keyboard shortcuts you use. These settings belong to you and not to the project. A few minutes spent here saves a lot of time later. In this quest you check auto save, choose your camera controls, make a new keyboard shortcut and export your shortcuts to a file.",
+  "checklist": [
+   "Open Edit > Editor Preferences. In the Auto Save section, check that Enable AutoSave is on. Set Frequency in Minutes and Warning in Seconds to values you like.",
+   "Go to Level Editor, then Viewports, then Controls. Pick the Flight Camera Control type you prefer (for example Use WASD Only When Right Mouse Button is Held) and try it in the viewport.",
+   "Turn on Highlight Objects Under Mouse Cursor. Then move the mouse over a few actors in the viewport to see the effect.",
+   "In the Content Browser section, turn on Auto Reimport Textures. Then edit a texture source file outside Unreal and confirm that Unreal imports it again by itself.",
+   "Open the Keyboard Shortcuts section and bind a new shortcut to a command you use often. If a warning says the keys are already taken, decide between Override, which removes the old binding, and cancel.",
+   "Click Export at the top of the Keyboard Shortcuts editor and save your keybinds as an .ini file."
+  ],
+  "done_when": "Send a screenshot of the Keyboard Shortcuts section that shows your new binding, and a screenshot of the Auto Save section with your values. Write the name of the exported .ini file in your message."
+ },
+ "TAQ63": {
+  "brief": "In Niagara, an emitter inside a system can be a child of an emitter asset, which is then called the parent. The child takes all its settings from the parent, and you can change, or override, single values in the child. When you later change the parent, every child gets the change, but keeps its own overrides. This keeps many effects in a project consistent and easy to update. In this quest you make one parent emitter for hit effects and use it three times in one system.",
+  "checklist": [
+   "Create a Niagara Emitter asset named NE_TA_HitBase (the Fountain template is fine). Set a Spawn Rate, a Lifetime range and a Sprite Size range that you like, and save it.",
+   "Open NE_TA_HitBase. In Emitter Properties, under Asset Options, set Library Visibility so that the emitter shows in the library, and give it a Category named TA Hits.",
+   "Right-click NE_TA_HitBase in the Content Browser and choose Create Niagara System. Name the system NS_TA_HitVariants.",
+   "In NS_TA_HitVariants, right-click the System Overview and choose Add Emitter. Add NE_TA_HitBase two more times, so the system has three emitters. Rename the three emitters to Concrete, Glass and Wood.",
+   "In Glass, override the color in Initialize Particle. In Wood, add a Gravity Force module. Leave Concrete unchanged.",
+   "Open NE_TA_HitBase again and change its Spawn Rate. Go back to NS_TA_HitVariants and confirm that all three children picked up the new rate but kept their own overrides.",
+   "In one child, click the reset arrow next to an overridden value to set it back to the value of the parent."
+  ],
+  "done_when": "Send a screenshot of NS_TA_HitVariants with the three child emitters visible and one override arrow visible in the stack. Also send a second screenshot of the Niagara Asset Browser Details panel that shows NE_TA_HitBase in your TA Hits category."
+ },
+ "TAQ64": {
+  "brief": "In Niagara, most values in a module do not have to be one fixed number. A dynamic input is a small function that you put in the place of a value, for example a random number in a range. A curve changes a value over the life of a particle. With these two tools you can get many different looks from the standard modules, without building a module of your own. In this quest you add several dynamic inputs and curves to a fountain of embers.",
+  "checklist": [
+   "Create a Niagara System named NS_TA_Embers from the Fountain template and drag it into your level.",
+   "In Particle Spawn, open Initialize Particle. Enable Sprite Rotation and set the mode to Direct Angle (Degrees). Then click the dropdown arrow next to the value, choose Dynamic Inputs, then Random Range Float, and set the range from -10 to 30.",
+   "In Add Velocity, click the dropdown arrow next to the value and choose Dynamic Inputs, then Random Range Vector. Give it a small range for X and Y and a larger range for Z.",
+   "In Particle Update, open Scale Color. Turn off Scale RGB, and apply the Smooth Ramp Down template to the Scale Alpha curve so each particle fades out over its life.",
+   "Add a Scale Sprite Size module to Particle Update. Set Scale Factor to a curve so that particles grow and then shrink. Then open Window > Curves and edit the same curve in that panel.",
+   "Chain two dynamic inputs: on any float value, pick a dynamic input, and then pick another dynamic input on one of its own inputs. Note the result.",
+   "Find the Library Only checkbox in the dynamic input list. Uncheck it and see which extra entries appear in the list."
+  ],
+  "done_when": "Send a screenshot of the stack with at least three dynamic inputs visible (Random Range Float, Random Range Vector and a curve) and the Curves panel open that shows your Scale Sprite Size curve."
+ },
+ "TAQ65": {
+  "brief": "An event is a message that a particle in one emitter sends to another emitter, for example \"I am here\" or \"I just died\". The other emitter can react by spawning its own particles at that place. This is how one effect becomes a chain of effects. Events only work with CPU simulation. In this quest you build fireworks: a rocket that leaves a trail behind it and explodes when its life ends.",
+  "checklist": [
+   "Create a Niagara System named NS_TA_Fireworks with an emitter named Rocket (CPU sim, from the Sprite Burst or Fountain template). Give the rockets a lifetime of about 2 s and a strong upward velocity.",
+   "In the Rocket emitter, open Emitter Properties and enable Requires Persistent ID. Events need this so that each particle can be identified.",
+   "In the Particle Update group of Rocket, click the + button. Under Events, add Generate Location Event and Generate Death Event.",
+   "Add a second emitter named Trail. Click the + button next to Emitter Properties and add an Event Handler. Set Source to the location event of Rocket, set Execution Mode to Spawned Particles and set Spawn Number to 3. Then add a Receive Location Event module.",
+   "Add a third emitter named Explosion. Add an Event Handler with Source set to the death event of Rocket and a Spawn Number of about 60, and add a Receive Death Event module. Give the explosion particles a short lifetime and a random sphere velocity.",
+   "As a test, set Execution Mode to Every Particle on the Trail handler and watch what happens. Then set it back to Spawned Particles.",
+   "Optional: add a Collision module to Rocket and then a Generate Collision Event. Make the explosion also start when a rocket hits something."
+  ],
+  "done_when": "Send a screenshot of the three emitters in the System Overview with the Event Handler stages visible, and of the viewport that shows a trail behind a rocket and an explosion when the rocket dies."
+ },
+ "TAQ66": {
+  "brief": "Some effects must start on the surface of an object, such as sparks on a prop or magic that covers a character. For this, Niagara needs to read the shape of a mesh. It does that through a data interface, which is a way for Niagara to read data from outside the particle simulation. In this quest you spawn particles on a static mesh and on a skeletal mesh (a mesh with bones), and you draw the particles as small 3D meshes in place of sprites.",
+  "checklist": [
+   "Create a Niagara System named NS_TA_MeshSpawn from the Fountain template. Remove the modules Add Velocity in Cone and Shape Location.",
+   "In Particle Spawn, add a Static Mesh Location module. Set its Static Mesh data interface to a Starter Content mesh (Shape_Sphere is fine). Confirm that particles appear on the surface of the mesh.",
+   "Add a second emitter. In its Particle Spawn group, add a Skeletal Mesh Location module and point the data interface at a skeletal mesh from your project (the mannequin works). Try both bone/socket sampling and surface sampling.",
+   "In the second emitter, replace the Sprite Renderer with a Mesh Renderer, which draws each particle as a 3D mesh. Set Particle Mesh to a small mesh. Enable Override Materials and add a material that has the Niagara Mesh Particles flag checked.",
+   "In Initialize Particle, set the Sprite attributes to Unset, because a Mesh Renderer does not use them. Set Mesh Scale Mode to Random Uniform with a small range.",
+   "On the Mesh Renderer, set Facing Mode to Velocity and compare the result with Default.",
+   "Place the system in the level next to the source mesh, and check that the particles follow its surface."
+  ],
+  "done_when": "Send a screenshot of both emitters in the stack with Static Mesh Location and Skeletal Mesh Location visible, and of the viewport that shows particles sitting on each mesh, with the Mesh Renderer details open."
+ },
+ "TAQ67": {
+  "brief": "Niagara Fluids is a plugin that simulates gas, fire and liquid in real time. A gas simulation divides a box of space into a grid of small cells, and each cell stores values such as density, temperature and velocity. More cells give a sharper result but cost much more performance, so you need to know which settings to change. In this quest you place a ready-made gas explosion, make it collide with a sphere, change how it behaves and measure its cost.",
+  "checklist": [
+   "Open Edit > Plugins and search for Niagara. Enable Niagara Fluids, accept the Beta warning and restart the editor.",
+   "Right-click in the Content Drawer and choose Niagara System. Under Niagara Fluids, then 3D Gas, pick Grid3D_Gas_Explosion. Name the system NS_TA_GasExplosion and drag it into the level.",
+   "Select the system in the level. In the Details panel, under Override Parameters, set WorldSpaceSize to 300, 300, 600 and ResolutionMaxAxis to 300. Turn ShowOverlays off and on again to restart the explosion.",
+   "Add a Sphere above the explosion, inside the bounds of the simulation. Add an actor tag named collider to the sphere, and watch the gas flow around it.",
+   "Open the system. In Grid3D_Gas_CONTROLS_Emitter, open Emitter Summary. Set Density Dissipation to 3.0, Temperature Dissipation to 1.5, Velocity Dissipation to 0.8 and Temperature Buoyancy to 3.5. Dissipation is how fast a value fades away, and buoyancy makes hot gas rise.",
+   "In the Render section, set Render Density Gain to 0.5. Switch Render Temperature to Curve and edit the color curve.",
+   "Note the frame time with ResolutionMaxAxis at 300 and then at 150, and write both numbers down."
+  ],
+  "done_when": "Send a screenshot of the explosion colliding with the tagged sphere in the level, plus a screenshot of the Emitter Summary with your changed dissipation and buoyancy values. Write your two frame-time numbers in the message."
+ }
+}

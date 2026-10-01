@@ -1,0 +1,151 @@
+{
+ "EAQ36": {
+  "brief": "Outdoor scenes in Unreal usually start with two actors: a Directional Light, which acts as the sun, and a Sky Atmosphere, which draws a sky that reacts to the sun. When the two are linked, moving the sun changes the color of the sky, just like in the real world. In this quest you build this sun and sky from an empty level, rotate the sun to sunset and noon, and add a second light as a moon.",
+  "checklist": [
+   "Make a new level and choose Empty Level. Then place a Directional Light and a Sky Atmosphere from the Place Actors panel.",
+   "Select the Directional Light and enable Atmosphere Sun Light in its Details panel. This tells the sky to use this light as the sun. Check that Atmosphere Sun Light Index is 0.",
+   "Hold Right Ctrl + L and move the mouse to rotate the sun. Find a low sun angle that looks like a sunset, and a high sun angle that looks like noon.",
+   "On the Directional Light, turn on Use Temperature. Try a Temperature of 6500 K and then 3000 K, and note how the color of the light changes.",
+   "Turn on Show > Shadow Frustum for the light. Look at the rays and notice that they are parallel, which is how sunlight behaves.",
+   "Select the Sky Atmosphere and change Mie Scattering Scale up and down. Then set Mie Anisotropy to 0 and to 0.9 and watch the glow around the sun. Reset the values to their defaults when you are done.",
+   "Add a second Directional Light and set its Atmosphere Sun Light Index to 1. Make it dim and blue so it works as a moon, and rotate it so it points the opposite way to the sun."
+  ],
+  "done_when": "Send two screenshots of the same view: one at sunset with a low sun, and one at noon with a high sun. In one of them, the Details panel of the Directional Light must be visible with Atmosphere Sun Light enabled."
+ },
+ "EAQ37": {
+  "brief": "Local lights are lights that sit at one place in the level and light only the area around them. Unreal has three kinds: the Point Light shines in all directions like a bulb, the Spot Light shines in a cone like a torch, and the Rect Light shines from a flat rectangle like a screen or a window. In this quest you build a small dark room and try the most important settings of each one.",
+  "checklist": [
+   "Build a small dark room with a floor and 3 walls, and put a few props inside. Set the Directional Light and the Sky Light to a very low brightness, or delete them, so the room is dark.",
+   "Place a Point Light. Change Attenuation Radius, which is how far the light reaches, until the light stops at the walls. Then set Source Radius to 20 and look at the highlight on a smooth prop.",
+   "Place a Spot Light and aim it at the floor. Set Inner Cone Angle to 20 and Outer Cone Angle to 40. Then try 35 and 40, and compare how soft the edge of the light is.",
+   "Place a Rect Light that acts as a TV screen. Set Source Width to 100 and Source Height to 60. Rotate it so its X axis points into the room, because a Rect Light only shines along its X axis.",
+   "On the Rect Light, try Barn Door Angle and Barn Door Length. Barn doors are flaps at the sides of the light, and you can use them to cut the light that spills onto the wall.",
+   "Set the Mobility of the Rect Light to Movable, and then to Stationary. Note how the shape of the shadow changes between blocky and soft."
+  ],
+  "done_when": "Send one screenshot of the room with all three lights turned on. The Details panel of the Spot Light must be visible and show your Inner Cone Angle and Outer Cone Angle values."
+ },
+ "EAQ38": {
+  "brief": "Every light in Unreal has a Mobility setting with three options. A Static light cannot change at all while the game runs, a Stationary light stays in place but can change brightness and color, and a Movable light can change in every way. This choice affects both how good the light looks and how much it costs to draw. In this quest you place five overlapping lights, see what happens when too many Stationary lights overlap, and decide which Mobility each light should have.",
+  "checklist": [
+   "Open a small test level that has a floor and a few props. Place five Point Lights close together so that the areas they light overlap.",
+   "Set all five lights to Stationary. Look at the light icons in the viewport and find the one that shows a red X.",
+   "Open View Mode, then Optimization Viewmodes, then click Stationary Light Overlap. Take a screenshot that shows the red overlap.",
+   "Change one light to Movable and one light to Static. Then check the overlap view again and see what changed.",
+   "Select a Movable Point Light and turn Cast Shadows off and then on again. Read the section of the documentation that explains why Movable lights without shadows are cheap.",
+   "For each of your five lights, write down which Mobility you would use in a real scene and why. One line for each light is enough."
+  ],
+  "done_when": "Send one screenshot in the Stationary Light Overlap view mode that shows the red overlap. Add your five lines of text, one for each light, that say which Mobility you chose."
+ },
+ "EAQ39": {
+  "brief": "Global illumination, often written GI, is light that bounces from one surface to another, for example sunlight that hits a floor and then lights the ceiling. Lumen is the system in Unreal Engine 5 that calculates this bounced light and the reflections while the game runs. Lumen has many settings, but only a few of them change the picture in a way you can easily see. In this quest you build a small room and try those settings in a Post Process Volume, which is a box that changes how the final picture is drawn.",
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering. Confirm that Dynamic Global Illumination Method and Reflection Method are both set to Lumen. Note whether Generate Mesh Distance Fields is turned on.",
+   "Build a small room with one open door and a bright white floor. Place a strong Directional Light outside so that light bounces into the room through the door.",
+   "Add a Post Process Volume and enable Infinite Extent (Unbound), so that its settings apply to the whole level.",
+   "In the Post Process Volume, under Global Illumination, try Final Gather Quality at 1 and then at 4. Compare the noise in the dark corners of the room.",
+   "Set Max Trace Distance to a very small value, for example 200, and watch what happens in the corners. Then set it back to its old value.",
+   "Place a sphere that works like a mirror, with a material that has Roughness 0 and Metallic 1. Under Reflections, set Max Reflection Bounces to 1 and then to 3. Compare the black areas in the reflection.",
+   "Try Skylight Leaking at 0 and then at 0.2. Note which value stops the room from becoming fully black."
+  ],
+  "done_when": "Send two screenshots of the room, one with Final Gather Quality 1 and one with Final Gather Quality 4. Also send a screenshot of the sphere with Max Reflection Bounces set to 3 and the Details panel of the Post Process Volume visible."
+ },
+ "EAQ40": {
+  "brief": "Virtual Shadow Maps, often written VSM, are the default way Unreal Engine 5 draws shadows. They can make shadows that are sharp where an object touches the ground and softer further away, which is how real shadows look. In this quest you check that your project uses Virtual Shadow Maps, make soft shadows with one setting on the light, and look at a debug view that shows which parts of the shadow are redrawn every frame.",
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering, and find the Shadows section. Confirm that Shadow Map Method is set to Virtual Shadow Maps.",
+   "Place a tall thin mesh, such as a pole or a fence, on a floor. Add a Directional Light with Mobility set to Movable, and rotate it to a low angle so the shadow is long.",
+   "On the Directional Light, set Source Angle to 0.5 and then to 3. Watch the shadow: it should be sharp at the base of the pole and softer far away from it.",
+   "Place a Movable Point Light near a prop. Change Source Radius from 0 to 10 and compare the penumbra, which is the soft edge of the shadow.",
+   "Open Show, then Visualize, then Virtual Shadow Map, and pick the Cached Page view. Move the camera and watch the green and red pages. Green pages are reused from the last frame, and red pages had to be drawn again.",
+   "Add a mesh whose material uses World Position Offset, which moves the surface of the mesh, for example wind on foliage. See how this mesh keeps showing red pages.",
+   "On the Directional Light, compare Contact Shadow Length at 0 and at 0.1. Decide if it adds anything to the picture when Virtual Shadow Maps are on."
+  ],
+  "done_when": "Send two screenshots: one of the pole shadow with Source Angle 3 that shows the shadow sharp at the base and softer further away, and one of the Cached Page view with red and green pages visible."
+ },
+ "EAQ41": {
+  "brief": "A light function is a material that you put on a light to change its brightness in a pattern, a little like a slide in a projector. Artists use light functions for moving effects such as the light patterns under water, called caustics, or the shadows of clouds. In this quest you make a light function material with a moving pattern, put it on a Spot Light, and adjust how it looks.",
+  "checklist": [
+   "Create a material named M_LF_Caustic. Open it, and in the Details panel set Material Domain to Light Function.",
+   "Add a tiling noise texture or caustic texture, and make it move with a Panner node. Connect the result to Emissive Color. Keep the values between 0 and 1.",
+   "Place a Spot Light with Mobility set to Movable and aim it at a floor. In the Details panel of the light, assign M_LF_Caustic to Light Function Material.",
+   "Change the X and Y values of Light Function Scale until the size of the pattern looks right. Also note what the Z value does.",
+   "Set Fade Distance so that the pattern fades out far from the camera. Then set Disabled Brightness to the average brightness of your pattern, so the light does not jump in brightness when the pattern fades.",
+   "Place an Exponential Height Fog, enable Volumetric Fog on it, and see the pattern appear in the fog.",
+   "Open the console and run ShowFlag.VisualizeLightFunctionAtlas 1. Check if your material appears in the atlas, which is one shared texture where Unreal stores light functions."
+  ],
+  "done_when": "Send one screenshot of the animated caustic pattern on the floor, and one screenshot of the Light Function Atlas view that shows your material in the list."
+ },
+ "EAQ42": {
+  "brief": "Exponential Height Fog is a fog actor that is thick in low places and thin in high places. It is a cheap way to make an outdoor scene feel deep, because things far away fade into the fog. In this quest you place the fog, change where it sits and how it is colored, add a second layer of fog, and connect it to the sky.",
+  "checklist": [
+   "Open an outdoor level that has some difference in height, such as a hill or a Landscape. Open Place Actors, then Visual Effects, and place an Exponential Height Fog.",
+   "Move the fog actor up and down on the Z axis and watch where the thick fog sits. Then set Fog Height Falloff to a smaller value and to a larger value and compare.",
+   "Set Fog Inscattering Color and Directional Inscattering Color to two clearly different colors. Look toward the sun, and then look away from it, to see where each color is used.",
+   "Open Second Fog Data, which is a second layer of fog. Give this layer a small density and a Fog Height Offset so that it sits in a valley.",
+   "Set Start Distance to 0 and then to 5000, and compare how the scene looks. Read the Performance section of the documentation to learn why a larger start distance is cheaper.",
+   "Do this step if your project uses Sky Atmosphere. Turn on Support Sky Atmosphere Affecting Height Fog in Project Settings, set both inscattering colors to black, and try Height Fog Contribution on the Sky Atmosphere."
+  ],
+  "done_when": "Send two screenshots, one looking toward the sun and one looking away from it, so that the two inscattering colors are visible. Also show the Details panel with your Second Fog Data values."
+ },
+ "EAQ43": {
+  "brief": "A Sky Light takes a picture of the sky around your level and uses it to light everything softly and to create reflections. This picture is called a capture. If the sky changes and the capture does not, the lighting and the reflections no longer match the sky. In this quest you see this problem for yourself, and then you fix it with Recapture and with Real Time Capture.",
+  "checklist": [
+   "Start from your level from quest EAQ36, which has a Directional Light and a Sky Atmosphere. Place a Sky Light and set its Mobility to Movable.",
+   "Place a chrome sphere, which is a sphere with a material that has Roughness 0 and Metallic 1. You will use it to see the reflection of the sky.",
+   "Rotate the sun to a sunset. Notice that the sphere and the lighting on the ground do not change until you press Recapture in the Details panel of the Sky Light.",
+   "Enable Real Time Capture on the Sky Light. Rotate the sun again and watch the reflection and the lighting follow it.",
+   "Change Cubemap Resolution from 128 to 64, and then to 256. Compare the reflection on the sphere each time.",
+   "Open the Advanced section and enable Lower Hemisphere is Solid Color. Note what changes under overhangs, which are places that are covered from above.",
+   "Switch Source Type to SLS Specified Cubemap and pick any HDRI, which is a picture of a full sky. Then switch back to SLS Captured Scene."
+  ],
+  "done_when": "Send two screenshots of the chrome sphere at sunset: one taken before Recapture, where the sky reflection is old, and one with Real Time Capture enabled. The Details panel of the Sky Light must be visible."
+ },
+ "EAQ44": {
+  "brief": "A prop is a small object in a level, such as a crate or a lamp. Most props are made in another 3D program and brought into Unreal as an FBX file, a common file format for 3D models. The pivot is the point the prop moves and rotates around, and together with the scale it decides how easy the prop is to place later. In this quest you make a simple prop, import it with the correct pivot and size, and check it next to an object of a known size.",
+  "checklist": [
+   "In your 3D app, make a small prop such as a crate, a barrel or a lamp. Put it at the origin, which is the zero point of the scene, so that the origin is at one corner or at the bottom center of the prop.",
+   "Triangulate the mesh in your 3D app before you export it, which means turning all its faces into triangles. Then export it as FBX. Unreal uses the version FBX 2020.2.",
+   "In Unreal, click Add/Import in the Content Browser and choose your FBX file. In the FBX Import Options window, look at Import Uniform Scale, Convert Scene Unit and Generate Lightmap UVs before you click Import.",
+   "Name the asset SM_<PropName>, with the name of your prop in place of <PropName>. Open it in the Static Mesh Editor and check its size and its pivot.",
+   "If the scale is wrong, import the file again with a different Import Uniform Scale. Do not fix it by scaling the actor in the level.",
+   "Place SM_<PropName> in a level next to the default mannequin, which is 180 cm tall, or next to a 100 cm cube, to check its size."
+  ],
+  "done_when": "Send a screenshot of the Static Mesh Editor that shows SM_<PropName>, and one screenshot of the prop in the level next to an object that shows its size. Add one line that says where your pivot is."
+ },
+ "EAQ45": {
+  "brief": "Collision is a simple invisible shape around a mesh that tells the game where the mesh is solid. Players never see it, but they feel it when it stops them in the wrong place or lets them walk through an object. In this quest you add collision to props in the Static Mesh Editor in several ways, from automatic shapes to a collision that you build by hand from boxes.",
+  "checklist": [
+   "Open a simple prop in the Static Mesh Editor. You can use SM_Door from Starter Content or your own mesh with a name that starts with SM_.",
+   "In the Collision menu, add a Box Simplified Collision. Then add a Sphere Simplified Collision and see that both shapes now exist. Use Remove Collision to delete them.",
+   "Open a prop with a more complex shape, for example SM_Chair. Try 10-DOP, 18-DOP and 26-DOP from the Collision menu and look at how the shapes differ.",
+   "Try Auto Convex Collision, which builds the collision from several simple shapes called hulls. Change Hull Count and Max Hull Verts, click Apply, and compare the result.",
+   "Build a collision by hand. Add a Box Simplified Collision, then move and scale it to fit one part of the prop. Duplicate it with Ctrl + D and fit the copies to the other parts.",
+   "Place the prop in a level, set Simulate Physics to true, and press Play. Then change the Collision Preset and see what changes."
+  ],
+  "done_when": "Send two screenshots of the Static Mesh Editor: one with the result of Auto Convex Collision, and one with the collision you built by hand from several boxes. Add one line that says which one you would use in a finished game and why."
+ },
+ "EAQ46": {
+  "brief": "Modeling Mode is a set of tools inside the Unreal editor for making and changing meshes, so you do not always need another 3D program. A Boolean combines two meshes, for example by cutting the shape of one out of the other, and a Bevel makes sharp edges softer. In this quest you build a quick prop from a box and a cylinder with these tools and save it as a Static Mesh.",
+  "checklist": [
+   "Press SHIFT+5 to enter Modeling Mode. If Modeling Mode is missing, enable the plugin named Modeling Tools Editor Mode first.",
+   "In the Create category, place a Box with Output Type set to Static Mesh. This is the body of your prop. Then place a Cylinder that cuts into the Box.",
+   "Select the Box first, and then the Cylinder. Open Model, then Boolean, and use Difference A - B to cut a hole in the Box. Click Accept.",
+   "Select the result and open Model, then PolyGroup Edit. Select the top face and use Extrude to add a lip. Then select the outer edges and use Bevel. Click Accept.",
+   "Open Xform, then Edit Pivot, and set the pivot to Bottom. Click Accept.",
+   "Save the asset as SM_Quick_<Name>, with a name of your choice in place of <Name>. Place two copies of it in the level."
+  ],
+  "done_when": "Send a screenshot of the finished mesh in the level and a screenshot of the Content Browser that shows SM_Quick_<Name>. Also say which Boolean operation you used."
+ },
+ "EAQ47": {
+  "brief": "UVs are a flat map of the surface of a 3D mesh. They tell Unreal which part of a texture goes on which part of the mesh. When the UVs are stretched or lie on top of each other, every texture on the mesh looks wrong. In this quest you open a mesh in the UV Editor, create clean UVs, and check the result with a checker pattern.",
+  "checklist": [
+   "Take the SM_Quick_ prop from quest EAQ46, or any other mesh made in Modeling Mode. Right-click it in the Content Browser and open the UV Editor.",
+   "In Display, turn on a checker texture as the background. Look at the 3D Viewport and find places where the checker squares are stretched.",
+   "Run AutoUV with the default method, Patch Builder, and click Apply. Then look at the checker squares again.",
+   "Use the Seam tool to cut one seam on an edge that players will not see. A seam is a cut that lets the surface unfold flat. Then use Unwrap on that island, which is one connected piece of the UV map.",
+   "Use Layout with the type Repack so that no islands overlap inside the 0-1 square. Click Apply and then Save.",
+   "In the level, assign a material with a visible texture to the mesh. Compare how it looks now with how it looked before."
+  ],
+  "done_when": "Send two screenshots: one of the 2D view of the UV Editor after Repack, and one of the prop in the level with a checker material or a textured material that shows even squares."
+ }
+}

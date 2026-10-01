@@ -1,0 +1,150 @@
+{
+ "LDQ53": {
+  "brief": "A Data Layer is a named group of actors in a World Partition level that you can load and unload together. This lets one map hold several versions of the same place, for example the blockout and the final art, or a building before and after it is destroyed. Editor Data Layers only help you organize your work in the editor, and Runtime Data Layers can be switched on and off while the game runs. In this quest you make one of each and switch the runtime one with a key press.",
+  "checklist": [
+   "Open a World Partition level (the Open World template works). Then open Window > World Partition > Data Layer Outliner, the panel that lists the Data Layers of this level.",
+   "In the Content Browser, right-click, open Miscellaneous, and choose Data Layer. Make two assets this way: DL_Blockout with the type Editor, and DL_Ruins with the type Runtime.",
+   "Drag both assets into the Data Layer Outliner. This creates a Data Layer Instance for each one, which is the version of the Data Layer that belongs to this level.",
+   "Select your blockout cubes. Then right-click DL_Blockout in the Data Layer Outliner and choose Add Selected Actors to Selected Data Layers.",
+   "Place a few ruin meshes on the same spot and add them to DL_Ruins. On the DL_Ruins instance, set Initial Runtime State so that the layer starts unloaded.",
+   "Click the eye icon on DL_Blockout a few times to hide and show the blockout.",
+   "In the Level Blueprint, add a key press event that uses the node Set Data Layer Instance Runtime State to set DL_Ruins to Activated. Test it in Play In Editor."
+  ],
+  "done_when": "Send one screenshot of the Data Layer Outliner that shows both instances and their actors. Also send a short clip, or two screenshots, taken in Play In Editor that show the level before and after the key press."
+ },
+ "LDQ54": {
+  "brief": "In a World Partition level, the parts of the world that are far from the player are unloaded, so they would simply disappear. HLOD, short for Hierarchical Level of Detail, fixes this by building cheap stand-in meshes, called proxies, that are shown in place of the far actors. This keeps mountains and forests visible on the horizon at a low cost. In this quest you create two HLOD Layers, assign rocks and trees to them, and build the HLODs.",
+  "checklist": [
+   "Open a World Partition level. In the Content Drawer, click + Add, open Miscellaneous, and choose HLOD Layer. Name it HLOD_Rocks and set its Layer Type to Merged Mesh.",
+   "Make a second HLOD Layer named HLOD_Trees and set its Layer Type to Instancing.",
+   "Place 20 rock meshes and 20 tree meshes far away from the player start. Set the Mobility of all of them to Static.",
+   "Select the rocks and, in the Details panel, set their HLOD Layer property to HLOD_Rocks. Do the same for the trees with HLOD_Trees.",
+   "Open the Build menu and run Build HLODs. Wait until the build is finished.",
+   "In the viewport view mode menu, open Level of Detail Coloration and choose Hierarchical LOD Coloration. Move the camera close to the actors, where they are drawn green, and then far away, where the proxy is drawn blue.",
+   "Start Play In Editor and walk far away. Open the console and run the command wp.Runtime.ToggleDrawRuntimeHash2D to see which HLOD cells are loaded."
+  ],
+  "done_when": "Send two screenshots in Hierarchical LOD Coloration: one close up with green actors and one from far away with the blue proxy. Add one line that says which layer type you gave the trees and why."
+ },
+ "LDQ55": {
+  "brief": "Foliage mode lets you paint many copies of a mesh, such as rocks, bushes or trees, onto the ground with a brush instead of placing them one by one. Foliage fills a level quickly, but it can also block paths and views, so deciding where it grows and where it does not is part of level design. In this quest you paint two foliage types on a slope, erase a path through them, and set how far away they stop being drawn.",
+  "checklist": [
+   "Open a level that has a Landscape. Press Shift+3 to enter Foliage mode.",
+   "Drag two Static Meshes from the Content Drawer into the Mesh List, for example a rock and a bush (any assets are fine). This creates a Static Mesh Foliage type for each mesh.",
+   "Select the Paint tool. Set Brush Size to 512 and Paint Density to 0.3. Paint both foliage types across a slope.",
+   "Hold Shift and paint to erase foliage. Clear a path through the foliage that is wide enough for a player.",
+   "In Filters, turn off Landscape and turn on Static Mesh. Try to paint on the landscape and note what happens.",
+   "Select the bush type and change Scale Min and Scale Max. Then use the Reapply tool to paint the new scale onto bushes that are already placed.",
+   "In the Foliage Details, set an End Cull Distance and a Start Cull Distance for the bush. These are the distances at which the bushes fade out and stop being drawn. Start Play In Editor and walk away to watch them disappear."
+  ],
+  "done_when": "Send one screenshot of the painted slope with a clear path through it, and one screenshot of the Foliage panel that shows your two types and the Cull Distance values."
+ },
+ "LDQ56": {
+  "brief": "The Sky Atmosphere is the actor that draws a realistic sky and adds haze to things that are far away. In an outdoor level this haze is the strongest sign of depth, because it tells the player what is near and what is far. In this quest you set up a sky with a sun, place a line of cubes that goes into the distance, and change the atmosphere settings until the distances are easy to see.",
+  "checklist": [
+   "Start from an empty level. From the Place Actors panel, add a Sky Atmosphere, a Directional Light and a Sky Light.",
+   "On the Directional Light, enable Atmosphere Sun Light so that it acts as the sun. Then hold Right Ctrl + L and move the mouse to move the sun across the sky.",
+   "Place 5 large cubes in a line that goes away from the camera. Put each cube about 100 meters further away than the one before it.",
+   "Set the sun low for a sunset and take a screenshot. Then set the sun high for noon and take another screenshot.",
+   "Raise Mie Scattering Scale a little. Watch how the haze and the halo around the sun change.",
+   "Raise Aerial Perspective View Distance Scale. Compare how easy it is now to tell which cube is nearer.",
+   "Choose the settings that make distance easiest to see, and save the level with them."
+  ],
+  "done_when": "Send three screenshots of the same line of cubes: one at sunset, one at noon, and one with your final settings. Add one line that says which setting helped depth the most."
+ },
+ "LDQ57": {
+  "brief": "The NavMesh, short for Navigation Mesh, is a map of the floor areas where AI characters can walk. Unreal builds it from your level geometry. The NavMesh has settings for the size of the character, called the agent, and if they do not match your character the AI will fail in doorways, on stairs and in narrow gaps. In this quest you change these settings and watch how the NavMesh reacts.",
+  "checklist": [
+   "Open a blockout level and add a NavMeshBoundsVolume that covers the play area. Press P in the viewport to see the NavMesh, which is drawn in green.",
+   "Build a narrow gap of about 60 cm between a wall and a box. Check that the NavMesh goes through the gap.",
+   "Select the actor named RecastNavMesh-Default. In the Details panel, find the Generation section and raise Cell Size from its default value to 64. Watch the NavMesh in the gap disappear.",
+   "Set Cell Size back to its default. Now change Agent Radius and Agent Max Step Height, and watch how the NavMesh changes on stairs and in doorways.",
+   "Pick one small decorative prop. In the Collision section of its Details panel, disable Can Ever Affect Navigation so the prop no longer cuts a hole in the NavMesh.",
+   "Write down the Cell Size, Agent Radius and Agent Max Step Height that you keep for this level, and why you chose each one."
+  ],
+  "done_when": "Send two screenshots of the same gap: one with the default Cell Size where the NavMesh passes through, and one with Cell Size 64 where the NavMesh is gone. Add your three chosen values with one line of reason for each."
+ },
+ "LDQ58": {
+  "brief": "A Nav Modifier Volume is a box that changes the NavMesh inside it. It can remove the NavMesh, or it can mark the area as costly, so that AI characters prefer other routes but can still cross it if there is no other way. This lets a level designer guide AI around hazards without building walls. In this quest you block and steer a roaming AI with these volumes, and you build a small reusable mud patch actor.",
+  "checklist": [
+   "In a blockout level that has a NavMesh, place an AI character that roams around. BP_NPC_NavMesh from the Basic Navigation guide is fine.",
+   "From the Place Actors panel, drag in a Nav Modifier Volume. Press P and notice that there is no NavMesh inside it. Use the volume to block one route.",
+   "Add a second Nav Modifier Volume and set its Area Class to NavArea_Obstacle, which gives the area a high cost. Place it on the short route to a target.",
+   "Click Simulate. The AI should take the long way around the obstacle area. Then close the long way with another volume and see the AI walk through the obstacle area.",
+   "Change the obstacle volume to NavArea_Null and click Simulate again. The AI can no longer reach its goal.",
+   "Make a Blueprint named BP_MudPatch. It is an Actor with a Box component as its root and a Nav Modifier component. Set its Area Class to NavArea_Obstacle and place two of them in the level."
+  ],
+  "done_when": "Send one screenshot taken in Simulate with P turned on. It must show the green NavMesh, the obstacle zone in a different color, and the AI walking around it. Add one sentence that says what happened with NavArea_Null."
+ },
+ "LDQ59": {
+  "brief": "The NavMesh breaks wherever the floor is not continuous, for example at a gap, a ledge or a ladder. AI characters will not cross such a break on their own. A Nav Link Proxy is an actor that connects two points on the NavMesh and tells the AI that it may jump or drop between them. In this quest you use Nav Link Proxies to let an AI cross a gap and drop down from a ledge.",
+  "checklist": [
+   "Build two floor areas with a gap between them, and a raised platform that has a ledge. Cover all of it with one NavMeshBoundsVolume.",
+   "Place an AI character that roams around. Press P and confirm that the two floor areas are not connected by the NavMesh.",
+   "From the Place Actors panel, drag in a Nav Link Proxy. Move its two handles, PointLinks[0].Left and Right, onto the NavMesh on each side of the gap. The green arrow must stay visible, because it shows that the link is connected.",
+   "In the Details panel, open Point Links and then entry 0, and set Direction to Left to Right. Click Simulate and watch the AI cross in one direction only.",
+   "Add a second Nav Link Proxy at the ledge. Put its Left handle on the edge of the platform and its Right handle on the floor below, and set Direction to Left to Right. The AI can now drop down.",
+   "Select RecastNavMesh-Default and enable Draw Tile Bounds to see the tiles of the NavMesh. Check that each link connects tiles that are next to each other."
+  ],
+  "done_when": "Send one screenshot with P turned on that shows both Nav Link Proxies with their green arrows visible. Add one sentence that says which Direction each link uses and why."
+ },
+ "LDQ60": {
+  "brief": "When an AI character does not go where it should, the cause is often in the NavMesh, the map of where AI can walk. Unreal can draw the NavMesh in several ways that show its polygons, its tiles and its costs. You cannot fix a movement problem that you cannot see, so reading this drawing is the first step for every navigation bug. In this quest you turn on the different drawing options and find one spot where the NavMesh is missing.",
+  "checklist": [
+   "Open a level that has stairs, a doorway and a NavMeshBoundsVolume. Press P to show the NavMesh.",
+   "Select the actor RecastNavMesh-Default. In the Display section of the Details panel, set Draw Offset to 50 and compare how the stairs look now.",
+   "Enable Draw Poly Edges, then Draw Tile Bounds, then Draw Polygon Costs. Take one screenshot of each.",
+   "Enable Draw Nav Links and Draw Failed Nav Links. Note in which situations each one is useful.",
+   "Start Play in Editor. Open the console and type show Navigation true to see the NavMesh during play. Then type show Navigation false to hide it.",
+   "Find one place where the NavMesh is missing but a player could walk. Write one line that says why it is missing, for example step height, a gap, or the collision of a prop."
+  ],
+  "done_when": "Send three screenshots (Poly Edges, Tile Bounds and Polygon Costs), and add your one-line note about the spot where the NavMesh is missing."
+ },
+ "LDQ61": {
+  "brief": "The quickest way to test whether the NavMesh of your level really connects two places is to send a character from one to the other. The Blueprint node AI Move To does this: it makes a character find a path on the NavMesh and walk to a destination. In this quest you build a simple walker character that goes to a Target Point, a marker actor that you place in the level.",
+  "checklist": [
+   "In a Third Person project, copy BP_ThirdPersonCharacter into a folder named NavigationSystem and rename the copy to BP_NPC_Walker. Open it and delete all input nodes.",
+   "Add a Target Point actor to the level. You find it in the Place Actors panel under All Classes. Name it TP_Goal.",
+   "In BP_NPC_Walker, add a variable named Goal of the type Target Point (Object Reference) and turn on Instance Editable. On Event BeginPlay, use Get Actor Location on Goal, and then call AI Move To with Pawn set to self and Destination set to that location.",
+   "From the On Fail pin, add a Delay of 0.1 and call the move again. From the On Success pin, add a Print String node that prints Arrived.",
+   "Place BP_NPC_Walker in the level and set its Goal to TP_Goal in the Details panel. Add a NavMeshBoundsVolume and click Simulate.",
+   "Optional: replace the goal with the node Get Random Reachable Point In Radius (with a radius of 1000) and a loop with a Delay of 4, as shown in the guide."
+  ],
+  "done_when": "Send a screenshot of the event graph of BP_NPC_Walker, and one screenshot taken in Simulate that shows the NPC arriving at TP_Goal."
+ },
+ "LDQ62": {
+  "brief": "A Smart Object is an object in the level that AI characters can use, such as a bench, a door or a workstation. Each Smart Object has one or more slots, which are the exact spots where a character stands or sits to use it. Placing these slots and pointing them the right way is level design work. In this quest you make a bench with two slots and place several benches in a small plaza.",
+  "checklist": [
+   "Open the Plugins window (Settings > Plugins) and look in the Gameplay category. Enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Then restart the editor.",
+   "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_Bench. Open it and add two Slots.",
+   "Create an Actor Blueprint named BP_SO_Bench. Give it a Static Mesh of a bench and a Smart Object component. On the component, set Definition Asset to SO_Definition_Bench.",
+   "Open BP_SO_Bench and move the two slots so that each one sits on one seat of the bench and faces forward.",
+   "Place three BP_SO_Bench actors in a small plaza blockout. Add a NavMeshBoundsVolume around the plaza.",
+   "Optional: follow the Quick Start guide to make an AI agent claim a slot and use it."
+  ],
+  "done_when": "Send a screenshot of the plaza with the three benches selected, so that the slot markers are visible. Add one sentence that says what Free, Claimed and Occupied mean."
+ },
+ "LDQ63": {
+  "brief": "EQS, the Environment Query System, lets AI ask questions about the level, such as where the nearest spot is that the enemy cannot see. It creates many test points, removes or scores them with tests, and shows the result as colored spheres. This lets you check and fix the cover layout of a level before any enemy logic exists. In this quest you build a cover query and test it in the editor with a special testing pawn.",
+  "checklist": [
+   "Enable the Environment Query System in Project Settings. Then build a small arena that has a NavMesh and 5 to 8 cover blocks.",
+   "Create an Environment Query asset named EQS_Cover. In it, add a Points: Grid generator around the Querier. The Querier is the character that runs the query.",
+   "Add a Trace test on the grid, with the Querier as its context. Set Test Purpose to Filter so that only points that cannot be seen from the querier remain. Change Bool Match if the result is the wrong way around.",
+   "Add a Distance test and set its Test Purpose to Score, so that points nearer to the querier get a higher score.",
+   "Create a Blueprint named BP_EQSTestPawn from the EQSTestingPawn class. Place it in the arena and set its Query Template to EQS_Cover.",
+   "Move the pawn around the arena and watch the spheres change. Then move one cover block so that a bad cover spot becomes a good one."
+  ],
+  "done_when": "Send two screenshots of the spheres of the EQS Testing Pawn, taken from two positions. Add one sentence that says which cover block you moved and why."
+ },
+ "LDQ64": {
+  "brief": "A patrol is an AI character that walks the same route again and again, and it is the most common kind of AI in levels. A good way to build one is to draw the route as a spline, a line through editable points, and to mark the stops with Target Point actors. Then you can change the route quickly without touching the AI logic. In this quest you build a patrol path and an NPC that walks from point to point in a loop.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_PatrolPath and give it a Spline component. Place it in a level that has a NavMesh, and drag the spline points into a loop around a building.",
+   "In the Details panel of the spline, enable Closed Loop. Then select one spline point and set its Type to Linear to make a sharp corner.",
+   "Place four Target Point actors on the corners of the spline. Name them TP_Patrol_1 to TP_Patrol_4.",
+   "Make BP_NPC_Patrol from your walker from quest LDQ61. Add an array variable named Patrol Points that holds Target Point references, and turn on Instance Editable.",
+   "On BeginPlay, build a loop: call AI Move To for the next point in the array, add a Delay of 2 on success, and then move to the next point. After the last point, go back to index 0.",
+   "Click Simulate. Adjust the spline and the Target Points until the patrol passes a window twice in each loop."
+  ],
+  "done_when": "Send one screenshot of the level with the closed spline and the four Target Points visible, and one screenshot taken in Simulate that shows the NPC on the path."
+ }
+}

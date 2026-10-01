@@ -1,0 +1,150 @@
+{
+ "LDQ89": {
+  "brief": "Every light in Unreal has a Mobility setting with three options. A Static light cannot change at all during play, a Stationary light stays in place but can change its color and brightness, and a Movable light can do everything but costs the most. Mobility decides both how expensive a light is and what you can do with it in gameplay. In this quest you find and fix a common problem, too many Stationary lights that overlap, and you explain your choice for each kind of light.",
+  "checklist": [
+   "Open one of your blockout levels, or make a new one with a corridor and one room.",
+   "Place 6 Point Lights or Spot Lights in the corridor. Set the Mobility of all of them to Stationary.",
+   "In the viewport, open the View Mode menu, then Optimization Viewmodes, and choose Stationary Light Overlap. Find the lights that show a red X, which means too many Stationary lights overlap there.",
+   "Fix the overlap. Change some lights to Movable, or move the lights further apart, until no red X is left.",
+   "Pick one light that only marks a door. Set it to Movable and turn off Cast Shadows. Read what the documentation says about the cost of such a light and note it.",
+   "Write 3 lines in a text note inside the level, with a Text Render or a note actor. Say which light is Static, which is Stationary, which is Movable, and why."
+  ],
+  "done_when": "Send two screenshots: one of the Stationary Light Overlap view with no red X, and one of the Lit view with your 3-line note visible."
+ },
+ "LDQ90": {
+  "brief": "Lumen is the system in Unreal Engine 5 that calculates bounced light, also called global illumination or GI, while the game runs. It is on by default. With Lumen a room that gets little light can become so dark that the player cannot see the layout. A Post Process Volume, or PPV, is a box that changes how the picture looks inside it, and it has a few Lumen settings for this. In this quest you use them to make a dark interior easy to see without losing its mood.",
+  "checklist": [
+   "Build a small interior with one door to the outside. Light the level with one Directional Light and one Sky Light.",
+   "Walk inside. Note the places where the room goes fully black and the player cannot see the layout.",
+   "Add a Post Process Volume that covers the room and name it PPV_Interior. In its Details panel, go to Global Illumination and enable the overrides under Lumen Global Illumination.",
+   "Raise Skylight Leaking a little, until you can see the corners. Then try Diffuse Color Boost, and keep it below 2.",
+   "Turn the sun off and on again, and measure how long the room takes to update. Then raise Final Gather Lighting Update Speed and compare.",
+   "Test Max Trace Distance with a low value and look for light that leaks through walls. Then set it back to a safe value.",
+   "Write a short note with the 3 values you kept and why you kept them."
+  ],
+  "done_when": "Send screenshots from before and after your PPV changes, and add your note with the 3 values."
+ },
+ "LDQ91": {
+  "brief": "Exposure is how bright the camera makes the picture, like the way your eyes adapt when you walk from sunlight into a dark room. Unreal adjusts exposure automatically, but the result is not always good, and a dark area can become impossible to see. A Post Process Volume is a box that changes camera settings such as exposure only inside its area. In this quest you give a bright yard and a dark tunnel their own volumes and adjust how the picture changes between them.",
+  "checklist": [
+   "Build a bright yard that leads into a dark tunnel. Keep one Directional Light and one Sky Light in the level.",
+   "Place two Post Process Volumes named PPV_Yard and PPV_Tunnel. Keep Infinite Extent turned off, and scale each box to fit its area.",
+   "In PPV_Tunnel, set Exposure Compensation to a higher value so that you can see inside the tunnel. Set Priority so that the tunnel volume wins in the places where the two volumes overlap.",
+   "Set a Blend Radius on both volumes, which makes the change gradual, and walk through the transition in PIE. Then adjust Speed Up and Speed Down, which control how fast the exposure adapts.",
+   "In the viewport, open Show, then Visualization, and enable HDR (Eye Adaptation). Read the value of Average Scene EV100 in each area.",
+   "Turn on Local Exposure in the tunnel volume (under Lens, then Local Exposure). Compare how the door opening looks with and without it."
+  ],
+  "done_when": "Send a screenshot of the HDR (Eye Adaptation) view in the tunnel, and a short note with the Priority, Blend Radius and Speed values you kept."
+ },
+ "LDQ92": {
+  "brief": "Normally a light shines on every object in its range. Lighting channels let you choose which objects a light affects: a light only lights the objects that share a channel with it. This lets you put a spotlight on one important object, such as a key, without making the whole room brighter. In this quest you light a key prop on its own channel and see why this does not work on Static objects.",
+  "checklist": [
+   "Place a key prop (SM_Key or any small mesh) on a table in a dim room. Set its mobility to Movable.",
+   "Add a Spot Light named SL_KeyHighlight and aim it at the key. Its mobility can be Stationary or Movable.",
+   "Select the light. In the Details panel, open the Light category, then Advanced, and find Lighting Channels. Turn off Channel 0 and turn on Channel 1.",
+   "Select the key mesh. In the Lighting category, find Lighting Channels and turn on Channel 1.",
+   "Check that the table and the walls stay dim while the key is lit. If any other mesh also lights up, fix its channels.",
+   "Test the reverse: set the key back to Static mobility and note what happens."
+  ],
+  "done_when": "Send a screenshot of the lit key on a dim table, and add one line that says what happened when the key was Static."
+ },
+ "LDQ93": {
+  "brief": "An emissive material is a material that glows by itself, like a lamp or a screen. Thin glowing strips along a floor or a wall are a cheap and clear way to show the player which way to go, and with Lumen they also throw real light on the path. Bloom is the soft glow that the camera adds around very bright things. In this quest you make a glowing strip material, lay strips along a route, and adjust the brightness and the bloom.",
+  "checklist": [
+   "Make a material named M_GuideStrip. Add a scalar parameter named Brightness and multiply it into Emissive Color. Then make a Material Instance of it named MI_GuideStrip.",
+   "Place thin strip meshes along the correct route in a dark corridor, on the edge of the floor or as a band on the wall. Apply MI_GuideStrip to them.",
+   "Set Brightness to 1, then 5, then 20. Note at which value the strip starts to glow, and at which value it starts to throw light on the floor.",
+   "Select one small strip. In the Details panel, enable Emissive Light Source, and compare the light it throws with a strip that has this option off.",
+   "In a Post Process Volume, adjust the Threshold and Intensity of Bloom until the strips glow but the white walls do not.",
+   "Walk the route in PIE from the start. Confirm that you can see the strips from each decision point, which is each place where the player must choose a direction."
+  ],
+  "done_when": "Send a screenshot taken from a decision point that shows the strips leading the way. Add a note with the Brightness and Bloom Threshold values you kept."
+ },
+ "LDQ94": {
+  "brief": "Exponential Height Fog is a fog actor that is thick in low places and thin in high places. Level designers use it to show the player what is low, far away or dangerous. With Volumetric Fog turned on, lights can also draw visible beams in the fog, and such a beam can mark an exit. In this quest you fill a pit with layered fog, keep a walkway clear, and make a light beam that points to the exit.",
+  "checklist": [
+   "Build a space with a high walkway and a low pit. Place an Exponential Height Fog actor, which you find in the Place Actors panel under Visual Effects.",
+   "Move the actor up or down (on the Z axis) and adjust Fog Density and Fog Height Falloff until the pit is foggy and the walkway is clear.",
+   "Enable Second Fog Data and give it a Fog Height Offset, so that a thin second layer of fog sits only in the pit.",
+   "Set Start Distance so that the area right in front of the player stays clear. Read what the documentation says about its effect on performance and note it.",
+   "Enable Volumetric Fog on the fog actor. Aim a Spot Light through a doorway and raise its Volumetric Scattering Intensity, so that the beam marks the exit.",
+   "If any flickering light leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
+  ],
+  "done_when": "Send two screenshots: one of the pit with layered fog seen from the walkway, and one of the light beam that marks the exit."
+ },
+ "LDQ95": {
+  "brief": "The Env. Light Mixer, short for Environment Light Mixer, is one window that creates and controls all the actors that light an outdoor scene: the sun, the moon, the Sky Light and the Sky Atmosphere. Because everything is in one place, you can make a day version and a night version of a level quickly. In this quest you use the mixer to build both looks for one level and compare them from the same camera position.",
+  "checklist": [
+   "Open a blockout level that has a route and one landmark. Then open Window > Env. Light Mixer.",
+   "Use the toolbar of the mixer to add a Sky Light, two Atmosphere Lights (one for the sun and one for the moon), and a Sky Atmosphere.",
+   "Set Property Details to Normal to see more settings. Adjust the sun for a day look, and save a viewport bookmark that looks at the landmark so you can return to the same view.",
+   "Rotate the sun below the horizon and raise the brightness of the moon light. Make a night look in which the player can still see the route.",
+   "On the Sky Light, enable Real Time Capture. Compare how the lighting on the landmark updates when you rotate the sun.",
+   "Write a note of 3 lines that says which Sky Light mobility you used and why."
+  ],
+  "done_when": "Send two screenshots taken from the same bookmark, one for day and one for night, and add your note about the Sky Light mobility."
+ },
+ "LDQ96": {
+  "brief": "A Reflection Capture is an actor that takes a picture of its surroundings in all directions and uses it as the reflection on nearby shiny surfaces. It is a cheap way to make wet floors and metal look right. A designer can also use it on purpose, so that a bright exit is reflected on the floor and draws the player toward it. In this quest you build a wet corridor, place several captures, and check that the exit shows in the floor.",
+  "checklist": [
+   "Build a wet corridor. It needs a floor with a low-roughness material (a smooth, shiny one), one turn, and a lit exit.",
+   "Place one large Sphere Reflection Capture for the corridor, and smaller ones at the turn and at the exit.",
+   "Switch to the Reflection Override view mode and check the seams where one capture ends and the next begins. Move the captures away from walls.",
+   "Use the Lit view, and in the Show menu open Lighting Components and turn Specular off. This shows you what the captures see.",
+   "Open the Build menu and run Build Reflection Captures. Compare the floor before and after.",
+   "Confirm in PIE that the bright exit is reflected on the floor when you stand at the start of the corridor."
+  ],
+  "done_when": "Send a screenshot of the Reflection Override view, and a screenshot of the Lit view that shows the exit reflected on the floor."
+ },
+ "LDQ97": {
+  "brief": "PCG, the Procedural Content Generation framework, places things such as rocks or plants for you by following a graph of nodes instead of placing each one by hand. A graph parameter is a value of the graph that you can change from outside it, and a graph instance is a saved copy of the graph with its own parameter values. With these, one graph can fill many areas of a level in different ways. In this quest you build a rock field graph with a parameter, save an instance, and use the debug views.",
+  "checklist": [
+   "Create a PCG graph named PCG_RockField. In it, connect these nodes in a chain: Get Landscape Data, then Surface Sampler, then Transform Points, then Static Mesh Spawner.",
+   "In Transform Points, set Max Rotation Z to 360 and enable Absolute Rotation. Set Scale Min to 0.5 and Scale Max to 1.2.",
+   "In Static Mesh Spawner, add two Mesh Entries: a big rock with Weight 3 and a small rock with Weight 1. A higher weight means the mesh is picked more often.",
+   "Open Graph Settings and add a float Parameter named PointsPerSqm. Connect it to the Points Per Square Meter override pin on the Surface Sampler.",
+   "Place a PCG Volume over your terrain, assign PCG_RockField to it, and click Generate. Then change PointsPerSqm in the Details panel and watch the result update.",
+   "Select the PCG component and click Save Instance. Name the instance PCGI_RockField_Dense and give it a higher PointsPerSqm.",
+   "In the graph, select the Surface Sampler and press D to see its debug points in the viewport. Then select the Transform Points node, press A to inspect it, and read the Attributes list."
+  ],
+  "done_when": "Send two screenshots: (1) the PCG graph with the Attributes list open on an inspected node, and (2) the viewport with debug points visible and the Details panel showing your PointsPerSqm parameter on the PCG component."
+ },
+ "LDQ98": {
+  "brief": "PCG, the Procedural Content Generation framework, can place meshes along a spline, which is a curved line through points that you draw. This turns a fence, a wall or a barrier into something that you draw as one line and not something you place piece by piece. The editor also has a PCG mode with drawing tools that can use your graph as a preset. In this quest you build a fence graph and then draw fences with it directly in the level.",
+  "checklist": [
+   "Create an Actor Blueprint named BP_FenceLine. Add a Spline component and a PCG component to it.",
+   "Create a PCG graph named PCG_FenceLine. Connect these nodes in a chain: Get Spline Data, then Spline Sampler (set to sample on the spline), then Transform Points, then Static Mesh Spawner with a fence panel mesh.",
+   "Assign PCG_FenceLine to the PCG component of BP_FenceLine. Place the actor in the level and move its spline points. Confirm that the fence follows the spline.",
+   "Open Graph Settings and find Tool Data. Set Display Name to Fence, add SplineTool to Compatible Tool Tags, and enable Is Preset.",
+   "Switch the editor mode to PCG. With nothing selected, pick the Draw Spline tool, choose the Fence preset, and draw a second fence on the landscape. Then click Apply.",
+   "In Raycast Rules, enable Landscape and Ignore PCG Components. Draw a third fence that crosses the first one, and confirm that it does not snap onto the fence meshes.",
+   "Walk the route in PIE. Adjust the spline so that the fence guides the player but does not block the route."
+  ],
+  "done_when": "Send one screenshot of the PCG mode panel with your Fence preset button visible, and one PIE screenshot that shows at least two fences drawn with the tool along your route."
+ },
+ "LDQ99": {
+  "brief": "When PCG scatters objects such as bushes over a landscape, it will also put them on the paths the player needs unless you tell it not to. In PCG every point has a density, a value from 0 to 1, and you can remove points by area, by density, or because they overlap. In this quest you build a scatter graph that keeps the main route empty with keep-out volumes, and that thins out the remaining points with noise, a filter and pruning.",
+  "checklist": [
+   "Create a PCG graph named PCG_Scatter_Route. Start with a Get Landscape Data node connected to a Surface Sampler node.",
+   "Place two Volumes over your main route and give them the tag KeepOut. In the graph, add a Get Volume Data node and set its Actor Filter to find actors by the tag KeepOut.",
+   "Add a Difference node. Connect the sampler points to Source and the volumes to Differences. Set Density Function to Binary, which removes the points inside the volumes completely.",
+   "Add a Density Noise node, which gives each point a random density. Then add a Density Filter that keeps only the points with a density between 0.5 and 1.0.",
+   "Add a Self Pruning node set to Large to Small, which removes points that overlap. Add a Bounds Modifier before it, and test how changing the bounds changes the pruning.",
+   "Finish the graph with a Static Mesh Spawner that uses two bush meshes. Click Generate, and check in PIE that the route stays clear."
+  ],
+  "done_when": "Send one screenshot of the graph with the Difference, Density Filter and Self Pruning nodes visible, and one viewport screenshot that shows the empty keep-out corridor with bushes around it."
+ },
+ "LDQ100": {
+  "brief": "A landscape can be painted with layers such as Grass, Rock and Path. PCG, the Procedural Content Generation framework, can read these painted layers and use them to decide where to place things. This means that painting a layer is the fastest way to tell a procedural system where bushes or boulders belong, and where the path must stay empty. In this quest you build a graph that places bushes on Grass, boulders on Rock, and nothing on the Path.",
+  "checklist": [
+   "Use a landscape that has at least three painted layers: Grass, Rock and Path. Paint the Path layer along your main route.",
+   "Create a PCG graph named PCG_Biome. Add a World Ray Hit Query node and enable Apply Metadata From Landscape, so that the points know which layers are painted under them. Connect it to a Surface Sampler.",
+   "Add an Attribute Filter on the attribute of the Grass layer, and keep values above 0.5. Spawn bushes from its Inside pin.",
+   "Add a second Attribute Filter on the attribute of the Rock layer. Spawn boulders from its Inside pin.",
+   "Add a Normal To Density node before the boulders, so that steep slopes get fewer boulders.",
+   "Add a Spatial Noise node. Use its attribute with a Match And Set Attributes node to choose between two bush meshes.",
+   "Paint part of the Path layer again in a new place and click Generate again. Confirm that the route stays empty."
+  ],
+  "done_when": "Send one screenshot of the graph that shows the World Ray Hit Query and both Attribute Filters. Also send one viewport screenshot where the painted Path stays free while Grass has bushes and Rock has boulders."
+ }
+}

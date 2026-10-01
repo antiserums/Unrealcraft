@@ -1,0 +1,80 @@
+{
+ "AQ81": {
+  "brief": "A notify is a marker on an animation timeline that runs some logic when the animation reaches it, for example a footstep sound. You can write your own notify as a Blueprint class, and then every animator on the team can place it on any animation. An AnimNotify fires once at one moment, and an AnimNotifyState lasts for a range of frames. In this quest you create one of each, place them on a walk animation, and try the settings that decide when a notify is allowed to fire.",
+  "checklist": [
+   "In the Content Browser, click Add, then Blueprint Class. Open All Classes and pick AnimNotify. Name the new class AN_Footstep.",
+   "In AN_Footstep, use the Override dropdown to add Received Notify. In it, print the name of the owner of the Skeletal Mesh Component, and play a sound at the foot socket.",
+   "Override Get Notify Name, so that the notify shows a clear label on the timeline.",
+   "Create a second Blueprint with the parent class AnimNotifyState and name it ANS_Trail. Override Received Notify Begin, Received Notify Tick and Received Notify End, and put a Print String in each.",
+   "Open a walk Animation Sequence. Add AN_Footstep at each moment where a foot lands, and add one ANS_Trail across the middle of the animation.",
+   "Select one AN_Footstep on the timeline. In the Details panel, set Notify Trigger Chance to 0.5 and Trigger Weight Threshold to 0.5. Play in the editor and watch the printed output.",
+   "Right-click the Notify area and open Manage Notifies. Use Find References on one Skeleton Notify to see where it is used."
+  ],
+  "done_when": "Send one screenshot of the AN_Footstep graph with the Received Notify override, and one screenshot of the Animation Sequence timeline that shows both custom notifies. Add one sentence that says what Trigger Weight Threshold 0.5 changed."
+ },
+ "AQ82": {
+  "brief": "When a joint such as a shoulder rotates far, the mesh around it can lose its shape. A corrective pose repairs the shape for one specific rotation. The Pose Driver node reads the rotation of a bone and blends in the corrective poses that match it, and you do not need an extra rig or any C++ code. In this quest you make three shoulder poses, store them in a Pose Asset, and let the rotation of the upper arm drive them.",
+  "checklist": [
+   "Make a short Animation Sequence with 3 poses for one shoulder: arm down, arm forward and arm up. Right-click it and create a Pose Asset named PA_ShoulderFix.",
+   "In your Animation Blueprint, add a Pose Driver node after the locomotion pose. Set its Pose Asset to PA_ShoulderFix.",
+   "Add upperarm_l as a Source Bone, the bone whose movement the node reads. Set Drive Source to Rotation and Drive Output to Drive Poses.",
+   "In the Tool dropdown, choose Copy All from PoseAsset to create the pose targets. Then choose Auto Scale.",
+   "Set Solver Type to Interpolative and enable Eval from Ref Pose. Compile, and rotate the arm in the preview to watch the poses blend.",
+   "Hold the Solo button on one Pose Target to preview only that pose. Double-click the button to lock it, and then unlock it again.",
+   "Switch Solver Type to Additive and compare the result. Note which solver is smoother with your 3 targets."
+  ],
+  "done_when": "Send one screenshot of the Details panel of the Pose Driver with Source Bones, Pose Targets and Solver Type visible, and one screenshot of the preview viewport with the arm raised and the driven pose visible. Add one sentence that compares Additive and Interpolative."
+ },
+ "AQ83": {
+  "brief": "A montage does not start and stop in an instant. It blends in from the current pose and blends out again at the end, and the length of these blends decides if an action feels quick or slow. A montage can also have more than one Slot track, so the same montage can play a different animation depending on the state of the character, for example standing or lying down. In this quest you tune the blend settings of a reload montage and add a second Slot track to it.",
+  "checklist": [
+   "Open a reload montage named AM_Reload, or create one from a reload Animation Sequence.",
+   "In Asset Details, set the Blend Time of Blend In to 0.1 and the Blend Time of Blend Out to 0.4. Set Blend Out Trigger Time to 0.3, and test the difference in Play In Editor.",
+   "Turn off Enable Auto Blend Out and play the montage. Note what the character does at the end. Then turn the setting on again.",
+   "Right-click the Slot track and choose New Slot. Set the new track to a second Slot in the same Slot Group, for example DefaultGroup.Prone.",
+   "Drag a prone reload sequence (a reload done lying down) into the new track. Make both tracks the same length.",
+   "In the Character Blueprint, use Play Montage and a Branch on a bool variable named IsProne to pick which Slot plays. In the AnimGraph, add a Slot node for each of the two slots.",
+   "Set In Play Rate to 2.0 on one of the calls, and check that the montage plays at double speed."
+  ],
+  "done_when": "Send one screenshot of the Asset Details of the montage with your Blend In, Blend Out and Blend Out Trigger Time values, and one screenshot of the montage timeline with two Slot tracks. Add one sentence that says what happened when Enable Auto Blend Out was off."
+ },
+ "AQ84": {
+  "brief": "In a scene with many characters, animation is often the largest cost on the Game Thread, the main line of work of the game. Two techniques reduce this cost. Thread safe functions let the update logic of an Animation Blueprint run on other threads, and Fast Path lets AnimGraph nodes read their values directly, without running Blueprint logic. In this quest you clean an Animation Blueprint until every node uses Fast Path, move its logic into a thread safe function, and try Update Rate Optimizations, which update far away characters less often.",
+  "checklist": [
+   "Open ABP_Character. In Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Compile and read the Compiler Results.",
+   "Find every AnimGraph node that does not have the lightning icon. Move any math, for example a multiply on Speed, out of the AnimGraph and store the result in a variable.",
+   "In the My Blueprint panel, add a new function named GetLocomotionData. In its Details panel, enable Thread Safe.",
+   "Use the Override dropdown to add Blueprint Thread Safe Update Animation, and call GetLocomotionData from it.",
+   "Inside the function, add a Property Access node. Use Bind to read the Velocity of the owning Pawn, and store Speed and Direction in variables.",
+   "Delete the old Event Graph logic that set those variables. Compile until there are no warnings.",
+   "On the Skeletal Mesh Component of your character, turn on Enable Update Rate Optimizations and Display Debug Update Rate Optimizations. Then press Play and walk away from the character."
+  ],
+  "done_when": "Send one screenshot of the Compiler Results with no Fast Path warnings and the AnimGraph nodes showing lightning icons, and one screenshot of the Thread Safe function with the Property Access node. Add one sentence that says what the URO debug display showed at a distance."
+ },
+ "AQ85": {
+  "brief": "LOD means Level of Detail. A mesh can have several versions, and Unreal shows a simpler version with fewer triangles when the character is far from the camera. Skeletal meshes are expensive to draw, so LODs are the first and cheapest way to make a crowd run faster. Unreal can create these simpler versions for you. In this quest you generate four LODs for a character, protect important areas such as the head and the hands, and remove finger bones on the lowest LOD.",
+  "checklist": [
+   "Open Edit > Project Settings and search for Skeletal Mesh Reduction. Make sure that the plugin property is set to SkeletalMeshReduction.",
+   "Open the Skeletal Mesh of your character, SK_Character. In Asset Details, under LOD Settings, set Number of LODs to 4 and click Apply Changes. Save the LODSettings asset next to the mesh.",
+   "Use the LOD menu of the viewport to look at LOD 1, LOD 2 and LOD 3. Write down the triangle count of each one.",
+   "In LOD Picker, enable Custom so that the sections of all LODs are visible. In LOD 3, add the head bone and both hand bones to Bones to Prioritize, set Weight of Prioritization to 5000, and click Regenerate LOD.",
+   "In the Reduction Settings of LOD 2, change Termination Criterion to Max Triangles and set a triangle count. Regenerate the LOD and compare.",
+   "In the LOD Info of LOD 3, add the finger bones to Bones to Remove and click Regenerate LOD. Check the icons of those bones in the Skeleton Tree.",
+   "Set LOD Hysteresis on LOD 1. Move the camera back and forth, and check for LOD popping, a sudden visible switch between two versions."
+  ],
+  "done_when": "Send one screenshot of the viewport at LOD 3 with the LOD stats visible, and one screenshot of the Asset Details of LOD 3 that shows Bones to Prioritize and Bones to Remove filled in. Add one sentence that lists the triangle counts for LOD 0 to 3."
+ },
+ "AQ86": {
+  "brief": "A validator is a small check that Unreal runs on assets, for example when you save them. It can find wrong names or missing data before they cause problems for the rest of the team. You can write your own validator as a Blueprint. In this quest you write one that checks that the name of every Animation Sequence starts with A_, and you run it on one asset and on a whole folder.",
+  "checklist": [
+   "Open Edit > Plugins and confirm that the Data Validation plugin is enabled.",
+   "In the Content Browser, click Add, then Blueprint Class. Search All Classes for EditorValidatorBase, pick it, and name the new class EUV_AnimNaming.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is an Animation Sequence.",
+   "Override the function Validate Loaded Asset. If the name of the asset starts with A_, call Asset Passes. If it does not, call Asset Fails with a message such as Animation names must start with A_.",
+   "Compile and save. Restart the editor, because validators are found when the editor starts.",
+   "Rename one animation to a wrong name. Right-click it and choose Asset Actions, then Validate Assets. Read the result in the Message Log.",
+   "Right-click your Animations folder and choose Validate Assets in Folder to check everything at once. Fix the names until the whole folder passes."
+  ],
+  "done_when": "Send one screenshot of the Validate Loaded Asset graph of EUV_AnimNaming with both Asset Passes and Asset Fails, and one screenshot of the Message Log that shows a failed animation. Add one sentence that says how many assets failed in your folder the first time."
+ }
+}

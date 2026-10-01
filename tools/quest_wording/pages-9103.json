@@ -1,0 +1,117 @@
+{
+ "AQ1": {
+  "brief": "A playable character in Unreal is built from a few parts: a Capsule that is its real collision shape, a Mesh that is only the visible model, and a CharacterMovement component that holds numbers such as walk speed and jump strength. Every room, stair and gap in a level must fit these numbers, so you need to know them. In this quest you read the numbers of your character and test them on stairs, ramps and a ledge.",
+  "checklist": [
+   "Open your Third Person character Blueprint. In the Components panel, find the Capsule, the Mesh and CharacterMovement.",
+   "Select the Capsule and write down its Half Height and its Radius. These two numbers are the real collision size of your character.",
+   "Select CharacterMovement. In the Details panel, find the settings Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle.",
+   "In a test level, build a stair with 3 steps whose risers are 20, 40 and 60 cm high. A riser is the vertical front of a step. Also build three ramps with angles of 30°, 45° and 55°.",
+   "Play in the editor (PIE) and note which steps and ramps you can walk up. Then change Max Step Height or Walkable Floor Angle one time and test again.",
+   "Set Jump Z Velocity to two times its value and jump onto a ledge. Then set it back to the old value. Note the ledge height you could reach with each value."
+  ],
+  "done_when": "Send a screenshot of the CharacterMovement Details panel that shows your four values. Add a note of 3 lines: the capsule size, the highest step you could climb, and the steepest ramp you could walk up."
+ },
+ "AQ2": {
+  "brief": "An Animation Blueprint, often called an AnimBP, is the asset that decides which animation a character plays at each moment. You do not need to build one to learn from it. When you can read one, you understand why a character moves the way it does and where to look when the animation is wrong. In this quest you open the Animation Blueprint of your character, read its parts, and watch it work while you play.",
+  "checklist": [
+   "Find out which AnimBP your character uses. To do this, select the Mesh component in the character Blueprint and look at the Anim Class property.",
+   "Open that AnimBP. In the Event Graph, find the node Event Blueprint Update Animation. Follow the nodes after it to see how it reads the velocity of the pawn, which is the character, and stores it in a speed variable.",
+   "In the AnimGraph, open the locomotion state machine, which is the graph that switches between states such as idle and jump. List every state, and click each transition to read its rule.",
+   "Open the blendspace that is used for idle, walk and run. A blendspace mixes several animations based on a value such as speed. Move the preview point along the speed axis and watch the animations blend.",
+   "Play in the editor (PIE). Then, in the AnimBP, pick your character in the debug object dropdown. Watch the speed variable and the active state change while you run and jump."
+  ],
+  "done_when": "Send a screenshot of the AnimBP in debug mode during PIE with the speed value visible. Add a list of the states and their transition rules."
+ },
+ "AQ3": {
+  "brief": "An Animation Montage is an animation asset that gameplay code can start at any moment, for example when the player pulls a lever. A world that answers with the body of the character feels much more solid than one that only prints a message. A montage plays through a Slot node in the Animation Blueprint, and without that node nothing is shown. In this quest you build a lever that makes the character play a montage and then changes something in the level.",
+  "checklist": [
+   "In the Content Browser, right-click any animation sequence that uses your character's skeleton. Choose Create, then Create AnimMontage, and name the new asset AM_PullLever.",
+   "Open the AnimBP of the character. Look in the AnimGraph for a Slot 'DefaultSlot' node before the Output Pose node. If there is none, add one.",
+   "Build a Blueprint named BP_Lever. Give it a mesh and a Box collision, and add an overlap check so that the lever only works when the player is close.",
+   "When the player interacts, through an Enhanced Input action or a key event, get the player character. Then call Play Montage and give it the character's Mesh and AM_PullLever.",
+   "Connect the On Completed pin of Play Montage, which fires when the animation has finished. From this pin, flip the lever and do one thing in the level, for example open a door or turn on a light.",
+   "Play in the editor (PIE) and pull the lever. Then pull it while the character is running and note what happens."
+  ],
+  "done_when": "Send a short PIE clip of the character pulling the lever, and a screenshot of the lever graph."
+ },
+ "AQ4": {
+  "brief": "Retargeting means copying an animation from one character to another character that has a different skeleton, which is a different set of bones. It lets you reuse animations and saves a lot of work. Unreal does this with IK Rig assets, which describe each skeleton, and an IK Retargeter asset, which maps one skeleton to the other. In this quest you retarget one animation and fix one problem in the result.",
+  "checklist": [
+   "Pick one source animation. Also pick a second character that has a different skeleton from the first one.",
+   "Retarget the animation to the second character with auto retargeting, the option where Unreal sets up the retarget for you.",
+   "Open the IK Rigs and the Retargeter that Unreal generated. Fix one problem that you can see, for example in the feet, the hands or the root."
+  ],
+  "done_when": "Send a screenshot that shows the source pose and the retargeted pose side by side, and add one line that says what you fixed."
+ },
+ "AQ5": {
+  "brief": "A Control Rig is an asset that lets you move the bones of a character with handles called controls, directly inside Unreal. Animators use these controls to pose and animate a character without another 3D program. In this quest you create a small Control Rig, add controls for one arm, and pose the arm.",
+  "checklist": [
+   "Create a Control Rig asset for the skeleton of your character.",
+   "Add controls for one arm. In the rig graph, make the controls drive the bones, so that the bones follow when you move a control.",
+   "Use the controls to pose the arm in the viewport."
+  ],
+  "done_when": "Send a screenshot of the rig graph and a screenshot of the posed arm."
+ },
+ "AQ6": {
+  "brief": "An anim notify is a marker that you place on one frame of an animation. When the animation reaches that frame, the notify tells the game to do something, such as play a sound or start an effect. This lets you match game events to the exact moment in a movement. In this quest you make your lever move at the frame where the hand grips it, and you add a sound notify to a walk animation.",
+  "checklist": [
+   "Open AM_PullLever and add a notify at the frame where the hand grips the lever.",
+   "On your Play Montage node, use the On Notify Begin pin to handle the notify. Trigger the lever from this pin, so that the lever moves at that frame.",
+   "Add a sound notify or a footstep notify to a walk cycle, which is a walk animation that loops."
+  ],
+  "done_when": "Send a PIE clip in which the lever moves on the notify frame and not at the end of the animation."
+ },
+ "AQ7": {
+  "brief": "A blend space is an asset that mixes several animations based on a value, most often the speed of the character. With it, a character changes smoothly from idle to walk to run, with no sudden switch. If the animations sit at the wrong speeds, the feet seem to slide over the ground. In this quest you build a blend space yourself and check it for foot sliding.",
+  "checklist": [
+   "Create a new blend space. Give it a speed axis whose top value matches the Max Walk Speed of your character.",
+   "Place an idle sample, a walk sample and a run sample on the axis. Put each one at the speed it was authored for, which means the speed the animation was made to move at.",
+   "Make a copy of the AnimBP and use your blend space in the copy in place of the old one. Play in the editor (PIE) and check whether the feet slide."
+  ],
+  "done_when": "Send a screenshot of the blend space grid, and a PIE clip of the character at walk speed and at run speed."
+ },
+ "AQ8": {
+  "brief": "An aim offset is an asset that bends the upper body of a character toward the direction the player is looking. It is made from additive poses, which are poses that are added on top of another animation and do not replace it. With it, a character can walk and aim up, down or to the side at the same time. In this quest you create an aim offset and put it on top of the walking animation.",
+  "checklist": [
+   "Create an aim offset asset from additive aim poses.",
+   "In the AnimBP, read the pitch and the yaw from the control rotation and give them to the aim offset. Pitch is looking up and down, yaw is looking left and right, and the control rotation is the direction the player is looking.",
+   "Layer the aim offset over the locomotion, which is the walking and running animation. Then test looking up, down and to the sides."
+  ],
+  "done_when": "Send a PIE clip of the character aiming around while walking."
+ },
+ "LDQ33": {
+  "brief": "A combat space, or arena, is a part of a level that is built for a fight. Almost every combat game builds its arenas from the same parts: an entry, an exit, cover to hide behind, side routes called flanks, and high ground. When you can name these parts, you can give and get feedback much faster. In this quest you graybox one arena, which means building it from simple blocks, and you mark its parts on a picture.",
+  "checklist": [
+   "Create a new level named L_Arena_01. Graybox one arena of about 30 x 30 m with one entry and one exit.",
+   "Place a view point just inside the entry. This is a spot where the player can stand and read the space before anyone shoots.",
+   "Add 6 to 10 cover pieces. Make some of them low and some of them full height. Make sure that no single piece of cover is safe from every direction.",
+   "Add at least one flank route on each side, which is a path that leads around the middle of the fight. Add one high-ground position that has a cost, for example exposed stairs or little cover.",
+   "Take a screenshot from above in the Top orthographic view, a flat view with no perspective. Open it in any paint tool and mark the entry, the exit, the flanks, the high ground and the cover."
+  ],
+  "done_when": "Send your marked screenshot from above, and one screenshot taken at eye level from the entry."
+ },
+ "LDQ34": {
+  "brief": "Enemies are part of the level layout, because where they start changes how the fight plays. To move on their own, enemies need a NavMesh, which is a map of the floor areas where the AI can walk, and an AI controller, which is the part that steers them. In this quest you add a NavMesh to your arena, create a simple enemy, and place hidden spawn points for it.",
+  "checklist": [
+   "In L_Arena_01, add a Nav Mesh Bounds Volume that covers the whole arena. Press P to show the NavMesh, and fix any gaps near cover and doorways.",
+   "Create a Blueprint named BP_Enemy with Character as its parent class. Set its Auto Possess AI property to 'Placed in World or Spawned', so that the enemy always gets an AI controller.",
+   "Give the enemy a simple loop that uses AI MoveTo to walk between two target points. Or run the sample Behavior Tree that is linked in the #epic-games-resources channel. A Behavior Tree is an asset that describes what an AI decides to do.",
+   "If you use the provided Behavior Tree, open it and write one line for each node that says what the node does. You do not need to build anything in it yourself.",
+   "Place 3 spawn points that the player cannot see from the entry. Mark each one with a simple arrow or billboard that is visible in the editor.",
+   "Play in the editor (PIE) and watch each enemy reach its first position. Fix any enemy that gets stuck."
+  ],
+  "done_when": "Send a screenshot with the NavMesh shown (press P) and the spawn points visible, and a PIE clip of the enemies moving into position."
+ },
+ "LDQ35": {
+  "brief": "Metrics are the measured numbers of your level, such as how high cover is and how far apart enemies and the player stand. Numbers are easier to talk about in a review than a feeling that something is wrong. A sightline is what a person can see from one place. In this quest you set two cover heights from the size of your character, measure the fighting distances in your arena, and check what each enemy can see.",
+  "checklist": [
+   "Use your capsule numbers from quest AQ1 to choose two heights. Low cover is a height the standing player can see over. Full cover is a height that hides the whole capsule.",
+   "Resize every cover piece in L_Arena_01 so that it has one of those two heights.",
+   "Switch the viewport to the Top orthographic view. Drag with the middle mouse button to measure the distances between the enemy positions and the player cover. Write down a short, a mid and a long distance.",
+   "At each enemy position, place a Camera Actor at the eye height of the enemy. Right-click the camera and choose Pilot to look through it, and check what it can see.",
+   "Save a bookmark with Ctrl+1 to Ctrl+9 at each enemy view and at the player entry. A bookmark stores a camera position so you can come back to it. Then fix one sightline that is too open or too closed.",
+   "Add the cover heights and the engagement distances, which are the distances at which the fight happens, to your metrics sheet."
+  ],
+  "done_when": "Send your metrics sheet with the cover heights and engagement distances, and screenshots from before and after of the sightline you fixed."
+ }
+}

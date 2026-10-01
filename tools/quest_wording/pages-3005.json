@@ -1,0 +1,155 @@
+{
+ "GDQ59": {
+  "brief": "A State Tree stays easy to read when it is clear where its data comes from. Parameters are fixed values that you set on the tree, such as a wait time. Evaluators and Global Tasks are small pieces of logic that run for the whole tree and give fresh data to every state. In this quest you build a patrolling character whose State Tree uses parameters, a Global Task that measures how close the player is, and bindings that pass data between tasks.",
+  "checklist": [
+   "Enable the StateTree and GameplayStateTree plugins. Make a Blueprint named BP_Patroller, a copy of the Third Person character with no input and with a StateTree component. Create a State Tree named ST_Patroller with the StateTreeComponentSchema, and set its Context Actor Class to BP_Patroller.",
+   "Add two State Tree Parameters: WaitTime, a float with the value 2.0, and PatrolRadius, a float with the value 800.0.",
+   "Create a task named STT_AlertLevel with the parent StateTreeTaskBlueprintBase, and give it an integer variable AlertLevel in the category Output. On Tick, set it to 1 when the player is closer than 1000 units, and to 0 otherwise. Add the task to the Global Tasks of the tree, so it runs the whole time.",
+   "Build the states. Under Root, add Calm with the children PickPoint, Walk and Wait, and add a second state named Alert. PickPoint runs a task that outputs a random reachable point using PatrolRadius. Walk moves to that point, so bind its input to the output of the PickPoint task. Wait uses a Delay bound to WaitTime. Link the three with Next transitions so that they loop.",
+   "Give Alert an Enter Condition that checks if AlertLevel, bound to the output of the Global Task, is greater or equal to 1. On Calm, add a transition with the trigger On Tick that goes to Alert. In Alert, print Alert and go back to Calm when AlertLevel is 0.",
+   "Add failure handling. On Walk, add a transition with the trigger On State Failed that goes to PickPoint, so that a bad point does not stop the loop.",
+   "Place three BP_Patroller actors and press Play. Walk close to one of them and watch it switch to Alert and back."
+  ],
+  "done_when": "Send one screenshot of ST_Patroller that shows the Parameters, the Global Task, the states Calm (with PickPoint, Walk and Wait) and Alert, and the binding on the Enter Condition of Alert. Add two sentences that say which data is a Parameter, which data comes from the Global Task, and why you used a Global Task and not a normal Task."
+ },
+ "GDQ60": {
+  "brief": "Sight is only one of the senses in the AI Perception system. An enemy can also notice that it was damaged or that something touched it. These senses let an enemy react when the player breaks the rules of stealth, for example by hitting a guard from behind. In this quest you add the damage and touch senses to your enemy and make a sleepy guard wake up when it is hit or touched.",
+  "checklist": [
+   "Open AIC_Enemy, the AI Controller of your enemy. On its AIPerception component, keep AI Sight and add AI Damage and AI Touch to the Senses Config. Give each sense a different Debug Color. Set Dominant Sense to AISense_Sight.",
+   "Make the enemy start sleepy: on the AI Sight config, set Starts Enabled to false. Keep Damage and Touch enabled.",
+   "On the On Target Perception Updated event, break the AIStimulus. If Successfully Sensed is true, call Set Sense Enabled for AISense_Sight with the value true. Also set a Blackboard key named IsAwake, and store Stimulus Location in a key named LastStimulus.",
+   "In the player, add a key press that calls Apply Damage on the enemy with any amount. Walk into the enemy to test Touch. Both actions should wake the enemy up.",
+   "Open Project Settings, go to AI System, and enable Forget Stale Actors. On the AI Damage config, set Max Age to 5, so that a hit is forgotten after five seconds. Use Get Known Perceived Actors with AISense_Damage to check if the enemy still remembers the hit.",
+   "Press Play, then press the apostrophe key and then Numpad 4. Hit the enemy and watch the damage stimulus appear in the color of its sense."
+  ],
+  "done_when": "Send two screenshots. The first shows the Senses Config with Sight, Damage and Touch and the Dominant Sense field. The second shows the Perception debug view (apostrophe, then Numpad 4) right after you damaged the enemy. Add one sentence that says what woke the enemy first in your test, damage or touch, and why."
+ },
+ "GDQ61": {
+  "brief": "The Gameplay Debugger is a tool that draws information about an AI character on top of the running game. It shows which Behavior Tree branch is active and what the Blackboard values are. Most AI problems come from one wrong Blackboard value, and this tool shows it with one key press. In this quest you use the debugger on your enemy to find a value that blocks a branch.",
+  "checklist": [
+   "Use an enemy that has an AI Controller running a Behavior Tree, from quest GDQ28 or GDQ57. Play in the editor. Point the camera at the enemy and press the apostrophe key to select it for debugging.",
+   "Press Numpad 1. Read the AI category: Controller Name, Pawn Name, Movement Mode, Behavior (Tree) and Active task. Write them down.",
+   "Press Numpad 2. Read the Behavior Tree branch on the left and the Blackboard keys and values on the right. Find one Blackboard key whose value blocks a branch that you expected to run.",
+   "Open the Behavior Tree asset and add a breakpoint on one Task node. Play again and note when the game pauses.",
+   "Press Numpad 0 to see the NavMesh around the enemy. Then open the console and try the command show Navigation true, and after that show Navigation false.",
+   "Stop the game and use Simulate, not Play. Enable the Debug AI show flag. Find the GameplayDebuggingReplicator actor in the Outliner and use its properties to turn categories on and off.",
+   "Change one tuning value, such as Sight Radius or a chase speed. Play again and confirm the change in the debugger."
+  ],
+  "done_when": "Send a writeup with two screenshots. The first shows the Numpad 1 AI category over your enemy. The second shows the Numpad 2 view with the Blackboard values. Add three sentences that say which Blackboard key blocked a branch, what you changed, and what the debugger showed after the change."
+ },
+ "GDQ62": {
+  "brief": "In a very large level it takes too much time and memory to build one NavMesh, the map of walkable floor, for the whole world. A Navigation Invoker is a component that you add to an AI character so that Unreal builds NavMesh only in a radius around that character while the game runs. In this quest you turn on invokers, add one to a wandering NPC, and watch the NavMesh tiles appear only where the NPCs are.",
+  "checklist": [
+   "In a Third Person project, make a new Basic level. Scale the Floor to X 100, Y 100 and Z 1.",
+   "Open Project Settings and go to Navigation System. Enable Generate Navigation Only Around Navigation Invokers, and set Invokers Maximum Distance from Seed to 30000. Then go to Navigation Mesh, find Runtime, and set Runtime Generation to Dynamic.",
+   "Add a NavMeshBoundsVolume on the floor and scale it to X 500, Y 500 and Z 10.",
+   "Copy BP_ThirdPersonCharacter into a folder named NavigationSystem and name the copy BP_NPC_Invoker. Delete its input nodes. Add an event named MoveNPC that calls Get Random Reachable Point In Radius with 1000 from the actor location, and then AI Move To for self. On success, add a Delay of 4 and call MoveNPC again. On fail, add a Delay of 0.1 and call MoveNPC again. Call MoveNPC on Begin Play.",
+   "Add a Navigation Invoker component to the Blueprint. Set Tile Generation Radius to 3000 and Tile Removal Radius to 5000. Compile and save.",
+   "Place several BP_NPC_Invoker actors in the level and use Simulate. Press P to see the NavMesh tiles, which appear only around each NPC.",
+   "Change the two radii to 1000 and 2000 and use Simulate again. Add a Print String on the On Fail path and note how often it runs."
+  ],
+  "done_when": "Send two screenshots. The first shows Simulate with P pressed and NavMesh tiles only around the NPCs. The second shows Project Settings with Generate Navigation Only Around Navigation Invokers enabled and Runtime Generation set to Dynamic. Add one sentence that says what changed when you used the smaller radii."
+ },
+ "GDQ63": {
+  "brief": "A Smart Object is an object in the level, such as a bench, that tells NPCs what they can do with it. It has one or more slots, the places an NPC can use, and tags that say which activity it offers and who may use it. An NPC must claim a slot, use it, and release it again. With Smart Objects you add life to a level by placing objects, and you do not need to edit Behavior Trees. In this quest you build a bench with two slots and villagers that find, claim and use it.",
+  "checklist": [
+   "Enable the SmartObjects and GameplayBehaviors plugins. Create a Smart Object Definition named SOD_Bench with two Slots. Add the Activity Tag SO.Activity.Rest. Add a user tag query that requires the tag Character.Type.Villager.",
+   "Give Slot 0 its own Behavior Definition (a Gameplay Behavior), and leave Slot 1 on the default Behavior Definitions list. Note which one overrides the other.",
+   "Create an Actor Blueprint named BP_Bench with a Static Mesh, and add a SmartObject component that points to SOD_Bench. Place two benches in the level. Also add a SmartObject Persistent Collection actor to the level.",
+   "Create BP_Villager, a copy of the Third Person character with no input and with the Gameplay Tag Character.Type.Villager. On Begin Play, find Smart Objects around the actor that have the Rest activity tag, and claim one result. Get the slot location from the claim handle and use AI Move To to walk there. Then call Use, add a Delay of 3, and call Release.",
+   "Place three BP_Villager actors and one BP_Guard that runs the same search but does not have the Villager tag. Press Play and watch the slot rings. Two villagers occupy the slots, the third finds no free slot, and the guard finds nothing.",
+   "Add a key press that destroys one bench during play. In the villager, bind to the slot invalidated event and print a message when it runs."
+  ],
+  "done_when": "Send two screenshots. The first shows SOD_Bench with the Activity Tag, the user tag query and the behavior override on Slot 0. The second shows Play In Editor with two villagers on the two slots and the third one waiting. Add one sentence that says what the third villager should do next according to the documentation page."
+ },
+ "GDQ64": {
+  "brief": "In a Mass crowd, avoidance is the steering logic that keeps each agent from walking into walls and into other agents. When it is tuned badly, the crowd gets stuck in narrow places such as a doorway. In this quest you send your crowd through a narrow gap, look at the avoidance data in two debug tools, change the avoidance settings, and compare the result.",
+  "checklist": [
+   "Start from the crowd of quest GDQ40: the MassEntity, MassGameplay and MassCrowd plugins, DA_Crowd_Walker with movement and avoidance traits, and a MassSpawner with 200 entities. If you do not have it, build it first.",
+   "Build a corridor from two long wall meshes with a gap of about 300 units between them, so that the crowd must squeeze through.",
+   "Open Tools > Debug > Visual Logger and select the MassSimulationSubsystem track. In Editor Preferences, under Visual Logger, enable Stick to Recent Data. In the console, run the command ai.debug.mass.SetDebugEntityRange for a few entities, and then use Simulate.",
+   "Look at the categories LogAvoidance, LogAvoidanceVelocity and LogAvoidanceAgents. Find the obstacle edges and the predicted collisions near the gap.",
+   "Press Play. Press the backtick key to open the Gameplay Debugger. Then press Shift+O for the Entity Overview and Shift+V for the avoidance view. Take a screenshot at the gap.",
+   "In the avoidance trait of DA_Crowd_Walker, change the moving avoidance parameters, for example the separation settings. Use Simulate again and compare how the crowd flows through the gap. Note the value of stat fps before and after."
+  ],
+  "done_when": "Send a writeup with two screenshots. The first shows the Visual Logger with LogAvoidanceAgents data near the gap. The second shows the avoidance view of the Gameplay Debugger (Shift+V). Add three sentences that say which parameter you changed, what changed in the crowd, and what the difference is between avoidance forces and separation forces, in your own words."
+ },
+ "GDQ65": {
+  "brief": "A Curve Table is an asset where each row is a curve: a value that changes as another number grows, for example damage that rises with the player level. You can ask the table for the value at any level, also between two levels, and Unreal calculates it. This lets you tune how values grow over levels without changing a graph. In this quest you make a Curve Table from a spreadsheet, read one curve in a Blueprint, and compare two ways of calculating the values between points.",
+  "checklist": [
+   "Read the sections Data Curves, Curve Tables and Data Hookup of the Data Driven Gameplay Elements page.",
+   "Make a table in a spreadsheet. The header of the first column is Name. The next headers are 0, 1, 2 and 3, which stand for the player level. Add the rows Melee_Damage, Melee_KnockBack and Melee_StunTime with values that grow with each level. Save the table as CT_Combat.csv.",
+   "In the Content Browser, click Import and pick the CSV file. Choose Import As CurveTable and the interpolation Linear. Open CT_Combat and click the graph button to see all three curves.",
+   "In BP_Enemy, add a Curve Table Row Handle variable named DamageCurve and make it Instance Editable. Set its CurveTable to CT_Combat and its RowName to Melee_Damage.",
+   "On Begin Play, evaluate the row with the current player level and print the result. To find the evaluate node, search for Curve Table in the node menu. Test with level 1.5 and note the value.",
+   "Reimport the CSV file with the interpolation Constant. Play again with level 1.5 and note the value. Write one sentence that says which mode you would use for damage and why.",
+   "Change one value in the CSV file in a text editor. Right-click CT_Combat and choose Reimport. Confirm that the graph updates."
+  ],
+  "done_when": "Send a screenshot of CT_Combat in graph view with three curves. Add the two values printed at level 1.5 (one with Linear and one with Constant) and your one sentence about which interpolation you chose."
+ },
+ "GDQ66": {
+  "brief": "A Data Registry is an asset that gives your game one place to look up data, even when that data comes from several Data Tables. The order of the sources matters: when two tables hold a row with the same name, the first source wins. This is a base for difficulty modes and special events, because a second table can replace only the rows that should change. In this quest you set up a registry with two tables and see how the order decides which value the game uses.",
+  "checklist": [
+   "Read the Data Registries page and the Data Registries Quick Start. Enable the Data Registry plugin under Edit > Plugins in the Gameplay category, and restart the editor.",
+   "Open Project Settings, go to Game, then Data Registry, and add /Game/DataRegistries to Directories to Scan. Create that folder in the Content Browser.",
+   "In that folder, right-click, choose Miscellaneous, then DataRegistry, and name the asset DR_EnemyStats. Set Registry Type to EnemyStats. Set Item Struct to your enemy row struct. You can reuse S_EnemyStats from an earlier quest or make a new one.",
+   "Add a DataTable Source that points to DT_Enemies, the table with Grunt, Runner and Tank. Click Refresh and check that the Registry Preview tab shows the rows.",
+   "Make a Data Table named DT_Enemies_Hard that has only the row Grunt, with a higher Health. Add it as a second DataTable Source and drag it ABOVE the first one. Click Refresh and look at Runtime Sources to see both Grunt entries and which one is first.",
+   "In BP_Enemy, add a Data Registry Id variable. Pick EnemyStats and the row Grunt from the dropdown. On Begin Play, call Acquire Data Registry Item. In its callback, read the item from the cache with the Get Data Registry Item node, and print Health.",
+   "Press Play and confirm that Grunt uses the Hard value. Then move DT_Enemies_Hard below DT_Enemies, click Refresh, play again, and confirm that Grunt uses the normal value."
+  ],
+  "done_when": "Send two screenshots: one of DR_EnemyStats with the Runtime Sources list that shows Grunt from two sources, and one of the Play In Editor output that shows the Hard Health value for Grunt. Add one line that names what you changed to make the normal value win."
+ },
+ "GDQ67": {
+  "brief": "When several people add Gameplay Tags to one project, the list of tags grows fast. A tag source is a separate config file that holds one group of tags, and a tag table is a Data Table that adds tags. Both keep a large tag tree in order. A tag query is a saved question about tags that can combine several conditions. In this quest you add tags from a new source file and from a table, build a query with two conditions, and add one tag by hand in the file.",
+  "checklist": [
+   "Read the Gameplay Tags page. Pay special attention to the parts Defining Gameplay Tags, Gameplay Tag Queries and Setting Tag Editing Restrictions.",
+   "Open Project Settings, go to Project, then GameplayTags, and enable Import Tags From Config. Click Add new Gameplay Tag source and name it Combat.ini.",
+   "Open Manage Gameplay Tags. Add the tags Damage.Fire, Damage.Ice and Damage.Physical. Give each one a Comment and set its Source to Combat.ini.",
+   "Make a Data Table named DT_LootTags with the row type GameplayTagTableRow. Add the rows Loot.Common, Loot.Rare and Loot.Epic. In Project Settings, add the table to Gameplay Tag Table List. Then open the Tag Manager and try to rename Loot.Rare. Note what happens.",
+   "In BP_Enemy, add a Gameplay Tag Query variable named ImmuneQuery. Use the root expression All Expressions Match with two sub-expressions: Any Tags Match with Damage.Fire, and No Tags Match with Status.Wet. Use the query in your damage function to skip the damage.",
+   "Test both cases in Play In Editor, and print the result of the query each time.",
+   "Close the editor. Open the file Config/Tags/Combat.ini in a text editor and add the tag Damage.Poison by hand. Start the editor again and confirm that the tag appears."
+  ],
+  "done_when": "Send a screenshot of the Gameplay Tag Manager that shows tags from Combat.ini and from DT_LootTags. Add the printed query results for the two test cases, and one line that says what happened when you tried to rename a tag from the table."
+ },
+ "GDQ68": {
+  "brief": "A Data Only Blueprint is a Blueprint that has no graph logic and only holds default values. Because it is a Blueprint class, you can make child classes of it. A child takes over, or inherits, every value from its parent and changes only the values it needs. When you change a value in the parent later, every child gets the new value. In this quest you build weapon variants this way and compare them with a normal Data Asset.",
+  "checklist": [
+   "Read the Data Assets page. Pay special attention to the notes on Data Only Blueprint Classes and Primary Data Asset types.",
+   "Make a Blueprint Class named PDA_Weapon with the parent PrimaryDataAsset. Add the variables DisplayName (Text), Damage (Float), FireRate (Float) and Range (Float).",
+   "Make a child Blueprint Class named BP_Weapon_Rifle with the parent PDA_Weapon. Do not add any graph nodes, and only set values in Class Defaults. This is a Data Only Blueprint.",
+   "Make a Blueprint named BP_Weapon_Rifle_Gold with the parent BP_Weapon_Rifle. Change only Damage, and leave the other values as they are inherited.",
+   "Change FireRate in BP_Weapon_Rifle. Then open BP_Weapon_Rifle_Gold and confirm that it has the new FireRate, although you did not edit it.",
+   "Now make a Data Asset instance. In the Content Browser, choose Miscellaneous, then Data Asset, pick the class PDA_Weapon, and name the asset DA_Weapon_Pistol. Change a default value in PDA_Weapon and note whether DA_Weapon_Pistol updates.",
+   "Write 3 sentences that say when a Data Only Blueprint child is better than a Data Asset instance, and what PrimaryAssetType your Rifle variants have and why."
+  ],
+  "done_when": "Send a screenshot of the Class Defaults of BP_Weapon_Rifle_Gold that shows the inherited FireRate and the changed Damage. Add your 3 sentences."
+ },
+ "GDQ69": {
+  "brief": "A config file is a text file with the ending .ini in the Config folder of your project. Unreal reads these files when it starts, and a variable that is marked as a Config Variable takes its default value from them. This lets you change a default for the whole project, or for one platform such as Windows, without opening a Blueprint. In this quest you mark two variables as config variables, set them in a file, and see how a platform file replaces the project value.",
+  "checklist": [
+   "Read the Configuration Files page, and look at the parts Syntax, Arrays and Hierarchy. Also read the Advanced Variable Properties table on the Blueprint Variables page.",
+   "Make an Actor Blueprint named BP_Tuning in /Game/Blueprints. Add a Float variable EnemyDamageMult with the default 1.0 and an Integer variable StartingLives with the default 3. For each one, expand the advanced variable properties and enable Config Variable.",
+   "Close the editor. Open the file Config/DefaultEngine.ini of your project and add a section named [/Game/Blueprints/BP_Tuning.BP_Tuning_C] with the lines EnemyDamageMult=1.5 and StartingLives=5. Add a comment line that starts with ; and explains the values. (Actors read the Engine category.)",
+   "Start the editor and place BP_Tuning in the level. Print both values on Begin Play and confirm that the values from the config file are used.",
+   "Add a String array variable named BannedWeapons with Config Variable on. In the same section, write these three lines: +BannedWeapons=Rocket, +BannedWeapons=Rocket and .BannedWeapons=Rocket. Print the length of the array, and compare the result with the array example on the page.",
+   "Make a file named Config/Windows/WindowsEngine.ini with the same section and the line EnemyDamageMult=2.0. Restart the editor and confirm that the platform file wins over DefaultEngine.ini.",
+   "Write 2 sentences that answer this: when would you put a tuning value in a config file and not in a Data Table?"
+  ],
+  "done_when": "Send a screenshot of your section in DefaultEngine.ini and a screenshot of the Play In Editor output that shows the config values and the array length. Add your 2 sentences."
+ },
+ "GDQ70": {
+  "brief": "A game often needs more than one save file. Profile data, such as the total kills and the unlocked levels, should stay for all time. Run data, such as the last checkpoint and the current health, belongs to one playthrough. When you keep them in two files, starting a New Game can delete the run without removing what the player has earned. In this quest you make two SaveGame classes, save them to two slots, and check that a New Game only clears the run.",
+  "checklist": [
+   "Read the Blueprint tab of the page Saving and Loading Your Game, and then the Async Save Game to Slot node page.",
+   "Make BP_ProfileSave with the parent SaveGame and the variables Difficulty (Name), TotalKills (Integer) and UnlockedLevels (Name array). Make BP_RunSave with the parent SaveGame and the variables Checkpoint (Name), Health (Float) and Inventory (Name array). Give each class a default slot name: Profile and Run.",
+   "In your Game Instance, on each kill, add 1 to TotalKills in the profile object and call Async Save Game To Slot. From the Completed pin, print the Success value.",
+   "When the player reaches a checkpoint, fill BP_RunSave and save it with Save Game To Slot, the synchronous node that makes the game wait until the save is done. Write 1 sentence that says why a synchronous save is acceptable here or why it is not.",
+   "On New Game, call Delete Game in Slot for the Run slot only. Use Does Save Game Exist to confirm that the profile file is still there.",
+   "On Begin Play, call Async Load Game From Slot for both slots. Cast each result and print Difficulty, TotalKills and Checkpoint. Use the Success pin to handle a missing Run file without an error.",
+   "Play: get 3 kills, reach a checkpoint, start a new game, then quit and play again. Look in the Saved/SaveGames folder and confirm that both .sav files are there."
+  ],
+  "done_when": "Send a screenshot of Saved/SaveGames with Profile.sav and Run.sav. Also send a Play In Editor screenshot taken after New Game that shows TotalKills kept from the profile while Checkpoint was reset. Add your one sentence about synchronous saving."
+ }
+}

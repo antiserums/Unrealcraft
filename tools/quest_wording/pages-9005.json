@@ -1,0 +1,112 @@
+{
+ "LDQ20": {
+  "brief": "A courtyard is an open space with walls around it, and it is a good size for a first complete level. This quest brings together what you practiced in the earlier level design quests: metrics, routes, a landmark, guidance and readable lighting. You build one small courtyard with three routes to a goal, review it, and send screenshots, a map and a short writeup.",
+  "checklist": [
+   "Create a new level named L_Courtyard. Build an enclosed courtyard with one entrance and one goal, and build everything to the metrics you measured in quest LDQ11.",
+   "Build three routes to the goal that differ in a clear way. At least one route must use height (as in quest LDQ16), and at least two routes must connect.",
+   "Add one landmark that is visible from the entrance and from each route (as in quest LDQ14). Follow your color rule (from quest LDQ15).",
+   "Do a lighting pass for readability with locked exposure. The goal must be the brightest point and the dead ends must be dim (as in quests EAQ10 and LDQ18).",
+   "Save 3 review bookmarks: one at the entrance, one at a point in the middle of a route, and one at the goal. Take a screenshot of each in Game View.",
+   "Take a top-down screenshot in the orthographic Top view, which shows the level from above without perspective. Draw the three routes on it in different colors.",
+   "Play the level once yourself with fresh eyes (as in quest LDQ17), and fix the worst problem you find."
+  ],
+  "done_when": "Send these together: your 3 bookmark screenshots, a top-down map with the routes drawn on it, and a writeup of 5 to 8 lines that says how the routes differ, what guides the player, and what you fixed after the playtest."
+ },
+ "LDQ19": {
+  "brief": "Level designers check a space by walking through it as a player and noting how it feels. The places where you hesitate show where the space did not guide you. In this quest you walk through a small courtyard, write three notes about what you notice, and take a screenshot of each spot.",
+  "checklist": [
+   "Open the Third Person template map. If you prefer, block out a quick courtyard next to L_Room_01 with a floor, walls and 2 exits.",
+   "Start PIE and walk through the space. Write 3 notes: where you hesitated, what drew your eye, and one place where the space felt too tight or too big.",
+   "For each note, press F8 to eject, which lets you leave the character and fly the camera freely while the game runs. Take a screenshot of the spot."
+  ],
+  "done_when": "Send your 3 notes with one screenshot for each note."
+ },
+ "LDQ1": {
+  "brief": "The Water plugin gives Unreal ready-made lakes, rivers and oceans that you can place in a level. In level design, water is a useful edge: it shows the player where the route ends without a wall. In this quest you add a lake or a river to your terrain and let your path run beside it.",
+  "checklist": [
+   "Enable the Water plugin in the Plugins window and restart the editor.",
+   "Add a Water Body Lake or a Water Body River to L_Terrain_01.",
+   "Use the water as a boundary that the path runs beside. It should not be a blocker that the player cannot understand."
+  ],
+  "done_when": "Send a screenshot taken at eye level that shows the path beside the water."
+ },
+ "LDQ2": {
+  "brief": "Fog changes the mood of a level, and it can also guide the player. Places with thick fog feel less inviting, so players tend to go toward the clear areas. In this quest you turn on Volumetric Fog, which is fog that reacts to light in 3D, and you place a Local Fog Volume, a small area of fog, over a dead end.",
+  "checklist": [
+   "In L_Routes_01, select the Exponential Height Fog actor and enable Volumetric Fog on it.",
+   "Add a Local Fog Volume over one dead end to make it feel less inviting.",
+   "Check that you can still see the goal and the landmark clearly through the fog."
+  ],
+  "done_when": "Send before and after screenshots taken from the same bookmark."
+ },
+ "LDQ3": {
+  "brief": "A decal is a material that is projected onto surfaces, like a sticker, a stain or a painted arrow. A line of small decals on the ground can lead the eye of the player toward a route, without any text or sign. In this quest you place a few decals that lead toward one route entrance.",
+  "checklist": [
+   "Place a Decal Actor in your level. Give it a decal material from the Starter Content or another simple decal material.",
+   "Use 3 to 4 decals, such as scuffs, arrows or stains, to lead toward one route entrance."
+  ],
+  "done_when": "Send a screenshot taken at eye level that shows the trail of decals."
+ },
+ "LDQ4": {
+  "brief": "A Level Instance is a group of actors saved as its own small level, which you can place many times in a bigger level. When you edit one copy, all the copies change. This saves a lot of work when a level uses the same room or building several times. In this quest you turn a blockout room into a Level Instance, place more copies, and check that an edit shows up in all of them.",
+  "checklist": [
+   "Select all the actors of a small blockout room and create a Level Instance from the selection.",
+   "Place the instance two more times in the level, so that you have three.",
+   "Edit one copy, and confirm that the change shows up in all of them."
+  ],
+  "done_when": "Send a screenshot that shows the three instances after the shared edit."
+ },
+ "LDQ5": {
+  "brief": "A landscape spline is a curved line that you draw on a landscape with control points. Unreal can then shape the ground to follow that line, which is a fast way to make roads and paths. In this quest you draw a spline along your ramped path and flatten the landscape under it so that the path is easy to walk.",
+  "checklist": [
+   "In L_Terrain_01, open Landscape Mode, go to the Manage tab and select the Splines tool.",
+   "Hold Ctrl and click on the landscape to place control points along your ramped path.",
+   "Deform the landscape to the spline, so that the path sits flat and is walkable."
+  ],
+  "done_when": "Send a screenshot of the spline path, and one PIE screenshot of you walking on it."
+ },
+ "LDQ6": {
+  "brief": "PCG means Procedural Content Generation. It is a system in Unreal where you build a graph of rules, and the graph places many objects for you. To scatter means to spread objects over an area. In this quest you take a first look at PCG: you scatter one rock mesh inside a volume and keep it away from your path.",
+  "checklist": [
+   "Enable the PCG plugin. Then create a PCG Graph, which holds the rules, and a PCG Volume, which is the box that marks where the graph works.",
+   "Set up the graph so that it scatters one rock mesh on the landscape inside the volume.",
+   "Move the volume away from your path, so that the scattered rocks do not block it."
+  ],
+  "done_when": "Send a screenshot of the graph and a screenshot of the scattered result."
+ },
+ "LDQ7": {
+  "brief": "A level that is easy to read in daylight can become confusing at night. The same rules still apply: the player must be able to see the route entrances and the goal. In this quest you make a night copy of your routes level and use local lights, such as Point Lights and Spot Lights, to keep it readable.",
+  "checklist": [
+   "Duplicate L_Routes_01 and name the copy L_Routes_01_Night.",
+   "Lower the sun and change it to a dim, cool moonlight. Keep the exposure locked.",
+   "Add local lights so that every route entrance and the goal are still easy to see."
+  ],
+  "done_when": "Send day and night screenshots taken from the same 3 bookmarks."
+ },
+ "LDQ8": {
+  "brief": "Sound can guide a player just like light can. A sound that gets louder as you get closer pulls the player toward its source. Attenuation is the setting that controls how a sound gets quieter with distance, and reverb is the echo of a room. In this quest you place a looping sound near your goal, set how far it reaches, and change the reverb of one room.",
+  "checklist": [
+   "Place an Ambient Sound actor near the goal. The Starter Content has looping sounds that you can use.",
+   "Set the attenuation so that the player can hear the sound from the route entrances, and so that it is louder near the goal.",
+   "Add an Audio Volume to one room and change its reverb."
+  ],
+  "done_when": "Send a writeup that says where the sound is and how it pulls the player."
+ },
+ "LDQ9": {
+  "brief": "A Landscape Grass Type is an asset that lets the landscape material place grass by itself, on the layers you choose. The Grass Quick Start is the page in the Unreal documentation that shows how to set this up. In this quest you follow that guide on your terrain and keep the path free of grass.",
+  "checklist": [
+   "Follow the Grass Quick Start guide on L_Terrain_01. Use one Landscape Grass Type.",
+   "Paint a path layer that has no grass, so that the route stays clear."
+  ],
+  "done_when": "Send a screenshot taken at eye level that shows grass on both sides of a clear path."
+ },
+ "LDQ10": {
+  "brief": "A silhouette is the outline of an object when you see it as one dark shape. From far away, fine detail disappears and only the silhouette is left, so a good landmark needs an outline that is easy to recognize. In this quest you block out three landmark ideas and compare their silhouettes against the sky.",
+  "checklist": [
+   "Block out 3 landmark options with the tools in Modeling Mode.",
+   "Look at each one from a distance against the sky. Use the Unlit or the Lighting Only view mode, so that you judge only the shape.",
+   "Keep the one that you recognize the fastest, and note why."
+  ],
+  "done_when": "Send one screenshot that shows all 3 silhouettes, and add one line about the one you chose."
+ }
+}

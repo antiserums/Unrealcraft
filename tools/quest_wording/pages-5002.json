@@ -1,0 +1,148 @@
+{
+ "EAQ48": {
+  "brief": "Baked lighting is light that Unreal calculates once in the editor and stores in textures called lightmaps. A mesh that uses baked lighting needs a special UV channel, the lightmap UV, where no two faces share the same space. Projects that use Lumen calculate light while the game runs and do not need lightmaps at all. In this quest you find out which kind of lighting your project uses and look at the lightmap settings of one prop.",
+  "checklist": [
+   "Open Project Settings, then Engine, then Rendering. Note whether Dynamic Global Illumination is set to Lumen, and whether Allow Static Lighting is turned on.",
+   "Open a prop whose name starts with SM_ in the Static Mesh Editor. In the Details panel, expand LOD0 and then Build Settings. Find Generate Lightmap UVs, Min Lightmap Resolution, Source Lightmap Index and Destination Lightmap Index.",
+   "Set Min Lightmap Resolution to 64 and click Apply Changes. Then use the UV button in the toolbar to view the lightmap UV channel.",
+   "Under General Settings, check that Lightmap Resolution and Lightmap Coordinate Index match the channel you generated.",
+   "Write three lines that answer these questions: does this project bake its lighting or use Lumen, and does this prop need a lightmap UV at all?"
+  ],
+  "done_when": "Send a screenshot of the Static Mesh Editor that shows the lightmap UV channel and the Build Settings, and add your three lines of text."
+ },
+ "EAQ49": {
+  "brief": "Mesh Paint mode lets you paint directly on a mesh that is placed in the level. The paint is stored as vertex colors, which are color values saved on each corner point of the mesh, and a material can read them to blend between two textures. This way one copy of a prop can have dirt or moss and the next copy can be clean. In this quest you make a blend material, paint a second texture onto a prop, and copy the paint to another prop.",
+  "checklist": [
+   "Make a material named M_Blend2 that blends two textures with a Lerp node, and use the alpha of the vertex color to control the blend. Apply the material to a prop (an SM_ mesh) that is placed in the level.",
+   "Enter Mesh Paint mode. Choose the Vertex Weight paint method, and set Texture Weight Type to Alpha (Two Textures).",
+   "Set Paint Texture Weight Index to the second texture and paint dirt or moss on the lower part of the prop. Use Ctrl + [ and Ctrl + ] to make the brush smaller or larger.",
+   "Use Color View Mode to look at the Alpha channel. This shows you exactly where you painted.",
+   "Click To LODs so that the paint is copied to all LOD levels, which are the simpler versions of the mesh used at a distance. Then click Save.",
+   "Duplicate the prop. Use Copy on the painted prop and Paste on the new copy to move the paint across."
+  ],
+  "done_when": "Send a screenshot of the painted prop in the level, and a screenshot with Color View Mode set to Alpha Channel. Also say which Texture Weight Type you used."
+ },
+ "EAQ50": {
+  "brief": "Snapping means that the editor moves an object to an exact position for you, such as onto a surface or onto a corner point of another mesh. With snapping you can place many props quickly and still have them sit correctly on the ground. In this quest you try surface snapping, the End key and vertex snapping on a small test level.",
+  "checklist": [
+   "Make a small test level that has a floor, a sloped ramp and a table mesh.",
+   "In the toolbar of the Level Viewport, enable Surface Snapping and Rotate to Surface Normal. Drag five small props onto the ramp and see how they tilt to match the slope.",
+   "Set Surface Offset to 5 and place one prop, so you can see the small gap it creates. Then set Surface Offset back to 0.",
+   "Select a prop that floats in the air and press End. Watch it drop to the nearest surface below it.",
+   "Hold V and drag one prop so that its pivot snaps to a vertex of the table. A vertex is a corner point of a mesh.",
+   "In Modeling Mode, open Xform, then Edit Pivot, and move the pivot of a prop to Bottom. Then place the prop again with surface snapping."
+  ],
+  "done_when": "Send a screenshot of the ramp with at least five props that sit on the slope and are rotated to match it. Also send a screenshot of a prop that is snapped by a vertex to the corner of the table."
+ },
+ "EAQ51": {
+  "brief": "A Packed Level Actor turns a group of Static Meshes, such as a table with chairs, into one asset that you can place many times. When you edit the group once, every copy in the level updates. A Level Instance works in a similar way but is meant for groups that also contain gameplay. In this quest you make a prop kit as a Packed Level Actor, place copies of it, edit it, and compare it with a Level Instance.",
+  "checklist": [
+   "In a level, arrange a small group of props that uses only Static Meshes. For example, use a table, two chairs and a lamp.",
+   "Select all the actors and right-click one of them. Go to Level and choose Create Packed Level Actor. Set Pivot Type to Center Min Z, click Ok, and save it as BP_Kit_TableSet.",
+   "Drag three more copies of BP_Kit_TableSet into the level and rotate them.",
+   "Edit the Packed Level Actor: click Edit in the Outliner and move one chair. Then commit the change and see all copies update.",
+   "Select another group of the same kind, and this time use Create Level Instance to make a Level Instance. Note how it looks different in the Outliner.",
+   "Use the Break option on one instance and see the original actors come back."
+  ],
+  "done_when": "Send a screenshot of the level with at least four copies of BP_Kit_TableSet, and one screenshot of the Outliner. Add one line that says when you would choose a Level Instance instead."
+ },
+ "EAQ52": {
+  "brief": "A Post Process Volume is a box that changes how the final picture looks, for example its colors, brightness and blur. A common setup is one global volume that gives the whole level its basic look, plus small local volumes that change the look in special places. In this quest you set up one global and one local volume and learn how Priority, Blend Radius and Blend Weight decide which one you see.",
+  "checklist": [
+   "Open a small level that has two rooms or two clearly different areas. A template level is fine.",
+   "Place a Post Process Volume and name it PPV_Global. In Post Process Volume Settings, turn on Infinite Extent (Unbound) so it affects the whole level, and keep Priority at 0.",
+   "Place a second Post Process Volume around one room and name it PPV_Room. Leave Infinite Extent off and set Priority to 100.",
+   "In PPV_Room, override one setting that is easy to see. For example, open Color Grading, then Global, and set Saturation to 0.2.",
+   "Set Blend Radius on PPV_Room to 0. Play from the viewport and walk in and out of the room. Then set Blend Radius to 1000, walk again, and note the difference.",
+   "Set Blend Weight on PPV_Room to 0.5 and look at the room again.",
+   "Open Project Settings, then Rendering, then Default Settings, and find where the post process defaults for the whole project are stored. Do not change them."
+  ],
+  "done_when": "Send two screenshots taken from the same spot at the edge of PPV_Room: one with Blend Radius 0 and one with Blend Radius 1000. Also show the Details panel of PPV_Room with Priority, Blend Radius and Blend Weight visible."
+ },
+ "EAQ53": {
+  "brief": "Exposure is how bright the camera makes the picture. By default Unreal uses auto exposure, which changes the brightness slowly as you move between dark and bright places, like human eyes do. You can also set exposure by hand with real camera values. In this quest you try three ways to control exposure: auto exposure, manual exposure on a camera, and Local Exposure, which adjusts bright and dark areas of the same picture separately.",
+  "checklist": [
+   "Open a level that has a dark interior and a bright exterior. If you do not have one, build a box with one open door.",
+   "In your global Post Process Volume, open Lens, then Exposure, and set Metering Mode to Auto Exposure Histogram. In the viewport, turn on Show > Visualize > HDR (Eye Adaptation) and watch the graph as you move from dark to bright.",
+   "Override Speed Up and Speed Down. Try Speed Up 10 with Speed Down 1, and then the reverse. Note which one feels more like real eyes.",
+   "Override Exposure Compensation. Try -1 and then +1, and note what happens to the image.",
+   "Place a Cine Camera Actor and pilot it with Ctrl+Shift+P, which means you look through it. In the camera's own post process settings, set Metering Mode to Manual and turn on Apply Physical Camera Exposure.",
+   "Set ISO, Shutter Speed and Aperture on the camera until the interior looks right. Write the three values down.",
+   "Turn on Local Exposure in the volume. Use Show > Visualization > Local Exposure to see where it works."
+  ],
+  "done_when": "Send three screenshots taken from the doorway: one with histogram auto exposure and the HDR visualization turned on, one with manual physical camera exposure and the ISO, shutter and aperture values written in the caption, and one of the Local Exposure visualization."
+ },
+ "EAQ54": {
+  "brief": "Color grading means changing the colors of the final picture to give it a mood, for example warmer, colder or with stronger contrast. It is the last step, and it only works well when the lighting and exposure are already right. In this quest you grade one camera view in a Post Process Volume, in a sensible order, and compare the result with the ungraded picture.",
+  "checklist": [
+   "Pick one camera view in a scene that already has lighting. Take a screenshot before you change anything, so you have the ungraded picture.",
+   "In the Post Process Volume, open Color Grading, then Temperature. Keep Temperature Type on White Balance. Move Temp up and down and note which direction makes the image warm.",
+   "Adjust Tint a little to remove any green or magenta color that covers the whole image.",
+   "Open Color Grading, then Global, and do the main work here. Set Saturation, Contrast and Gamma until the image has the mood you want.",
+   "Use a small amount of Offset under Global to make the shadows lighter or darker.",
+   "Only now change Shadows or Highlights, and only if one part of the image still needs help.",
+   "Take the graded screenshot from the same camera."
+  ],
+  "done_when": "Send two still images from the same camera, one ungraded and one graded. Add a short list of the values you changed (Temp, Tint, Saturation, Contrast, Gamma, Offset)."
+ },
+ "EAQ55": {
+  "brief": "Unreal calculates light with a very wide range of brightness, called HDR, which is much wider than a normal screen can show. The tonemapper is the last step that turns this range into the colors on your screen, using a curve that looks like film. In this quest you move the main controls of that curve to see what each one does, and then you put them back.",
+  "checklist": [
+   "In a scene that has lighting, place a few spheres with different colors and one with a strong emissive material, which is a material that glows. Take a reference screenshot.",
+   "In the Post Process Volume, open the Film category. Override Slope and move it up and down. Note which direction makes the image darker.",
+   "Override Toe and Shoulder, one at a time. Watch what happens to the darkest and the brightest areas of the image.",
+   "Raise the emissive brightness of one sphere by a large amount. Watch how its color changes as it gets very bright.",
+   "Put Slope, Toe and Shoulder back to their default values. Write one line about when the Film settings should be changed.",
+   "This step is optional. Open Color Grading, then Misc, and set Tone Curve Amount and Expand Gamut to 0 to see the image without the tone curve. Then restore the values."
+  ],
+  "done_when": "Send one image with 4 labeled crops of the same view: default, high Slope, high Toe and high Shoulder. Add one sentence that says when the Film settings should be changed."
+ },
+ "EAQ56": {
+  "brief": "Reflections make objects look like they belong in the scene. Unreal has several ways to create them: Lumen, Screen Space Reflections (often written SSR), Reflection Captures and Planar Reflections. Each one costs a different amount of performance and fails in a different way. In this quest you look at the same shiny floor with all four methods and write down what each can do.",
+  "checklist": [
+   "Build a small room. Give the floor plane a material named M_Floor_Shiny with Roughness 0.1, and add a few colored props. Put one tall prop just outside the camera view.",
+   "In the Post Process Volume, open Reflections and set Method to Lumen. Take a screenshot. Then change Max Roughness To Trace and watch the floor.",
+   "Set Method to Screen Space Reflections. Look at the floor near the edge of the screen and find where the prop that is outside the view disappears from the reflection. Take a screenshot.",
+   "Place a Sphere Reflection Capture in the room, and change Method to None. Observe how the capture alone reflects the room. Take a screenshot.",
+   "Open Project Settings, then Rendering, then Reflections, and turn on Support global clip plane for Planar Reflections. Restart the editor, and then place a Planar Reflection Actor on the floor. Take a screenshot.",
+   "Write one line for each method that says what it can reflect and what it costs."
+  ],
+  "done_when": "Send four labeled screenshots of the same floor (Lumen, SSR, capture only, planar) and your four lines of notes, one for each method."
+ },
+ "EAQ57": {
+  "brief": "The Blend Mode of a material decides how it mixes with what is behind it. Opaque is fully solid, Masked cuts holes, Translucent is see-through, and Additive and Modulate make the background brighter or darker. See-through materials also have a Lighting Mode that decides how well they receive light. In this quest you build one test material for each blend mode and compare three lighting modes.",
+  "checklist": [
+   "Create a material named M_Blend_Test with a colored Base Color. Place four spheres in front of a wall, and give each sphere a Material Instance of this material.",
+   "For the first sphere, set the Blend Mode of the parent material to Masked. Connect a striped texture to Opacity Mask and try two different Opacity Mask Clip Values.",
+   "Duplicate the material and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity.",
+   "Duplicate again to make M_Blend_Additive, with Blend Mode Additive, and M_Blend_Modulate, with Blend Mode Modulate, set to Unlit, and with the color connected to Emissive. Overlap two spheres and look at the area where they overlap.",
+   "On M_Blend_Translucent, open the Translucency section in the Details panel. Place a Point Light nearby and compare these three Lighting Mode values: Volumetric NonDirectional, Surface TranslucencyVolume and Surface ForwardShading.",
+   "Take one screenshot with all four blend modes visible, and one screenshot with the three lighting modes side by side."
+  ],
+  "done_when": "Send two screenshots: one with the four blend modes labeled, and one with the three translucency lighting modes labeled. Add one line that says which mode showed a specular highlight."
+ },
+ "EAQ58": {
+  "brief": "Refraction is the way light bends when it passes through glass or water, so things behind the glass look shifted. The strength of the bend is given by a number called the index of refraction, or IOR. In this quest you build a glass material that bends the background more at the edges than in the center, and you compare several real IOR values.",
+  "checklist": [
+   "Create a material named M_Glass. Set Blend Mode to Translucent. Under Translucency, set Lighting Mode to Surface TranslucencyVolume so that the Refraction pin appears.",
+   "Add a Scalar Parameter named Opacity with the value 0.3 and connect it to Opacity. Add a Scalar Parameter named IOR with the value 1.52. Use a Fresnel node to drive a Lerp between 1.0 at the center and IOR at the edges, and connect the result to Refraction.",
+   "Create a Material Instance named MI_Glass and apply it to a sphere in front of a textured wall. Try IOR 1.0, 1.33, 1.52 and 2.42, and take a screenshot of each.",
+   "Add a Normal Map texture parameter and connect it to Normal. The texture T_Water_N from Starter Content works well. See how the refraction breaks up.",
+   "Find Refraction Depth Bias in the Details panel of the material. Try a small value while you look at a close object through the glass.",
+   "This step is optional. Duplicate the material as M_Glass_Thin, and set Shading Model to Thin Translucent and Lighting Mode to Surface ForwardShading. Compare the highlights."
+  ],
+  "done_when": "Send four labeled screenshots of the sphere with IOR 1.0, 1.33, 1.52 and 2.42, and one more screenshot with the normal map turned on."
+ },
+ "EAQ59": {
+  "brief": "Substrate is the newer material system in Unreal Engine 5. Instead of the classic inputs such as Base Color and Metallic, you describe a surface with a building block called a Slab, and you connect it to one input named Front Material. Here F0 is the amount of light a surface reflects when you look straight at it: low for plastic, high for metal. In this quest you check if your project uses Substrate and build two simple Slab materials so that the system is familiar when you meet it.",
+  "checklist": [
+   "Open Project Settings, then Rendering, and check whether Substrate materials is enabled in your project. Write down what you found, and also the GBuffer Format.",
+   "Create a material named M_Substrate_Test. If Substrate is on, add a Substrate Slab node and connect it to the Front Material input on the root node.",
+   "Set Diffuse Albedo to a color, F0 to 0.04 (which is a plastic) and Roughness to 0.3. Apply the material to a sphere.",
+   "Duplicate the material. Set F0 to a bright color (which is a metal) and Diffuse Albedo to black. Apply it to a second sphere and compare the two.",
+   "Open any old material that does not use Substrate. Right-click the root node and read the Convert to Substrate option. Do NOT convert a material that other people share. Use a copy instead.",
+   "Write two lines: one that says what a Slab is made of, and one that says what happens to a converted material if Substrate is turned off."
+  ],
+  "done_when": "Send a screenshot of the M_Substrate_Test graph with the Slab connected to Front Material, a screenshot of the two spheres side by side, and the two lines from the last step."
+ }
+}

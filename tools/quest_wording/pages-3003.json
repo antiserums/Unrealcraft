@@ -1,0 +1,153 @@
+{
+ "GDQ35": {
+  "brief": "The Gameplay Ability System, or GAS, is the Unreal framework that many large games use for abilities, buffs and stats. It has three main parts: Attributes are numbers such as Health and Stamina, Gameplay Effects change those numbers, and Gameplay Abilities are the actions a character can do. Designers tune most of it in data. In this quest you set up two attributes, three effects and one ability, and you show the attributes in a widget.",
+  "checklist": [
+   "Enable the Gameplay Abilities plugin and restart the editor. Attribute Sets cannot be made in Blueprint, so add one small C++ class named UAS_Basic with the parent AttributeSet. Give it two FGameplayAttributeData properties, Health and Stamina. Copy the code from the Attributes page and compile.",
+   "Add an Ability System Component to BP_ThirdPersonCharacter. In its Default Starting Data, add AS_Basic and a Data Table named DT_AttributeInit with the row type AttributeMetaData. In the table, set AS_Basic.Health to 100 and AS_Basic.Stamina to 50.",
+   "Create three Gameplay Effect Blueprints. GE_Damage has Duration Policy Instant and a modifier that adds -25 to Health. GE_SprintCost is Instant and adds -10 to Stamina. GE_Regen uses Has Duration with 5 s, has a Period of 1 s, and adds +5 to Stamina.",
+   "Create a Blueprint named GA_Slam with the parent GameplayAbility. In Activate Ability, call Commit Ability, then play a short montage or use a Delay. Then use Apply Gameplay Effect To Owner with GE_Damage on an overlapped enemy, and finish with End Ability. Add State.Stunned as an Activation Blocked Tag, so the ability cannot start while the character is stunned.",
+   "On Begin Play, on the server side, call Give Ability with GA_Slam. Bind a key to Try Activate Ability By Class. Add a second key that applies GE_Regen to the character itself.",
+   "Make a widget named WBP_Stats with a health bar. Update it from On Attribute Changed, or read Get Float Attribute on each tick. Press Play, use the ability, and watch Health and Stamina change."
+  ],
+  "done_when": "Send two screenshots. The first shows the GA_Slam graph with Commit Ability and End Ability visible. The second shows Play In Editor with WBP_Stats showing Health and Stamina after one slam and one regen. Add one sentence that answers this: which value did you change from base to current, and which effect changed it?"
+ },
+ "GDQ36": {
+  "brief": "In a multiplayer game one computer is the server, and it holds the true state of the game. The other players are clients, and they receive copies of that state, which is called replication. A mechanic only works in multiplayer when the server owns the important values, such as the score, and the clients only ask the server to act. In this quest you test with two players, make a replicated score, and send a request from a client to the server.",
+  "checklist": [
+   "In a Third Person project, open the Play In Editor settings. Set Number of Players to 2 and set Net Mode to Play As Listen Server. Play once and note which window is the server.",
+   "Make an Actor Blueprint named BP_ScoreCrate with a Static Mesh and a Box collision. In Class Defaults, turn Replicates on. Add an Integer variable named Score and set its Replication to RepNotify. In the function OnRep_Score, which runs when the value changes, update a text render above the crate.",
+   "On the Begin Overlap event of the crate, add a Switch Has Authority node. On the Authority pin, which runs only on the server, add 1 to Score. On the Remote pin, do nothing. Play with 2 players and touch the crate in the client window. Both windows must show the new number.",
+   "In BP_ThirdPersonCharacter, add a Custom Event named Server_Kick and set it to Run on Server and Reliable. Make it apply an impulse to the crate, and call it from an input key. Add a second Custom Event named Multicast_KickFX, set to Multicast and Unreliable, that spawns a particle. Call it from Server_Kick.",
+   "On Begin Play of the character, add a Print String that prints Get Local Role and Get Remote Role. Compare the four lines that you get across the two windows.",
+   "Write 4 sentences that say which values in your crate are owned by the server, which are cosmetic (only for looks), and why the particle event is unreliable."
+  ],
+  "done_when": "Send two screenshots. The first shows both Play In Editor windows side by side after the client touched the crate, with the same Score in both. The second shows the character graph with Server_Kick and Multicast_KickFX and their Replicates settings visible. Add your 4 sentences."
+ },
+ "GDQ37": {
+  "brief": "Chaos is the physics system of Unreal, and Chaos Destruction lets you break objects into pieces. A mesh that can break is stored as a Geometry Collection. It breaks when the force on it, called strain, is higher than its Damage Threshold. Destruction becomes a real mechanic when it changes the state of the game and not only the picture. In this quest you make one weak wall and one strong wall, break them with a projectile, and count broken pieces to unlock a door.",
+  "checklist": [
+   "In a First Person project, place two box Static Meshes as walls. Select the first wall and switch to Fracture Mode with Shift-6. Click New under Generate, name the asset GC_Wall_Weak, and fracture it with Uniform. Do the same for the second wall, name it GC_Wall_Strong, and fracture it in two levels.",
+   "In the Details of each Geometry Collection, set a Damage Threshold: 200000 for GC_Wall_Weak and 500000 for GC_Wall_Strong. Then enable Show Engine Content in the Content Browser settings and find the folder Engine > Content > EditorResources > FieldNodes.",
+   "Open BP_FirstPersonProjectile. On Event Hit, use Spawn Actor to create FS_MasterField at the Hit Location. Use Set Activation Type with the value Trigger, call CE Trigger, and then add a Delay and a Destroy Actor node. Set the Strain Magnitude of the field to 400000.",
+   "Drag an FS_AnchorField_Generic over the base of each wall. Add it to the Initialization Fields array of the wall, so that the bottom row of pieces stays in place. Place an FS_SleepDisable_Generic on the floor and give it a high Threshold.",
+   "Now make it a mechanic. On the Geometry Collection component of the wall, enable Notify Breaks and bind On Chaos Break Event. Each time it runs, add 1 to an Integer named BrokenPieces on the Game State, set up so that it can be replicated later. Show the number in a small widget, and unlock a door when BrokenPieces reaches 15.",
+   "Press Play. One shot should crack the weak wall and leave the strong wall whole. Then add a second field setting on the projectile, with Use Decay on and Decay Amount 100000. Test how many shots the strong wall takes."
+  ],
+  "done_when": "Send two screenshots. The first shows Play In Editor after you shot both walls, with the BrokenPieces widget visible, the weak wall broken and the strong wall still standing. The second shows the projectile graph with Spawn Actor FS_MasterField, Set Activation Type and CE Trigger. Add one sentence that says how many shots the strong wall took and which setting you changed."
+ },
+ "GDQ38": {
+  "brief": "A data-driven system is a system where all the content and numbers are stored in data, such as Data Assets and Data Tables, and the Blueprint logic only reads that data. Another designer can then add content and tune the game without opening a graph. In this quest you build one such system, add checks that warn about bad data, and write a short guide that someone else can follow. This is a piece you can show in a portfolio.",
+  "checklist": [
+   "Pick one system: a wave spawner, a shop economy, or an ability set. Write its goal on one page, and say what a designer should be able to change without opening a graph.",
+   "Build the data layer. Make a Primary Data Asset class, for example PDA_Wave, PDA_Item or PDA_AbilityDef, and a Data Table for the numbers that change per level or per row. Give every field a tooltip and a sensible range.",
+   "Build the runtime, the part that runs in the game. Make one Blueprint (BP_WaveDirector, BP_Shop, or the ability loader of the character) that reads only from the data and never from numbers typed into the graph. Register the asset type in the Asset Manager and load the assets by Primary Asset Id.",
+   "Add validation. On Begin Play, check every asset and every row for mistakes such as a missing mesh, a negative cost or an empty name. Use Print String to show a clear warning that names the asset.",
+   "Write a one-page file named DESIGNER_GUIDE.md. It must list every field, what it does, its safe range, and the exact steps to add a new wave, item or ability. Screenshots of graphs are not allowed in the guide.",
+   "Give the guide to another person, or follow it yourself after one day, and add a third variant using only the guide. Record what was unclear and fix the guide.",
+   "Record a 2-minute video, or take 6 screenshots, that show the system running with all three variants. Also show one validation warning that you triggered on purpose."
+  ],
+  "done_when": "Send your work for a mentor review: the project folder or a link to it, DESIGNER_GUIDE.md, and the video or screenshots. The mentor will add a new variant using only your guide, and it must work without touching a Blueprint graph."
+ },
+ "GDQ39": {
+  "brief": "Level streaming means that parts of the world are stored as separate levels, called sublevels, that load and unload while the game runs. One persistent level is always loaded and holds the others. Streaming is also a pacing tool, because what loads at which moment decides where the player can go next. In this quest you build a hub with two streamed sublevels, and you load them with a volume, with a Blueprint, and after a key pickup.",
+  "checklist": [
+   "Create a persistent level named L_Hub with a Player Start and a corridor. Create two more levels, L_Arena and L_Reward, each with a few graybox props. In L_Hub, open Window > Levels and use Add Existing to add both levels as sublevels with the streaming type Blueprint.",
+   "Place a Level Streaming Volume in L_Hub that covers the corridor and the whole arena. In the Levels window, open the details of L_Arena and add the volume under Streaming Volumes. Uncheck Initially Loaded and Initially Visible. Then set the Streaming Usage of the volume to SVB Visibility Blocking on Load.",
+   "Make an Actor Blueprint named BP_LevelStreamer with a Box collision and an editable Name variable called LevelToStream. When the player begins to overlap the box, call Load Stream Level with Make Visible After Load turned on. On End Overlap, call Unload Stream Level. Place one in front of the door of L_Reward and set LevelToStream to L_Reward.",
+   "Now control the pacing. Add a second Level Streaming Volume for L_Reward with Disabled checked. When the player picks up a key in the arena, set Disabled to false from a Blueprint. This way the reward room only starts to load after the player has the key.",
+   "Test in Play In Editor, and then test again as Standalone Game. Note the difference in when the levels appear.",
+   "Write 3 sentences that say where a player could see a hitch, which is a short freeze, and how you would resize a volume to hide it."
+  ],
+  "done_when": "Send two screenshots. The first shows the Levels window with L_Hub as the persistent level, L_Arena and L_Reward as sublevels streamed by Blueprint, and the volume assigned. The second shows the BP_LevelStreamer graph with Load Stream Level and Unload Stream Level. Add your 3 sentences about hitches."
+ },
+ "GDQ40": {
+  "brief": "An Actor is a heavy object, so hundreds or thousands of Actors moving at once can make a game slow. Mass Entity is the Unreal framework for very large numbers of simple agents, such as a crowd. It stores each agent as a light entity made only of small pieces of data, and shared logic updates all of them together. In this quest you spawn a crowd with Mass, measure the frame rate with 200 and with 1000 entities, and explain the main terms in your own words.",
+  "checklist": [
+   "Enable the MassEntity, MassGameplay and MassCrowd plugins and restart the editor. In a Third Person level, add a NavMeshBoundsVolume that covers a large open area.",
+   "Create a Mass Entity Config asset named DA_Crowd_Walker. Add traits, which are sets of features, for collision, movement and avoidance. Also add a visualization trait that uses a low-poly Static Mesh (Instanced Static Mesh).",
+   "Place a MassSpawner actor in the level. Set its Entity Types to DA_Crowd_Walker with a Count of 200. Add an instance generator that spreads the entities over the nav mesh.",
+   "Press Play. Take a screenshot with stat fps and stat unit visible on screen. Then set Count to 1000 and compare the numbers.",
+   "Make a second config named DA_Crowd_Runner as a child of DA_Crowd_Walker. Change only the movement speed in it. Spawn 50 of them with a second spawner.",
+   "Write 5 sentences. Say in your own words what a Fragment, an Entity, an Archetype and a Processor are. Also name one case in your game where Mass would matter and one case where plain Actors are enough."
+  ],
+  "done_when": "Send a writeup with your 5 sentences and two screenshots. The first shows the MassSpawner Details with DA_Crowd_Walker and Count 200. The second shows Play In Editor with the crowd moving and stat fps visible. Include the frame time at 200 entities and at 1000 entities."
+ },
+ "GDQ41": {
+  "brief": "The jump is often the first thing a player tries, and its tuning sets the feel of the whole game. A variable-height jump means that a short tap gives a small jump and a long hold gives a high jump. A double jump lets the player jump one more time in the air. In this quest you set up both on a copy of the player character and tune them on a small test course.",
+  "checklist": [
+   "Read the node pages for Jump, Stop Jumping, Is Jump Providing Force and Can Jump. Also read the Characters page.",
+   "Open a Third Person project. Duplicate the player character and name the copy BP_JumpChar. Set it as the Default Pawn in your Game Mode.",
+   "In the Class Defaults of BP_JumpChar, set Jump Max Hold Time to 0.3 and Jump Max Count to 2. Make Jump Max Hold Time and Jump Z Velocity Instance Editable.",
+   "In the Event Graph, call Jump from the Started pin of IA_Jump, and call Stop Jumping from its Completed pin. Test it: a short tap gives a small jump, and a long hold gives a high jump.",
+   "Now add the second jump. The Jump Max Count of 2 already lets you press Jump again in the air. Add an integer variable named JumpsUsed that goes up by one on each Jump and resets to zero in Event OnLanded (Landed).",
+   "Build a small test course with three gaps of different widths and one ledge that needs a full-hold jump. Tune Jump Z Velocity, Air Control and Gravity Scale on the Character Movement component until each gap feels fair.",
+   "Write your final values for Jump Z Velocity, Air Control, Gravity Scale and Jump Max Hold Time in a text box in the level."
+  ],
+  "done_when": "Send a screenshot of the Event Graph with Jump and Stop Jumping connected to IA_Jump. Also send a screenshot of your test course with the final tuning values visible."
+ },
+ "GDQ42": {
+  "brief": "A dash is a short, fast burst of movement in one direction. It is a small mechanic, but it changes how players dodge and how you lay out a level. In Unreal you can build it with the Launch Character node, which gives the character a sudden velocity. A cooldown, a short wait before the next dash, stops the player from using it all the time. In this quest you build a dash with a cooldown and compare a few settings.",
+  "checklist": [
+   "Read the Launch Character node page, the Platforming section of the Game Template Variants page, and the Set Timer by Event page.",
+   "In your Third Person project, add an Input Action named IA_Dash with the value type Digital (bool). Map it to a key in IMC_Default, the asset that links keys to actions.",
+   "In the character Blueprint, add a float DashSpeed with the value 1500, a float DashCooldown with the value 1.0, and a bool CanDash with the value true. Make DashSpeed and DashCooldown Instance Editable.",
+   "From the Started pin of IA_Dash, check CanDash with a Branch. If it is true, get the Actor Forward Vector, multiply it by DashSpeed, and call Launch Character with XY Override set to true and Z Override set to false.",
+   "Right after the launch, set CanDash to false. Then use Set Timer by Event with Time set to DashCooldown and Looping off, and make its event set CanDash back to true.",
+   "Test three versions: XY Override on, XY Override off, and a Z value of 0 compared with 300. Write one sentence for each version about how it feels.",
+   "Optional: create a second project with the Third Person Platforming variant, and compare its dash with yours."
+  ],
+  "done_when": "Send a screenshot of the dash graph that shows Launch Character with XY Override true and the cooldown timer. Add your three one-sentence feel notes in a text box or a writeup."
+ },
+ "GDQ43": {
+  "brief": "Stamina is a number that goes down while the player sprints and comes back when they rest. A resource like this turns the sprint key into a decision, because the player must choose when to spend it. The drain and refill numbers decide the rhythm of play. In this quest you study the stamina of the Survival Horror template, and then you build your own sprint with stamina that drains, stops the sprint at zero, and refills after a short wait.",
+  "checklist": [
+   "Read the Survival Horror section of the First Person Template page, the Add a Sprint Mechanic page, and the Set Timer by Event page.",
+   "Create a First Person project with the Survival Horror variant. Open BP_FP_Horror in Content/Variant_Horror/Blueprints and read how its sprint and its stamina bar work. Play it once.",
+   "In your own project (Third Person, or the None variant), add a sprint like the tutorial does. Create IA_Sprint with a Down trigger, save DefaultMovementSpeed on BeginPlay, and call Set Max Walk Speed from both the Triggered pin and the Completed pin.",
+   "Add these float variables: Stamina with the value 100, MaxStamina 100, DrainPerSecond 25, RegenPerSecond 15 and RegenDelay 1.0. Make them Instance Editable.",
+   "Use a Set Timer by Event node with Looping on and Time set to 0.1 to lower Stamina while the player sprints. When Stamina reaches 0, stop the sprint and set Max Walk Speed back to the default value.",
+   "After the player releases the sprint key, wait for RegenDelay and then refill Stamina with a second looping timer. Show Stamina with Print String or with a simple progress bar.",
+   "Tune the four numbers so that a full sprint lasts about 4 seconds and a full refill takes about 7 seconds. If your sprint key is Shift, test in Standalone."
+  ],
+  "done_when": "Send a screenshot of the stamina graph that shows the drain timer, the regen timer and the stop at 0. Also send a screenshot taken during play that shows the stamina value or bar, and add your final tuning numbers."
+ },
+ "GDQ44": {
+  "brief": "When a character crouches, its collision capsule becomes shorter, so it can fit through spaces that are too low to walk through. This changes how you measure and build your levels, because a low tunnel becomes a new kind of door. In this quest you add a crouch to your character and build tunnels that teach the player what fits and what does not.",
+  "checklist": [
+   "Read the node pages for Crouch, Un Crouch and Can Crouch, the Characters page, and the Third Person Template page. Also read the Enhanced Input part of the sprint tutorial.",
+   "In your character Blueprint, select the Character Movement component and enable Can Crouch under Nav Movement. Note the value of Crouched Half Height, which is half the height of the capsule while crouched.",
+   "Create an Input Action named IA_Crouch with the value type Digital (bool) and a Down trigger. Map it to the C key in IMC_Default.",
+   "Call Crouch from the Triggered pin of IA_Crouch, and call Un Crouch from its Completed pin. Print Is Crouched after each call to see the change.",
+   "On the Character Movement component, set Max Walk Speed Crouched to about half of Max Walk Speed.",
+   "Build a test corridor with a low tunnel that is taller than the crouched capsule but shorter than the standing capsule. Also add a tunnel that is too low for both, so players learn the rule.",
+   "Add a Box Collision above the tunnel exit. While the player overlaps it, keep the player crouched. You can call Crouch again when the player tries to stand up, or block Un Crouch with a bool variable."
+  ],
+  "done_when": "Send a screenshot of the crouch graph with Crouch and Un Crouch connected to IA_Crouch. Also send a screenshot taken during play of your character crouched inside the low tunnel."
+ },
+ "GDQ45": {
+  "brief": "A spline is a curved path that you draw with a few points in the level. A Timeline is a Blueprint node that changes a value smoothly over time. Together they let you move a platform along any path, and a moving platform is a timing puzzle for the player. In this quest you build a platform that travels back and forth on a spline, add a spinning hazard, and tune the timing.",
+  "checklist": [
+   "Read the Blueprint Spline Components Overview, the node pages for Get Location at Distance Along Spline and Get Spline Length, the Timelines page and the Movement Components page.",
+   "Make a Blueprint named BP_SplinePlatform from Actor. Add a Spline component as the root and a Static Mesh component for the platform. Place it in the level and drag out the spline points to draw a path with 3 or more points.",
+   "Add a Timeline named TL_Move with one float track named Alpha that goes from 0 to 1 over 4 seconds. Play it from Event BeginPlay. Do not set it to loop, because you will send it back and forth with the Finished pin.",
+   "From the Update pin, multiply Alpha by Get Spline Length. Put the result into Get Location at Distance Along Spline with Coordinate Space set to World. Use the location it returns in Set World Location on the Static Mesh.",
+   "Add a float variable named TravelTime and make it Instance Editable. Use Set Play Rate on the Timeline so that TravelTime changes the speed. From the Finished pin, add a FlipFlop node that calls Reverse from End for the way back and Play from Start for the way forward.",
+   "Make a second actor named BP_SpinHazard with a Static Mesh and a Rotating Movement component. Set Rotation Rate so that it spins once every 2 seconds.",
+   "Place two platforms and one spinner in a gap that the player must cross. Tune TravelTime until the player can read the jump timing but it is still not too easy."
+  ],
+  "done_when": "Send a screenshot of the BP_SplinePlatform graph that shows the Timeline, Get Spline Length and Get Location at Distance Along Spline. Also send a screenshot of the level that shows the spline path and the spinner."
+ },
+ "GDQ46": {
+  "brief": "An impulse is one sudden push on a physics object, and a force is a push that continues over time. Unreal has nodes for both, and a radial impulse pushes everything away from one point, like an explosion. These pushes give weight to your world. In this quest you push cubes with impulses and forces, build a bomb, and knock the player back.",
+  "checklist": [
+   "Read the node pages for Add Impulse, Add Radial Impulse, Add Force and Launch Character. Also read the Character Movement part of the Movement Components page.",
+   "Place 10 cubes with Simulate Physics turned on. Make a Blueprint named BP_PushHit from Actor with a Box Collision. When it overlaps a physics component, call Add Impulse on that component in the forward direction of the actor. Test with Vel Change on and off, using cubes of different Mass.",
+   "Make a Blueprint named BP_Bomb from Actor with a Sphere mesh. On a key press, or after a Delay of 2 seconds, use a Sphere Overlap Actors node to collect all physics components inside Radius. Call Add Radial Impulse on each one, with Origin set to the location of the bomb.",
+   "Make the floats Radius and Strength and a Falloff choice Instance Editable. Test Falloff set to Constant and then to Linear, and write one line about the difference you see.",
+   "Add a fan actor named BP_Fan with a Box Collision. On every tick while a physics component overlaps the box, call Add Force with a modest force. Compare the result with Add Impulse.",
+   "Add knockback for the player. When BP_Bomb explodes and the player Character is inside Radius, call Launch Character away from the bomb. For the direction, take the player location minus the bomb location, normalize it, multiply it by 800, and use 300 for Z.",
+   "Tune Strength and Radius so that the explosion looks strong but the cubes do not fly out of the level."
+  ],
+  "done_when": "Send a screenshot of the BP_Bomb graph that shows Add Radial Impulse and the Launch Character branch for the player. Also send a screenshot taken during play at the moment of the explosion."
+ }
+}

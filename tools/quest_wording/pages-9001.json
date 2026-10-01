@@ -1,0 +1,116 @@
+{
+ "EAQ1": {
+  "brief": "A reference board is one image that holds a group of pictures you collected to guide your work. A mood target is the single picture and short description that says how your scene should feel. When you have a target, it is much easier to judge if your lighting is right or wrong. In this quest you collect reference images for one small space, pick one as your target, and describe it in three lines.",
+  "checklist": [
+   "Collect 8 to 12 reference images for one small space. They can be photos, film stills or paintings.",
+   "Mark each image with what you are taking from it: the light direction, the color, the material, or the composition (how things are arranged in the picture).",
+   "Pick one image as your mood target. This is the image your scene should feel like.",
+   "Write 3 lines: one for the time of day, one for the color of the key light (the main light in the scene), and one for the feeling you want."
+  ],
+  "done_when": "Send an image of your reference board together with your 3-line mood target, posted as a writeup."
+ },
+ "EAQ2": {
+  "brief": "The sky gives a base color to everything below it, so it has a strong effect on the mood of a scene. Unreal offers two common ways to make a sky. One is the atmosphere system, which calculates the sky from a sun light. The other is an HDRI, a 360 degree photo of a real sky that also lights the scene. In this quest you light the same scene both ways and compare which one fits your mood target better.",
+  "checklist": [
+   "Light one scene with Sky Atmosphere, a Directional Light (the sun), a Sky Light (soft light that comes from the whole sky), and Height Fog.",
+   "Duplicate the level and light the copy with an HDRI instead. You can use the HDRI Backdrop actor or a Sky Light with a cubemap, which is a texture that covers all directions.",
+   "Push each version toward your mood target from quest EAQ1. Change the sun angle, the fog color and the fog density until the mood is close.",
+   "Compare the two versions from the same camera bookmark, so that both pictures show exactly the same view."
+  ],
+  "done_when": "Send side-by-side screenshots of the atmosphere version and the HDRI version taken from the same bookmark, and add 2 lines that say which one fits the target better."
+ },
+ "EAQ3": {
+  "brief": "Unreal can measure light in the same units that real lamps use, such as candela and lumens, and can set its color as a temperature in Kelvin. When you use real values, your lighting behaves in a way you can predict. An IES profile is a small file from a lamp maker that describes the shape of the light a real lamp gives. In this quest you light a room with real-world values and see what an IES profile changes.",
+  "checklist": [
+   "Open L_Room_01 and set the exposure to a fixed value. Exposure is how bright the camera makes the picture, and a fixed value stops Unreal from adjusting it, so you can see brightness changes.",
+   "Place 2 lights and give them real-world intensities, in candela or lumens, and a realistic color temperature.",
+   "Apply an IES profile to one of the lights. Compare how the light looks with the profile and without it.",
+   "Write down the intensity and the temperature you used, and where you got each value from."
+  ],
+  "done_when": "Send before and after screenshots of the light with the IES profile, and add your notes about the intensity values."
+ },
+ "EAQ4": {
+  "brief": "Composition is the way things are arranged inside the picture frame. The position of the camera decides what people see, so it matters as much as the lighting. A Cine Camera Actor is a camera in Unreal that works like a real film camera, with a focal length (how wide or narrow the view is) and a focus distance. In this quest you save camera bookmarks, frame a view with a Cine Camera, and take a still image through it.",
+  "checklist": [
+   "Save 3 camera bookmarks in your scene: one wide view, one medium view and one detail view.",
+   "Place a Cine Camera Actor and set its focal length and focus distance. Then pilot the camera, which means you look through it and move it, and frame the best view.",
+   "Turn on a composition overlay, such as the rule of thirds grid or a similar one. Use it to adjust the frame.",
+   "Take a High Resolution Screenshot while you look through the Cine Camera."
+  ],
+  "done_when": "Send the still image, and also a screenshot of the Cine Camera settings."
+ },
+ "EAQ12": {
+  "brief": "A diorama is a small, complete scene, like a model in a box. A small finished scene teaches you more than a big scene that you never finish, because you have to make every part work together. In this quest you combine what you learned in the earlier quests: you build a small piece of landscape with plants, light it toward your mood target, and render three still images.",
+  "checklist": [
+   "Build a small diorama of roughly 10 x 10 m. Use a sculpted landscape patch (from quest EAQ8) and add foliage to it (from quest EAQ11).",
+   "Light it toward your mood target from quest EAQ1. Use sky and atmosphere (from quest EAQ2) and at least one local light that uses physical units (from quest EAQ3).",
+   "Set the exposure and the post process settings on purpose (from quest EAQ10), so that the result is your choice and not the default.",
+   "Render 3 stills from your bookmarks. Take one of them through a Cine Camera (from quest EAQ4).",
+   "Write 3 lines that say what matches the target and what does not match it yet."
+  ],
+  "done_when": "Send your 3 stills, the mood target image, and your 3-line writeup."
+ },
+ "EAQ5": {
+  "brief": "Volumetric Fog is fog that reacts to light in 3D space. It makes light visible in the air, so you can see beams of light, often called light shafts, when light comes through a window. In this quest you turn on Volumetric Fog and adjust one light until the shafts help the picture.",
+  "checklist": [
+   "Turn on Volumetric Fog, which is a setting on the Exponential Height Fog actor. Adjust the scene until you can see light shafts coming through a window.",
+   "Tune the volumetric scattering intensity of the light, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
+  ],
+  "done_when": "Send a screenshot that shows the light shafts."
+ },
+ "EAQ6": {
+  "brief": "A Local Fog Volume is a small area of fog that you can place anywhere in the level, unlike the height fog that covers the whole scene. Layers of fog at different distances make a picture look deeper, because far things become softer than near things. In this quest you place two of these volumes and compare the scene with and without them.",
+  "checklist": [
+   "Add 2 Local Fog Volumes to your scene. Place them so that they separate the foreground from the background.",
+   "Take one screenshot with the volumes and one screenshot without them, from the same view."
+  ],
+  "done_when": "Send the before and after screenshots."
+ },
+ "EAQ7": {
+  "brief": "The angle of the sun decides where shadows fall and how long they are. The Source Angle setting of the Directional Light decides how soft the edges of those shadows are. Together they change how clearly you can read the shapes in a scene. In this quest you render the same view with different sun settings and choose the best one.",
+  "checklist": [
+   "Render the same view at 3 sun angles and with 2 Source Angle values for each, so that you get 6 renders.",
+   "Pick the render where the shapes are the easiest to read, and write one line that says why."
+  ],
+  "done_when": "Send a contact sheet (one image that shows all 6 renders together), and say which one you picked."
+ },
+ "EAQ13": {
+  "brief": "A material is the asset that decides how a surface looks: its color, how shiny it is, and if it is metal. Every surface in Unreal has one. You build materials in the Material Editor by connecting small boxes called nodes to the inputs of the material. In this quest you create your first simple material, look at how much work it costs to draw, and put it on a mesh.",
+  "checklist": [
+   "Create a material named M_Basic in the folder UC/Materials. Double-click it to open the Material Editor.",
+   "Add a Constant3Vector node, which holds a color, and connect it to Base Color. Add Constant nodes, which each hold one number, and connect them to Roughness and Metallic.",
+   "Look at the material in the preview viewport. Open the Stats panel to see the instruction counts, which show how much work the material costs to draw.",
+   "Apply the material to a mesh in your diorama."
+  ],
+  "done_when": "Send a screenshot of the material graph with the Stats panel visible."
+ },
+ "EAQ14": {
+  "brief": "PBR means physically based rendering. It is a way to describe a surface with a few inputs, such as Base Color, Roughness and Metallic, that act like real materials do. When the values are plausible, the surface looks right under any light. A dielectric is any material that is not a metal, such as plastic, wood or stone. In this quest you make four test surfaces, called swatches, and compare them under the same light.",
+  "checklist": [
+   "Make 4 swatches: a rough dielectric, a glossy dielectric, a rough metal and a polished metal.",
+   "Keep the Base Color values of each swatch in a plausible range. Do not use pure black or pure white.",
+   "Add a normal map to one swatch. A normal map is a texture that fakes small bumps on the surface. Compare the swatch with and without it.",
+   "Check each swatch under your R1 lighting."
+  ],
+  "done_when": "Send a screenshot of the 4 swatches under the same light, with a label on each one."
+ },
+ "EAQ15": {
+  "brief": "Most materials get their detail from textures, which are images that the material reads, or samples. UVs are the coordinates that say which part of the image goes on which part of the mesh. Wrong texture settings are a common problem because Unreal does not show an error, the surface just looks a little wrong. In this quest you import three textures, check their settings, and use them in a material with adjustable tiling.",
+  "checklist": [
+   "Import a color texture, a normal texture and a packed roughness texture. A packed texture stores a different grayscale map in each color channel. Check the sRGB setting and the compression settings of each texture.",
+   "Sample the textures in a material. Add a TexCoord node with a tiling parameter, so that you can change how many times the texture repeats.",
+   "Split the packed texture into its channels, so that you can use each channel on its own.",
+   "Find one place where you can see the texture repeat. Fix it by changing the scale or by rotating the UVs."
+  ],
+  "done_when": "Send a screenshot of the material graph, and also a screenshot of the textured mesh."
+ },
+ "EAQ16": {
+  "brief": "A parameter is a value in a material that has a name and can be changed later without opening the material graph. A Material Instance is a copy of a material that only changes those parameters. This lets one material serve many different surfaces. In this quest you add parameters to your material and create three instances that look different from each other.",
+  "checklist": [
+   "Turn your material from quest EAQ15 into M_Surface. Give it scalar parameters (single numbers), vector parameters (colors) and texture parameters.",
+   "Put the parameters in named groups. Give each one a sensible default value and a sort priority, which sets the order they are listed in.",
+   "Create 3 instances of the material that look like different materials."
+  ],
+  "done_when": "Send a screenshot of the 3 instances applied to meshes, and also a screenshot of the Details panel of one instance."
+ }
+}

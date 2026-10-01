@@ -1,0 +1,150 @@
+{
+ "TAQ13": {
+  "brief": "An Editor Utility Widget is a small panel with buttons and text that you build yourself and that runs inside the Unreal editor. You make it the same way as a game menu, but its buttons do editor work, such as changing all the actors you have selected. One button like this can save a team hundreds of repeated clicks. In this quest you build a panel with two buttons that change the rotation and the scale of selected actors.",
+  "checklist": [
+   "In the Content Browser, right-click, choose Editor Utilities, and then click Editor Utility Widget. Name the new asset EUW_ActorTools.",
+   "Open it. In the Designer, the tab where you lay out the panel, add a Vertical Box with two Buttons inside. Label the buttons Randomize Rotation and Snap Scale 1.",
+   "Build the logic for Randomize Rotation. Get the selected level actors (for example with Get Selection Set), loop over them, and set a random Yaw on each one. Yaw is the rotation around the up axis.",
+   "Build the logic for Snap Scale 1. Loop over the selected actors and set the scale of each one to 1, 1, 1.",
+   "Add a Text block to the panel that shows how many actors the last click changed.",
+   "In the Content Browser, right-click EUW_ActorTools and choose Run Editor Utility Widget. Drag the new tab and dock it next to the Details panel.",
+   "Select 5 or more props in a level and test both buttons."
+  ],
+  "done_when": "Send a screenshot of the docked EUW_ActorTools panel next to a level where several selected props have a random rotation. Also send one screenshot of the button's graph."
+ },
+ "TAQ14": {
+  "brief": "Data Validation is an editor feature that checks assets against rules and reports the ones that break a rule. A rule that runs by itself catches mistakes, such as a badly named texture, before they reach the finished game. You can write your own rules as Blueprints. In this quest you run the built-in validation once, and then you write a validator that fails every texture whose name does not start with T_.",
+  "checklist": [
+   "Open Edit, then Plugins, and check that the Data Validation plugin is enabled.",
+   "Right-click a content folder and choose Validate Assets in Folder. Read the results in the Message Log.",
+   "Create a new Blueprint Class and pick EditorValidatorBase as its parent class. Name it EV_TextureNaming.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is a Texture2D, so the rule is used for textures only.",
+   "Override the function Validate Loaded Asset. If the asset name does not start with T_, call Asset Fails with a clear message. Otherwise call Asset Passes. Every path through the function must end in one of these two calls.",
+   "Save the Blueprint, and restart the editor if the validator is not picked up. Then import or rename one texture so its name has no T_, and run Validate Assets on it."
+  ],
+  "done_when": "Send a screenshot of the Message Log that shows your EV_TextureNaming failure message on a badly named texture. Also send one screenshot of the Validate Loaded Asset graph."
+ },
+ "TAQ15": {
+  "brief": "A master material is one material with many parameters, and artists make Material Instances from it to get different looks without building new materials. In a real team, a technical artist hands over reusable materials like this together with effects that the game can control. In this quest you build a master material with several instances, a Niagara effect with a value that a Blueprint changes during play, and a short note that tells artists how to use them.",
+  "checklist": [
+   "Build a material named M_Master_Prop with clear parameters, such as a color tint, a roughness value, and a texture switch or a scale. Put the parameters in groups and give them names that artists will understand.",
+   "Make at least 3 Material Instances from it, with names that start with MI_, that look clearly different. Use them on props in one small scene.",
+   "Build one Niagara system, with a name that starts with NS_, that has at least one User parameter (for example SpawnRate or TintColor). You may drive it from an MPC value instead. MPC is short for Material Parameter Collection.",
+   "Make one Blueprint, with a name that starts with BP_, that changes that value during play. It can use a key press, a trigger or a timer.",
+   "If you use an MPC, let the same value also change M_Master_Prop, so that the props and the effect react together.",
+   "Write a short usage note for artists. It should list each parameter, its safe range, and which Blueprint call drives the effect.",
+   "Record a short clip, or take before and after screenshots, in Play In Editor (PIE)."
+  ],
+  "done_when": "Send the scene with the 3 or more instances, the effect before and after the Blueprint change, the parameter list in M_Master_Prop, and your usage note for artists. A mentor reviews it."
+ },
+ "TAQ16": {
+  "brief": "By default, particles pass through floors and walls, and this makes sparks, rain and debris look fake. The Collision module makes particles hit surfaces and bounce. An emitter can run on the processor (CPU) or on the graphics card (GPU), and each one finds surfaces in a different way. In this quest you make sparks that bounce, build a CPU version and a GPU version, and compare how they behave.",
+  "checklist": [
+   "Make a Niagara system named NS_BouncingSparks that uses a fountain emitter. Place it above a floor and a box in a test level.",
+   "In the Particle Update group, click the + button and choose Collision, then Collision, to add the Collision module. Keep it right before the solver module in the stack.",
+   "Set Bounce Restitution to about 0.4 and Friction to about 0.2. Restitution controls how much speed a particle keeps after a bounce. Check that the sparks bounce off the floor.",
+   "Duplicate the emitter. On the copy, open Emitter Properties and set Sim Target to GPU. Keep the first emitter on CPU.",
+   "On the GPU copy, try the options of GPU Collision Type. Turn the camera so the floor leaves the screen, and note what changes.",
+   "Write 3 lines that say what each version used to find surfaces, and which version you would ship for this effect."
+  ],
+  "done_when": "Send a screenshot of both emitters bouncing on the floor, and add your 3-line note that compares CPU and GPU collision."
+ },
+ "TAQ17": {
+  "brief": "Most particles are drawn as sprites, which are small flat images that face the camera. A Ribbon Renderer works differently: it connects the particles of an emitter into one long strip. Ribbons are used for trails, smoke paths and magic streaks that sprites cannot draw well. In this quest you change a simple sprite emitter into a ribbon that spirals and falls.",
+  "checklist": [
+   "In the Content Drawer, choose FX, then Niagara System, then New system from selected emitters, and pick Simple Sprite Burst. Name the system NS_RibbonTrail and drag it into a level.",
+   "In the Render group, delete the Sprite Renderer and add a Ribbon Renderer. Pick DefaultRibbonMaterial as its material. To find this material, turn on Show Engine Content and Show Plugin Content.",
+   "In the Emitter Update group, set the Life Cycle Mode of Emitter State to System. Then add a Spawn Rate module with a rate of about 100.",
+   "In the Particle Spawn group, set Lifetime, Color and Ribbon Width. Add a Shape Location module set to Ring / Disk and an Add Velocity module set to From Point, so that the ribbon spirals.",
+   "In the Particle Update group, remove Scale Color. Add an Acceleration Force module with a negative Z value so that the ribbon falls.",
+   "Try one setting of the Ribbon Renderer, either UV0 Tiling Distance or Tessellation, and note what changed."
+  ],
+  "done_when": "Send a screenshot of the spiral ribbon in the level. Add one line that says which Ribbon Renderer setting you changed and what it did."
+ },
+ "TAQ18": {
+  "brief": "Materials are normally built from nodes, but the Custom node lets you type shader code directly. The code is written in HLSL, the language that graphics cards use for shaders. This helps when the node graph cannot express what you need, but it has a cost: Unreal cannot optimize the code inside a Custom node as well as it optimizes normal nodes. In this quest you build a blur with a Custom node and then compare the cost of a Custom node with the same effect made from built-in nodes.",
+  "checklist": [
+   "Make a new material named M_TA_CustomBlur. Add a Custom node to the graph. You can find it with the right-click search or in the Custom category of the Palette.",
+   "Select the Custom node. In its Inputs array, add four inputs named Tex, UV, r and dist. Set Output Type to a 3-channel float. Paste the blur code from the documentation page into the Code field.",
+   "Connect a Texture Object node to Tex, a TexCoord node to UV, and two Scalar Parameters to r and dist. Set Description to 'Box Blur' so that the title of the node is clear.",
+   "Add one extra output to the node with Additional Outputs, for example a luminance (brightness) value, and use it somewhere in the graph.",
+   "Build a second, simple effect two times: once in a Custom node and once with built-in nodes (for example Sin, Multiply by a parameter, and Add). Compare the two instruction counts in the Stats panel. A lower count means a cheaper material.",
+   "Write 3 short lines that say when you would keep the Custom node here, and when you would replace it with nodes."
+  ],
+  "done_when": "Send a screenshot of the blurred result with the Details panel of the Custom node visible. Also add the two instruction counts from the Stats panel and your 3 lines."
+ },
+ "TAQ19": {
+  "brief": "A Runtime Virtual Texture (RVT) is a large texture that Unreal fills in while the game runs, usually with the colors and surface details of the landscape. Other materials can read it, so a rock can take the color of the ground under it and meet the ground softly. Without this, rocks and props stop sharply at the ground and look fake. In this quest you set up an RVT for a landscape, blend a rock into it, and add a decal-like plane that draws into it.",
+  "checklist": [
+   "Open Project Settings and go to Engine, then Rendering, then the Virtual Textures section. Turn on Enable virtual texture support, and then restart the editor.",
+   "Create a Runtime Virtual Texture asset named RVT_Terrain. Set its type to Base Color, Normal, Roughness, Specular.",
+   "In your landscape material, turn on Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node, read it back with a Runtime Virtual Texture Sample node, and send both through a Virtual Texture Feature Switch node.",
+   "Place a Runtime Virtual Texture Volume in the level and assign RVT_Terrain to it. Under Transform from Bounds, use Set Bounds on the landscape so the volume covers it. Then add RVT_Terrain to the Draw in Virtual Textures list of the landscape.",
+   "Make a material named M_TA_RockBlend. In this rock material, sample RVT_Terrain and blend its Base Color into the bottom of the rock, so that the rock meets the ground softly.",
+   "Add a plane mesh with a masked material that works like a decal and writes to the RVT. Set Draw in Main Pass to Never on the plane, and turn off its collision.",
+   "Run the console command stat virtualtexturing and note the cost in ms (milliseconds)."
+  ],
+  "done_when": "Send a before and after screenshot of the rock where it meets the ground, one screenshot of the decal plane on the terrain, and the numbers from stat virtualtexturing."
+ },
+ "TAQ20": {
+  "brief": "A Niagara module is one block in an emitter's stack, such as Spawn Rate or Add Velocity. Unreal comes with many modules, but you can also write your own as a Niagara module script. This is useful when a team needs the same behavior in many effects. In this quest you write a module that pulls particles toward a point, make it available in the module library, and use versioning so you can change it later without breaking effects that already use it.",
+  "checklist": [
+   "In the Content Browser, create a Niagara module script named NMS_TA_PullToPoint. Open it in the Script Editor.",
+   "Add two Module Inputs named TargetPosition and Strength. Read Particle.Position, calculate the direction to the target and store it in a Module Local (a value that exists only inside this module), and then write a new Particle.Velocity.",
+   "In Script Details, set Module Usage Bitmask to the particle scripts, and fill in a Category, a Description and Keywords. Turn on Expose to Library so the module shows up when you add modules. Then click Compile.",
+   "Add the module to the Particle Update group of a system named NS_TA_PullTest. Check that the particles move toward the target.",
+   "In the module script, click Versioning and enable it. Mark version 1.0 as the exposed version.",
+   "Add a new minor version. In it, add an input named Falloff and write a Change Description. Then set this version as exposed and visible. In NS_TA_PullTest, switch the module to the new version from the Selection panel."
+  ],
+  "done_when": "Send a screenshot of the module graph with Script Details visible, a screenshot of the Versioning panel that shows both versions, and a screenshot of the effect running in the viewport."
+ },
+ "TAQ21": {
+  "brief": "Unreal Insights is a tool that records what the engine does over time and shows it frame by frame. A recording is called a trace. With a trace you do not have to guess what is slow, because you can see how many milliseconds each part of the code took. In this quest you record a trace of a heavy moment, find the slowest frame and the function that costs the most, fix one thing, and measure again.",
+  "checklist": [
+   "Make a test level named L_TA_Profile that has a known heavy moment. For example, use 50 Niagara systems, or many actors that spawn at the same time.",
+   "In the toolbar at the bottom of the editor, open the Trace menu. Check which channels are turned on, and click Start Trace. Then play in PIE for about 20 seconds.",
+   "Right before the heavy moment, add a Trace Bookmark, which is a marker you can find later in the recording. You can do this from the Trace menu or with the trace.bookmark command. Then stop the trace.",
+   "Open the trace from the Unreal Insights Session Browser. In the Frames panel, find the tallest frame, which is the slowest one, and select it.",
+   "In the Timers panel, sort by exclusive time, which is the time spent in a function itself without the functions it calls. Pick the top timer, and use Callers and Callees to see where it sits in the code.",
+   "Change one thing to fix the problem and capture a second trace. Compare the same timer in both traces over a longer time range."
+  ],
+  "done_when": "Send a screenshot of Timing Insights with the spike frame selected and the Timers panel sorted. Add a 4-line writeup: the timer, its time in ms before, your change, and its time in ms after."
+ },
+ "TAQ22": {
+  "brief": "A Scriptable Tool is an editor tool that you build with Blueprints and that works directly in the level viewport, for example by reacting to mouse clicks on surfaces. It suits jobs where an artist needs to click in the scene and not press buttons in a window, and it needs no C++. In this quest you build a tool that places a prop with a random scale at each point you click.",
+  "checklist": [
+   "Enable the Scriptable Tools Editor Mode plugin. Also enable Geometry Script if you need its nodes. Then restart the editor.",
+   "Create an Editor Utility Blueprint with the parent class EditorScriptableModularBehaviorTool and name it BP_Tool_PlaceProp. Set its Tool Name, Category and Tooltip.",
+   "Create a Blueprint named BP_ToolProps_PlaceProp with the parent class ScriptableInteractiveToolPropertySet. This holds the settings of the tool. Give it the public variables Mesh, MinScale and MaxScale. Add it to the tool in On Script Setup with the node Add Property Set of Type.",
+   "Add a Single Click Behavior to the tool. In the IfHitByClick function, do a line trace along the click ray and return the hit. When a click happens, spawn the chosen mesh at the hit point with a random scale.",
+   "Show short instructions to the user with Display User Help Message. Save the property set when the tool shuts down, and restore it when the tool is set up.",
+   "Open the Scriptable Tools mode in the editor and place 10 props with your tool."
+  ],
+  "done_when": "Send a screenshot of the Scriptable Tools mode with your tool active, its settings panel visible, and the props you placed. Also send a screenshot of the IfHitByClick function."
+ },
+ "TAQ23": {
+  "brief": "A tool is only finished when another person can use it without you in the room. That means it must solve a real problem, handle wrong input, and come with a short guide. In this quest you ask an artist for a slow, repeated task, build a tool that does it, write a usage page, and let the artist test it without your help.",
+  "checklist": [
+   "Ask one artist, or a member from another specialization, which slow and repeated task annoys them. Write the task down in one sentence.",
+   "Choose one form for your tool: an Editor Utility Widget, a Scriptable Tool, or a Python script. Explain your choice in two lines.",
+   "Build the tool. It must check its input and show a clear message when something is wrong. It must not fail without a message.",
+   "Use at least one skill from the quests at this level where it fits: Data Validation, Material Parameter Collections, custom Niagara modules, or RVT setup.",
+   "Write a usage document of one page. It should say what the tool does, how to open it, what each setting does, and one known limit.",
+   "Record a before and after example: the same task done by hand and done with the tool, with the time each one took.",
+   "Give the tool and the document to the artist. They must use it without your help. Write down what confused them, and fix one of those things."
+  ],
+  "done_when": "Send a short video or screenshots of the tool in use, the one-page usage document, the before and after example with times, and the artist's feedback together with the fix you made. A mentor reviews it."
+ },
+ "TAQ24": {
+  "brief": "Effects can use up the whole frame time if nobody sets limits. A Niagara Effect Type is an asset that holds shared rules for a group of effects, such as when to turn effects off because they are far away or because too many are playing. Turning off an effect in this way is called culling. In this quest you create an Effect Type with a budget, give it to two systems, and use the Niagara Debugger to watch effects get culled.",
+  "checklist": [
+   "Create an Effect Type named EFT_TA_Ambient. In the Content Browser, choose FX, then Niagara Effect Type.",
+   "Open it. Under Budget Scaling, set Max Global Budget Usage and one curve, for example Max Distance Scale by Global Budget Use.",
+   "Assign EFT_TA_Ambient to two of your Niagara systems in their System Properties. Place about 30 copies of them in a level named L_TA_FXBudget.",
+   "Open Tools > Debug > Niagara Debugger. Turn on the Debug HUD, Debug Overview and Show Global Budget Info. Set System Debug Verbosity to Basic.",
+   "Turn off System Show Active Only in World, so that culled systems are shown too. Walk around in PIE and watch systems get culled.",
+   "In the FX Outliner, turn on Perf and Capture. Sort the list by average time and note the system that costs the most."
+  ],
+  "done_when": "Send a screenshot of the viewport with the Debug HUD overview and the budget info visible, and one screenshot of the performance view of the FX Outliner. Add 3 lines that say which Budget Scaling setting you chose and why."
+ }
+}

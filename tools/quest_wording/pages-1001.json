@@ -1,0 +1,155 @@
+{
+ "AQ21": {
+  "brief": "Some animations move the character forward by moving the root bone, the first bone of the skeleton. This is called root motion. Other animations are in-place: the character walks on the spot and the movement code moves it through the level. The choice decides who moves the character, the animation or the code. In this quest you look at the root bone of a moving animation, turn on root motion, and see how the character's collision capsule follows the mesh in the game.",
+  "checklist": [
+   "Open an Animation Sequence that moves the character forward, such as a roll, a vault or a walk with root movement. Give it a clear name, or write down the name it has.",
+   "In the viewport, open the Character menu, go to Bones, then Bone Drawing, and choose All Hierarchy so that all bones are drawn. Watch the red root bone and its red line while the animation plays.",
+   "In the Character menu, go to Animation, then Root Motion, and try the options Ignore, Loop, and Loop and Reset. Note what each option does to the preview.",
+   "In the Asset Details panel, check Enable Root Motion on the sequence. Then create a montage from the sequence and name it AM_Roll.",
+   "Open the Animation Blueprint and click Class Defaults in the toolbar. Set Root Motion Mode to Root Motion from Montages Only.",
+   "In the Character Blueprint, play AM_Roll when a key is pressed. Play in the editor and press the key while the character is standing still.",
+   "Open the console with the backtick key and type show collision. You can now see the capsule, the collision shape of the character, move together with the mesh."
+  ],
+  "done_when": "Send a screenshot of the Animation Sequence with All Hierarchy bone drawing and the red root line, and a screenshot of the Class Defaults of the Animation Blueprint that shows Root Motion Mode. Add one sentence that describes what changed in the game after you turned on Enable Root Motion."
+ },
+ "AQ22": {
+  "brief": "An IK Rig is an asset that describes the important parts of a character's skeleton, such as the pelvis, the spine, the arms and the legs. Unreal needs it for retargeting, which means playing the animations of one skeleton on a different skeleton. IK means Inverse Kinematics: you move the end of a limb, such as a foot, and the rest of the limb bends to follow. In this quest you create an IK Rig, mark the pelvis, define seven bone chains, and add IK goals to the feet.",
+  "checklist": [
+   "In the Content Browser, click Add (+), then Animation, then IK Rig. Pick the Skeletal Mesh of your character and name the new asset IK_MyCharacter.",
+   "In the Hierarchy panel, right-click the pelvis bone and set it as the pelvis (the retarget root). This tells Unreal which bone carries the movement of the whole body.",
+   "Create retarget chains for Spine, Neck, Head, Left Arm, Right Arm, Left Leg and Right Leg. For each chain, select the bones from the first to the last, right-click, choose New Retarget Chain, and check the Chain Name that Unreal fills in for you.",
+   "Select both foot bones, click Add (+) in the Hierarchy panel and choose New IK Goal. When Unreal asks for a Solver, pick Limb IK. A solver is the part that calculates how the limb bends.",
+   "Do this for each Limb IK solver: select the solver and the thigh bone, right-click, and choose Set Root Bone on Selected Solver.",
+   "In the viewport, drag one foot goal up and watch the leg bend. Then click Reset.",
+   "Look at the IK Retargeting panel and check that every chain has a name, a Start Bone and an End Bone."
+  ],
+  "done_when": "Send a screenshot of the IK Rig editor that shows the IK Retargeting panel with all seven chains and the pelvis set. Also send a second screenshot with a foot goal moved and the leg bending in the viewport."
+ },
+ "AQ23": {
+  "brief": "Many game actions follow the same pattern: the player presses a key, the character plays an animation, and something happens in the world at the right moment of that animation. An Animation Montage with notifies makes this possible. A notify is a marker on the animation timeline that sends an event when the animation reaches it. In this quest you build a lever or a chest that the character can use, with an effect at the moment of contact and a clean stop when the animation is interrupted.",
+  "checklist": [
+   "Build an actor that the player can interact with, named BP_Lever or BP_Chest. Give it a trigger volume and a prompt on screen. When the player presses the interact key inside the trigger volume, the actor tells the character to interact.",
+   "Create a montage named AM_Interact with at least two sections, Reach and Pull. Set it to a named Slot, FullBody or UpperBody, and make sure that this Slot exists in the AnimGraph of the character.",
+   "Play AM_Interact with the Play Montage node. Use its On Completed output to unlock the player, and use On Interrupted to cancel the interaction cleanly.",
+   "Add a Notify to the montage at the moment when the hand touches the object. When that notify fires, spawn a Niagara effect or play a sound at a socket on the hand.",
+   "Add a second notify that fires On Notify Begin in the Play Montage node. Use it to change the state of the lever or chest, for example to open or pulled.",
+   "Make it possible to interrupt the montage. A hit or a jump during the montage should stop it, and the actor should go back to its starting state.",
+   "Record a clip of 20 to 40 seconds. It must show the approach, the interaction, the effect at the right frame, the change of the actor state, and one attempt that is interrupted."
+  ],
+  "done_when": "Send the clip described in the last step, a screenshot of the montage timeline with the sections and notifies visible, and a screenshot of the Blueprint graph with Play Montage, On Completed, On Interrupted and On Notify Begin connected. Add a short note that explains which Slot you used and why. A mentor reviews your work."
+ },
+ "AQ24": {
+  "brief": "An animation curve is an extra value stored inside an animation that changes over time, like a small graph that plays together with the movement. Materials, face shapes and gameplay code can read this value, so they can follow the motion. In this quest you add a curve named Glow to an animation, use it to make the character's material glow, and read its value in an Animation Blueprint.",
+  "checklist": [
+   "Open an Animation Sequence. In the timeline, open the drop-down of the Curves track, choose Add Curve..., then Create Curve, and name the curve Glow.",
+   "Click the drop-down of the new curve and choose Edit Curve. Add keys with the Enter key so that Glow goes from 0 up to 1 and back to 0 during the animation.",
+   "Open Window > Anim Curves. Turn on the Material type for Glow, so that the curve can drive a material. Save the Skeleton when Unreal asks you to.",
+   "Open the material of the character and add a scalar parameter named Glow. Multiply it into Emissive, the input that makes a material give off light. Watch the mesh glow while the animation plays.",
+   "In the Event Graph of the Animation Blueprint, call Get Curve Value with the Curve Name set to Glow. Show the result every tick with a Print String node.",
+   "Add a second curve, right-click it and choose Convert To Metadata. Note which value the curve outputs now."
+  ],
+  "done_when": "Send a screenshot of the Curve Editor with the Glow keys, a screenshot of the Anim Curves panel that shows Glow with the Material type turned on, and a screenshot or clip of the mesh glowing during playback."
+ },
+ "AQ25": {
+  "brief": "When Unreal blends two animations of different lengths, such as a walk and a run, the feet often do not touch the ground at the same time. The result is feet that slide. A Sync Group makes the animations play in step with each other, and Sync Markers are named marks on the timeline, such as the moment the left foot lands, that Unreal lines up between the animations. In this quest you blend a walk and a run, see the problem, and fix it with a Sync Group and markers.",
+  "checklist": [
+   "In the AnimGraph, add a sequence player for a walk and one for a run, and connect both to a Blend node. Set the Blend Alpha to 0.5 and watch how the feet slide and do not move together.",
+   "Select both sequence players. In the Details panel, find the Sync section, set Method to Sync Group and set Group Name to Locomotion. Watch the blend again.",
+   "Open the walk sequence. Right-click the notify timeline at the moment the left foot lands, choose Add Sync Marker..., then New Sync Marker..., and name it LeftFootDown. Add a marker named RightFootDown for the right foot in the same way.",
+   "Open the run sequence. Use Add Sync Marker..., then Existing Sync Markers, to add the same two marker names at the moments where the feet land in the run.",
+   "Play the blend again with the Alpha at 0.5. The feet now land together, even though the two animations have different lengths.",
+   "Set the Group Role of the run sequence player to Always Leader, and note how the walk speeds up to follow the run."
+  ],
+  "done_when": "Send a screenshot of the walk sequence timeline that shows the two Sync Markers, and a screenshot of the Details panel of a sequence player with Method and Group Name set. Add one sentence that says what changed after you added the markers."
+ },
+ "AQ26": {
+  "brief": "Full Body IK, often written FBIK, is a way to pose a character by moving only a few points, such as the hands, the feet and the head. The solver then moves the whole body so that it reaches those points, instead of bending only one arm or one leg. Control Rig is the Unreal tool where you build such rigs with a graph of nodes. In this quest you build a Full Body IK rig for the mannequin and tune how stiff the pelvis is and how the knee and ankle are allowed to bend.",
+  "checklist": [
+   "Enable the FullBodyIK plugin in Edit > Plugins, and then restart the editor.",
+   "Create a Control Rig named CR_Manny_FBIK for the mannequin skeletal mesh. Add controls, the handles you move in the viewport, for the head, both hands and both feet.",
+   "In the rig graph, right-click and add the node Full Body IK from the Hierarchy category. Connect it to the Forwards Solve node, and set its Root to the pelvis bone.",
+   "Add one Effector for each control. An effector is a point that the body tries to reach. Set the Bone of each effector, and connect a Get Transform node of the matching control to it.",
+   "Move a hand control in the viewport and watch the body follow. Then add a Bone Setting for the pelvis and set both Rotation Stiffness and Position Stiffness to 0.8.",
+   "Add a Bone Setting for one knee. Enable Use Preferred Angles and set a preferred angle so that the knee bends in the correct direction.",
+   "Add a Limit on one axis of an ankle: set it to Limited, with Min -70 and Max 70. Compare the pose before and after."
+  ],
+  "done_when": "Send two screenshots. The first shows the rig graph with the Full Body IK node, its effectors and at least two Bone Settings visible. The second shows the viewport with a hand control pulled far away and the body following in a natural pose."
+ },
+ "AQ27": {
+  "brief": "Motion Warping changes the root motion of an animation while the game runs, so that the character ends exactly at a target you choose. Without it, a vault or a jump onto a ledge always covers the same distance and often misses the object. In this quest you add a warping window to a montage and make the character reach a Target Point in the level from different start positions.",
+  "checklist": [
+   "Enable the Motion Warping plugin. Pick an animation with root motion, such as a vault, a mantle or a punch, and turn on EnableRootMotion in the asset.",
+   "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage.",
+   "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target.",
+   "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget.",
+   "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it.",
+   "On an input action, do three things in this order: get the location of the Target Point, call Add or Update Warp Target from Transform with the Name VaultTarget, and then use Play Montage to play AM_Vault.",
+   "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare the result."
+  ],
+  "done_when": "Send a short clip or two screenshots that show the character warping to the Target Point from two different start positions. Also send a screenshot of the Details panel of the Motion Warping notify."
+ },
+ "AQ28": {
+  "brief": "In a big project, one Animation Blueprint for everything becomes very large, and only one person can work on it at a time. Linked Anim Layers solve this. An Animation Layer Interface is a list of named layers, such as FullBody and UpperBody, and different Animation Blueprints can each fill in those layers. The game can then swap which Animation Blueprint fills a layer while it runs, for example when the character picks up a rifle. In this quest you create an interface with three layers and swap the upper body layer with a key press.",
+  "checklist": [
+   "Create an Animation Layer Interface named ALI_Character: click Add, then Animation, then Animation Interface. Add three layers named FullBody, UpperBody and IK.",
+   "Give the UpperBody layer and the IK layer a pose input. Put all three layers in one Group, and give the Group a name that is not the default name.",
+   "Open ABP_Base, the Animation Blueprint of your character. In Class Settings, add ALI_Character under Interfaces.",
+   "Drag the three layers into the AnimGraph in this order: FullBody, then UpperBody, then IK. Connect them one after the other, and connect the last one to Output Pose.",
+   "Create a second Animation Blueprint named ABP_Rifle that also implements ALI_Character. In its UpperBody layer, put a different animation or an aim offset.",
+   "In BP_ThirdPersonCharacter, add a key press event that calls Link Anim Class Layers. Use the Mesh as Target and ABP_Rifle as In Class.",
+   "Press Play and press the key. Confirm that the upper body changes while the base locomotion keeps running."
+  ],
+  "done_when": "Send a screenshot of the list of layers in ALI_Character, a screenshot of the AnimGraph of ABP_Base with the three layer nodes, and screenshots of the game view before and after Link Anim Class Layers."
+ },
+ "AQ29": {
+  "brief": "Locomotion means all the ways a character moves around: standing, walking, running, jumping and landing. A complete locomotion set joins these animations so that the character changes smoothly from one to the next. It is the main piece of work that a game animator shows to others. In this quest you build one from a blend space, a state machine and an upper body layer, and you record a clip of the result.",
+  "checklist": [
+   "Create a blend space named BS_Locomotion. It blends idle, walk and run animations based on Speed, and also on Direction if you have strafe (sideways) animations.",
+   "Create ABP_Locomotion with a state machine that has four states: Locomotion (which plays BS_Locomotion), JumpStart, JumpLoop and JumpEnd. The transition rules read IsFalling and Speed from the character.",
+   "Add an Animation Layer Interface with a layer named UpperBody that takes a pose input. Add the interface to ABP_Locomotion, and place the layer after the state machine in the AnimGraph.",
+   "Create ABP_Locomotion_Upper, which implements the same interface. In it, blend an upper body animation over the input pose with a Layered Blend per Bone node that starts from the spine.",
+   "In the character Blueprint, link the upper body Animation Blueprint with Link Anim Class Layers when a key is pressed.",
+   "Test all the transitions: stand, walk, run, jump from a run, land into a run, and the upper body layer while running.",
+   "Record a clip of 30 to 60 seconds. Write 5 to 10 lines about your transition rules and about what you would fix next."
+  ],
+  "done_when": "Send a video clip that shows idle to walk to run, a jump from a run with the landing, and the upper body layer active while the character moves. Also send screenshots of the state machine and of the layer graph, and your short written text. A mentor reviews your work."
+ },
+ "AQ30": {
+  "brief": "A Pose Asset stores a set of fixed poses of a skeletal mesh, and each pose has a curve with the same name. When the value of a curve goes up, that pose is blended in more strongly. Faces are animated this way, with one pose for each expression, and the same method is used for small shape corrections on the body. In this quest you create a Pose Asset from an animation and drive its poses inside an Animation Blueprint.",
+  "checklist": [
+   "In the Content Browser, right-click a short animation sequence, choose Create, then Create PoseAsset. Name it PA_Test, and type names for a few of the frames in the Pose Names field.",
+   "Open PA_Test and look at the list of curves. There is one curve for each pose.",
+   "In an Animation Blueprint, drag PA_Test into the AnimGraph. This creates a Pose Blender node. Connect a sequence player or a Custom Curve to its input, because the node needs curve values to show a pose.",
+   "Right-click the Pose Blender node and choose Create Pose by Name Node. Pick one pose name, and drive its Alpha with a variable that goes from 0 to 1.",
+   "Duplicate PA_Test. In the copy, enable Additive and click Convert to Additive Pose. Use this copy after an Apply Additive node, on top of a base sequence.",
+   "Optional: add a Pose Driver node and assign the pose asset to it. Use Copy Poses from Pose Asset and set a Source Bone."
+  ],
+  "done_when": "Send a screenshot of the Pose Asset with its named curves, and a screenshot of the AnimGraph with a Pose by Name node driven by Alpha that shows the pose applied in the preview."
+ },
+ "AQ31": {
+  "brief": "An Animation Modifier is a small Blueprint script that changes animation assets for you, for example by adding tracks or markers. Placing markers by hand on hundreds of animations is slow, and a modifier does the same work with one click. It has two functions: OnApply makes the changes, and OnRevert removes them again. In this quest you write a modifier that finds the frame where a foot is lowest and puts a sync marker there.",
+  "checklist": [
+   "Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it AM_FootSync.",
+   "Add a variable for the name of the foot bone, for example foot_l. Make the variable Instance Editable, so that you can change it later without opening the Blueprint.",
+   "Implement the OnApply function. First add a Notify track named FootSync. Then loop through the frames with Get Bone Pose for Frame, and add a sync marker at the frame where the foot is lowest.",
+   "Implement the OnRevert function so that it removes the FootSync notify track.",
+   "Open a walk animation and go to Window > Animation Data Modifiers. Click Add Modifier and choose AM_FootSync, set the bone name, and then choose Apply Modifier.",
+   "Check the new track and its markers in the Notifies area. Then choose Revert Modifier and confirm that the track is gone.",
+   "Now apply the modifier on the Skeleton instead of on one animation. Check that another animation also gets the track."
+  ],
+  "done_when": "Send screenshots of the AM_FootSync graph that show OnApply and OnRevert. Also send a screenshot of a walk sequence that shows the generated FootSync track with its markers and the Animation Data Modifiers tab."
+ },
+ "AQ32": {
+  "brief": "Motion Matching is a newer way to build character movement. You do not write a state machine with transition rules. You give Unreal a database of animations, and on every frame it picks the pose that best fits what the character is doing and where it is going. A Pose Search Schema says what Unreal compares, and a Pose Search Database holds the animations. In this quest you set up Motion Matching for locomotion, look at its choices in the Rewind Debugger, and change one weight to see the effect.",
+  "checklist": [
+   "Enable the Pose Search plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor. Then get a set of locomotion animations with root motion, for example from the Game Animation Sample.",
+   "Create PSS_Locomotion for your skeleton: in the Add menu choose Animation, then Motion Matching, then Pose Search Schema. Check that the Pose channel uses the bones of your left foot and your right foot.",
+   "Create a Pose Search Database named PSD_Locomotion and set PSS_Locomotion as its Schema. Add loops, starts, stops and pivots (quick turns). Confirm that Root Motion is enabled on each sequence.",
+   "In ABP_MMCharacter, add a Motion Matching node with Database set to PSD_Locomotion. Connect it to a Pose History node, and connect the Pose History node to Output Pose. On the Pose History node, enable Generate Trajectory and add the collected bones.",
+   "Play in the editor. Enable Should Filter Notifies and set Notify Recency Time Out. Then tune Continuing Pose Cost Bias until the character no longer switches between animations too often.",
+   "Record 10 seconds with the Rewind Debugger, which you find under Tools > Debug. Open the Pose Search track and the Selection Table. Find one pose that was rejected and read the reason.",
+   "Change the Weight of the Trajectory channel, for example from 3.0 to 1.0, and record again. Note what changed."
+  ],
+  "done_when": "Send a short clip of the character moving with Motion Matching, and a screenshot of the selection table in the Rewind Debugger with Channel Breakdown turned on. Add 5 lines that name your schema channels, say which database bias you changed and why, and describe one case where a state machine would still be the better choice."
+ }
+}

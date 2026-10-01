@@ -1,0 +1,150 @@
+{
+ "GDQ47": {
+  "brief": "A projectile is an object that flies through the level after it is fired, such as a bullet, a grenade or a magic bolt. In Unreal the Projectile Movement component moves it for you, and a few numbers decide how it behaves: speed, gravity, bounce and how long it lives. In this quest you study the projectile of the Arena Shooter template, and then you build your own ball and three variants of it.",
+  "checklist": [
+   "Read the Projectile Movement section of the Movement Components page, the Arena Shooter section of the First Person Template page, the Implementing Projectiles overview, and the Set Life Span node page.",
+   "Create a First Person project with the Arena Shooter variant. Open BP_FirstPersonProjectile in Content/Variant_Shooter/Blueprints/Pickups/Projectiles and read how it spawns, how it hits, and how it applies an impulse.",
+   "In your own project, make a Blueprint named BP_Ball from Actor. Give it a Sphere Collision as the root, a Static Mesh, and a Projectile Movement component. Set Initial Speed to 2000, Max Speed to 2000 and Projectile Gravity Scale to 0.5.",
+   "In the player character, from the Started pin of IA_Fire, add a Spawn Actor from Class node with the class BP_Ball. Spawn it at the camera location plus 100 units forward, and use the camera rotation.",
+   "In BP_Ball, add Event Hit. If the Other Comp is simulating physics, call Add Impulse on it with the velocity of the ball multiplied by 20. Then call Destroy Actor. On BeginPlay, call Set Life Span with 3.0 so the ball removes itself after 3 seconds.",
+   "Make three Child Blueprints of BP_Ball. BP_Ball_Bouncy has Should Bounce on, Bounciness 0.8, and is not destroyed on hit. BP_Ball_Heavy has Gravity Scale 2 and Initial Speed 1200. BP_Ball_Homing has Is Homing Projectile on and its Homing Target set to an actor you choose.",
+   "Place some physics cubes and a target dummy in the level. Write one line for each ball that says what kind of weapon it would suit."
+  ],
+  "done_when": "Send a screenshot of BP_Ball that shows its components with Projectile Movement and the Hit graph. Also send a screenshot taken during play with at least two ball types in flight or after impact."
+ },
+ "GDQ48": {
+  "brief": "In a melee attack, such as a punch, the game must decide the exact moment and place where the hit lands. A common way is a sphere trace: Unreal moves an unseen sphere along a short line and reports what it touches. An Animation Notify is a marker inside an animation that tells your Blueprint when the right frame is reached. In this quest you play a punch animation and run a sphere trace at the frame where the arm is extended.",
+  "checklist": [
+   "Read the node pages for Sphere Trace By Channel and Multi Sphere Trace By Channel, the Traces with Raycasts overview, and the Multi Line Trace tutorial. Also read the Animation Notifies page (the parts Notify, Skeleton Notify and Montage Notify) and the Play Montage node page.",
+   "Optional but useful: create a Third Person project with the Combat variant. Play its hand combat and combo attack to feel a good example.",
+   "In your project, make an Animation Montage named AM_Punch from any short attack or gesture animation of the mannequin. In the montage, right-click the Notify track and add a Montage Notify named HitWindow at the frame where the hand is extended.",
+   "In the character, from the Started pin of IA_Attack, call Play Montage (not Play Anim Montage) with AM_Punch on the Mesh. Store a bool named IsAttacking, and set it to false from both On Completed and On Interrupted.",
+   "From the On Notify Begin pin of the Play Montage node, check that Notify Name == HitWindow. Then run Multi Sphere Trace By Channel from the actor location to 120 units forward, with Radius 40 and the channel Visibility. Set Draw Debug Type to For Duration, and add Self to Actors to Ignore.",
+   "Add a For Each Loop over Out Hits. For each hit, use Break Hit Result, call Apply Damage with 10 on the Hit Actor, and print its display name. To test, place three BP_Target dummies in a row. You can use the ones from quest GDQ22 or any actor with Event AnyDamage.",
+   "Tune the Radius, the distance and the frame of the notify until a hit lands only when the arm is extended and only on the enemy in front. Then compare Sphere Trace By Channel, which returns the first hit only, with the Multi version, which returns many hits."
+  ],
+  "done_when": "Send a screenshot of the attack graph that shows Play Montage with On Notify Begin leading into Multi Sphere Trace By Channel. Also send a screenshot taken during play that shows the debug sphere hitting a target dummy."
+ },
+ "GDQ49": {
+  "brief": "A health bar can ask for the health value on every frame, or it can wait until the game tells it that the value changed. The second way does less work and is easier to understand. In Unreal you build it with an Event Dispatcher, a kind of signal that one Blueprint sends and other Blueprints can listen to. In this quest you make a health bar that updates only when the Health of the character changes.",
+  "checklist": [
+   "In BP_ThirdPersonCharacter, add a float variable Health with the value 100 and an Event Dispatcher named OnHealthChanged. Call the dispatcher at the end of every script that changes Health, for example a key press that removes 10.",
+   "Create a Widget Blueprint named WBP_HealthBar with a Progress Bar named barHealth. Do NOT use the Bind option on the Percent field.",
+   "In the widget graph, on Event Construct, get the player character, cast it to BP_ThirdPersonCharacter, and store it in a variable.",
+   "Add a Custom Event named UpdateHealth that sets the Percent of barHealth to Health / 100. Right after the cast, use a Bind Event node to bind UpdateHealth to OnHealthChanged.",
+   "Call UpdateHealth one time after the bind, so the bar is correct on the first frame. Then, on BeginPlay, create the widget and call Add to Viewport.",
+   "Bonus: add a Widget Component to any enemy or prop actor. Set its Widget Class to WBP_HealthBar and its Space to Screen, and compare it with Space set to World."
+  ],
+  "done_when": "Send a screenshot of the widget graph that shows the cast, the Bind Event node and UpdateHealth. Also send a screenshot of the game with the bar partly empty after you took damage."
+ },
+ "GDQ50": {
+  "brief": "Menus are built from parts that repeat, such as buttons. In Unreal you can make one button as its own Widget Blueprint and then place it inside other widgets as many times as you need. When you change the button once, every menu that uses it changes too. In this quest you build one reusable button with a style and a click signal, and you use it three times in a menu.",
+  "checklist": [
+   "Create two Widget Blueprints named WBP_CustomButton and WBP_MenuHUD.",
+   "In WBP_CustomButton, add a Button. Right-click it and choose Wrap With, then Size Box. On the Size Box, set Width Override to 300 and Height Override to 100.",
+   "In the graph, on Event Construct, call Set Style on the Button and promote the style input to a variable named ButtonStyle. In that variable, choose an image for Normal, copy it to Hovered and Pressed, and give Hovered a tint.",
+   "Set ButtonStyle to Instance Editable and Expose on Spawn. Add an Event Dispatcher named ButtonClicked, and call it from the OnClicked event of the Button.",
+   "In WBP_MenuHUD, add a Vertical Box. From the Palette, under User Created, add three WBP_CustomButton widgets to it. Bind the ButtonClicked event of each button to a different Print String.",
+   "In the Level Blueprint, on BeginPlay, add a Create Widget node with WBP_MenuHUD, call Add to Viewport, and use Set Show Mouse Cursor with the value true. Press Play and click each button."
+  ],
+  "done_when": "Send a screenshot of WBP_MenuHUD during play that shows three styled buttons, with one of them hovered, and the three different Print String messages visible."
+ },
+ "GDQ51": {
+  "brief": "The input mode decides where key presses and mouse clicks go: to the game, to the interface, or to both. Menus often seem broken only because the input mode is wrong, for example the buttons cannot be clicked or the character keeps moving. In this quest you build a pause menu and switch the input mode and the mouse cursor yourself when the menu opens and closes.",
+  "checklist": [
+   "Create a Widget Blueprint named WBP_PauseMenu. Put a Vertical Box in the center that holds a Text with the word PAUSED and two Buttons, Resume and Quit.",
+   "In BP_ThirdPersonCharacter, add an input event for the P key. When it is pressed, check if the PauseMenu variable is valid. If it is not valid, add a Create Widget node with WBP_PauseMenu and store the result in PauseMenu. Then call Add to Viewport.",
+   "After you add the widget, call Get Player Controller. Use Set Show Mouse Cursor with true, then Set Input Mode UI Only, and then Set Game Paused with true.",
+   "On the OnClicked event of the Resume button, call Remove from Parent, then Set Input Mode Game Only, then Set Show Mouse Cursor with false, and then Set Game Paused with false.",
+   "On the Quit button, use the Quit Game node. Then test: pause, move the mouse over the buttons, resume, and check that the character moves again.",
+   "Write 2-3 sentences that answer this: which Input Mode would you use for a shop interface where the player can still walk, and why?"
+  ],
+  "done_when": "Send a screenshot of the character graph that shows the pause path and the resume path, and a screenshot of the paused game with the cursor over Resume. Add your short note about the input mode."
+ },
+ "GDQ52": {
+  "brief": "Movement on the screen tells the player where to look. Widget Blueprints have their own animation tool: you set a value at one time and another value at a later time, and Unreal moves smoothly between them. Each stored value is called a key. In this quest you make a main menu where the buttons slide in from below and the START button blinks.",
+  "checklist": [
+   "Create a Widget Blueprint named WBP_MainMenu with two Vertical Boxes. One holds a Text with the words GAME TITLE, and the other holds two Buttons, START and QUIT.",
+   "Select the Vertical Box with the buttons. Set the anchor as shown on the documentation page, and set Position X to -300, Position Y to 500, Size X to 600 and Size Y to 200. Then change Position Y to 1200, which places the box below the screen.",
+   "Click +Animation and name the new animation StartAnimation. Add a key for Position Y at the time 0.00. Move the Timeline Bar to 1.00, set Position Y back to 500, and add a second key.",
+   "Add a second animation named BlinkingButton. Add keys for the Background Color of the START button at 1.00, 1.50 and 2.00, so that the color changes and then comes back.",
+   "In the Graph, on Event Construct, play StartAnimation. Then add a Set Timer by Event node with Looping on and a time of 2 s. Connect it to a Custom Event named StartBlinking that plays BlinkingButton.",
+   "Create the widget from the character Blueprint or the Level Blueprint and call Add to Viewport. Press Play and watch the buttons slide up and the START button blink."
+  ],
+  "done_when": "Send a short screen recording, or 2 screenshots that show the buttons in the middle of the slide and the START button in its blink color. Also send a screenshot of the Timeline with both animations."
+ },
+ "GDQ53": {
+  "brief": "Many games are played with a mouse and also with a gamepad, and a menu must work with both. Common UI is a plugin from Epic that helps with this. It sends input to the right widget, shows the right button icons for each device, and lets many buttons share one style asset. In this quest you set up Common UI in a project and build a small menu with two styled buttons.",
+  "checklist": [
+   "Enable the Common UI plugin and restart the editor. Open Project Settings, then Engine, then General Settings, and set Game Viewport Client Class to CommonGameViewportClient.",
+   "Create a Data Table named DT_UIActions with the row structure CommonInputActionDataBase. Add two rows named Click and Back, and give each one a keyboard key and a gamepad key.",
+   "Create a Blueprint from the class CommonUIInputData and assign the DT_UIActions rows for Click and Back in it. Then open Project Settings, go to Game, then Common Input Settings, and set this Blueprint as Input Data.",
+   "Create a Blueprint from the class CommonInputBaseControllerData for a Generic gamepad, and a second one for Mouse and Keyboard. Add both under Platform Input for Windows.",
+   "Create a Common Text Style Blueprint and a Common Button Style Blueprint. Build a widget named WBP_CommonMenu with two Common Button Base widgets that use your styles.",
+   "Add the menu to the viewport and test it with the mouse and with a gamepad. If you have no gamepad, write that in a note. Then change the style asset and confirm that both buttons update."
+  ],
+  "done_when": "Send screenshots of three things: the Common Input Settings page filled in, DT_UIActions, and the menu during play with your style applied."
+ },
+ "GDQ54": {
+  "brief": "A Viewmodel is an object that sits between the game data and the widgets on screen. The game writes values such as the score into the Viewmodel, and the widgets update on their own when a value changes. This keeps data and visuals separate, so a designer and a programmer can each change their part without breaking the other. In this quest you make a Viewmodel for a match, fill it from the Game State, and bind a HUD to it.",
+  "checklist": [
+   "Enable the UMG Viewmodel plugin. Create a Blueprint named VM_Match from the class MVVMViewModelBase, with an int variable Score and a float variable TimeLeft. Click the bell icon on both variables to make them FieldNotify, which means widgets are told when the value changes.",
+   "Create a Blueprint named BP_MatchGameState from Game State Base and set it in your Game Mode. On BeginPlay, construct a VM_Match object and store it in a variable named MatchVM.",
+   "In the Game State, add a looping timer of 1 s that lowers TimeLeft with a Set W/Broadcast node. Add a function named AddScore that sets Score with Set W/Broadcast.",
+   "Create a widget named WBP_MatchHUD with two Text widgets. Open Window > Viewmodels and add VM_Match with Creation Type set to Property Path. Give it a path that reaches Get Game State and then MatchVM. Use a helper function on the widget for this.",
+   "Open Window > View Binding. Bind Score and TimeLeft to the Text fields with the direction One Way to Widget, and use a conversion function that turns the number into Text.",
+   "Call AddScore from the coin pickup of quest GDQ17, or from a key press. Press Play and check that both values update with no Tick in the widget."
+  ],
+  "done_when": "Send screenshots of the Viewmodels window, the View Binding window, and the running HUD after the Score changed."
+ },
+ "GDQ55": {
+  "brief": "Prompts, warnings and short messages are all the same box with different content. In Unreal you can build the box once as a template widget and leave empty places in it, called Named Slots. Child widgets of the template then fill those slots with their own content. In this quest you make one dialog box template and two different dialogs from it.",
+  "checklist": [
+   "Create a Widget Blueprint named WBP_DialogBox_Template. Set Screen Size to Custom with 750 x 175. Add a black Border and put a Vertical Box inside it. In the Vertical Box, add two Named Slots called Slot_Content and Slot_Interaction, and set the Size of each to Fill.",
+   "Create WBP_DialogBox_Warning as a child Blueprint of the template. In its Designer, drop a Horizontal Box into Slot_Content. The box holds an Image and a Text that says: Do you want to keep these changes?",
+   "Create a widget named WBP_BinaryPromptButtons. It has a Horizontal Box with a Confirm button and a Cancel button, each inside a Size Box of 150 x 50.",
+   "In the graph of WBP_DialogBox_Warning, on Pre Construct, add a Create Widget node with the class WBP_BinaryPromptButtons and with Owning Player set to Get Owning Player. Promote the result to a variable named PromptButtonWidget. Then get Slot_Interaction and call Add Child on it.",
+   "Create a second child named WBP_DialogBox_Saved with a message and one Continue button. Show it when a key is pressed, and remove it when Continue is clicked.",
+   "Test the option Expose on Instance Only on Slot_Interaction. Write one sentence about what changed in the Hierarchy of the child."
+  ],
+  "done_when": "Send screenshots of both child dialogs during play and of the Pre Construct graph. Add your one-sentence note about Expose on Instance Only."
+ },
+ "GDQ56": {
+  "brief": "Players use many screen sizes and shapes, from phones to wide TVs. A HUD that looks right on your monitor can be cut off on another screen. Unreal has three tools against this: anchors fix a widget to a corner or edge, DPI scaling makes the interface larger or smaller with the resolution, and the safe zone keeps widgets away from screen edges that may be hidden. In this quest you make a HUD that stays whole on very different screens.",
+  "checklist": [
+   "Open the HUD from quest GDQ49, or a new WBP_HUD. Add a Safe Zone widget under the Canvas Panel and move your bars and text inside it.",
+   "Anchor the health bar to the bottom with the horizontal stretch preset, so that it grows with the viewport. Anchor a minimap Image to the bottom-right corner.",
+   "Use the Screen Size button in the Designer to preview a phone in Portrait, a 4:3 monitor and a 1080p TV. Fix anything that goes outside the viewport.",
+   "Open Project Settings and go to User Interface. Add a key to the DPI Curve so that the interface is larger at 720. Check that the DPI Scale Rule is Shortest Side.",
+   "Set the debug title safe zone to a value less than 1. Confirm that the red unsafe area appears and that your widgets scale to stay inside the safe area.",
+   "Open Editor Preferences, then Level, then Play, then Game Viewport Settings, and choose a phone size. Play in a New Editor Window. Take screenshots at two very different sizes."
+  ],
+  "done_when": "Send two screenshots of the HUD at two different screen sizes (one phone or 4:3, and one 16:9) where nothing is cut off. Also send a screenshot of the DPI Curve settings."
+ },
+ "GDQ57": {
+  "brief": "A real enemy is rarely one very large Behavior Tree. It is built from smaller trees that you can reuse, from cooldowns that stop an action from repeating too fast, and from actions that run at the same time. In this quest you improve the enemy from quest GDQ28 with a sub-tree for patrol, a Simple Parallel node that moves and plays a sound together, and an attack with a cooldown.",
+  "checklist": [
+   "Start from the enemy of quest GDQ28, with BB_Enemy, BT_Enemy and Enemy_Controller. Duplicate BT_Enemy, name the copy BT_Enemy_v2, and run BT_Enemy_v2 from the controller.",
+   "Move the whole Patrol sequence into its own asset named BT_Patrol that uses the same Blackboard. In BT_Enemy_v2, replace the sequence with a Run Behavior task that runs BT_Patrol.",
+   "Under Chase Player, add a Simple Parallel node. Its main task is Move To with the key EnemyActor. Its background tree is a Sequence with Play Sound and a Wait of 1.0 with Random Deviation 0.5. Set Finish Mode to Immediate.",
+   "Add an Attack sequence before Chase Player. It holds Rotate to face BB entry with EnemyActor, then a custom task named BTT_Attack that prints Attack, then Set Tag Cooldown with the tag AI.Cooldown.Attack for 3 seconds. Put a Tag Cooldown decorator with the same tag on the Attack sequence.",
+   "Put a Time Limit decorator of 8 seconds on Chase Player. A chase that never reaches the player then fails, and the tree falls back to patrol.",
+   "Give every composite node a clear Node Name, so that the tree reads like a sentence. Press Play and open BT_Enemy_v2 while the game runs. Watch the cooldown block Attack and watch Attack come back after 3 seconds.",
+   "Change Finish Mode to Delayed and play again. Note the difference in one sentence."
+  ],
+  "done_when": "Send one screenshot of BT_Enemy_v2 in the Behavior Tree editor while the game runs. It must show the Run Behavior node, the Simple Parallel node and the Tag Cooldown decorator. Add one sentence that says which Finish Mode you kept and why."
+ },
+ "GDQ58": {
+  "brief": "An EQS query scores many points in the level and picks the best one, but those scores are hard to tune when you cannot see them. The EQS Testing Pawn is a special actor that runs a query inside the editor and draws every point as a colored sphere with its score, before the game even runs. In this quest you build a query that finds a spot to flee to, study it with the Testing Pawn, and then use it in the Behavior Tree of your enemy.",
+  "checklist": [
+   "Enable the Environment Query Editor plugin. If you do not have EQC_PlayerContext from quest GDQ29, create it now: use the parent EnvQueryContext_BlueprintBase, override Provide Single Actor, and return Get Player Character.",
+   "Create an Environment Query named EQS_FleeSpot with a Points: Donut generator around the Querier. Add a Distance test to EQC_PlayerContext set to Score Only with Scoring Factor 1.0. Add a Trace test to EQC_PlayerContext set to Filter Only, so that spots the player can see are removed.",
+   "Create a Blueprint named BP_EQSTester from the EQSTestingPawn class. Place it in the level and set its Query Template to EQS_FleeSpot. Turn on Draw Labels. Move the pawn and read the colors and numbers on the spheres.",
+   "Set Highlight Mode so that it shows the best 25 percent. Then set Querying Mode to Single Result, and change Step to Debug Draw to see the Distance test alone and the Trace test alone.",
+   "Clear the Query Template on the pawn, change the donut radius in EQS_FleeSpot, and then set the template again. Do not edit the query while it is assigned to the pawn.",
+   "In BT_Enemy, add a Flee branch. It holds a Run EQS Query task with Query Template EQS_FleeSpot and Blackboard Key FleeLocation, followed by Move To with FleeLocation. Test the Run Mode Single Best Item, and then Single Random Item from Best 25 percent.",
+   "Play twice with each Run Mode and watch where the enemy goes."
+  ],
+  "done_when": "Send two screenshots. The first shows BP_EQSTester selected in the level with labelled spheres, from green to red and with some blue ones. The second shows the details of the Run EQS Query node with the Run Mode you kept. Add one sentence that says why a random item from the best 25 percent can be better than the single best item."
+ }
+}

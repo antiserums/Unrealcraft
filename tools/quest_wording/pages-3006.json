@@ -1,0 +1,151 @@
+{
+ "GDQ71": {
+  "brief": "A playtest gives you feelings, such as that the game is too hard. An event log gives you numbers. If the game writes one line to the log each time something important happens, such as a kill or a death, you can count these lines afterwards and compare one version of the game with the next. In this quest you build a small logging function, call it from three places, and count the results in a spreadsheet.",
+  "checklist": [
+   "Read the Logging page, with the parts Log Verbosity, Console Command and On-screen debug messages. Also read the Print String node page.",
+   "Make a Blueprint Function Library named BPL_Telemetry with a function named LogEvent. Give it two inputs: EventName of type Name and Value of type Float. Inside, build the string EVT,<game time>,<EventName>,<Value>. Then call Print String with Print to Screen off and Print to Log on.",
+   "Call LogEvent from at least three places: when the player dies, when an enemy is killed, and when an item is picked up. Use the event names Death, Kill and Pickup.",
+   "Add a second Print String on pickup with Print to Screen on, a Duration of 2, and a Key named PickupMsg. Pick up two items quickly and notice that the new message replaces the old one and they do not stack.",
+   "Play for 2 minutes. Open Window > Output Log and filter for EVT. Then open the newest .txt file in the Saved/Logs folder and find the same lines there.",
+   "Copy the EVT lines into a spreadsheet, split them at the commas, and count the kills and the deaths. Write 2 sentences about one balance change that the data suggests.",
+   "Set Print to Log to off on the Death call and play again. Confirm that the Death line no longer appears in the Output Log, and explain why in one line."
+  ],
+  "done_when": "Send a screenshot of the Output Log filtered to EVT with at least 10 lines, and a screenshot of the spreadsheet with the kill and death counts. Add your 2 sentences and the one line about Print to Log."
+ },
+ "GDQ72": {
+  "brief": "A console variable, or CVar, is a named engine setting that you can change while the editor or the game runs, such as the maximum frame rate. The Console Variables Editor is a panel where you can collect CVars in a list and save the list as a preset. With a saved preset, every tester can load the same setup on any computer. In this quest you build two presets for playtests and learn how the panel shows and searches values.",
+  "checklist": [
+   "Read the Console Variables Editor page. Enable the Console Variables Editor plugin and restart the editor. Open Window > Console Variables and dock the panel.",
+   "Click Add Console Variable and add t.MaxFPS with the value 30 and r.ScreenPercentage with the value 70. Look up both in the Console Variables Reference and note their default values.",
+   "Add the command stat unit. Note whether it appeared in the suggestion list while you were typing.",
+   "Move the mouse over the value of t.MaxFPS and read the Custom, Preset and Startup values. Uncheck the row, play, and confirm that the frame limit is gone. Then check the row again.",
+   "Open the Presets panel and save the list as Playtest_LowEnd. Clear the list, add only t.MaxFPS with the value 0, and save it as Playtest_Default. Load each preset and watch what happens to the values.",
+   "Type lumen|screen percentage in the search box and click Search All. Explain in one line what the pipe character and the space mean.",
+   "Open Project Settings, go to Plugins, then Console Variables Editor, and enable Add All Changed Console Variables to Current Preset. Change a CVar from the console, which you open with the ~ key, and confirm that it appears in the list."
+  ],
+  "done_when": "Send a screenshot of the Console Variables Editor with the Playtest_LowEnd preset loaded, with t.MaxFPS, r.ScreenPercentage and stat unit visible. Add one line with the default values of both CVars and one line that explains the search syntax."
+ },
+ "GDQ73": {
+  "brief": "A camera shake is a short, small movement of the camera that makes a hit or an explosion feel heavy. It costs very little to add, but too much shake can make players feel sick. In Unreal a shake is an asset that sets how strong, how fast and how long the camera moves. In this quest you make a small shake for a punch and a larger one for an explosion that gets weaker with distance.",
+  "checklist": [
+   "In a Third Person project, add a Blueprint Class with the parent CameraShakeBase and name it CS_HitSmall. Set Root Shake Pattern to Perlin Noise Camera Shake Pattern. Give Rotation Pitch an Amplitude of about 1 and a Frequency of about 25. Set Duration to 0.25 and Blend In/Out to 0.05, and enable Single Instance.",
+   "Make a second shake named CS_Explosion with the same pattern, but with a larger Amplitude of about 5, a Duration of 0.8 and a Blend Out of 0.3. Leave Single Instance off.",
+   "In BP_ThirdPersonCharacter, add an Input Action or a key event for a punch. On the event, call Get Player Camera Manager, and then call Start Camera Shake with Shake Class CS_HitSmall and Scale 1.0.",
+   "Make a Blueprint named BP_Barrel with a Static Mesh and a Box Collision. When the player begins to overlap the box, call Play World Camera Shake with Shake CS_Explosion and Epicenter set to the location of the barrel. Set Inner Radius to 200, Outer Radius to 1500 and Falloff to 1.0.",
+   "Place three barrels at different distances. Press Play, walk into them, and note how the shake gets weaker with distance.",
+   "Test the punch shake by pressing the key many times quickly. Then turn Single Instance off on CS_HitSmall and press quickly again. Write 2 sentences about the difference you saw."
+  ],
+  "done_when": "Send two screenshots. The first shows the Details of CS_HitSmall with the Perlin pattern, the Duration and Single Instance. The second shows the BP_Barrel graph with the Play World Camera Shake node and its radius values. Add your 2 sentences about Single Instance."
+ },
+ "GDQ74": {
+  "brief": "Hit stop is a very short freeze of the game at the moment a hit lands. It makes the hit feel strong. In Unreal you can create it with time dilation, a setting that makes game time run slower than real time. You must be careful, because timers and delays also slow down when game time does. In this quest you build a hit stop, measure how long it lasts in real time, and see which time nodes are slowed.",
+  "checklist": [
+   "In a Third Person project, make a Blueprint named BP_Dummy with a Static Mesh and a Box Collision. In BP_ThirdPersonCharacter, add a key event for a punch that does a Sphere Trace forward with a radius of 60 and a length of 150, and finds a BP_Dummy.",
+   "Make a custom event named HitStop with a Float input named Duration. It calls Set Global Time Dilation with 0.05. Then it calls Set Timer by Event with Time set to Duration and Looping off. The event of the timer calls Set Global Time Dilation with 1.0.",
+   "Before the hit stop starts, store Get Real Time Seconds in a variable. When time returns to 1.0, print Get Real Time Seconds minus the stored value. Test with Duration 0.1, see how many real seconds the stop lasted, and write down the number.",
+   "During the hit stop, print Get Time Seconds, Get Unpaused Time Seconds, Get Audio Time Seconds and Get Real Time Seconds on the same tick. Note which ones move slowly and which ones do not.",
+   "Add a Get Global Time Dilation check at the start of HitStop. If the value is not 1.0, do nothing. This stops a second hit from breaking the first stop.",
+   "After the punch, add a Delay of 0.1 that spawns a small debug text. Compare how long the Delay waits during the hit stop with how long the timer waits. Write 2 sentences about what you measured."
+  ],
+  "done_when": "Send one screenshot of the HitStop event graph with Set Global Time Dilation, Set Timer by Event and the Get Global Time Dilation check. Add your measured numbers: the real seconds that a 0.1 hit stop lasted, and which time nodes were slowed."
+ },
+ "GDQ75": {
+  "brief": "Rumble is the vibration of a gamepad. The player feels it in the hand, so it can show the weight of a hit without anything on screen. In Unreal a rumble is stored in a Force Feedback Effect asset. The asset holds curves that say how strong each motor of the gamepad vibrates over time. In this quest you make a light rumble for a hit and a heavy one for an explosion, and you play them from Blueprints.",
+  "checklist": [
+   "In the Content Browser, click Add and choose Input, then Force Feedback Effect. Name the asset FF_HitLight. In its one channel, enable only Affects Right Small. Hold Shift and click on the curve to add two keys: (0, 1.0) and (0.15, 0).",
+   "Make a second effect named FF_Explosion with two channels. Channel 0 uses Affects Left Large with the keys (0, 1.0), (0.4, 0.6) and (0.8, 0). Channel 1 uses Affects Right Small with the keys (0, 0), (0.1, 0.8) and (0.3, 0). With a gamepad connected, move the mouse over the asset icon and press the play button to preview each effect.",
+   "In BP_ThirdPersonCharacter, on your punch event, call Get Player Controller and then Client Play Force Feedback with FF_HitLight. Give it the Tag Hit.",
+   "Make a Blueprint named BP_ExplosiveBarrel. When the player begins to overlap it, call Spawn Force Feedback at Location with FF_Explosion at the location of the barrel and with Auto Destroy on. Give it an attenuation asset, so that the rumble gets weaker with distance.",
+   "Add a looping test. One key calls Client Play Force Feedback with Looping on and the Tag Engine. Another key calls Client Stop Force Feedback with the same Tag. Confirm that the loop stops.",
+   "Write 2 sentences that say which motors you used for the light hit and which for the explosion, and why."
+  ],
+  "done_when": "Send two screenshots. The first shows FF_Explosion open with both channels and their curves. The second shows the graph with Client Play Force Feedback (with the Tag set) and Spawn Force Feedback at Location. Add your 2 sentences about your choice of motors."
+ },
+ "GDQ76": {
+  "brief": "A hit that sounds exactly the same every time becomes boring very fast. A Sound Cue is an asset where you connect sound nodes, so that one sound event can play a random recording with a slightly different pitch and volume each time. In this quest you build a hit sound that changes on every hit, switch it by surface type from a Blueprint, limit how many copies can play at once, and try the same idea in a MetaSound, the newer audio tool of Unreal.",
+  "checklist": [
+   "Import or pick three short impact Sound Waves. Starter Content has some. Create a Sound Cue named SC_Hit. Add a Random node with the three waves as inputs. Set the Weights so that one wave is chosen twice as often as the others.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9, Pitch Max to 1.1, Volume Min to 0.8 and Volume Max to 1.0. Connect it to the Output node.",
+   "Add a Switch node before the Output node and set Int Parameter Name to Surface. Connect your SC_Hit chain to input 0 and a different wave for metal to input 1. In a Blueprint, play the cue with Spawn Sound at Location. Then call Set Integer Parameter with In Name Surface on the Audio Component that the node returns.",
+   "On the Output node, enable Override Concurrency and set Max Count to 3. Trigger the hit 10 times quickly, and compare what you hear with Max Count 1.",
+   "Make a MetaSound Source named MSS_Hit that plays a Wave Player when a Trigger Input named Impact fires. In a Blueprint, use Spawn Sound Attached and then Execute Trigger Parameter with In Name Impact.",
+   "Write 3 sentences that say what the Random node, the Modulator node and the Switch node each changed in how the hit sounds."
+  ],
+  "done_when": "Send two screenshots. The first shows the SC_Hit graph with the Random, Modulator, Switch and Output nodes visible. The second shows the Blueprint graph that plays the cue and calls Set Integer Parameter with the name Surface. Add your 3 sentences."
+ },
+ "GDQ77": {
+  "brief": "Niagara is the visual effects system of Unreal. It creates particles, which are many small images that move and fade, for effects such as sparks or dust. A short burst of particles at the point of a hit shows the player exactly where and when the hit happened. In this quest you build a small burst effect and spawn it from a Blueprint at the place where your punch lands.",
+  "checklist": [
+   "Right-click in the Content Browser, choose FX, then Niagara System. Pick the Simple Sprite Burst template and name the system NS_HitBurst. Rename the emitter to HitBurst.",
+   "In Emitter Update, in Emitter State, set Loop Behavior to Once and Loop Duration to 1. In Spawn Burst Instantaneous, set Spawn Count to 12.",
+   "In Particle Spawn, set Lifetime to a random value from 0.2 to 0.4. Add Shape Location with Shape Primitive set to Sphere and a small radius. Then add the module Add Velocity from the Velocity group, with Velocity Mode set to From Point and a speed of about 300. If the stack shows an error, click Fix Issue.",
+   "In Particle Update, add the Drag module from the Forces group and set Drag to 5. Keep Scale Color, so that the burst fades out.",
+   "In BP_ThirdPersonCharacter, where your punch trace hits, call Spawn System at Location with System Template NS_HitBurst at the Impact Point and with Auto Destroy on. Rotate it so that it faces along the Impact Normal.",
+   "Make a second call with Spawn System Attached, attached to the mesh of the hit actor. Set Attach Point Name to a socket or a bone, and set Location Type to Keep Relative Offset. Move the target and note which burst follows it.",
+   "Drag NS_HitBurst into the level one time, next to the character, to check its size. Then remove it."
+  ],
+  "done_when": "Send two screenshots. The first shows NS_HitBurst open in the Niagara Editor with the Emitter Update and Particle Spawn modules. The second shows the Blueprint graph with Spawn System at Location connected to the Impact Point of the trace. Say which spawn node followed the moving target."
+ },
+ "GDQ78": {
+  "brief": "The feel of an attack depends on timing. An Animation Notify is a marker that you place on a frame of an animation. When the animation reaches that frame, the notify can play an effect or a sound, or tell your Blueprint that the hit happens now. A notify window marks a span of time with a start and an end. In this quest you add notifies to a punch montage for the effects, for the hit, and for a window in which the player may cancel the attack.",
+  "checklist": [
+   "Pick or import an attack animation for the Third Person mannequin. Right-click it and create an Animation Montage named AM_Punch. Make sure that the montage plays through a slot that your Anim Blueprint uses.",
+   "In AM_Punch, add a notify track named Feel. Right-click at the moment the fist reaches the target, choose Add Notify, and then Play Niagara Particle Effect. Then add a Sound notify with a Pitch Multiplier of 1.1. Set Attach Name to the hand socket.",
+   "Add a Montage Notify named HitFrame at the same frame. In BP_ThirdPersonCharacter, play the montage with the Play Montage node. From On Notify Begin, check that the Notify Name equals HitFrame, and then run your trace and your damage.",
+   "Add a Montage Notify Window named Cancel over the last third of the animation. When On Notify Begin runs with the name Cancel, allow the next input to interrupt the montage. When On Notify End runs, stop allowing it.",
+   "Set the Montage Tick Type of the HitFrame notify to Branching Point. Set a Notify Trigger Chance of 0.5 on the sound notify, and play the montage 10 times to hear the sound skip.",
+   "Write 3 sentences: why the hit is in the animation and not on the input, what the Cancel window does for the feel, and why you chose Branching Point."
+  ],
+  "done_when": "Send two screenshots. The first shows the AM_Punch timeline with the Feel track and the Niagara, Sound, HitFrame and Cancel notifies. The second shows the Blueprint with Play Montage and the On Notify Begin check for HitFrame. Add your 3 sentences."
+ },
+ "GDQ79": {
+  "brief": "A post process material is a material that changes the whole picture after the scene is drawn. A vignette is a darker or colored border around the screen. A red vignette that flashes when the player is hurt is feedback that nobody can miss. In this quest you build a post process material with a parameter named Intensity, add it to the level and to the camera, and make it flash and fade from a Blueprint when damage happens.",
+  "checklist": [
+   "Create a material named M_PP_Damage. In the Details panel, set Material Domain to Post Process and set Blendable Location to After Tonemapping.",
+   "Build the graph. Add a SceneTexture node set to PostProcessInput0, which gives you the color of the scene. Make a round mask from Screen Position, using the distance from the point 0.5, 0.5. Use a Lerp node to blend from the scene color to a red color. For the blend amount, multiply the mask by a Scalar Parameter named Intensity with the default value 0. Connect the result to Emissive Color.",
+   "Make a Material Instance named MI_PP_Damage. Add an unbound Post Process Volume to the level, which is a volume that affects the whole level. Add MI_PP_Damage to its Blendables array, under Post Process Materials.",
+   "In BP_ThirdPersonCharacter, add the same material to the blendables in the Post Process Settings of the Camera Component. On Begin Play, create a Dynamic Material Instance from it and store it. On damage, set Intensity to 1.0, and then bring it back to 0 over 0.5 seconds with a Timeline.",
+   "Test it. With the default Intensity of 0, confirm that the screen looks unchanged. Then change the default of the parameter to 1 and confirm that the red vignette is always on. Set it back to 0.",
+   "Write 2 sentences: why the default parameter value must make the screen look as if nothing happened, and why you chose After Tonemapping."
+  ],
+  "done_when": "Send two screenshots. The first shows the M_PP_Damage graph with Material Domain and Blendable Location visible in Details. The second shows a Play In Editor frame with the red vignette after damage. Add your 2 sentences."
+ },
+ "GDQ80": {
+  "brief": "Players often press a button a little too early, for example they press attack while the last attack is still playing. An input buffer remembers that press for a short time and uses it as soon as the character is free, so the game feels responsive. Unreal's Enhanced Input system also reports the state of each press, such as Started, Triggered and Completed. In this quest you read these states, build an input buffer for an attack, and add a hold trigger and a chorded trigger.",
+  "checklist": [
+   "Create an Input Action named IA_Attack of the type bool. Add it to your Input Mapping Context on a keyboard key and on a gamepad face button. Add a second mapping of the same key with a Hold trigger that has a Hold Time Threshold of 0.4, and bind it to IA_HeavyAttack.",
+   "In BP_ThirdPersonCharacter, add the IA_Attack event. Print a separate line from each of the Started, Triggered and Completed pins. Watch the order of the lines in the log for one press.",
+   "Add a Boolean variable named IsBusy that is true while the punch montage plays. From the Started pin of IA_Attack, check IsBusy. If it is false, attack. If it is true, store Get Real Time Seconds in a Float variable named BufferedAt.",
+   "When the montage ends, set IsBusy to false. Then check if Get Real Time Seconds minus BufferedAt is less than 0.25. If it is, attack again and clear BufferedAt. This is your input buffer.",
+   "Test with quick double presses. Then set the buffer window to 0.05 and to 1.0 and feel the difference. Pick a value and write why you chose it.",
+   "Add a Chorded Action trigger so that IA_HeavyAttack only fires while a Block action is held. Type showdebug enhancedinput in the console to see the actions.",
+   "Write 3 sentences that say what the buffer does for a player who presses early, and which Trigger State you used to start it."
+  ],
+  "done_when": "Send one screenshot of the Blueprint with the IA_Attack event, the IsBusy branch and the BufferedAt time check. Add the buffer window you chose, in seconds, and your 3 sentences."
+ },
+ "GDQ81": {
+  "brief": "A match in Unreal can move through fixed states: WaitingToStart before the players appear, InProgress while the game is played, and WaitingPostMatch after it ends. These match states are built into the Game Mode class, which is a more complete version of Game Mode Base. Rounds, lobbies and end screens all depend on them, so it is better to use them than to build your own version. In this quest you make a Game Mode that waits for a key before it starts the match and that ends the match on another key.",
+  "checklist": [
+   "In a Third Person project, create BP_GM_Rounds with the parent class Game Mode (not Game Mode Base), and create BP_GS_Rounds with the parent class Game State. In the Class Defaults of BP_GM_Rounds, set Game State Class to BP_GS_Rounds and Default Pawn Class to the template character.",
+   "Open World Settings and set GameMode Override to BP_GM_Rounds for your test map.",
+   "In BP_GM_Rounds, override the function Ready To Start Match so that it returns a Boolean variable named bReady with the default false. In the character or the Level Blueprint, bind a key that sets bReady to true on the Game Mode. Press Play: the pawn must NOT appear until you press the key.",
+   "On Begin Play of BP_GM_Rounds, add a looping timer of 1 second that prints Get Match State. Watch the state move from WaitingToStart to InProgress.",
+   "Add a second key that calls End Match. Confirm that the printed state becomes WaitingPostMatch. Also confirm that actors keep ticking, which you can see because your timer keeps printing.",
+   "In BP_GS_Rounds, add an Integer variable named RoundNumber. When the match starts, add 1 to it and show it on screen with a Print String.",
+   "Write 3 sentences: which class holds the rules, which class holds the shared state, and why the state must be in the Game State and not in the Game Mode."
+  ],
+  "done_when": "Send one screenshot of the BP_GM_Rounds graph that shows the Ready To Start Match override, the state printer and the End Match key. Also send one screenshot of the Play window that shows the printed match state WaitingPostMatch and RoundNumber. Add your 3 sentences."
+ },
+ "GDQ82": {
+  "brief": "To respawn means to put a player back into the game after they die. In Unreal the Game Mode controls this. It has events that run when a player joins, when a player is restarted and when a player leaves, and it has functions that create a new pawn at a Player Start. Every respawn rule, such as lives, a waiting time or a checkpoint, is built on these. In this quest you print the order of these events, add lives, and respawn the player at a tagged Player Start after a delay.",
+  "checklist": [
+   "In BP_GM_Rounds, or in a new BP_GM_Respawn, add the events OnPostLogin, OnRestartPlayer and OnLogout. Print the name of the controller in each one. Press Play and read the order of the printed lines.",
+   "Make a Player State Blueprint named BP_PS_Lives with an Integer variable Lives that has the default 3. Set it as Player State Class on the Game Mode.",
+   "In the character, add a key press that calls Destroy Actor on the character itself to act as a death. You can use your health system if you have one. Before the character is destroyed, tell the Game Mode through a custom event named PlayerDied and pass the Controller.",
+   "In PlayerDied, subtract 1 from Lives on the Player State of that controller. If Lives is above 0, use Set Timer by Event with 3 seconds, and then call Restart Player with the Controller. If Lives is 0, print OUT OF LIVES and do not respawn the player.",
+   "Place two Player Start actors. Set Player Start Tag to Checkpoint on one of them. In OnRestartPlayer, or before Restart Player, call Find Player Start with Incoming Name Checkpoint. Then use Restart Player at Player Start, so that the respawn uses the tagged start.",
+   "If a Player Start shows the label BADsize, move it out of the geometry until the label is gone."
+  ],
+  "done_when": "Send one screenshot of the Game Mode graph with OnPostLogin, PlayerDied, the timer and Restart Player at Player Start. Also send one screenshot of the Play window after a respawn at the Checkpoint start, with the printed Lives value."
+ }
+}

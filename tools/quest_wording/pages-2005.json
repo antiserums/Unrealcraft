@@ -1,0 +1,152 @@
+{
+ "CQ49": {
+  "brief": "Lip sync means that the mouth of a character moves in time with spoken words. MetaHuman Animator can create this face animation from a voice recording alone, so you do not need a camera or a capture device. A MetaHuman is one of the realistic digital humans made with Epic's MetaHuman tools. In this quest you turn a short voice recording into face animation and export it to a Level Sequence.",
+  "checklist": [
+   "Enable the MetaHuman Animator plugin: open Edit > Plugins, search for MetaHuman, turn it on and restart the editor. Add a MetaHuman character to your project. Any free MetaHuman works.",
+   "Import a short voice recording of 5 to 10 seconds as a SoundWave asset. Name it, for example, SW_Line01.",
+   "Right-click in the Content Browser and choose MetaHuman Animator, then MetaHuman Performance. Name the asset MHP_Line01 and open it.",
+   "Set Input Type to Audio and pick SW_Line01 in the Audio field. Set Visualization Mesh to the face mesh of your MetaHuman. Then click Process.",
+   "Drag the playhead through the result to check it. Then enable Head Movement and set a mood under Solve Override, for example Happy. Click Process again and compare the two results.",
+   "Click Export Level Sequence and assign your MetaHuman character Blueprint. Open the exported sequence and add a Cine Camera that is close to the face."
+  ],
+  "done_when": "Send a screenshot of the MetaHuman Performance editor with the audio settings visible, and a screenshot of the exported Level Sequence with the face tracks and your camera. Add one line that says which mood you chose."
+ },
+ "CQ50": {
+  "brief": "Retargeting means copying an animation from one character to another character that has a different skeleton. Shots often need a clip that only exists for another character, and retargeting gives it to your actor in minutes. Unreal does this with an IK Rig for each character, which names the main bone chains such as arms and legs, and an IK Retargeter, which maps the chains of one rig to the other. In this quest you retarget a mannequin clip the automatic way and then the manual way.",
+  "checklist": [
+   "Get a second two-legged character that has a different skeleton, for example a free character from Fab. Keep the Mannequin from the Third Person template as the source.",
+   "Try the quick way first. Right-click an Animation Sequence of the Mannequin and choose Retarget Animation Assets. Set Target Preview Mesh to your new character and export one clip with the suffix _Auto.",
+   "Now do it by hand. Create an IK Rig for each mesh with Add (+), then Animation, then IK Rig. In each rig, right-click the pelvis or hip bone and choose Set Retarget Root.",
+   "In each IK Rig, make chains for Spine, Left Arm, Right Arm, Neck, Head, Left Leg and Right Leg. Select the bones of a chain and use New Retarget Chain from Selected Bones, and choose No Goal.",
+   "Create an IK Retargeter from the source rig with Add (+), then Animation, then IK Retargeter. Set the Target IKRig Asset. Check the Chain Mapping and the reference poses of both characters.",
+   "Preview a walk clip, then use Export Selected Animations. Put the exported clip on your new character in a Level Sequence named LS_Retarget and frame it with a camera."
+  ],
+  "done_when": "Send a screenshot of the IK Retargeter editor that shows both characters and the Chain Mapping panel. Also send a screenshot of LS_Retarget playing the retargeted clip on the new character."
+ },
+ "CQ51": {
+  "brief": "Cloth simulation makes parts of a character, such as a cape or a skirt, move by physics when the character moves. In close shots this shows the weight and speed of the character. You set it up by creating a cloth asset from a part of the mesh and painting how far each point of the cloth may move. In this quest you make a cape simulate and watch it in a sequence.",
+  "checklist": [
+   "Get a character whose cape, skirt or scarf is a separate material section. A free character from Fab works. Open it in the Skeletal Mesh Editor.",
+   "Click Section Selection and left-click the cloth part. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character. Then right-click again and use Apply Clothing Asset.",
+   "Open Window > Clothing and click Activate Cloth Paint. Paint the top of the cape with the value 0, so that it stays fixed, and the bottom with a higher value, so that it can move. Hold H to preview the result.",
+   "Try the Gradient tool. Click with LMB to set the start value, click with Ctrl + LMB to set the end value, and press Enter to paint. Compare this with the brush result.",
+   "Add a Mask, set its Target to Anim Drive Multiplier, and paint it. Note what this target does for cinematics.",
+   "Create a Level Sequence named LS_Cape with the character and a run clip. Drag the playhead through it and play it. Write down one setting you changed to make the cloth look better."
+  ],
+  "done_when": "Send a screenshot of the Skeletal Mesh Editor with the Clothing panel open and your painted cape visible, and a screenshot of LS_Cape in the middle of the run. Add one line that says which mask targets you set."
+ },
+ "CQ52": {
+  "brief": "In Unreal, strand hair is stored in a Groom asset. When the head moves and the hair stays stiff, viewers notice it at once, most of all in a close-up. The Groom asset has physics settings that let the hair react to movement. In this quest you turn on hair simulation, change two physics values, and look at the simulated strands in a shot.",
+  "checklist": [
+   "Use a character that has a groom, such as a MetaHuman or any free character with a Groom asset. Open the Groom asset in the Groom Asset Editor.",
+   "In Show, turn on Guide and Guide Influence and look at the result. Guides are the few strands that are simulated and that lead the other strands. Then switch to the LODs dropdown and step through the LODs, the simpler versions used at a distance.",
+   "In the Physics panel, turn on Enable Simulation. Note which Niagara Solver is chosen and the value of Sub Steps.",
+   "Raise Air Drag, then lower Bend Stiffness a little. Drag the playhead or play while the character walks, and compare the hair before and after.",
+   "In the LOD panel, set Simulation to Disable on the last LOD.",
+   "In the level, select the Groom component. Enable Override Settings and Debug Simulation to see the simulated strands. Play LS_Hair, a sequence with a turn animation and a close camera."
+  ],
+  "done_when": "Send a screenshot of the Physics panel of the Groom Asset Editor with Enable Simulation on and your changed values. Also send a screenshot of the shot with the Debug Simulation strands visible."
+ },
+ "CQ53": {
+  "brief": "Extras are background characters that make a place feel alive, like people on a street. In Sequencer they can be cheap: a few spawnable characters with looping animations, and one track that controls several actors at once. In this quest you add extras to a sequence, bind several actors to one track, and film a short shot with the extras behind a hero.",
+  "checklist": [
+   "Open a project made from the Third Person template and create a Level Sequence named LS_Extras. Drag SKM_Manny from the Content Browser into Sequencer three times, so that you get three spawnable extras.",
+   "Give each extra a different idle or walk loop on its Animation track. Shift the sections in time so that the extras do not move in step with each other.",
+   "Place four more Skeletal Mesh Actors in the level and select them. Right-click the track of one extra, open Assign Actor and choose Add Selected. Notice the yellow chevron and the count next to the track name.",
+   "On the track that is now bound to several actors, key a Transform or a property once. Check that all the bound actors change.",
+   "Right-click a spawnable track, open Spawnable, and set Spawned Object Owner to External. Play, then stop. Write down what happens to the actor.",
+   "Add a Cine Camera and film a shot of 5 seconds with the hero in front and the extras moving behind."
+  ],
+  "done_when": "Send a screenshot of Sequencer that shows the spawnable extras (lightning bolt icons) and one track bound to several actors with the count in brackets. Also send a frame from your shot."
+ },
+ "CQ54": {
+  "brief": "A constraint makes one object follow another object. With a Parent constraint, a prop follows the hand of a character, and you can turn the constraint off at the frame where the character lets go. This solves one of the most common shot problems: a character who picks something up and puts it down. In this quest you constrain a prop to a hand control, release it, and try a LookAt constraint and a custom space.",
+  "checklist": [
+   "Start from LS_CRPose (from CQ47), or drag the Mannequin Control Rig into a level. Place a Static Mesh prop, such as a cube or a cup, near the hand and name it SM_Prop.",
+   "Select SM_Prop in the viewport. In the Animation panel, click Add Constraint (+) and choose Parent, then use the eyedropper to pick the hand control. Move the hand and check that the prop follows it.",
+   "Move the playhead 48 frames later. Use the key button to add a key that deactivates the constraint. Animate the prop falling to a table. Drag the playhead over the release and look for a sudden jump (a pop). Fix it with Compensate Key while the playhead is on the constraint key.",
+   "Select the control of the other hand. Add a LookAt constraint to SM_Prop. Change its Axis so that the hand aims correctly.",
+   "Select the hand control and open Spaces. Add SM_Prop as a custom space and switch to it at one frame. Then switch back to Parent at a later frame.",
+   "Right-click the Parent constraint and choose Bake. Then open the Constraints Manager actor and count your constraints."
+  ],
+  "done_when": "Send a screenshot of the Constraints section of the Animation panel with the Parent and LookAt constraints listed. Also send a screenshot of Sequencer that shows the constraint keys and a space-switch key with its own color."
+ },
+ "CQ55": {
+  "brief": "By default, the settings of a render job in Movie Render Queue are lost when you close the editor. A preset saves them as an asset that a whole team can reuse. There are three kinds: a master config for a whole job, a shot config for one shot inside a job, and a queue asset that saves the full list of jobs. In this quest you create one of each and learn the difference between editing a job's copy of a preset and editing the asset itself.",
+  "checklist": [
+   "Open Window > Cinematics > Movie Render Queue. Add a job for a Level Sequence that has at least 2 shots. Check the Map field in Job Details and type your name in Author.",
+   "Click Settings for the job. Add EXR Sequence and Anti-Aliasing with Temporal 4. Click Load/Save Preset and choose Save As Preset. Save it as MPC_Final, which is a Movie Pipeline Master Config asset.",
+   "Expand the job to see its shots and click Edit on one shot. Add Anti-Aliasing with Temporal 8. Try to add an Export setting and notice that you cannot. Use Save As Preset and name it MPSC_Hero, which is a Movie Pipeline Shot Config asset.",
+   "Add a second job with another sequence. In its Settings dropdown, pick MPC_Final. Then click Unsaved Queue, choose Save Queue As, and save the queue as MPQ_Weekly.",
+   "Click the name MPC_Final in the Settings column, change Output Directory, and close the window. Then double-click MPC_Final in the Content Browser and see that the change is not there. Set the directory in the asset editor and click Save.",
+   "Remove both jobs from the queue. Pick MPQ_Weekly from the queue menu and confirm that both jobs come back with their presets.",
+   "Click Render (Local). Open the Output link and confirm that both jobs rendered into the directory you set in the asset."
+  ],
+  "done_when": "Send a screenshot of Movie Render Queue that shows the queue named MPQ_Weekly, two jobs that use MPC_Final, and one shot that uses MPSC_Hero. Also send a screenshot of the Content Browser with the three assets MPC_Final, MPSC_Hero and MPQ_Weekly."
+ },
+ "CQ56": {
+  "brief": "Movie Render Graph is the newer way to set up renders in Unreal. You do not fill in a list of settings. You connect nodes in a graph, and each chain of nodes that ends in the Output node describes one image to render. Render layers and variables are only available in the graph. In this quest you create your first graph, build one chain that renders PNG files, and turn one setting into a variable that you can change for each job.",
+  "checklist": [
+   "In Movie Render Queue, add a job. In the Settings column, click the arrow next to Unsaved Config and choose Movie Render Graph (Beta). Under Create New Asset, click Movie Render Graph and save it as MRG_Base.",
+   "Open MRG_Base. Find the Globals chain and click each of its nodes: Sampling Method, Global Output Settings, Warm Up Settings and Global Game Overrides. Set the output directory and the resolution in Global Output Settings.",
+   "In the Members tab, under OUTPUTS, click + and name the output beauty. Build this chain of nodes: Render Layer, then Deferred Renderer, then PNG Output File Type, then Output. Set the File Name to {sequence_name}.{layer_name}.{frame_number}.",
+   "Right-click the Sampling Method node and expose the TemporalSampleCount pin. Right-click the pin and choose Promote to Variable. Go back to the queue and set the variable to 4 on the job.",
+   "Open the Active Render Settings tab and click Evaluate Graph to see the final settings. Break the chain between the renderer and the output, evaluate again, and then reconnect it.",
+   "Right-click the Deferred Renderer node and choose Disable. Evaluate, then enable the node again. Click Render (Local) and check the names of the PNG files.",
+   "Click the three dots next to Quick Render in the main toolbar and open Quick Render Settings. Set After Render to Open Output Directory and render the Current Viewport."
+  ],
+  "done_when": "Send a screenshot of MRG_Base that shows the Globals chain and your beauty chain, with the exposed TemporalSampleCount pin promoted to a variable. Also send a screenshot of the queue that shows the variable value on the job."
+ },
+ "CQ57": {
+  "brief": "A sample is one render of a frame. Movie Render Queue renders each frame several times and averages the results, which gives smooth edges and motion blur. Warm-up means running the scene for some frames before the first rendered frame, so that effects such as particles are already moving on frame 1. In this quest you compare sample settings and anti-aliasing methods, and you use warm-up to fix the first frame of a shot.",
+  "checklist": [
+   "Pick a shot of 48 frames with a moving character and a Niagara effect. Add the Anti-Aliasing setting with Spatial 1 and Temporal 4, turn on Override Anti-Aliasing, and set the method to None. Render it to PNG. This is render A.",
+   "Render B: use Spatial 2 and Temporal 8 (16 samples in total) with the method TemporalAA. Add Console Variables and set r.TemporalAASamples to 16. Compare the edges with render A.",
+   "Render C: use the same settings as B, but delete the console variable. Look for sample positions that repeat, which you see as less smooth edges.",
+   "Add a Camera Cuts section that starts 24 frames before the start of the playback range. Enable Use Camera Cut for Warm Up and Render Warm Up Frames, and set Engine Warm Up Count to 24. Compare the Niagara effect on frame 1 with render A.",
+   "Add Debug Options and enable Write All Samples. Render only 2 frames with Custom Playback Range. Open the sample images that are saved next to the output.",
+   "Set Output Frame Step to 2 for a quick preview. Count the output files.",
+   "Switch the job to a Movie Render Graph. Show where the temporal count is set (the Sampling Method node) and where the spatial count and the AntiAliasing Method are set (the Deferred Renderer node)."
+  ],
+  "done_when": "Send a screenshot with renders B and C side by side on one high-contrast edge, a screenshot of the Write All Samples folder with the sub-sample files, and a short note that says which warm-up settings fixed frame 1."
+ },
+ "CQ58": {
+  "brief": "The file format of a render decides what the next person in the process receives. Some formats keep the full brightness range (HDR), some keep transparency (alpha), and some are movie files that can carry sound. A wrong choice loses information that the edit team needs later. In this quest you render the same shot to EXR, Apple ProRes and a movie encoded with ffmpeg, export an XML file for editing software, and write a table that compares the formats.",
+  "checklist": [
+   "Make a job for a shot of 24 frames. Add EXR Sequence with Compression set to PIZ and Multilayer turned on. Add Color Output and enable Disable Tone Curve. Render, and open one EXR file in a viewer that shows pixel values above 1.",
+   "Open Edit > Plugins, enable Apple ProRes Media (in the Media Players section) and restart the editor. Add Apple ProRes [10-12bit] with the codec Apple ProRes 422 HQ, and add WAV Audio. Render, and check the .mov file and the .wav file.",
+   "Install ffmpeg. Open Edit > Project Settings > Plugins > Movie Pipeline CLI Encoder. Set Executable Path, set Video Codec to libvpx-vp9, Audio Codec to libvorbis, and Output File Extension to mkv. Then run MovieRenderPipeline.DumpCLIEncoderCodecs in the Output Log.",
+   "Add Command Line Encoder with Quality set to High, and also add a .jpg Sequence and WAV Audio. Render, and play the .mkv file.",
+   "Add Final Cut Pro XML with Data Source set to Sequence Data. Open the XML file in a text editor and find the shot names.",
+   "Switch the job to a Movie Render Graph. Add an Apple ProRes Movie Output Type node and open its Quality list. Note the default value.",
+   "Write a small table with these columns: format, bit depth, alpha yes or no, audio yes or no, and when you would use it."
+  ],
+  "done_when": "Send a screenshot of the output folder with the EXR, .mov, .wav, .mkv and .xml files, and send your format table."
+ },
+ "CQ59": {
+  "brief": "A render layer is a separate image of one part of the scene, for example only the characters. Layers let a compositor change the character without a new render of the whole world. In Movie Render Graph, a Collection node chooses a group of actors, and a Modifier node changes how that group is rendered, for example hidden or as a holdout (a black cutout with the shape of the actors). In this quest you render a character layer and a background layer of the same shot.",
+  "checklist": [
+   "Open Edit > Project Settings > Engine > Rendering > Default Settings. Enable Alpha Output and Support Primitive Alpha Holdout (Deferred). Restart the editor if it asks.",
+   "In your shot, rename the character actors so that their names start with CHAR_. Put the background actors in an Outliner folder named BG.",
+   "Open MRG_Base, or make a new graph. Add a Collection node named col_Chars with a Condition Group that uses Actor Name CHAR_*. Add a second Collection named col_BG that uses Editor Folder BG. Click the arrow icon in the Details panel to select the members of a collection in the level.",
+   "Make a render layer named rl_Chars with this chain: Render Layer, then a Modifier named mod_HideBG, then Deferred Renderer, then EXR, then Output. In the Modifier, set Collections to col_BG and turn on Is Hidden, Cast Shadows While Hidden and Affect Indirect Lighting While Hidden.",
+   "Make a render layer named rl_BG with this chain: a Modifier named mod_HoldChars, then Deferred Renderer, then EXR, then Output. In the Modifier, set Collections to col_Chars and turn on Holdout.",
+   "Add a Set Metadata Attributes node to rl_Chars, with the key artist and your name as the value. Keep the File Name {sequence_name}.{layer_name}.{frame_number}.",
+   "Render 24 frames. Open both EXR files, and check the alpha of the holdout region and the EXR metadata."
+  ],
+  "done_when": "Send a screenshot of the graph with both render layers. Also send one frame from each layer side by side, which shows the hidden background (with its shadow and bounce light kept) and the black holdout of the character."
+ },
+ "CQ60": {
+  "brief": "The Path Tracer gives the best lighting but is slow, so it makes sense to use it only where it shows. In Movie Render Graph each render layer can use its own renderer, so the hero can be path traced while the background uses the faster Deferred Renderer. In this quest you build such a graph with a switch between the two renderers, and you also render the diffuse light and the specular light (the reflections) of a shot as separate passes.",
+  "checklist": [
+   "Check the Path Tracer project settings from your earlier quest: DirectX 12, Support Hardware Ray Tracing and Enable Path Tracing. Make a graph named MRG_PT.",
+   "Build two render layers on the same job. The layer rl_Hero uses the Path Traced Renderer node with Spatial 8 and Reference Motion Blur on. The layer rl_BG uses the Deferred Renderer node. Set the temporal count to 4 in Sampling Method.",
+   "Insert a Branch node before the renderer in rl_Hero. Promote its condition to a bool variable (true or false) named bUsePathTracer. Set it on each job in the queue and render once each way.",
+   "Make a Blueprint named BP_PTPasses: an Actor with a Post Process Volume that has Infinite Extent (Unbound) and a high Priority. Add two custom events named RenderDiffuse and RenderSpecular that set the checkboxes under Path Tracer Lighting Components.",
+   "In a legacy MRQ config, add Console Variables with this Start Console Command: Ke * RenderSpecular. Duplicate the job and give it a second config that calls Ke * RenderDiffuse.",
+   "Render the queue. Compare the specular-only frame and the diffuse-only frame, and compare the time per frame of each job.",
+   "Write down where the Reference Motion Blur option is found and why the deferred layer does not have it."
+  ],
+  "done_when": "Send a screenshot of MRG_PT with the Branch node and both renderer nodes. Also send a specular-only frame and a diffuse-only frame from the same shot with their render times."
+ }
+}

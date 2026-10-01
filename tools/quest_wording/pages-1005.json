@@ -1,0 +1,152 @@
+{
+ "AQ69": {
+  "brief": "An IK Retargeter copies animation from one character to another through a list of operations, called ops. The most important op is FK Chains, which copies the rotations of each chain of bones, such as an arm or a finger. Its settings decide how the limbs look on a target character that has different body proportions. In this quest you try the rotation and translation modes of FK Chains, and add ops that correct the knee direction, the arm length and the root motion.",
+  "checklist": [
+   "Open RTG_PoseFix, or make a new retargeter between two two-legged characters with different proportions. Click Add Default Ops and write down the ops that appear.",
+   "Select FK Chains. Use Map All (Fuzzy), and then Hide Mapped Chains to see which chains are left without a match. Fix every unmapped chain by hand.",
+   "Select the LeftArm chain. Switch Rotation Mode between Interpolated and One to One while a wave animation plays. Then do the same on a finger chain. Note which mode fits each chain better.",
+   "On the Spine chain, set Translation Mode to Globally Scaled, then to Absolute, and then back to None. Note what looked broken.",
+   "Add a Pole Vector Alignment op below FK Chains. On LeftLeg, set Align Alpha to 1 and try a Static Angular Offset of 15. Watch the knee.",
+   "Add a Stretch Chains op. On the arm chains, set Match Source Length to 1, and then set Scale Chain Length to 1.1. Compare the position of the wrists.",
+   "Select Pelvis Motion and set Scale Vertical to 0.8. Then, on Root Motion, switch Root Motion Source between Copy From Source Root and Generate From Target Pelvis. Turn on Draw Chain Lines in the debug settings of FK Chains for your final screenshot."
+  ],
+  "done_when": "Send screenshots of the Op Stack with the ops you added, of the FK Chains chain list with the mapping filters, and of the viewport with the chain debug lines turned on. Add four lines: the rotation mode you used for arms and for fingers, the translation mode you kept and why, the pole vector offset you used, and which root motion source you chose."
+ },
+ "AQ70": {
+  "brief": "After a retarget, feet often slide or sink into the floor, and the steps can be too long or too short for the new character. IK goals in the retargeter fix this: they pull the feet to the right place after the rotations are copied. An override set is a named group of setting changes that you can turn on while the game runs. In this quest you add a floor constraint and stride warping (changing the length of the steps), put one setting into an override set, and control it from an Animation Blueprint.",
+  "checklist": [
+   "In the IK Rig of the target, give the LeftLeg and RightLeg chains an IK Goal, using Add Chain and Goal with Limb IK. In the retargeter, select Run IK Rig. Confirm that Enable IK is on for both leg chains, and that the goals are drawn when Draw Final Goals is on.",
+   "Under Run IK Rig, add a Floor Constraint sub-op. On both leg chains, turn Enable Floor Constraint on and set Alpha to 1. Enable Use Foot, and adjust Heel Offset and Toe Offset until the feet stop sinking into the floor in a walk animation.",
+   "Add a Stride Warp IK Goals sub-op. Set Direction Source to Goals and Forward Direction to Y, and enable it on the leg chains. Set Warp Forwards to 0.7 and then to 1.3, and watch the length of the steps.",
+   "Add a Speed Plant IK Goals sub-op. Read its settings, and write down which animation curve it needs and which Blend Method you would pick for a run. Leave the op disabled if your animations have no speed curve.",
+   "Open Override Sets and create a set named OS_LongStride. Right-click the Stride Warp op and add Warp Forwards to the set with the value 1.3. Turn the set on and off in the editor.",
+   "Open Variables and add a Float variable named StrideScale. Bind it to Warp Forwards inside OS_LongStride.",
+   "In the Animation Blueprint of the target, add a Retarget Pose From Mesh node and set the retargeter on it. Add OS_LongStride to Override Set to Apply, and connect a variable to the StrideScale pin. Press Play and change the value."
+  ],
+  "done_when": "Send screenshots of the Run IK Rig sub-stack with Floor Constraint and Stride Warp, of the Override Sets panel with OS_LongStride, and of the Retarget Pose From Mesh node with the override set and the StrideScale pin. Add three lines: the heel and toe offsets you used, the Warp Forwards value that looked right, and what Speed Planting needs to work."
+ },
+ "AQ71": {
+  "brief": "Distance Matching picks the frame of an animation from a distance and not from time. For a landing, the distance is how far the character is above the ground, so the legs reach for the floor at the right moment from any fall height. The animation needs a curve that stores this distance for every frame. In this quest you add that curve to a landing animation with a modifier, and build an Animation Blueprint that chooses the pose from the distance to the ground.",
+  "checklist": [
+   "Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Open a landing animation that has root motion, and go to Windows > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers.",
+   "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details.",
+   "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time.",
+   "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround.",
+   "Compile. In the preview viewport, open Scene Setup and change Floor Height Offset. Watch the legs reach for the ground at different distances."
+  ],
+  "done_when": "Send two screenshots: one of the graph of the DistanceMatching function, and one of the preview viewport at two different Floor Height Offset values that shows two different poses."
+ },
+ "AQ72": {
+  "brief": "Mirroring flips an animation from left to right, so a step that starts with the left foot becomes a step that starts with the right foot. You then need to make only half of the animations. A Mirror Data Table is the asset that tells Unreal which left bone matches which right bone, and it can also swap notifies and sync markers. In this quest you create the table for your character and mirror the pose in an Animation Blueprint with the Mirror node.",
+  "checklist": [
+   "In the Content Browser, click Add (+), then Animation, then Mirror Data Table. Pick the Skeleton of your character and name the asset MDT_Character.",
+   "Open the table and check that Unreal filled in the left and right bones for you. Set Mirror Axis to X. Make sure that the central bones (pelvis, spine, neck and head) have the same bone in Name and in Mirrored Name. Add any rows that are missing.",
+   "Add one row with Mirror Entry Type set to Sync Marker (or Animation Notify) for a left and right pair that you use, for example FootL and FootR.",
+   "In ABP_Character, right-click the AnimGraph and add the Mirror node from the Mirroring category. Connect your locomotion pose to it. Create a bool variable named IsMirrored and connect it to the Mirror pin.",
+   "On the Mirror node, set Blend Time on Mirror State Change to 0.2. Add an Inertialization node after the Mirror node, because the blend time needs it.",
+   "Turn IsMirrored on and off in the preview. Check that the pose with the left foot forward becomes a pose with the right foot forward, and that the notifies still fire.",
+   "Optional: in a custom Notify State Blueprint, use Is Triggered By Mirrored Animation with a Branch node to decide whether a Print String runs."
+  ],
+  "done_when": "Send a screenshot of MDT_Character with the Sync Marker or Notify row visible, and a screenshot of the AnimGraph with the Mirror and Inertialization nodes."
+ },
+ "AQ73": {
+  "brief": "In a Physics Asset, a constraint is the joint between two bodies, and its limits say how far the joint may bend and twist. With good limits, a ragdoll falls like a real body. With bad limits, the arms and legs fold in impossible ways. A constraint profile is a saved set of constraint settings that you can switch to while the game runs. In this quest you turn the elbow into a hinge, copy it to the other arm, and create a stiffer profile that you apply from a Blueprint.",
+  "checklist": [
+   "Open the Physics Asset of your character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow.",
+   "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends.",
+   "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V.",
+   "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies.",
+   "Open Windows > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values.",
+   "Use BP_RagdollPawn, a Blueprint with a Skeletal Mesh Component that has Collision Enabled and ignores the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Press Play and compare with the default profile."
+  ],
+  "done_when": "Send a screenshot of the elbow constraint with its arc in the viewport and the Details panel. Also send a screenshot of the Profiles tab that shows CP_Stiff assigned, and a screenshot of the Blueprint graph that applies it."
+ },
+ "AQ74": {
+  "brief": "Secondary motion is the movement of parts that hang from a character, such as a ponytail, a chain or a tail. They swing and lag behind when the character moves, and this makes the character feel heavy and fast. The RigidBody node is an AnimGraph node that simulates such parts with physics at a low cost, and it also handles collision with the body. In this quest you make a small Physics Asset for a hanging part and simulate it with the RigidBody node.",
+  "checklist": [
+   "Pick a character with a hanging part, such as a ponytail, a chain, a tail or a hose. Right-click the Skeletal Mesh, choose Create, then Physics Asset, then Create, and name the asset PHYS_Secondary. Keep only the bodies of the hanging chain, and the bodies of the head, the back and the arms that it can touch.",
+   "In the Skeleton Tree, right-click the bodies of the chain and choose Collision, then Enable Collision All. Set their Physics Mode to Simulated. Set every other body to Kinematic, which means physics does not move it.",
+   "Set Mass (kg) so that the body nearest to the parent is the heaviest and each next body has half the mass. Set Linear Damping and Angular Damping to about 5.0 on the simulated bodies. Press Simulate to test.",
+   "In ABP_Character, after your pose, add a Component To Local conversion node and a RigidBody node. Set Override Physics Asset to PHYS_Secondary. Keep Simulation Space set to Component Space.",
+   "Expand Sim Space Settings. Set Master Alpha to 1, Velocity Scale Z to 0.5, Max Angular Velocity to about 10, and Max Linear Acceleration to a few hundred. Run the game and spin the character.",
+   "In the Event Graph, add a custom event named OnTeleport that calls Reset Dynamics on the Anim Instance. Trigger this event after you teleport the character, so the simulation starts fresh."
+  ],
+  "done_when": "Send a screenshot of PHYS_Secondary that shows the simulated chain bodies with their Mass values, and a screenshot of the Details of the RigidBody node with your Sim Space Settings."
+ },
+ "AQ75": {
+  "brief": "Physical animation is a mix of animation and physics. The body is simulated by physics, but motors pull each body part toward the pose of the animation. The character keeps playing its animation and still reacts when something pushes it. A Physical Animation Profile stores how strong those motors are for each body. In this quest you create a profile for the upper body, apply it from a Blueprint, and push the character with a physics cube.",
+  "checklist": [
+   "Open the Physics Asset of the character and go to Windows > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody.",
+   "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled.",
+   "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset.",
+   "Create BP_PhysAnimPawn with a Skeletal Mesh Component. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01.",
+   "In the Event Graph, connect three nodes after BeginPlay. First, call Set Skeletal Mesh Component with the Physical Animation Component as target. Second, call Apply Physical Animation Profile Below with Body Name set to BoneName, Profile Name set to PAP_UpperBody, and Include Self on. Third, call Set All Bodies Below Simulate Physics with BoneName, New Simulate on and Include Self on.",
+   "Set the mesh to play a looping animation. Play in the editor and push the character with a physics cube. The upper body should follow the animation and also react to the hits.",
+   "Try Orientation Strength 100 and then 5000. Note how closely the pose still follows the animation in each case."
+  ],
+  "done_when": "Send a screenshot of the Profiles tab with PAP_UpperBody assigned, with the graph nodes filled, and a screenshot of the BeginPlay graph. Add one line about what changed between Orientation Strength 100 and 5000."
+ },
+ "AQ76": {
+  "brief": "A hit reaction makes the part of the body that was hit move by physics for a short moment, and then return to the animation. It is a cheap way to make combat feel physical. The key value is the Physics Blend Weight: at 0 the body part follows the animation, and at 1 it is fully driven by physics. In this quest you raise and lower that weight with a Timeline when the character is hit, and you also make the hands stay on the animation with Kinematic bodies.",
+  "checklist": [
+   "In the Event Graph of ABP_Character, add a custom event named HitBone with a Name input. On the mesh, call Set All Bodies Below Simulate Physics with that bone, New Simulate on and Include Self on.",
+   "Add a Timeline named TL_HitBlend with a length of 0.6 s and a float track that goes from 0 to 1 and back to 0. On every tick of the Timeline, send its value to Set All Bodies Below Physics Blend Weight for the same bone.",
+   "On the Finished output of the Timeline, call Set All Bodies Below Simulate Physics with New Simulate off, so that the simulation stops.",
+   "In BP_Character, detect a hit with a line trace or a projectile. Take the Hit Bone Name from the hit result, and call HitBone on the Anim Instance.",
+   "Open the Physics Asset. Select hand_l and hand_r and set their Physics Type to Kinematic. Set Physics Update Mode to Component Transform is Kinematic. Simulate with the jump loop animation, and watch the hands stay on the animation.",
+   "Play in the editor. Shoot the character in the arm, and then in the leg. Check that the part that was hit blends into physics and back to the animation."
+  ],
+  "done_when": "Send a short clip or three screenshots of a hit blending in and out. Also send a screenshot of the Event Graph with the timeline and both Set All Bodies Below nodes."
+ },
+ "AQ77": {
+  "brief": "A groom is the Unreal asset for hair made of single strands. Simulating every strand would cost too much, so Unreal simulates a small number of guide strands, and the other strands follow them. With simulation turned on, the hair reacts to movement and wind. In this quest you look at the guides of a groom, turn on its physics, make the tips softer than the roots, and put the groom on a character.",
+  "checklist": [
+   "Get a groom asset. It can be a MetaHuman hair groom or any imported Alembic (.abc) groom. Double-click it to open the Groom Asset Editor.",
+   "In the Show menu of the viewport, turn on Guide and Guide Influence. Take a screenshot of the simulation guides and their colored clumps, the groups of strands that follow one guide.",
+   "In the Physics panel, turn on Enable Simulation. Set Niagara Solver to Groom Rods. Note the values of Sub Steps and Iteration Count.",
+   "Lower Bend Stiffness a little and raise Bend Damping. Edit the Bend Stiffness Scale curve so that the tip of the hair (x = 1) is softer than the root (x = 0).",
+   "In the LOD panel, set Simulation to Disable on your last LOD, the simplest version used at far distances.",
+   "Place the groom on a character with a Groom component. On the component, set Physics Asset to the physics asset of the character, which is used for collision. Enable Override Settings, then turn Local Simulation on and set Local Bone to head. Run with the character and watch the hair."
+  ],
+  "done_when": "Send two screenshots: one of the Physics panel of the Groom Asset Editor with your values, and one of the Details of the Groom component with Override Settings, Physics Asset and Local Bone filled in. Add one line about what Bend Damping changed."
+ },
+ "AQ78": {
+  "brief": "Animations use a lot of memory, so Unreal compresses them, which means it stores them in a smaller form. Stronger compression saves more memory but can cause small errors, such as feet that slide or shake. A Bone Compression Settings asset holds the rules for compressing bone movement, and you can give different animations different rules. In this quest you create one asset for high quality and one for small size, apply them to two copies of a run animation, and compare the size and the quality.",
+  "checklist": [
+   "In the Content Browser, click Add (+), then Animation, then Advanced, then Bone Compression Settings. Name the asset BCS_Quality. Add one codec (a compression method): Anim Compress Per Track Compression. Set Error Threshold to 0.05 and enable Force Below Threshold.",
+   "Create BCS_Small in the same way, with two codecs: Anim Compress Remove Linear Keys and Anim Compress Removes Every Second Key. Set Error Threshold to 0.5.",
+   "Duplicate a run animation twice and name the copies A_Run_Quality and A_Run_Small. In the Asset Details panel of each copy, under Compression, assign the matching Bone Compression Settings asset. Note the size or memory that is shown for each.",
+   "Open BCS_Small and change Max Pos Diff on the Remove Linear Keys codec. Click the Compress button in the toolbar, and read the dialog that shows how many assets will be compressed.",
+   "Create a Curve Compression Settings asset named CCS_Default. Note its default values for Max Curve Error and Error Sample Rate. Assign it to A_Run_Quality.",
+   "Play both animations side by side in the Animation Sequence Editor. Look for foot sliding or shaking on the small one."
+  ],
+  "done_when": "Send a text with the sizes of A_Run_Quality and A_Run_Small, a screenshot of the Compress confirmation dialog, and 3 lines about where you saw a loss of quality and which kinds of animation you would give each settings asset."
+ },
+ "AQ79": {
+  "brief": "Animations made in another 3D program come into Unreal as FBX files. The import settings decide which Skeleton the animation belongs to, which frames are imported, and how many frames per second are used. Mistakes here are among the most common animation problems, and they are easy to avoid. In this quest you import one animation per file onto an existing Skeleton, and then import a second one with a limited frame range.",
+  "checklist": [
+   "Export one animation from your DCC tool (Blender, Maya or 3ds Max) with the Animations checkbox enabled. Export only the skeleton, and put one animation in each file.",
+   "In the Content Browser, go to the folder where the animation should be stored. Click Import and pick the FBX file.",
+   "In the FBX Import Options, set Skeleton to your existing Skeleton, for example SK_Mannequin_Skeleton. Do not create a new one.",
+   "Open the Animation section. Set Animation Length to Animated Time, and turn off Use Default Sample Rate so that the frame rate is read from the file.",
+   "Type a name in Override Animation Name, for example A_Wave. Then click Import.",
+   "Import a second animation, but this time use Set Range and import only the first 20 frames. Compare the two Animation Sequences.",
+   "Open each sequence in the Animation Sequence Editor. Check the number of frames, and check that the Skeleton is the one you chose."
+  ],
+  "done_when": "Send one screenshot of the FBX Import Options dialog with your Skeleton, Animation Length and Override Animation Name set, and one screenshot of the two imported Animation Sequences in the Content Browser. Add one sentence that says how many frames each one has."
+ },
+ "AQ80": {
+  "brief": "When an additive animation, such as breathing or a head look, plays on top of a base pose, the hands can drift away from the weapon or prop they hold. A Virtual Bone helps with this. It is an extra bone that follows a target bone, such as a hand, but is attached to a different parent, such as the root. It remembers where the hand was in the base animation, and IK can then pull the real hand back to that place. In this quest you add two Virtual Bones and use them to keep the hands steady.",
+  "checklist": [
+   "Open the Skeleton of your character in the Animation Editor. In the Skeleton Tree, right-click the root bone, choose Add Virtual Bone, and pick hand_l as the target. Do the same for hand_r.",
+   "Preview an animation and watch the two VB bones follow the hands. Save the Skeleton.",
+   "In the Options menu of the Skeleton Tree, choose Add Blend Mask. Name the mask BM_NoVirtualBones and set both virtual bones to 0.0.",
+   "In your Animation Blueprint, ABP_Character, add two Slot nodes: one set to DefaultSlot and a second one named AdditiveSlot. Connect them to an Apply Additive node.",
+   "Put a Layered Blend per Bone node between AdditiveSlot and Apply Additive. Set its Blend Mode to Blend Mask and pick BM_NoVirtualBones.",
+   "Add a Two Bone IK node for each arm. Set IKBone to the hand, set Effector Location Space to Bone Space, and set Effector Target to the matching virtual bone. Enable Take Rotation from Effector Space.",
+   "Play an additive head look or breathing animation on AdditiveSlot. Check that the hands stay where they are in the base pose."
+  ],
+  "done_when": "Send one screenshot of the Skeleton Tree that shows both virtual bones under root, and one screenshot of the AnimGraph with the Slots, the Layered Blend per Bone node set to Blend Mask, and the Two Bone IK nodes. Add one sentence that says what changed when the additive animation was playing."
+ }
+}
