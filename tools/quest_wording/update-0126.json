@@ -1,0 +1,127 @@
+{
+ "LDQ53": {
+  "done_when": "Send one screenshot of the Data Layer Outliner that shows both instances and their actors. Also send a short video clip (30 seconds or less), or two screenshots, taken in Play In Editor that show the level before and after the key press.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a World Partition level: create one with File, New Level, Open World if you have none. Then open Window > World Partition > Data Layer Outliner, the panel that lists the Data Layers of this level.",
+   "In the Content Browser, right-click, open Miscellaneous, and choose Data Layer. Make two assets this way: DL_Blockout with the type Editor, and DL_Ruins with the type Runtime.",
+   "Drag both assets into the Data Layer Outliner. This creates a Data Layer Instance for each one, which is the version of the Data Layer that belongs to this level.",
+   "Place a few cubes as a small blockout and select them. Then right-click DL_Blockout in the Data Layer Outliner and choose Add Selected Actors to Selected Data Layers.",
+   "Place a few other meshes on the same spot that stand for ruins, for example tilted and scaled cubes, and add them to DL_Ruins. On the DL_Ruins instance, set Initial Runtime State so that the layer starts unloaded.",
+   "Click the eye icon on DL_Blockout a few times to hide and show the blockout.",
+   "In the Level Blueprint, add a key press event that uses the node Set Data Layer Instance Runtime State to set DL_Ruins to Activated. Test it in Play In Editor."
+  ]
+ },
+ "LDQ54": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Open a World Partition level: create one with File, New Level, Open World if you have none. In the Content Drawer, click + Add, open Miscellaneous, and choose HLOD Layer. Name it HLOD_Rocks and set its Layer Type to Merged Mesh.",
+   "Make a second HLOD Layer named HLOD_Trees and set its Layer Type to Instancing.",
+   "Place 20 rock meshes and 20 tree meshes far away from the player start. The Starter Content has a rock in its Props folder, and a cone or a bush can stand in for a tree. Set the Mobility of all of them to Static.",
+   "Select the rocks and, in the Details panel, set their HLOD Layer property to HLOD_Rocks. Do the same for the trees with HLOD_Trees.",
+   "Open the Build menu and run Build HLODs. Wait until the build is finished.",
+   "In the viewport view mode menu, open Level of Detail Coloration and choose Hierarchical LOD Coloration. Move the camera close to the actors, where they are drawn green, and then far away, where the proxy is drawn blue.",
+   "Start Play In Editor and walk far away. Open the console and run the command wp.Runtime.ToggleDrawRuntimeHash2D to see which HLOD cells are loaded."
+  ]
+ },
+ "LDQ55": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Open a level that has a Landscape with a slope, or make one: create a new level, enter Landscape mode, choose New on the Manage tab, and raise a hill with the Sculpt tool. Press Shift+3 to enter Foliage mode.",
+   "Drag two Static Meshes from the Content Drawer into the Mesh List, for example the rock and the bush from the Props folder of the Starter Content (any assets are fine). This creates a Static Mesh Foliage type for each mesh.",
+   "Select the Paint tool. Set Brush Size to 512 and Paint Density to 0.3. Paint both foliage types across a slope.",
+   "Hold Shift and paint to erase foliage. Clear a path through the foliage that is wide enough for a player.",
+   "In Filters, turn off Landscape and turn on Static Mesh. Try to paint on the landscape and note what happens.",
+   "Select the bush type and change Scale Min and Scale Max. Then use the Reapply tool to paint the new scale onto bushes that are already placed.",
+   "In the Foliage Details, set an End Cull Distance and a Start Cull Distance for the bush. These are the distances at which the bushes fade out and stop being drawn. Start Play In Editor and walk away to watch them disappear."
+  ]
+ },
+ "LDQ56": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Start from an empty level: choose File, New Level, Empty Level. From the Place Actors panel, add a Sky Atmosphere, a Directional Light and a Sky Light.",
+   "On the Directional Light, enable Atmosphere Sun Light so that it acts as the sun. Then hold Right Ctrl + L and move the mouse to move the sun across the sky.",
+   "Place 5 large cubes in a line that goes away from the camera. Put each cube about 100 meters further away than the one before it.",
+   "Set the sun low for a sunset and take a screenshot. Then set the sun high for noon and take another screenshot.",
+   "Raise Mie Scattering Scale a little. Watch how the haze and the halo around the sun change.",
+   "Raise Aerial Perspective View Distance Scale. Compare how easy it is now to tell which cube is nearer.",
+   "Choose the settings that make distance easiest to see, and save the level with them."
+  ]
+ },
+ "LDQ57": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a blockout level with a doorway and stairs. The level of the template works, or you can build a small one from cubes. Add a NavMeshBoundsVolume that covers the play area. Press P in the viewport to see the NavMesh, which is drawn in green.",
+   "Build a narrow gap of about 60 cm between a wall and a box. Check that the NavMesh goes through the gap.",
+   "Select the actor named RecastNavMesh-Default. In the Details panel, find the Generation section and raise Cell Size from its default value to 64. Watch the NavMesh in the gap disappear.",
+   "Set Cell Size back to its default. Now change Agent Radius and Agent Max Step Height, and watch how the NavMesh changes on stairs and in doorways.",
+   "Pick one small decorative prop. In the Collision section of its Details panel, disable Can Ever Affect Navigation so the prop no longer cuts a hole in the NavMesh.",
+   "Write down the Cell Size, Agent Radius and Agent Max Step Height that you keep for this level, and why you chose each one."
+  ]
+ },
+ "LDQ58": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Work in a blockout level that has a NavMeshBoundsVolume, with a few walls so that there is a short and a long route between two places. Place an AI character that roams around. To make one, duplicate BP_ThirdPersonCharacter, name the copy BP_NPC_NavMesh, delete its input nodes, and add an event that calls Get Random Reachable Point In Radius with a radius of 1000 and then AI Move To, and repeats after a Delay of 4. Epic's Basic Navigation guide builds the same character.",
+   "From the Place Actors panel, drag in a Nav Modifier Volume. Press P and notice that there is no NavMesh inside it. Use the volume to block one route.",
+   "Add a second Nav Modifier Volume and set its Area Class to NavArea_Obstacle, which gives the area a high cost. Place it on the short route to a target.",
+   "Click Simulate. The AI should take the long way around the obstacle area. Then close the long way with another volume and see the AI walk through the obstacle area.",
+   "Change the obstacle volume to NavArea_Null and click Simulate again. The AI can no longer reach its goal.",
+   "Make a Blueprint named BP_MudPatch. It is an Actor with a Box component as its root and a Nav Modifier component. Set its Area Class to NavArea_Obstacle and place two of them in the level."
+  ]
+ },
+ "LDQ59": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a new level, build two floor areas with a gap between them, and a raised platform that has a ledge. Cover all of it with one NavMeshBoundsVolume.",
+   "Place an AI character that roams around. To make one, duplicate BP_ThirdPersonCharacter, delete its input nodes, and add an event that calls Get Random Reachable Point In Radius with a radius of 1000 and then AI Move To, and repeats after a Delay of 4. Press P and confirm that the two floor areas are not connected by the NavMesh.",
+   "From the Place Actors panel, drag in a Nav Link Proxy. Move its two handles, PointLinks[0].Left and Right, onto the NavMesh on each side of the gap. The green arrow must stay visible, because it shows that the link is connected.",
+   "In the Details panel, open Point Links and then entry 0, and set Direction to Left to Right. Click Simulate and watch the AI cross in one direction only.",
+   "Add a second Nav Link Proxy at the ledge. Put its Left handle on the edge of the platform and its Right handle on the floor below, and set Direction to Left to Right. The AI can now drop down.",
+   "Select RecastNavMesh-Default and enable Draw Tile Bounds to see the tiles of the NavMesh. Check that each link connects tiles that are next to each other."
+  ]
+ },
+ "LDQ60": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has stairs and a doorway. The level of the template works, or you can build a small one from cubes. Add a NavMeshBoundsVolume that covers it, if it has none. Press P to show the NavMesh.",
+   "Select the actor RecastNavMesh-Default. In the Display section of the Details panel, set Draw Offset to 50 and compare how the stairs look now.",
+   "Enable Draw Poly Edges, then Draw Tile Bounds, then Draw Polygon Costs. Take one screenshot of each.",
+   "Enable Draw Nav Links and Draw Failed Nav Links. Note in which situations each one is useful.",
+   "Start Play in Editor. Open the console and type show Navigation true to see the NavMesh during play. Then type show Navigation false to hide it.",
+   "Find one place where the NavMesh is missing but a player could walk. Write one line that says why it is missing, for example step height, a gap, or the collision of a prop."
+  ]
+ },
+ "LDQ61": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Copy BP_ThirdPersonCharacter into a folder named NavigationSystem and rename the copy to BP_NPC_Walker. Open it and delete all input nodes.",
+   "Add a Target Point actor to the level. You find it in the Place Actors panel under All Classes. Name it TP_Goal.",
+   "In BP_NPC_Walker, add a variable named Goal of the type Target Point (Object Reference) and turn on Instance Editable. On Event BeginPlay, use Get Actor Location on Goal, and then call AI Move To with Pawn set to self and Destination set to that location.",
+   "From the On Fail pin, add a Delay of 0.1 and call the move again. From the On Success pin, add a Print String node that prints Arrived.",
+   "Place BP_NPC_Walker in the level and set its Goal to TP_Goal in the Details panel. Add a NavMeshBoundsVolume and click Simulate.",
+   "Optional: replace the goal with the node Get Random Reachable Point In Radius (with a radius of 1000) and a loop with a Delay of 4, as shown in the guide."
+  ]
+ },
+ "LDQ62": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open the Plugins window (Edit > Plugins) and look in the Gameplay category. Enable Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Then restart the editor.",
+   "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_Bench. Open it and add two Slots.",
+   "Create an Actor Blueprint named BP_SO_Bench. Give it a Static Mesh in the shape of a bench, for example a cube that you scale to be long and low, and a Smart Object component. On the component, set Definition Asset to SO_Definition_Bench.",
+   "Open BP_SO_Bench and move the two slots so that each one sits on one seat of the bench and faces forward.",
+   "Build a small plaza blockout: a floor with a few cubes around it. Place three BP_SO_Bench actors in it. Add a NavMeshBoundsVolume around the plaza.",
+   "Optional: follow the Quick Start guide to make an AI agent claim a slot and use it."
+  ]
+ },
+ "LDQ63": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. The Environment Query System is part of UE5 and needs no setup. If you do not find Environment Query in the Add menu under Artificial Intelligence, open Edit > Plugins and enable Environment Query Editor. Then build a small arena in a new level: a floor with a NavMeshBoundsVolume and 5 to 8 cubes as cover blocks.",
+   "Create an Environment Query asset named EQS_Cover. In it, add a Points: Grid generator around the Querier. The Querier is the character that runs the query.",
+   "Add a Trace test on the grid, with the Querier as its context. Set Test Purpose to Filter so that only points that cannot be seen from the querier remain. Change Bool Match if the result is the wrong way around.",
+   "Add a Distance test and set its Test Purpose to Score, so that points nearer to the querier get a higher score.",
+   "Create a Blueprint named BP_EQSTestPawn from the EQSTestingPawn class. Place it in the arena and set its Query Template to EQS_Cover.",
+   "Move the pawn around the arena and watch the spheres change. Then move one cover block so that a bad cover spot becomes a good one."
+  ]
+ },
+ "LDQ64": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Work in a level that has a NavMeshBoundsVolume and a building or a large block to walk around. Create an Actor Blueprint named BP_PatrolPath and give it a Spline component. Place it in the level, and drag the spline points into a loop around the building.",
+   "In the Details panel of the spline, enable Closed Loop. Then select one spline point and set its Type to Linear to make a sharp corner.",
+   "Place four Target Point actors on the corners of the spline. Name them TP_Patrol_1 to TP_Patrol_4.",
+   "Make the patrol character: duplicate BP_ThirdPersonCharacter, name the copy BP_NPC_Patrol, and delete all its input nodes. Add an array variable named Patrol Points that holds Target Point references, and turn on Instance Editable. Place the character in the level and fill the array with the four Target Points.",
+   "On BeginPlay, build a loop: call AI Move To for the next point in the array, add a Delay of 2 on success, and then move to the next point. After the last point, go back to index 0.",
+   "Click Simulate. Adjust the spline and the Target Points until the patrol passes a window twice in each loop."
+  ]
+ }
+}

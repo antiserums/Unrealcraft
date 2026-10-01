@@ -1,0 +1,141 @@
+{
+ "PQ69": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Vehicle with a Static Mesh. Add a float variable named TopSpeed that is Instance Editable, a float variable named Secret that is Private, and a function named Honk that prints Honk. Also add a local macro named FlashLights that toggles a Point Light.",
+   "Create BP_PoliceCar and BP_FireTruck as children of BP_Vehicle. In BP_PoliceCar, override Honk so that it first calls the parent Honk and then prints Siren. In BP_FireTruck, try to override FlashLights and note what the editor offers you.",
+   "In BP_FireTruck, try to add a Get node for Secret. Write one line that says what happens and why.",
+   "Create BP_Taxi as a child of BP_Vehicle and change only TopSpeed and the mesh. Do not add any nodes. Open it and notice the compact Data-Only editor. Then add one variable and watch it become a full Blueprint.",
+   "Place one of each vehicle in the level. In the Level Blueprint, add an event for the H key that uses Get All Actors of Class with BP_Vehicle and calls Honk on all of them. Watch each child answer in its own way.",
+   "In BP_Vehicle, change the type of TopSpeed from float to integer and compile. Open the children. Write one line that says what the compiler did to the instances placed in the level."
+  ]
+ },
+ "PQ70": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_GasRoom with a Box Collision. For version 1, on Tick, check if the player is inside and apply 1 damage per second with the help of Delta Seconds. Place 20 copies, open stat game, and note the tick cost.",
+   "For version 2, turn off Start with Tick Enabled in Class Defaults. On begin overlap, call Set Timer by Event with Time 1.0 and Looping on, connect it to a custom event named DamageTick, and store the handle in a variable. On end overlap, call Clear and Invalidate Timer by Handle.",
+   "Add an event for the P key that calls Pause Timer by Handle, and an event for the O key that unpauses it. While the timer is paused, use another timer to print Get Timer Remaining Time by Handle each second, and confirm that the value does not change.",
+   "Add a delayed start: a 3-second Set Timer by Event that does not loop and that starts the damage loop. Set its Initial Start Delay Variance to 0.5. Spawn 20 rooms and watch them start at different moments.",
+   "Make BP_Spawner. It uses a looping timer to try to find a BP_GasRoom every 1 second, and it clears its own timer when it finds one. Destroy a room while its timer is running and check the log for errors.",
+   "Write three lines: the difference in stat game between the two versions, why a timer that is not cleared is not a leak when the actor dies, and one case where Tick is still the right tool."
+  ]
+ },
+ "PQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Right-click in the Content Browser and choose Blueprints, then Structure. Name it S_InventoryItem. Add the fields ItemName (Name), Count (Integer), Weight (Float) and Icon (Texture 2D soft reference).",
+   "Make an Actor Component named BP_InventoryComponent. Add a variable named Items with the type S_InventoryItem and set its container to Array.",
+   "Add a function named AddItem with the inputs Name and Count. Loop through the Items array. If an ItemName matches, use Set Members in Struct to raise only Count. If nothing matches, use Make S_InventoryItem and Add the new item to the array.",
+   "Add a function named RemoveItem with the input Name. Find the index of the item and lower its Count. Use Remove Index when Count reaches 0. Return a Boolean named Success.",
+   "Add a pure function named GetTotalWeight. It loops through Items, uses a Break node on each struct to read its fields, and adds up Count * Weight.",
+   "Add BP_InventoryComponent to the character Blueprint of the template, BP_ThirdPersonCharacter. On Begin Play, call AddItem three times and use one of the names twice. Print the Length of Items and the total weight.",
+   "Select each Break S_InventoryItem node and click Hide Unconnected Pins in the Details panel, so that the graph stays clean."
+  ]
+ },
+ "PQ72": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint Interface named BPI_Interactable with two functions: Interact with an Actor input named Instigator, and GetPrompt with a Text output.",
+   "Make an Actor Component named BP_InteractComponent. On Event Tick, run Line Trace By Channel from the camera location to the camera location + forward vector * 300. While you test, set Draw Debug Type to For One Frame so that you can see the line.",
+   "Use a Break node on the Hit Result. Store the Hit Actor in a variable named FocusedActor, but only if it implements BPI_Interactable (check this with Does Implement Interface). Clear the variable when the trace hits nothing.",
+   "Add the character that owns the component to the Actors to Ignore of the trace, so that the trace does not hit the player.",
+   "Make BP_Chest and BP_Lever, and make both implement BPI_Interactable. Interact opens the chest or flips the lever, and GetPrompt returns a text such as Open or Pull.",
+   "Add the component to the character Blueprint of the template. Add an interact key to the character, for example a keyboard event for the E key or an Input Action that you map to E, and call Interact (Message) on FocusedActor from it. On each tick where FocusedActor is valid, show the prompt on the screen with Print String.",
+   "Place both actors and a plain cube in the level. Press Play and confirm that the cube gives no prompt and that both actors respond."
+  ]
+ },
+ "PQ73": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make two Blueprint classes with DamageType as the parent, and name them DT_Fire and DT_Explosion.",
+   "Make an Actor Component named BP_HealthComponent with a Float variable named Health that has a default of 100. On Begin Play, bind an event to the OnTakeAnyDamage event of the owner and subtract Damage from Health. Print the class name of the Damage Type and the Damage Causer.",
+   "Also bind an event to OnTakePointDamage. Print the Hit Location and the Bone Name, so that you can see where the hit landed.",
+   "Make BP_Target, a cube that has the health component. Place three of them at 100, 300 and 600 units from a marker.",
+   "Make BP_Grenade. On overlap with the player, call Apply Radial Damage with Base Damage 50, Damage Radius 400, the damage type DT_Explosion and Self as Damage Causer, and then call Destroy Actor. Test it with Do Full Damage on and with it off.",
+   "In the character Blueprint of the template, add a fire event, for example for the left mouse button, and do a Line Trace forward from the camera. Call Apply Point Damage on the Hit Actor and give it the Hit Result, the Hit From Direction and DT_Fire.",
+   "Add a Branch in the health component: if the Damage Type is DT_Fire, multiply the damage by 2. When Health reaches 0, kill the owner with Destroy."
+  ]
+ },
+ "PQ74": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named SG_Profile with SaveGame as the parent. Add SaveVersion (Integer, default 1), PlayerName (String), and an array of Names named Items. If you have an item struct of your own, you can use an array of that struct.",
+   "Make a Blueprint Function Library named BFL_Save. Add a function named GetSlotName with an input named Slot Index that returns the text Profile_ plus the index.",
+   "Make a Blueprint named BP_SaveGameInstance with Game Instance as the parent, and set it as the Game Instance Class in Project Settings, under Maps & Modes. In it, add a function named SaveToSlot with an input named Index. Use Create Save Game Object with SG_Profile, fill it with data, and then call Async Save Game to Slot. On Completed, print Success and the slot name.",
+   "Add LoadFromSlot with an input named Index. First call Does Save Game Exist. If it is false, print No save in slot. If it is true, call Async Load Game from Slot. On Completed, cast the result to SG_Profile and copy the data back.",
+   "Add DeleteSlot with an input named Index. It calls Delete Game in Slot and prints the Boolean that the node returns.",
+   "In the character Blueprint of the template, bind the keys 1, 2 and 3 to save to slots 0, 1 and 2, and Shift+1, 2 and 3 to load them, through Get Game Instance and a cast. Bind the Delete key to delete slot 0. Press Play, save to two slots, delete one, and try to load both.",
+   "Open the Saved/SaveGames folder of the project in Windows Explorer and look at the .sav files."
+  ]
+ },
+ "PQ75": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Enum named E_GameFlow with the values Playing, Paused and GameOver. Make a Player Controller Blueprint named BP_FlowController and add a variable named GameFlow of that type to it. Open the GameMode of the template and set its Player Controller Class to BP_FlowController.",
+   "Make two Widget Blueprints: WBP_PauseMenu with a Resume button and a Quit button, and WBP_GameOver with a Restart button.",
+   "In BP_FlowController, add a function named SetFlow with an input named New State and use a Switch on E_GameFlow. For Playing: Set Game Paused false, Set Input Mode Game Only, and hide the cursor. For Paused: create WBP_PauseMenu, Add to Viewport, Set Game Paused true, Set Input Mode UI Only with the menu as In Widget to Focus, and show the cursor.",
+   "For GameOver: create WBP_GameOver, call Set Input Mode Game And UI, and show the cursor. Keep the game running so that the camera still moves.",
+   "Make an Input Action named IA_Pause, map it to a key in the Input Mapping Context of the template, and handle it in BP_FlowController. Use Is Game Paused to decide if you call SetFlow with Playing or with Paused. Open the IA_Pause asset and turn on Trigger When Paused, or you cannot unpause with the same key. If you use an old style key event node, the setting is Execute when Paused in the Details of the node.",
+   "Connect the Resume button to SetFlow with Playing and to Remove from Parent. Connect the Restart button to Open Level with the name of the current level.",
+   "Add a key press that calls SetFlow with GameOver, so that you can test that state. Press Play. Pause the game, move the mouse and click Resume. Then trigger GameOver and confirm that the camera still moves and that the button works."
+  ]
+ },
+ "PQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make three levels: L_Hub, L_Arena and L_ArenaStream, which is a small room. Put a floor and a Player Start in L_Hub and in L_Arena.",
+   "Make a Blueprint with Game Instance as the parent and set it as the Game Instance Class in Project Settings, under Maps & Modes, or use the one your project already has. Add a String variable named LastLevel and an Integer variable named Score to it.",
+   "Make BP_Portal with a Box Collision and an editable variable named Level of the type Soft Object Reference to World. On overlap with the player, store the result of Get Current Level Name (with Remove Prefix String on) in LastLevel, and then call Open Level (by Object Reference).",
+   "Make BP_ReturnPortal and place it in L_Arena. On overlap with the player, it reads LastLevel from the Game Instance and calls Open Level (by Name) with LastLevel as the Level Name and the text fromArena in the Options pin. Options are extra text that is passed to the level that opens. To see them arrive, open the GameMode Blueprint that L_Hub uses, and on Begin Play print its Options String variable.",
+   "In the Levels window, add L_ArenaStream as a sublevel of L_Arena. Make BP_Streamer. On overlap it calls Load Stream Level (by Name) with Make Visible After Load on, and on end overlap it calls Unload Stream Level.",
+   "Add 10 to Score before each transition. Print Score on Begin Play of each level, to prove that the Game Instance survives Open Level.",
+   "Press Play in L_Hub. Go to the arena, walk into the streamer, and come back through the return portal."
+  ]
+ },
+ "PQ77": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_PowerUpManager and place it in the level. In its Class Defaults, set Auto Receive Input to Player 0, so that it receives key presses. Add a custom event named OnShieldTick that prints Shield tick, and a custom event named OnShieldEnd.",
+   "Add a function named StartShield and call it on BeginPlay. In it, call Set Timer by Event with OnShieldTick, Time 1.0, Looping on and Initial Start Delay 0.5, and promote the returned handle to a variable named ShieldTickHandle. Call a second Set Timer by Event with OnShieldEnd, Time 10 and no looping, and store its handle as ShieldEndHandle.",
+   "In OnShieldEnd, call Clear and Invalidate Timer by Handle on ShieldTickHandle, so that the ticks stop when the shield ends.",
+   "Bind the P key to Pause Timer by Handle on both handles, and the U key to Unpause Timer by Handle. Print Is Timer Active by Handle after each key press.",
+   "On Event Tick, print Get Timer Remaining Time by Handle for ShieldEndHandle. This lets you watch the time count down and stop while the timer is paused.",
+   "Add an event for the R key that calls StartShield again while the shield is already running. Watch that the timer starts again from the beginning and that you do not get two timers.",
+   "Add an event for the K key that destroys the manager while the shield is running. Confirm that no more ticks are printed."
+  ]
+ },
+ "PQ78": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Find the default Input Mapping Context that already exists in the template. Make two new ones named IMC_Vehicle and IMC_Menu.",
+   "Make the Input Actions IA_Honk (Boolean), IA_Steer (Axis1D) and IA_MenuBack (Boolean). In IMC_Vehicle, map A and D to IA_Steer and add the Negate modifier on A, and map H to IA_Honk. In IMC_Menu, map Escape to IA_MenuBack.",
+   "Make a Pawn Blueprint named BP_Car. On Possessed, get the Enhanced Input Local Player Subsystem from the controller and call Add Mapping Context with IMC_Vehicle and Priority 1. On Unpossessed, call Remove Mapping Context.",
+   "Make BP_CarTrigger. On overlap, it makes the player possess BP_Car, which means the player takes control of it. Also let the player press a key to possess the character again.",
+   "Make a Player Controller Blueprint and set it in the GameMode of the template, or use the one your project already has. In it, add IMC_Menu with Priority 10 when a menu opens, and remove it when the menu closes. A simple Widget Blueprint with one line of text that you show with a key press is enough as the menu. Also map Escape in the default context, so that you can see which context wins.",
+   "Add the IA_Steer and IA_Honk events in BP_Car. Print the Action Value of IA_Steer while you press A and D. Try the Started, Triggered and Completed pins on IA_Honk.",
+   "Press Play. Enter the car, steer, honk, open the menu, press Escape, close the menu, and leave the car."
+  ]
+ },
+ "PQ79": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Add a header file named ItemTypes.h. It does not need a class. You can use the Class Wizard with the parent None, or create the file by hand.",
+   "Declare UENUM(BlueprintType) enum class EItemRarity : uint8 with the values Common, Rare and Epic. Give Epic the text UMETA(DisplayName=\"Legendary\"), which changes the name shown in the editor. Add one more value and mark it with UMETA(Hidden).",
+   "Declare USTRUCT(BlueprintType) struct FItemRow. Put GENERATED_BODY() on its first line. Then add these UPROPERTY fields: FName Id, int32 Stack and EItemRarity Rarity. Mark each of them with EditAnywhere, BlueprintReadWrite.",
+   "On a C++ actor named AItemChest, add a UPROPERTY of the type TArray<FItemRow> named Items. Compile, and make a Blueprint named BP_ItemChest from the actor.",
+   "In BP_ItemChest, fill in two rows of Items in the Details panel. In the Event Graph, use the Make ItemRow and Break ItemRow nodes and print the Rarity of one row. Blueprint shows the struct name without the F at the start.",
+   "Check the dropdown of the enum in the editor. The DisplayName should show, and the Hidden value should not show."
+  ]
+ },
+ "PQ80": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AContainerLab and place it in a level. In BeginPlay, build a TArray<FString> and add items with Emplace. Then Sort it with a predicate (a small function that compares two items) that sorts by the length of the string.",
+   "Use Find to get the index of an item, and FindByPredicate to get a pointer to an item. Log both results with UE_LOG. Also log what Find returns for a value that is not in the array.",
+   "Remove one element with RemoveAt and one with RemoveAllSwap. Log the array after each removal, so that you can see how the order changes.",
+   "Make a TMap<int32, FString>. Add three entries, and then call Add again with a key that already exists. Log Num() before and after.",
+   "On a key that does not exist, use Find (and check the pointer it returns), FindRef and FindOrAdd. Log each result and log Num() after them.",
+   "Make a TSet<FString>, Add the same value twice, and log Num(). Then mark the TMap with UPROPERTY(EditAnywhere), make a Blueprint child of the actor named BP_ContainerLab, and edit the map from its Details panel."
+  ]
+ },
+ "PQ81": {
+  "done_when": "Send a screenshot of the header with the three DECLARE_ macros, and a screenshot in Play mode where the Blueprint event and the C++ log both react to the same Broadcast.",
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AAlarmActor. In its header, declare a single delegate with DECLARE_DELEGATE_OneParam(FOnAlarmMessage, FString), and add a member variable of that type.",
+   "In BeginPlay, bind the delegate to a member function with BindUObject and call it with ExecuteIfBound. Then call Unbind and call ExecuteIfBound again. Log that nothing happened the second time.",
+   "Declare a multicast delegate with DECLARE_MULTICAST_DELEGATE_OneParam(FOnAlarmLevel, int32). Add two listeners, one with AddUObject and one with AddLambda, and then call Broadcast. Write a log line from both listeners.",
+   "Declare DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlarmTriggered, int32, Level) and add a member of that type marked with UPROPERTY(BlueprintAssignable), so that Blueprints can bind to it.",
+   "Make a Blueprint named BP_Alarm from the actor. In the Blueprint, bind an event to OnAlarmTriggered and print the Level. Trigger the Broadcast from a timer or from a key press.",
+   "Also bind the dynamic delegate from C++, in a second actor. Use AddDynamic to bind it to a function that is marked with UFUNCTION."
+  ]
+ }
+}

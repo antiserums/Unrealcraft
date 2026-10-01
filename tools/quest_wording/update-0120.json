@@ -1,0 +1,129 @@
+{
+ "GDQ23": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Read the Data Driven Gameplay Elements page that is linked on this quest. It also describes the Get Data Table Row node.",
+   "Make a Structure asset named S_EnemyStats. A Structure is a group of variables, and here it defines the columns of the table. Give it three float variables: Health, Speed and Damage.",
+   "Make a Data Table named DT_Enemies and choose S_EnemyStats as its row type. Add three rows named Grunt, Runner and Tank, and give them different values.",
+   "Make an Actor Blueprint named BP_Enemy with a cube mesh, three float variables named Health, Speed and Damage, and a Name variable called RowName that is Instance Editable. On Begin Play, use Get Data Table Row with DT_Enemies and RowName. From the Row Found output, break the row and set Health, Speed and Damage.",
+   "From the Row Not Found output, print a red warning that includes the row name.",
+   "Place 3 BP_Enemy actors in the level and give each one a different RowName value. Press Play and print the Health of each one.",
+   "Export DT_Enemies to a CSV file, which is a simple text file with values separated by commas. Change one value in a text editor and reimport the file. Confirm that the value changed in the editor."
+  ]
+ },
+ "GDQ24": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Read the Gameplay Tags page that is linked on this quest. Then open Project Settings, go to Project, then GameplayTags, and click Manage Gameplay Tags.",
+   "Add these tags: Character.Enemy.Grunt, Character.Enemy.Boss, Character.Player, Status.Stunned and Status.Invisible. Give each tag a short Comment.",
+   "Make an Actor Blueprint named BP_Enemy with a cube mesh and with Simulate Physics turned on, so that you can push it. If you already have an enemy Blueprint, you can use that. Add a Gameplay Tag Container variable named Tags and make it Instance Editable. A container can hold several tags. Place two enemies in the level and set the variable on each, so that one enemy is a Grunt and one is a Boss.",
+   "Make a new Actor Blueprint named BP_Zone with a Box Collision. On overlap, cast Other Actor to BP_Enemy, get its Tags, and use a Has Tag node with the tag Character.Enemy and with Exact Match turned off. Print Enemy or Not enemy. Place the zone so that both enemies are inside it or can be pushed into it.",
+   "Add a Gameplay Tag Query variable that matches Any of the tags Status.Stunned or Status.Invisible. Use a Does Container Match Tag Query node to check it before you apply an effect.",
+   "Test it: while the game runs, give one enemy the tag Status.Stunned with an Add Gameplay Tag node. Confirm that the result of the query changes."
+  ]
+ },
+ "GDQ25": {
+  "done_when": "Send a short video clip (30 seconds or less) that shows a win or a loss with the HUD updating, a screenshot of the other result, and a screenshot of DT_Tuning open. Add your 5-line loop note and your 1-line tuning note. A mentor reviews your work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick one verb, which is one action for the player, such as shoot, dash, throw or push. Write your loop in 5 lines: the goal, the threat, the reward, the fail state and the win state.",
+   "Build BP_Player from Character with a Health variable and the verb. Build BP_Enemy so that it uses Apply Damage on the player. Both Blueprints must use Event AnyDamage to lower their health.",
+   "Make a Data Table named DT_Tuning with rows for at least 5 numbers: player Health, enemy Health, enemy Damage, enemy Speed and the score needed to win. Read them with Get Data Table Row on Begin Play. Do not type any tuning numbers directly into the graphs.",
+   "Give the enemies Gameplay Tags that start with Character.Enemy. Use a Has Tag node for at least one decision.",
+   "Make a Game Mode named BP_CoreGameMode that keeps track of the score and the lives. When the score reaches the target, show WIN. When the player Health <= 0, show LOSE. Add an input that restarts the game.",
+   "Make a widget named WBP_HUD that shows Health, Score and the score needed to win. Add it to the viewport from the Player Controller.",
+   "Play 3 full runs and change one DT_Tuning row between the runs. Write 1 line that says how the feel changed. Then record a short video clip (30 seconds or less) that shows the end of one run with a win or a loss and the HUD, and take a screenshot of the other result and of the Data Table."
+  ]
+ },
+ "GDQ26": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Read the page Saving and Loading Your Game that is linked on this quest (use the Blueprint tab). It shows the nodes Create Save Game Object, Does Save Game Exist and Delete Game in Slot.",
+   "Make a Blueprint named BP_MySaveGame with the parent class SaveGame. Add the variables PlayerName (String), Score (Integer) and LastLocation (Vector). Also add SaveSlotName with the default value Slot1 and UserIndex with the default value 0.",
+   "Open BP_ThirdPersonCharacter, or your own Player Controller if you have one. Add an Integer variable named Score and a key that adds 1 to it, so that there is a value to save. Add an event for the key F5. Call Create Save Game Object with the class BP_MySaveGame, and set the three values from the game: a name, the Score, and the location of the character. Then call Async Save Game To Slot with the slot name and the user index.",
+   "Add an event for the key F9 that calls Does Save Game Exist. If the result is true, call Load Game From Slot and cast the result to BP_MySaveGame. Then move the player to LastLocation and set Score.",
+   "Add an event for the key F8 that calls Delete Game in Slot, and then print the return value.",
+   "Test it: move, save, move again, and load. Then find the .sav file in the Saved/SaveGames folder of your project."
+  ]
+ },
+ "GDQ27": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Read the Gameplay Framework overview that is linked on this quest, and look at the parts about Game Instance, Game Mode, Game State and Player State.",
+   "Make a Blueprint named BP_MyGameInstance from the Game Instance class. Add two Integer variables, TotalCoins and RunsPlayed. In Project Settings, under Maps and Modes, set it as the Game Instance class of the project.",
+   "Make two small levels named L_Room1 and L_Room2, each with a floor and a Player Start. Make a coin pickup, an Actor Blueprint named BP_Coin with a mesh and a Sphere Collision, and put one in each level. When the player overlaps the coin, call Get Game Instance, cast the result to BP_MyGameInstance, add 1 to TotalCoins, and destroy the coin.",
+   "Add a trigger in each room that adds 1 to RunsPlayed and runs Open Level to load the other room.",
+   "Make a Game Mode Blueprint as a child of the Game Mode of the template and set it as the GameMode Override of both levels. Add an Integer variable named Score to it, and add to it on each pickup with Get Game Mode and a cast. Print both values after each level change and compare them.",
+   "Write 3 lines that say which value survived the level change, which value did not, and where you would keep the team score in a multiplayer game."
+  ]
+ },
+ "GDQ28": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Copy BP_ThirdPersonCharacter into a folder named AI and name the copy Enemy_Character. Delete its input script. Create an AIController Blueprint named Enemy_Controller, and set it as the AI Controller Class of Enemy_Character.",
+   "Create a Blackboard named BB_Enemy with three keys: EnemyActor (type Object, with base class Actor), HasLineOfSight (type Bool) and PatrolLocation (type Vector).",
+   "Create a Behavior Tree named BT_Enemy. Add a Selector node named AI Root and give it two Sequence children named Chase Player and Patrol. Add a Wait task as the last fallback, which runs when the other branches fail.",
+   "Create two task Blueprints named BTT_ChasePlayer and BTT_FindRandomPatrol. In each one, start from Event Receive Execute AI, call a function on the character, and end with Finish Execute. Make the variables ChaseSpeed and PatrolRadius Instance Editable.",
+   "In Enemy_Controller, run BT_Enemy from Event On Possess. Add an AIPerception component with an AI Sight config, which lets the enemy see. On the On Target Perception Updated event, set HasLineOfSight and EnemyActor in the Blackboard.",
+   "Put a Blackboard decorator, which is a condition, on Chase Player. Set its key to HasLineOfSight and set Observer aborts to Both. Add a NavMeshBoundsVolume to the level so the enemy can find paths, place the enemy, and press Play.",
+   "While the game runs, open BT_Enemy and watch which branch is active. Change ChaseSpeed on the task node and test again."
+  ]
+ },
+ "GDQ29": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. This quest follows the EQS Quick Start page that is linked on it, so keep that page open for the details. If the Environment Query asset type is missing from the Artificial Intelligence menu of the Content Browser, enable the Environment Query Editor plugin. Create a Blackboard named BB_Enemy, a Behavior Tree named BT_Enemy, an Environment Query named EQS_FindPlayer, an AIController named AIC_Enemy that runs BT_Enemy when it possesses a pawn, and a Blueprint named EQC_PlayerContext with the parent class EnvQueryContext_BlueprintBase. For the enemy, duplicate BP_ThirdPersonCharacter, delete its input logic, set its AI Controller Class to AIC_Enemy, and place it in a level that has a Nav Mesh Bounds Volume.",
+   "In EQC_PlayerContext, override the function Provide Single Actor and return Get Player Character. This tells the query who the player is.",
+   "In EQS_FindPlayer, add a Points: Grid generator with GridHalfSize 800 and Space Between 150. Add a Trace test set to Filter Only, with Context EQC_PlayerContext and Bool Match turned off. Add a Distance test set to Score Only, with Scoring Factor -1.0.",
+   "Build BT_Enemy with a selector named In Combat that has two sequences, Attack and Move into Position, and add a sequence named Patrolling. In Move into Position, use a Run EQSQuery node that writes its result to the key MoveToLocation, followed by Move To and Rotate to face BB entry.",
+   "In AIC_Enemy, add an AIPerception component with a Sight config that has Detect Neutrals turned on. From the On Target Perception Updated event, update the Blackboard keys HasLineOfSight and TargetActor.",
+   "Press Play. Press the apostrophe key and then Numpad 3 to open the EQS debug view. It shows the grid points, their scores and the point marked Winner.",
+   "Change the Scoring Factor of the Distance test to 1.0 and watch how the chosen spot changes. Then set it back to -1.0."
+  ]
+ },
+ "GDQ30": {
+  "checklist": [
+   "Open a project made from the First Person template, or create one. Enable the GameplayStateTree plugin and the StateTree plugin. Then restart the editor.",
+   "Create a StateTree named ST_ShootingTarget and choose the StateTreeComponentSchema. Create an Actor Blueprint named BP_ShootingTarget with a Static Mesh and a StateTree component that is set to ST_ShootingTarget. Add an integer variable HitCount that goes up by one in On Component Hit, and add a custom event named DelayedDestroy.",
+   "In ST_ShootingTarget, set Context Actor Class to BP_ShootingTarget. Add two states named Idle and Dead. On Idle, add a transition with the trigger On Tick that goes to Dead, and give it an Integer Compare condition that checks if Actor > Hit Count is greater or equal to 5.",
+   "Create a task Blueprint named STT_Destroy with the parent StateTreeTaskBlueprintBase, and add an Actor variable in the category Context. Override ExitState and call DelayedDestroy there. In the Dead state, add the tasks Debug Text, Delay with 2.0, and STT_Destroy. Add a transition with the trigger On State Completed that goes to Tree Succeeded.",
+   "Create an Actor Blueprint named BP_SplineActor with a Spline, which is a curved path. Create an evaluator named STE_GetSpline that uses TreeStart and Find Nearest Actor, and has an output variable SplineActor in the category Output. Create a task named STT_MoveAlongSpline that uses Tick to call Set Actor Location along the spline, and calls Finish Task at the end.",
+   "Add a child state named MoveAlongSpline under Idle. Add the task STT_MoveAlongSpline to it, and bind its Spline Actor to the output of the evaluator. Place both actors in the level and close the spline loop. Then press Play and shoot the target."
+  ]
+ },
+ "GDQ31": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need an enemy with an AIController Blueprint. If you have none, create an AIController Blueprint named AIC_Enemy, duplicate BP_ThirdPersonCharacter as BP_Enemy, delete its input logic, set its AI Controller Class to AIC_Enemy, and place it in the level. Open the AIController Blueprint and add an AIPerception component to it.",
+   "On the component, add an AI Sight config with Sight Radius 1500, Lose Sight Radius 2000, Peripheral Vision Half Angle 60, and Detect Neutrals turned on. Then add an AI Hearing config with Hearing Range 1200 and Detect Neutrals turned on.",
+   "Add the On Target Perception Updated event. Break the AIStimulus pin to see its parts. Use Successfully Sensed together with Actor Has Tag and the tag Player to set Blackboard keys. As a simpler option, you can use Print String to show the sensed actor and the stimulus location.",
+   "On the player character, BP_ThirdPersonCharacter, add an AIPerception Stimuli Source component. Enable Auto Register as Source and register it for Sight and Hearing. Also add the actor Tag Player to the character.",
+   "In the player character, add a key press event that calls Report Noise Event with Loudness 1.0 at the location of the player.",
+   "Press Play. Press the apostrophe key and then Numpad 4 to see the sight cone and the hearing radius. Walk behind the enemy and press the noise key.",
+   "Change Peripheral Vision Half Angle to 30. Note how much harder it is for the enemy to see you."
+  ]
+ },
+ "GDQ32": {
+  "done_when": "Send the design document (as text or as an image), a screenshot of DT_MechanicTuning with its 3 rows, the playtest note, and the short video clip or the screenshots. A mentor will check that switching rows changes the feel and that the document matches what is built.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick one mechanic that uses at least one of these systems: a Behavior Tree enemy, EQS spot picking, a State Tree object, or AI Perception. One example is a guard that hears you, searches for you, and then gives up. Build the enemy from a copy of BP_ThirdPersonCharacter with its own AIController Blueprint.",
+   "Make a struct named S_MechanicTuning with 3 to 5 numbers that change the feel, for example sight radius, give-up time and chase speed. Create a Data Table named DT_MechanicTuning with exactly 3 rows: Easy, Normal and Hard.",
+   "Read the row at Begin Play with Get Data Table Row, and pass the values into the actor, the controller or the task. When you switch the row name, the behavior must change without opening a graph.",
+   "Build a small graybox test space, made of simple shapes, with one goal such as reaching a door or grabbing an item. Put the mechanic between the player and the goal.",
+   "Write a one-page design document. It must cover the goal, the core verb, the 3 variants and their values, what each variant should feel like, and how you tested it.",
+   "Playtest: ask one person to try each variant. If you work alone, play each variant 3 times and record your time and result. Write one note that says what surprised you and what you changed afterwards.",
+   "Record a short video clip (30 seconds or less), or take 3 screenshots, that show the 3 variants in play."
+  ]
+ },
+ "GDQ33": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Add a NavMeshBoundsVolume that covers the play area. Press P to see the NavMesh drawn in green. Select the actor RecastNavMesh-Default and enable Draw Poly Edges and Draw Tile Bounds.",
+   "Make a Blueprint named BP_NPC_NavMesh, a copy of the character with no input. Add a custom event named MoveNPC that uses Get Random Reachable Point In Radius with a radius of 1000 and then AI Move To. Make it repeat with a Delay of 4.",
+   "Place three Nav Modifier Volumes: one with the default Area Class (no NavMesh is built inside it), one with NavArea_Obstacle (a high cost area), and one with NavArea_Null. Use Simulate and watch how the NPC finds its way around each one.",
+   "Add a raised platform. Place a Nav Link Proxy that goes from the edge of the platform to the floor, and set its Direction to Left to Right. Confirm that the NPC drops down from the platform.",
+   "Open Project Settings, then Navigation Mesh, then Runtime Generation, and choose Dynamic Modifiers Only. Make a Blueprint named BP_RotatingActor with a Cube, a Rotating Movement component and a Nav Modifier component. Use Simulate and watch the NavMesh update in red tiles."
+  ]
+ },
+ "GDQ34": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Blueprint Class with the parent PrimaryDataAsset and name it PDA_Enemy. Add the variables DisplayName (Text), MaxHealth (Float) and MoveSpeed (Float), and a variable Mesh that is a Soft Object Reference to Skeletal Mesh. A soft reference points to an asset without loading it right away. Give each variable a tooltip.",
+   "Right-click in the Content Browser, choose Miscellaneous, then Data Asset, and pick PDA_Enemy. Make three assets in a folder named Data/Enemies: DA_Enemy_Grunt, DA_Enemy_Brute and DA_Enemy_Boss. Fill in different values for each.",
+   "Open Project Settings, then Game, then Asset Manager. Under Primary Asset Types to Scan, add a type named Enemy with the base class PDA_Enemy and the directory /Game/Data/Enemies.",
+   "Make a simple enemy to spawn: a Character Blueprint named BP_DataEnemy with a Float variable named Health. Then make a Blueprint named BP_EnemySpawner and place it in the level. On Begin Play, call Get Primary Asset Id List for the type Enemy, pick one Id, and load it with Async Load Primary Asset. From Completed, cast the object to PDA_Enemy and spawn a BP_DataEnemy that gets its Health from MaxHealth and its Max Walk Speed from MoveSpeed. Print its DisplayName.",
+   "Add a fourth Data Asset without changing any graph. Play again and confirm that the spawner can pick it.",
+   "Write 3 sentences that answer this: when would you use a Data Asset and not a Data Table row, and when would you do the reverse?"
+  ]
+ }
+}

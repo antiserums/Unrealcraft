@@ -1,0 +1,136 @@
+{
+ "PQ56": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a NavMeshBoundsVolume and one AI pawn. To make the pawn, duplicate BP_ThirdPersonCharacter, delete its input nodes, and on BeginPlay call AI Move To toward a Target Point that you place in the level. Any AI of your own that moves works too.",
+   "Press Play to start Play In Editor (PIE). Press the apostrophe (') key to open the Gameplay Debugger.",
+   "Point the camera at the AI pawn and press the apostrophe key again to select it.",
+   "Use the keys of the numeric keypad to turn the Navmesh category on and off. Also turn on the Basic category.",
+   "Open Edit > Project Settings, go to Gameplay Debugger, and look at the Input section. Do not change anything there.",
+   "Type ToggleDebugCamera in the console (or press ;) to get a free debug camera, and orbit around the pawn."
+  ]
+ },
+ "PQ57": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own. In it, make a function named CountDown that takes an integer. It prints the number and then calls itself again with the number minus one, until the number reaches 0.",
+   "Call CountDown with the value 3 from BeginPlay. Place the actor in the level.",
+   "Right-click the Print String node inside CountDown and choose Add Breakpoint.",
+   "Open the Blueprint Debugger: in the Blueprint Editor, open the Debug menu and choose Blueprint Debugger. In the Level Editor it is under Tools > Debug. Press Play. When the game pauses, look at the Call Stack. CountDown should appear in it more than once.",
+   "Use Resume and the step button to move through the calls one by one. Watch the Execution Trace list while you do this.",
+   "Right-click the breakpoint and choose Disable Breakpoint. Press Play again and confirm that the game does not pause."
+  ]
+ },
+ "PQ58": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own, and place it in the level. Add a Print String on Tick that prints the frame time. Turn Print to Screen on and Print to Log off.",
+   "Press Play and watch the screen fill with lines. Then stop.",
+   "Set the Key input of the Print String to FrameTime. Press Play again and see that only one line stays on the screen and updates.",
+   "Add a second Print String on BeginPlay, with Print to Log on and Print to Screen off. Open Window > Output Log and find the line.",
+   "Open the Saved/Logs folder of the project and open the newest .txt log file. Find the same BeginPlay message in it.",
+   "Write two sentences: one that says when you would use screen output, and one that says when you would use the log."
+  ]
+ },
+ "PQ59": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own. Add an integer array variable named Scores with 3 default values, and a float variable named Speed. On Tick, add Delta Seconds to Speed and set Speed to the result.",
+   "Place two copies of BP_Debug in the level. In the Blueprint Editor, use the Debug Object dropdown to pick one of the two copies, so the editor knows which one to show.",
+   "Right-click the output pin of the Add node and choose Watch this value.",
+   "Press Play. Look at the wires that pulse, which shows they are active. Hover the mouse over a pin that has not run yet and read its message.",
+   "Open the Blueprint Debugger from the Debug menu of the Blueprint Editor (in the Level Editor it is under Tools > Debug) and go to the Data Flow tab. Filter the list to BP_Debug and expand the Scores array to see its items.",
+   "Put a breakpoint on the Set Speed node so that the game pauses there. Compare the watched value with the value in the tooltip."
+  ]
+ },
+ "PQ60": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and select the Testing filter on the left. Enable at least one automation test plugin and restart the editor.",
+   "Open Tools > Session Frontend and go to the Automation tab. If the list is empty, select your machine in the Session Browser.",
+   "In the Test Name list, expand Project and enable the tests under it. Do not enable everything in the list.",
+   "Click Start Tests. Watch the Test Name column and the results panel while the tests run.",
+   "Use the Errors and Warnings filter buttons to see only the tests that failed.",
+   "Use the Export drop-down to save the results as a CSV file, or use Copy to copy the result lines."
+  ]
+ },
+ "PQ61": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a simple pickup to test: an Actor Blueprint named BP_Pickup with a mesh and a Sphere Collision. Then make a small level named L_Test_Pickup with a floor and one BP_Pickup actor.",
+   "Place a Functional Test actor in the level and name it FT_PickupExists.",
+   "Keep the test actor selected and open the Level Blueprint. Add the OnTestStart event of the test actor to the graph.",
+   "From OnTestStart, call Get All Actors Of Class with BP_Pickup. Add a Branch that checks if the array length is > 0. Call Finish Test with Succeeded on the true side and with Failed on the false side.",
+   "On the test actor, set an Observation Point actor. The player is moved to that actor when the test starts, so choose a place with a good view.",
+   "Open Tools > Session Frontend and go to Automation. Click Run Level Test (or find the test under Project) and run it."
+  ]
+ },
+ "PQ62": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in it for a few minutes so that a log exists. Open the Saved/Logs folder of the project and open the newest .txt log file. Find three lines that contain Warning or Error and write down what they say.",
+   "Open the Saved/Crashes folder. If it is empty, cause a crash on purpose. Save your work first. Then open the console with the backtick key and type debug crash. This closes the editor and writes a crash report. A mistake in a Blueprint, such as calling a function on an empty reference, only gives an Accessed None error in the Message Log and does not crash. In C++ you can also crash with check(false).",
+   "Open one crash folder and find the callstack text and the copy of the log inside it.",
+   "Open Editor Preferences, go to Privacy, then Bug Reports, and read the options. Do not change them unless you want to.",
+   "Open Project Settings, go to Project, then Packaging, then the Advanced part, and find Include Crash Reporter. Leave it as it is.",
+   "Write 5 lines that say what crashed, which function is at the top of the callstack, and where you found the report."
+  ]
+ },
+ "PQ63": {
+  "brief": "A Blueprint Interface is a list of function names that different Actors can each answer in their own way. Interface functions can also return values, so one system can ask many kinds of Actors the same question, such as \"Can I use you?\", without any Cast node. In this quest you build a Usable interface with functions that return data, implement it in a parent, a child and an unrelated Actor, and call it from the player.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Blueprint Interface named BPI_Usable with three functions: CanUse with a Boolean output, GetPrompt with a Text output, and Use with an input named Instigator of the type Actor Object Reference. An object reference input cannot have a default value, so the caller must always pass the Instigator.",
+   "Make an Actor Blueprint named BP_UsableBase that implements BPI_Usable. Implement CanUse so that it returns true, and GetPrompt so that it returns the text Use. Click Compile.",
+   "Make BP_Chest as a child of BP_UsableBase. Open the inherited GetPrompt function, right-click its entry node and choose Add Call to Parent Function. Append the word Chest to the text that the parent returns. Then override CanUse so that it returns false after the first Use.",
+   "Make an Actor Blueprint named BP_Vendor that has no parent Blueprint and also implements BPI_Usable. Make it return a different prompt and print a line in Use.",
+   "In the player character, BP_ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Does Object Implement Interface with BPI_Usable on the Other Actor and store the actor in a variable. If the result is true, call CanUse and GetPrompt with the Interface call type and show the prompt with Print String. On the E key, call Use (Message) on the stored actor with the player as Instigator.",
+   "Place BP_Chest, BP_Vendor and a plain cube in the level and press Play. The cube should give no prompt, the chest prompt should show the parent text plus Chest, and after one Use the chest should report CanUse = false.",
+   "Open Class Settings on BP_Chest and take a screenshot of the Inherited Interfaces list."
+  ]
+ },
+ "PQ64": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_EventBus with two Event Dispatchers. OnScoreChanged has the inputs NewScore (Integer) and Delta (Integer). OnItemPicked has the inputs ItemName (Name) and Picker (Actor Object Reference). Set a Category and a Tooltip on both.",
+   "Add a custom event named ReportScore with the same two inputs as OnScoreChanged. Select OnScoreChanged and use Copy Signature from to copy the inputs from ReportScore. Compare the result with the inputs you made by hand.",
+   "Make an Actor Blueprint named BP_Coin. On overlap, find the placed BP_EventBus with Get Actor of Class. Call OnItemPicked with the name of the coin and the overlapping actor, and then destroy the coin.",
+   "Make BP_ScoreBoard, an Actor with a Text Render component. On BeginPlay, bind a custom event to OnItemPicked that adds 10 to a Score variable and then calls OnScoreChanged on the bus with the new score and the delta. Bind a second custom event to OnScoreChanged that writes the score to the text.",
+   "Select the placed BP_EventBus in the level, open the Level Blueprint and drag the bus into the graph. Use Bind Event to OnScoreChanged with an event that prints the Delta.",
+   "In BP_ScoreBoard, on Event End Play, use Unbind Event for both dispatchers. Write one line that says what would break if a bound object was destroyed without unbinding.",
+   "Place the bus, the scoreboard and 5 coins in the level. Press Play and collect all the coins."
+  ]
+ },
+ "PQ65": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Blueprint Class with Scene Component as the parent and name it BPC_Orbit. Add the float variables Radius (150), Speed (90) and Angle.",
+   "In BPC_Orbit, on Event Tick, add Speed times Delta Seconds to Angle. Then call Set Relative Location with (cos(Angle) * Radius, sin(Angle) * Radius, 0). This makes the component move itself in a circle around its parent.",
+   "Make an Actor Blueprint named BP_Planet with a Static Mesh sphere as the root. Add BPC_Orbit as a child of the root, and add a second, smaller sphere Static Mesh as a child of BPC_Orbit. Press Play and check that the small sphere orbits.",
+   "Add a second BPC_Orbit under the first small sphere, with a third mesh under it. Notice that the tree now goes root, Orbit, mesh, Orbit, mesh, and that each orbit uses the transform of its parent.",
+   "In BP_Planet, add an event for the T key that calls Set Component Tick Enabled (false) on the first BPC_Orbit, and an event for the Y key that sets it to true. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. Press Play and confirm that the outer orbit stops and starts again.",
+   "Add an event for the A key that spawns a new BP_Planet. Use Attach Component to Component (or Attach Actor to Component) to attach it under the outer mesh while the game runs. Confirm that it follows.",
+   "Write three lines: why BPC_Orbit must be a Scene Component and not an Actor Component, why the mesh needs BPC_Orbit as its parent, and one thing that would need a Primitive Component instead."
+  ]
+ },
+ "PQ66": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Blueprint Function Library named BFL_Gameplay. Add a Pure function named MapRange01 with the float inputs Value, InMin and InMax and a float output named Alpha. Build it with one Math Expression node that has this formula: clamp((value-inMin)/(inMax-inMin),0,1).",
+   "Add a Pure function named RingPosition with the inputs Center (Vector), Radius (float) and AngleDeg (float), and a Vector output named Pos. Use a Math Expression with vector(...) and sin/cos. Double-click the node and take a screenshot of the sub-graph that Unreal generated.",
+   "Add an impure function (not Pure) named ApplyKnockback with the inputs Target (Actor) and Force (Vector). Give it the Category Gameplay and a Description. It calls Add Impulse on the root of the target if the root simulates physics.",
+   "Add a function named TallyHits with an Integer input that is passed by reference. To do this, expand the input and tick Pass-by-Reference. The function adds 1 to the input. Call it three times from one actor and print the variable.",
+   "Make an Actor Blueprint named BP_Turret with a function named Aim that is Protected and a function named Fire that is Private. Make BP_TurretChild as a child of it and try to call both functions from its graph. Note which call compiles.",
+   "In BP_TurretChild, call RingPosition on Tick for 8 angles and use Draw Debug Sphere at each result. Press Play and check that the spheres form a ring."
+  ]
+ },
+ "PQ67": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a large Starter Content mesh to HeavyMesh on that copy.",
+   "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two.",
+   "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded.",
+   "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor.",
+   "Add an event for the B key that uses Load Asset Blocking instead. Open stat unit, and press B right after you start a fresh Play In Editor session. Then start again and press L. Write one line that says which one made the game hitch.",
+   "Add a second soft mesh variable and load both meshes one after the other. Write two lines: why the loaded mesh stays in memory after Set Static Mesh, and what would happen to a loaded object that nothing holds a hard reference to."
+  ]
+ },
+ "PQ68": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create two Blueprint Function Libraries: BFL_Combat with the functions ComputeDamage and RollCrit, and BFL_Debug with the functions DrawHitMarker and LogHit. Compile and save both.",
+   "Open BFL_Combat and click Class Settings. In Blueprint Options, set Blueprint Namespace to Project.Combat. Do the same for BFL_Debug with Project.Debug. Then try a namespace that contains # and read the validation message.",
+   "In the Content Browser, search for BlueprintNamespace=Combat and take a screenshot of the result. Hover the mouse over a library asset and read the namespace in its tooltip.",
+   "Make an Actor Blueprint named BP_Enemy. In its Class Settings, set Blueprint Namespace to Project.Combat. Compile, save and restart the editor. Open BP_Enemy again and look at the Imports section in Class Settings to see which namespaces are imported.",
+   "In the Event Graph of BP_Enemy, right-click, search for DrawHitMarker and select it. Check Imports again and note that Project.Debug was imported automatically.",
+   "Open Edit > Project Settings and go to Editor, then Blueprint Project Settings, then Experimental. Add Project.Combat to Namespaces to Always Include. Write two lines: who this setting affects, and why you would (or would not) commit it to source control."
+  ]
+ }
+}

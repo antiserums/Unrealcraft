@@ -1,0 +1,281 @@
+{
+ "AQ11": {
+  "done_when": "Send a screenshot taken in Play mode with Manny as the player character, and a screenshot of the Anims folder. Add one line that names the two Control Rig assets you found in the Rigs folder.",
+  "checklist": [
+   "Create a new project from the Third Person template (choose Games, then Third Person). Press Play once and move around with the WASD keys and Space.",
+   "Open the folder Content/Characters. Find the UE5 mannequins Quinn and Manny, and note which one the template uses by default.",
+   "Open the folder Content/Characters/Mannequins/Anims. Count how many animation sets there are, and open one animation from each set.",
+   "Open the Blueprint Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter. Select the Mesh component, and change its Skeletal Mesh property to SKM_Manny_Simple.",
+   "In the Animation section, check that Animation Mode is set to Use Animation Blueprint and that Anim Class is set to ABP_Unarmed. Quinn and Manny share one skeleton, so the same Animation Blueprint works for both. Click Compile, save the Blueprint, and press Play.",
+   "Open the folder Content/Characters/Mannequins/Rigs and find the Control Rig assets CR_Mannequin_Body and CR_Mannequin_FootIK. In older versions the second one is named CR_Mannequin_BasicFootIK. Read on the documentation page what each one is used for."
+  ],
+  "quiz": [
+   {
+    "q": "Which mannequin does the UE5 Third Person template use by default?",
+    "choices": [
+     "Manny",
+     "The legacy UE4 mannequin",
+     "Quinn",
+     "A MetaHuman"
+    ],
+    "explain": "The template starts with the feminine UE5 mannequin, Quinn. Manny is the male mannequin and is also included."
+   },
+   {
+    "q": "Where are the mannequin animations stored in the template?",
+    "choices": [
+     "Content/Characters/Mannequins/Anims",
+     "Content/LevelPrototyping",
+     "Content/ThirdPerson/Blueprints",
+     "Engine/Content/Animations"
+    ],
+    "explain": "Animations for the mannequins are in Content/Characters/Mannequins/Anims, sorted into sets such as Unarmed, Pistol and Rifle. Quinn and Manny share one skeleton, so both use the same animations."
+   },
+   {
+    "q": "To swap the player mesh to Manny, which Blueprint do you edit?",
+    "choices": [
+     "ABP_Unarmed",
+     "BP_ThirdPersonCharacter in Content/ThirdPerson/Blueprints",
+     "CR_Mannequin_Body",
+     "The Level Blueprint"
+    ],
+    "explain": "You open BP_ThirdPersonCharacter, select the Mesh component, and change its Skeletal Mesh. The Animation Blueprint stays the same, because both mannequins share one skeleton."
+   },
+   {
+    "q": "What is the foot IK Control Rig of the mannequin (CR_Mannequin_FootIK) used for?",
+    "choices": [
+     "Changing the mannequin's LODs",
+     "Adjusting the feet to the terrain with IK",
+     "Playing the run animation",
+     "Spawning physics cubes"
+    ],
+    "explain": "The Animation Blueprint of the template runs this Control Rig to move the feet so that they match the ground. Older versions name it CR_Mannequin_BasicFootIK."
+   },
+   {
+    "q": "What is CR_Mannequin_Body for?",
+    "choices": [
+     "Posing and animating the mannequin directly in the editor",
+     "Importing FBX files",
+     "Controlling the camera distance",
+     "Setting the mannequin's Materials"
+    ],
+    "explain": "CR_Mannequin_Body is a Control Rig asset you can use to pose and animate the mannequin in the editor."
+   }
+  ]
+ },
+ "EAQ65": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_DetailWall. You need a base color texture and a base normal map for the wall, and a second color texture and normal map for the fine detail. Free surfaces from Fab work well. For a first test, use T_Quinn_01_D and T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template as the base, and T_GridChecker_A from LevelPrototyping/Textures and the engine texture T_Default_Material_Grid_N as the detail. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Drag all four textures into the graph.",
+   "Add the DetailTexturing material function, which is in the Misc category. Then right-click the two detail textures and choose Convert To Texture Object for each.",
+   "Connect the base textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal.",
+   "Add three Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, and set each one to 1. Connect them to the function.",
+   "Make a Material Instance named MI_DetailWall and apply it to a cube that you scale into a wall. Try Scale at 1, 5 and 10, and look at the wall from very close each time.",
+   "Add a TextureCoordinate node in front of the base textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
+  ]
+ },
+ "GDQ30": {
+  "checklist": [
+   "Open a project made from the First Person template with the Arena Shooter variant, or create one. The variant gives you weapons to shoot with, which the plain First Person template does not have. Enable the GameplayStateTree plugin and the StateTree plugin. Then restart the editor.",
+   "Create a StateTree named ST_ShootingTarget and choose the StateTreeComponentSchema. Create an Actor Blueprint named BP_ShootingTarget with a Static Mesh and a StateTree component that is set to ST_ShootingTarget. Add an integer variable HitCount that goes up by one in On Component Hit, and add a custom event named DelayedDestroy.",
+   "In ST_ShootingTarget, set Context Actor Class to BP_ShootingTarget. Add two states named Idle and Dead. On Idle, add a transition with the trigger On Tick that goes to Dead, and give it an Integer Compare condition that checks if Actor > Hit Count is greater or equal to 5.",
+   "Create a task Blueprint named STT_Destroy with the parent StateTreeTaskBlueprintBase, and add an Actor variable in the category Context. Override ExitState and call DelayedDestroy there. In the Dead state, add the tasks Debug Text, Delay with 2.0, and STT_Destroy. Add a transition with the trigger On State Completed that goes to Tree Succeeded.",
+   "Create an Actor Blueprint named BP_SplineActor with a Spline, which is a curved path. Create an evaluator named STE_GetSpline that uses TreeStart and Find Nearest Actor, and has an output variable SplineActor in the category Output. Create a task named STT_MoveAlongSpline that uses Tick to call Set Actor Location along the spline, and calls Finish Task at the end.",
+   "Add a child state named MoveAlongSpline under Idle. Add the task STT_MoveAlongSpline to it, and bind its Spline Actor to the output of the evaluator. Place both actors in the level and close the spline loop. Then press Play, pick up a weapon in the level, and shoot the target."
+  ]
+ },
+ "GDQ37": {
+  "checklist": [
+   "Open a project made from the First Person template with the Arena Shooter variant, or create one. The variant gives you weapons and projectiles, which the plain First Person template does not have. Place two box Static Meshes as walls. Select the first wall and switch to Fracture Mode with Shift-6. Click New under Generate, name the asset GC_Wall_Weak, and fracture it with Uniform. Do the same for the second wall, name it GC_Wall_Strong, and fracture it in two levels.",
+   "In the Details of each Geometry Collection, set a Damage Threshold: 200000 for GC_Wall_Weak and 500000 for GC_Wall_Strong. Then enable Show Engine Content in the Content Browser settings and find the folder Engine > Content > EditorResources > FieldNodes.",
+   "Open the projectile Blueprint of the variant, BP_ShooterProjectileBase, in Content/Variant_Shooter/Blueprints/Pickups/Projectiles. Find the place in its graph where the projectile reacts to a hit, or add Event Hit if there is none. There, use Spawn Actor to create FS_MasterField at the Hit Location. Use Set Activation Type with the value Trigger, call CE Trigger, and then add a Delay and a Destroy Actor node. Set the Strain Magnitude of the field to 400000. Epic's guide does this in BP_FirstPersonProjectile, the projectile of an older First Person template.",
+   "Drag an FS_AnchorField_Generic over the base of each wall. Add it to the Initialization Fields array of the wall, so that the bottom row of pieces stays in place. Place an FS_SleepDisable_Generic on the floor and give it a high Threshold.",
+   "Now make it a mechanic. On the Geometry Collection component of the wall, enable Notify Breaks and bind On Chaos Break Event. Each time it runs, add 1 to an Integer named BrokenPieces on a Game State Blueprint that you make for this level, set up so that it can be replicated later. Show the number in a small widget, and unlock a door, for example a cube that you destroy, when BrokenPieces reaches 15.",
+   "Press Play, pick up a weapon in the level, and shoot the walls. One shot should crack the weak wall and leave the strong wall whole. Then add a second field setting on the projectile, with Use Decay on and Decay Amount 100000. Test how many shots the strong wall takes."
+  ]
+ },
+ "GDQ43": {
+  "checklist": [
+   "Read the Survival Horror section of the First Person Template page that is linked on this quest.",
+   "Create a First Person project with the Survival Horror variant. Open the player character Blueprint in Content/Variant_Horror/Blueprints (BP_HorrorCharacter in the current version, BP_FP_Horror in some older ones) and read how its sprint and its stamina bar work. Play it once.",
+   "Now build your own. Open a project made from the Third Person template, or from the First Person template without a variant, or create one. Add a sprint to the character: create an Input Action named IA_Sprint with a Down trigger and map it to a key, save the walk speed in a variable named DefaultMovementSpeed on BeginPlay, and call Set Max Walk Speed with a higher value from the Triggered pin and with the saved value from the Completed pin.",
+   "Add these float variables: Stamina with the value 100, MaxStamina 100, DrainPerSecond 25, RegenPerSecond 15 and RegenDelay 1.0. Make them Instance Editable.",
+   "Use a Set Timer by Event node with Looping on and Time set to 0.1 to lower Stamina while the player sprints. When Stamina reaches 0, stop the sprint and set Max Walk Speed back to the default value.",
+   "After the player releases the sprint key, wait for RegenDelay and then refill Stamina with a second looping timer. Show Stamina with Print String or with a simple progress bar.",
+   "Tune the four numbers so that a full sprint lasts about 4 seconds and a full refill takes about 7 seconds. If your sprint key is Shift, test in Standalone."
+  ],
+  "quiz": [
+   {
+    "q": "In the Survival Horror variant, what happens when the stamina bar is fully depleted?",
+    "choices": [
+     "The character dies",
+     "The flashlight turns off",
+     "The character stops sprinting",
+     "The level restarts"
+    ],
+    "explain": "The First Person Template page says the stamina bar depletes while sprinting and when fully depleted the character stops sprinting."
+   },
+   {
+    "q": "Where is the Survival Horror sprint logic stored?",
+    "choices": [
+     "In the horror player character Blueprint in Content/Variant_Horror/Blueprints",
+     "In the Game Mode",
+     "In the Level Blueprint",
+     "In the Player Controller only"
+    ],
+    "explain": "The sprint logic is in the player character Blueprint of the variant, in Content/Variant_Horror/Blueprints, together with the input assets in its Input folder. The current version names the Blueprint BP_HorrorCharacter."
+   },
+   {
+    "q": "In the sprint tutorial, why is the trigger set to Down and not Hold?",
+    "choices": [
+     "Hold is not supported for keyboards",
+     "Down triggers immediately on press; Hold triggers only after some time has passed",
+     "Down works with gamepads only",
+     "Hold cannot be mapped in an Input Mapping Context"
+    ],
+    "explain": "The tutorial says Down triggers immediately when pressing a key, while Hold triggers after a certain time has passed while the key is held."
+   },
+   {
+    "q": "Which Input Action trigger does the tutorial suggest for a charged heavy attack?",
+    "choices": [
+     "Down",
+     "Tap",
+     "Combo",
+     "Hold"
+    ],
+    "explain": "The tutorial says Hold can be useful for actions like heavy-attack abilities where you charge before releasing."
+   },
+   {
+    "q": "Which pin of the IA_Sprint event should return the character to its default speed?",
+    "choices": [
+     "Started",
+     "Triggered",
+     "Completed",
+     "Ongoing"
+    ],
+    "explain": "The tutorial uses Triggered to set the sprint speed and Completed (key released) to set the default speed back."
+   },
+   {
+    "q": "What is the default Max Walk Speed of the Character Movement component shown in the tutorial?",
+    "choices": [
+     "300 cm/s",
+     "600 cm/s",
+     "450 cm/s",
+     "1000 cm/s"
+    ],
+    "explain": "The tutorial says the default Max Walk Speed is 600 cm/s. The sprint speed in the tutorial is set to 1000."
+   },
+   {
+    "q": "Your sprint is mapped to Shift and does nothing in Play In Editor. What does the tutorial recommend?",
+    "choices": [
+     "Test in Standalone mode or use a different key during development",
+     "Reinstall the engine",
+     "Use a Hold trigger instead",
+     "Map the key in the Level Blueprint"
+    ],
+    "explain": "The tutorial warns that Shift, Ctrl and Alt are used by the editor and may not work in PIE. Test in Standalone or use another key."
+   },
+   {
+    "q": "You want one timer to tick your stamina drain every 0.1 seconds. Which Set Timer by Event input makes it repeat?",
+    "choices": [
+     "Initial Start Delay",
+     "Max Once Per Frame",
+     "Time = 0",
+     "Looping = true"
+    ],
+    "explain": "The Set Timer by Event page says Looping true keeps executing the event every Time seconds; false runs it once."
+   }
+  ]
+ },
+ "GDQ47": {
+  "checklist": [
+   "Read the Projectile Movement section of the Movement Components page that is linked on this quest.",
+   "Create a First Person project with the Arena Shooter variant. Open the projectile Blueprints in Content/Variant_Shooter/Blueprints/Pickups/Projectiles (BP_ShooterProjectileBase and its children in the current version) and read how a projectile spawns, how it hits, and how it applies an impulse.",
+   "Now build your own. Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Ball from Actor. Give it a Sphere Collision as the root, a Static Mesh, and a Projectile Movement component. Set Initial Speed to 2000, Max Speed to 2000 and Projectile Gravity Scale to 0.5.",
+   "Create an Input Action named IA_Fire and map it to the left mouse button in the Input Mapping Context of the template. In the player character, from the Started pin of IA_Fire, add a Spawn Actor from Class node with the class BP_Ball. Spawn it at the camera location plus 100 units forward, and use the camera rotation.",
+   "In BP_Ball, add Event Hit. If the Other Comp is simulating physics, call Add Impulse on it with the velocity of the ball multiplied by 20. Then call Destroy Actor. On BeginPlay, call Set Life Span with 3.0 so the ball removes itself after 3 seconds.",
+   "Make three Child Blueprints of BP_Ball. BP_Ball_Bouncy has Should Bounce on, Bounciness 0.8, and is not destroyed on hit. BP_Ball_Heavy has Gravity Scale 2 and Initial Speed 1200. BP_Ball_Homing has Is Homing Projectile on and a Homing Acceleration Magnitude of about 5000. Its target cannot be picked in the Details panel, so set it on BeginPlay: find an actor you choose, for example with Get Actor Of Class, and use Set Homing Target Component on the Projectile Movement component with the root component of that actor.",
+   "Place some physics cubes and a target dummy in the level. Write one line for each ball that says what kind of weapon it would suit."
+  ],
+  "quiz": [
+   {
+    "q": "What does a Projectile Movement Component do?",
+    "choices": [
+     "Renders a tracer line",
+     "Updates the position of another component during its tick",
+     "Spawns actors every frame",
+     "Replaces the player camera"
+    ],
+    "explain": "The Movement Components page says it updates the position of another component during its tick. Bouncing and homing are supported."
+   },
+   {
+    "q": "Which behaviours does the docs list as supported by Projectile Movement?",
+    "choices": [
+     "Swimming and flying",
+     "Crouching and sprinting",
+     "Bouncing after impacts and homing toward a target",
+     "Splines and timelines"
+    ],
+    "explain": "The page says behaviour such as bouncing after impacts and homing toward a target are supported."
+   },
+   {
+    "q": "By default, which component does Projectile Movement move?",
+    "choices": [
+     "The root component of the owning actor",
+     "The first Static Mesh found",
+     "The camera",
+     "All components at once"
+    ],
+    "explain": "The page says normally the root component of the owning actor is moved, though another component may be selected with SetUpdatedComponent."
+   },
+   {
+    "q": "Your projectile root is a sphere with Simulate Physics on. What does the docs say happens?",
+    "choices": [
+     "Homing still works fully",
+     "The projectile never moves",
+     "Gravity is ignored",
+     "Only the initial launch parameters affect it, then the physics simulation takes over"
+    ],
+    "explain": "The page says if the updated component is simulating physics, only the initial launch parameters (with non-zero initial velocity) affect the projectile; physics takes over from there."
+   },
+   {
+    "q": "In the Arena Shooter variant, what do projectiles do when they hit a physics-enabled actor?",
+    "choices": [
+     "They apply a physics impulse to it",
+     "They heal it",
+     "They attach to it",
+     "They teleport it"
+    ],
+    "explain": "The First Person Template page says projectiles are spawned on left-click and apply a physics impulse to any physics-enabled actor they collide with."
+   },
+   {
+    "q": "Where are the projectile Blueprints located in the Arena Shooter variant?",
+    "choices": [
+     "Content/FirstPerson/Blueprints",
+     "Content/Variant_Horror/Blueprints",
+     "Content/Characters/Mannequins",
+     "Content/Variant_Shooter/Blueprints/Pickups/Projectiles"
+    ],
+    "explain": "The projectile Blueprints of the variant are in the folder Content/Variant_Shooter/Blueprints/Pickups/Projectiles."
+   },
+   {
+    "q": "You call Set Life Span with In Lifespan = 0. What happens?",
+    "choices": [
+     "The actor is destroyed immediately",
+     "The timer is cleared and the actor will not be destroyed",
+     "The actor is hidden",
+     "The actor lives for one second"
+    ],
+    "explain": "The Set Life Span page says a requested lifespan of 0 clears the timer and the actor will not be destroyed."
+   },
+   {
+    "q": "In the FPS tutorial's projectile collision profile, how does the projectile respond to Pawns?",
+    "choices": [
+     "It blocks Pawns",
+     "It ignores Pawns",
+     "It overlaps Pawns",
+     "It destroys Pawns"
+    ],
+    "explain": "The Implementing Projectiles page says the profile blocks static, dynamic, physics, vehicle and destructible actors, and overlaps Pawns."
+   }
+  ]
+ }
+}

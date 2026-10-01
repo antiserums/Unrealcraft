@@ -1,0 +1,133 @@
+{
+ "PQ82": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AGasRoom. Give it a member FTimerHandle DamageTimerHandle and a function ApplyGasTick() that is marked with UFUNCTION.",
+   "In BeginPlay, call GetWorldTimerManager().SetTimer(DamageTimerHandle, this, &AGasRoom::ApplyGasTick, 1.0f, true, 2.0f). This starts the timer after 2 s and repeats it every second.",
+   "In ApplyGasTick, count down an int named TicksRemaining. When it reaches 0, call ClearTimer with the same handle and log that the room is safe.",
+   "Add two functions marked UFUNCTION(BlueprintCallable), named PauseGas() and ResumeGas(), that call PauseTimer and UnPauseTimer. Make a Blueprint child of the actor named BP_GasRoom, set Auto Receive Input to Player 0 in its Class Defaults, place it in the level, and call the two functions from key press events.",
+   "On each tick, log GetTimerElapsed and GetTimerRemaining for the handle. Check that the two values add up to the rate of the timer.",
+   "In BeginPlay, use SetTimerForNextTick with a lambda (a small function written in place) to log one line on the next frame."
+  ]
+ },
+ "PQ83": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Use the C++ Class Wizard with the class type Unreal Interface to create ReactToTrigger. You get two classes: UReactToTrigger (the UINTERFACE) and IReactToTrigger.",
+   "Mark the UINTERFACE with Blueprintable. In the I-class, add UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool ReactToTrigger();.",
+   "Make a C++ actor named ATrapActor that inherits from AActor and IReactToTrigger. Implement ReactToTrigger_Implementation so that it writes a log line and returns true.",
+   "Make a Blueprint actor named BP_PointsPickup. Add the ReactToTrigger interface in its Class Settings and implement the event in the Blueprint.",
+   "Make ATriggerZone with a box that detects overlaps. On overlap, check Implements<UReactToTrigger>() on the other actor and call IReactToTrigger::Execute_ReactToTrigger(OtherActor).",
+   "Also try Cast<IReactToTrigger>(OtherActor) on both actors, and log which one returns null."
+  ]
+ },
+ "PQ84": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Create a C++ class named UStatsSubsystem that inherits from UGameInstanceSubsystem.",
+   "Override Initialize(FSubsystemCollectionBase&) and Deinitialize(). Write a log line in both, so that you can see when they run.",
+   "Add UFUNCTION(BlueprintCallable) void IncrementResourceStat(FName Resource) and UFUNCTION(BlueprintPure) int32 GetResourceStat(FName Resource) const. Store the values in a TMap<FName, int32>.",
+   "In a C++ actor, get the subsystem with the line GetGameInstance()->GetSubsystem<UStatsSubsystem>(). Then increment a stat on BeginPlay.",
+   "In a Blueprint, right-click in the graph and search for 'Stats Subsystem'. Use the node that Unreal generated for you (no cast is needed) to read the stat and print it.",
+   "Stop Play In Editor and start it again. Confirm in the log that Deinitialize ran and that Initialize then ran again."
+  ]
+ },
+ "PQ85": {
+  "checklist": [
+   "Use a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. In the Source folder of the project, create a folder named GameCore with two subfolders named Private and Public.",
+   "Add the file GameCore.Build.cs with a class that derives from ModuleRules. Put Core, CoreUObject and Engine in PrivateDependencyModuleNames.",
+   "Add the file Private/GameCoreModule.cpp. It contains #include \"Modules/ModuleManager.h\" and the line IMPLEMENT_MODULE(FDefaultModuleImpl, GameCore);.",
+   "Register the module in the Modules list of the .uproject file with the Type Runtime. Then add \"GameCore\" to PublicDependencyModuleNames in the Build.cs file of the primary module.",
+   "Generate the project files again: right-click the .uproject file and choose Generate Visual Studio project files. Then compile.",
+   "In the editor, add a new C++ Actor class. Pick GameCore (Runtime) in the module dropdown, set Class Type to Public, and name the class ModuleActorBase. Make BP_ModuleActor from it and place it in the level."
+  ]
+ },
+ "PQ86": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Open Editor Preferences and go to General, then Live Coding. Take a screenshot of the General section and of the Modules section.",
+   "Add the primary module of the project, or a second module if the project has one, to Preload Named Modules. Restart the editor and note the difference in startup time.",
+   "Place an actor based on C++ in the level. If you have none, add an Actor class with Tools, then New C++ Class, give it a float UPROPERTY(EditAnywhere) with a default value set in the constructor, and build. In the .cpp file, change the default value in the constructor. Press Ctrl+Alt+F11 to start Live Coding, and check if the placed instance updates.",
+   "Now change the same default value in the .h file instead. Run Live Coding again and compare the result.",
+   "Add a completely new UFUNCTION and a new UPROPERTY to the class. Run Live Coding with Enable Reinstancing on, and confirm that the new property shows in the Details panel.",
+   "Open the Live Coding console and take a screenshot of the log from a successful patch."
+  ]
+ },
+ "PQ87": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Open Tools > New C++ Class. Pick PrimaryDataAsset as the parent and type the name WeaponDefinition. Unreal adds the U at the start itself, so the class in the code is named UWeaponDefinition. Build the project.",
+   "Add these members marked with UPROPERTY(EditAnywhere): FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Build again.",
+   "In the Content Browser, right-click and choose Miscellaneous, then Data Asset. Choose WeaponDefinition as the class. Make two assets named DA_Sword and DA_Bow, and fill in their values.",
+   "Make a Blueprint child of WeaponDefinition named BP_WeaponBase. Then make a Data Only Blueprint child of BP_WeaponBase named BP_WeaponFire, and change one value in this child.",
+   "In any Blueprint, call Get Primary Asset Id on DA_Sword and show the result with Print String. Do the same for BP_WeaponFire.",
+   "Write 3 lines that answer this: when do you pick a Data Asset instance, and when do you pick a Data Only Blueprint?"
+  ]
+ },
+ "PQ88": {
+  "brief": "The Asset Manager is the engine system that knows about your Primary Assets and loads them when you ask, by id. You tell it which asset types exist and in which folders to look. An Asset Bundle is a named group of extra assets, such as meshes, that belong to a Primary Asset and can be loaded together with it. Loading only what you need, when you need it, keeps the start of the game fast. In this quest you register weapon Data Assets, list them, and load one in the background.",
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need a Primary Data Asset class named UWeaponDefinition. If you have none, make it now with Tools, then New C++ Class, with PrimaryDataAsset as the parent, and give it the UPROPERTY(EditAnywhere) members FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Create two or three Data Assets from it (right-click in the Content Browser, Miscellaneous, Data Asset) and put them all in one folder: Content/Data/Weapons.",
+   "Open Project Settings and go to Game, then Asset Manager. Under Primary Asset Types to Scan, add a type named WeaponDefinition with the base class WeaponDefinition and the directory /Game/Data/Weapons.",
+   "In the header, add meta=(AssetBundles=\"Visual\") to the UPROPERTY of the Mesh member, so that the mesh goes into a bundle named Visual.",
+   "In a GameMode or a Blueprint Function Library, ask the Asset Manager for all Primary Asset Ids of the type WeaponDefinition and print them. In Blueprint the node is Get Primary Asset Id List.",
+   "Load one weapon asynchronously (in the background) by its Primary Asset Id. In Blueprint use Async Load Primary Asset, and in C++ use LoadPrimaryAsset. Print its DisplayName in the completion callback, the code that runs when the load is finished.",
+   "Load it again with the bundle list [Visual] and confirm that the mesh is now loaded. To check, print Is Valid on the object that the soft pointer resolves to."
+  ]
+ },
+ "PQ89": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. In C++, declare USTRUCT(BlueprintType) FLevelUpRow : public FTableRowBase with the members int32 XPtoLvl, int32 AdditionalHP and TSoftObjectPtr<UTexture> Icon. Build the project.",
+   "Write a file named LevelUp.csv. Its first column must be named Name, and after that it has one column for each member of the struct. Add 5 rows.",
+   "Import the CSV file in the Content Browser. Choose DataTable and the row type LevelUpRow. Name the asset DT_LevelUp.",
+   "Add a UPROPERTY(EditAnywhere) FDataTableRowHandle LevelRow to an actor. In BeginPlay, call LevelRow.FindRow<FLevelUpRow>() and write the XPtoLvl value to the log with UE_LOG.",
+   "Edit one number in the CSV file. Right-click DT_LevelUp and choose Reimport. Play again and confirm that the log shows the new number.",
+   "Also import the same CSV file once as a CurveTable to see the difference, and then delete that asset."
+  ]
+ },
+ "PQ90": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ class UGameTuning : public UObject and mark it with UCLASS(config=Game). Add UPROPERTY(Config) int32 StartingLives and UPROPERTY(Config) float RespawnDelay.",
+   "In the file Config/DefaultGame.ini of the project, add a section named [/Script/YourModule.GameTuning] and set both values in it. Replace YourModule with the name of your module.",
+   "In BeginPlay of any actor, read the value with GetDefault<UGameTuning>()->StartingLives and write it to the log with UE_LOG. Run the game and confirm that the value from the .ini file appears.",
+   "Add a section [MyTuning] with the line Difficulty=2 to DefaultGame.ini. Read it with GConfig->GetInt(TEXT(\"MyTuning\"), TEXT(\"Difficulty\"), Value, GGameIni) and log the value.",
+   "In the console, run: GetIni Game:/Script/YourModule.GameTuning StartingLives. Compare the result with your log.",
+   "Start the editor once with -ini:Game:[/Script/YourModule.GameTuning]:StartingLives=9 on the command line. Show that the log now says 9."
+  ]
+ },
+ "PQ91": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins. Search for Data Validation and confirm that the plugin is enabled.",
+   "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick EditorValidatorBase as the parent class and name the asset EUB_Validate_StaticMeshNames.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is a Static Mesh.",
+   "Override the function Validate Loaded Asset. If the name of the asset does not start with SM_, call Asset Fails with a clear message. In every other case, call Asset Passes.",
+   "Make a Static Mesh named BadName, for example by duplicating any mesh and renaming the copy. Right-click it and choose Asset Actions, then Validate Assets. Read the Message Log.",
+   "Run Tools > Validate Data... on the whole project and count the failures. Rename the bad asset and validate again."
+  ]
+ },
+ "PQ92": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the plugins Python Editor Script Plugin and Editor Scripting Utilities, and restart the editor. Create the folder Content/Python in the project. Also make a test folder named Content/RenameTest and copy five Static Meshes into it, with names that do not start with SM_.",
+   "Write a script named rename_meshes.py. It gets all Static Mesh assets in the RenameTest folder with unreal.EditorAssetLibrary, and adds the prefix SM_ to every name that does not have it yet. Rename with the Unreal API and never with os.rename.",
+   "Wrap the loop in unreal.ScopedEditorTransaction(\"Prefix meshes\") and in unreal.ScopedSlowTask, so that the editor shows a progress dialog with a Cancel button.",
+   "Log each rename with unreal.log and each skipped asset with unreal.log_warning. Run the script from the Tools > Execute Python Script menu. The documentation page lists this command under the File menu, where it was in older versions.",
+   "Open Edit > Undo History and check that it shows one entry named Prefix meshes. Undo it and confirm that the old names come back.",
+   "Create the file Content/Python/init_unreal.py and make it print a message with unreal.log. Restart the editor and find the message in the Output Log."
+  ]
+ },
+ "PQ93": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Pick a small pure C++ function of your own (for example a damage formula in a static library). If you have none, write FDamageCalc::Apply(int32 Base, float Multiplier).",
+   "Create the file Source/YourModule/Private/Tests/DamageCalc.spec.cpp. Use BEGIN_DEFINE_SPEC and END_DEFINE_SPEC, with a member variable for the object under test and the flags ProductFilter | ApplicationContextMask.",
+   "In Define(), add Describe(\"Apply()\") with at least three It() blocks whose names start with the word should. Use TestEqual and TestTrue to check the results.",
+   "Add a BeforeEach() block that resets the member before each test. Also add a loop over an array of inputs that creates 3 It() blocks, one for each input.",
+   "Build the project. Open Tools > Session Frontend, go to Automation, and run your group of tests. Make one expectation fail on purpose, and then fix it.",
+   "Disable one block by changing it to xIt(), and confirm that it disappears from the run."
+  ]
+ },
+ "PQ94": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Declare a category named LogInventory with DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All) in a header, and with DEFINE_LOG_CATEGORY(LogInventory) in a .cpp file.",
+   "In one function that runs during play, for example the BeginPlay of an actor that you place in the level, write four UE_LOG lines at the levels Display, Log, Verbose and VeryVerbose. Play and note which of the four lines appear in the Output Log.",
+   "In the console, type: log LogInventory verbose. Play again and compare. Then try veryverbose.",
+   "In DefaultEngine.ini, add the section [Core.Log] with the line LogInventory=Warning. Restart and show that the Display and Log lines are gone.",
+   "Include Logging/StructuredLog.h and rewrite one line with UE_LOGFMT. Use the named fields {ItemName} and {Count}.",
+   "Start the editor once with -LogCmds=\"LogInventory VeryVerbose\" on the command line, and confirm that every line appears."
+  ]
+ }
+}

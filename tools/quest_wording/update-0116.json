@@ -1,0 +1,125 @@
+{
+ "CQ40": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Animation, then Camera Animation Sequence. Name it CAS_PushIn. Open it and notice that a Cine Camera Actor is already bound as a Spawnable.",
+   "Key a slow push in: the Transform Location X goes from 0 to 150 over 3 seconds. Right-click the section and set Blend Type to Additive, so that the move is added on top of the position of any camera.",
+   "Make a second asset named CAS_Orbit with a Rotation Yaw turn from 0 to 40 over 5 seconds. Set it to Additive too.",
+   "Create a Level Sequence named LS_Reuse with two Cine Camera Actors. On the first camera track, click + Track, then Template Sequence, and pick CAS_PushIn. On the second camera, pick CAS_Orbit.",
+   "Right-click the CAS_PushIn section and open Property Multipliers. Add the Transform multiplier. Expand the track and set the multiplier to 0.5. Then key it from 0 to 2 over the shot and watch the difference.",
+   "Make a Blueprint named BP_CamPlayer. Add a Create Template Sequence Player node with CAS_PushIn. Call Set Binding with the Out Actor and a Cine Camera Actor in the level, then call Play. Test it in Play In Editor."
+  ]
+ },
+ "CQ41": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Camera Animation Sequence named CAS_Impact that is about 0.5 seconds long: right-click in the Content Browser and choose Animation, then Camera Animation Sequence. Animate a sharp dip of Rotation Pitch that settles back to 0. Leave the blend type of the section as it is.",
+   "Make a Blueprint Class from CameraShakeBase and name it CS_Impact. Set Root Shake Pattern to Sequence Camera Shake Pattern, set Sequence to CAS_Impact, and set Play Rate to 1 and Scale to 1.",
+   "Create CAS_Rumble with 10 seconds of noisy handheld keys. Make a shake named CS_Rumble with the Sequence pattern. Enable Random Segment and set Random Segment Duration to 1.0, so that each time a random part of the animation plays.",
+   "Make a shake named CS_Combo with Root Shake Pattern set to Composite Camera Shake Pattern. Add two Child Patterns: a Perlin Noise pattern with a low amplitude, and a Sequence pattern that uses CAS_Impact. Enable Single Instance.",
+   "Create a Level Sequence named LS_Shakes and click the Camera button in the Sequencer toolbar to add a Cine Camera Actor. Go to the frame where the hit should happen. On the Cine Camera Actor track, click + Track, then Camera Shake, then CS_Impact. Right-click the section and open Properties. Set Play Scale to 0.5 and Play Space to World, then compare it with Camera Local.",
+   "Place a Camera Shake Source and set its Camera Shake to CS_Rumble, its Attenuation to Linear, and enable Auto Start. Open Window > Camera Shake Previewer, enable Allow Camera Shakes and press Play Selected."
+  ]
+ },
+ "CQ42": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Level Sequence named LS_Intro. Click the Camera button in the Sequencer toolbar to get a spawnable Cine Camera Actor and a Camera Cuts track, and name the camera CAM_Intro. Frame a wide shot of the start area.",
+   "Right-click the Camera Cuts track and enable Can Blend. Drag the upper corner of the cut section at its start and at its end, to create a blend in and a blend out of about one second each.",
+   "Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer. This creates a spawnable proxy, a stand-in for the player. Key a short walk. Right-click its track, open Tags, and add the tag Player.",
+   "Place a Level Sequence Actor for LS_Intro and create a reference to it in the Level Blueprint. Add Get Player Pawn and Set Binding by Tag. Set Binding Tag to Player, connect Get Player Pawn to Actors, and turn Allow Bindings from Asset off. Then call Play.",
+   "Play in Editor. The view should blend from the gameplay camera into CAM_Intro, and back to gameplay at the end.",
+   "Right-click the cut section, open Properties and enable Lock Previous Camera. Then open Thumbnails and enable Draw Single Thumbnail. Notice how the height of the track changes."
+  ]
+ },
+ "CQ44": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins, enable the VirtualCamera and Live Link plugins, and restart the editor.",
+   "Place a Cine Camera Actor named CAM_VCam. In the Details panel, click Add and add a VCam Component. Drag it onto the CameraComponent so that it is a direct child of it.",
+   "Under Output Providers, click + and pick the Viewport Output Provider. Turn on Is Active and set Target Viewport. Enable Use Override Resolution and set 1280 x 720. Then turn Is Active off and on again.",
+   "In the Content Browser, enable Show Plugin Content and open Engine > Plugins > VirtualCamera Content > Modifiers. Add two of these modifiers to the Modifier Stack and swap their order.",
+   "Enable Disable Component when Spawned by Sequencer. Add a second provider, Pixel Streaming, and give it a unique Streamer Id.",
+   "Optional, if you have a supported phone or tablet: connect the Unreal VCam app and enable Auto Set Live Link Subject on the Pixel Streaming provider. The documentation page of this component still uses the older app name, Live Link VCAM."
+  ]
+ },
+ "CQ45": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. Place a prop in the level, such as a mannequin or a few cubes. Place four Cine Camera Actors around it and name them CAM_Front, CAM_Side, CAM_Top and CAM_Detail. Give each one a different focal length.",
+   "In the Content Browser, open the settings and enable Show Engine Content and Show Plugin Content. Go to MovieRenderPipeline Content > Editor > Stills. Right-click StillRenderSetupAutomation and choose Run Editor Utility Widget.",
+   "Set Sequence Creation Path to a folder named Stills in your project. Enable Automatically Add Jobs to Movie Queue. Enable Override Movie Resolution and set 1920 x 1080.",
+   "Click Create Sequence For All Cameras. Open Movie Render Queue and confirm that four jobs are listed.",
+   "In the job preset, open Anti-Aliasing and set Engine Warm Up to 64. Enable Use Map as Output Prefix. Then click Render (Local).",
+   "Select only CAM_Front and CAM_Detail in the level and click Create Sequence For Selected. Note how many new sequences appear."
+  ]
+ },
+ "CQ46": {
+  "checklist": [
+   "You need a supported phone or tablet with the Unreal VCam app for this quest. Open any project, or create one from the Third Person template. Enable the VirtualCamera, Live Link and Take Recorder plugins in Edit > Plugins and restart the editor. Drag a VCam Actor from the Place Actors panel into the level. Put the device on the same network as your PC, open the Pixel Streaming dropdown in the editor, read the Signaling Server URL, enter it in the app and press Connect.",
+   "Tap the Wrench icon to open Tools, then open Scale and Gain. Set Axis to Planar and Scale to 2, then lower Joystick Rotation Gain. Walk a few steps and compare the result with Scale 1.",
+   "Tap Stabilization. Try Rotation Stabilization at 0x and at 100x while you do a slow pan. Then enable Kill Roll and Local Space Flight Mode, and fly with the left joystick while you look down.",
+   "In the editor, place a Cine Camera Attach Mount and name it AM_Hero. Set its Target Actor to a character that moves. For example, drag SKM_Manny into the level and move it with two Transform keys in a Level Sequence, or use the player character in Play In Editor. In the app, tap the parenting dropdown and attach the camera to AM_Hero.",
+   "Create three bookmarks from different positions and move through them with Bookmark Navigation. Check Re-inherit Camera Settings and jump to a bookmark that has a different focal length.",
+   "Tap Take Recorder and record a take of 10 seconds. Open the Take Viewer, give the take two stars and a flag, and try the smoothing slider. Then open the Takes Browser and filter by flagged."
+  ]
+ },
+ "CQ47": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, find the Control Rig asset of the mannequin, for example CR_Mannequin_Body.",
+   "Drag the Control Rig asset into the level. A new Level Sequence opens with a Control Rig track, and Animation Mode turns on. Rename the sequence to LS_CRPose.",
+   "In the Anim Outliner, select a hand control. Move it in the viewport and press S to key it. Move the playhead 24 frames forward, move the hand again, and press S.",
+   "Open Poses in the Animation panel. Select several controls and click Create Pose. Name the pose P_Wave. Move the playhead to a later time and double-click the pose to apply it.",
+   "Open Tweens. Put the playhead between two keys of the hand control and drag the slider to -0.5 and then to 0.5. Watch how the pose between the keys changes.",
+   "Add a second Control Rig track on the same Skeletal Mesh track: click Add (+), then Control Rig, and make sure Layered is checked. Set its Order to 200. Note the default Order value of the first track.",
+   "Press Shift + 1 to leave Animation Mode and Shift + 7 to return to it."
+  ]
+ },
+ "CQ48": {
+  "done_when": "Send a short video clip (30 seconds or less) of the end of the cutscene, where the game takes over again. Also send screenshots that show the Slot node in ABP_Manny, the Properties of the animation section with Slot Name, and the Level Blueprint with Set Binding by Tag. Add one line that says if the blend at the end looked smooth.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and open ABP_Manny. In Window > Anim Slot Manager, add a slot named CineSlot and save.",
+   "In the AnimGraph, add a Slot node and set its Slot Name to CineSlot. Connect it directly before the Output Pose node.",
+   "Create a Level Sequence named LS_Outro. Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer to make a spawnable proxy, a stand-in for the player. Add a short animation and a camera with a Camera Cut.",
+   "Open the Properties of the animation section and set Slot Name to CineSlot. Drag a blend-out at the end of the section. On the transform section, set When Finished to Keep State.",
+   "On the Camera Cut track, enable Can Blend and add a blend-out region. On the Cine Camera, disable Constrain Aspect Ratio.",
+   "Right-click the character track and add the tag Player. In the Level Blueprint, call Set Binding by Tag with Get Player Pawn, then Play the sequence.",
+   "On the Level Sequence Actor, enable Disable Movement Input and Disable Look at Input. Play in the editor and check if there is a pop at the end."
+  ]
+ },
+ "CQ49": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the MetaHuman Animator plugin: open Edit > Plugins, search for MetaHuman, turn it on and restart the editor. Add a MetaHuman character to your project. Any free MetaHuman from Epic works.",
+   "Record a short voice line of 5 to 10 seconds with any recording program, save it as a WAV file, and import it as a SoundWave asset. Name it, for example, SW_Line01.",
+   "Right-click in the Content Browser and choose MetaHuman Animator, then MetaHuman Performance. Name the asset MHP_Line01 and open it.",
+   "Set Input Type to Audio and pick SW_Line01 in the Audio field. Set Visualization Mesh to the face mesh of your MetaHuman. Then click Process.",
+   "Drag the playhead through the result to check it. Then enable Head Movement and set a mood under Solve Override, for example Happy. Click Process again and compare the two results.",
+   "Click Export Level Sequence and assign your MetaHuman character Blueprint. Open the exported sequence and add a Cine Camera that is close to the face."
+  ]
+ },
+ "CQ50": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Get a second two-legged character that has a different skeleton. Some versions of the template include the older UE4 mannequin in the Characters folder, which works. If yours does not, add a free character from Fab, Epic's asset store. Keep the Mannequin from the template as the source.",
+   "Try the quick way first. Right-click an Animation Sequence of the Mannequin and choose Retarget Animation Assets. Set Target Preview Mesh to your new character and export one clip with the suffix _Auto.",
+   "Now do it by hand. Create an IK Rig for each mesh with Add (+), then Animation, then IK Rig. In each rig, right-click the pelvis or hip bone and choose Set Retarget Root.",
+   "In each IK Rig, make chains for Spine, Left Arm, Right Arm, Neck, Head, Left Leg and Right Leg. Select the bones of a chain and use New Retarget Chain from Selected Bones, and choose No Goal.",
+   "Create an IK Retargeter from the source rig with Add (+), then Animation, then IK Retargeter. Set the Target IKRig Asset. Check the Chain Mapping and the reference poses of both characters.",
+   "Preview a walk clip, then use Export Selected Animations. Put the exported clip on your new character in a Level Sequence named LS_Retarget and frame it with a camera."
+  ]
+ },
+ "CQ51": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Get a character whose cape, skirt or scarf is a separate material section, for example your own character or a free one from Fab, Epic's asset store. If you have none, you can practice on a copy of SKM_Manny: use one of its material sections as the cloth, and paint the mask so that only a small area is allowed to move. Open the character in the Skeletal Mesh Editor.",
+   "Click Section Selection and left-click the cloth part. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character. Then right-click again and use Apply Clothing Asset.",
+   "Open Window > Clothing and click Activate Cloth Paint. Paint the top of the cape with the value 0, so that it stays fixed, and the bottom with a higher value, so that it can move. Hold H to preview the result.",
+   "Try the Gradient tool. Click with LMB to set the start value, click with Ctrl + LMB to set the end value, and press Enter to paint. Compare this with the brush result.",
+   "Add a Mask, set its Target to Anim Drive Multiplier, and paint it. Note what this target does for cinematics.",
+   "Create a Level Sequence named LS_Cape with the character and a run clip. Drag the playhead through it and play it. Write down one setting you changed to make the cloth look better."
+  ]
+ },
+ "CQ52": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Groom plugin enabled. Use a character that has a groom, such as a free MetaHuman from Epic or a free character from Fab that comes with a Groom asset. No template includes one. Open the Groom asset in the Groom Asset Editor.",
+   "In Show, turn on Guide and Guide Influence and look at the result. Guides are the few strands that are simulated and that lead the other strands. Then switch to the LODs dropdown and step through the LODs, the simpler versions used at a distance.",
+   "In the Physics panel, turn on Enable Simulation. Note which Niagara Solver is chosen and the value of Sub Steps.",
+   "Raise Air Drag, then lower Bend Stiffness a little. Drag the playhead or play while the character walks, and compare the hair before and after.",
+   "In the LOD panel, set Simulation to Disable on the last LOD.",
+   "Create a short Level Sequence named LS_Hair: add the character with a turn animation, and add a camera that is close to the head. In the level, select the Groom component. Enable Override Settings and Debug Simulation to see the simulated strands. Then play LS_Hair."
+  ]
+ }
+}

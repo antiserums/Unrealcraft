@@ -1,0 +1,192 @@
+{
+ "SQ1": {
+  "quiz": [
+   {
+    "q": "Which program do you use to download and install Unreal Engine 5?",
+    "choices": [
+     "Steam",
+     "The Epic Games Launcher, in the Unreal Engine tab under Library",
+     "The Microsoft Store",
+     "A zip file that someone sends you in a chat"
+    ],
+    "explain": "Unreal Engine is installed from the Epic Games Launcher. Its Library tab is where you add, update and remove engine versions."
+   },
+   {
+    "q": "During the install, the Options button lets you untick target platforms such as Android or iOS. Why is it a good idea to untick the ones you do not use?",
+    "choices": [
+     "Because they cost money",
+     "Because they take a lot of disk space and you do not need them yet",
+     "Because they break Lumen",
+     "Because they only work on Linux"
+    ],
+    "explain": "Each extra platform adds many gigabytes to the install. You can add a platform later, when you actually want to build your game for it."
+   },
+   {
+    "q": "Can you have more than one version of Unreal Engine installed on the same computer?",
+    "choices": [
+     "No, only one version at a time",
+     "Yes, they sit side by side in the Library",
+     "Only if you build the engine from source code",
+     "Only on a Mac"
+    ],
+    "explain": "The Library can hold several engine versions at once. This is why you always say which version you used when you send your work."
+   },
+   {
+    "q": "You launch the engine for the first time. Which screen opens first?",
+    "choices": [
+     "The Level Editor",
+     "The Project Browser",
+     "The Material Editor",
+     "Fortnite"
+    ],
+    "explain": "The Project Browser opens first. It is the window where you open a project you already have, or create a new one."
+   },
+   {
+    "q": "The server rules are listed in #welcome on Discord. Which of those rules is about the engine you just installed?",
+    "choices": [
+     "You must use Unreal Engine 4",
+     "State your engine version when you send your work",
+     "Install every platform",
+     "None of the rules is about it"
+    ],
+    "explain": "Rule 5 in #welcome says to state your Unreal version every time you send work. Unrealcraft teaches the current UE5 version."
+   }
+  ]
+ },
+ "AQ25": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a new Animation Blueprint for the mannequin Skeleton and name it ABP_SyncTest. In its AnimGraph, add a sequence player for a walk animation and one for a run animation of the mannequin, and connect both to a Blend node. Connect the Blend node to Output Pose. Set the Blend Alpha to 0.5 and watch how the feet slide and do not move together.",
+   "Select both sequence players. In the Details panel, find the Sync section, set Method to Sync Group and set Group Name to Locomotion. Watch the blend again.",
+   "Open the walk sequence. Right-click the notify timeline at the moment the left foot lands, choose Add Sync Marker..., then New Sync Marker..., and name it LeftFootDown. Add a marker named RightFootDown for the right foot in the same way.",
+   "Open the run sequence. Use Add Sync Marker..., then Existing Sync Markers, to add the same two marker names at the moments where the feet land in the run.",
+   "Play the blend again with the Alpha at 0.5. The feet now land together, even though the two animations have different lengths.",
+   "Set the Group Role of the run sequence player to Always Leader, and note how the walk speeds up to follow the run."
+  ]
+ },
+ "AQ26": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the FullBodyIK plugin in Edit > Plugins, and then restart the editor.",
+   "Create a Control Rig named CR_Manny_FBIK for the mannequin skeletal mesh. Add controls, the handles you move in the viewport, for the head, both hands and both feet.",
+   "In the rig graph, right-click and add the node Full Body IK from the Hierarchy category. Connect it to the Forwards Solve node, and set its Root to the pelvis bone.",
+   "Add one Effector for each control. An effector is a point that the body tries to reach. Set the Bone of each effector, and connect a Get Transform node of the matching control to it.",
+   "Move a hand control in the viewport and watch the body follow. Then add a Bone Setting for the pelvis and set both Rotation Stiffness and Position Stiffness to 0.8.",
+   "Add a Bone Setting for one knee. Enable Use Preferred Angles and set a preferred angle so that the knee bends in the correct direction.",
+   "Add a Limit on one axis of an ankle: set it to Limited, with Min -70 and Max 70. Compare the pose before and after."
+  ]
+ },
+ "AQ27": {
+  "done_when": "Send a short video clip (30 seconds or less), or two screenshots, that show the character warping to the Target Point from two different start positions. Also send a screenshot of the Details panel of the Motion Warping notify.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Motion Warping plugin in Edit > Plugins and restart the editor. Pick an animation with root motion, such as a vault, a mantle or a punch. If you have none, make one: duplicate a jump animation of the mannequin, open the copy, select the root bone in the Skeleton Tree, press Key in the toolbar at the first frame, then move the root bone about 200 units forward at the last frame and press Key again. Open the animation and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion.",
+   "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage.",
+   "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target.",
+   "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget.",
+   "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it. In the Animation Blueprint that the character uses, click Class Defaults and set Root Motion Mode to Root Motion from Montages Only, and make sure the AnimGraph has a Slot 'DefaultSlot' node before Output Pose.",
+   "On an input action, do three things in this order: get the location of the Target Point, call Add or Update Warp Target from Transform with the Name VaultTarget, and then use Play Montage to play AM_Vault.",
+   "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare the result."
+  ]
+ },
+ "AQ28": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Animation Layer Interface named ALI_Character: in the Content Browser click Add, then Animation, then Animation Layer Interface (the documentation page calls this menu item Animation Interface). Add three layers named FullBody, UpperBody and IK.",
+   "Give the UpperBody layer and the IK layer a pose input. Put all three layers in one Group, and give the Group a name that is not the default name.",
+   "Create a new Animation Blueprint for the mannequin Skeleton and name it ABP_Base. In Class Settings, add ALI_Character under Interfaces. In the My Blueprint panel, open the FullBody layer and put a walk or run Sequence Player in it. Leave the UpperBody and IK layers as they are, so that they pass their input pose through. In BP_ThirdPersonCharacter, select the Mesh and set Anim Class to ABP_Base. If you have an Animation Blueprint of your own, you can use that instead.",
+   "Drag the three layers into the AnimGraph in this order: FullBody, then UpperBody, then IK. Connect them one after the other, and connect the last one to Output Pose.",
+   "Create a second Animation Blueprint named ABP_Rifle that also implements ALI_Character. In its UpperBody layer, put a different animation, for example a jump or fall pose of the mannequin, or an aim offset if you have one.",
+   "In BP_ThirdPersonCharacter, add a key press event that calls Link Anim Class Layers. Use the Mesh as Target and ABP_Rifle as In Class.",
+   "Press Play and press the key. Confirm that the upper body changes while the base locomotion keeps running."
+  ]
+ },
+ "AQ29": {
+  "done_when": "Send a short video clip (30 seconds or less) that shows idle to walk to run, a jump from a run with the landing, and the upper body layer active while the character moves. Also send screenshots of the state machine and of the layer graph, and your short written text. A mentor reviews your work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. The template has idle, walk, run and jump animations that you can use. Create a blend space named BS_Locomotion. It blends idle, walk and run animations based on Speed, and also on Direction if you have strafe (sideways) animations.",
+   "Create ABP_Locomotion with a state machine that has four states: Locomotion (which plays BS_Locomotion), JumpStart, JumpLoop and JumpEnd. The transition rules read IsFalling and Speed from the character.",
+   "Add an Animation Layer Interface with a layer named UpperBody that takes a pose input. Add the interface to ABP_Locomotion, and place the layer after the state machine in the AnimGraph.",
+   "Create ABP_Locomotion_Upper, which implements the same interface. In it, blend an upper body animation over the input pose with a Layered Blend per Bone node that starts from the spine.",
+   "In BP_ThirdPersonCharacter, set the Anim Class of the Mesh to ABP_Locomotion, and link the upper body Animation Blueprint with Link Anim Class Layers when a key is pressed.",
+   "Test all the transitions: stand, walk, run, jump from a run, land into a run, and the upper body layer while running.",
+   "Record a short video clip (30 seconds or less). Write 5 to 10 lines about your transition rules and about what you would fix next."
+  ]
+ },
+ "AQ30": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, right-click a short animation sequence of the mannequin, choose Create, then Create PoseAsset. Name it PA_Test, and type names for a few of the frames in the Pose Names field.",
+   "Open PA_Test and look at the list of curves. There is one curve for each pose.",
+   "Create a new Animation Blueprint for the mannequin Skeleton, or open one of your own. Drag PA_Test into the AnimGraph. This creates a Pose Blender node. Connect a sequence player or a Custom Curve to its input, because the node needs curve values to show a pose.",
+   "Right-click the Pose Blender node and choose Create Pose by Name Node. Pick one pose name, and drive its Alpha with a variable that goes from 0 to 1.",
+   "Duplicate PA_Test. In the copy, enable Additive and click Convert to Additive Pose. Use this copy after an Apply Additive node, on top of a base sequence.",
+   "Optional: add a Pose Driver node and assign the pose asset to it. Use Copy Poses from Pose Asset and set a Source Bone."
+  ]
+ },
+ "AQ31": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it BP_FootSyncModifier.",
+   "Add a variable for the name of the foot bone, for example foot_l. Make the variable Instance Editable, so that you can change it later without opening the Blueprint.",
+   "Implement the OnApply function. First add a Notify track named FootSync. Then loop through the frames with Get Bone Pose for Frame, and add a sync marker at the frame where the foot is lowest.",
+   "Implement the OnRevert function so that it removes the FootSync notify track.",
+   "Open a walk animation of the mannequin and go to Window > Animation Data Modifiers. Click Add Modifier and choose BP_FootSyncModifier, set the bone name, and then choose Apply Modifier.",
+   "Check the new track and its markers in the Notifies area. Then choose Revert Modifier and confirm that the track is gone.",
+   "Now apply the modifier on the Skeleton instead of on one animation. Check that another animation also gets the track."
+  ]
+ },
+ "AQ32": {
+  "done_when": "Send a short video clip (30 seconds or less) of the character moving with Motion Matching, and a screenshot of the selection table in the Rewind Debugger with Channel Breakdown turned on. Add 5 lines that name your schema channels, say which database bias you changed and why, and describe one case where a state machine would still be the better choice.",
+  "checklist": [
+   "Motion Matching needs a set of locomotion animations with root motion, and the Third Person template does not have one. Epic's free Game Animation Sample project, which the Motion Matching documentation uses and which you get from Fab or the Epic Games Launcher, has such a set. Create a project from it, or use your own animations with root motion. Enable the Pose Search plugin if it is off: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Create PSS_Locomotion for your skeleton: in the Add menu choose Animation, then Motion Matching, then Pose Search Schema. Check that the Pose channel uses the bones of your left foot and your right foot.",
+   "Create a Pose Search Database named PSD_Locomotion and set PSS_Locomotion as its Schema. Add loops, starts, stops and pivots (quick turns). Confirm that Root Motion is enabled on each sequence.",
+   "Create a new Animation Blueprint for the same skeleton and name it ABP_MMCharacter. Add a Motion Matching node with Database set to PSD_Locomotion. Connect it to a Pose History node, and connect the Pose History node to Output Pose. On the Pose History node, enable Generate Trajectory and add the collected bones. Set ABP_MMCharacter as the Anim Class of a character that you can control.",
+   "Play in the editor. Enable Should Filter Notifies and set Notify Recency Time Out. Then tune Continuing Pose Cost Bias until the character no longer switches between animations too often.",
+   "Record 10 seconds with the Rewind Debugger, which you find under Tools > Debug. Open the Pose Search track and the Selection Table. Find one pose that was rejected and read the reason.",
+   "Change the Weight of the Trajectory channel, for example from 3.0 to 1.0, and record again. Note what changed."
+  ]
+ },
+ "AQ33": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a source character, for example the UE5 Mannequin, and a target character that has a different skeleton. Some versions of the template include the older UE4 mannequin in the Characters folder, which works. If yours does not, add a free character from Fab, Epic's asset store, to the project. Create one IK Rig for each and name them IKR_Source and IKR_Target.",
+   "In each IK Rig, run Auto Create Retarget Chains and Set Pelvis. Read the notification that appears, and fix by hand any chain that the tool got wrong.",
+   "Create an IK Retargeter named RTG_SourceToTarget: in the Add menu choose Animation, then IK Rig, then IK Retargeter. Click Add Default Ops. Check the chain mapping with Map All (Fuzzy), which matches chains by similar names, and fix any wrong chain.",
+   "If the two characters stand in different reference poses, for example an A-pose and a T-pose, create a new retarget pose and use Auto Align. Do not edit the Default Pose.",
+   "Preview 3 animations in the Asset Browser. Fix one problem you can see by changing an op setting. For example, change FK Chains Rotation Mode on the fingers, or add a Pin Bones op for a weapon bone.",
+   "Now retarget a batch. In the Content Browser, select 10 or more source Animation Sequences, right-click them and choose Retarget Animation Assets. Turn off Auto Generate Retargeter, pick RTG_SourceToTarget, use Add Suffix so the new files get a clear name, and export.",
+   "Create one Override Set, for example IsHoldingWeapon, that changes one property of an op. Show it on the Retarget Pose From Mesh node."
+  ]
+ },
+ "AQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Set up the crowd assets: duplicate SKM_Manny and name the copy SK_CrowdCharacter, duplicate ABP_Manny and name the copy ABP_Crowd, and make a Character Blueprint named BP_CrowdCharacter whose Mesh uses SK_CrowdCharacter with ABP_Crowd as its Anim Class. Spawn 50 or more copies of BP_CrowdCharacter, for example with a loop in the Level Blueprint that calls Spawn Actor from Class in a grid. Type stat unit in the console to show the frame times, and note the game thread time.",
+   "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon.",
+   "Enable the Animation Budget Allocator plugin. In BP_CrowdCharacter, select the Mesh and set its Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play.",
+   "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh.",
+   "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level. Each level has its own section, so you write four sections: [ViewDistanceQuality@0], [ViewDistanceQuality@1], [ViewDistanceQuality@2] and [ViewDistanceQuality@3], each with its own a.Budget.BudgetMs line below it. Test two of the levels.",
+   "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD.",
+   "Compare stat unit before and after your changes, and write the numbers down."
+  ]
+ },
+ "AQ35": {
+  "done_when": "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module. Also send the screenshots of your 3 poses in Sequencer, or a short video clip (30 seconds or less) of them. Add 4 lines about what your module does and how its connectors resolve.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Control Rig Modules plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "Create CR_Modular_Hero: in the Add menu choose Animation, then Control Rig, then Control Rig, and choose ModularRig. Set the Preview Mesh to the mannequin, for example SKM_Manny, or to a character of your own.",
+   "Drag the Spine module onto the unresolved socket. Then add Neck, both Legs, both Feet, Shoulders and Arms. For the fingers, select all finger sockets at once and drop one Finger module on them.",
+   "Delete the modules of the left arm. Build them again by selecting the modules of the right arm and using Mirror in the Module Hierarchy.",
+   "Make one connector unresolved on purpose, for example by renaming a bone or removing a socket. Then fix it with Use Selected or with the hierarchy dropdown. Take a screenshot of the red none before the fix and another one after the fix.",
+   "Create your own module. Make a new Control Rig, choose Switch to Rig Module, and set its Name, Icon and Description. Add one Secondary connector with a Type Rule, and then add your module to CR_Modular_Hero.",
+   "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and take a screenshot of each pose."
+  ]
+ },
+ "AQ36": {
+  "brief": "A kit is a folder that holds everything another person needs to animate a character: the mesh, the skeleton, the rig, the retargeter and a set of animations, with a short guide. The real test is that someone can use it with only the guide. In this quest you build such a kit for a character that is not the Mannequin, test it in an empty project, and write down what the test showed.",
+  "done_when": "Send the text of README_Kit.md, a screenshot of the kit folder in the Content Browser, the short video clip, the before and after screenshots of the three fixes, and your written notes from the test. A mentor reviews your work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a character that is not the Mannequin. It can be your own, or a free one from Fab, Epic's asset store. Build CR_Kit_Character as a Modular Control Rig (enable the Control Rig Modules plugin for this) that contains at least one custom module you made yourself.",
+   "Build IKR_Kit_Character and RTG_MannequinToKit. Retarget at least 12 Mannequin animations in one batch, including idle, walk, run, jump and two montages. Give the new files a clear suffix.",
+   "Fix the three worst retarget problems with ops, such as the retarget pose, Pin Bones or the FK Chains modes. Take a screenshot before and after each fix.",
+   "Put everything in one folder named Content/Kits/<CharacterName>: the mesh, the skeleton, the rigs, the retargeter and the animations. Nothing in the folder may use assets from outside the folder, except assets that come with the engine.",
+   "Write a file named README_Kit.md inside the folder. It explains how to open the rig, how to retarget more animations with the retargeter, and the known limits. Include one screenshot for each step.",
+   "Test the kit. Right-click the folder, choose Migrate, and copy it into a new empty project. If another person can help you, let them do the test: they play one retargeted animation and set a key for one pose on the rig in Sequencer, using only your README. If nobody can, do the test yourself in the empty project. Write down what was unclear or missing.",
+   "Record a short video clip (30 seconds or less). It shows the rig posed in Sequencer, and then two retargeted animations playing in a level."
+  ]
+ }
+}

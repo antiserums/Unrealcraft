@@ -1,0 +1,197 @@
+{
+ "TAQ49": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Place a wall in a level, for example a scaled cube, and place a sphere in front of it. Create a material named M_BlendTest with a texture connected to Base Color, for example T_GridChecker_A from the folder LevelPrototyping/Textures. Also have a pattern with clear black and white areas ready, such as a striped texture of your own or the same checker texture.",
+   "Set Blend Mode to Masked and connect the stripes to Opacity Mask. Change the Opacity Mask Clip Value, which is the limit below which a pixel is not drawn, and watch which stripes disappear.",
+   "Turn on Two Sided, which makes the material draw on the back of each surface too. Look inside the sphere and note the change.",
+   "Duplicate the material and name the copy M_BlendTest_Trans. Set its Blend Mode to Translucent, connect a gradient to Opacity, and note that the reflections are gone.",
+   "Make two more copies, one with the Additive blend mode and one with Modulate. Put all four spheres in a row in front of the wall.",
+   "For each blend mode, write down whether it supports lighting and what happens where two spheres overlap."
+  ]
+ },
+ "TAQ50": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a material that has several texture samples, for example M_Mannequin from the folder Characters/Mannequins/Materials. Work on a duplicate, so that the original stays unchanged. If the Stats panel is hidden, open it from the Window menu.",
+   "Write down the instruction count and the number of texture samplers.",
+   "Add three Texture Sample nodes and do not connect them to anything. Check the Stats panel again. Then click the Clean Up button in the toolbar to remove the unconnected nodes.",
+   "Open Window > Platform Stats and compare the cost of the material for two different renderers.",
+   "Open Window > Shader Code > HLSL Code, which shows the shader code that Unreal made from your graph. Find where one of your texture samples appears in that code.",
+   "In the level viewport, press Alt+8 to switch to the Shader Complexity view mode. Find the object that is the most red and open its material. Remove or simplify one expensive part, and then compare the color again."
+  ]
+ },
+ "TAQ51": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a messy material of your own. If you have none, duplicate M_Mannequin from the folder Characters/Mannequins/Materials and name the copy M_Mannequin_Clean.",
+   "Select each group of related nodes and press C to make a comment box around it. Give each box a name, and give it a color in the Details panel.",
+   "Add a comment bubble to one node, and pin it so that it stays readable when you zoom out.",
+   "Double-click a long wire to add a Reroute node, which is a small point that the wire passes through. Drag it to lead the wire around other nodes.",
+   "Right-click a reroute and choose Convert to Named Reroute. Give the Declaration node a clear name, for example GlobalUVs. Then add a second Usage node for it from the right-click menu.",
+   "Use Align Left and Distribute Vertically on one column of nodes. Then collapse one group of nodes that repeats, and rename the collapsed node."
+  ]
+ },
+ "TAQ52": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a material named M_Pins. Click the background of the graph so that the properties of the Main Material Node show in the Details panel.",
+   "Connect a Constant3Vector with the value (1,0,0) to Base Color. Then connect Constants with the values 0, 0.5 and 0.5 to Metallic, Specular and Roughness. Confirm that the preview does not change, because these are the default values.",
+   "Change Roughness to 0.07 and note the difference. Then change Metallic to 1 and note the difference.",
+   "Switch Blend Mode to Translucent, then to Masked, and then back to Opaque. Each time, write down which pins turn white (enabled) or gray (disabled).",
+   "Switch Shading Model to Clear Coat and then to Unlit. Note which extra pins appear or disappear.",
+   "Leave a Constant connected to Opacity while the material is in Opaque mode. Compile the material and confirm that the Constant has no effect."
+  ]
+ },
+ "TAQ53": {
+  "done_when": "Send a screenshot of the Material Editor that previews the material on the mesh you selected, with changed Preview Scene Settings. Also send a level screenshot with the material on two actors.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a material that has a Fresnel node, or add one to a new material named M_Preview. Right-click the Fresnel node and choose Start Previewing Node. Then stop previewing it.",
+   "Switch the preview shape between cylinder, sphere, plane and cube. Then select a Static Mesh in the Content Browser, for example a mesh of the template or one of your own, and click the teapot icon to preview the material on that mesh.",
+   "Open Window > Preview Scene Settings. Change the light direction, the light intensity and the background. Hold L and drag in the viewport to rotate the light.",
+   "Click Apply and then Save. Drag the material from the Content Browser onto an actor in the level.",
+   "Select a second actor. In the Materials section of its Details panel, click the Use Selected Asset from Content Browser button to apply the same material to one material slot.",
+   "Add a Vector Parameter to the material. While the material is applied in the level, change the parameter value inside the Material Editor, and watch the level viewport update without a recompile."
+  ]
+ },
+ "TAQ54": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a large texture in the Texture Asset Editor, for example a duplicate of T_Manny_01_D from the folder Characters/Mannequins/Textures, or a 2048 texture of your own. Write down the values of Imported, Max In-Game, Combined LOD Bias, Number of Mips and Method (streamed or not).",
+   "Enable the Mip Level selector in the toolbar and step through the mips. Note how the Displayed size changes.",
+   "Set Maximum Texture Size to 1024 and note the new Max In-Game value. Then set it back to 0.",
+   "Set LOD Bias to -1 and then to 2. Note Combined LOD Bias and Max In-Game each time.",
+   "Change the Texture Group to UI and then to World. Check the Filter and the Number of Mips each time.",
+   "Enable Never Stream and check the Method field. Then set Mip Gen Settings to NoMipMaps and see what happens to Number of Mips."
+  ]
+ },
+ "TAQ55": {
+  "brief": "A good spark effect is not one emitter but several that work together. An emitter is the part of a Niagara system that creates one kind of particle. Here you combine three: soft smoke, a bright flash at the center, and fast sparks that fly out, fall and bounce. In this quest you build a system with these three emitters. Epic's tutorial page uses materials from the Starter Content, which current engine versions no longer include, so you use the default sprite material of Niagara.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Start with the smoke: right-click in the Content Browser, choose FX, then Niagara System, pick New system from selected emitters and add the Simple Sprite Burst template. Name the system SparksSystem, rename the emitter to FX_Sparks_Smoke, and drag the system into a level. If you already have a smoke emitter asset of your own, you can add that emitter to the system instead. Keep the default sprite material, which is a soft round dot.",
+   "In FX_Sparks_Smoke, find Emitter State and set Life Cycle Mode to System. Delete Spawn Burst Instantaneous and add a Spawn Rate module with the value 20. In Initialize Particle, make the lifetime random from 2 to 3, make the color dark gray (0.3), and set the sprite size to a random value from 75 to 200. Add an Add Velocity module that points mostly upward, with Z from 25 to 35, and a Shape Location module with a sphere of radius 5.",
+   "In the Particle Update group of the smoke emitter, open Scale Color. Turn off Scale RGB, and give Scale Alpha the Smooth Ramp Down shape so the smoke fades out. Add an Acceleration Force module and set it to Z 20.",
+   "Add a second emitter from the Simple Sprite Burst template and name it FX_SparkBurst. Delete Sprite Burst Instantaneous, set Life Cycle Mode to System, add a Spawn Rate of 50, set Lifetime to 0.2, and set the RGB of Scale Color to 2, 6, 25. This is the bright flash at the center.",
+   "Add a third Simple Sprite Burst emitter and name it FX_Sparks_Radial. In its Sprite Renderer, set Alignment to Velocity Aligned, so each spark points the way it moves. Use a Spawn Rate of 500, a random lifetime from 0.2 to 0.7, a small sprite size, and Add Velocity with a random range where Z goes from 300 to 500.",
+   "In the Particle Update group of FX_Sparks_Radial, add Gravity Force with Z -4500, Drag with 1.7, and Collision with Restitution 0.4 and Friction 0.2. Remove Scale Color, and add Scale Sprite Size by Speed with a Velocity Threshold of 2000.",
+   "Look at the effect in the level and adjust one value that you do not like, for example the gravity or the spawn rate of the radial emitter."
+  ],
+  "done_when": "Send one screenshot of the Niagara System Overview that shows all three emitters (FX_Sparks_Smoke, FX_SparkBurst and FX_Sparks_Radial). Also send one screenshot of the effect in the level with sparks bouncing on the floor."
+ },
+ "TAQ56": {
+  "brief": "A sprite is a flat 2D image that always turns to face the camera, and it is the most common kind of particle. A sprite sheet is one texture that holds many small images in a grid, and playing them one after the other makes the particle look animated. Niagara is the visual effects system of Unreal, and an emitter is the part of a Niagara System that creates particles. In this quest you build a steady column of smoke from sprites. Epic's tutorial page uses a smoke sprite sheet from the Starter Content, which current engine versions no longer include, so you make a simple smoke material yourself.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a folder for the effect, for example NiagaraFX/SpriteEffect. In it, create a material named M_SmokeSoft. Set its Blend Mode to Translucent and its Shading Model to Unlit. Add a Particle Color node and a RadialGradientExponential node. Connect the color of Particle Color to Emissive Color, and multiply the gradient by the alpha of Particle Color and connect the result to Opacity. This gives a soft round puff that the emitter can tint and fade.",
+   "Right-click in the Content Browser and choose FX, then Niagara System. Pick New system from selected emitters and add the Simple Sprite Burst template. Name the system SmokeSystem and rename the emitter to FX_Smoke.",
+   "In the Sprite Renderer, set the material to M_SmokeSoft. Then drag SmokeSystem into a level. If you have a smoke sprite sheet of your own, with for example 8 by 8 images, use a material with that texture instead, set Sub Image Size to 8 by 8 so that the renderer knows how many images are in the sheet, and turn on Sub UV Blending.",
+   "In Emitter Update, delete Spawn Burst Instantaneous, add a Spawn Rate module and set it to 50, so the smoke comes out all the time and not in one burst. In Emitter State, set Life Cycle Mode to Self and Loop Behavior to Infinite.",
+   "In Initialize Particle, set a random lifetime (2 to 3), a gray color, a random uniform sprite size (75 to 200) and a random sprite rotation (Direct Normalized Angle, 0.25 to 0.5). Add an Add Velocity module with a random range (Z 50 to 200). Add a Shape Location module that uses a sphere with a radius of 64.",
+   "In Particle Update, add an Acceleration Force module with Z set to 500 so the smoke keeps rising, and keep Scale Color so that the smoke fades out. If you use a sprite sheet, also add a SubUV Animation module, which plays the images of the sheet one after the other: set its mode to Linear, Start Frame to 0 and End Frame to 63 for a sheet of 8 by 8 images.",
+   "Click the Gear icon on the emitter and choose Create Asset From This, so that FX_Smoke becomes its own emitter asset that you can use again. Save everything."
+  ],
+  "done_when": "Send a screenshot of the Niagara Editor with the FX_Smoke stack open, where Spawn Rate and Acceleration Force are visible, and a screenshot of the smoke column in the level. Also show the FX_Smoke emitter asset in the Content Browser.",
+  "quiz": [
+   {
+    "q": "What is a sprite in Niagara?",
+    "choices": [
+     "A 2D plane that always faces the camera and shows a texture or material",
+     "A small static mesh",
+     "A light that follows a particle",
+     "A sound attached to a particle"
+    ],
+    "explain": "Sprites are 2D camera-facing planes. The renderer draws a texture or material on them."
+   },
+   {
+    "q": "Why does the tutorial set Sub Image Size to X 8, Y 8 in the Sprite Renderer?",
+    "choices": [
+     "It makes each sprite 8 times bigger",
+     "The smoke material of the tutorial is a sprite sheet, so the renderer must know how many images are in the grid",
+     "It limits the emitter to 8 particles",
+     "It sets the number of LODs"
+    ],
+    "explain": "A sprite sheet holds many images in a grid. Sub Image Size tells the Sprite Renderer how many images there are in each direction, here 8 by 8."
+   },
+   {
+    "q": "The tutorial deletes Spawn Burst Instantaneous and adds Spawn Rate. What is the reason?",
+    "choices": [
+     "Spawn Burst only works on the GPU",
+     "Spawn Rate is needed for SubUV materials",
+     "The goal is a constant column of smoke, not one burst",
+     "Spawn Burst cannot be used with Shape Location"
+    ],
+    "explain": "A burst spawns everything at once. Spawn Rate (50 per second here) gives a steady column of smoke."
+   },
+   {
+    "q": "Without the SubUV Animation module, what happens to the smoke sprite sheet?",
+    "choices": [
+     "The particles are invisible",
+     "All 64 images show at the same time",
+     "The material turns black",
+     "The renderer only shows the first image of the sheet"
+    ],
+    "explain": "If nothing plays the sheet, the renderer uses only the first sprite. SubUV Animation with Linear mode from frame 0 to 63 plays all 64 images."
+   },
+   {
+    "q": "Which module makes the smoke rise over time, and in which group is it?",
+    "choices": [
+     "Add Velocity in Particle Spawn",
+     "Acceleration Force in Particle Update",
+     "Spawn Rate in Emitter Update",
+     "Shape Location in Particle Spawn"
+    ],
+    "explain": "Add Velocity only gives a start push. Acceleration Force (Z 500) in Particle Update keeps pushing the smoke up every frame."
+   },
+   {
+    "q": "How do you save the FX_Smoke emitter so other systems can reuse it?",
+    "choices": [
+     "Right-click the system and choose Export",
+     "Drag the emitter into the level",
+     "Click the Gear icon on the emitter and choose Create Asset From This",
+     "Save the level"
+    ],
+    "explain": "The Emitter Settings menu (Gear icon) has Create Asset From This, which makes an independent Niagara Emitter asset."
+   }
+  ]
+ },
+ "TAQ57": {
+  "brief": "You do not have to build every effect from zero. If you start from an emitter that already works and change a few values, you get a new effect in much less time. In this quest you take a simple smoke emitter and change its speed, color, size and forces until it looks like steam.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a smoke emitter to start from. If you have a smoke emitter asset of your own, right-click it, choose Duplicate Emitter, and rename the copy FX_Steam. If not, right-click in the Content Browser, choose FX, then Niagara System, pick New system from selected emitters, add the Simple Sprite Burst template, and rename the emitter to FX_Steam. In this emitter, delete Spawn Burst Instantaneous and add a Spawn Rate module, an Add Velocity module, a Shape Location module with a sphere, and an Acceleration Force module.",
+   "If you started from an emitter asset, right-click FX_Steam and choose Create Niagara System, which makes a new system that already contains the emitter. Name the system Steam and drag it into a level.",
+   "In Emitter Update, find Emitter State and set Life Cycle Mode to System. Then set Spawn Rate to 30.",
+   "In Initialize Particle, set the lifetime range to 3 to 7, the color to white (1, 1, 1) and the sprite size to 100 to 200. Set Add Velocity so that it pushes the particles sideways and up (X 16 to 32, Y -5 to 5, Z 35 to 50). Set the sphere radius to 20.",
+   "In Particle Update, give Acceleration Force a random range with a minimum of X 25, Y -10, Z 15 and a maximum of X 55, Y 10, Z 25. In Scale Color, pick the Pulse Out curve shape, which makes the steam fade in and then fade out.",
+   "Add a Drag module, which slows the particles down. When the 'unmet dependencies' error appears, click Fix Issue so that Niagara moves the module to the correct place. Set Drag to 0.8."
+  ],
+  "done_when": "Send a screenshot of the Steam system in a level next to a prop (for example a cylinder that stands for a pipe or a cup), and a screenshot of the Particle Update group that shows Acceleration Force, Scale Color and Drag in the correct order."
+ },
+ "TAQ58": {
+  "done_when": "Send a screenshot of the lightning beam in the level and a screenshot of the Particle Update group that shows Update Beam above Jitter Position. If you did the optional step, also show the Override Parameters section with Sphere_BeamEnd.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System from the Static Beam template. Name it BeamSystem, rename the emitter to FX_Beam and drag the system into a level.",
+   "In the Render group, keep the Ribbon Renderer with DefaultRibbonMaterial. In its Tessellation section, set Curve Tension to 0.5.",
+   "In Emitter Update, give Loop Duration a Random Ranged Float from 0.1 to 0.2. In Beam Emitter Setup, enable Absolute Start and Absolute End and turn on Use Beam Tangents (both tangents point up in Z). Set Spawn Burst Instantaneous to 35.",
+   "In Particle Spawn, set Lifetime to 0.2 so the beam appears and disappears quickly. Keep the Spawn Beam module as it is. In Beam Width, choose the Ramp Up Down curve and set Scale Curve to 5.",
+   "In Particle Update, add a Jitter Position module, which moves the particles by small random amounts. Then add an Update Beam module and drag it above Jitter Position. Set Jitter Delay to -0.01 and Jitter Amount to 15.",
+   "Optional: on Beam End, make a New Dynamic Scratch Input with an Actor Component Interface, and turn it into a user parameter named Beam_End. Then place a sphere in the level, name it Sphere_BeamEnd, select the system in the level and pick the sphere as the Source Actor, so the beam ends at that sphere."
+  ]
+ },
+ "TAQ59": {
+  "done_when": "Send a screenshot of Emitter Properties that shows Sim Target set to GPUComputeSim and Fixed Bounds ticked, plus a screenshot of the swirling particle ball in the level.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System from the Simple Sprite Burst template. Name it GPUSprite, rename the emitter to FX_GPUSprite and drag the system into a level.",
+   "Open Emitter Settings, then Emitter Properties, and set Sim Target to GPUComputeSim so the particles are calculated on the graphics card. Tick Fixed Bounds to clear the warning that appears.",
+   "In Emitter Update, set Life Cycle Mode to System. Set the Spawn Burst Instantaneous count to 2500, and add a Spawn Rate module set to 500.",
+   "In Initialize Particle, set Lifetime to 5 and Sprite Size to 5 by 5. Then add a Sphere Location module, which spawns the particles inside a sphere shape.",
+   "In Particle Update, add a Scale Sprite Size module and set it to Non-Uniform. For Scale Factor choose Vector2D from Float, then choose Float from Curve and pick the Ramp Up Down shape, so each particle grows and then shrinks.",
+   "Add a Curl Noise Force module (Noise Strength 72, Noise Frequency 0.02), which makes the particles swirl. Add a Point Attraction Force module (Attraction Strength 5.5, Attraction Radius 300, Falloff Exponent 0.6, Kill Radius 4 enabled), which pulls the particles toward one point.",
+   "Add a Color module and set it to Color from Curve. Build a gradient with at least four color stops, and make the alpha (the opacity) fade to 0 at the end."
+  ]
+ },
+ "TAQ60": {
+  "brief": "Particles can do more than show an image: each one can also carry a small light that shines on the floor and walls around it. This makes fire, magic and sparks look like a real part of the scene. In Niagara you do this with a Light Renderer, which you add next to the normal Sprite Renderer. In this quest you build a blue fountain of particles that lights up a dark corner of a level.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System from the Fountain template. Name it ParticleLights, rename the emitter to FX_ParticleLight and drag the system into a dark part of a level. If the level has no dark place, build a small closed room from cubes.",
+   "In Emitter Update, set Life Cycle Mode to System and set Spawn Rate to 500.",
+   "In Initialize Particle, set a random lifetime (1.75 to 2.5), set the color to R 0.1, G 0.3, B 50, and set a random uniform sprite size (2.5 to 8). A color value above 1 makes the particles glow. Set the Sphere Location radius to 15.",
+   "In the Add Velocity in Cone module, set Velocity Strength to a random range of 300 to 600.",
+   "Keep Gravity Force and Drag at their default values. Add a Collision module so the particles do not fall through the floor, and click Fix Issue when the error appears.",
+   "In the Render group, add a Light Renderer, which creates a light for each particle. Set Radius Scale to 5 and set Color Add to X 0, Y 0, Z 15, which gives a strong blue light."
+  ]
+ }
+}

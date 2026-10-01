@@ -1,0 +1,136 @@
+{
+ "PQ43": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Torch with a Static Mesh and a Point Light. On BeginPlay, print 'Torch BeginPlay' plus the display name you get from Get Parent Actor.",
+   "Make an Actor Blueprint named BP_Wall with a Static Mesh cube scaled to 4 x 0.2 x 2. Add two Child Actor Components and set the Child Actor Class of each to BP_Torch. Move them to the left end and the right end of the wall.",
+   "Place BP_Wall in the level and press Play. Read the Output Log: each torch prints the wall as its parent actor.",
+   "In BP_Wall, add an event for the T key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, call Get All Child Actors with Include Descendants turned on, and print the length of the result. You should see 2.",
+   "Make BP_Torch2, a child Blueprint of BP_Torch that has a different light color. In BP_Wall, add an event for the C key that calls Set Child Actor Class on the first Child Actor Component with BP_Torch2.",
+   "In BP_Torch, also print the value of Is Child Actor on BeginPlay. Drag one BP_Torch directly into the level and compare what it prints with what the wall torches print."
+  ]
+ },
+ "PQ44": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a new Blueprint Class with Actor Component as the parent, and name it BPC_Health. Add a float variable named MaxHealth with the value 100, and a float variable named Health.",
+   "In BPC_Health, on Event Begin Play, set Health to the value of MaxHealth. Add a function named ApplyDamage with an input named Amount. It lowers Health, clamps it so it cannot go below 0, and prints the name of the owner plus Health. Use Get Owner to get the name.",
+   "Add BPC_Health to BP_ThirdPersonCharacter and to a new actor named BP_Barrel. Make MaxHealth Instance Editable, and set it to 30 on the barrel.",
+   "In BP_Barrel, add an event for the K key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, use Get Component by Class with BPC_Health and call ApplyDamage with 10. Press Play and watch the two actors keep separate Health values.",
+   "In BPC_Health, add an Event Dispatcher named OnDied and call it when Health reaches 0. In BP_Barrel, bind an event to it that destroys the barrel.",
+   "In the defaults of the barrel's component, turn Auto Activate off. In ApplyDamage, check Is Active and ignore the damage when the component is not active. Then call Activate from the BeginPlay of the barrel."
+  ]
+ },
+ "PQ45": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Ticker with a Static Mesh and place it in the level. In its Class Defaults, set Auto Receive Input to Player 0, so that it receives key presses. On Event Tick, add Delta Seconds to a float variable named Elapsed and print it each frame.",
+   "In Class Defaults, find the Actor Tick section. Set Tick Interval to 0.5 and press Play. The print now appears twice per second. Then set it back to 0.",
+   "Add an event for the P key that calls Set Actor Tick Enabled with Enabled set to false. Add an event for the O key that sets it to true. Press Play and confirm that the print stops and starts again.",
+   "Add an event for the G key that calls Set Tick Group with Post Physics. Press Play, press G, and read the Tick Group value in the Details panel of the actor while the game is running.",
+   "Make BP_Follower with a Static Mesh. On each Tick, it sets its own location to the location of BP_Ticker plus 200 on X. Set the tick group of BP_Follower to Post Physics and the tick group of BP_Ticker to Pre Physics.",
+   "In the BeginPlay of BP_Follower, call Add Tick Prerequisite Actor with BP_Ticker. This makes the follower wait for the ticker. Write one line that says why this is not needed when the two actors are already in different tick groups."
+  ]
+ },
+ "PQ46": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Bullet with a small sphere mesh and a Projectile Movement Component. On BeginPlay, call Set Life Span with 2.0 so that the bullet destroys itself after 2 seconds.",
+   "In the character Blueprint of the template, on the left mouse button, use Spawn Actor from Class to spawn BP_Bullet at the camera location. To make it repeat while you hold the button, start a timer on Pressed with Set Timer by Event, with Time 0.05 and Looping turned on, and stop it on Released with Clear and Invalidate Timer by Handle. Hold the button for 10 seconds. Open the console, run stat game, and note the frame time and the lines about spawning actors while you shoot.",
+   "Make an Actor Blueprint named BP_BulletPool. On BeginPlay, spawn 30 BP_Bullet actors. Hide each one with Set Actor Hidden In Game, disable its collision, and set its Projectile Movement to inactive. Store them all in an array variable named Pool.",
+   "Add a function named GetBullet. It finds the first hidden bullet, unhides it, enables its collision, activates its movement, and returns it. Add a function named ReturnBullet that does the opposite.",
+   "Change BP_Bullet: remove Set Life Span. Add a Custom Event named OnTakenFromPool to BP_Bullet, and call it from GetBullet each time a bullet is taken from the pool. In this event, use Set Timer by Event with Time 2.0 and Looping off. When the timer ends, call ReturnBullet on the pool with this bullet. Then change the character so that it calls GetBullet instead of Spawn Actor.",
+   "Shoot for 10 seconds again with stat game open. Write three lines: what changed, why destroyed actors are not freed immediately, and one case where pooling is not worth it."
+  ]
+ },
+ "PQ47": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Project Settings. Click through the categories on the left side. Note the five that you think a programmer uses most.",
+   "Under Project, open Description. Set Project Name, Company Name and a Copyright Notice for the project.",
+   "Under Project, open Maps & Modes. Set Editor Startup Map to a level of the project, for example the level of the template, and set Game Default Map to the same level.",
+   "Still in Maps & Modes, check which Default GameMode is set. A GameMode is the Blueprint that holds the rules of the game. If you have your own BP_ GameMode, select it here.",
+   "Use the search box at the top to find the setting Use Borderless Window. Note which category it is in.",
+   "Click Export in the upper-right corner and save a backup file of your settings.",
+   "Open the file <ProjectDirectory>\\Config\\DefaultEngine.ini in a text editor. Find the GameDefaultMap line that you just changed."
+  ]
+ },
+ "PQ48": {
+  "checklist": [
+   "Use any project, or create one from the Third Person template. Close the Editor. Open the folder <ProjectDirectory>\\Config and look at its files with a text editor. List the Default*.ini files you find (DefaultEngine, DefaultGame, DefaultInput, and so on).",
+   "In DefaultEngine.ini, find the section [/Script/EngineSettings.GameMapsSettings] and, inside it, the key GameDefaultMap.",
+   "Open the engine file Engine\\Config\\BaseEngine.ini. Only read it and do not edit it. Find the same section and compare the two values.",
+   "In DefaultGame.ini, add your own section [MyTestSection] with the line MyValue=42 under it. Above it, add a comment line that starts with ; (a semicolon).",
+   "Open the Editor. In the console, type: GetIni Game:MyTestSection MyValue. Confirm that the value 42 is printed.",
+   "In Project Settings, change one setting (for example Project Name). Close the editor and check that DefaultGame.ini changed."
+  ]
+ },
+ "PQ49": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin that you want).",
+   "Enable the plugin with its checkbox. Save your work and restart the Editor when it asks you to.",
+   "In the Content Drawer, click the Settings button with the gear icon in the upper right and turn on Show Plugin Content. Then find a plugin folder in the folder tree.",
+   "On your disk, open the engine folder Engine\\Plugins and find the folder of the plugin you enabled. Open its .uplugin file in a text editor.",
+   "In the .uplugin file, find FriendlyName, Category, CanContainContent and the Modules list. Note the Type of each module (Runtime, Editor, and so on).",
+   "In the Editor, open Edit > Plugins and click the Add button in the top left corner. In the New Plugin window, choose the Content Only template and name the plugin MyToolsPlugin. Then find its folder under <Project>\\Plugins."
+  ]
+ },
+ "PQ50": {
+  "brief": "Source control, which the Editor now calls revision control, is a system that keeps every version of the project files and lets a team work on one project without overwriting each other. Unreal assets cannot be merged like text, so the Editor lets you check out a file, which locks it for you while you edit it, and then submit your change. Teams depend on this, and the Editor has the buttons built in. The documentation page still uses the older name Source Control for menus that are now named Revision Control. In this quest you look at the revision control settings and either do a real check out and submit, or describe the workflow in writing.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Editor Preferences, then Loading & Saving, and find the Source Control section (named Revision Control in newer versions). Read each option and note which ones are on by default.",
+   "Click the Revision Control button in the bottom right corner of the editor window and choose Connect to Revision Control. The documentation page calls this the Source Control icon. In the login dialog, look at the list of providers (Perforce, Subversion, and Git if its plugin is enabled).",
+   "If you have a server (for example Perforce or a Git repo), pick the provider, enter its settings, and click Accept Settings. If you do not have one, close the dialog without connecting and continue with the writing part.",
+   "If you have a connection: right-click an asset in the Content Browser and use Check Out, then change the asset and save it. After that, open the Revision Control menu again, choose Submit Content, and write a short description. The documentation page lists this as File > Submit to Source Control.",
+   "If you have no connection: read the sections Checking Out, Submitting, Syncing and Deleting Files on the documentation page. Write 5 lines that describe that workflow in your own words.",
+   "Open Edit > Project Settings and look for the check-out indicator on the config file. Note why config files cannot be checked back in from the Editor."
+  ]
+ },
+ "PQ51": {
+  "brief": "Packaging turns a project into a game that runs by itself, without the Unreal Editor. On Windows the result is a folder with an .exe file. Things that work in the Editor can break in a packaged build, so the packaged build is the real test. In this quest you package a project for Windows and run the result.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Project Settings and go to Maps & Modes. Set Game Default Map to a playable level, such as the level of the template, because this is the level the packaged game opens first.",
+   "In Project Settings, open Packaging and look at the Project section. Confirm that Build Configuration is set to Development.",
+   "In the main toolbar, open the Platforms menu and choose Windows. Check that Binary Configuration shows Use Project Setting (Development).",
+   "Click Package Project. Pick or create an empty folder for the build, called the staging folder (for example D:\\Builds\\MyGame). Wait until you see the message Packaging Complete.",
+   "If packaging fails, open Window > Message Log and read the Packaging Results section. Fix the first error and try again.",
+   "Open the staging folder and run the .exe file. Then find the Pak files, which hold the game content, under [ProjectName]\\Content\\Paks.",
+   "In the running game, press the backtick key to open the console. Type quit and press Enter to close the game."
+  ]
+ },
+ "PQ52": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Choose ActorActionUtility as the parent class and name the asset EUB_ActorTools.",
+   "Add a function named PrintSelectedNames. Select its entry node and confirm that Call In Editor is checked.",
+   "In the function, call Get Selection Set (you find it in the Development > Editor category). Loop through the actors it returns and use Print String to print the Display Name of each actor.",
+   "Click Compile and save. Select 3 actors in the level, right-click them, open Scripted Actor Actions, and run PrintSelectedNames.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes and click Compile. Check that the action no longer shows when you right-click a Light actor.",
+   "Add a second function with a float input named NewScale. It sets Actor Scale 3D on each selected actor. Run it and type a value in the window that pops up."
+  ]
+ },
+ "PQ53": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any Blueprint, or make a new Actor Blueprint named BP_TestActor with one variable and a Print String on BeginPlay. In the Blueprint Editor, open Window > Compiler Results and dock the panel under the graph.",
+   "Click Compile without changing anything. Read the success line and note the compile time in milliseconds.",
+   "Now make an error. Add a Cast To node and leave its Object pin with nothing connected. Also add a Get node for a variable, and then delete that variable. Click Compile.",
+   "Move the mouse over each message to read the extra detail. Then click a message and watch the graph jump to the node with the problem.",
+   "Fix the error. Now make a message that is not an error. For example, connect Get Player Character to a Cast To Character node. This cast is not needed, and the compiler tells you so with a warning or a note. Click Compile and compare the colors of the two kinds of message.",
+   "Click Clear in the panel. Compile once more so that the panel is empty and the compile is green."
+  ]
+ },
+ "PQ54": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Press Play, then press the backtick key to open the console. Type r.RefractionQuality and press Enter. Read the value and the LastSetBy text, which tells you what set the value last.",
+   "Type r.RefractionQuality ? and read the help text. Then type r.RefractionQuality 0 and check the new value that is printed.",
+   "Type the first letters of a variable (for example r.Shadow) and watch the auto-complete list appear. Pick one variable and read its help by adding ? after its name.",
+   "Open Edit > Plugins and enable the Console Variables Editor plugin. Restart the editor, and then open Window > Console Variables.",
+   "Click Add Console Variable and add r.RefractionQuality. Hover the mouse over the value to see the Custom, Preset and Startup values. Also check the Source column.",
+   "Open Edit > Project Settings and go to Engine, then Console. Find Max Scrollback Size and the Auto-Complete options."
+  ]
+ },
+ "PQ55": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level and add a NavMeshBoundsVolume, the volume that tells AI where it can walk, if it has none. Add one AI Character named BP_VLogBot: duplicate BP_ThirdPersonCharacter, delete its input nodes, and on BeginPlay call AI Move To toward a Target Point that you place in the level.",
+   "Open Tools > Debug > Visual Logger.",
+   "Start recording in the Visual Logger, and then press Play to start Play In Editor (PIE). Let the bot walk for 10 to 20 seconds, and then stop PIE.",
+   "In the Actor list of the Visual Logger, search for the AI controller of the bot and select it.",
+   "Drag the timeline scrubber, the bar that marks the current time, to a moment when the bot was moving. Look at the snapshot area and the text window.",
+   "Write one sentence that says what changes in the snapshot when you move the scrubber."
+  ]
+ }
+}

@@ -1,0 +1,321 @@
+{
+ "AQ73": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (its name starts with PA_ and it sits next to SKM_Manny), or the one of your own character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow.",
+   "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends.",
+   "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V.",
+   "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies.",
+   "Open Window > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values.",
+   "Create an Actor Blueprint named BP_RagdollPawn with a Skeletal Mesh Component that uses SKM_Manny. Set the collision of the component to Collision Enabled, and set it to ignore the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Place the Blueprint in a level, press Play and compare with the default profile."
+  ]
+ },
+ "AQ74": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a character with a hanging part, such as a ponytail, a chain, a tail or a hose. If you have none, use the mannequin and treat its left arm, from upperarm_l down to hand_l, as the hanging chain. Right-click the Skeletal Mesh, choose Create, then Physics Asset, then Create, and name the asset PHYS_Secondary. Keep only the bodies of the hanging chain, and the bodies of the head, the back and the arms that it can touch.",
+   "In the Skeleton Tree, right-click the bodies of the chain and choose Collision, then Enable Collision All. Set their Physics Mode to Simulated. Set every other body to Kinematic, which means physics does not move it.",
+   "Set Mass (kg) so that the body nearest to the parent is the heaviest and each next body has half the mass. Set Linear Damping and Angular Damping to about 5.0 on the simulated bodies. Press Simulate to test.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn), name the copy ABP_Character, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. In its AnimGraph, after the last pose node, add a RigidBody node, which also adds the conversion nodes to and from component space. Set Override Physics Asset to PHYS_Secondary. Keep Simulation Space set to Component Space.",
+   "Expand Sim Space Settings. Set Master Alpha to 1, Velocity Scale Z to 0.5, Max Angular Velocity to about 10, and Max Linear Acceleration to a few hundred. Run the game and spin the character.",
+   "In the Event Graph, add a custom event named OnTeleport that calls Reset Dynamics on the Anim Instance. Trigger this event after you teleport the character, so the simulation starts fresh."
+  ]
+ },
+ "AQ75": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (its name starts with PA_ and it sits next to SKM_Manny) and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody.",
+   "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled.",
+   "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset.",
+   "Create an Actor Blueprint named BP_PhysAnimPawn with a Skeletal Mesh Component that uses SKM_Manny. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01.",
+   "In the Event Graph, connect three nodes after BeginPlay. First, call Set Skeletal Mesh Component with the Physical Animation Component as target. Second, call Apply Physical Animation Profile Below with Body Name set to BoneName, Profile Name set to PAP_UpperBody, and Include Self on. Third, call Set All Bodies Below Simulate Physics with BoneName, New Simulate on and Include Self on.",
+   "Set the mesh to play a looping animation: set Animation Mode to Use Animation Asset and pick an idle. Place the Blueprint in a level and place a cube with Simulate Physics turned on next to it. Play in the editor and push the cube into the character. The upper body should follow the animation and also react to the hits.",
+   "Try Orientation Strength 100 and then 5000. Note how closely the pose still follows the animation in each case."
+  ]
+ },
+ "AQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Character Blueprint named BP_HitDummy. Set its Mesh to SKM_Manny with the Anim Class ABP_Manny, and set the collision preset of the Mesh so that collision is enabled and the Visibility channel is blocked. Place one in the level. In its Event Graph, add a custom event named HitBone with a Name input. In it, call Set All Bodies Below Simulate Physics on the Mesh with that bone, New Simulate on and Include Self on.",
+   "In BP_HitDummy, add a Timeline named TL_HitBlend with a length of 0.6 s and a float track that goes from 0 to 1 and back to 0. Play it from the start at the end of HitBone. On every update of the Timeline, send its value to Set All Bodies Below Physics Blend Weight for the same bone.",
+   "On the Finished output of the Timeline, call Set All Bodies Below Simulate Physics with New Simulate off, so that the simulation stops.",
+   "In BP_ThirdPersonCharacter, add a key press event that does a Line Trace by Channel from the camera forward, with Trace Complex turned on. Break the hit result, cast the Hit Actor to BP_HitDummy, take the Hit Bone Name, and call HitBone with it.",
+   "Open the Physics Asset of the mannequin. Select hand_l and hand_r and set their Physics Type to Kinematic. Set Physics Update Mode to Component Transform is Kinematic. Simulate with the jump loop animation, and watch the hands stay on the animation.",
+   "Play in the editor. Aim at the arm of the dummy and press the key, and then do the same on the leg. Check that the part that was hit blends into physics and back to the animation."
+  ],
+  "done_when": "Send a short video clip (30 seconds or less), or three screenshots, of a hit blending in and out. Also send a screenshot of the Event Graph with the timeline and both Set All Bodies Below nodes."
+ },
+ "AQ77": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and enable the Groom plugin in Edit > Plugins. Get a groom asset. No template includes one, so use a MetaHuman hair groom from Epic, a free groom from Fab, or any Alembic (.abc) groom that you import with the Alembic Groom Importer plugin. Double-click it to open the Groom Asset Editor.",
+   "In the Show menu of the viewport, turn on Guide and Guide Influence. Take a screenshot of the simulation guides and their colored clumps, the groups of strands that follow one guide.",
+   "In the Physics panel, turn on Enable Simulation. Set Niagara Solver to Groom Rods. Note the values of Sub Steps and Iteration Count.",
+   "Lower Bend Stiffness a little and raise Bend Damping. Edit the Bend Stiffness Scale curve so that the tip of the hair (x = 1) is softer than the root (x = 0).",
+   "In the LOD panel, set Simulation to Disable on your last LOD, the simplest version used at far distances.",
+   "Place the groom on a character with a Groom component, for example on the Mesh of BP_ThirdPersonCharacter or on the character the groom came with. On the component, set Physics Asset to the physics asset of the character, which is used for collision. Enable Override Settings, then turn Local Simulation on and set Local Bone to head. Run with the character and watch the hair."
+  ]
+ },
+ "AQ78": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Advanced, then Bone Compression Settings. Name the asset BCS_Quality. Add one codec (a compression method): Anim Compress Per Track Compression. Set Error Threshold to 0.05 and enable Force Below Threshold.",
+   "Create BCS_Small in the same way, with two codecs: Anim Compress Remove Linear Keys and Anim Compress Removes Every Second Key. Set Error Threshold to 0.5.",
+   "Duplicate a run animation of the mannequin twice and name the copies A_Run_Quality and A_Run_Small. In the Asset Details panel of each copy, under Compression, assign the matching Bone Compression Settings asset. Note the size or memory that is shown for each.",
+   "Open BCS_Small and change Max Pos Diff on the Remove Linear Keys codec. Click the Compress button in the toolbar, and read the dialog that shows how many assets will be compressed.",
+   "Create a Curve Compression Settings asset named CCS_Default. Note its default values for Max Curve Error and Error Sample Rate. Assign it to A_Run_Quality.",
+   "Play both animations side by side in the Animation Sequence Editor. Look for foot sliding or shaking on the small one."
+  ]
+ },
+ "AQ79": {
+  "brief": "Animations made in another 3D program come into Unreal as FBX files. The import settings decide which Skeleton the animation belongs to, which frames are imported, and how many frames per second are used. Current versions of Unreal show these settings in the Interchange import window, and older versions show them in a window named FBX Import Options. In this quest you import one animation per file onto an existing Skeleton, and then import a second one with a limited frame range.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Get an FBX file that holds one animation for the mannequin skeleton. If you use a DCC tool (Blender, Maya or 3ds Max), export one animation with the Animations checkbox enabled, export only the skeleton, and put one animation in each file. If you have no such tool, export one from Unreal: right-click an animation of the mannequin, choose Asset Actions, then Export, and save it as an FBX file.",
+   "In the Content Browser, go to the folder where the animation should be stored. Click Import and pick the FBX file.",
+   "The import window opens. In current versions it is named Interchange Pipeline Configuration, and older versions show FBX Import Options. Set Skeleton to your existing Skeleton. For the UE5 mannequins this is the asset named SK_Mannequin. Do not leave it empty, because then a new Skeleton is created. In the new window, also turn on Import Only Animations, which needs a Skeleton to be set.",
+   "Open the Animations section. Set Animation Length to the option that imports only the range of frames that contain animation: it is named Animation Time in the new window and Animated Time in the old one. Let the frame rate come from the file: in the new window, leave Use 30Hz to Bake Bone Animation off and Custom Bone Animation Sample Rate at 0, and in the old window, turn off Use Default Sample Rate.",
+   "Give the animation a name, for example A_Wave: type it into Asset Name in the Common section of the new window, or into Override Animation Name in the old one. Then click Import.",
+   "Import a second animation, or the same file again with another name. This time set Animation Length to Set Range and type a Frame Import Range that covers only the first 20 frames. Compare the two Animation Sequences.",
+   "Open each sequence in the Animation Sequence Editor. Check the number of frames, and check that the Skeleton is the one you chose."
+  ],
+  "done_when": "Send one screenshot of the import window with your Skeleton, Animation Length and the name of the animation set, and one screenshot of the two imported Animation Sequences in the Content Browser. Add one sentence that says how many frames each one has.",
+  "quiz": [
+   {
+    "q": "You export an animation FBX with a different FBX version than the one Unreal expects. Which version does the Unreal FBX import pipeline use?",
+    "choices": [
+     "FBX 2020.2",
+     "FBX 2016",
+     "FBX 2013",
+     "FBX 2024"
+    ],
+    "explain": "The docs say the Unreal Engine FBX import pipeline uses FBX 2020.2. Another version may cause incompatibilities."
+   },
+   {
+    "q": "You import an animation FBX without a skeletal mesh. What do the docs say is required?",
+    "choices": [
+     "A Physics Asset",
+     "An existing Skeleton must be specified",
+     "A Skeletal Mesh in the same folder",
+     "A Material for the mesh"
+    ],
+    "explain": "When you import an animation on its own, you must specify an existing Skeleton in the import window. In the Interchange window, Import Only Animations requires a Skeleton."
+   },
+   {
+    "q": "You import a skeletal mesh and its animation in one FBX and leave the name field empty. What is the Animation Sequence named by default?",
+    "choices": [
+     "After the FBX file name",
+     "After the Skeletal Mesh name",
+     "After the root bone of the skeleton",
+     "AnimSequence_0"
+    ],
+    "explain": "When animation is imported together with a Skeletal Mesh, the sequence is named after the root bone by default. You can rename it later."
+   },
+   {
+    "q": "Your exported time range is longer than the actual keyframes in the file. Which Animation Length option imports only the frames that have animation?",
+    "choices": [
+     "Source Timeline",
+     "Set Range",
+     "Animation Time (named Animated Time in the older FBX Import Options window)",
+     "Frame Import Range"
+    ],
+    "explain": "Animation Time imports the range of frames that contain animation. Source Timeline (Exported Time in the older window) uses the range defined in the file, and Set Range uses the frames you type into Frame Import Range."
+   },
+   {
+    "q": "In the import window, Use 30Hz to Bake Bone Animation is turned on. What sample rate does the animation get?",
+    "choices": [
+     "24 frames per second",
+     "60 frames per second",
+     "The rate stored in the FBX file",
+     "30 frames per second"
+    ],
+    "explain": "With this option on, all animation curves are sampled at 30 frames per second. The older FBX Import Options window has a similar option named Use Default Sample Rate. With the option off and Custom Bone Animation Sample Rate at 0, the importer finds the best rate from the file."
+   },
+   {
+    "q": "Your animation has non-uniform scale on some bones. What does the docs say about importing scale?",
+    "choices": [
+     "Scale is never imported for animations",
+     "Scale imports without extra options, and the engine only saves scale that is not 1",
+     "You must enable Import Scale Tracks first",
+     "Scale is baked into the mesh instead"
+    ],
+    "explain": "Unreal supports non-uniform scale animations. Scale imports automatically, and for memory reasons the engine only stores scale when it is not 1."
+   },
+   {
+    "q": "You want a curves-only animation and do not want any bone transform data. Which option do you turn off?",
+    "choices": [
+     "Import Bone Tracks",
+     "Import Attributes as Curves or Animation Attribute",
+     "Remove Redundant Keys",
+     "Use T0 As Ref Pose"
+    ],
+    "explain": "Import Bone Tracks imports the bone transform tracks found in the file. With it turned off they are left out, which is useful for curves-only animations. The older window writes the name as Import Bone Track."
+   },
+   {
+    "q": "Many DCC tools such as Maya cannot save several animations in one FBX. Which tool does the docs name as one that can, so Unreal imports all of them from a single file?",
+    "choices": [
+     "Blender",
+     "Motion Builder",
+     "Houdini",
+     "ZBrush"
+    ],
+    "explain": "The docs say that if you export from a supporting application such as Motion Builder, Unreal imports all the animations contained in that file."
+   }
+  ]
+ },
+ "AQ80": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Skeleton of the mannequin, or of your own character, in the Animation Editor. In the Skeleton Tree, right-click the root bone, choose Add Virtual Bone, and pick hand_l as the target. Do the same for hand_r.",
+   "Preview an animation and watch the two VB bones follow the hands. Save the Skeleton.",
+   "In the Options menu of the Skeleton Tree, choose Add Blend Mask. Name the mask BM_NoVirtualBones and set both virtual bones to 0.0.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn), name the copy ABP_Character, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. In its AnimGraph, add two Slot nodes: one set to DefaultSlot and a second one named AdditiveSlot, which you first add in the Anim Slot Manager. Connect them to an Apply Additive node.",
+   "Put a Layered Blend per Bone node between AdditiveSlot and Apply Additive. Set its Blend Mode to Blend Mask and pick BM_NoVirtualBones.",
+   "Add a Two Bone IK node for each arm. Set IKBone to the hand, set Effector Location Space to Bone Space, and set Effector Target to the matching virtual bone. Enable Take Rotation from Effector Space.",
+   "Make an additive animation: duplicate an animation in which the upper body moves, such as the idle, and set Additive Anim Type to Local Space in its Asset Details. Create a montage from it, set its Slot track to AdditiveSlot, and play it from a key press in BP_ThirdPersonCharacter. Check that the hands stay where they are in the base pose."
+  ]
+ },
+ "AQ81": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. In the Content Browser, click Add, then Blueprint Class. Open All Classes and pick AnimNotify. Name the new class AN_Footstep.",
+   "In AN_Footstep, use the Override dropdown to add Received Notify. In it, print the name of the owner of the Skeletal Mesh Component, and play a sound at the foot socket.",
+   "Override Get Notify Name, so that the notify shows a clear label on the timeline.",
+   "Create a second Blueprint with the parent class AnimNotifyState and name it ANS_Trail. Override Received Notify Begin, Received Notify Tick and Received Notify End, and put a Print String in each.",
+   "Open a walk Animation Sequence of the mannequin. Add AN_Footstep at each moment where a foot lands, and add one ANS_Trail across the middle of the animation.",
+   "Select one AN_Footstep on the timeline. In the Details panel, set Notify Trigger Chance to 0.5 and Trigger Weight Threshold to 0.5. Play in the editor and watch the printed output.",
+   "Right-click the Notify area and open Manage Notifies. Use Find References on one Skeleton Notify to see where it is used."
+  ]
+ },
+ "AQ82": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a short Animation Sequence with 3 poses for one shoulder: arm down, arm forward and arm up. One way: duplicate the idle animation of the mannequin, open the copy, select upperarm_l in the Skeleton Tree, and press Key in the toolbar at the first frame. Then go to a frame in the middle, rotate the bone so that the arm points forward, and press Key, and do the same at the last frame with the arm up. Right-click the sequence and create a Pose Asset named PA_ShoulderFix.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and open the copy. Add a Pose Driver node after the locomotion pose. Set its Pose Asset to PA_ShoulderFix.",
+   "Add upperarm_l as a Source Bone, the bone whose movement the node reads. Set Drive Source to Rotation and Drive Output to Drive Poses.",
+   "In the Tool dropdown, choose Copy All from PoseAsset to create the pose targets. Then choose Auto Scale.",
+   "Set Solver Type to Interpolative and enable Eval from Ref Pose. Compile, and rotate the arm in the preview to watch the poses blend.",
+   "Hold the Solo button on one Pose Target to preview only that pose. Double-click the button to lock it, and then unlock it again.",
+   "Switch Solver Type to Additive and compare the result. Note which solver is smoother with your 3 targets."
+  ]
+ },
+ "AQ83": {
+  "brief": "A montage does not start and stop in an instant. It blends in from the current pose and blends out again at the end, and the length of these blends decides if an action feels quick or slow. A montage can also have more than one Slot track, so the same montage can play a different animation depending on the state of the character, for example standing or lying down. In this quest you tune the blend settings of a montage and add a second Slot track to it.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a reload montage of your own, or create a montage named AM_Reload from any Animation Sequence of the mannequin that stands in for a reload: right-click it and choose Create, then Create AnimMontage.",
+   "In Asset Details, set the Blend Time of Blend In to 0.1 and the Blend Time of Blend Out to 0.4. Set Blend Out Trigger Time to 0.3, and test the difference in Play In Editor.",
+   "Turn off Enable Auto Blend Out and play the montage. Note what the character does at the end. Then turn the setting on again.",
+   "Open Window > Anim Slot Manager and add a Slot named Prone to the DefaultGroup. Then right-click the Slot track of the montage and choose New Slot. Set the new track to DefaultGroup.Prone.",
+   "Drag a second, different Animation Sequence into the new track. It stands in for a reload done lying down. Make both tracks the same length.",
+   "In BP_ThirdPersonCharacter, add a key press event that calls Play Montage with AM_Reload. Add a bool variable named IsProne to the character. In the AnimGraph of the Animation Blueprint that the character uses, add a Slot node for each of the two slots and use a Blend Poses by bool node on IsProne to choose which Slot node is shown.",
+   "Set In Play Rate to 2.0 on one of the calls, and check that the montage plays at double speed."
+  ]
+ },
+ "AQ84": {
+  "title": "Cheaper crowds: update rates and fixed bounds",
+  "brief": "In a scene with many characters, animation is often the largest cost on the Game Thread, the main line of work of the game. Some of that cost can be saved on the Skeletal Mesh Component, without changing the Animation Blueprint. Update Rate Optimizations, or URO, update the animation of far away characters less often, and fixed bounds stop Unreal from recalculating the size of each character on every frame. In this quest you build a small crowd, turn on these options, and measure what they change.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Character Blueprint named BP_CrowdDummy whose Mesh uses SKM_Manny with the Anim Class ABP_Manny. Place 20 or more copies in a level, in rows that lead away from the Player Start. Press Play, type stat unit in the console, and write down the Game time.",
+   "Open BP_CrowdDummy and select the Mesh component. In the Details panel, find the Optimization section and turn on Enable Update Rate Optimizations. In the same panel, turn on Display Debug Update Rate Optimizations, which shows the update rate of each character on screen while the game runs.",
+   "Press Play. Stand close to the crowd, then walk far away from it, and watch how the debug display on the characters changes with distance. Take a screenshot at each distance.",
+   "On the same Mesh component, search the Details panel for Component Use Fixed Skel Bounds and turn it on. The component now skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not calculated again on every frame. To see the bounds, open the Show menu of the viewport, then Advanced, then Bounds, and compare with the option on and off.",
+   "Open the walk or run animation that the crowd plays and look at its Notifies track. Notifies run on the game thread after the animation work is done, so write one line that says which of them are Blueprint notifies and why the documentation advises notifies that are not Blueprint based.",
+   "Run stat unit again with all options on and compare the Game time with your first number. Read the part about Update Rate Optimizations on the documentation page linked on this quest, and note which plugin it recommends in place of URO for controlling how often Animation Blueprints are evaluated."
+  ],
+  "done_when": "Send one screenshot in Play mode with the URO debug display visible on characters that are near and far, and one screenshot of the Details panel of the Mesh component with the three options turned on. Add the stat unit Game time before and after, and one sentence that says what the URO debug display showed at a distance.",
+  "quiz": [
+   {
+    "q": "According to the docs, which part of an Animation Blueprint is usually the most expensive?",
+    "choices": [
+     "The AnimGraph",
+     "The Event Graph logic",
+     "The State Machine transitions",
+     "The Slot nodes"
+    ],
+    "explain": "The Event Graph runs each tick, sequentially on the Game Thread, and is generally the most expensive part. The docs advise reducing it as much as possible."
+   },
+   {
+    "q": "Where do you turn on Update Rate Optimizations for a character?",
+    "choices": [
+     "In Project Settings, under Rendering",
+     "On the Skeletal Mesh Component, in the Optimization section of its Details panel, with Enable Update Rate Optimizations",
+     "In the Class Settings of the Animation Blueprint",
+     "In the Skeleton asset"
+    ],
+    "explain": "URO is a setting of each Skeletal Mesh Component. You find Enable Update Rate Optimizations in the Optimization section of its Details panel."
+   },
+   {
+    "q": "What does Component Use Fixed Skel Bounds do?",
+    "choices": [
+     "It locks the mesh to its most detailed LOD",
+     "It stops the animation when the character is hidden",
+     "It skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not recalculated every frame",
+     "It makes the collision capsule static"
+    ],
+    "explain": "With this option on, the component uses the fixed bounds defined in the Skeletal Mesh. The bounding volume used for culling is then not recalculated on each frame, which improves performance."
+   },
+   {
+    "q": "Which property shows the URO rate of each character on screen while the game runs?",
+    "choices": [
+     "Display Debug Update Rate Optimizations",
+     "Warn About Blueprint Usage",
+     "Enable Lazy Evaluation",
+     "Component Use Fixed Skel Bounds"
+    ],
+    "explain": "Display Debug Update Rate Optimizations is a property of the Skeletal Mesh Component. It shows the update rate on screen during the simulation."
+   },
+   {
+    "q": "Which plugin do the docs recommend in place of URO for controlling how often Animation Blueprints are evaluated?",
+    "choices": [
+     "Pose Search",
+     "Animation Budget Allocator",
+     "Motion Warping",
+     "Control Rig Modules"
+    ],
+    "explain": "The page recommends the Animation Budget Allocator plugin for controlling the tick rate of Animation Blueprint evaluation."
+   },
+   {
+    "q": "Animation Notifies run on the game thread after the worker threads have finished. What do the docs advise for them?",
+    "choices": [
+     "Use Blueprint notifies wherever you can",
+     "Store every notify on the Skeleton",
+     "Turn all notifies off at a distance",
+     "Make them non-Blueprint based, to avoid calls into the Blueprint Virtual Machine"
+    ],
+    "explain": "Notifies are part of the work done on the main thread after the parallel animation task. The docs say they should not be Blueprint based, because each one would call into the Blueprint Virtual Machine."
+   },
+   {
+    "q": "Your character uses root motion for movement. What do the docs say about parallel animation updates?",
+    "choices": [
+     "They are faster with root motion",
+     "The parallel update cannot happen because character movement is not multi-threaded",
+     "Root motion has no effect on threading",
+     "Root motion forces the AnimGraph onto a worker thread"
+    ],
+    "explain": "If root motion is required for character movement, the update cannot run in parallel, because character movement runs on the game thread."
+   },
+   {
+    "q": "What update rate do the docs suggest as a target when using Update Rate Optimizations at distance?",
+    "choices": [
+     "60Hz with interpolation on",
+     "30Hz with interpolation on",
+     "15Hz and under, with interpolation disabled",
+     "1Hz for all characters"
+    ],
+    "explain": "The docs recommend targeting 15Hz and under at appropriate distances and disabling interpolation."
+   }
+  ]
+ },
+ "AQ85": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Project Settings and search for Skeletal Mesh Reduction. Make sure that the plugin property is set to SkeletalMeshReduction.",
+   "Duplicate SKM_Manny and name the copy SK_Character, or use the Skeletal Mesh of your own character. Open it. In Asset Details, under LOD Settings, set Number of LODs to 4 and click Apply Changes. Save the LODSettings asset next to the mesh.",
+   "Use the LOD menu of the viewport to look at LOD 1, LOD 2 and LOD 3. Write down the triangle count of each one.",
+   "In LOD Picker, enable Custom so that the sections of all LODs are visible. In LOD 3, add the head bone and both hand bones to Bones to Prioritize, set Weight of Prioritization to 5000, and click Regenerate LOD.",
+   "In the Reduction Settings of LOD 2, change Termination Criterion to Max Triangles and set a triangle count. Regenerate the LOD and compare.",
+   "In the LOD Info of LOD 3, add the finger bones to Bones to Remove and click Regenerate LOD. Check the icons of those bones in the Skeleton Tree.",
+   "Set LOD Hysteresis on LOD 1. Move the camera back and forth, and check for LOD popping, a sudden visible switch between two versions."
+  ]
+ },
+ "AQ86": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Plugins and confirm that the Data Validation plugin is enabled.",
+   "In the Content Browser, click Add, then Blueprint Class. Search All Classes for EditorValidatorBase, pick it, and name the new class EUV_AnimNaming.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is an Animation Sequence.",
+   "Override the function Validate Loaded Asset. If the name of the asset starts with A_, call Asset Passes. If it does not, call Asset Fails with a message such as Animation names must start with A_.",
+   "Compile and save. Restart the editor, because validators are found when the editor starts.",
+   "Make a folder named Content/ValidateTest and copy five animations of the mannequin into it. Rename one of them so that its name starts with A_. Right-click one of the others and choose Asset Actions, then Validate Assets. Read the result in the Message Log.",
+   "Right-click the ValidateTest folder and choose Validate Assets in Folder to check everything at once. Fix the names until the whole folder passes."
+  ]
+ }
+}

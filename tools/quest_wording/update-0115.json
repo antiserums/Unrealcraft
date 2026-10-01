@@ -1,0 +1,147 @@
+{
+ "CQ27": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a lit level with a few objects. Open Project Settings. Set Default RHI to DirectX 12, and enable Support Hardware Ray Tracing and Enable Path Tracing. Accept Support Compute Skin Cache when the editor asks. Restart the editor.",
+   "In the viewport, open View Modes and choose Path Tracing. Let the frame converge, which means waiting until the noise is gone. Note how long it takes to become clean.",
+   "Place a Post Process Volume with Infinite Extent (Unbound) turned on, or select the one your level already has. Open its PathTracing category. Set Max Bounces, Samples Per Pixel and Max Path Intensity. Turn Emissive Materials off and on, and look for places that are lit twice.",
+   "Check the materials in the level. Keep the diffuse Base Color below 0.8, and fix any bright white walls.",
+   "Make a Level Sequence with a camera for the render: choose Add Level Sequence in the Cinematics dropdown of the main toolbar, click the Camera button in Sequencer, and set two keys on the camera that are 48 frames apart. Create a job for it in Movie Render Queue (MRQ). Remove Deferred Rendering and add the Path Tracer renderer. For a still frame, use Spatial Sample Count 16 and Temporal 1. Render one frame and note the time.",
+   "For a moving shot of 48 frames, use Spatial 1 and Temporal 8, and enable Reference Motion Blur. Render it and note the seconds per frame.",
+   "Compare a Path Tracer frame with the same frame rendered with Deferred Rendering. Write three differences that you can see."
+  ]
+ },
+ "CQ28": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Pick a shot of 48 frames with a moving camera and one moving object. To make one, choose Add Level Sequence in the Cinematics dropdown of the main toolbar, click the Camera button in Sequencer, set two keys on the camera, and add a cube with two Transform keys. Add the sequence to Movie Render Queue as a job. Add a Burn In setting, which prints information on the image, so that each frame shows the job name and frame number.",
+   "Render A: in Anti-Aliasing use Spatial 1 and Temporal 1, and export a PNG Sequence at 1920x1080. Write down the seconds per frame and the total time.",
+   "Render B: use Spatial 1 and Temporal 8, turn on Override Anti Aliasing and set the method to None. Extend your tracks one frame before the start, so that the first temporal sample has data. Note the time.",
+   "Render C: use the same settings as B, and add High Resolution with Tile Count 2 and Overlap Ratio 0.1 at 3840x2160. Note the time.",
+   "Add a particle effect to the shot: in the Content Browser, create a Niagara System from one of the templates, such as a fountain, and place it in view of the camera. Add Engine Warm Up Count 32 and Render Warm Up Count 8 to the job. Compare the first frame with warm-up and without it.",
+   "Make a table with these columns: render, settings, seconds per frame, total minutes, and what got better. Add the file name format you used, which must include the {ts_count} and {ss_count} tokens.",
+   "Write a budget rule of 3 lines: for a film of 60 seconds at 24 fps, which settings fit into an overnight render on your machine."
+  ]
+ },
+ "CQ29": {
+  "brief": "A shot kit is a folder of ready-made cameras, rigs and render presets that other people can use to build shots quickly. The real test of a kit is that someone can use it with only its README file. In this quest you build the kit, make a demo sequence with it, write a README file that explains it, and test the README by building one more shot from it.",
+  "done_when": "Send a screenshot of the ShotKit folder tree, the text of the README, a short video clip (30 seconds or less) of the rendered demo with the preview and one final shot, and your notes from the README test. A mentor reviews your work.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a folder named Content/ShotKit with the subfolders Cameras, Rigs, Presets and Docs.",
+   "Create at least three Camera Animation Sequences, which are reusable camera moves. In the Content Browser, choose Animation, then Camera Animation Sequence. Name them CAS_PushIn, CAS_Handheld and CAS_Orbit. Make CAS_Handheld additive (set Blend Type to Additive) so that it can be layered on any camera.",
+   "Build two reusable rig Blueprints: BP_RigRail, a Camera Rig Rail with a Cine Camera attached, and BP_RigCrane, a Camera Rig Crane with a Cine Camera. Expose the useful values as variables.",
+   "In MRQ, save two presets. MPC_Final is a Movie Pipeline Primary Config with EXR, tone curve off, Spatial 1, Temporal 8, AA None and Burn In. MPC_Preview uses PNG, 1 and 1 samples, and half resolution. Also save one Shot config named MPS_HeroDoF for a shot that needs more spatial samples.",
+   "Create SEQ_KitDemo with Add Level Sequence with Shots, with 3 shots. Use a different kit item in each shot: a rig, a Camera Animation Sequence through the Template Sequence track, and CAS_Handheld layered on a rail move. Render it with MPC_Preview, and then render one shot with MPC_Final.",
+   "Write Docs/README as a text or markdown file. It says what each asset is, how to add it to a shot, a naming rule for shots and takes (the shot prefix, the number of digits, and where takes are saved), which preset to use when, and the expected seconds per frame for each preset on your machine.",
+   "Test the README. If another person can help you, ask them to follow it and build one new shot with the kit without your help. If nobody can, take a break and then build one new shot yourself by following only the README, step by step. Write down what was unclear and fix the README."
+  ]
+ },
+ "CQ30": {
+  "done_when": "Send a screenshot of the Live Link window that shows the connected source and subject with a green light, a screenshot of the recorded take open in Sequencer, and a short video clip (30 seconds or less) or a screenshot of the view in the VCam app.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and enable VirtualCamera, Live Link and Take Recorder. Restart the editor.",
+   "Install the Unreal VCam app on an iOS device (version 15 or later, with ARKit) or an Android device (with ARCore). Put the device on the same network as your PC.",
+   "In the Place Actors panel, search for VCAM and drag a VCam Actor into the level. Notice that the viewport starts to pilot it.",
+   "Open the Pixel Streaming dropdown (not Pixel Streaming 2) and read the Signaling Server URL that matches your network. Enter it in the app and press Connect.",
+   "Walk with the device to frame a shot. Then use the touch joysticks to add extra movement on top of the tracked motion.",
+   "Open Window > Live Link. Find the source and the subject for your device, and confirm that the status light is green.",
+   "Record a camera take of 10 seconds with Take Recorder and play it back in Sequencer."
+  ]
+ },
+ "CQ31": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place two Static Mesh actors, such as cubes, in the level. Create a Level Sequence named LS_TrackTour and click the Camera button in the Sequencer toolbar to add a camera. Use Add Track (+), then Actor To Sequencer, to add the two meshes.",
+   "Right-click one mesh track and choose Rename. Give it a clear name. Notice that the actor in the level gets the new name too.",
+   "Right-click the camera track and choose Locked. Try to add a key on it. Then unlock the track again.",
+   "Right-click one mesh track and choose Solo. Drag the playhead and watch the other tracks stop working. Then use Mute on one track and see its actor become hidden in the viewport.",
+   "Add a Fade Track with Add Track (+), then Fade Track. Key the value 0 at frame 0 and the value 1 near the end. Right-click the fade section, open Properties, and set Fade Color to white.",
+   "Right-click one mesh track, open Edit Track, then Condition, and add a Scalability Condition. This makes the track play only at certain quality settings. Turn on Editor Force True so that it still plays in the editor.",
+   "Type part of a track name in the Sequencer search field. Then open the Filters menu to filter the list by track type."
+  ]
+ },
+ "CQ32": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place a Point Light and a Static Mesh actor, such as a cube, in the level. Create a Level Sequence named LS_Properties and add both to it. Note which tracks appear by default.",
+   "On the light, use Add Track (+), then Properties, and add Intensity (a float, which is a number with decimals) and Light Color (a color). Key two values on each track. Double-click a color key to open the Color Picker.",
+   "Right-click the Intensity section, open Display, and choose Show Curve. The float curve is now drawn inside the track.",
+   "Add a Boolean property, which can only be on or off, for example Visible / Hidden In Game. Key it on and off. Notice the red and green colors on the timeline.",
+   "On the Transform track of the mesh, right-click the section, open Properties, and turn on Use Quaternion Interpolation. Set Show 3D Trajectory to Always.",
+   "Right-click the Location Z channel of the transform and choose Override with Double Perlin Noise. Change Frequency and Amplitude in Double Perlin Noise Parameters.",
+   "Right-click the transform section, open Active Channels, and disable Scale."
+  ]
+ },
+ "CQ33": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any Level Sequence, or create a new one, and add a mesh from the level to it, such as a cube. Animate the Location of the mesh with at least five keys. Open the Curve Editor from the Sequencer toolbar.",
+   "Select the Location Z track in the Curve Editor Outliner. Press F to Zoom to Fit. Try the three View Modes: Absolute, Stacked and Normalized.",
+   "Select one key. Turn on Weighted Tangents and stretch a tangent handle. Hold Shift while you move a tangent to snap it to 45 degrees.",
+   "Right-click a curve segment and choose Buffer Curves, which stores a copy of the curve. Move some keys. Then right-click and choose Apply 1 Buffered Curves to go back to the stored curve.",
+   "Enable the Retime Tool (Ctrl + E). Double-click in the graph to add an anchor. Drag the anchors to move the keys in time.",
+   "Enable the Multi Select Tool (Ctrl + M). Select several keys and scale them with Pivot Type set to First Key.",
+   "Open the Filter Tool. Bake the selected keys with Use Frame Bake turned on and Bake Interval in Frames set to 2. Then set Post Infinity to Oscillate (Ping Pong) on the curve, which decides how the curve continues after its last key."
+  ]
+ },
+ "CQ34": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place a mesh in the level, such as a cube. Create a Level Sequence named LS_Blends and add the mesh, so that it has a Transform track. Right-click the section, open Properties, and unlock Section Range Start and End. The section now has a fixed start and end.",
+   "Click Section (+) on the Location track and add a second section with Blend Type set to Additive. Key a small up-and-down move on it and watch it stack on top of the base.",
+   "Add a third section with Blend Type set to Additive from Base. Notice that its first key is equal to the current value at that time.",
+   "Drag the blend handle at the top corner of a section to make an ease in and an ease out. Right-click the blend curve and set Easing Length to a fixed length. Then choose a curve shape from Options.",
+   "Drag two Absolute sections so that they overlap. Drag the playhead through the overlap, and use Order to change which section shows its keys.",
+   "On one section, click Add (+), then Add Time Warp, then Time Warp Curve. Key the play rate so that the motion slows down in the middle.",
+   "Right-click the base section, open Properties, and set When Finished to Keep State. Play past the end and confirm that the mesh stays in its final position."
+  ]
+ },
+ "CQ35": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Level Sequence named LS_PlayerBind. Drag the player character Blueprint, BP_ThirdPersonCharacter, from the Content Browser into Sequencer, so that it becomes a spawnable preview.",
+   "Right-click the character track and choose Convert Selected Binding(s) To…, then Replaceable from Director Blueprint…, then Quick Bind, then Resolve to Player Pawn.",
+   "Add a Camera Cut and a short camera move that frames the character. Add an Animation track on the character with any animation.",
+   "Place a Level Sequence Actor in the level and turn on Auto Play. Press Play In Editor and confirm that the real player pawn is used, not the preview.",
+   "Right-click the track and choose Convert Selected Binding(s) To…, then Replaceable from Director Blueprint…, then Create New Binding Endpoint. Open the Director Blueprint and look at the binding node and its return node.",
+   "Split the Return Value struct pin so that you see its parts. Set Return Value Object to an actor you choose, and test with Is Possessed Object turned on and turned off.",
+   "Right-click the track, open Binding Properties, and use the trash icon to remove the custom binding. Notice that the Blueprint functions are still there."
+  ]
+ },
+ "CQ36": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any sequence that has a camera and a mesh. To make one, choose Add Level Sequence in the Cinematics dropdown of the main toolbar, click the Camera button in Sequencer, and add a cube from the level with Add Track (+), then Actor To Sequencer. Do this whole quest without the toolbar buttons wherever a hotkey exists.",
+   "Practice playback. Press Space to play, Up Arrow to jump to the start, and Ctrl + Up Arrow to jump to the end. Press L and J to shuttle forward and backward, and press comma and period to step between keys.",
+   "Set the playback range with [ and ] at the playhead. Press Home to reframe the timeline.",
+   "Select the mesh in the viewport. Press S to key the full transform. Then move the mesh and press Shift + W to key only the Location.",
+   "Select two keys and press 4 (Linear), then 1 (Cubic Auto). Move them by one frame with Ctrl + Right Arrow. Then press Ctrl + M and move them by 12 frames.",
+   "Select a section, put the playhead in the middle of it, and press Ctrl + / to split it. Trim the pieces with Ctrl + , and Ctrl + . (comma and period).",
+   "Drag a new actor into the level while you hold Shift, then drag another one while you hold Ctrl. Check which one became a spawnable in Sequencer. Then drag the playhead with MMB to move the time without evaluating the sequence."
+  ]
+ },
+ "CQ37": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a sequence that has at least eight tracks, such as cameras, lights, meshes and audio. If you do not have one, create a Level Sequence and add cameras, lights and cubes from the level until you have eight tracks.",
+   "Select all camera tracks and press Ctrl + G to put them in a new folder. Press F2 and rename the folder to Cameras. Do the same to make folders named Lights and Props.",
+   "Right-click each folder, choose Set Color, and pick a different color for each one. Then right-click the Cameras folder and choose Add Folder to make a subfolder named Rigs.",
+   "Drag a track into the wrong folder. Then right-click it and choose Move to Folder to fix it. Take one track out of its folder with Remove from Folder.",
+   "Open View Options and choose Sort All Nodes, then look at what changed. Then press Shift + V on a folder to expand it together with its children.",
+   "Pin the Cameras folder: right-click it and choose Pinned. Then use the search field and the Filters button to show only camera tracks.",
+   "Open Actions and choose Open Sequencer Group Manager. Look at what it shows for your sequence."
+  ]
+ },
+ "CQ38": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any Level Sequence, or create one and add a cube from the level with one key on its Transform track. In the Frames Per Second menu, set Show Time As to Timecode, then to Frames. Turn on Lock to Display Rate at Runtime. Note the options under Clock Source.",
+   "In Playback Options, turn on Game View (Clean Playback Mode) and set Jump Frame Increment to 10. Test it with Shift + Right Arrow.",
+   "In Keyframe Options, choose Key Group and set the default tangent to Linear. Turn on Auto Key. Move a mesh that already has a key and see what gets keyed.",
+   "In Edit Options, choose Allow Sequencer Edits Only. Move an actor in the level that is not in the sequence, and look for the Autotracked Changes folder in Sequencer.",
+   "Open the Snapping menu and turn off Snap to the Pressed Key. Then hold Shift and click a key to move the playhead exactly onto it.",
+   "Open Edit > Editor Preferences > Level Sequence Editor. Turn on Auto Set Track Defaults and Create Spawnable Cameras. Click Create Camera and check that the new camera is a spawnable.",
+   "Open Edit > Project Settings > Engine > Level Sequence and set Default Display Rate to 24 fps. Create a new sequence and confirm that it uses 24 fps."
+  ]
+ },
+ "CQ39": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place a Cine Camera Actor named CAM_Frame in front of a prop, such as a cube or a mannequin. Pick a Filmback preset and write down its Sensor Width and Sensor Height. Enable Constrain Aspect Ratio in Camera Options.",
+   "In Crop Settings, choose 2.39. Then choose Custom and type 1.5 into Cropped Aspect Ratio. Compare the black bars in the Picture-in-Picture (PIP) window each time.",
+   "Go to Edit > Editor Preferences > Level Editor. Set Camera Preview Size to 8 and check that the PIP gets larger. Pin the PIP so that it stays visible.",
+   "In the Post Process settings of the camera, set Vignette Intensity to 0.8. Set Post Process Blend Weight to 0, then to 1, and pilot the camera to see the difference. Also enable Use Field Of View for LOD.",
+   "Go to Edit > Plugins, search for CineCameraCapture, enable the plugin and restart the editor. Select CAM_Frame, click Add in the Details panel, and add a Cine Capture Component 2D. Drag it under the CineCameraComponent so that it becomes its child.",
+   "Create a Render Target asset, a texture that a camera can draw into. Set it as the Texture Target of the capture component and set Render Target Highest Dimension to 1000. Open the Render Target to see the captured view."
+  ]
+ }
+}

@@ -1,0 +1,132 @@
+{
+ "TAQ99": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Plugins, look in the Animation section, enable the Deformer Graph plugin and restart. Use the mannequin of the template.",
+   "Select the character in the level. In the Details panel, enable Mesh Deformer and create a new Deformer Graph asset named DG_Twist. Open the asset and set its Mesh property to the mannequin.",
+   "In the Update Graph, add a Skeletal Mesh Component Binding node. Connect these nodes to it: Write Skinned Mesh, Execute Skinned Mesh (with Domain set to Vertex), Scene Data (for Time) and Skinned Mesh (for Position, Tangent X and Tangent Z).",
+   "Add a Custom Compute Kernel node. In its Details panel, add the inputs Num Threads (Int Vector 3, Parameter), Twist, Start, End and Time (Float, Parameter), Position (Vector 3, Vertex x1), and Tangent X and Tangent Y (Vector 4, Vertex x1). Add the outputs Out Position (Vector 3) and OutTangentX and OutTangentZ (Vector 4), all set to Vertex x1. Set Execution Domain to Vertex, then click Save and Compile.",
+   "Check that the Declarations tab lists ReadPosition, ReadTwist and WriteOutPosition. Then paste the HLSL twist program from the documentation page linked on this quest into the Shader Text tab.",
+   "Connect the read nodes to the inputs of the kernel, and connect the outputs of the kernel to Write Skinned Mesh. Add three Float Constant nodes: Twist 180, Start 0 and End 100. Click Save and Compile, and watch the character twist in the viewport and in the level.",
+   "Replace the Twist constant with a Deformer Graph Variable named TwistAmount, so that the value can be changed from outside the graph. Set it to 45 and compare."
+  ]
+ },
+ "TAQ100": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and use the mannequin as the character. You need two static meshes for a simple cape or flag: a render mesh that the player sees, and a simulation mesh with fewer polygons that the physics uses. Model them in a DCC (a 3D modeling program such as Blender, which is free) over the exported mannequin and export both as FBX files. For a first test you can also make them in Modeling Mode: a Rectangle with many subdivisions, placed behind the shoulders of the mannequin, and a copy of it with fewer subdivisions.",
+   "Import both static meshes into Unreal. Create a new Cloth Asset named CA_Cape from the meshes with a new Dataflow graph, and open it in the Chaos Cloth Panel node editor.",
+   "Build the node graph step by step, so that the asset is generated in a non-destructive way. Transfer the skin weights from the skeletal mesh of the character onto the cloth mesh, so the cloth follows the bones.",
+   "Configure the cloth settings. Add at least one weight map on the cloth mesh, which is a map you paint to give each area its own value. For example, paint a max-distance style map with 0 at the shoulders and a high value at the lower edge.",
+   "Set the Physics Asset of the character on the cloth asset, so that the cloth collides with the body.",
+   "Open the character Blueprint, add a Chaos Cloth Component and assign CA_Cape to it. Test the simulation in Play In Editor (PIE) with a run animation.",
+   "Write 3 short lines: what the panel workflow gives you that the legacy Clothing Tool does not, and what it costs at render time."
+  ]
+ },
+ "TAQ101": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Groom plugin enabled. Use a groom asset: a hair groom of a free MetaHuman from Epic, or a free groom from Fab. No template includes one. Open it in the Groom Asset Editor. In the Show menu, turn on Vis. Clusters and then Hair CVs, and look at the strands.",
+   "In the LOD panel, set LOD Mode to Manual. For the first hair group, click the Add (+) button until you have three LOD entries. LOD0 keeps the full strands. LOD1 has Curve Decimation and Vertex Decimation around 0.5 and a Screen Size around 0.5. LOD2 has stronger decimation, a Screen Size around 0.2 and Simulation set to Disable.",
+   "On LOD1 and LOD2, raise Thickness Scale a little, so that the hair does not look thin after strands were removed.",
+   "Use the LODs dropdown in the viewport to step through LOD0, LOD1 and LOD2. Read the stats for each one: geometry type, curves and points.",
+   "Switch LOD Mode to Auto. Then change Auto LOD Bias and zoom the camera out slowly. Note where you start to see that strands are removed.",
+   "If your groom has a card mesh, add an entry in the Cards panel with Guide Type set to Generated, Group Index 0 and LOD Index 2, and then set the Geometry Type of LOD2 to Cards. If it has no card mesh, write one line about why cards or meshes would be used for the far LOD."
+  ]
+ },
+ "TAQ102": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Groom plugin enabled. Place a character with a groom that is bound to its skeletal mesh in a level. A free MetaHuman from Epic comes with bound grooms. In the View Modes menu of the viewport, choose Groom, then Guides, and after that Groom, then Strands Guides Influences. Take a screenshot of the clumps.",
+   "Open the groom in the Groom Asset Editor. In the Interpolation panel, read the settings Interpolation Quality and Interpolation Distance. Enable Randomize Guide and note how long the rebuild takes.",
+   "Enable RBF Interpolation in the Interpolation panel. In the level, use Lit, then Groom, then Root Bindings to see the RBF samples. Play a strong animation (a big head turn or a crouch) with RBF on and with RBF off, and compare.",
+   "In the LOD panel, set RBF Interpolation to Disable on the last LOD only.",
+   "Create a material named M_Hair_TA. Set the Shading Model to Hair, and check that Use with Hair Strands is enabled in the Usage section. Add a Hair Attributes node. Use a Lerp node to blend from a root color to a tip color with the U output, and use Seed to change the color of each strand a little.",
+   "Add a slot in the Materials panel of the groom asset and assign M_Hair_TA to it. Then override that slot on the Groom component in the level with a second instance, and confirm that the override works."
+  ]
+ },
+ "TAQ103": {
+  "brief": "RenderDoc is a free program that records everything the GPU, the graphics card, does to draw one single frame. You can then look at each step in order and see which part of the rendering takes the most time. This replaces guessing with facts. Unreal has a plugin that adds a capture button to the viewport. In this quest you capture one frame of a level and find its three most expensive steps.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Install RenderDoc from renderdoc.org. Confirm that the RenderDoc plugin is enabled in the project (it is on by default).",
+   "Open Project Settings, then Plugins, then RenderDoc, and enable Auto attach on startup. Restart the editor and find the RenderDoc icon in the upper-right corner of the Level Viewport.",
+   "Open a level that has at least 20 meshes and one Niagara system. The level of the template works if you add a Niagara system made from the Fountain template. Run the console command stat unit and write down the GPU time in ms.",
+   "Click the RenderDoc Capture button in the Level Viewport. Open the capture in RenderDoc and find the event list, which shows the draw events of the frame.",
+   "In the Event Browser of RenderDoc, click the clock button to show the duration of each event, because the times are hidden at first. Find the three most expensive events in the capture. Note which pass each one belongs to (base pass, shadows, post process, and so on). A pass is one stage of drawing the frame.",
+   "Write a short table with the pass name, the time, and which content in your level causes it.",
+   "Turn Auto attach on startup off again if you do not need it every day."
+  ]
+ },
+ "TAQ104": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level that uses Lumen GI and Lumen reflections, which is the default in new projects. Add a few smooth surfaces with low roughness, for example a floor with a material that has a roughness of 0.2.",
+   "Run the console command stat GPU. Write down the times of the three Lumen passes: Lumen Scene Lighting, Lumen Screen Probe Gather and Lumen Reflections.",
+   "Run r.Lumen.AsyncCompute 0 and read the Lumen timings again. Note the difference. With this setting off, the numbers show the cost of Lumen alone.",
+   "Switch the viewport to the Performance Overview view mode. Find the pixels that trace their own reflection rays.",
+   "In a Post Process Volume, lower Max Roughness To Trace, and watch how the Lumen Reflections time changes.",
+   "Try r.Lumen.Reflections.DownsampleFactor 2, and note the change in the timing and in the image.",
+   "Set sg.GlobalIlluminationQuality and sg.ReflectionQuality to 3 (Epic), then to 2 (High), and then to 1 (Medium). Record the times of the three Lumen passes for each setting."
+  ]
+ },
+ "TAQ105": {
+  "brief": "Nanite is the system in Unreal Engine 5 that draws very detailed meshes and picks the right amount of detail by itself, so you do not have to make LODs by hand. It is not free, though. Overdraw (drawing the same pixel more than once), streaming (loading mesh data when it is needed) and disk size still cost time and memory. In this quest you use the Nanite view modes and the NaniteStats command to see these costs in a level.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has many Nanite meshes. If you have none, place 10 or more meshes in the level of the template, select them in the Content Browser, right-click them, and choose Nanite, then Enable.",
+   "In the View Modes menu of the viewport, open Nanite Visualization. Look at the modes Overview, Mask, Triangles, Clusters and Overdraw.",
+   "Stack several small Nanite props close together. Compare their Overdraw with the Overdraw of one large prop.",
+   "Run the console command NaniteStats and read the overlay in the top-right corner. Then run NaniteStats List, and then NaniteStats VirtualShadowMaps.",
+   "Open Show, then Nanite, and turn off Streaming Geometry. Take a screenshot of the quality that is always kept in memory.",
+   "Run r.Nanite 0 and take a screenshot of the same view, which now shows the fallback meshes. Then run r.Nanite 1 to turn Nanite on again.",
+   "Pick one heavy mesh and try Keep Triangle Percent 50 on it. Compare the disk size in the tooltip of the asset before and after."
+  ]
+ },
+ "TAQ106": {
+  "checklist": [
+   "Use any project, or create one from the Third Person template. Read the PSO Precaching page that is linked on this quest, and the PSO Caches overview page that it links to. Write two lines: what a PSO is, and how precaching is different from a bundled cache.",
+   "Set r.PSOPrecache.Validation=1 in the file DefaultEngine.ini, or set it in the console at startup. This turns on the statistics.",
+   "Package or launch a Development build of the project with -clearPSODriverCache on the command line. This clears the cache of the graphics driver, so you see what a first-time player sees.",
+   "Play a level that has many different materials. Run stat PSOPrecache and take a screenshot of the numbers for Missed, Too late, Hit and Precached.",
+   "Set r.PSOPrecache.ProxyCreationDelayStrategy 1 and play the same level again. Note where you see the default (grey) material for a moment.",
+   "Write down what your loading screen should wait for before it hides."
+  ]
+ },
+ "TAQ107": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a heavy level, or make the level of the template heavy by adding many lights and meshes. Run the console commands stat unit and stat unitgraph. Confirm that the DynRes line says that dynamic resolution is off.",
+   "In a Blueprint (for example in the Level Blueprint on BeginPlay), call Get Game User Settings and then Set Dynamic Resolution Enabled with the value true.",
+   "In the console, set r.DynamicRes.OperationMode 1 and r.DynamicRes.FrameTimeBudget 16.6, and then play. Read the primary and secondary screen percentages on the DynRes line.",
+   "Run stat raw. Watch the curve of the primary screen percentage drop during a camera cut or a big effect.",
+   "Stop playing. Move the Screen Percentage slider of the editor viewport to 50, and look closely at a thin object such as a fence or a grill.",
+   "Compare the same object at 50 percent with and without a temporal upscaler. In UE5 the default anti-aliasing method, Temporal Super Resolution (TSR), is the temporal upscaler. Type r.AntiAliasingMethod 1 in the console to switch to FXAA, which has no temporal upscaling, and take a screenshot. Then type r.AntiAliasingMethod 4 to go back to TSR and take a second one. The older command r.TemporalAA.Upsampling only applies to the TAA method.",
+   "Run profileGPU once at 100 percent and once at 50 percent. Note which passes get cheaper."
+  ]
+ },
+ "TAQ108": {
+  "brief": "VRAM is the memory of the graphics card. Textures, meshes and other render data are stored there, and the amount is limited. When it is full, textures become blurry or the game can crash. The Render Resource Viewer is a tool that lists every resource in GPU memory with its size and its owner, so you can see what uses the memory. In this quest you use it together with the stat streaming command to find the largest users of memory in a level.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with several skeletal meshes and static meshes. The level of the template works if you drag a few mannequins into it. Then open Tools > Render Resource Viewer.",
+   "Sort the list by Size. Note the five largest resources, their type and their Owner.",
+   "Search for the path of one skeletal mesh, for example the mannequin of the template (its name starts with SKM_), and record the total size of all its resources. Note the LOD index that is shown at the end of the owner path.",
+   "Tick the Transient filter. Compare the totals with the filter on and with the filter off.",
+   "Select an entry and press Ctrl+B to jump to the asset in the Content Browser.",
+   "Run the console command stat streaming. Write down the values of Texture Pool, Streaming Pool, Required Pool, Wanted Mips and Cached Mips.",
+   "Place 10 more props with textures in view, for example 10 more mannequins. Click Refresh in the viewer, and read both sets of numbers again."
+  ]
+ },
+ "TAQ109": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a new level, build a small interior from cubes: two rooms with a wall and a door between them. Put 30 or more props in the far room. Simple shapes work as props.",
+   "Play in the editor and run the console command stat initviews. Record the values of Processed Primitives, Frustum Culled Primitives, Occluded Primitives, Occlusion Queries and Visible Static Mesh Elements.",
+   "Run r.VisualizeOccludedPrimitives 1. Confirm that green boxes appear around the props that are fully hidden.",
+   "Stand in the doorway and run FreezeRendering, which stops the engine from updating what it draws. Then walk into the far room and take a screenshot of what is missing.",
+   "Add a Cull Distance Volume around the map, with a small size and a short distance. Read stat initviews again from far away.",
+   "Select one prop and set its Bounds Scale to 3. Explain in one line why this can hurt culling and shadows."
+  ]
+ },
+ "TAQ110": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable Virtual Textures in Project Settings if it is not enabled yet. You need a material named M_Ground that has three large textures (base color, normal and mask) that use the same UVs. If you have no 4K textures, make M_Ground from copies of three mannequin textures of the template: a color texture (name ending in _D), a normal texture (_N) and a packed mask (_MRA). Apply the material to a floor.",
+   "Select the three textures in the Content Browser, right-click them, and choose Convert to Virtual Texture. Confirm that the Texture Sample nodes in the material now show VT and a Virtual sampler type.",
+   "Open M_Ground and read the Stats panel. Count the texture fetches, which are the texture reads of the material. Then give the mask a different UV tiling and read the count again.",
+   "In the level, run the console commands stat virtualtexturing and stat virtualtexturememory. Take a screenshot of both.",
+   "Run r.VT.Borders 1. Move the camera close and far, and look at the grid of tiles. Turn it off again with r.VT.Borders 0.",
+   "Compare the Streaming Pool value of stat streaming before and after the conversion."
+  ]
+ }
+}

@@ -21,7 +21,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/array-nodes?application_version=4.27"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_Containers. Add a String variable named Names. Click the Variable Type icon next to the type and pick the Array container, so the variable holds a list of Strings."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Containers and place it in the level. Add a String variable named Names. Click the Variable Type icon next to the type and pick the Array container, so the variable holds a list of Strings."
       - "Click Compile. Then open Class Defaults and add 4 default items to Names (for example Apple, Banana, Cherry, Date)."
       - "Add a second String variable and turn it into a Set (the { } option in the same container menu). Try to add the same item twice and read the warning that appears."
       - "Add a Map variable with a String key and an Integer value, and name it Scores. Add 3 key-value pairs in the defaults."
@@ -77,9 +77,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-communication-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-communication-usage-in-unreal-engine"
     checklist:
-      - "In a Third Person project, make a Blueprint named BP_RotateActor with a Static Mesh that uses Shape_Cube. On Event Tick, call AddActorLocalRotation with Z = 2.0, and put it behind a Branch node that reads a Boolean variable named CanRotate."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_RotateActor with a Static Mesh that uses a cube mesh, such as SM_Cube from the folder LevelPrototyping/Meshes of the template. On Event Tick, call AddActorLocalRotation with Z = 2.0, and put it behind a Branch node that reads a Boolean variable named CanRotate."
       - "Add a function named OverlappedPlayer with a Boolean input named Begin Overlap. Inside the function, use that input to set CanRotate."
-      - "Open the ThirdPersonCharacter Blueprint and add a Sphere Collision component with Radius 200. Add the events OnComponentBeginOverlap and OnComponentEndOverlap for it."
+      - "Open the character Blueprint of the template, BP_ThirdPersonCharacter, and add a Sphere Collision component with Radius 200. Add the events OnComponentBeginOverlap and OnComponentEndOverlap for it."
       - "Drag from the Other Actor pin and add a Cast To BP_RotateActor node. From the As BP Rotate Actor pin, call OverlappedPlayer. Pass True on the begin overlap event and False on the end overlap event."
       - "Connect a Print String node to the Cast Failed pin, so you can see when the cast does not work. Place BP_RotateActor and one plain cube in the level."
       - "Press Play and walk near both objects. The cube from BP_RotateActor should spin, and the plain cube should print the failed message."
@@ -133,11 +133,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/referencing-assets-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawning-actors-in-unreal-engine"
     checklist:
-      - "Open a Third Person project that has Starter Content. Place Blueprint_CeilingLight in the level."
-      - "In the ThirdPersonCharacter Blueprint, add a variable named LampReference. Set its type to Blueprint Ceiling Light and choose Object Reference. Enable Instance Editable, which lets you set the value on the character placed in the level."
-      - "Add an event for the F key. Use a Flip Flop node and Set Visibility to turn the lamp's Point Light 1 on and off through LampReference."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Lamp with a Static Mesh component that uses a cylinder, and a Point Light component. Place BP_Lamp in the level. Epic's guide uses a ceiling light Blueprint from the Starter Content, which current engine versions no longer include."
+      - "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a variable named LampReference. Set its type to BP Lamp and choose Object Reference. Enable Instance Editable, which lets you set the value on the character placed in the level."
+      - "Add an event for the F key. Use a Flip Flop node and Set Visibility to turn the Point Light of the lamp on and off through LampReference."
       - "Select the character in the level. In the Details panel, open the Lamp Reference dropdown and pick the lamp you placed. Press Play and press F."
-      - "Add a second variable named LampClass. Set its type to Blueprint Ceiling Light and choose Class Reference. Set its default value to Blueprint_CeilingLight."
+      - "Add a second variable named LampClass. Set its type to BP Lamp and choose Class Reference. Set its default value to BP_Lamp."
       - "Add an event for the G key. Use Spawn Actor from Class with LampClass, and spawn the lamp at the player location plus 200 units forward."
       - "Compare the icons of the two variables and the colors of their pins. Write one sentence that says what each variable holds."
     done_when: "Send a screenshot of the graph that shows both variables in use (one Object Reference and one Class Reference). Add one sentence that explains the difference in your own words."
@@ -189,12 +189,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-interface-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/implementing-blueprint-interfaces-in-unreal-engine"
     checklist:
-      - "Create a Blueprint Interface named BPI_Interact with one function named Interact. Click Compile and save it."
-      - "Duplicate Blueprint_CeilingLight and name the copy BP_Lamp. Add a custom event named ToggleLight that uses Flip Flop and Set Visibility on Point Light 1 to turn the light on and off."
+      - "Open a project made from the Third Person template, or create one. Create a Blueprint Interface named BPI_Interact with one function named Interact. Click Compile and save it."
+      - "Make an Actor Blueprint named BP_Lamp with a Static Mesh component that uses a cylinder, and a Point Light component. Add a custom event named ToggleLight that uses Flip Flop and Set Visibility on the Point Light to turn the light on and off."
       - "In BP_Lamp, open Class Settings and add BPI_Interact under Implemented Interfaces. Then add Event Interact to the graph and make it call ToggleLight."
       - "Make a Blueprint named BP_Door with two Static Mesh components named Frame and Door. Add a custom event named OpenDoor that uses a Timeline named TM_Door, with an Alpha value that goes from 0 to 1. Use a Lerp node to turn the door Yaw to 90."
       - "Add BPI_Interact to BP_Door in the same way. Implement Event Interact there and make it call OpenDoor."
-      - "In ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Interact (Message) and connect Other Actor to the Target pin."
+      - "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Interact (Message) and connect Other Actor to the Target pin."
       - "Place BP_Lamp, BP_Door and a plain cube in the level. Press Play and walk near all three. Nothing should happen at the plain cube, because it does not use the interface."
     done_when: "Send a screenshot of the Class Settings panel of one actor that shows BPI_Interact under Implemented Interfaces, and a screenshot in Play mode with the door open and the lamp toggled."
     xp: 60
@@ -237,7 +237,7 @@ quests:
     required_spine: false
     required: false
     title: One event, many listeners
-    brief: "An Event Dispatcher is a way for one Actor to announce that something happened, without knowing who is listening. Other Actors bind to the dispatcher, which means they sign up to be told, and they all react when it is called. This keeps Actors independent: the boss does not need to know about the doors. In this quest one trigger box announces that a boss died, and a door and several explosions react at the same time."
+    brief: "An Event Dispatcher is a way for one Actor to announce that something happened, without knowing who is listening. Other Actors bind to the dispatcher, which means they sign up to be told, and they all react when it is called. This keeps Actors independent: the boss does not need to know about the doors. In this quest one trigger box announces that a boss died, and a door and several alarm lights react at the same time."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/event-dispatchers-and-delegates-quick-start-guide-in-unreal-engine"
     backup_url: null
@@ -247,14 +247,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-dispatcher-events-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/calling-event-dispatchers-in-unreal-engine"
     checklist:
-      - "Make a Blueprint named BP_BossDied with a Box Collision component. Set its scale to 4, 4, 2 and turn off Hidden in Game so you can see the box while you play. Add an Event Dispatcher named OnBossDied."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_BossDied with a Box Collision component. Set its scale to 4, 4, 2 and turn off Hidden in Game so you can see the box while you play. Add an Event Dispatcher named OnBossDied."
       - "On the OnComponentBeginOverlap event of the box, add the Call OnBossDied node. Place BP_BossDied in the level."
       - "Make a Blueprint named BP_BossDoor with a Frame mesh and a Door mesh. Add a custom event named OpenDoor that uses a Timeline named TM_Door to rotate the door to Yaw 90."
       - "In BP_BossDoor, add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Bind Event to OnBossDied and connect a custom event named BossDied that calls OpenDoor."
-      - "Make a copy of Blueprint_Effect_Explosion. Turn off Auto Activate on both of its components. On BeginPlay, use Assign OnBossDied, and make the new event Activate both components."
-      - "Place the door and 3 explosions in the level. On each one, set BossDiedReference to the BP_BossDied you placed. Press Play and walk into the box."
-      - "Extra: on one explosion, add an Unbind All Events node after it fires. Test that this explosion does not fire a second time."
-    done_when: "Send a screenshot of the BP_BossDoor graph that shows Bind Event to OnBossDied, and a screenshot in Play mode with the door open and the explosions active at the same time."
+      - "Make an Actor Blueprint named BP_AlarmLight with a Point Light component. Give the light a red color and turn off Visible on it, so the light starts off. Add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Assign OnBossDied on that reference, and make the new event call Toggle Visibility on the Point Light. Epic's guide uses an explosion Blueprint from the Starter Content here, which current engine versions no longer include."
+      - "Place the door and 3 alarm lights in the level. On each one, set BossDiedReference to the BP_BossDied you placed. Press Play and walk into the box."
+      - "Extra: on one alarm light, add an Unbind All Events node after it reacts. Walk into the box a second time. The other lights switch off again, and this one stays on because it no longer listens."
+    done_when: "Send a screenshot of the BP_BossDoor graph that shows Bind Event to OnBossDied, and a screenshot in Play mode with the door open and the alarm lights on at the same time."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -303,7 +303,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/functions-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-best-practices-in-unreal-engine"
     checklist:
-      - "In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Function Library. Name it BFL_Utils."
+      - "Open any project, or create one from the Third Person template. In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Function Library. Name it BFL_Utils."
       - "Add a function named DistanceXY with two Vector inputs and one Float output. Mark it as Pure, which means it only returns a value and changes nothing. Build the math from the two inputs."
       - "Add a second function named PrintWithPrefix with a String input. Leave it impure (do not check Pure). Inside, it calls Print String with a prefix in front of the text."
       - "In any Actor Blueprint, call both functions on Event Tick and on BeginPlay. Notice that the pure function has no exec pins, the white pins that set the order of execution."
@@ -358,7 +358,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/macros-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-best-practices-in-unreal-engine"
     checklist:
-      - "In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Macro Library. Pick Actor as the Parent Class and name the library BML_Flow."
+      - "Open any project, or create one from the Third Person template. In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Macro Library. Pick Actor as the Parent Class and name the library BML_Flow."
       - "Add a macro named CheckScore. Give it an Integer input named Score, an input exec pin named Test, and two output exec pins named Win and Lose. Inside the macro, compare Score to 10 to decide which output runs."
       - "Add a macro named WaitThenPrint with a String input and a Delay node inside. Notice that a Delay is allowed in a macro."
       - "Select each macro and, in the Details panel, set an Instance Color and a Category for it."
@@ -414,7 +414,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-actor-lifecycle"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
     checklist:
-      - "Make a Blueprint named BP_Post with a Static Mesh. Add an Integer variable named Count with a default of 3, and make it Instance Editable so you can change it on each placed copy."
+      - "Open any project, or create one from the Third Person template. Make a Blueprint named BP_Post with a Static Mesh. Add an Integer variable named Count with a default of 3, and make it Instance Editable so you can change it on each placed copy."
       - "In the Construction Script, add a loop that runs Count times. In each pass, use Add Static Mesh Component, and place the meshes 150 units apart."
       - "Place BP_Post in the level. Change Count in the Details panel and watch the meshes update in the editor, before you press Play."
       - "Add Event BeginPlay and make it print Hello. Add Event End Play and make it print the End Play Reason. Press Play and then stop."
@@ -470,7 +470,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spawning-actors-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/DestroyActor"
     checklist:
-      - "Make a Blueprint Actor named BP_LifeProbe with a Static Mesh that is a cube. On Event BeginPlay, add a Print String that prints the actor name plus 'BeginPlay'."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint Actor named BP_LifeProbe with a Static Mesh that is a cube. On Event BeginPlay, add a Print String that prints the actor name plus 'BeginPlay'."
       - "Add Event End Play. Make it print the actor name plus 'EndPlay' and also the End Play Reason."
       - "In the Construction Script, add a Print String that prints 'Construct'. Drag BP_LifeProbe into the level and watch the message appear before you press Play."
       - "In the Level Blueprint, add an event for key 1 that uses Spawn Actor from Class to spawn BP_LifeProbe at the player location. Add an event for key 2 that calls Destroy Actor on the last probe you spawned."
@@ -525,7 +525,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actors-in-unreal-engine"
     checklist:
-      - "Make a Blueprint Actor named BP_Lantern and keep the default Scene root. Add a Static Mesh Component for the pole, a second Static Mesh for the lamp head, and a Point Light."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint Actor named BP_Lantern and keep the default Scene root. Add a Static Mesh Component for the pole, a second Static Mesh for the lamp head, and a Point Light."
       - "In the Components window, drag the lamp head onto the pole so that it becomes a child of the pole. Then drag the Point Light onto the lamp head."
       - "Select the pole and move it in the viewport. Confirm that the head and the light move with it. Then move only the head and confirm that only the light follows."
       - "Select each component, press F2, and rename them to Pole, Head and Light. Check the new names in the My Blueprint panel."
@@ -582,7 +582,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Transformation/AttachComponentToComponent"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
     checklist:
-      - "Make a Blueprint named BP_Ball with a Static Mesh sphere as its root, and set the scale to 0.3. Set its Mobility to Movable so that it can move during play."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Ball with a Static Mesh sphere as its root, and set the scale to 0.3. Set its Mobility to Movable so that it can move during play. Place one ball in the level."
       - "Open the Third Person character (BP_ThirdPersonCharacter). Open its Skeletal Mesh in the Skeleton editor and note the name of a socket or bone on the right hand (for example hand_r)."
       - "In the character, add an event for the E key. Call Get All Actors Of Class with BP_Ball and take index 0 from the result. Then call Attach Actor To Component with Parent set to the character Mesh and Socket Name set to the hand bone. Set Location Rule and Rotation Rule to Snap to Target."
       - "Add an event for the Q key. Call Detach From Actor on the same ball, with Location Rule set to Keep World."
@@ -639,7 +639,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/FindComponentbyTag"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/ComponentHasTag"
     checklist:
-      - "Place six cubes in a test level and select three of them. In the Details panel, find the Tags property in the Actor section and add the tag Breakable to each of the three."
+      - "Open any project, or create one from the Third Person template. Place six cubes in a test level and select three of them. In the Details panel, find the Tags property in the Actor section and add the tag Breakable to each of the three."
       - "Make an Actor Blueprint named BP_TagScanner. On BeginPlay, call Get All Actors with Tag with Tag set to Breakable. Print the length of the array it returns. You should see 3."
       - "Loop through the array. For each actor, call Actor Has Tag with Breakable and print the actor name. Then try the tag Wall and see that it returns false."
       - "Make a Blueprint named BP_Crate with two Static Mesh Components. Select one component and add the component tag Lid in the Tags property of its Details panel. In BeginPlay, call Find Component by Tag with the class Static Mesh Component and the tag Lid, and set the material of the result to something red."
@@ -696,7 +696,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/IsChildActor"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/components-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_Torch with a Static Mesh and a Point Light. On BeginPlay, print 'Torch BeginPlay' plus the display name you get from Get Parent Actor."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Torch with a Static Mesh and a Point Light. On BeginPlay, print 'Torch BeginPlay' plus the display name you get from Get Parent Actor."
       - "Make an Actor Blueprint named BP_Wall with a Static Mesh cube scaled to 4 x 0.2 x 2. Add two Child Actor Components and set the Child Actor Class of each to BP_Torch. Move them to the left end and the right end of the wall."
       - "Place BP_Wall in the level and press Play. Read the Output Log: each torch prints the wall as its parent actor."
       - "In BP_Wall, add an event for the T key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, call Get All Child Actors with Include Descendants turned on, and print the length of the result. You should see 2."
@@ -752,7 +752,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/Activation/SetAutoActivate"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/Activation/Activate"
     checklist:
-      - "Create a new Blueprint Class with Actor Component as the parent, and name it BPC_Health. Add a float variable named MaxHealth with the value 100, and a float variable named Health."
+      - "Open a project made from the Third Person template, or create one. Create a new Blueprint Class with Actor Component as the parent, and name it BPC_Health. Add a float variable named MaxHealth with the value 100, and a float variable named Health."
       - "In BPC_Health, on Event Begin Play, set Health to the value of MaxHealth. Add a function named ApplyDamage with an input named Amount. It lowers Health, clamps it so it cannot go below 0, and prints the name of the owner plus Health. Use Get Owner to get the name."
       - "Add BPC_Health to BP_ThirdPersonCharacter and to a new actor named BP_Barrel. Make MaxHealth Instance Editable, and set it to 30 on the barrel."
       - "In BP_Barrel, add an event for the K key. An Actor only receives key presses when input is enabled for it, so open Class Defaults and set Auto Receive Input to Player 0. From the key event, use Get Component by Class with BPC_Health and call ApplyDamage with 10. Press Play and watch the two actors keep separate Health values."
@@ -808,7 +808,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetActorTickInterval"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetActorTickEnabled"
     checklist:
-      - "Make an Actor Blueprint named BP_Ticker with a Static Mesh. On Event Tick, add Delta Seconds to a float variable named Elapsed and print it each frame."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Ticker with a Static Mesh and place it in the level. In its Class Defaults, set Auto Receive Input to Player 0, so that it receives key presses. On Event Tick, add Delta Seconds to a float variable named Elapsed and print it each frame."
       - "In Class Defaults, find the Actor Tick section. Set Tick Interval to 0.5 and press Play. The print now appears twice per second. Then set it back to 0."
       - "Add an event for the P key that calls Set Actor Tick Enabled with Enabled set to false. Add an event for the O key that sets it to true. Press Play and confirm that the print stops and starts again."
       - "Add an event for the G key that calls Set Tick Group with Post Physics. Press Play, press G, and read the Tick Group value in the Details panel of the actor while the game is running."
@@ -864,8 +864,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/SetLifeSpan"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coder-06-create-a-respawning-pickup-item-in-unreal-engine"
     checklist:
-      - "Make a Blueprint named BP_Bullet with a small sphere mesh and a Projectile Movement Component. On BeginPlay, call Set Life Span with 2.0 so that the bullet destroys itself after 2 seconds."
-      - "In the character, on the left mouse button, use Spawn Actor from Class to spawn BP_Bullet at the camera location. To make it repeat while you hold the button, start a timer on Pressed with Set Timer by Event, with Time 0.05 and Looping turned on, and stop it on Released with Clear and Invalidate Timer by Handle. Hold the button for 10 seconds. Open the console, run stat game, and note the frame time and the lines about spawning actors while you shoot."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Bullet with a small sphere mesh and a Projectile Movement Component. On BeginPlay, call Set Life Span with 2.0 so that the bullet destroys itself after 2 seconds."
+      - "In the character Blueprint of the template, on the left mouse button, use Spawn Actor from Class to spawn BP_Bullet at the camera location. To make it repeat while you hold the button, start a timer on Pressed with Set Timer by Event, with Time 0.05 and Looping turned on, and stop it on Released with Clear and Invalidate Timer by Handle. Hold the button for 10 seconds. Open the console, run stat game, and note the frame time and the lines about spawning actors while you shoot."
       - "Make an Actor Blueprint named BP_BulletPool. On BeginPlay, spawn 30 BP_Bullet actors. Hide each one with Set Actor Hidden In Game, disable its collision, and set its Projectile Movement to inactive. Store them all in an array variable named Pool."
       - "Add a function named GetBullet. It finds the first hidden bullet, unhides it, enables its collision, activates its movement, and returns it. Add a function named ReturnBullet that does the opposite."
       - "Change BP_Bullet: remove Set Life Span. Add a Custom Event named OnTakenFromPool to BP_Bullet, and call it from GetBullet each time a bullet is taken from the pool. In this event, use Set Timer by Event with Time 2.0 and Looping off. When the timer ends, call ReturnBullet on the pool with this bullet. Then change the character so that it calls GetBullet instead of Spawn Actor."
@@ -919,9 +919,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/project-section-of-the-unreal-engine-project-settings"
     community_urls: []
     checklist:
-      - "Open Edit > Project Settings. Click through the categories on the left side. Note the five that you think a programmer uses most."
-      - "Under Project, open Description. Set Project Name, Company Name and a Copyright Notice for your project."
-      - "Under Project, open Maps & Modes. Set Editor Startup Map to your test level, and set Game Default Map to the same level."
+      - "Open any project, or create one from the Third Person template. Open Edit > Project Settings. Click through the categories on the left side. Note the five that you think a programmer uses most."
+      - "Under Project, open Description. Set Project Name, Company Name and a Copyright Notice for the project."
+      - "Under Project, open Maps & Modes. Set Editor Startup Map to a level of the project, for example the level of the template, and set Game Default Map to the same level."
       - "Still in Maps & Modes, check which Default GameMode is set. A GameMode is the Blueprint that holds the rules of the game. If you have your own BP_ GameMode, select it here."
       - "Use the search box at the top to find the setting Use Borderless Window. Note which category it is in."
       - "Click Export in the upper-right corner and save a backup file of your settings."
@@ -975,7 +975,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/project-settings-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Close the Editor. Open the folder <ProjectDirectory>\\Config and look at its files with a text editor. List the Default*.ini files you find (DefaultEngine, DefaultGame, DefaultInput, and so on)."
+      - "Use any project, or create one from the Third Person template. Close the Editor. Open the folder <ProjectDirectory>\\Config and look at its files with a text editor. List the Default*.ini files you find (DefaultEngine, DefaultGame, DefaultInput, and so on)."
       - "In DefaultEngine.ini, find the section [/Script/EngineSettings.GameMapsSettings] and, inside it, the key GameDefaultMap."
       - "Open the engine file Engine\\Config\\BaseEngine.ini. Only read it and do not edit it. Find the same section and compare the two values."
       - "In DefaultGame.ini, add your own section [MyTestSection] with the line MyValue=42 under it. Above it, add a comment line that starts with ; (a semicolon)."
@@ -1030,7 +1030,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/plugins-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin that you want)."
+      - "Open any project, or create one from the Third Person template. Open Edit > Plugins. Use the Search box to find the Console Variables Editor plugin (or another built-in plugin that you want)."
       - "Enable the plugin with its checkbox. Save your work and restart the Editor when it asks you to."
       - "In the Content Drawer, click the Settings button with the gear icon in the upper right and turn on Show Plugin Content. Then find a plugin folder in the folder tree."
       - "On your disk, open the engine folder Engine\\Plugins and find the folder of the plugin you enabled. Open its .uplugin file in a text editor."
@@ -1077,7 +1077,7 @@ quests:
     required_spine: false
     required: false
     title: Source control inside the Editor
-    brief: "Source control, which the Editor now calls revision control, is a system that keeps every version of the project files and lets a team work on the same project without overwriting each other. Unreal assets cannot be merged like text, so the Editor lets you check out a file, which locks it for you while you edit it, and then submit your change. Teams depend on this, and the Editor has the buttons built in. The documentation page still uses the older name Source Control for menus that are now named Revision Control. In this quest you look at the revision control settings and either do a real check out and submit, or describe the workflow in writing."
+    brief: "Source control, which the Editor now calls revision control, is a system that keeps every version of the project files and lets a team work on one project without overwriting each other. Unreal assets cannot be merged like text, so the Editor lets you check out a file, which locks it for you while you edit it, and then submit your change. Teams depend on this, and the Editor has the buttons built in. The documentation page still uses the older name Source Control for menus that are now named Revision Control. In this quest you look at the revision control settings and either do a real check out and submit, or describe the workflow in writing."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-source-control-in-the-unreal-editor"
     backup_url: null
@@ -1086,7 +1086,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-perforce-as-source-control-for-unreal-engine"
     community_urls: []
     checklist:
-      - "Open Edit > Editor Preferences, then Loading & Saving, and find the Source Control section (named Revision Control in newer versions). Read each option and note which ones are on by default."
+      - "Open any project, or create one from the Third Person template. Open Edit > Editor Preferences, then Loading & Saving, and find the Source Control section (named Revision Control in newer versions). Read each option and note which ones are on by default."
       - "Click the Revision Control button in the bottom right corner of the editor window and choose Connect to Revision Control. The documentation page calls this the Source Control icon. In the login dialog, look at the list of providers (Perforce, Subversion, and Git if its plugin is enabled)."
       - "If you have a server (for example Perforce or a Git repo), pick the provider, enter its settings, and click Accept Settings. If you do not have one, close the dialog without connecting and continue with the writing part."
       - "If you have a connection: right-click an asset in the Content Browser and use Check Out, then change the asset and save it. After that, open the Revision Control menu again, choose Submit Content, and write a short description. The documentation page lists this as File > Submit to Source Control."
@@ -1133,7 +1133,7 @@ quests:
     required_spine: false
     required: false
     title: Package a first Windows build
-    brief: "Packaging turns your project into a game that runs by itself, without the Unreal Editor. On Windows the result is a folder with an .exe file. Things that work in the Editor can break in a packaged build, so the packaged build is the real test. In this quest you package your project for Windows for the first time and run the result."
+    brief: "Packaging turns a project into a game that runs by itself, without the Unreal Editor. On Windows the result is a folder with an .exe file. Things that work in the Editor can break in a packaged build, so the packaged build is the real test. In this quest you package a project for Windows and run the result."
     time_min: 50
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project"
     backup_url: null
@@ -1142,7 +1142,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/preparing-unreal-engine-projects-for-release"
     community_urls: []
     checklist:
-      - "Open Edit > Project Settings and go to Maps & Modes. Set Game Default Map to your playable level, because this is the level the packaged game opens first."
+      - "Open a project made from the Third Person template, or create one. Open Edit > Project Settings and go to Maps & Modes. Set Game Default Map to a playable level, such as the level of the template, because this is the level the packaged game opens first."
       - "In Project Settings, open Packaging and look at the Project section. Confirm that Build Configuration is set to Development."
       - "In the main toolbar, open the Platforms menu and choose Windows. Check that Binary Configuration shows Use Project Setting (Development)."
       - "Click Package Project. Pick or create an empty folder for the build, called the staging folder (for example D:\\Builds\\MyGame). Wait until you see the message Packaging Complete."
@@ -1200,7 +1200,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/editor-utility-widgets-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Choose ActorActionUtility as the parent class and name the asset EUB_ActorTools."
+      - "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Choose ActorActionUtility as the parent class and name the asset EUB_ActorTools."
       - "Add a function named PrintSelectedNames. Select its entry node and confirm that Call In Editor is checked."
       - "In the function, call Get Selection Set (you find it in the Development > Editor category). Loop through the actors it returns and use Print String to print the Display Name of each actor."
       - "Click Compile and save. Select 3 actors in the level, right-click them, open Scripted Actor Actions, and run PrintSelectedNames."
@@ -1255,7 +1255,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project"
     community_urls: []
     checklist:
-      - "Open any Blueprint (for example BP_TestActor). In the Blueprint Editor, open Window > Compiler Results and dock the panel under the graph."
+      - "Open any project, or create one from the Third Person template. Open any Blueprint, or make a new Actor Blueprint named BP_TestActor with one variable and a Print String on BeginPlay. In the Blueprint Editor, open Window > Compiler Results and dock the panel under the graph."
       - "Click Compile without changing anything. Read the success line and note the compile time in milliseconds."
       - "Now make an error. Add a Cast To node and leave its Object pin with nothing connected. Also add a Get node for a variable, and then delete that variable. Click Compile."
       - "Move the mouse over each message to read the extra detail. Then click a message and watch the graph jump to the node with the problem."
@@ -1312,7 +1312,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-console-variables-reference"
     community_urls: []
     checklist:
-      - "Press Play, then press the backtick key to open the console. Type r.RefractionQuality and press Enter. Read the value and the LastSetBy text, which tells you what set the value last."
+      - "Open any project, or create one from the Third Person template. Press Play, then press the backtick key to open the console. Type r.RefractionQuality and press Enter. Read the value and the LastSetBy text, which tells you what set the value last."
       - "Type r.RefractionQuality ? and read the help text. Then type r.RefractionQuality 0 and check the new value that is printed."
       - "Type the first letters of a variable (for example r.Shadow) and watch the auto-complete list appear. Pick one variable and read its help by adding ? after its name."
       - "Open Edit > Plugins and enable the Console Variables Editor plugin. Restart the editor, and then open Window > Console Variables."
@@ -1364,7 +1364,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/visual-logger-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Open a level that has a NavMeshBoundsVolume, the volume that tells AI where it can walk. Add one AI Character named BP_VLogBot that uses AI Move To on BeginPlay to walk toward a target point."
+      - "Open a project made from the Third Person template, or create one. Open a level and add a NavMeshBoundsVolume, the volume that tells AI where it can walk, if it has none. Add one AI Character named BP_VLogBot: duplicate BP_ThirdPersonCharacter, delete its input nodes, and on BeginPlay call AI Move To toward a Target Point that you place in the level."
       - "Open Tools > Debug > Visual Logger."
       - "Start recording in the Visual Logger, and then press Play to start Play In Editor (PIE). Let the bot walk for 10 to 20 seconds, and then stop PIE."
       - "In the Actor list of the Visual Logger, search for the AI controller of the bot and select it."
@@ -1418,13 +1418,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-debugger-settings-in-the-unreal-engine-project-settings"
     checklist:
-      - "Open a level that has a NavMeshBoundsVolume and one AI pawn. You can reuse BP_VLogBot or any AI that moves."
+      - "Open a project made from the Third Person template, or create one. Open a level that has a NavMeshBoundsVolume and one AI pawn. To make the pawn, duplicate BP_ThirdPersonCharacter, delete its input nodes, and on BeginPlay call AI Move To toward a Target Point that you place in the level. Any AI of your own that moves works too."
       - "Press Play to start Play In Editor (PIE). Press the apostrophe (') key to open the Gameplay Debugger."
       - "Point the camera at the AI pawn and press the apostrophe key again to select it."
-      - "Use the keys of the numeric keypad to turn the Navmesh category on and off. Also turn on the Basic category."
+      - "Use the keys of the numeric keypad to turn the Navmesh category on and off. Also turn on the AI category, which shows basic data about the pawn and its controller. The documentation page calls this category Basic."
       - "Open Edit > Project Settings, go to Gameplay Debugger, and look at the Input section. Do not change anything there."
       - "Type ToggleDebugCamera in the console (or press ;) to get a free debug camera, and orbit around the pawn."
-    done_when: "Send one screenshot taken in Play mode with the Gameplay Debugger overlay visible, the AI pawn selected, and at least two categories shown (for example Basic and Navmesh)."
+    done_when: "Send one screenshot taken in Play mode with the Gameplay Debugger overlay visible, the AI pawn selected, and at least two categories shown (for example AI and Navmesh)."
     xp: 55
     verify_type: screenshot
     quiz:
@@ -1475,7 +1475,7 @@ quests:
     community_urls:
       - {title: "How to Debug Blueprints like a Pro - Unreal Engine 5 Tutorial (Cobra Code)", url: "https://www.youtube.com/watch?v=YBuw7JeGt6w"}
     checklist:
-      - "In BP_Debug (any actor Blueprint), make a function named CountDown that takes an integer. It prints the number and then calls itself again with the number minus one, until the number reaches 0."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own. In it, make a function named CountDown that takes an integer. It prints the number and then calls itself again with the number minus one, until the number reaches 0."
       - "Call CountDown with the value 3 from BeginPlay. Place the actor in the level."
       - "Right-click the Print String node inside CountDown and choose Add Breakpoint."
       - "Open the Blueprint Debugger: in the Blueprint Editor, open the Debug menu and choose Blueprint Debugger. In the Level Editor it is under Tools > Debug. Press Play. When the game pauses, look at the Call Stack. CountDown should appear in it more than once."
@@ -1529,11 +1529,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine"
     checklist:
-      - "In BP_Debug, add a Print String on Tick that prints the frame time. Turn Print to Screen on and Print to Log off."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own, and place it in the level. Add a Print String on Tick that prints the frame time. Turn Print to Screen on and Print to Log off."
       - "Press Play and watch the screen fill with lines. Then stop."
       - "Set the Key input of the Print String to FrameTime. Press Play again and see that only one line stays on the screen and updates."
       - "Add a second Print String on BeginPlay, with Print to Log on and Print to Screen off. Open Window > Output Log and find the line."
-      - "Open the Saved/Logs folder of your project and open the newest .txt log file. Find the same BeginPlay message in it."
+      - "Open the Saved/Logs folder of the project and open the newest .txt log file. Find the same BeginPlay message in it."
       - "Write two sentences: one that says when you would use screen output, and one that says when you would use the log."
     done_when: "Send one screenshot that shows the Output Log with your BeginPlay message and the game view with a single on-screen line that updates. Add your two sentences."
     xp: 50
@@ -1583,7 +1583,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-debugging-example-in-unreal-engine"
     checklist:
-      - "In BP_Debug, add an integer array variable named Scores with 3 default values, and a float variable named Speed. On Tick, add Delta Seconds to Speed and set Speed to the result."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Debug, or use any Actor Blueprint of your own. Add an integer array variable named Scores with 3 default values, and a float variable named Speed. On Tick, add Delta Seconds to Speed and set Speed to the result."
       - "Place two copies of BP_Debug in the level. In the Blueprint Editor, use the Debug Object dropdown to pick one of the two copies, so the editor knows which one to show."
       - "Right-click the output pin of the Add node and choose Watch this value."
       - "Press Play. Look at the wires that pulse, which shows they are active. Hover the mouse over a pin that has not run yet and read its message."
@@ -1637,7 +1637,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-system-user-guide-in-unreal-engine"
     checklist:
-      - "Open Edit > Plugins and select the Testing filter on the left. Enable at least one automation test plugin and restart the editor."
+      - "Open any project, or create one from the Third Person template. Open Edit > Plugins and select the Testing filter on the left. Enable at least one automation test plugin and restart the editor."
       - "Open Tools > Session Frontend and go to the Automation tab. If the list is empty, select your machine in the Session Browser."
       - "In the Test Name list, expand Project and enable the tests under it. Do not enable everything in the list."
       - "Click Start Tests. Watch the Test Name column and the results panel while the tests run."
@@ -1691,7 +1691,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automation-system-user-guide-in-unreal-engine"
     checklist:
-      - "Make a small level named L_Test_Pickup with a floor and one BP_Pickup actor."
+      - "Open any project, or create one from the Third Person template. Make a simple pickup to test: an Actor Blueprint named BP_Pickup with a mesh and a Sphere Collision. Then make a small level named L_Test_Pickup with a floor and one BP_Pickup actor."
       - "Place a Functional Test actor in the level and name it FT_PickupExists."
       - "Keep the test actor selected and open the Level Blueprint. Add the OnTestStart event of the test actor to the graph."
       - "From OnTestStart, call Get All Actors Of Class with BP_Pickup. Add a Branch that checks if the array length is > 0. Call Finish Test with Succeeded on the true side and with Failed on the false side."
@@ -1746,7 +1746,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/logging-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asserts-in-unreal-engine"
     checklist:
-      - "Open the Saved/Logs folder of your project and open the newest .txt log file. Find three lines that contain Warning or Error and write down what they say."
+      - "Open any project, or create one from the Third Person template, and work in it for a few minutes so that a log exists. Open the Saved/Logs folder of the project and open the newest .txt log file. Find three lines that contain Warning or Error and write down what they say."
       - "Open the Saved/Crashes folder. If it is empty, cause a crash on purpose. Save your work first. Then open the console with the backtick key and type debug crash. This closes the editor and writes a crash report. A mistake in a Blueprint, such as calling a function on an empty reference, only gives an Accessed None error in the Message Log and does not crash. In C++ you can also crash with check(false)."
       - "Open one crash folder and find the callstack text and the copy of the log inside it."
       - "Open Editor Preferences, go to Privacy, then Bug Reports, and read the options. Do not change them unless you want to."
@@ -1793,7 +1793,7 @@ quests:
     required_spine: false
     required: false
     title: Interfaces that answer back
-    brief: "You already know that a Blueprint Interface lets different Actors answer the same call. Interface functions can also return values, so one system can ask many kinds of Actors the same question, such as \"Can I use you?\", without any Cast node. In this quest you build a Usable interface with functions that return data, implement it in a parent, a child and an unrelated Actor, and call it from the player."
+    brief: "A Blueprint Interface is a list of function names that different Actors can each answer in their own way. Interface functions can also return values, so one system can ask many kinds of Actors the same question, such as \"Can I use you?\", without any Cast node. In this quest you build a Usable interface with functions that return data, implement it in a parent, a child and an unrelated Actor, and call it from the player."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/implementing-blueprint-interfaces-in-unreal-engine"
     backup_url: null
@@ -1802,11 +1802,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/DoesObjectImplementInterface"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-communication-in-unreal-engine"
     checklist:
-      - "Create a Blueprint Interface named BPI_Usable with three functions: CanUse with a Boolean output, GetPrompt with a Text output, and Use with an input named Instigator of the type Actor Object Reference. An object reference input cannot have a default value, so the caller must always pass the Instigator."
+      - "Open a project made from the Third Person template, or create one. Create a Blueprint Interface named BPI_Usable with three functions: CanUse with a Boolean output, GetPrompt with a Text output, and Use with an input named Instigator of the type Actor Object Reference. An object reference input cannot have a default value, so the caller must always pass the Instigator."
       - "Make an Actor Blueprint named BP_UsableBase that implements BPI_Usable. Implement CanUse so that it returns true, and GetPrompt so that it returns the text Use. Click Compile."
       - "Make BP_Chest as a child of BP_UsableBase. Open the inherited GetPrompt function, right-click its entry node and choose Add Call to Parent Function. Append the word Chest to the text that the parent returns. Then override CanUse so that it returns false after the first Use."
       - "Make an Actor Blueprint named BP_Vendor that has no parent Blueprint and also implements BPI_Usable. Make it return a different prompt and print a line in Use."
-      - "In the player, on overlap, call Does Object Implement Interface with BPI_Usable. If the result is true, call CanUse and GetPrompt with the Interface call type and show the prompt with Print String. On the E key, call Use (Message) with the player as Instigator."
+      - "In the player character, BP_ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Does Object Implement Interface with BPI_Usable on the Other Actor and store the actor in a variable. If the result is true, call CanUse and GetPrompt with the Interface call type and show the prompt with Print String. On the E key, call Use (Message) on the stored actor with the player as Instigator."
       - "Place BP_Chest, BP_Vendor and a plain cube in the level and press Play. The cube should give no prompt, the chest prompt should show the parent text plus Chest, and after one Use the chest should report CanUse = false."
       - "Open Class Settings on BP_Chest and take a screenshot of the Inherited Interfaces list."
     done_when: "Send a screenshot of the GetPrompt graph of BP_Chest with the Parent call node, and a screenshot in Play mode that shows the prompt text and the CanUse result after the first Use."
@@ -1867,7 +1867,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-blueprint-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-communication-usage-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_EventBus with two Event Dispatchers. OnScoreChanged has the inputs NewScore (Integer) and Delta (Integer). OnItemPicked has the inputs ItemName (Name) and Picker (Actor Object Reference). Set a Category and a Tooltip on both."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_EventBus with two Event Dispatchers. OnScoreChanged has the inputs NewScore (Integer) and Delta (Integer). OnItemPicked has the inputs ItemName (Name) and Picker (Actor Object Reference). Set a Category and a Tooltip on both."
       - "Add a custom event named ReportScore with the same two inputs as OnScoreChanged. Select OnScoreChanged and use Copy Signature from to copy the inputs from ReportScore. Compare the result with the inputs you made by hand."
       - "Make an Actor Blueprint named BP_Coin. On overlap, find the placed BP_EventBus with Get Actor of Class. Call OnItemPicked with the name of the coin and the overlapping actor, and then destroy the coin."
       - "Make BP_ScoreBoard, an Actor with a Text Render component. On BeginPlay, bind a custom event to OnItemPicked that adds 10 to a Score variable and then calls OnScoreChanged on the bus with the new score and the delta. Bind a second custom event to OnScoreChanged that writes the score to the text."
@@ -1931,7 +1931,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Components/Tick/SetComponentTickEnabled"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-blueprint-classes-in-unreal-engine"
     checklist:
-      - "Create a Blueprint Class with Scene Component as the parent and name it BPC_Orbit. Add the float variables Radius (150), Speed (90) and Angle."
+      - "Open a project made from the Third Person template, or create one. Create a Blueprint Class with Scene Component as the parent and name it BPC_Orbit. Add the float variables Radius (150), Speed (90) and Angle."
       - "In BPC_Orbit, on Event Tick, add Speed times Delta Seconds to Angle. Then call Set Relative Location with (cos(Angle) * Radius, sin(Angle) * Radius, 0). This makes the component move itself in a circle around its parent."
       - "Make an Actor Blueprint named BP_Planet with a Static Mesh sphere as the root. Add BPC_Orbit as a child of the root, and add a second, smaller sphere Static Mesh as a child of BPC_Orbit. Press Play and check that the small sphere orbits."
       - "Add a second BPC_Orbit under the first small sphere, with a third mesh under it. Notice that the tree now goes root, Orbit, mesh, Orbit, mesh, and that each orbit uses the transform of its parent."
@@ -1995,7 +1995,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/math-expression-node-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-function-libraries-in-unreal-engine"
     checklist:
-      - "Create a Blueprint Function Library named BFL_Gameplay. Add a Pure function named MapRange01 with the float inputs Value, InMin and InMax and a float output named Alpha. Build it with one Math Expression node that has this formula: clamp((value-inMin)/(inMax-inMin),0,1)."
+      - "Open any project, or create one from the Third Person template. Create a Blueprint Function Library named BFL_Gameplay. Add a Pure function named MapRange01 with the float inputs Value, InMin and InMax and a float output named Alpha. Build it with one Math Expression node that has this formula: clamp((value-inMin)/(inMax-inMin),0,1)."
       - "Add a Pure function named RingPosition with the inputs Center (Vector), Radius (float) and AngleDeg (float), and a Vector output named Pos. Use a Math Expression with vector(...) and sin/cos. Double-click the node and take a screenshot of the sub-graph that Unreal generated."
       - "Add an impure function (not Pure) named ApplyKnockback with the inputs Target (Actor) and Force (Vector). Give it the Category Gameplay and a Description. It calls Add Impulse on the root of the target if the root simulates physics."
       - "Add a function named TallyHits with an Integer input that is passed by reference. To do this, expand the input and tick Pass-by-Reference. The function adds 1 to the input. Call it three times from one actor and print the variable."
@@ -2061,7 +2061,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/LoadAssetBlocking"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/IsValidSoftObjectReference"
     checklist:
-      - "Make an Actor Blueprint named BP_Showcase with a Static Mesh Component. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a large Starter Content mesh to HeavyMesh on that copy."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a mesh to HeavyMesh on that copy. In a real game this would be a large mesh. For the test any mesh works, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template."
       - "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two."
       - "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded."
       - "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor."
@@ -2123,7 +2123,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-function-libraries-in-unreal-engine"
     checklist:
-      - "Create two Blueprint Function Libraries: BFL_Combat with the functions ComputeDamage and RollCrit, and BFL_Debug with the functions DrawHitMarker and LogHit. Compile and save both."
+      - "Open any project, or create one from the Third Person template. Create two Blueprint Function Libraries: BFL_Combat with the functions ComputeDamage and RollCrit, and BFL_Debug with the functions DrawHitMarker and LogHit. Compile and save both."
       - "Open BFL_Combat and click Class Settings. In Blueprint Options, set Blueprint Namespace to Project.Combat. Do the same for BFL_Debug with Project.Debug. Then try a namespace that contains # and read the validation message."
       - "In the Content Browser, search for BlueprintNamespace=Combat and take a screenshot of the result. Hover the mouse over a library asset and read the namespace in its tooltip."
       - "Make an Actor Blueprint named BP_Enemy. In its Class Settings, set Blueprint Namespace to Project.Combat. Compile, save and restart the editor. Open BP_Enemy again and look at the Imports section in Class Settings to see which namespaces are imported."
@@ -2187,11 +2187,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/compiler-overview-for-blueprints-visual-scripting-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_Vehicle with a Static Mesh. Add a float variable named TopSpeed that is Instance Editable, a float variable named Secret that is Private, and a function named Honk that prints Honk. Also add a local macro named FlashLights that toggles a Point Light."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Vehicle with a Static Mesh. Add a float variable named TopSpeed that is Instance Editable, a float variable named Secret that is Private, and a function named Honk that prints Honk. Also add a local macro named FlashLights that toggles a Point Light."
       - "Create BP_PoliceCar and BP_FireTruck as children of BP_Vehicle. In BP_PoliceCar, override Honk so that it first calls the parent Honk and then prints Siren. In BP_FireTruck, try to override FlashLights and note what the editor offers you."
       - "In BP_FireTruck, try to add a Get node for Secret. Write one line that says what happens and why."
       - "Create BP_Taxi as a child of BP_Vehicle and change only TopSpeed and the mesh. Do not add any nodes. Open it and notice the compact Data-Only editor. Then add one variable and watch it become a full Blueprint."
-      - "Place one of each vehicle in the level. Add an event for the H key that uses Get All Actors of Class with BP_Vehicle and calls Honk on all of them. Watch each child answer in its own way."
+      - "Place one of each vehicle in the level. In the Level Blueprint, add an event for the H key that uses Get All Actors of Class with BP_Vehicle and calls Honk on all of them. Watch each child answer in its own way."
       - "In BP_Vehicle, change the type of TopSpeed from float to integer and compile. Open the children. Write one line that says what the compiler did to the instances placed in the level."
     done_when: "Send a screenshot of the Honk override in BP_PoliceCar with the Parent call, a screenshot in Play mode with all three prints, and your two lines."
     xp: 60
@@ -2254,7 +2254,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Actor/Tick/SetActorTickEnabled"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-ticking-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_GasRoom with a Box Collision. For version 1, on Tick, check if the player is inside and apply 1 damage per second with the help of Delta Seconds. Place 20 copies, open stat game, and note the tick cost."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_GasRoom with a Box Collision. For version 1, on Tick, check if the player is inside and apply 1 damage per second with the help of Delta Seconds. Place 20 copies, open stat game, and note the tick cost."
       - "For version 2, turn off Start with Tick Enabled in Class Defaults. On begin overlap, call Set Timer by Event with Time 1.0 and Looping on, connect it to a custom event named DamageTick, and store the handle in a variable. On end overlap, call Clear and Invalidate Timer by Handle."
       - "Add an event for the P key that calls Pause Timer by Handle, and an event for the O key that unpauses it. While the timer is paused, use another timer to print Get Timer Remaining Time by Handle each second, and confirm that the value does not change."
       - "Add a delayed start: a 3-second Set Timer by Event that does not loop and that starts the damage loop. Set its Initial Start Delay Variance to 0.5. Spawn 20 rooms and watch them start at different moments."
@@ -2317,12 +2317,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-arrays?application_version=4.27"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/structs-in-unreal-engine"
     checklist:
-      - "Right-click in the Content Browser and choose Blueprints, then Structure. Name it S_InventoryItem. Add the fields ItemName (Name), Count (Integer), Weight (Float) and Icon (Texture 2D soft reference)."
+      - "Open a project made from the Third Person template, or create one. Right-click in the Content Browser and choose Blueprints, then Structure. Name it S_InventoryItem. Add the fields ItemName (Name), Count (Integer), Weight (Float) and Icon (Texture 2D soft reference)."
       - "Make an Actor Component named BP_InventoryComponent. Add a variable named Items with the type S_InventoryItem and set its container to Array."
       - "Add a function named AddItem with the inputs Name and Count. Loop through the Items array. If an ItemName matches, use Set Members in Struct to raise only Count. If nothing matches, use Make S_InventoryItem and Add the new item to the array."
       - "Add a function named RemoveItem with the input Name. Find the index of the item and lower its Count. Use Remove Index when Count reaches 0. Return a Boolean named Success."
       - "Add a pure function named GetTotalWeight. It loops through Items, uses a Break node on each struct to read its fields, and adds up Count * Weight."
-      - "Add BP_InventoryComponent to the ThirdPersonCharacter. On Begin Play, call AddItem three times and use one of the names twice. Print the Length of Items and the total weight."
+      - "Add BP_InventoryComponent to the character Blueprint of the template, BP_ThirdPersonCharacter. On Begin Play, call AddItem three times and use one of the names twice. Print the Length of Items and the total weight."
       - "Select each Break S_InventoryItem node and click Hide Unconnected Pins in the Details panel, so that the graph stays clean."
     done_when: "Send one screenshot of the S_InventoryItem structure asset with its four fields, one screenshot of the AddItem function graph that shows Set Members in Struct, and one screenshot of the Output Log in Play mode that shows the item count and the total weight."
     xp: 60
@@ -2382,12 +2382,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-a-multi-line-trace-raycast-by-channel-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-interface-in-unreal-engine"
     checklist:
-      - "Make a Blueprint Interface named BPI_Interactable with two functions: Interact with an Actor input named Instigator, and GetPrompt with a Text output."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint Interface named BPI_Interactable with two functions: Interact with an Actor input named Instigator, and GetPrompt with a Text output."
       - "Make an Actor Component named BP_InteractComponent. On Event Tick, run Line Trace By Channel from the camera location to the camera location + forward vector * 300. While you test, set Draw Debug Type to For One Frame so that you can see the line."
       - "Use a Break node on the Hit Result. Store the Hit Actor in a variable named FocusedActor, but only if it implements BPI_Interactable (check this with Does Implement Interface). Clear the variable when the trace hits nothing."
-      - "Add the ThirdPersonCharacter to the Actors to Ignore of the trace, so that the trace does not hit the player."
+      - "Add the character that owns the component to the Actors to Ignore of the trace, so that the trace does not hit the player."
       - "Make BP_Chest and BP_Lever, and make both implement BPI_Interactable. Interact opens the chest or flips the lever, and GetPrompt returns a text such as Open or Pull."
-      - "Add the component to the character. On an Interact input action, call Interact (Message) on FocusedActor. On each tick where FocusedActor is valid, show the prompt on the screen with Print String."
+      - "Add the component to the character Blueprint of the template. Add an interact key to the character, for example a keyboard event for the E key or an Input Action that you map to E, and call Interact (Message) on FocusedActor from it. On each tick where FocusedActor is valid, show the prompt on the screen with Print String."
       - "Place both actors and a plain cube in the level. Press Play and confirm that the cube gives no prompt and that both actors respond."
     done_when: "Send one screenshot of the BP_InteractComponent graph with the Line Trace By Channel node and the Does Implement Interface check, and one screenshot in Play mode with the debug line and a prompt printed while you look at the chest."
     xp: 60
@@ -2449,12 +2449,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage/OnTakePointDamage"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Game/Damage/OnTakeRadialDamage"
     checklist:
-      - "Make two Blueprint classes with DamageType as the parent, and name them DT_Fire and DT_Explosion."
+      - "Open a project made from the Third Person template, or create one. Make two Blueprint classes with DamageType as the parent, and name them DT_Fire and DT_Explosion."
       - "Make an Actor Component named BP_HealthComponent with a Float variable named Health that has a default of 100. On Begin Play, bind an event to the OnTakeAnyDamage event of the owner and subtract Damage from Health. Print the class name of the Damage Type and the Damage Causer."
       - "Also bind an event to OnTakePointDamage. Print the Hit Location and the Bone Name, so that you can see where the hit landed."
       - "Make BP_Target, a cube that has the health component. Place three of them at 100, 300 and 600 units from a marker."
       - "Make BP_Grenade. On overlap with the player, call Apply Radial Damage with Base Damage 50, Damage Radius 400, the damage type DT_Explosion and Self as Damage Causer, and then call Destroy Actor. Test it with Do Full Damage on and with it off."
-      - "In the character, on a Fire input action, do a Line Trace forward. Call Apply Point Damage on the Hit Actor and give it the Hit Result, the Hit From Direction and DT_Fire."
+      - "In the character Blueprint of the template, add a fire event, for example for the left mouse button, and do a Line Trace forward from the camera. Call Apply Point Damage on the Hit Actor and give it the Hit Result, the Hit From Direction and DT_Fire."
       - "Add a Branch in the health component: if the Damage Type is DT_Fire, multiply the damage by 2. When Health reaches 0, kill the owner with Destroy."
     done_when: "Send one screenshot of the BP_HealthComponent graph with both bound damage events, and one screenshot of the Output Log in Play mode after one grenade and one shot, which shows the damage type names and which targets took damage."
     xp: 60
@@ -2514,12 +2514,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame/DoesSaveGameExist"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/SaveGame/DeleteGameinSlot"
     checklist:
-      - "Make a Blueprint named SG_Profile with SaveGame as the parent. Add SaveVersion (Integer, default 1), PlayerName (String), and an array of S_InventoryItem. If you did not do PQ71, use an array of Names."
+      - "Open a project made from the Third Person template, or create one. Make a Blueprint named SG_Profile with SaveGame as the parent. Add SaveVersion (Integer, default 1), PlayerName (String), and an array of Names named Items. If you have an item struct of your own, you can use an array of that struct."
       - "Make a Blueprint Function Library named BFL_Save. Add a function named GetSlotName with an input named Slot Index that returns the text Profile_ plus the index."
-      - "In the Game Instance, add a function named SaveToSlot with an input named Index. Use Create Save Game Object with SG_Profile, fill it with data, and then call Async Save Game to Slot. On Completed, print Success and the slot name."
+      - "Make a Blueprint named BP_SaveGameInstance with Game Instance as the parent, and set it as the Game Instance Class in Project Settings, under Maps & Modes. In it, add a function named SaveToSlot with an input named Index. Use Create Save Game Object with SG_Profile, fill it with data, and then call Async Save Game to Slot. On Completed, print Success and the slot name."
       - "Add LoadFromSlot with an input named Index. First call Does Save Game Exist. If it is false, print No save in slot. If it is true, call Async Load Game from Slot. On Completed, cast the result to SG_Profile and copy the data back."
       - "Add DeleteSlot with an input named Index. It calls Delete Game in Slot and prints the Boolean that the node returns."
-      - "Bind the keys 1, 2 and 3 to save to slots 0, 1 and 2, and Shift+1, 2 and 3 to load them. Bind the Delete key to delete slot 0. Press Play, save to two slots, delete one, and try to load both."
+      - "In the character Blueprint of the template, bind the keys 1, 2 and 3 to save to slots 0, 1 and 2, and Shift+1, 2 and 3 to load them, through Get Game Instance and a cast. Bind the Delete key to delete slot 0. Press Play, save to two slots, delete one, and try to load both."
       - "Open the Saved/SaveGames folder of the project in Windows Explorer and look at the .sav files."
     done_when: "Send one screenshot of the LoadFromSlot graph with Does Save Game Exist and Async Load Game from Slot, one screenshot of the Saved/SaveGames folder with your .sav files, and one screenshot of the Output Log that shows a successful load and a failed load of a deleted slot."
     xp: 60
@@ -2580,13 +2580,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Input/SetInputModeGameOnly"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/umg-ui-designer-quick-start-guide-in-unreal-engine"
     checklist:
-      - "Make an Enum named E_GameFlow with the values Playing, Paused and GameOver. Add a variable named GameFlow of that type to your Player Controller BP_FlowController. Set this controller as the default controller in the GameMode."
+      - "Open a project made from the Third Person template, or create one. Make an Enum named E_GameFlow with the values Playing, Paused and GameOver. Make a Player Controller Blueprint named BP_FlowController and add a variable named GameFlow of that type to it. Open the GameMode of the template and set its Player Controller Class to BP_FlowController."
       - "Make two Widget Blueprints: WBP_PauseMenu with a Resume button and a Quit button, and WBP_GameOver with a Restart button."
       - "In BP_FlowController, add a function named SetFlow with an input named New State and use a Switch on E_GameFlow. For Playing: Set Game Paused false, Set Input Mode Game Only, and hide the cursor. For Paused: create WBP_PauseMenu, Add to Viewport, Set Game Paused true, Set Input Mode UI Only with the menu as In Widget to Focus, and show the cursor."
       - "For GameOver: create WBP_GameOver, call Set Input Mode Game And UI, and show the cursor. Keep the game running so that the camera still moves."
-      - "Bind a Pause input action. Use Is Game Paused to decide if you call SetFlow with Playing or with Paused. Open the Input Action asset of your Pause action and turn on Trigger When Paused, or you cannot unpause with the same key. If you use an old style key event node, the setting is Execute when Paused in the Details of the node."
+      - "Make an Input Action named IA_Pause, map it to a key in the Input Mapping Context of the template, and handle it in BP_FlowController. Use Is Game Paused to decide if you call SetFlow with Playing or with Paused. Open the IA_Pause asset and turn on Trigger When Paused, or you cannot unpause with the same key. If you use an old style key event node, the setting is Execute when Paused in the Details of the node."
       - "Connect the Resume button to SetFlow with Playing and to Remove from Parent. Connect the Restart button to Open Level with the name of the current level."
-      - "Press Play. Pause the game, move the mouse and click Resume. Then trigger GameOver and confirm that the camera still moves and that the button works."
+      - "Add a key press that calls SetFlow with GameOver, so that you can test that state. Press Play. Pause the game, move the mouse and click Resume. Then trigger GameOver and confirm that the camera still moves and that the button works."
     done_when: "Send one screenshot of the SetFlow function graph with the Switch on E_GameFlow and the three input mode nodes, and one screenshot in Play mode with the pause menu open and the cursor visible."
     xp: 60
     verify_type: screenshot
@@ -2646,8 +2646,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/loading-and-unloading-levels-using-blueprints-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/travelling-in-multiplayer-in-unreal-engine"
     checklist:
-      - "Make three levels: L_Hub, L_Arena and L_ArenaStream, which is a small room. Put a Player Start in L_Hub and in L_Arena."
-      - "In your Game Instance, add a String variable named LastLevel and an Integer variable named Score."
+      - "Open a project made from the Third Person template, or create one. Make three levels: L_Hub, L_Arena and L_ArenaStream, which is a small room. Put a floor and a Player Start in L_Hub and in L_Arena."
+      - "Make a Blueprint with Game Instance as the parent and set it as the Game Instance Class in Project Settings, under Maps & Modes, or use the one your project already has. Add a String variable named LastLevel and an Integer variable named Score to it."
       - "Make BP_Portal with a Box Collision and an editable variable named Level of the type Soft Object Reference to World. On overlap with the player, store the result of Get Current Level Name (with Remove Prefix String on) in LastLevel, and then call Open Level (by Object Reference)."
       - "Make BP_ReturnPortal and place it in L_Arena. On overlap with the player, it reads LastLevel from the Game Instance and calls Open Level (by Name) with LastLevel as the Level Name and the text fromArena in the Options pin. Options are extra text that is passed to the level that opens. To see them arrive, open the GameMode Blueprint that L_Hub uses, and on Begin Play print its Options String variable."
       - "In the Levels window, add L_ArenaStream as a sublevel of L_Arena. Make BP_Streamer. On overlap it calls Load Stream Level (by Name) with Make Visible After Load on, and on end overlap it calls Unload Stream Level."
@@ -2713,8 +2713,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/Time/ClearandInvalidateTimerbyHandle"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/Time/IsTimerActivebyHandle"
     checklist:
-      - "Make an Actor Blueprint named BP_PowerUpManager. Add a custom event named OnShieldTick that prints Shield tick, and a custom event named OnShieldEnd."
-      - "Add a function named StartShield. Call Set Timer by Event with OnShieldTick, Time 1.0, Looping on and Initial Start Delay 0.5, and promote the returned handle to a variable named ShieldTickHandle. Call a second Set Timer by Event with OnShieldEnd, Time 10 and no looping, and store its handle as ShieldEndHandle."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_PowerUpManager and place it in the level. In its Class Defaults, set Auto Receive Input to Player 0, so that it receives key presses. Add a custom event named OnShieldTick that prints Shield tick, and a custom event named OnShieldEnd."
+      - "Add a function named StartShield and call it on BeginPlay. In it, call Set Timer by Event with OnShieldTick, Time 1.0, Looping on and Initial Start Delay 0.5, and promote the returned handle to a variable named ShieldTickHandle. Call a second Set Timer by Event with OnShieldEnd, Time 10 and no looping, and store its handle as ShieldEndHandle."
       - "In OnShieldEnd, call Clear and Invalidate Timer by Handle on ShieldTickHandle, so that the ticks stop when the shield ends."
       - "Bind the P key to Pause Timer by Handle on both handles, and the U key to Unpause Timer by Handle. Print Is Timer Active by Handle after each key press."
       - "On Event Tick, print Get Timer Remaining Time by Handle for ShieldEndHandle. This lets you watch the time count down and stop while the timer is paused."
@@ -2776,11 +2776,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Input/AddMappingContext"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Input/RemoveMappingContext"
     checklist:
-      - "In the Third Person template, find the default Input Mapping Context that already exists. Make two new ones named IMC_Vehicle and IMC_Menu."
+      - "Open a project made from the Third Person template, or create one. Find the default Input Mapping Context that already exists in the template. Make two new ones named IMC_Vehicle and IMC_Menu."
       - "Make the Input Actions IA_Honk (Boolean), IA_Steer (Axis1D) and IA_MenuBack (Boolean). In IMC_Vehicle, map A and D to IA_Steer and add the Negate modifier on A, and map H to IA_Honk. In IMC_Menu, map Escape to IA_MenuBack."
       - "Make a Pawn Blueprint named BP_Car. On Possessed, get the Enhanced Input Local Player Subsystem from the controller and call Add Mapping Context with IMC_Vehicle and Priority 1. On Unpossessed, call Remove Mapping Context."
       - "Make BP_CarTrigger. On overlap, it makes the player possess BP_Car, which means the player takes control of it. Also let the player press a key to possess the character again."
-      - "In the Player Controller, add IMC_Menu with Priority 10 when a menu opens, and remove it when the menu closes. Also map Escape in the default context, so that you can see which context wins."
+      - "Make a Player Controller Blueprint and set it in the GameMode of the template, or use the one your project already has. In it, add IMC_Menu with Priority 10 when a menu opens, and remove it when the menu closes. A simple Widget Blueprint with one line of text that you show with a key press is enough as the menu. Also map Escape in the default context, so that you can see which context wins."
       - "Add the IA_Steer and IA_Honk events in BP_Car. Print the Action Value of IA_Steer while you press A and D. Try the Started, Triggered and Completed pins on IA_Honk."
       - "Press Play. Enter the car, steer, honk, open the menu, press Escape, close the menu, and leave the car."
     done_when: "Send one screenshot of IMC_Vehicle that shows the key mappings with the Negate modifier on A, and one screenshot of the BP_Car graph with Add Mapping Context on Possessed and Remove Mapping Context on Unpossessed."
@@ -2839,7 +2839,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/metadata-specifiers-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-uproperties"
     checklist:
-      - "In your C++ project, add a header file named ItemTypes.h. It does not need a class. You can use the Class Wizard with the parent None, or create the file by hand."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Add a header file named ItemTypes.h. It does not need a class. You can use the Class Wizard with the parent None, or create the file by hand."
       - "Declare UENUM(BlueprintType) enum class EItemRarity : uint8 with the values Common, Rare and Epic. Give Epic the text UMETA(DisplayName=\"Legendary\"), which changes the name shown in the editor. Add one more value and mark it with UMETA(Hidden)."
       - "Declare USTRUCT(BlueprintType) struct FItemRow. Put GENERATED_BODY() on its first line. Then add these UPROPERTY fields: FName Id, int32 Stack and EItemRarity Rarity. Mark each of them with EditAnywhere, BlueprintReadWrite."
       - "On a C++ actor named AItemChest, add a UPROPERTY of the type TArray<FItemRow> named Items. Compile, and make a Blueprint named BP_ItemChest from the actor."
@@ -2902,12 +2902,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/map-containers-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/set-containers-in-unreal-engine"
     checklist:
-      - "Make a C++ actor named AContainerLab. In BeginPlay, build a TArray<FString> and add items with Emplace. Then Sort it with a predicate (a small function that compares two items) that sorts by the length of the string."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AContainerLab and place it in a level. In BeginPlay, build a TArray<FString> and add items with Emplace. Then Sort it with a predicate (a small function that compares two items) that sorts by the length of the string."
       - "Use Find to get the index of an item, and FindByPredicate to get a pointer to an item. Log both results with UE_LOG. Also log what Find returns for a value that is not in the array."
       - "Remove one element with RemoveAt and one with RemoveAllSwap. Log the array after each removal, so that you can see how the order changes."
       - "Make a TMap<int32, FString>. Add three entries, and then call Add again with a key that already exists. Log Num() before and after."
       - "On a key that does not exist, use Find (and check the pointer it returns), FindRef and FindOrAdd. Log each result and log Num() after them."
-      - "Make a TSet<FString>, Add the same value twice, and log Num(). Then mark the TMap with UPROPERTY(EditAnywhere) and edit it from the Details panel in BP_ContainerLab."
+      - "Make a TSet<FString>, Add the same value twice, and log Num(). Then mark the TMap with UPROPERTY(EditAnywhere), make a Blueprint child of the actor named BP_ContainerLab, and edit the map from its Details panel."
     done_when: "Send a screenshot of the Output Log that shows the sorted array, the Find results (also the one for the missing value), the map counts after the duplicate key, and the set count after the duplicate. Also send a screenshot of the map being edited in the Details panel."
     xp: 65
     verify_type: screenshot
@@ -2965,7 +2965,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/multicast-delegates-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/dynamic-delegates-in-unreal-engine"
     checklist:
-      - "Make a C++ actor named AAlarmActor. In its header, declare a single delegate with DECLARE_DELEGATE_OneParam(FOnAlarmMessage, FString), and add a member variable of that type."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AAlarmActor. In its header, declare a single delegate with DECLARE_DELEGATE_OneParam(FOnAlarmMessage, FString), and add a member variable of that type."
       - "In BeginPlay, bind the delegate to a member function with BindUObject and call it with ExecuteIfBound. Then call Unbind and call ExecuteIfBound again. Log that nothing happened the second time."
       - "Declare a multicast delegate with DECLARE_MULTICAST_DELEGATE_OneParam(FOnAlarmLevel, int32). Add two listeners, one with AddUObject and one with AddLambda, and then call Broadcast. Write a log line from both listeners."
       - "Declare DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAlarmTriggered, int32, Level) and add a member of that type marked with UPROPERTY(BlueprintAssignable), so that Blueprints can bind to it."
@@ -3025,10 +3025,10 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-timers-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Make a C++ actor named AGasRoom. Give it a member FTimerHandle DamageTimerHandle and a function ApplyGasTick() that is marked with UFUNCTION."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named AGasRoom. Give it a member FTimerHandle DamageTimerHandle and a function ApplyGasTick() that is marked with UFUNCTION."
       - "In BeginPlay, call GetWorldTimerManager().SetTimer(DamageTimerHandle, this, &AGasRoom::ApplyGasTick, 1.0f, true, 2.0f). This starts the timer after 2 s and repeats it every second."
       - "In ApplyGasTick, count down an int named TicksRemaining. When it reaches 0, call ClearTimer with the same handle and log that the room is safe."
-      - "Add two functions marked UFUNCTION(BlueprintCallable), named PauseGas() and ResumeGas(), that call PauseTimer and UnPauseTimer. Call them from BP_GasRoom on key presses."
+      - "Add two functions marked UFUNCTION(BlueprintCallable), named PauseGas() and ResumeGas(), that call PauseTimer and UnPauseTimer. Make a Blueprint child of the actor named BP_GasRoom, set Auto Receive Input to Player 0 in its Class Defaults, place it in the level, and call the two functions from key press events."
       - "On each tick, log GetTimerElapsed and GetTimerRemaining for the handle. Check that the two values add up to the rate of the timer."
       - "In BeginPlay, use SetTimerForNextTick with a lambda (a small function written in place) to log one line on the next frame."
     done_when: "Send a screenshot of the Output Log that shows the ticks with the elapsed and remaining values, a pause and a resume, and the final clear message. The SetTimer line from your .cpp file must also be in the screenshot."
@@ -3085,7 +3085,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/interfaces-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Use the C++ Class Wizard with the class type Unreal Interface to create ReactToTrigger. You get two classes: UReactToTrigger (the UINTERFACE) and IReactToTrigger."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Use the C++ Class Wizard with the class type Unreal Interface to create ReactToTrigger. You get two classes: UReactToTrigger (the UINTERFACE) and IReactToTrigger."
       - "Mark the UINTERFACE with Blueprintable. In the I-class, add UFUNCTION(BlueprintCallable, BlueprintNativeEvent) bool ReactToTrigger();."
       - "Make a C++ actor named ATrapActor that inherits from AActor and IReactToTrigger. Implement ReactToTrigger_Implementation so that it writes a log line and returns true."
       - "Make a Blueprint actor named BP_PointsPickup. Add the ReactToTrigger interface in its Class Settings and implement the event in the Blueprint."
@@ -3145,7 +3145,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-subsystems-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Create a C++ class named UStatsSubsystem that inherits from UGameInstanceSubsystem."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Create a C++ class named UStatsSubsystem that inherits from UGameInstanceSubsystem."
       - "Override Initialize(FSubsystemCollectionBase&) and Deinitialize(). Write a log line in both, so that you can see when they run."
       - "Add UFUNCTION(BlueprintCallable) void IncrementResourceStat(FName Resource) and UFUNCTION(BlueprintPure) int32 GetResourceStat(FName Resource) const. Store the values in a TMap<FName, int32>."
       - "In a C++ actor, get the subsystem with the line GetGameInstance()->GetSubsystem<UStatsSubsystem>(). Then increment a stat on BeginPlay."
@@ -3208,7 +3208,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-make-a-gameplay-module-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-properties-in-unreal-engine"
     checklist:
-      - "In the Source folder of your project, create a folder named GameCore with two subfolders named Private and Public."
+      - "Use a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. In the Source folder of the project, create a folder named GameCore with two subfolders named Private and Public."
       - "Add the file GameCore.Build.cs with a class that derives from ModuleRules. Put Core, CoreUObject and Engine in PrivateDependencyModuleNames."
       - "Add the file Private/GameCoreModule.cpp. It contains #include \"Modules/ModuleManager.h\" and the line IMPLEMENT_MODULE(FDefaultModuleImpl, GameCore);."
       - "Register the module in the Modules list of the .uproject file with the Type Runtime. Then add \"GameCore\" to PublicDependencyModuleNames in the Build.cs file of the primary module."
@@ -3268,9 +3268,9 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-live-coding-to-recompile-unreal-engine-applications-at-runtime"
     backup_url: null
     checklist:
-      - "Open Editor Preferences and go to General, then Live Coding. Take a screenshot of the General section and of the Modules section."
-      - "Add the second module of your project (or your primary module) to Preload Named Modules. Restart the editor and note the difference in startup time."
-      - "Place BP_GasRoom (or any actor based on C++) in the level. In the .cpp file, change a default value in the constructor. Press Ctrl+Alt+F11 to start Live Coding, and check if the placed instance updates."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Open Editor Preferences and go to General, then Live Coding. Take a screenshot of the General section and of the Modules section."
+      - "Add the primary module of the project, or a second module if the project has one, to Preload Named Modules. Restart the editor and note the difference in startup time."
+      - "Place an actor based on C++ in the level. If you have none, add an Actor class with Tools, then New C++ Class, give it a float UPROPERTY(EditAnywhere) with a default value set in the constructor, and build. In the .cpp file, change the default value in the constructor. Press Ctrl+Alt+F11 to start Live Coding, and check if the placed instance updates."
       - "Now change the same default value in the .h file instead. Run Live Coding again and compare the result."
       - "Add a completely new UFUNCTION and a new UPROPERTY to the class. Run Live Coding with Enable Reinstancing on, and confirm that the new property shows in the Details panel."
       - "Open the Live Coding console and take a screenshot of the log from a successful patch."
@@ -3331,7 +3331,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asset-management-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Open Tools > New C++ Class. Pick PrimaryDataAsset as the parent and type the name WeaponDefinition. Unreal adds the U at the start itself, so the class in the code is named UWeaponDefinition. Build the project."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Open Tools > New C++ Class. Pick PrimaryDataAsset as the parent and type the name WeaponDefinition. Unreal adds the U at the start itself, so the class in the code is named UWeaponDefinition. Build the project."
       - "Add these members marked with UPROPERTY(EditAnywhere): FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Build again."
       - "In the Content Browser, right-click and choose Miscellaneous, then Data Asset. Choose WeaponDefinition as the class. Make two assets named DA_Sword and DA_Bow, and fill in their values."
       - "Make a Blueprint child of WeaponDefinition named BP_WeaponBase. Then make a Data Only Blueprint child of BP_WeaponBase named BP_WeaponFire, and change one value in this child."
@@ -3386,7 +3386,7 @@ quests:
     required_spine: false
     required: false
     title: Register and load with the Asset Manager
-    brief: "The Asset Manager is the engine system that knows about your Primary Assets and loads them when you ask, by id. You tell it which asset types exist and in which folders to look. An Asset Bundle is a named group of extra assets, such as meshes, that belong to a Primary Asset and can be loaded together with it. Loading only what you need, when you need it, keeps the start of the game fast. In this quest you register your weapon assets, list them, and load one in the background."
+    brief: "The Asset Manager is the engine system that knows about your Primary Assets and loads them when you ask, by id. You tell it which asset types exist and in which folders to look. An Asset Bundle is a named group of extra assets, such as meshes, that belong to a Primary Asset and can be loaded together with it. Loading only what you need, when you need it, keeps the start of the game fast. In this quest you register weapon Data Assets, list them, and load one in the background."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/asset-management-in-unreal-engine"
     backup_url: null
@@ -3394,7 +3394,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/asynchronous-asset-loading-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Use the UWeaponDefinition class from PQ87 (or make one now). Put all weapon Data Assets in one folder: Content/Data/Weapons."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need a Primary Data Asset class named UWeaponDefinition. If you have none, make it now with Tools, then New C++ Class, with PrimaryDataAsset as the parent, and give it the UPROPERTY(EditAnywhere) members FText DisplayName, int32 Damage and TSoftObjectPtr<UStaticMesh> Mesh. Create two or three Data Assets from it (right-click in the Content Browser, Miscellaneous, Data Asset) and put them all in one folder: Content/Data/Weapons."
       - "Open Project Settings and go to Game, then Asset Manager. Under Primary Asset Types to Scan, add a type named WeaponDefinition with the base class WeaponDefinition and the directory /Game/Data/Weapons."
       - "In the header, add meta=(AssetBundles=\"Visual\") to the UPROPERTY of the Mesh member, so that the mesh goes into a bundle named Visual."
       - "In a GameMode or a Blueprint Function Library, ask the Asset Manager for all Primary Asset Ids of the type WeaponDefinition and print them. In Blueprint the node is Get Primary Asset Id List."
@@ -3455,7 +3455,7 @@ quests:
     backup_url: null
     community_urls: []
     checklist:
-      - "In C++, declare USTRUCT(BlueprintType) FLevelUpRow : public FTableRowBase with the members int32 XPtoLvl, int32 AdditionalHP and TSoftObjectPtr<UTexture> Icon. Build the project."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. In C++, declare USTRUCT(BlueprintType) FLevelUpRow : public FTableRowBase with the members int32 XPtoLvl, int32 AdditionalHP and TSoftObjectPtr<UTexture> Icon. Build the project."
       - "Write a file named LevelUp.csv. Its first column must be named Name, and after that it has one column for each member of the struct. Add 5 rows."
       - "Import the CSV file in the Content Browser. Choose DataTable and the row type LevelUpRow. Name the asset DT_LevelUp."
       - "Add a UPROPERTY(EditAnywhere) FDataTableRowHandle LevelRow to an actor. In BeginPlay, call LevelRow.FindRow<FLevelUpRow>() and write the XPtoLvl value to the log with UE_LOG."
@@ -3516,8 +3516,8 @@ quests:
     backup_url: null
     community_urls: []
     checklist:
-      - "Make a C++ class UGameTuning : public UObject and mark it with UCLASS(config=Game). Add UPROPERTY(Config) int32 StartingLives and UPROPERTY(Config) float RespawnDelay."
-      - "In the file Config/DefaultGame.ini of your project, add a section named [/Script/YourModule.GameTuning] and set both values in it. Replace YourModule with the name of your module."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ class UGameTuning : public UObject and mark it with UCLASS(config=Game). Add UPROPERTY(Config) int32 StartingLives and UPROPERTY(Config) float RespawnDelay."
+      - "In the file Config/DefaultGame.ini of the project, add a section named [/Script/YourModule.GameTuning] and set both values in it. Replace YourModule with the name of your module."
       - "In BeginPlay of any actor, read the value with GetDefault<UGameTuning>()->StartingLives and write it to the log with UE_LOG. Run the game and confirm that the value from the .ini file appears."
       - "Add a section [MyTuning] with the line Difficulty=2 to DefaultGame.ini. Read it with GConfig->GetInt(TEXT(\"MyTuning\"), TEXT(\"Difficulty\"), Value, GGameIni) and log the value."
       - "In the console, run: GetIni Game:/Script/YourModule.GameTuning StartingLives. Compare the result with your log."
@@ -3579,11 +3579,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripting-the-unreal-editor-using-blueprints"
     community_urls: []
     checklist:
-      - "Open Edit > Plugins. Search for Data Validation and confirm that the plugin is enabled."
+      - "Open any project, or create one from the Third Person template. Open Edit > Plugins. Search for Data Validation and confirm that the plugin is enabled."
       - "Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick EditorValidatorBase as the parent class and name the asset EUB_Validate_StaticMeshNames."
       - "Override the function Can Validate Asset. Make it return true only when the asset is a Static Mesh."
       - "Override the function Validate Loaded Asset. If the name of the asset does not start with SM_, call Asset Fails with a clear message. In every other case, call Asset Passes."
-      - "Make a Static Mesh named BadName. Right-click it and choose Asset Actions, then Validate Assets. Read the Message Log."
+      - "Make a Static Mesh named BadName, for example by duplicating any mesh and renaming the copy. Right-click it and choose Asset Actions, then Validate Assets. Read the Message Log."
       - "Run Tools > Validate Data... on the whole project and count the failures. Rename the bad asset and validate again."
     done_when: "Send a screenshot of the Message Log that shows your failure message, and one screenshot after the fix that shows the asset passes."
     xp: 60
@@ -3640,8 +3640,8 @@ quests:
     backup_url: null
     community_urls: []
     checklist:
-      - "Enable the plugins Python Editor Script Plugin and Editor Scripting Utilities, and restart the editor. Create the folder Content/Python in your project."
-      - "Write a script named rename_meshes.py. It gets all Static Mesh assets in a folder with unreal.EditorAssetLibrary, and adds the prefix SM_ to every name that does not have it yet. Rename with the Unreal API and never with os.rename."
+      - "Open any project, or create one from the Third Person template. Enable the plugins Python Editor Script Plugin and Editor Scripting Utilities, and restart the editor. Create the folder Content/Python in the project. Also make a test folder named Content/RenameTest and copy five Static Meshes into it, with names that do not start with SM_."
+      - "Write a script named rename_meshes.py. It gets all Static Mesh assets in the RenameTest folder with unreal.EditorAssetLibrary, and adds the prefix SM_ to every name that does not have it yet. Rename with the Unreal API and never with os.rename."
       - "Wrap the loop in unreal.ScopedEditorTransaction(\"Prefix meshes\") and in unreal.ScopedSlowTask, so that the editor shows a progress dialog with a Cancel button."
       - "Log each rename with unreal.log and each skipped asset with unreal.log_warning. Run the script from the Tools > Execute Python Script menu. The documentation page lists this command under the File menu, where it was in older versions."
       - "Open Edit > Undo History and check that it shows one entry named Prefix meshes. Undo it and confirm that the old names come back."
@@ -3703,7 +3703,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/write-cplusplus-tests-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Pick a small pure C++ function of your own (for example a damage formula in a static library). If you have none, write FDamageCalc::Apply(int32 Base, float Multiplier)."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Pick a small pure C++ function of your own (for example a damage formula in a static library). If you have none, write FDamageCalc::Apply(int32 Base, float Multiplier)."
       - "Create the file Source/YourModule/Private/Tests/DamageCalc.spec.cpp. Use BEGIN_DEFINE_SPEC and END_DEFINE_SPEC, with a member variable for the object under test and the flags ProductFilter | ApplicationContextMask."
       - "In Define(), add Describe(\"Apply()\") with at least three It() blocks whose names start with the word should. Use TestEqual and TestTrue to check the results."
       - "Add a BeforeEach() block that resets the member before each test. Also add a loop over an array of inputs that creates 3 It() blocks, one for each input."
@@ -3747,7 +3747,7 @@ quests:
         explain: "The convention is the Private\\Tests directory of the relevant module, with [ClassFilename]Test.cpp naming."
     flavors:
       _default: {why: "Tests that read like sentences are tests people keep. Specs make the failing part obvious."}
-      programming: {why: "PQ61 gave you a Functional Test in a level. A Spec tests pure logic with no level and runs in seconds.", do: "Add an AsyncExecution::ThreadPool It() and check it still passes."}
+      programming: {why: "A Functional Test runs inside a level. A Spec tests pure logic with no level and runs in seconds.", do: "Add an AsyncExecution::ThreadPool It() and check it still passes."}
       tech_art: {why: "Tool code with math in it deserves tests too.", do: "Write a Spec for one helper function in your editor tool module."}
 
   - id: PQ94
@@ -3766,8 +3766,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/configuration-files-in-unreal-engine"
     community_urls: []
     checklist:
-      - "Declare a category named LogInventory with DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All) in a header, and with DEFINE_LOG_CATEGORY(LogInventory) in a .cpp file."
-      - "In one function, write four UE_LOG lines at the levels Display, Log, Verbose and VeryVerbose. Play and note which of the four lines appear in the Output Log."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Declare a category named LogInventory with DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All) in a header, and with DEFINE_LOG_CATEGORY(LogInventory) in a .cpp file."
+      - "In one function that runs during play, for example the BeginPlay of an actor that you place in the level, write four UE_LOG lines at the levels Display, Log, Verbose and VeryVerbose. Play and note which of the four lines appear in the Output Log."
       - "In the console, type: log LogInventory verbose. Play again and compare. Then try veryverbose."
       - "In DefaultEngine.ini, add the section [Core.Log] with the line LogInventory=Warning. Restart and show that the Display and Log lines are gone."
       - "Include Logging/StructuredLog.h and rewrite one line with UE_LOGFMT. Use the named fields {ItemName} and {Count}."
@@ -3810,7 +3810,7 @@ quests:
         explain: "The Configuration Files page shows [Core.Log] in DefaultEngine.ini with lines like LogTemp=warning to set the display level of a category."
     flavors:
       _default: {why: "Good logs are quiet by default and loud when you ask. Verbosity control is how you get both."}
-      programming: {why: "PQ25 gave you a category. Now you control it from the console, the command line and the ini without a rebuild.", do: "Add a second category and show that log all warning silences both at once."}
+      programming: {why: "A log category is only useful if you can turn it up and down. Here you control one from the console, the command line and the ini without a rebuild.", do: "Add a second category and show that log all warning silences both at once."}
       tech_art: {why: "Turning one noisy category up or down is how you read tool output without drowning.", do: "Raise LogPython to verbose while running one of your scripts."}
 
   - id: PQ95
@@ -3828,7 +3828,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/replicated-object-execution-order-in-unreal-engine"
     checklist:
-      - "In a C++ project, make a class named ANetCrate with Actor as the parent. In the constructor, set bReplicates = true."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a class named ANetCrate with Actor as the parent. In the constructor, set bReplicates = true."
       - "Add UPROPERTY(ReplicatedUsing=OnRep_Health) int32 Health and UPROPERTY(Replicated) int32 SecretCode. Include Net/UnrealNetwork.h in the .cpp file."
       - "Override GetLifetimeReplicatedProps. Call Super first, and then add DOREPLIFETIME(ANetCrate, Health) and DOREPLIFETIME_CONDITION(ANetCrate, SecretCode, COND_OwnerOnly)."
       - "Write the function OnRep_Health(int32 LastHealth), which runs on clients when Health changes. Add a UE_LOG in it that prints the old value and the new value."
@@ -3890,7 +3890,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-owner-and-owning-connection-in-unreal-engine"
     checklist:
-      - "In a C++ Character class, add UFUNCTION(Server, Reliable, WithValidation) void ServerFire(int32 Ammo). Write ServerFire_Implementation and ServerFire_Validate, and make the validate function return false when Ammo < 0."
+      - "Open a C++ project made from the Third Person template, or create one with C++ selected. You need an IDE such as Visual Studio to compile. In the C++ Character class of the template, add UFUNCTION(Server, Reliable, WithValidation) void ServerFire(int32 Ammo). Write ServerFire_Implementation and ServerFire_Validate, and make the validate function return false when Ammo < 0."
       - "Add UFUNCTION(NetMulticast, Unreliable) void MulticastFireFX(). In its _Implementation function, spawn a sound or a particle effect at the actor."
       - "Add UFUNCTION(Client, Reliable) void ClientShowHit(). In its _Implementation function, print a message on the screen."
       - "In ServerFire_Implementation, call MulticastFireFX and ClientShowHit. Bind ServerFire to an input key on the owning client, the client that controls this character."
@@ -3952,8 +3952,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-owner-and-owning-connection-in-unreal-engine"
     checklist:
-      - "Make an Actor Component named BP_RoleLabel. On Begin Play, it adds a Text Render component above the owner. Then, every 0.5 s with a timer, it sets the text to the Get Local Role and Get Remote Role of the owner."
-      - "Add BP_RoleLabel to BP_ThirdPersonCharacter. Also place a replicated BP_NetCrate (with Replicates on) and a BP_Rock that is not replicated in the level, and add the component to both."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Component named BP_RoleLabel. On Begin Play, it adds a Text Render component above the owner. Then, every 0.5 s with a timer, it sets the text to the Get Local Role and Get Remote Role of the owner."
+      - "Add BP_RoleLabel to BP_ThirdPersonCharacter. Make two simple Actor Blueprints, each with a cube mesh: BP_NetCrate with Replicates turned on in its Class Defaults, and BP_Rock with Replicates turned off. Place one of each in the level and add the component to both."
       - "Play with 3 players and Play As Listen Server. In the server window, read the labels on your own pawn, on another pawn, on the crate and on the rock."
       - "Open a client window and read the same four labels. Write them into a small table with the columns actor, window, local role and remote role."
       - "While the game is running, select the crate in the server world. In its Details panel, find the Role and Remote Role values and compare them with your text."
@@ -4013,10 +4013,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/network-debugging-for-unreal-engine"
     checklist:
-      - "Open the Play drop-down in the Level Editor toolbar. Set Number of Players to 3 and Net Mode to Play As Listen Server. Press Play and note the title of each window."
+      - "Open a project made from the Third Person template, or create one. Open the Play drop-down in the Level Editor toolbar. Set Number of Players to 3 and Net Mode to Play As Listen Server. Press Play and note the title of each window."
       - "Stop the game. Set Net Mode to Play As Client with Number of Players 1 and play again. Write one sentence that says what is different and where the server is."
       - "Open Editor Preferences and go to Level Editor, then Play. Turn on Enable Network Emulation, set Emulation Target to Everyone, and choose the profile Bad. Play as a client, walk around, and note how it feels."
-      - "Set the profile to Custom with 250 ms for the minimum and maximum latency and 10% packet loss in both directions. Play again with a replicated crate from an earlier quest and watch how it updates."
+      - "Set the profile to Custom with 250 ms for the minimum and maximum latency and 10% packet loss in both directions. Make a replicated test actor: an Actor Blueprint with a cube mesh, Replicates and Replicate Movement turned on, that moves back and forth on the server with a Timeline. Play again and watch how the cube updates in the client window."
       - "In BP_ThirdPersonCharacter, add a breakpoint on Begin Play. In the debug world drop-down of the Blueprint Editor, pick Client 1 only. Play with 2 players and count how many times the breakpoint hits."
       - "Turn off Run Under One Process, play with 2 players, and compare the start time with the earlier run. Then turn the setting back on."
     done_when: "Send two screenshots: (1) the Play In settings page with your network emulation values, and (2) the debug world drop-down of the Blueprint Editor set to a client world while the game is stopped at the breakpoint. Add your sentence about Play As Client."
@@ -4074,7 +4074,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-network-emulation-in-unreal-engine"
     checklist:
-      - "Play the Third Person template with 2 players, Play As Listen Server, and the network emulation profile Bad on Everyone. Move the client character and watch it in the server window."
+      - "Open a project made from the Third Person template, or create one. Play it with 2 players, Play As Listen Server, and the network emulation profile Bad on Everyone. You set the profile in Editor Preferences, under Level Editor, then Play. Move the client character and watch it in the server window."
       - "In BP_ThirdPersonCharacter, print Get Local Role each second. Confirm which window is the autonomous proxy, which is the authority and which is the simulated proxy for that character."
       - "Make BP_Rock, an Actor with a Static Mesh and with Replicates on. Move it with a Timeline on Begin Play, but only on the Authority pin. Play and note if the client sees it move. Then turn Replicate Movement on and compare."
       - "In BP_ThirdPersonCharacter, set Max Walk Speed to 3000 on Begin Play, but only when Has Authority is false. Play with emulation on and describe what the server does to the client pawn."
@@ -4135,7 +4135,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-relevancy-in-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_Lantern with Replicates on and Replicate Movement on. Add a Custom Event named Server_Toggle and set it to Run on Server and Reliable. It flips a replicated bool named bLit, and the OnRep function of bLit updates a point light."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Lantern with Replicates on and Replicate Movement on. Add a Custom Event named Server_Toggle and set it to Run on Server and Reliable. It flips a replicated bool named bLit, and the OnRep function of bLit updates a point light."
       - "Place one BP_Lantern in the level. In BP_ThirdPersonCharacter, on the E key, get the nearest BP_Lantern and call Server_Toggle on it. Play with 2 players and press E in the client window. Note if the light changes."
       - "Add a second key, F, that calls a Server event named Server_Pickup on the character. On the server, this event calls Set Owner on the lantern with the character as the new owner, and attaches the lantern to the hand."
       - "After the pickup, press E again from the client. Note the difference, and explain it with the owning connection rule."
@@ -4196,7 +4196,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-overview-for-unreal-engine"
     checklist:
-      - "Make an Actor Blueprint named BP_Beacon with Replicates on and a Static Mesh that has collision. In Class Defaults, in the Replication section, set Net Cull Distance Squared to 90000 (3 m squared)."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Beacon with Replicates on and a Static Mesh that has collision. In Class Defaults, in the Replication section, set Net Cull Distance Squared to 90000 (3 m squared)."
       - "Spawn one BP_Beacon on the server while the game runs. Play with 2 players and walk the client away from the beacon. Note the distance at which it disappears on the client, and check that it still exists in the server window."
       - "Turn on Always Relevant on BP_Beacon and do the test again. Then turn on Only Relevant To Owner and do it once more."
       - "Make an Actor Blueprint named BP_Sign with Replicates on, a replicated string named Message, and a text render that is updated in OnRep. Set Net Dormancy to Initial in Class Defaults and place the sign in the level."
@@ -4249,57 +4249,57 @@ quests:
     subjects: [networking, profiling, tools]
     required_spine: false
     required: false
-    title: Record a Network Profiler session
-    brief: "The Network Profiler is a separate program that comes with the engine. It reads a recording of the network traffic of your game and shows how many bytes each actor, property and RPC used. You cannot lower the amount of data your game sends until you can see what is sending it. In this quest you record a short multiplayer session, open the file in the Network Profiler, and find the biggest users."
+    title: "Record a Networking Insights session"
+    brief: "Networking Insights is the part of Unreal Insights that shows the network traffic of your game. It reads a trace, which is a recording made while the game runs, and shows every packet that was sent or received and what was inside it. You cannot lower the amount of data your game sends until you can see what is sending it. In this quest you record a short multiplayer session with network tracing turned on, open it in Networking Insights, and find the biggest users."
     time_min: 60
-    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-network-profiler-in-unreal-engine"
+    official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-insights-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/network-debugging-for-unreal-engine"
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
     checklist:
-      - "Play with 2 players and Play As Listen Server. In the server window, open the console and run netprofile enable. Move both characters and fire your RPCs from earlier quests for about 30 seconds. Then run netprofile disable."
-      - "Find the .nprof file in the folder <Project>/Saved/Profiling/. Note the pattern of its name."
-      - "Start the program Engine/Binaries/DotNET/NetworkProfiler.exe from your engine folder. Click Open File and load the .nprof file."
-      - "On the All Actors tab, sort the list by Total Size and write down the top 3 actor classes. Do the same on the All RPCs tab and the All Properties tab."
-      - "On the Chart, Filters, Details tab, click one frame that has a spike. Open Actors and expand your character to see its properties and their bytes."
-      - "Type the class name of your character in the actor filter, click Apply Filters, and compare the chart."
-      - "Write 3 sentences: which actor or RPC used the most bandwidth, one idea to reduce it, and why a recording made on a client shows less detail."
-    done_when: "Send a screenshot of the Network Profiler with the All Actors tab sorted by Total Size, and a screenshot of the Chart view with one frame selected and your character expanded in Actors. Add your 3 sentences."
+      - "Use a project made from the Third Person template, or create one, and close the editor. Start Unreal Insights first: run UnrealInsights.exe from the folder Engine/Binaries/Win64 of your engine and leave it open."
+      - "Start the editor from a command prompt with network tracing turned on, for example: UnrealEditor.exe YourProject.uproject -trace=net -NetTrace=1 -tracehost=localhost. The argument -tracehost=localhost is needed in the editor, because the editor runs its own data store for trace data."
+      - "In the editor, play with 2 players and Play As Listen Server. Move both characters and jump around for about 30 seconds. Then stop playing and close the editor."
+      - "In Unreal Insights, open the newest trace from the list of sessions. Open the Networking Insights window from the menu of Unreal Insights. In the connection selection area, pick a Game Instance and a Connection, and switch Connection Mode between outgoing and incoming data."
+      - "In the Packet Overview panel, hover over a packet to read its index, size and status. Click one large packet to select it, and hold Shift and click to select several. Dropped packets are shown in red."
+      - "Look at the Packet Content panel for your selection and find the character in it, with its replicated properties and remote function calls. Tick By NetId and type the NetId of one object to filter the view. Then filter by type and turn on Highlight."
+      - "Open the Net Stats panel and sort it by total size. Write down the top 3 entries. Then write 3 sentences: which object or remote function call used the most data, one idea to reduce it, and why the reported packet size can be larger than what really goes over the wire."
+    done_when: "Send a screenshot of Networking Insights with the Packet Overview and the Packet Content of a selected packet, and a screenshot of the Net Stats panel sorted by total size. Add your 3 sentences."
     xp: 60
     verify_type: screenshot
     quiz:
-      - q: "Which console command starts network profiling only if it is not already running?"
-        choices: ["netprofile", "stat net", "netprofile start", "netprofile enable"]
+      - q: "Which command-line arguments record a networking trace?"
+        choices: ["-stats on its own", "-netprofile=true", "-log -verbose", "-trace=net together with -NetTrace=1, or another value above zero"]
         answer_index: 3
-        explain: "netprofile toggles recording. netprofile enable starts recording if not already recording, and netprofile disable stops it."
-      - q: "Where is the recorded file saved and with what extension?"
-        choices: ["Engine/Saved as .csv", "The Desktop as .utrace", "Content/Profiling as .log", "<Project>/Saved/Profiling/<Project>-<timestamp>.nprof"]
+        explain: "The trace needs the net channel (-trace=net) and a NetTrace verbosity greater than zero, for example -NetTrace=1."
+      - q: "You record from the editor. Which extra argument does the documentation say you need, and why?"
+        choices: ["-game, because the editor cannot record traces", "-nosound, to keep the trace small", "-windowed, so that Unreal Insights can attach", "-tracehost=localhost, because the editor runs its own data store for trace data"]
         answer_index: 3
-        explain: "The file is saved as <PROJECT_DIRECTORY>/Saved/Profiling/<PROJECT_NAME>-<TIMESTAMP>.nprof. NetworkProfiling.tmp is only the temporary file during recording."
-      - q: "Why does a build need stat tracking for the profiler to record?"
-        choices: ["Because the engine must be compiled with the STATS macro non-zero, which debug and editor builds have", "Because the profiler is a plugin", "Because shipping builds have no network", "Because of licensing"]
+        explain: "The editor runs its own data store for trace data, so you need to specify the tracehost to collect network trace data while running in the editor."
+      - q: "Which panel shows a timeline of the packets and their sizes?"
+        choices: ["Packet Overview", "Packet Content", "Net Stats", "Net Stats Counters"]
         answer_index: 0
-        explain: "Recording needs an engine with stat tracking enabled, meaning STATS defined non-zero. Typically that is a debug build or, for other configurations, an editor build."
-      - q: "You recorded a profile on a client. What detailed data will you see?"
-        choices: ["All actor and property replication", "Nothing at all", "Only detailed data for RPCs sent from that client", "Only server CPU time"]
+        explain: "The Packet Overview panel visualizes the packets that were transmitted or received during the game, with their sizes."
+      - q: "What does the Packet Content panel show?"
+        choices: ["The frame rate of each client", "A list of all levels that were loaded", "What is inside the selected packets, such as replicated objects, properties and remote function calls", "The CPU time of the server"]
         answer_index: 2
-        explain: "Only servers replicate actors and properties. A profile recorded on a client only shows detailed data for RPCs sent from that client."
-      - q: "Which command-line argument starts recording as soon as the engine launches?"
-        choices: ["networkprofiler=true", "-stats", "-netdebug", "-profile"]
+        explain: "Packet Content reveals the content of the selected packet or packets: replicated objects, properties and remote function calls."
+      - q: "How are dropped packets shown in the Packet Overview?"
+        choices: ["In red", "In green", "They are not shown at all", "With a dotted outline"]
         answer_index: 0
-        explain: "Passing networkprofiler=true on the command line records from engine start."
-      - q: "The All Actors tab ignores which selection?"
-        choices: ["The sort column", "The frame or time span selected in the chart", "The Apply Filters text", "The Open File choice"]
+        explain: "Dropped packets are displayed in red."
+      - q: "Which selection decides whether you see incoming or outgoing data?"
+        choices: ["Game Instance", "Connection Mode", "Connection", "Net Stats"]
         answer_index: 1
-        explain: "The All Actors, All Properties, All RPCs and All Objects tabs summarize the whole session. Their data is not affected by the frame or time span selected on the chart."
-      - q: "In the Summary, why is Outgoing bandwidth larger than Game socket send size?"
-        choices: ["A bug in the tool", "It counts both directions", "Outgoing bandwidth includes an approximation of IP and UDP header sizes", "It counts dropped packets twice"]
+        explain: "Connection Mode controls whether incoming or outgoing data is shown. Game Instance and Connection choose whose data you look at."
+      - q: "The trace reports the size of each packet. How does this size relate to the data that really goes over the wire?"
+        choices: ["It is always exactly the same", "It counts every packet twice", "It is the size before compression, so the real data may be smaller", "It only counts the packet headers"]
         answer_index: 2
-        explain: "The Summary note says Outgoing bandwidth includes an approximation of the IP and UDP header sizes, so it is greater than the raw socket send size."
-      - q: "In the Actors detail view for one frame, what is the first number column for an actor row?"
-        choices: ["Bytes in the bunch", "CPU replication time in milliseconds", "Number of actors of that type", "Number of properties"]
+        explain: "The reported size of each packet is the size before compression, so the actual data on the wire may be smaller than what the report shows."
+      - q: "How do you select several packets at once in the Packet Overview?"
+        choices: ["Double-click one packet", "Hold Shift and click", "Press Ctrl+A in the Net Stats panel", "You can only select one packet"]
         answer_index: 1
-        explain: "For actor rows, the first column is CPU replication time in ms, the second is bytes in the bunch and the third is how many actors of that type replicated that frame."
+        explain: "Click selects one packet. Hold Shift and click to select several packets."
     flavors:
       _default: {why: "You cannot cut bandwidth until you can see which actor is spending it."}
       programming: {why: "The profiler turns 'the game feels laggy' into a named actor, property or RPC with a byte count.", do: "Compare two recordings: one with your multicast Reliable, one Unreliable, and note the size difference on the All RPCs tab."}
@@ -4320,12 +4320,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-timers-and-counters-tabs-in-unreal-insights-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-frames-panel-in-unreal-insights-for-unreal-engine"
     checklist:
-      - "Make an actor named BP_SlowSpawner that spawns 200 actors in one frame when you press a key."
+      - "Open any project, or create one from the Third Person template. Make an actor named BP_SlowSpawner that spawns 200 actors in one frame when you press a key, and writes one line to the log with Print String at that moment. Set Auto Receive Input to Player 0 in its Class Defaults, and place it in the level."
       - "Record a trace of a Play In Editor (PIE) session in which you press the key. Open the trace in Unreal Insights and go to the Timing Insights window."
       - "In the Frames panel, click the tall bar that belongs to the spawn frame. Then look at the track of the Game thread in the Timing panel."
       - "Open the Timers panel and set the Modes dropdown to Instance. Sort the list by Inclusive time and find the spawn work."
       - "Double-click the spawn timer to plot it in the main graph. Then select it and read the Callers and Callees panels, which show what calls it and what it calls."
-      - "Use the Log panel to find your own UE_LOG line from the spawn frame. Click the line to jump to that moment."
+      - "Use the Log panel to find your own log line from the spawn frame. Click the line to jump to that moment."
       - "Write down the name of the timer, its Inclusive time and Exclusive time, and one caller."
     done_when: "Send a screenshot of Timing Insights that shows the Frames panel with the spike selected and the Timers panel with your spawn timer highlighted. Add a short note with the timer name, the Inclusive and Exclusive times, and one caller."
     xp: 60
@@ -4375,21 +4375,21 @@ quests:
     subjects: [profiling, stat-commands, session-frontend]
     required_spine: false
     required: false
-    title: Stat groups and stat files
-    brief: "A stat command is a console command that shows live numbers about the running game on the screen, such as the time spent in ticks. The stats are sorted into groups, and you can also record them into a file and study them later. They are the fastest way to see what your game is doing right now. In this quest you try several stat groups, record a stat file, and open it in the Profiler."
+    title: "Stat groups and a trace"
+    brief: "A stat command is a console command that shows live numbers about the running game on the screen, such as the time spent in ticks. The stats are sorted into groups. They are the fastest way to see what your game is doing right now. To study a session later, you record a trace and open it in Unreal Insights. Older versions recorded stat files for the Profiler tab of the Session Frontend, but that tab no longer exists in the current engine. In this quest you try several stat groups, record a trace, and open it in Unreal Insights."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/introduction-to-performance-profiling-and-configuration-in-unreal-engine"
     checklist:
-      - "Start Play In Editor (PIE), open the console and run stat Help. Then run stat List Groups and note three groups that you did not know."
-      - "Run stat Game, stat TickGroups and stat Dumpticks. Find the tick of your own BP_ actor in the output."
-      - "Run stat Levels in a level that has at least one streaming sub-level. Note the colour of each level in the list."
-      - "Run stat StartFile to start a recording, play for 20 seconds, and then run stat StopFile."
-      - "Open Tools > Session Frontend and go to the Profiler tab. Click Load and open the .uestats file from the folder Saved/Profiling/UnrealStats."
-      - "Find the most expensive Game thread stat in the capture and write it down."
-    done_when: "Send two screenshots: the Editor viewport with stat Game and stat Levels visible, and the Profiler in the Session Frontend with your .uestats capture loaded. Add the name of the most expensive stat."
+      - "Open any project, or create one from the Third Person template. Start Play In Editor (PIE), open the console and run stat Help. Then run stat List Groups and note three groups that you did not know."
+      - "Make an Actor Blueprint named BP_StatTest that does a little work on Event Tick, for example a loop that adds numbers, and place it in the level. Run stat Game, stat TickGroups and stat Dumpticks. Find the tick of BP_StatTest in the output."
+      - "Run stat Levels in a level that has at least one streaming sub-level. To add one, open Window > Levels and create a new sub-level from the Levels menu. Note the colour of each level in the list."
+      - "Record a trace: click Trace in the bar at the bottom of the editor window and choose Start Trace. You can also open Tools > Session Frontend, go to the Trace Control tab and click Start Trace there. Play for 20 seconds, stop playing, and then stop the trace."
+      - "Open the trace in Unreal Insights: in the Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Go to the Timing Insights window and open the Timers panel."
+      - "Sort the timers by time and find the most expensive Game thread timer in the capture. Write it down."
+    done_when: "Send two screenshots: the Editor viewport with stat Game and stat Levels visible, and Unreal Insights with your trace loaded and the Timers panel visible. Add the name of the most expensive timer."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4405,18 +4405,18 @@ quests:
         choices: ["Loaded and visible", "Loaded but not visible", "Pre-loading", "Unloaded but still in memory until garbage collection"]
         answer_index: 3
         explain: "Blue means the level is unloaded but still in memory; it is cleaned up when garbage collection runs. Green is loaded and visible."
-      - q: "Where does stat StartFile write its capture?"
-        choices: ["Config/Profiling", "Saved/Logs", "Saved/Profiling/UnrealStats", "Intermediate/Stats"]
+      - q: "In the current engine, which tab of the Session Frontend lets you start and stop a trace?"
+        choices: ["Automation", "Console", "Trace Control", "Screen Comparison"]
         answer_index: 2
-        explain: "The engine typically saves captures under <PROJECT_DIRECTORY>\\Saved\\Profiling\\UnrealStats as .uestats files."
-      - q: "You closed PIE but forgot stat StopFile. What is the risk?"
-        choices: ["The file is deleted", "Nothing, it stops on its own", "The capture keeps running and bloats the disk", "The Editor crashes"]
+        explain: "The Session Frontend has the tabs Session Browser, Trace Control, Console, Automation and Screen Comparison. Trace Control has the Start Trace and Stop Trace commands. The old Profiler tab no longer exists."
+      - q: "You stopped playing but forgot to stop the trace. What is the risk?"
+        choices: ["The trace is deleted", "Nothing, a trace always stops together with PIE", "The trace keeps recording the editor and its file keeps growing", "The Editor crashes"]
         answer_index: 2
-        explain: "StartFile keeps running in the background even after PIE closes, so you must run stat StopFile."
-      - q: "Which tool opens a .uestats file for analysis?"
-        choices: ["Session Frontend Profiler tab", "Output Log", "Unreal Insights Memory window", "Blueprint Debugger"]
+        explain: "A trace that you started from the editor records the editor process, not only the PIE session. It keeps running until you stop it, so the file keeps growing."
+      - q: "Which tool opens a recorded trace for analysis?"
+        choices: ["Unreal Insights", "The Output Log", "The Material Editor", "The Blueprint Debugger"]
         answer_index: 0
-        explain: "Tools > Session Frontend > Profiler > Load opens uestats captures."
+        explain: "Unreal Insights opens traces. Its Timing Insights window shows the frames, the threads and the timers of the recording."
       - q: "Which stat command is the recommended starting point to decide where to profile?"
         choices: ["stat Memory", "stat Object", "stat RHI", "stat Unit"]
         answer_index: 3
@@ -4443,9 +4443,9 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/visual-logger-in-unreal-engine"
     backup_url: null
     checklist:
-      - "In a C++ actor (for example AProjectileTurret), add IVisualLoggerDebugSnapshotInterface to the list of classes that it inherits from."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Use a C++ actor of your own that fires at a target, or make a simple one named AProjectileTurret with a Fire function that picks a target location in front of it and is called from a timer every 2 seconds. Add IVisualLoggerDebugSnapshotInterface to the list of classes that it inherits from."
       - "Override GrabDebugSnapshot and put it inside #if ENABLE_VISUAL_LOG. In it, add one category with two values: the target name and the cooldown."
-      - "In your fire function, call UE_VLOG with your log category and the verbosity Verbose to log the target and its location."
+      - "In the fire function, call UE_VLOG with a log category and the verbosity Verbose to log the target and its location."
       - "Add UE_VLOG_LOCATION for the target point, and UE_VLOG_ARROW to draw an arrow from the muzzle to the target."
       - "Add UE_VLOG_CONE for the detection cone. It takes the origin, direction, length, angle and colour."
       - "Open Tools > Debug > Visual Logger. Play in PIE and fire. Then stop and drag the timeline to move through the recording."
@@ -4499,21 +4499,21 @@ quests:
     required_spine: false
     required: false
     title: A custom Gameplay Debugger category
-    brief: "The Gameplay Debugger is the overlay that shows live data about a selected actor during play. It sorts its data into categories, such as Navmesh and Basic, and it also works on clients in a network game. With C++ you can add a category that shows your own data. In this quest you add one category named MyData that shows a single value."
+    brief: "The Gameplay Debugger is the overlay that shows live data about a selected actor during play. It sorts its data into categories, such as Navmesh and AI, and it also works on clients in a network game. With C++ you can add a category that shows your own data. The documentation page still describes an older way to do this, with component classes and an .ini file. The current engine uses a category class that you register in code. In this quest you add one category named MyData that shows a single value."
     time_min: 90
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-gameplay-debugger-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-debugger-settings-in-the-unreal-engine-project-settings"
     checklist:
-      - "Add the GameplayDebugger module to the dependency modules in the Build.cs file of your project."
-      - "In PIE, point at an AI pawn and press the apostrophe key to open the Gameplay Debugger. Use the numeric keys to switch categories on and off."
-      - "Follow the documentation page: create a component class that derives from the Gameplay Debugger component class. It collects one replicated float value."
-      - "Create the HUD component class and override its drawing function, so that it prints your value with a colour tag such as {red}."
-      - "Add the category view with GetKeyboardDesc, so that the category shows as MyData in the category list."
-      - "Register both classes in DefaultEngine.ini, under the GameplayDebuggingReplicator section."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Add GameplayDebugger to the dependency modules in the Build.cs file of the project. Place a NavMeshBoundsVolume and an AI pawn in a level. A copy of the template character with its input removed, which walks to a point with AI Move To, is enough."
+      - "In PIE, point at the AI pawn and press the apostrophe key to open the Gameplay Debugger. Use the keys of the numeric keypad to switch categories on and off."
+      - "Open the file Engine/Source/Runtime/GameplayDebugger/Public/GameplayDebuggerCategory.h in your engine folder and read the comment at the top. It explains the two sides of a category: CollectData runs where the game has authority and gathers the data, and DrawData runs locally and shows it."
+      - "Create a class named FGameplayDebuggerCategory_MyData that derives from FGameplayDebuggerCategory, inside an #if WITH_GAMEPLAY_DEBUGGER block. Override CollectData(APlayerController* OwnerPC, AActor* DebugActor). In it, read one value from the debug actor, for example its speed, and call AddTextLine with a colour tag, such as {red}Speed: {white} followed by the number."
+      - "Give the class a static function named MakeInstance that returns a new instance as a TSharedRef<FGameplayDebuggerCategory>. Register the category when your game module starts: call IGameplayDebugger::Get().RegisterCategory with the name MyData, a delegate made with IGameplayDebugger::FOnGetCategory::CreateStatic for MakeInstance, and the state EGameplayDebuggerCategoryState::EnabledInGameAndSimulate. Then call NotifyCategoriesChanged. Call UnregisterCategory when the module shuts down."
+      - "Build the project. Play, select the AI pawn with the apostrophe key, and find MyData in the category list at the top of the overlay. Check that your value is shown in colour."
       - "Open Project Settings, go to Gameplay Debugger, and look at the Input section to see the activation key."
-    done_when: "Send a screenshot taken in Play mode with the Gameplay Debugger overlay that shows your MyData category and your value in colour. Also send a screenshot of your lines in DefaultEngine.ini."
+    done_when: "Send a screenshot taken in Play mode with the Gameplay Debugger overlay that shows your MyData category and your value in colour. Also send a screenshot of your code that registers the category."
     xp: 65
     verify_type: screenshot
     quiz:
@@ -4525,26 +4525,26 @@ quests:
         choices: ["To save replication channel bandwidth", "Because disabled categories are not compiled", "To avoid crashes on clients", "Because only the server can see categories"]
         answer_index: 0
         explain: "Only enabled categories are replicated, which saves the replication channel's bandwidth."
-      - q: "How many default categories and how many project categories does it have?"
-        choices: ["3 and 3", "4 and 6", "10 and 0", "5 and 5"]
+      - q: "Which function of a category runs on the side that has authority (the server, or a standalone game) to gather the data?"
+        choices: ["DrawData", "OnDataPackReplicated", "CreateDebugSceneProxy", "CollectData"]
         answer_index: 3
-        explain: "There are 5 default categories (Navmesh, Basic, Behavior Tree, EQS, Perception) and 5 for projects."
+        explain: "CollectData is called in the category that has authority. The text lines and shapes that it adds are replicated, so a client can see the state of the server."
       - q: "Can you extend the Gameplay Debugger with Blueprint only?"
         choices: ["Yes, with a Blueprint subclass", "Yes, with an Editor Utility Widget", "No, it can only be extended with C++", "Only in Simulate mode"]
         answer_index: 2
         explain: "The page says it can only be extended with C++. Blueprint projects can use it as-is."
-      - q: "In Simulate mode, what do you need in order to use the debugger?"
-        choices: ["A dedicated server", "The Debug AI show flag enabled", "The EnableGDT cheat only", "A Blueprint HUD"]
+      - q: "Which function of a category runs locally on every tick to show the gathered data?"
+        choices: ["CollectData", "DrawData", "AddShape", "MarkDataPackDirty"]
         answer_index: 1
-        explain: "In Simulate you enable the Debug AI show flag; the GameplayDebuggingReplicator actor's properties control categories."
-      - q: "Where do you tell the debugger about your custom component and HUD classes?"
-        choices: ["Project Settings > Input", "DefaultGame.ini under [Debug]", "DefaultEngine.ini under the GameplayDebuggingReplicator section", "The GameMode class defaults"]
+        explain: "DrawData is called locally in every tick to present the data. Everything added with AddTextLine and AddShape is shown before DrawData is called."
+      - q: "Where do you tell the current engine about your custom category?"
+        choices: ["Project Settings > Input", "DefaultGame.ini under [Debug]", "In code, with IGameplayDebugger::Get().RegisterCategory, best in the startup of the module that owns the category", "The GameMode class defaults"]
         answer_index: 2
-        explain: "DebugComponentClassName and DebugComponentHUDClassName are set in DefaultEngine.ini under [/Script/GameplayDebugger.GameplayDebuggingReplicator]."
-      - q: "What does PrintString do with a tag such as {green} inside a string?"
-        choices: ["Prints the text literally", "Selects a category", "Adds a new line", "Changes the active colour from that point"]
+        explain: "Categories must be registered and unregistered in code. The engine header recommends doing this in the Startup and Shutdown of the owning module."
+      - q: "What does AddTextLine do with a tag such as {green} inside the text?"
+        choices: ["Prints the tag as normal text", "Selects a category", "Adds a new line", "Changes the active colour from that point"]
         answer_index: 3
-        explain: "Colour tags in the string change the active colour, so one string can show several colours."
+        explain: "Colour tags in the text change the active colour, so one line can show several colours."
       - q: "Which section of Project Settings > Gameplay Debugger changes the activation key?"
         choices: ["Display", "Add-Ons", "Input", "Rendering"]
         answer_index: 2
@@ -4570,7 +4570,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/trace-in-unreal-engine-5"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-insights-in-unreal-engine"
     checklist:
-      - "Make a C++ actor named ALeakyCache that allocates a large TArray in BeginPlay and does not free it until EndPlay."
+      - "Use a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named ALeakyCache that allocates a large TArray in BeginPlay and does not free it until EndPlay."
       - "Start UnrealInsights.exe from the folder Engine/Binaries/Win64 before you run the game."
       - "Run your project from a command prompt, with the memory trace channel active from the start of the process. To do this, add the argument -trace=default,memory to the command line, for example: UnrealEditor.exe YourProject.uproject -game -trace=default,memory"
       - "Load a level with 20 ALeakyCache actors and wait a moment. Then open a different level and stop the session."
@@ -4633,11 +4633,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
     checklist:
-      - "Make a test level with an actor named BP_HeavyTick that runs a big loop on Tick. Add a switch that spawns 50 of them."
+      - "Open any project, or create one from the Third Person template. Make a test level with an actor named BP_HeavyTick that runs a big loop on Tick. Add a switch, for example a key press in the Level Blueprint, that spawns 50 of them."
       - "In the viewport menu, enable Show FPS. Then open Stat, then Engine, and enable FPS and Unit."
       - "Run stat Unit and stat UnitGraph. Read the values Frame, Game, Draw, GPU and RHIT before you spawn the actors and after."
       - "Run stat Hitches and stat DumpHitches. Set t.HitchFrameTimeThreshold and cause a spike. Find the HITCH line in the Output Log."
-      - "Now replace the heavy actors with 500 high-poly meshes and repeat the test. Compare which thread time grows."
+      - "Now replace the heavy actors with 500 high-poly meshes and repeat the test. For the mesh, you can make a Sphere with a very high subdivision level in Modeling Mode, with Nanite turned off. Compare which thread time grows."
       - "Write a short table with these columns: test, Frame ms, Game ms, Draw ms, GPU ms, and your verdict (CPU-bound or GPU-bound)."
     done_when: "Send a screenshot of stat Unit and stat UnitGraph in the heavy tick test, a screenshot of a HITCH log line, and your table with the verdict (CPU-bound or GPU-bound) for both tests."
     xp: 60
@@ -4696,7 +4696,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/common-memory-and-cpu-performance-considerations-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-the-timers-and-counters-tabs-in-unreal-insights-for-unreal-engine"
     checklist:
-      - "Make BP_MathWorker. On Tick, it loops 10,000 times and adds up vector distances. Spawn 20 of them."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make BP_MathWorker. On Tick, it loops 10,000 times and adds up vector distances. Spawn 20 of them."
       - "Make AMathWorkerCpp, which runs the same loop in its C++ Tick. Spawn 20 of them in a second test."
       - "Run the game with -trace=default,AssetLoadTime -statnamedevents, so that the Blueprint names show in Insights."
       - "Record a trace for each test. In Timing Insights, with the Game Frame mode, compare the timers of the Game thread."
@@ -4760,7 +4760,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/common-memory-and-cpu-performance-considerations-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/incremental-garbage-collection-in-unreal-engine"
     checklist:
-      - "Make BP_Churn. In a loop, it spawns 500 small actors and destroys them 2 seconds later."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio for the C++ steps. Make BP_Churn. In a loop, it spawns 500 small actors and destroys them 2 seconds later."
       - "Run stat GC and stat UnitGraph in PIE. Watch for the spike when the collector runs."
       - "Open Project Settings and go to Engine, then Garbage Collection. Lower Time Between Purging Pending Kill Objects and compare the size of the spike."
       - "In a C++ class, hold one object in a raw pointer and one object in a TObjectPtr that is marked with UPROPERTY. Destroy the object and log both pointers."

@@ -65,9 +65,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 stat unit stat fps show flags console commands debugging"
     checklist:
-      - "Start Play In Editor (PIE), which means pressing Play to run the game inside the editor. Open the console with the backtick key, which on most keyboards is the key above Tab. Run the command stat fps, then stat unit, and then stat none, which hides the stats again."
+      - "Open any project, or create one from the Third Person template. Start Play In Editor (PIE), which means pressing Play to run the game inside the editor. Open the console with the backtick key, which on most keyboards is the key above Tab. Run the command stat fps, then stat unit, and then stat none, which hides the stats again."
       - "Open the Show menu of the viewport and toggle two show flags, for example Collision and Bounds. A show flag turns one kind of visual information on or off. Note what each of the two shows you."
-      - "In a Blueprint, add a Print String node on the BeginPlay event, which runs when the game starts. Give the node a custom color, a Key, and a duration of 5 seconds."
+      - "In any Blueprint, for example the Level Blueprint or the character Blueprint of the template, add a Print String node on the BeginPlay event, which runs when the game starts. Give the node a custom color, a Key, and a duration of 5 seconds."
       - "Run the same Print String twice with the same Key. Note that the second message replaces the first one on the screen instead of appearing as a new line under it."
       - "Write down 5 console commands that you would want to use in every debug session."
     done_when: "Send a screenshot of PIE with stat unit visible, and add your list of 5 commands."
@@ -92,8 +92,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 blueprint debugger breakpoints watch values output log filter"
     checklist:
-      - "Open Window, then Output Log. Use its filter so that it shows only warnings and errors."
-      - "Open your Blueprint from quest SQ9. Select a node and press F9 to set a breakpoint on it, which makes the game pause when that node runs. Then play in the editor (PIE) and do the action that makes the node run."
+      - "Open a project made from the Third Person template, or create one. Open Window, then Output Log. Use its filter so that it shows only warnings and errors."
+      - "Open a Blueprint that has some logic in it. The character Blueprint of the template, BP_ThirdPersonCharacter, works well, and so does a Blueprint of your own. Select a node, for example the Jump node, and press F9 to set a breakpoint on it, which makes the game pause when that node runs. Then play in the editor (PIE) and do the action that makes the node run."
       - "While the game is paused, press F10 two times to step over two nodes, which means running them one at a time. Then hover the mouse over a variable to read its value."
       - "Right-click a pin and choose Watch This Value. Then open the Blueprint Debugger window and read the value there."
       - "Remove the breakpoint. Play again and confirm that PIE now runs straight through without pausing."
@@ -119,7 +119,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 third person template blueprint explained character input"
     checklist:
-      - "In a Third Person project, open the Third Person character Blueprint. Also open its GameMode, the Blueprint that sets the rules of the game and decides which character the player uses."
+      - "Open a project made from the Third Person template, or create one. Open the Third Person character Blueprint. Also open its GameMode, the Blueprint that sets the rules of the game and decides which character the player uses."
       - "Follow one input through the graph. Start at the Input Action event, which is the node that fires when the player presses a key or moves a stick, and end at the node that moves the character."
       - "List the components on the character, which are the parts shown in the Components panel. Write what each one is for."
       - "Find where the length of the camera boom is set. The camera boom is the arm that holds the camera behind the character. Change the length once to see the effect, and then set it back to the old value."
@@ -145,9 +145,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 test level gym map for testing gameplay"
     checklist:
-      - "Create a level named L_TestHarness in the folder UC/Maps. Give it a flat floor, a Player Start, and one pad for each system you plan to test. A pad is just a marked area on the floor."
+      - "Open a project made from the Third Person template, or create one. Create a level named L_TestHarness in the folder UC/Maps (create the folder if it does not exist yet). Give it a flat floor, a Player Start, and one pad for each system you plan to test. A pad is just a marked area on the floor. Plan at least two pads, for example one for a pickup and one for a door."
       - "Add a Text Render actor next to each pad. Set its text to the name of that pad so you can read what the pad is for."
-      - "Place your interactable object from quest SQ9 on one pad. Confirm that it works in PIE (Play In Editor) and also in Simulate, the mode that runs the level without a player."
+      - "Place an interactable object on one pad. If you have none, make a simple one: an Actor Blueprint with a cube mesh and a Box Collision that prints a message with Print String when something overlaps it. Confirm that it works in PIE (Play In Editor) and also in Simulate, the mode that runs the level without a player. In Simulate, drop a physics cube onto the pad to trigger it."
       - "Set the GameMode Override of the level, which you find in the World Settings panel. This makes the level always start with the same GameMode, so it always starts the same way."
     done_when: "Send a screenshot of the harness level taken from above that shows the pads with their labels."
     xp: 60
@@ -166,17 +166,16 @@ quests:
     required: true
     capstone: true
     title: Debug room
-    brief: "A debug room is a test level where each area shows one way to find problems. Building one proves that you can set up a space for testing and that you can explain your tests to another person. In this quest you grow your L_TestHarness level into a debug room with three pads, and you write notes so that someone else can repeat each test."
+    brief: "A debug room is a test level where each area shows one way to find problems. Building one proves that you can set up a space for testing and that you can explain your tests to another person. In this quest you build a small debug room with three pads, and you write notes so that someone else can repeat each test."
     time_min: 90
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/stat-commands-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 debug level setup print string stat commands"
     checklist:
-      - "Extend your L_TestHarness level into a debug room. It needs at least 3 pads, and each pad must show one debug technique."
-      - "Make one pad write a message to the Output Log. Make one pad use Print String with Keys. Give one pad a Blueprint that is ready for a breakpoint, which is a mark that pauses the game on a node you choose."
+      - "Open any project, or create one from the Third Person template. Build a debug room in a new level: a flat floor, a Player Start, and at least 3 pads, which are marked areas on the floor with a Text Render actor as a label. If you already have a test level of your own, you can extend that. Each pad must show one debug technique."
+      - "Give each pad a small Actor Blueprint with a Box Collision that reacts when the player steps on it. Make one pad write a message to the Output Log only (a Print String with Print to Screen turned off). Make one pad use Print String with Keys. Give one pad a Blueprint that is ready for a breakpoint, which is a mark that pauses the game on a node you choose."
       - "Write notes for each test. Say how to reproduce the test, which means the steps to run it again, and say what output you expect to see."
       - "Run stat unit in the room and write down the numbers it shows. Add one line that says what these numbers mean."
-      - "Another option is allowed here: instead of the debug room, you may send your courtyard walk-and-note from quest LDQ19 with debug notes added to it."
     done_when: "Send a screenshot of the room, and add written notes that another learner could follow to reproduce each test."
     xp: 200
     verify_type: writeup
@@ -200,7 +199,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 editor preferences settings for programmers"
     checklist:
-      - "Choose how Play In Editor (PIE) opens. Click the three dots next to the Play button in the main toolbar and pick New Editor Window (PIE) or Selected Viewport. Try both and note which one you prefer."
+      - "Open any project, or create one from the Third Person template. Choose how Play In Editor (PIE) opens. Click the three dots next to the Play button in the main toolbar and pick New Editor Window (PIE) or Selected Viewport. Try both and note which one you prefer."
       - "Open Edit > Editor Preferences, go to General, then Performance. Turn on Show Frame Rate and Memory, which shows these numbers in the editor at all times."
       - "In the Editor Preferences, go to General, then Source Code, and find Source Code Editor. This is the program that Unreal opens when you want to read or write C++ code. Note what it is set to now. Change it only if you use a different program."
     done_when: "Send a written note that lists the 3 settings from the steps, says what each one is set to now, and says why you chose that."
@@ -225,7 +224,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal insights beginner trace capture timing"
     checklist:
-      - "Start a trace from the editor: click Trace in the bar at the bottom of the editor window and choose Start Trace. Then play your L_TestHarness level for 10 seconds, stop playing, and choose Stop Trace in the same menu."
+      - "Open any project, or create one from the Third Person template. Start a trace from the editor: click Trace in the bar at the bottom of the editor window and choose Start Trace. Then play any level for 10 seconds, stop playing, and choose Stop Trace in the same menu."
       - "Open the trace in Unreal Insights: in the same Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn."
       - "Take a screenshot of the timing view of one frame."
     done_when: "Send a screenshot of a trace that is open in Unreal Insights."
@@ -250,7 +249,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 customize keyboard shortcuts"
     checklist:
-      - "Open the Editor Preferences and go to Keyboard Shortcuts. Find the shortcut that toggles a breakpoint and the shortcut that starts Simulate."
+      - "Open any project, or create one from the Third Person template. Open the Editor Preferences and go to Keyboard Shortcuts. Find the shortcut that toggles a breakpoint and the shortcut that starts Simulate."
       - "Pick one command that you use often and rebind it, which means giving it a new key. Choose a key that you will remember."
     done_when: "Send a written note that names the command and the new key you gave it."
     xp: 20
@@ -280,12 +279,12 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 game mode vs game state win condition blueprint"
     checklist:
-      - "Create two Blueprints: BP_UUGameMode with Game Mode Base as the parent class, and BP_UUGameState with Game State Base as the parent class. In the Class Defaults of BP_UUGameMode, set Game State Class to BP_UUGameState. In the World Settings of your harness level, set GameMode Override to BP_UUGameMode, so the level uses them when it runs."
+      - "Open a project made from the Third Person template, or create one. Create two Blueprints: BP_UUGameMode with Game Mode Base as the parent class, and BP_UUGameState with Game State Base as the parent class. In the Class Defaults of BP_UUGameMode, set Game State Class to BP_UUGameState, and set Default Pawn Class to the character of the template so that you can still walk around. In the World Settings of a test level, set GameMode Override to BP_UUGameMode, so the level uses them when it runs."
       - "In BP_UUGameState, add an Integer variable named Collected that stores a score or a count of collected items. Add a function named AddPoint that adds 1 to it."
-      - "In BP_UUGameMode, add an Integer variable named Target with the value 3, and a Custom Event named CheckWin. In CheckWin, use Get Game State, cast it to BP_UUGameState and read Collected. When the count reaches Target, the GameMode declares a win. Call AddPoint and then CheckWin each time the player collects something."
+      - "In BP_UUGameMode, add an Integer variable named Target with the value 3, and a Custom Event named CheckWin. In CheckWin, use Get Game State, cast it to BP_UUGameState and read Collected. When the count reaches Target, the GameMode declares a win. To test it, make a simple pickup: an Actor Blueprint with a sphere mesh and a Sphere Collision that, when the player overlaps it, calls AddPoint and then CheckWin and destroys itself. Place three of them in the level."
       - "Print or log the win message one time only. Put a Do Once node in front of the Print String, or use a Boolean variable named HasWon. The message must not appear again on every frame."
       - "Write 2 lines that say why the score is stored in the GameState and not in the GameMode."
-    done_when: "Send two screenshots from PIE, or a short GIF, that show the win happening, and add your 2 lines."
+    done_when: "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the win happening, and add your 2 lines."
     xp: 100
     verify_type: screenshot
     quiz: []  # TODO Phase 4
@@ -309,7 +308,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-2-create-a-flashlight-with-enhanced-input"
     checklist:
-      - "Create an Input Action asset named IA_Interact. Add it to an Input Mapping Context, either a new one or one that already exists, and give it a key."
+      - "Open a project made from the Third Person template, or create one. The template already uses Enhanced Input, so you can look at its Input folder as an example. Create an Input Action asset named IA_Interact. Add it to an Input Mapping Context, either a new one or one that already exists, and give it a key."
       - "On the BeginPlay event, which runs when the game starts, add the mapping context to the player. Without this step the player's keys do nothing."
       - "On the character, handle the Triggered event of IA_Interact. When it fires, write to the log which actor the character is facing."
       - "Add one modifier or one trigger to the mapping, for example Hold, which fires only after the key is held down for a moment. Note what changes in how the action behaves."
@@ -337,7 +336,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/flow-control-in-unreal-engine"
     checklist:
-      - "Choose one small behavior and build it three times in the same Blueprint: once as a function, once as a macro, and once as a custom event."
+      - "Open any project, or create one from the Third Person template, and make a new Actor Blueprint for this test. Choose one small behavior, such as printing a message and changing the color of a light, and build it three times in the same Blueprint: once as a function, once as a macro, and once as a custom event."
       - "Try to add a Delay node inside each of the three. A Delay node makes the graph wait for some time. Note where the editor allows it and where it does not."
       - "Try to call each of the three from another Blueprint. Note which ones you can reach from there."
       - "Write a table with 3 rows, one for each of the three. In each row, say when you would pick that one."
@@ -365,9 +364,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-variables-in-unreal-engine"
     checklist:
-      - "Create an enum named E_PickupType with 3 values. Then create a struct named S_PickupInfo that holds a name, a value, and a type."
-      - "Create a Data Asset class. Then create 2 Data Asset instances from it, each one describing a different pickup."
-      - "Make one pickup Blueprint read its values from a Data Asset. It must not use hardcoded variables, which are values typed directly into the Blueprint."
+      - "Open any project, or create one from the Third Person template. Create an enum named E_PickupType with 3 values. Then create a struct named S_PickupInfo that holds a name, a value, and a type."
+      - "Create a Data Asset class: make a new Blueprint Class with Primary Data Asset as its parent, name it DA_PickupBase, and add a variable of type S_PickupInfo to it. Then create 2 Data Asset instances from it (right-click in the Content Browser, open Miscellaneous, choose Data Asset and pick your class), each one describing a different pickup."
+      - "Make one pickup Blueprint, an Actor with a mesh and a Sphere Collision, that has an Instance Editable variable of your Data Asset type. When the player overlaps it, it prints the name and the value that it reads from the Data Asset. It must not use hardcoded variables, which are values typed directly into the Blueprint."
       - "Place a pickup in the level and change which Data Asset it uses. Confirm that the pickup behaves differently and that you did not need to edit the graph."
     done_when: "Send a screenshot of two placed pickups that use different Data Assets, and a screenshot of the Data Asset shown in the Details panel."
     xp: 90
@@ -385,14 +384,14 @@ quests:
     required_spine: false
     required: true
     title: Blueprint-side logging and asserts
-    brief: "A log message is a line of text that your game writes to the Output Log window. A good warning says what went wrong and which actor it happened on, so you find a bug in seconds and not in hours. An Is Valid check tests that a reference really points to an object before you use it. In this quest you add these checks and warnings to your win loop and then break something on purpose to see the warning work."
+    brief: "A log message is a line of text that your game writes to the Output Log window. A good warning says what went wrong and which actor it happened on, so you find a bug in seconds and not in hours. An Is Valid check tests that a reference really points to an object before you use it. In this quest you add these checks and warnings to a small Blueprint and then break something on purpose to see the warning work."
     time_min: 40
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "unreal engine blueprint print string log only vs screen ensure assert is valid"
     checklist:
-      - "Take one Print String node and turn off its Print to Screen option, so that it writes only to the log. Run the game and find the message in the Output Log."
-      - "In your win loop, add an Is Valid check before every place where you use an actor reference. An actor reference is a variable that points to an actor in the level."
+      - "Open any project, or create one from the Third Person template. Take one Print String node in any Blueprint and turn off its Print to Screen option, so that it writes only to the log. Run the game and find the message in the Output Log."
+      - "Use a Blueprint of your own that uses actor references, or make a small one: an Actor Blueprint named BP_Button with an Instance Editable variable named Target of type Actor, which destroys the Target when the player overlaps the button. An actor reference is a variable that points to an actor in the level. Add an Is Valid check before every place where the reference is used."
       - "When a check fails, log a clear warning. Include the name of the owning actor in the message so you know where the problem is."
       - "Break one reference on purpose, for example by leaving it empty. Run the game and confirm that the warning tells you where to look."
     done_when: "Send a screenshot of your warning in the Output Log after you broke the reference on purpose."
@@ -412,7 +411,7 @@ quests:
     required: true
     capstone: true
     title: Pickup/win loop in Blueprint
-    brief: "A game loop is the full circle of play: the player does something, the game counts it, and at some point the game says the player has won. Building a full loop proves that the separate pieces you made in earlier quests work together. In this quest you join your pickups, score, input and warnings into one small game, and then you package it, which means building a version that runs outside the editor."
+    brief: "A game loop is the full circle of play: the player does something, the game counts it, and at some point the game says the player has won. Building a full loop proves that separate pieces work together. In this quest you join pickups, a score, input and warnings into one small game, and then you package it, which means building a version that runs outside the editor. Everything you need to build is listed in the steps, and you may reuse your own earlier work where it fits."
     time_min: 180
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-5-building-the-coin-pickup-and-speed-boost-in-unreal-engine"
     backup_url: TODO_URL
@@ -420,13 +419,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/packaging-your-project"
     checklist:
-      - "Use pickups that get their values from Data Assets, as in quest PQ12. The pickups must talk to the player through a Blueprint Interface, as in quest GDQ4. A Blueprint Interface is a list of functions that different Blueprints can share."
-      - "Keep the score in the GameState, and let the GameMode declare the win, as in quest PQ9."
-      - "For at least one pickup type, make the player interact with it through your Enhanced Input action from quest PQ10."
-      - "Add an Is Valid check and a log warning for every reference, as in quest PQ13."
+      - "Open a project made from the Third Person template, or create one. Make a pickup Blueprint that gets its values, such as a name and a point value, from a Data Asset (a Blueprint class with Primary Data Asset as its parent, and two Data Asset instances made from it). The pickups must talk to the player through a Blueprint Interface, which is a list of functions that different Blueprints can share. For example, the character calls an Interact function of the interface on the pickup."
+      - "Keep the score in a GameState Blueprint, and let a GameMode Blueprint declare the win when the score reaches a target. Set both in the World Settings of your level."
+      - "For at least one pickup type, make the player interact with it through an Enhanced Input action: create an Input Action named IA_Interact, add it to the Input Mapping Context of the template with a key, and handle it on the character."
+      - "Add an Is Valid check and a log warning for every actor reference that you use."
       - "When the player wins, restart the level or show a simple win message."
-      - "Package a development build, which is a version of the game that runs without the editor. Play it outside the editor one time."
-    done_when: "Send a zip file of the packaged build, or a clip of the packaged build running. Add a short written description of how the pieces connect."
+      - "Package a development build, which is a version of the game that runs without the editor: use the Platforms button in the main toolbar, choose your platform and then Package Project. Play it outside the editor one time and record a short clip."
+    done_when: "Send a short video clip (30 seconds or less) of the packaged build running, in which you win once. Add a short written description of how the pieces connect."
     xp: 200
     verify_type: package
     quiz: []  # TODO Phase 4
@@ -449,7 +448,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine blueprint communication direct cast interface event dispatcher"
     checklist:
-      - "Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react."
+      - "Open any project, or create one from the Third Person template. Make two simple Actor Blueprints: BP_Button, with a mesh and a Box Collision that counts as pressed when the player overlaps it, and BP_Lamp, with a Point Light and a function that switches the light on and off. Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react."
       - "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
     done_when: "Send your written lines, and a screenshot of the graph of the Event Dispatcher version."
     xp: 50
@@ -473,8 +472,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 umg score hud widget blueprint beginner"
     checklist:
-      - "Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of your Player Controller or character, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen."
-      - "Update the widget from the GameState when the score changes. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+      - "Open a project made from the Third Person template, or create one. Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of the character of the template, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen."
+      - "Update the widget from the GameState when the score changes. If your project has no GameState with a score, make one: a Blueprint with Game State Base as its parent and an Integer variable named Score, set as the Game State Class of a GameMode Blueprint that the level uses. Add a key event on the character that adds 1 to the score, so that you can test. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
     done_when: "Send a screenshot of the HUD updating in PIE."
     xp: 50
     verify_type: screenshot
@@ -497,9 +496,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 checkpoint respawn kill volume blueprint"
     checklist:
-      - "Add a kill volume to your level: an Actor Blueprint with a large Box Collision. When the player overlaps it, the player must respawn, which means appear again, at the last checkpoint they reached. The simple way is to call an event on the GameMode that moves the player back with Set Actor Transform."
+      - "Open a project made from the Third Person template, or create one. Make a GameMode Blueprint as a child of the GameMode of the template and set it as the GameMode Override of a level in World Settings. Add a kill volume to the level: an Actor Blueprint with a large Box Collision, placed below the floor. When the player overlaps it, the player must respawn, which means appear again, at the last checkpoint they reached. The simple way is to call an event on the GameMode that moves the player back with Set Actor Transform."
       - "Store the last checkpoint in a place where the GameMode can read it, for example a Transform variable named LastCheckpoint in the GameMode itself or in the GameState. Make a checkpoint Blueprint with a Box Collision that writes its own transform into that variable when the player overlaps it."
-    done_when: "Send two or three screenshots from PIE, or a short GIF, that show the player touching the kill volume and standing at the checkpoint again."
+    done_when: "Send a short video clip (30 seconds or less), or two to three screenshots from PIE, that show the player touching the kill volume and standing at the checkpoint again."
     xp: 60
     verify_type: screenshot
     quiz: []  # TODO Phase 4
@@ -526,7 +525,7 @@ quests:
     backup_search: "unreal engine 5 visual studio or rider setup first c++ compile"
     checklist:
       - "Install the IDE and the workloads that the page Coder 01: Set Up and Compile a C++ Project, linked on this quest, lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work."
-      - "Add a C++ class to your UC_Sandbox project, or to a copy of it. When you do this, the project becomes a C++ project."
+      - "Create a new project from the Third Person template with C++ selected. You can also add a C++ class to a Blueprint project that you already have, or to a copy of it, with Tools, then New C++ Class. When you do this, the project becomes a C++ project."
       - "Generate the project files and open the solution in the IDE. Then build the Editor target with the configuration Development Editor."
       - "Start the Unreal editor from the IDE with the debugger attached. The debugger is the tool that lets you pause the program and look inside it."
       - "Set one breakpoint in your class, which is a mark on a line where the program will pause. Then make that line run so the program stops on it."
@@ -552,10 +551,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine uproperty editanywhere blueprintreadwrite ufunction blueprintcallable explained"
     checklist:
-      - "Create a C++ actor class named AUUDebugActor. Give it a float variable marked with UPROPERTY, and use the specifiers EditAnywhere and BlueprintReadWrite."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio, set up as Epic's documentation describes. Create a C++ actor class named AUUDebugActor with Tools, then New C++ Class. Give it a float variable marked with UPROPERTY, and use the specifiers EditAnywhere and BlueprintReadWrite."
       - "Add a second property that uses the specifier VisibleAnywhere. Compile, and note what is different about this property in the Details panel."
       - "Add a function marked with UFUNCTION(BlueprintCallable) that writes the float to the log."
-      - "Make a Blueprint that calls that function, and place the Blueprint in your L_TestHarness level."
+      - "Make a Blueprint child of your class that calls that function on BeginPlay, and place the Blueprint in any level."
       - "Write a short table of the specifiers you used. For each one, say what it does."
     done_when: "Send a screenshot of your properties in the Details panel, and a screenshot of the Blueprint that calls your function."
     xp: 110
@@ -573,14 +572,14 @@ quests:
     required_spine: false
     required: true
     title: BlueprintNativeEvent vs BlueprintImplementableEvent
-    brief: "C++ code often needs to let a Blueprint decide what happens at a certain moment. Unreal gives you two main tools for this. A BlueprintImplementableEvent is a function that C++ calls but only a Blueprint fills in. A BlueprintNativeEvent has a default version written in C++ that a Blueprint may replace. In this quest you add one of each to your actor and use both from a Blueprint child, which is a Blueprint made from your C++ class."
+    brief: "C++ code often needs to let a Blueprint decide what happens at a certain moment. Unreal gives you two main tools for this. A BlueprintImplementableEvent is a function that C++ calls but only a Blueprint fills in. A BlueprintNativeEvent has a default version written in C++ that a Blueprint may replace. In this quest you add one of each to a C++ actor and use both from a Blueprint child, which is a Blueprint made from your C++ class."
     time_min: 75
     official_url: TODO_URL
     backup_url: TODO_URL
     backup_search: "unreal engine blueprintnativeevent vs blueprintimplementableevent _Implementation"
     checklist:
-      - "Add a BlueprintImplementableEvent named OnActivated to your C++ actor. Call it from your C++ code."
-      - "Add a BlueprintNativeEvent named OnReset. Write its C++ version, which is a function with _Implementation at the end of its name, and make it write a line to the log."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. Create a C++ actor class with Tools, then New C++ Class, or use an actor class of your own. Add a BlueprintImplementableEvent named OnActivated to it. Call it from your C++ code, for example in BeginPlay."
+      - "Add a BlueprintNativeEvent named OnReset. Write its C++ version, which is a function with _Implementation at the end of its name, and make it write a line to the log. Call OnReset from BeginPlay as well, so that you can see it run."
       - "Create a Blueprint child of your actor. In it, implement OnActivated and override OnReset. In the OnReset override, call the parent version one time."
       - "Write 2 lines that say when you would use each of the two kinds of event."
     done_when: "Send a screenshot of the graph of the Blueprint child, and add the log output that shows that both the C++ code and the Blueprint code ran."
@@ -607,7 +606,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coder-02-create-a-player-character-with-input-actions-in-cplusplus"
     checklist:
-      - "In the constructor of your actor, create a root scene component, a static mesh, and a box collision. Use the function CreateDefaultSubobject for each one. The constructor is the function that runs when the object is created."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. Create a C++ actor class with Tools, then New C++ Class, or use an actor class of your own. In the constructor of the actor, create a root scene component, a static mesh, and a box collision. Use the function CreateDefaultSubobject for each one. The constructor is the function that runs when the object is created."
       - "Attach the components to each other with SetupAttachment. Mark them with UPROPERTY(VisibleAnywhere) so that you can see them in the editor."
       - "Write a class that is based on UActorComponent, for example UUSpinComponent. Make it tick, which means run every frame, and rotate its owner, the actor it belongs to."
       - "Add your component to a Blueprint actor. Then change its values in the Details panel until the motion looks right."
@@ -633,7 +632,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 live coding when to restart editor header changes"
     checklist:
-      - "Change the body of a function, which is the code inside it. Apply the change with Live Coding by pressing Ctrl+Alt+F11."
+      - "Open a C++ project that has at least one class of your own with a function, for example an actor that writes to the log in BeginPlay. If you have none, create a project from the Third Person template with C++ selected and add such an actor with Tools, then New C++ Class. With the editor open, change the body of a function, which is the code inside it. Apply the change with Live Coding by pressing Ctrl+Alt+F11."
       - "Add a new UPROPERTY to your class and use Live Coding again. Note what happens."
       - "Close the editor. Build the project from the IDE, and then open the editor again."
       - "Write your rule. Say which changes are safe to apply with Live Coding and which changes need a restart."
@@ -659,8 +658,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine declare_log_category_extern define_log_category ue_log verbosity"
     checklist:
-      - "Declare a log category named LogUU in a header file, and define it in a .cpp file."
-      - "From your actor, write three messages with UE_LOG: one with the verbosity Log, one with Warning, and one with Error."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. Declare a log category named LogUU in a header file with DECLARE_LOG_CATEGORY_EXTERN, and define it in a .cpp file with DEFINE_LOG_CATEGORY."
+      - "Create a C++ actor class with Tools, then New C++ Class, or use an actor of your own. From its BeginPlay function, write three messages with UE_LOG: one with the verbosity Log, one with Warning, and one with Error. Place the actor in a level and press Play."
       - "In the Output Log, set the filter so that it shows only the LogUU category."
       - "Open the console and use the log command to change the verbosity of your category. Confirm that messages of the lower levels no longer appear."
     done_when: "Send a screenshot of the Output Log filtered to your category."
@@ -669,7 +668,7 @@ quests:
     quiz: []  # TODO Phase 4
     flavors:
       _default: {why: "Your own category keeps your logs findable.", do: "Declare one and filter to it."}
-      programming: {why: "The C++ version of what you did in PQ13.", do: "Log the actor name on every warning."}
+      programming: {why: "The C++ version of a check you may know from Blueprint.", do: "Log the actor name on every warning."}
 
   - id: PQ26
     rank: 3
@@ -679,7 +678,7 @@ quests:
     required_spine: false
     required: true
     title: C++ and Blueprint interop patterns
-    brief: "Most Unreal projects use C++ and Blueprint together. A common pattern is a base class in C++ that holds the core logic, and a Blueprint child where designers set values and add small changes. How you split the work decides who can change what without asking a programmer. In this quest you plan such a split for one part of your pickup and win loop, on paper."
+    brief: "Most Unreal projects use C++ and Blueprint together. A common pattern is a base class in C++ that holds the core logic, and a Blueprint child where designers set values and add small changes. How you split the work decides who can change what without asking a programmer. In this quest you plan such a split for a pickup that the player collects, on paper."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/coding-in-unreal-engine-blueprint-vs-cplusplus"
     backup_url: TODO_URL
@@ -687,8 +686,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/programming-with-cplusplus-in-unreal-engine"
     checklist:
-      - "Read the documentation page Coding in Unreal Engine: Blueprint vs. C++ again, which is linked on this quest, and read your notes from quest SQ11 again."
-      - "Pick one piece of your loop from quest PQ19. Make a sketch of how you would split it into a C++ base class and a Blueprint child."
+      - "Read the documentation page Coding in Unreal Engine: Blueprint vs. C++, which is linked on this quest. Write down one thing that the page says is better done in Blueprint and one thing that is better done in C++."
+      - "Take a simple gameplay piece as your example: a pickup that the player collects, which adds to a score. If you have built something similar, use your own. Make a sketch of how you would split it into a C++ base class and a Blueprint child."
       - "Decide which values get the specifier EditDefaultsOnly, which get BlueprintReadOnly, and which stay private. A specifier is a word in the UPROPERTY macro that controls what the editor and Blueprints can do with the value."
       - "Expose one delegate that Blueprints can assign to, for an event that designers care about. A delegate is a signal that other code can listen to."
     done_when: "Send a written description of the split, about half a page long, and a piece of a header file that shows what you expose to Blueprint."
@@ -716,13 +715,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coder-06-create-a-respawning-pickup-item-in-unreal-engine"
     checklist:
-      - "Write a C++ base actor, for example AUUPickupBase. Build its components in the constructor, the function that runs when the object is created."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. Write a C++ base actor, for example AUUPickupBase. Build its components in the constructor, the function that runs when the object is created."
       - "Expose the values that people will want to tune with UPROPERTY. Add at least one BlueprintNativeEvent that has a default version in C++."
-      - "Write log messages through your LogUU category. Add clear warnings for the cases where the actor is set up badly."
-      - "Make 2 Blueprint children. They may differ only in their data and in one override. Place both of them in your L_TestHarness level."
+      - "Declare your own log category, for example LogUU, with DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY, and write log messages through it. Add clear warnings for the cases where the actor is set up badly."
+      - "Make 2 Blueprint children. They may differ only in their data and in one override. Place both of them in a test level."
       - "Write a short README file. Say what is in C++, what is in Blueprint, and how a designer would add a third child."
-      - "Show a mentor how it works, step by step. You can do this live or in a recorded clip."
-    done_when: "Send your README and show a mentor both Blueprint children working. The quest is complete when the mentor has seen both children work, has read the README, and approves."
+      - "Record a short video clip (30 seconds or less) that shows both Blueprint children working in PIE."
+    done_when: "Send your README as text, a screenshot of the header file of your base class, and a short video clip (30 seconds or less) that shows both Blueprint children working. The quest is complete when a mentor has reviewed your work and approves."
     xp: 200
     verify_type: mentor
     quiz: []  # TODO Phase 4
@@ -745,7 +744,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 c++ character movement component configure"
     checklist:
-      - "Make a copy of your project. In that copy, follow the tutorial page Coder 03: Configure Character Movement with C++, which is linked on this quest."
+      - "Create a project for this quest as the tutorial page Coder 03: Configure Character Movement with C++, which is linked on this quest, describes, or use a copy of a C++ project of your own. Follow the page in that project."
       - "Expose 2 movement values so that a Blueprint child, a Blueprint made from your C++ class, can tune them."
     done_when: "Send a screenshot of the tuned values in a Blueprint child."
     xp: 80
@@ -753,7 +752,7 @@ quests:
     quiz: []  # TODO Phase 4
     flavors:
       _default: {why: "Movement is where feel lives.", do: "Expose two knobs."}
-      programming: {why: "Good practice for PQ30's exposed surface.", do: "Let designers tune, not you."}
+      programming: {why: "Good practice for any class that exposes values to designers.", do: "Let designers tune, not you."}
 
   - id: PQ28
     rank: 3
@@ -769,7 +768,7 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 c++ primary data asset items"
     checklist:
-      - "Follow the tutorial page Coder 05: Manage Item and Data, which is linked on this quest, and define a Data Asset class for items in C++."
+      - "Open a C++ project, or create one as the tutorial page describes. Follow the tutorial page Coder 05: Manage Item and Data, which is linked on this quest, and define a Data Asset class for items in C++."
       - "In the editor, create 2 item assets from your class."
     done_when: "Send a screenshot of 2 Data Assets made from your C++ class."
     xp: 80
@@ -777,7 +776,7 @@ quests:
     quiz: []  # TODO Phase 4
     flavors:
       _default: {why: "Data classes in C++ are what designers fill in.", do: "Define one and make two assets."}
-      programming: {why: "The C++ side of PQ12.", do: "Compare it with your Blueprint struct version."}
+      programming: {why: "The C++ side of a Blueprint struct.", do: "Compare it with your Blueprint struct version."}
 
   - id: PQ29
     rank: 3
@@ -793,8 +792,8 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal insights trace cpu scope custom c++ code"
     checklist:
-      - "In your capstone actor, add a named CPU scope around one function, so that the time spent in that function is recorded under the name you give it."
-      - "Capture a trace while the game runs. Then open it in Unreal Insights and find your scope."
+      - "Open a C++ project, or create one from the Third Person template with C++ selected. Pick an actor class of your own with a function that runs during play, or add a new actor with Tools, then New C++ Class, and give it a Tick function that does some work, such as a loop that adds numbers. Add a named CPU scope around that function with the macro TRACE_CPUPROFILER_EVENT_SCOPE, so that the time spent in that function is recorded under the name you give it. Place the actor in a level."
+      - "Capture a trace while the game runs: click Trace in the bar at the bottom of the editor window, choose Start Trace, play for 10 seconds, and choose Stop Trace. Then open the trace in Unreal Insights and find your scope in the timing view."
     done_when: "Send a screenshot of your named scope in the timing view."
     xp: 70
     verify_type: screenshot

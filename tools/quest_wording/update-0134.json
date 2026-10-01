@@ -1,0 +1,126 @@
+{
+ "EAQ60": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Prepare three image files for one surface: a color image, a normal image and a roughness image, with a power-of-two size such as 1024x1024, saved as .png or .tga files. If you have none, export them from Unreal: in the Textures folder of the Starter Content, right-click a color texture (name ending in _D), a normal texture (_N) and a mask texture (_M), choose Asset Actions, then Export, and save each one as an image file.",
+   "Also prepare one image whose size is not a power of two, for example 1000x700. A cropped screenshot or photo works.",
+   "Import all four images with the Import button in the Content Browser, or drag them in from your file explorer. Name them T_Wood_BC, T_Wood_N, T_Wood_R and T_Test_NPOT.",
+   "Double-click T_Wood_BC to open the Texture Asset Editor. In the Details panel, read the values Imported, Displayed, Max In-Game and Number of Mips.",
+   "Enable the Mip Level checkbox in the toolbar and step through the mips one by one. Watch the Displayed size change.",
+   "Open T_Test_NPOT and check which value Mip Gen Settings was given at import. Write the value down."
+  ]
+ },
+ "EAQ61": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Open a color texture in the Texture Asset Editor, for example one from the Textures folder of the Starter Content with a name that ends in _D. Find the Compression category in the Details panel.",
+   "Note the value of Compression Settings, and the Format shown in the texture information at the top. Write down the Resource Size.",
+   "Open a packed mask texture, which is a texture that stores a different mask in each color channel. In the Starter Content, the names of these textures end in _M. Change Compression Settings to BC7 and compare the Resource Size before and after.",
+   "Open the Oodle panel. Enable On-disk Sizes and read the values Uncompressed Size and Compressed Size (Estimate).",
+   "In the Oodle panel, enable Try Encodings and test the RDO Lambda values 0, 30 and 100. Look in the viewport for artifacts, which are small errors in the image caused by compression.",
+   "Open Project Settings, then Engine, then Texture Encoding, and find the Fast and Final settings. Do not change them."
+  ]
+ },
+ "EAQ62": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. You need a normal map. Import one of your own, or duplicate a brick normal map from the Textures folder of the Starter Content (its name ends in _N), and name it T_Brick_N. Open it in the Texture Asset Editor and confirm that Compression Settings is set to Normalmap.",
+   "Make a material named M_NormalTest. Connect T_Brick_N to the Normal input, and apply the material to a cube in a level that has one directional light.",
+   "In the Texture Asset Editor, turn Flip Green Channel on and off and watch the cube. Note which setting makes the bumps look raised and not sunken.",
+   "Enable Normalize after making Mips. Move the camera far away from the cube and compare the surface with the setting turned off.",
+   "Open a roughness texture or another grayscale texture, for example a copy of a mask texture from the Starter Content. Set Composite Texture to T_Brick_N and set Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power at 1 and at 4."
+  ]
+ },
+ "EAQ63": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on, and work in a level with a wall. Create a material named M_Decal_Crack. In the Details panel, set Material Domain to Deferred Decal and Blend Mode to Translucent.",
+   "Add a crack texture or a dirt texture to the graph. If you have none, use any texture from the Starter Content with clear dark and light areas, and use one of its channels as the mask. Connect its color to Base Color and its mask to Opacity. If you like, also connect a normal map to Normal.",
+   "Place a Decal Actor from the Visual Effects category of the Place Actors panel. Assign M_Decal_Crack to Decal Material, and rotate the actor so its arrow points at a wall.",
+   "Scale the Decal Actor with the scale tool, using a different amount on each axis. Watch how the projection fades at the edges of the box.",
+   "Place a second decal that overlaps the first one. Change Sort Order on one of them so that it draws on top of the other.",
+   "Put a Static Mesh inside the box of the decal and turn off Receives Decals on that mesh. Confirm that the decal no longer shows on it.",
+   "Switch the viewport to the Shader Complexity view mode. Look at the cost in the area where the two decals overlap."
+  ]
+ },
+ "EAQ64": {
+  "done_when": "Send one screenshot of STAT STREAMING on screen while you play. Also send one screenshot of the Primitive Distance Accuracy view mode, with a short line about what the colors on the meshes mean.",
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Open a level with several textured props. If you have none, place about ten props from the Props folder of the Starter Content in the level of the template. Open the Build menu in the main menu bar and run Build Texture Streaming.",
+   "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips.",
+   "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change.",
+   "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green.",
+   "Type r.Streaming.PoolSize 50 in the console, play again, and look for blurry textures. Then set the value back to what it was before.",
+   "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it. Only note where it is."
+  ]
+ },
+ "EAQ65": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Create a material named M_DetailWall. Drag in the textures T_Brick_Clay_Old_D, T_Brick_Clay_Old_N, T_Ground_Gravel_D and T_Ground_Moss_N.",
+   "Add the DetailTexturing material function, which is in the Misc category. Then right-click the gravel texture and the moss texture and choose Convert To Texture Object for each.",
+   "Connect the brick textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal.",
+   "Add three Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, and set each one to 1. Connect them to the function.",
+   "Make a Material Instance named MI_DetailWall and apply it to a cube that you scale into a wall. Try Scale at 1, 5 and 10, and look at the wall from very close each time.",
+   "Add a TextureCoordinate node in front of the brick textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
+  ]
+ },
+ "EAQ66": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. On the Virtual Texturing documentation page linked on this quest, read the table that compares Runtime Virtual Textures with Streaming Virtual Textures. Write one sentence about each.",
+   "Import a large color texture with a power-of-two size (4096x4096 is enough) and name it T_Big_BC. If you have no such image, make one in any image editor by resizing a photo to 4096x4096. Use it in a material named M_BigTest and put that material on a plane.",
+   "In the Content Browser, right-click T_Big_BC and choose Convert to Virtual Texture. Read the list of materials in the Convert To window and click Ok.",
+   "Open M_BigTest. Confirm that the Texture Sample node now shows VT in its corner and uses a Virtual sampler type.",
+   "Play in the editor. In the console, type stat virtualtexturing, and then r.VT.Borders 1. Move around and look at the grid. Turn the grid off with r.VT.Borders 0."
+  ]
+ },
+ "EAQ67": {
+  "brief": "Fab is the online store of Epic Games for 3D content, and you can open it inside the Unreal editor. Megascans is a large library of surfaces and objects that were scanned from the real world, and many of them are free on Fab. A scanned surface is a quick way to get a material that looks real. In this quest you find a free Megascans surface in Fab, add it to a project, and apply it in a level.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open the Fab window with Window > Fab, which is in the Get Content section, or with the Fab button next to Add+ in the Content Drawer. If it is missing, open Edit > Plugins and enable the Fab plugin.",
+   "Open the Account menu and choose Fab settings. Under Megascans, read the Preferred Quality Tier, and set it to Medium if it is not already.",
+   "Use the Price filter to show only free products, and use the product type panel to show surfaces. Pick one Quixel surface, open its preview, and read its license and the formats it includes.",
+   "Click Add to My Library. Then open My Library and click the + icon on the tile of the surface to download it into your project.",
+   "Find the new assets in the Content Browser. Open the material instance and note which textures it uses, such as color, normal and packed mask.",
+   "Apply the surface to a plane or a cube in any level."
+  ]
+ },
+ "EAQ68": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input.",
+   "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input.",
+   "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library.",
+   "Click Apply, and then save the asset.",
+   "Open a material of your own, or create a simple one named M_Ground with a color texture from the Starter Content connected to Base Color. Find MF_DirtMask in the Palette under your category and drag it into the graph. Give it any grayscale texture as Height, as a Texture Object, and multiply its result with the Base Color. Move the mouse over the node and check that your description appears as the tooltip.",
+   "Place a second copy in another way. Hold F and left-click in the graph to make an Unspecified Function node, and then assign MF_DirtMask to it in the Details panel.",
+   "Change something inside MF_DirtMask, for example the default value of Contrast, and click Apply. Confirm that both copies in M_Ground update."
+  ]
+ },
+ "EAQ69": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Material Function named MF_Layer_Chrome. Add a Make Material Attributes node, which packs all material inputs into one wire, and connect it to Output Result. Build a chrome look with Metallic 1 and a low roughness, and add a Vector3 Function Input named Tint.",
+   "Create a second function named MF_Layer_Snow in the same way, with Make Material Attributes connected to Output Result. Give it a pale blue tint, make it non-metallic, and use a medium roughness.",
+   "Create a material named M_SnowyChrome. Click the background of the graph and turn on Use Material Attributes in the Details panel.",
+   "Drag both functions into the graph. From the Palette, add the nodes MatLayerBlend_Simple and WorldAlignedBlend.",
+   "Connect the chrome function to the Base input of MatLayerBlend_Simple and the snow function to its Top input. Connect WorldAlignedBlend to its Alpha input. Set Blend Sharpness to 10, and add a scalar parameter named BlendBias on Blend Bias.",
+   "Save the material. Create a Material Instance named MI_SnowyChrome and apply it to a prop, for example a sphere or a cone. Rotate the prop to confirm that the snow stays on the faces that point up.",
+   "This step is optional. In one layer, replace Make Material Attributes with Set Material Attributes and add only the attributes you need."
+  ]
+ },
+ "EAQ70": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. In the Content Browser, under Materials, create a Material Layer asset named ML_Metal and another one named ML_Rust. In each one, build the surface with Set Material Attributes, and add a Vector Parameter for the color and a Scalar Parameter for the roughness.",
+   "Create a Material Layer Blend asset named MLB_Mask. In its graph, connect a mask texture parameter to the Alpha of the BlendMaterialAttributes node that is already there. Any grayscale texture with clear light and dark areas works as the mask, for example a mask texture from the Starter Content.",
+   "Create the base material and name it M_Layered. Select the Main Material Node and enable Use Material Attributes. Add a Material Attribute Layers node and connect it to the output.",
+   "Select the Material Attribute Layers node. In the Details panel, set the Background layer to ML_Metal.",
+   "Create a Material Instance named MI_Layered from M_Layered. Open it and go to the Layer Parameters tab. Add ML_Rust as a second layer and assign MLB_Mask as its blend.",
+   "In the Layer Parameters tab, override the color and the roughness of the rust layer. Click the Eye icon on the rust layer to hide and show it, and watch the metal show through.",
+   "Apply MI_Layered to a prop, such as a sphere, and take screenshots."
+  ]
+ },
+ "EAQ71": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Right-click in the Content Browser, open Material and create a MaterialParameterCollection. Name it MPC_Scene.",
+   "Add a Scalar Parameter named Wetness with a default of 0, and a Vector Parameter named DirtTint. Save the asset.",
+   "Open two environment materials of your own. If you have none, make two simple ones, for example M_Wall and M_Floor, each with a different color texture from the Starter Content and a Roughness value. In each one, add a CollectionParameter node (search for 'collection'), and pick MPC_Scene and the Wetness parameter on it.",
+   "Use Wetness to lower the roughness and darken the base color, for example with a Lerp between the dry value and the wet value. Save both materials.",
+   "Apply the materials, or their instances, to different props in one level. Open MPC_Scene, change Wetness to 1, and watch every prop change at once.",
+   "In the Level Blueprint, add a Set Scalar Parameter Value node with Collection set to MPC_Scene and Parameter set to Wetness. Trigger it from a key press, then press Play and test it."
+  ]
+ }
+}

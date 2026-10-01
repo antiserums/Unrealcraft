@@ -1,0 +1,135 @@
+{
+ "AQ61": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Control Rig named CR_Manny_LookAt for the mannequin: right-click SKM_Manny and choose Create, then Control Rig. Add a Vector variable named LookTarget and a Float variable named LookWeight. Click the Eye icon next to each one in My Blueprint to make them instance-editable.",
+   "On Forwards Solve, aim the head bone at LookTarget. You can use an Aim node or your own rotation logic. Blend the result by LookWeight.",
+   "Open ABP_Manny, or make a new Animation Blueprint. In the Anim Graph, right-click, open Misc and add a Control Rig node. Place it after the locomotion pose and before the Output Pose.",
+   "In the Details panel of the node, set Control Rig Class to CR_Manny_LookAt. Under Input, enable Use Pin for LookTarget and for LookWeight.",
+   "In the Event Graph, on each update, set LookTarget to the location of the player camera and set LookWeight to 1.",
+   "Add a Float animation curve to one animation. On LookWeight, choose that curve with Use Curve and stop using the pin. Compare the result.",
+   "Disable Transfer Pose in Global Space, and check that the result is the same on this skeleton."
+  ]
+ },
+ "AQ62": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Control Rig for the mannequin. If you have none, right-click SKM_Manny, choose Create, then Control Rig, and open the new asset. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose.",
+   "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Construction Event, so that the starting A-pose is stored. The documentation page still uses the old name of this event, Setup Event.",
+   "Add a second Rig Pose variable named ArmsPose. Fill it with a Get Pose Cache node that has Element Type set to Bones, and whose Items to Set input comes from a Get Children node of the left upperarm bone.",
+   "On Forwards Solve, add an Apply Pose Cache node that reads RestPose. Add a Float variable named RestWeight and connect it to the Weight pin.",
+   "In Preview Scene Settings, set a walk animation as the Preview Controller. Change RestWeight from 0 to 1 and watch the rig blend to the A-pose.",
+   "Add a Draw Pose Cache node for ArmsPose, and confirm that only the elements of the arm are drawn.",
+   "Add a Branch node so that RestPose is only stored when a Bool variable named StorePose is true."
+  ]
+ },
+ "AQ63": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_BodyMover for the UE5 Mannequin or for your own two-legged character. To create it, click Add (+), then Animation, then IK Rig.",
+   "Select foot_l and foot_r, right-click and choose New IK Goal. When Unreal asks for a Solver, pick Limb IK. Set thigh_l and thigh_r as the root of each Limb IK: right-click the bone and choose Set Root Bone on Selected Solver.",
+   "In the Solver Stack, click Add New Solver and add Body Mover. Set pelvis as its root bone. Connect both foot goals to it: right-click each goal and choose Connect Goal to Selected Solver.",
+   "Drag Body Mover to the top of the Solver Stack, so that it is calculated first. Read the numbers next to the solver names, which show the order.",
+   "In the viewport, drag one foot goal 40 cm up and watch the pelvis move. Select Body Mover and set Rotation Alpha to 0. Compare how much the body leans before and after.",
+   "Add a Pole Solver for the left leg. Set thigh_l as its root and foot_l as its end. Then create an IK Goal on calf_l, the first child of the root, to use as the pole vector, the point that the knee turns toward. Move it and watch the knee turn.",
+   "Right-click a twist bone, for example thigh_twist_01_l, and choose Exclude Selected Bone From Solve. Note that its icon changes."
+  ]
+ },
+ "AQ64": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_FBIK for the UE5 Mannequin. In the toolbar, click Auto Create IK and look at what it made: an FBIK solver, goals and bone settings.",
+   "Delete that result and build your own. Click Add New Solver and choose Full Body IK, and set pelvis as its root. Then add IK Goals on hand_l, hand_r, foot_l and foot_r, and connect all four to the solver.",
+   "Drag the hand_r goal far to the front. The pelvis rotates too much. Select the FBIK solver, right-click pelvis and choose Add Settings to Selected Bone. Raise Rotation Stiffness until the hips stay calm.",
+   "Add bone settings on foot_l. Set the Limit of the Z axis to Limited with Min -50 and Max 40, as in the example from the documentation. Move the foot goal and check the ankle.",
+   "Add bone settings on calf_l. Enable Use Preferred Angles and raise the Z angle, so that the knee bends the right way when the foot goal comes close to the hip.",
+   "On the solver, set Root Behavior to Pin to Input, then to Pre Pull, then to Free. Note how the pelvis moves in each mode.",
+   "Raise Mass Multiplier to 5 and watch the goals stop reaching their targets. Then raise Iterations until they reach them again."
+  ]
+ },
+ "AQ65": {
+  "done_when": "Send a screenshot of the AnimGraph with the IK Rig node and its exposed pins, a screenshot of the Details of the node showing the Goals section, and a short video clip (30 seconds or less) or a screenshot of the hand reaching the target in Play mode. Add two lines about the difference you saw between World and Additive.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_Reach for the mannequin: click Add (+), then Animation, then IK Rig, and pick SKM_Manny. Select hand_r, right-click, choose New IK Goal and pick Limb IK as the solver. Then select upperarm_r, right-click and choose Set Root Bone on Selected Solver. If you already have an IK Rig with a Limb IK on the right arm, you can use that. Select the hand_r goal and enable Expose Position and Expose Rotation.",
+   "In the Animation Blueprint of the Third Person character, right-click the AnimGraph and add an IK Rig node from the Misc category. Set its Rig Definition Asset to your IK Rig. Place the node after the locomotion logic and before Output Pose.",
+   "In the Details panel of the node, under Goals, set the hand_r goal to Manual Input with the space World. Add a Vector variable named ReachTarget and connect it to the position pin of the goal.",
+   "Place a cube in the level as the target actor. In BP_ThirdPersonCharacter, get a reference to the cube, for example with an Instance Editable Actor variable or with Get Actor of Class, and pass its world location to the ReachTarget variable of the Animation Blueprint on every tick, or on a key press. Press Play and watch the hand follow the target.",
+   "Add a Float variable named ReachAlpha and connect it to the Position Alpha of the goal. Change it between 0 and 1, and confirm that the IK blends off and on.",
+   "Switch the space of the goal to Additive and give it a small offset. Compare this with World. Turn on Enable Debug Draw and set Debug Scale to 2 to see the goal in the viewport.",
+   "Try the Bone goal type: snap the hand goal to a socket bone such as ik_hand_r. Describe what this is useful for."
+  ]
+ },
+ "AQ66": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root.",
+   "Turn on Enable Debug Draw. In the preview, move the Effector Location, shown in red, and the Joint Target Location, shown in green. Watch the knee point toward the green target.",
+   "Set Effector Location Space to World. In the Event Graph, do a Line Trace from foot_l down to the floor, and store the hit location in a Vector variable named FootTarget_L. Connect this variable to Effector Location.",
+   "Select the Two Bone IK node. In its Details panel, set Joint Target Location Space to Bone Space and choose calf_l as the Joint Target bone. Then type a small value, for example 30, into one axis of Joint Target Location and watch the green target in the preview. Use the axis that moves the green target in front of the knee, so that the knee bends forward in a natural way.",
+   "Place BP_ThirdPersonCharacter on a low step or a slope and press Play. Add a Float variable named FootAlpha and connect it to the Alpha of the node, so that you can blend the effect off.",
+   "Enable Allow Stretching with Start Stretch Ratio 0.9 and Max Stretch Scale 1.2. Move the target too far away and note how the leg stretches.",
+   "Do the same for foot_r. You can also duplicate the setup and rename the variables."
+  ]
+ },
+ "AQ67": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an actor named BP_Button: a small box with a Scene component named PressPoint on top of it. Place it at hand height near the player start.",
+   "In the AnimGraph of the Animation Blueprint of the Third Person character, convert the pose to component space, add a CCDIK node, and then convert back to local space before Output Pose.",
+   "On the CCDIK node, set Tip Bone to index_03_l and Root Bone to clavicle_l. Set Effector Location Space to World Space, as in the example from the documentation.",
+   "Add a Vector variable named ButtonLocation and a Float variable named PressAlpha. When the player overlaps BP_Button, set ButtonLocation to the world location of PressPoint. Connect both variables to the node.",
+   "Turn on Enable Rotation Limit and open Rotation Limit Per Joints. Set limits on the first indices so that the finger and the wrist do not fold backwards.",
+   "Duplicate the setup with a FABRIK node that has Tip Bone hand_l and Root Bone clavicle_l. Compare the shape of the arm with CCDIK for the same target, and write the difference in one line.",
+   "On both nodes, compare Max Iterations 2 with 10, and Precision 1 with 0.1. Write down which values looked good enough."
+  ]
+ },
+ "AQ68": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a source character (the UE5 Mannequin, which is in an A-pose) and a target character with a different reference pose, for example your own character or a free T-pose character from Fab, Epic's asset store. Make an IK Rig for each with Auto Create Retarget Chains, and create an IK Retargeter named RTG_PoseFix.",
+   "Click Edit Retarget Pose in the toolbar. With Target selected, click Create (+), then Create, and name the new pose Target_Aligned. Do not edit the Default Pose.",
+   "Open Auto Align and choose Align All Bones with Alignment Method set to Direction. Then click Snap Character to Ground. After that, try Mesh as the method on the arms only, with Align Selected and Children, and compare.",
+   "Turn on Edit Mode and fix one bone by hand. In the Details panel, type 0, 0, 0 to send the bone back to the reference pose, and then set a small value. Drag Retarget Pose Blend between 0 and 1 to see your changes.",
+   "Create a second pose with Create (+), then Import from Animation Sequence, using frame 0 of an idle animation. Export one pose with Export Pose Asset.",
+   "In the Op Stack, add a Retarget Pose op at the top, with Override Target Pose set to Target_Aligned. Then add an Additive Pose op at the bottom, with a small Alpha and a pose that you made.",
+   "Run the retarget and preview 3 animations. Write down which alignment method gave the best shoulders."
+  ]
+ },
+ "AQ69": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open an IK Retargeter between two two-legged characters with different proportions, or make a new one. Manny and Quinn from the template work, because their bodies have different proportions: create an IK Rig for SKM_Manny and one for SKM_Quinn, use Auto Create Retarget Chains in each, and create an IK Retargeter with Manny as the source and Quinn as the target. Click Add Default Ops and write down the ops that appear.",
+   "Select FK Chains. Use Map All (Fuzzy), and then Hide Mapped Chains to see which chains are left without a match. Fix every unmapped chain by hand.",
+   "Select the LeftArm chain. Switch Rotation Mode between Interpolated and One to One while an animation in which the arms move plays. Then do the same on a finger chain. Note which mode fits each chain better.",
+   "On the Spine chain, set Translation Mode to Globally Scaled, then to Absolute, and then back to None. Note what looked broken.",
+   "Add a Pole Vector Alignment op below FK Chains. On LeftLeg, set Align Alpha to 1 and try a Static Angular Offset of 15. Watch the knee.",
+   "Add a Stretch Chains op. On the arm chains, set Match Source Length to 1, and then set Scale Chain Length to 1.1. Compare the position of the wrists.",
+   "Select Pelvis Motion and set Scale Vertical to 0.8. Then, on Root Motion, switch Root Motion Source between Copy From Source Root and Generate From Target Pelvis. Turn on Draw Chain Lines in the debug settings of FK Chains for your final screenshot."
+  ]
+ },
+ "AQ70": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open an IK Retargeter between two characters, or make one: create an IK Rig for SKM_Manny and one for SKM_Quinn, use Auto Create Retarget Chains in each, create an IK Retargeter with Manny as the source and Quinn as the target, and click Add Default Ops. In the IK Rig of the target, give the LeftLeg and RightLeg chains an IK Goal, using Add Chain and Goal with Limb IK. In the retargeter, select Run IK Rig. Confirm that Enable IK is on for both leg chains, and that the goals are drawn when Draw Final Goals is on.",
+   "Under Run IK Rig, add a Floor Constraint sub-op. On both leg chains, turn Enable Floor Constraint on and set Alpha to 1. Enable Use Foot, and adjust Heel Offset and Toe Offset until the feet stop sinking into the floor in a walk animation.",
+   "Add a Stride Warp IK Goals sub-op. Set Direction Source to Goals and Forward Direction to Y, and enable it on the leg chains. Set Warp Forwards to 0.7 and then to 1.3, and watch the length of the steps.",
+   "Add a Speed Plant IK Goals sub-op. Read its settings, and write down which animation curve it needs and which Blend Method you would pick for a run. Leave the op disabled if your animations have no speed curve.",
+   "Open Override Sets and create a set named OS_LongStride. Right-click the Stride Warp op and add Warp Forwards to the set with the value 1.3. Turn the set on and off in the editor.",
+   "Open Variables and add a Float variable named StrideScale. Bind it to Warp Forwards inside OS_LongStride.",
+   "Create an Animation Blueprint for the target character. In its AnimGraph, add a Retarget Pose From Mesh node and set the retargeter on it. Add OS_LongStride to Override Set to Apply, and connect a variable to the StrideScale pin. To test it, make a Character Blueprint in which the source mesh plays an animation and the target mesh is a child component of it with this Animation Blueprint. Press Play and change the value."
+  ]
+ },
+ "AQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "You need a landing animation in which the root bone moves down to the ground. If you have none, make one: duplicate the land animation of the mannequin, open the copy, select the root bone in the Skeleton Tree, move it about 100 units up at the first frame and press Key in the toolbar, then go to the last frame and press Key with the root at its normal height. Turn on Enable Root Motion in Asset Details. Open the animation and go to Window > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers.",
+   "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details.",
+   "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time.",
+   "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround.",
+   "Compile. In the preview viewport, open Scene Setup and change Floor Height Offset. Watch the legs reach for the ground at different distances."
+  ]
+ },
+ "AQ72": {
+  "brief": "Mirroring flips an animation from left to right, so a step that starts with the left foot becomes a step that starts with the right foot. You then need to make only half of the animations. A Mirror Data Table is the asset that tells Unreal which left bone matches which right bone, and it can also swap notifies and sync markers. In this quest you create the table for the mannequin and mirror the pose in an Animation Blueprint with the Mirror node.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Mirror Data Table. Pick the Skeleton of the mannequin, or of your own character, and name the asset MDT_Character.",
+   "Open the table and check that Unreal filled in the left and right bones for you. Set Mirror Axis to X. Make sure that the central bones (pelvis, spine, neck and head) have the same bone in Name and in Mirrored Name. Add any rows that are missing.",
+   "Add one row with Mirror Entry Type set to Sync Marker (or Animation Notify) for a left and right pair that you use, for example FootL and FootR.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn), name the copy ABP_Character and open it. Right-click the AnimGraph and add the Mirror node from the Mirroring category. Connect the locomotion pose to it. Create a bool variable named IsMirrored and connect it to the Mirror pin.",
+   "On the Mirror node, set Blend Time on Mirror State Change to 0.2. Add an Inertialization node after the Mirror node, because the blend time needs it.",
+   "Turn IsMirrored on and off in the preview. Check that the pose with the left foot forward becomes a pose with the right foot forward, and that the notifies still fire.",
+   "Optional: in a custom Notify State Blueprint, use Is Triggered By Mirrored Animation with a Branch node to decide whether a Print String runs."
+  ]
+ }
+}

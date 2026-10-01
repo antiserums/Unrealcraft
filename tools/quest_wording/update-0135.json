@@ -1,0 +1,134 @@
+{
+ "EAQ72": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Create a material named M_VertexBlend3 with three sets of textures, for example stone, moss and mud. The Textures folder of the Starter Content has rock, moss and ground textures that you can use.",
+   "Add one VertexColor node and two Lerp nodes. The first Lerp blends stone and moss, with the Green channel as its Alpha. The second Lerp blends that result with mud, with the Blue channel as its Alpha. Stone is the surface you see by default when the material compiles.",
+   "Do the same for the normal maps so that the blend is complete. Apply the material to a wall or floor mesh that has enough vertices, because the paint is stored on the vertices. A sphere or the rock from the Starter Content works. If your mesh has too few vertices, add more with a remesh or subdivide tool in Modeling Mode, or in a 3D app.",
+   "Enter Mesh Paint mode and choose the Vertex Weights tab. Select the mesh, and set Texture Weight Type to RGB (Three Textures).",
+   "Set Paint Texture Weight Index to the moss texture and paint moss into the lower corners. Press X to swap the paint index and the erase index, and clean up the edges.",
+   "Switch the index to mud and paint a path. Hold SHIFT and use the left mouse button to erase mistakes."
+  ]
+ },
+ "EAQ73": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Create a material named M_WorldStone. Add a WorldAlignedTexture function, and connect a stone base color texture, for example a rock texture from the Starter Content, to it as a Texture Object, not as a Texture Sample.",
+   "Connect a Vector3 parameter to TextureSize and start with the value 200,200,200. Connect the XYZ Texture output to Base Color.",
+   "Add a WorldAlignedNormal function with the matching normal map and the same TextureSize. Connect its XYZ output to Normal.",
+   "Apply the material to three cubes that have different scales and rotations. Confirm that the stone has the same size on all of them.",
+   "Make a second material named M_WorldStone3Way that uses WorldCoordinate3Way. Give it a different texture, such as gravel, for the XY plane, which is the top. Adjust Blend Exponent until the seams are soft.",
+   "Rotate one cube during play or in Sequencer, and notice that the texture slides over the surface. This is called swimming. Write one line about when you would avoid this technique."
+  ]
+ },
+ "EAQ74": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Create a material named M_BrickBump. Use these Starter Content textures: T_Brick_Clay_New_D for Base Color, the red channel of T_Brick_Clay_New_M for Roughness, and T_Brick_Clay_New_N for Normal.",
+   "Hold B and left-click in the graph to create a BumpOffset node. Connect its output to the UVs pin of all three Texture Sample nodes.",
+   "Duplicate the diffuse Texture Sample with Ctrl + D, and connect its A (alpha) output to the Height input of BumpOffset. The error on the node should disappear.",
+   "In the Details panel, change Height Ratio from 0.05 to 0.005 so the texture stops sliding too much. Click Apply and save.",
+   "Apply the material to a wall. Move the camera across the wall and compare it with a copy of the material that has no BumpOffset.",
+   "Look at the wall from a very low angle, almost along its surface, and note where the effect breaks."
+  ]
+ },
+ "EAQ75": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Nanite tessellation is experimental, so you have to turn it on. In the file Config/DefaultEngine.ini of the project (or in ConsoleVariables.ini), add r.Nanite.AllowTessellation=1 and r.Nanite.Tessellation=1. Then restart the editor.",
+   "Make a flat wall mesh: in Modeling Mode, create a Box that is wide, tall and thin, accept it as a Static Mesh, and name the asset SM_Wall. Open it in the Static Mesh Editor and enable Nanite on it.",
+   "Create a material named M_NaniteBrick. Select the Main Material Node and check Enable Tessellation under the Nanite settings. Connect a height texture with values from 0 to 1 to the Displacement pin, and also connect a matching normal map. The brick textures of the Starter Content work: the alpha channel of T_Brick_Clay_New_D holds a height map, and T_Brick_Clay_New_N is the normal map.",
+   "Set Magnitude to a small value, for example 4, and set Center to 0.5 so the surface moves both in and out. Apply the material to SM_Wall.",
+   "Enable Displacement Fade, and set Start Fade Size and End Fade Size in pixels so that the effect disappears at a distance.",
+   "Compare this with the static option. In the Static Mesh Editor, under Nanite Settings, set Trim Relative Error to 0.04, add a Displacement Map with a Magnitude, and click Apply Changes.",
+   "Take a screenshot of the edge of the wall from a low angle with tessellation on, and another one with tessellation off."
+  ]
+ },
+ "EAQ76": {
+  "brief": "A landscape material usually has several layers, such as grass, dirt and rock, that you paint on the terrain. With a plain blend, the border between two layers is a soft, even fade. With a height blend, the material uses a height map so that, for example, dirt fills the gaps between rocks first, which looks much more real. In this quest you build a landscape material with height blending and avoid the black spots that this method can cause.",
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. You need a landscape material with a Landscape Layer Blend node that has 4 layers: Grass, Dirt, Rock and Snow, all set to LB Weight Blend. If you have one, duplicate it. If not, create one with a texture from the Starter Content for each layer, and a white color for Snow. Name it M_Land_WeightBlend, duplicate it, and name the copy M_Land_HeightBlend. Work in the copy.",
+   "Set Grass, Dirt and Rock to LB Height Blend. For each layer, connect the alpha of its texture, or a height mask, to the matching Height input.",
+   "Set Snow to LB Alpha Blend and move it to the end of the list. This fixes the black spots that appear where all height layers have the value zero.",
+   "Add a Landscape Layer Switch node around the Snow branch. It lets Unreal skip the snow textures on parts of the landscape that have no snow.",
+   "Add a Landscape Layer Sample node for Rock. Multiply it into Roughness so that painted rock looks a little wetter or drier than grass.",
+   "Create a Landscape in a new level and assign M_Land_HeightBlend to it. In Landscape Mode, open Paint and create a Weight-Blended layer info for each layer. Paint rock next to dirt and look at the height detail where they meet.",
+   "Compare with the plain blend. Assign M_Land_WeightBlend to the landscape and take one close screenshot of the border between rock and dirt with each material."
+  ]
+ },
+ "EAQ77": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level whose landscape uses edit layers, or create a new level and a new Landscape with Enable Edit Layers turned on. In Landscape Mode, open Sculpt and find the Layers list.",
+   "Rename the default layer to Base. Add three layers with the + icon and name them SculptDetails, PaintDetails and Splines. For the last one, choose Spline Edit Layer.",
+   "Select SculptDetails and sculpt a few small bumps and a ditch. Then turn on Lit > Visualizers > Layer Contribution and take a screenshot of the highlight.",
+   "Set the heightmap Alpha of SculptDetails to a negative value and watch the bumps become dents. Then set it back to 1.",
+   "Hide the layer with the eye icon, and then show it again. Lock the Base layer with the lock icon and try to sculpt on it.",
+   "Select PaintDetails and switch to Paint mode. Paint one material layer, so that the paint is stored only on this edit layer. For this the landscape needs a material with paint layers. A simple material with a Landscape Layer Blend node and two layers with different colors is enough. Turn the visibility of the edit layer off and on to compare.",
+   "Drag SculptDetails above PaintDetails in the stack. Then right-click a layer and read the context menu, which has options such as Collapse, Clear Sculpt Layer and Show Only Selected."
+  ]
+ },
+ "EAQ78": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with a Landscape that has a hill and uses edit layers, or create one: make a new level, add a Landscape with Enable Edit Layers turned on, and sculpt a hill. For the paint step, the landscape needs a material with a paint layer named Dirt or Road. A simple material with a Landscape Layer Blend node and two layers with different colors is enough. In Landscape Mode, open Manage and choose Spline. Hold Ctrl and left-click to place 6 to 8 control points for a road across the hill. To extend the road, hold Alt and drag with the left mouse button from an end point.",
+   "Select all control points with Ctrl+A. Set Half-Width to about 300 and Side Falloff to about 400. Press End to snap the points to the landscape.",
+   "Add a Spline Edit Layer in the edit layer stack. Watch the terrain rise or get cut to fit the road.",
+   "Select all segments of the spline. Set Layer Name to the Dirt (or Road) paint layer so that the road paints itself onto the terrain.",
+   "Under Landscape Spline Meshes, assign a road Static Mesh. If you have none, make one in Modeling Mode: a long, flat Box that you accept as a Static Mesh. Turn on Scale to Width and set the correct Forward Axis for the mesh.",
+   "On one segment that goes downhill, turn off Raise Terrain and keep Lower Terrain. The road then cuts into the slope and does not build a bank of earth under itself.",
+   "Select a segment and use the scale tool to drag a tangent, which is the handle that controls the curve. Use it to smooth one sharp bend."
+  ]
+ },
+ "EAQ79": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the Water plugin and restart the editor. Use a landscape that has Enable Edit Layers turned on. To make one, create a new level and a new Landscape with that option checked. Place a Water Body Ocean and shape its closed spline into a coastline.",
+   "Select the WaterZone actor. Under Rendering, in Far Distance, note the value of Far Distance Mesh Extent, and check that the ocean reaches the horizon.",
+   "Place a Water Body River that runs from inland down to the ocean. Give its points different heights, and set River Width and Depth for each point.",
+   "In the Terrain settings of the river, set Blend Mode to Min. This makes sure the river never raises the terrain inside the area the ocean has carved.",
+   "Set Falloff Mode to Width and add an Edge Offset of about 500. This gives you a flat shore on both banks.",
+   "Try Curl Noise on the river, with Curl Amount and Curl Tiling, to break up the straight banks. Then try Terracing with a small Terrace Alpha on the ocean shore.",
+   "Assign the River to Ocean transition material slot on the river so that the join blends smoothly. Take a screenshot of the mouth of the river."
+  ]
+ },
+ "EAQ80": {
+  "brief": "A Runtime Virtual Texture, or RVT, is a large texture that Unreal fills in while the game runs, usually with the colors of the landscape. Other materials can then read it. Roads can be drawn into it so they become part of the ground, and rocks can take the ground color at their base so they do not look pasted on. In this quest you set up an RVT for a landscape, draw a road into it, and make a rock blend into the ground.",
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. You need a level with a Landscape that has a landscape material with a Landscape Layer Blend node. If you have none, create a Landscape and a simple material with two layers. Open Project Settings, then Engine, then Rendering, and find the Virtual Textures section. Enable virtual texture support and restart the editor.",
+   "Create a Runtime Virtual Texture asset named RVT_Ground. Set Virtual texture content to Base Color, Normal, Roughness, Specular, and keep border padding at 2 or more.",
+   "In the landscape material, enable Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node. Read RVT_Ground with a Runtime Virtual Texture Sample node, and send both paths through a Virtual Texture Feature Switch node.",
+   "Place a Runtime Virtual Texture Volume and assign RVT_Ground to it. Under Transform from Bounds, pick the landscape as Source Actor and click Set Bounds. Then add RVT_Ground to Draw in Virtual Textures on the landscape.",
+   "You need a road made with a landscape spline and a spline mesh. If you have none, draw a short spline with the Spline tool on the Manage tab of Landscape Mode and assign a long, flat box mesh under Landscape Spline Meshes. Open the material of the road mesh. Add a Runtime Virtual Texture Output node with Base Color and Roughness. Then select all spline segments and add RVT_Ground under Virtual Texture.",
+   "On the RVT Volume, enable Hide Primitives. Check that the road now exists only in the terrain texture.",
+   "Place a rock on the landscape, for example the rock from the Props folder of the Starter Content. Make a material for it named M_RockBlend. Sample RVT_Ground and blend its Base Color into the bottom of the rock so that the rock meets the ground softly. Set a Translucency Sort Priority on the road so that it is drawn above the rock."
+  ]
+ },
+ "EAQ81": {
+  "brief": "A landscape is built from a heightmap, which stores only one height for each point on the ground. Because of this, a landscape alone cannot have a cave or a tunnel. The solution is to paint a hole in the landscape and build the cave from separate meshes behind it. In this quest you prepare a landscape material for holes, paint a cave mouth with the Visibility tool, and fit a cave interior into it.",
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. You need a level with a Landscape that has a hill and a landscape material. If you have none, create a Landscape, sculpt a hill, and assign a simple material with one color or texture. Open the landscape material. Add a Landscape Visibility Mask node and connect it to Opacity Mask. Keep Blend Mode set to Opaque. The pin looks greyed out, but connect it anyway.",
+   "Check the Visibility tool panel under Target Layers. It should show no warning about a missing Visibility Mask node.",
+   "In Landscape Mode, open Sculpt and pick the Visibility tool. Set a brush size that fits a cave mouth, and left-click on a hillside to paint a hole.",
+   "Hold Shift and left-click to erase part of the hole, and use this to shape the entrance.",
+   "Build the inside of the cave from a few Static Meshes. You can use the rock from the Starter Content several times, or shapes made in Modeling Mode. Fit the meshes into the hole so that no sky shows through.",
+   "Switch to Place mode and Play In Editor. Walk through the hole into the cave and confirm that there is no collision where you painted.",
+   "If the landscape has Enable Nanite turned on, click Build Data in the Nanite section and check that the hole is still correct."
+  ]
+ },
+ "EAQ82": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Open an outdoor level with a ground, a Sky Light and a few rocks or bushes on the ground. The rock and the bush from the Props folder of the Starter Content work. Open Project Settings, then Engine, then Rendering, and find the Software Ray Tracing section. Enable Generate Mesh Distance Fields and restart the editor.",
+   "Set the Mobility of the Sky Light to Movable. Open Show, then Visualize, then Distance Fields Ambient Occlusion, and take a screenshot.",
+   "Open Show, then Visualize, then Mesh Distance Fields. Find a rock or a tree that looks blurry or mostly white.",
+   "Open that mesh in the Static Mesh Editor. In Build Settings, raise Distance Field Resolution Scale and apply. Read the size of the distance field in the corner of the viewport.",
+   "For a tree or bush with a masked leaf material, enable Two-Sided Distance Field Generation and compare the result in the visualizer.",
+   "If you painted the bush or a tree with Foliage Mode, enable Affect Distance Field Lighting on that foliage type only, and not on grass.",
+   "On the Sky Light, adjust Min Occlusion and Occlusion Contrast until the underside of the trees is dark but not black."
+  ]
+ },
+ "EAQ83": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Open a level with a Landscape, or create a new one. In Foliage Mode, add at least two Static Mesh Foliage types: a bush with a masked leaf material, and a rock. The bush and the rock from the Props folder of the Starter Content work. Paint a wide field of both.",
+   "On the bush type, set Start Cull Distance to 3000 and End Cull Distance to 5000. Fly the camera backward and watch whole groups vanish.",
+   "Open the bush material. Add a PerInstanceFadeAmount node and multiply it into the Opacity Mask, so the leaves thin out before the end distance. Fly backward again.",
+   "On the bush type, open Scalability and enable Enable Density Scaling. In the console, run foliage.DensityScale 0.3 and then foliage.DensityScale 1.0, and compare.",
+   "Enable Affect Distance Field Lighting on the bush type only. Leave it off for types that are like grass.",
+   "Sculpt the ground under some bushes again so that they float. Select those instances, move them above the ground, and press End to snap them down and attach them again.",
+   "If the map uses World Partition, find Instanced Foliage Grid Size in Project Settings and note the default value."
+  ]
+ }
+}

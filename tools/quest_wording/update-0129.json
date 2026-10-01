@@ -1,0 +1,127 @@
+{
+ "LDQ89": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a blockout level of your own, or make a new level with a corridor and one room built from cubes.",
+   "Place 6 Point Lights or Spot Lights in the corridor. Set the Mobility of all of them to Stationary.",
+   "In the viewport, open the View Mode menu, then Optimization Viewmodes, and choose Stationary Light Overlap. Find the lights that show a red X, which means too many Stationary lights overlap there.",
+   "Fix the overlap. Change some lights to Movable, or move the lights further apart, until no red X is left.",
+   "Pick one light that only marks a door. Set it to Movable and turn off Cast Shadows. Read the Movable Lights page that is linked on this quest, find what it says about the cost of a Movable light with and without shadows, and note it.",
+   "Write 3 lines in a text note inside the level, with a Text Render or a note actor. Say which light is Static, which is Stationary, which is Movable, and why."
+  ]
+ },
+ "LDQ90": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a new level, build a small interior from cubes with one door to the outside. Light the level with one Directional Light and one Sky Light.",
+   "Walk inside. Note the places where the room goes fully black and the player cannot see the layout.",
+   "Add a Post Process Volume that covers the room and name it PPV_Interior. In its Details panel, go to Global Illumination and enable the overrides under Lumen Global Illumination.",
+   "Raise Skylight Leaking a little, until you can see the corners. Then try Diffuse Color Boost, and keep it below 2.",
+   "Turn the sun off and on again, and measure how long the room takes to update. Then raise Final Gather Lighting Update Speed and compare.",
+   "Test Max Trace Distance with a low value and look for light that leaks through walls. Then set it back to a safe value.",
+   "Write a short note with the 3 values you kept and why you kept them."
+  ]
+ },
+ "LDQ91": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a new level, build a bright yard that leads into a dark tunnel, both from cubes. Keep one Directional Light and one Sky Light in the level.",
+   "Place two Post Process Volumes named PPV_Yard and PPV_Tunnel. Keep Infinite Extent turned off, and scale each box to fit its area.",
+   "In PPV_Tunnel, set Exposure Compensation to a higher value so that you can see inside the tunnel. Set Priority so that the tunnel volume wins in the places where the two volumes overlap.",
+   "Set a Blend Radius on both volumes, which makes the change gradual, and walk through the transition in PIE. Then adjust Speed Up and Speed Down, which control how fast the exposure adapts.",
+   "In the viewport, open Show, then Visualization, and enable HDR (Eye Adaptation). Read the value of Average Scene EV100 in each area.",
+   "Turn on Local Exposure in the tunnel volume (under Lens, then Local Exposure). Compare how the door opening looks with and without it."
+  ]
+ },
+ "LDQ92": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a dim room from cubes, with a cube as a table. Place a key prop on the table. Any small mesh works, such as a small cylinder or cone. Set its mobility to Movable.",
+   "Add a Spot Light named SL_KeyHighlight and aim it at the key. Its mobility can be Stationary or Movable.",
+   "Select the light. In the Details panel, open the Light category, then Advanced, and find Lighting Channels. Turn off Channel 0 and turn on Channel 1.",
+   "Select the key mesh. In the Lighting category, find Lighting Channels and turn on Channel 1.",
+   "Check that the table and the walls stay dim while the key is lit. If any other mesh also lights up, fix its channels.",
+   "Test the reverse: set the key back to Static mobility and note what happens."
+  ]
+ },
+ "LDQ93": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a material named M_GuideStrip. Add a scalar parameter named Brightness, multiply it by a color, and connect the result to Emissive Color. Then make a Material Instance of it named MI_GuideStrip.",
+   "Build a dark corridor from cubes with at least one junction where the player must choose a direction. Place thin strip meshes, for example cubes scaled to be long and flat, along the correct route, on the edge of the floor or as a band on the wall. Apply MI_GuideStrip to them.",
+   "Set Brightness to 1, then 5, then 20. Note at which value the strip starts to glow, and at which value it starts to throw light on the floor.",
+   "Select one small strip. In the Details panel, enable Emissive Light Source, and compare the light it throws with a strip that has this option off.",
+   "In a Post Process Volume, adjust the Threshold and Intensity of Bloom until the strips glow but the white walls do not.",
+   "Walk the route in PIE from the start. Confirm that you can see the strips from each decision point, which is each place where the player must choose a direction."
+  ]
+ },
+ "LDQ94": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In a new level, build a space from cubes with a high walkway, a low pit and a doorway as the exit. Place an Exponential Height Fog actor, which you find in the Place Actors panel under Visual Effects.",
+   "Move the actor up or down (on the Z axis) and adjust Fog Density and Fog Height Falloff until the pit is foggy and the walkway is clear.",
+   "Enable Second Fog Data and give it a Fog Height Offset, so that a thin second layer of fog sits only in the pit.",
+   "Set Start Distance so that the area right in front of the player stays clear. Read the Exponential Height Fog page that is linked on this quest, find what it says about Start Distance and performance, and note it.",
+   "Enable Volumetric Fog on the fog actor. Aim a Spot Light through a doorway and raise its Volumetric Scattering Intensity, so that the beam marks the exit.",
+   "If any flickering light leaves trails in the fog, set its Volumetric Scattering Intensity to 0."
+  ]
+ },
+ "LDQ95": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a blockout level that has a route and one landmark. If you have none, create a new Empty Level and build a floor, a short route of cubes and one tall landmark. Then open Window > Env. Light Mixer.",
+   "Use the toolbar of the mixer to add a Sky Light, two Atmosphere Lights (one for the sun and one for the moon), and a Sky Atmosphere.",
+   "Set Property Details to Normal to see more settings. Adjust the sun for a day look, and save a viewport bookmark that looks at the landmark so you can return to the same view.",
+   "Rotate the sun below the horizon and raise the brightness of the moon light. Make a night look in which the player can still see the route.",
+   "On the Sky Light, enable Real Time Capture. Compare how the lighting on the landmark updates when you rotate the sun.",
+   "Write a note of 3 lines that says which Sky Light mobility you used and why."
+  ]
+ },
+ "LDQ96": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a new level, build a wet corridor from cubes. It needs a floor with a low-roughness material (a smooth, shiny one, for example a simple material with Roughness set to 0.1), one turn, and a lit exit.",
+   "Place one large Sphere Reflection Capture for the corridor, and smaller ones at the turn and at the exit.",
+   "Switch to the Reflection Override view mode and check the seams where one capture ends and the next begins. Move the captures away from walls.",
+   "Use the Lit view, and in the Show menu open Lighting Components and turn Specular off. This shows you what the captures see.",
+   "Open the Build menu and run Build Reflection Captures. Compare the floor before and after.",
+   "Confirm in PIE that the bright exit is reflected on the floor when you stand at the start of the corridor."
+  ]
+ },
+ "LDQ97": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Open a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Create a PCG graph named PCG_RockField. In it, connect these nodes in a chain: Get Landscape Data, then Surface Sampler, then Transform Points, then Static Mesh Spawner.",
+   "In Transform Points, set Max Rotation Z to 360 and enable Absolute Rotation. Set Scale Min to 0.5 and Scale Max to 1.2.",
+   "In Static Mesh Spawner, add two Mesh Entries: a big rock with Weight 3 and a small rock with Weight 1. The rock from the Props folder of the Starter Content works for the first one, and any smaller mesh works for the second. A higher weight means the mesh is picked more often.",
+   "Open Graph Settings and add a float Parameter named PointsPerSqm. Connect it to the Points Per Square Meter override pin on the Surface Sampler.",
+   "Place a PCG Volume over the landscape, assign PCG_RockField to it, and click Generate. Then change PointsPerSqm in the Details panel and watch the result update.",
+   "Select the PCG component and click Save Instance. Name the instance PCGI_RockField_Dense and give it a higher PointsPerSqm.",
+   "In the graph, select the Surface Sampler and press D to see its debug points in the viewport. Then select the Transform Points node, press A to inspect it, and read the Attributes list."
+  ]
+ },
+ "LDQ98": {
+  "done_when": "Send one screenshot of the PCG mode panel with your Fence preset button visible, and one PIE screenshot that shows at least two fences drawn with the tool along the route.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Work in a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Create an Actor Blueprint named BP_FenceLine. Add a Spline component and a PCG component to it.",
+   "Create a PCG graph named PCG_FenceLine. Connect these nodes in a chain: Get Spline Data, then Spline Sampler (set to sample on the spline), then Transform Points, then Static Mesh Spawner with a fence panel mesh. A cube that you scale into a thin panel works as the fence mesh.",
+   "Assign PCG_FenceLine to the PCG component of BP_FenceLine. Place the actor in the level and move its spline points. Confirm that the fence follows the spline.",
+   "Open Graph Settings and find Tool Data. Set Display Name to Fence, add SplineTool to Compatible Tool Tags, and enable Is Preset.",
+   "Switch the editor mode to PCG. With nothing selected, pick the Draw Spline tool, choose the Fence preset, and draw a second fence on the landscape. Then click Apply.",
+   "In Raycast Rules, enable Landscape and Ignore PCG Components. Draw a third fence that crosses the first one, and confirm that it does not snap onto the fence meshes.",
+   "Walk through the level in PIE along a route that you choose. Adjust the spline so that the fence guides the player but does not block the route."
+  ]
+ },
+ "LDQ99": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Work in a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode, and decide where the main route runs across it. Create a PCG graph named PCG_Scatter_Route. Start with a Get Landscape Data node connected to a Surface Sampler node.",
+   "Place two Volumes, for example Trigger Volumes, over the main route and give them the actor tag KeepOut. In the graph, add a Get Volume Data node and set its Actor Filter to find actors by the tag KeepOut.",
+   "Add a Difference node. Connect the sampler points to Source and the volumes to Differences. Set Density Function to Binary, which removes the points inside the volumes completely.",
+   "Add a Density Noise node, which gives each point a random density. Then add a Density Filter that keeps only the points with a density between 0.5 and 1.0.",
+   "Add a Self Pruning node set to Large to Small, which removes points that overlap. Add a Bounds Modifier before it, and test how changing the bounds changes the pruning.",
+   "Finish the graph with a Static Mesh Spawner that uses two bush meshes. The bush from the Props folder of the Starter Content works, together with any other small mesh. Place a PCG Volume over the landscape, assign the graph and click Generate. Check in PIE that the route stays clear."
+  ]
+ },
+ "LDQ100": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. You need a landscape that has at least three painted layers: Grass, Rock and Path. If you have none, make a material with a Landscape Layer Blend node that has these three layers, each with its own color, create a Landscape with this material, and create a layer info object for each layer on the Paint tab. Paint the Path layer along a route across the landscape, and paint some Grass and some Rock areas.",
+   "Create a PCG graph named PCG_Biome. Add a World Ray Hit Query node and enable Apply Metadata From Landscape, so that the points know which layers are painted under them. Connect it to a Surface Sampler.",
+   "Add an Attribute Filter on the attribute of the Grass layer, and keep values above 0.5. Spawn bushes from its Inside pin.",
+   "Add a second Attribute Filter on the attribute of the Rock layer. Spawn boulders from its Inside pin.",
+   "Add a Normal To Density node before the boulders, so that steep slopes get fewer boulders.",
+   "Add a Spatial Noise node. Use its attribute with a Match And Set Attributes node to choose between two bush meshes.",
+   "Paint part of the Path layer again in a new place and click Generate again. Confirm that the route stays empty."
+  ]
+ }
+}

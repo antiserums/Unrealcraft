@@ -1,0 +1,838 @@
+{
+ "AQ16": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the mannequin Skeleton asset. In the Skeleton Tree, right-click the bone hand_r and choose Add Socket. Name the socket hand_rSocket.",
+   "In the Viewport menu, go to Character, then Bones, and enable Sockets so that you can see the socket. Move and rotate the socket until it sits in the palm of the hand. Save the Skeleton.",
+   "Right-click the socket, choose Add Preview Asset, and pick a simple prop mesh such as a cube or a cylinder. Adjust the socket until the prop looks like the hand is holding it.",
+   "In BP_ThirdPersonCharacter, add a Static Mesh component that uses the same prop. Drag it onto the Mesh component to make it a child of the Mesh. Then set its Parent Socket property to hand_rSocket.",
+   "In the Event Graph, add a key press event that calls Attach Component To Component (or Detach From Component). Give it the socket name and use the Snap to Target rules. Test it in Play mode.",
+   "Copy the socket, select the bone hand_l, and use Paste Sockets To Selected Bone. Compare the two sockets."
+  ]
+ },
+ "LDQ26": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_SoundDoor with a cube mesh in the shape of a door, a Box Collision, and an Instance Editable boolean (true or false) variable named IsLocked. If you already have a door or lever Blueprint, you can use that instead.",
+   "On the Begin Overlap event of the Box Collision, add a Branch on IsLocked. After each output of the Branch, add a Play Sound at Location node. Pick a sound in its Sound pin and connect Get Actor Location to its Location pin. If you have no sound files, the engine has a few short sounds, for example CompileSuccess and CompileFailed. If they do not show in the list, click the settings icon of the list and turn on Show Engine Content. You can also add an Audio Component and call Play on it.",
+   "Use one sound for when the door is locked and a different sound for when it opens. Place two copies in the level, one locked and one not, and test both in PIE."
+  ]
+ },
+ "LDQ35": {
+  "quiz": [
+   {
+    "q": "Where should cover heights come from?",
+    "choices": [
+     "Your character's measured capsule and eye height",
+     "Whatever looks nice",
+     "The engine default grid size",
+     "The size of the default cube"
+    ],
+    "explain": "Cover works only if it matches the character. Measure, then build to those numbers."
+   },
+   {
+    "q": "How do you measure a distance quickly in the editor?",
+    "choices": [
+     "Count grid squares on screen",
+     "Middle-mouse drag in an orthographic viewport",
+     "Use Print String",
+     "Open the Outliner"
+    ],
+    "explain": "The orthographic ruler shows the length in units (cm) as you drag."
+   },
+   {
+    "q": "How can you check exactly what an enemy position can see?",
+    "choices": [
+     "Lower the light intensity",
+     "Hide all cover",
+     "Place a camera at enemy eye height and pilot it, or bookmark that view",
+     "Turn on wireframe"
+    ],
+    "explain": "Look from the enemy's eye height, not the editor camera's."
+   },
+   {
+    "q": "Cover is 110 cm tall and your standing player can't see over it. What's wrong?",
+    "choices": [
+     "Nothing",
+     "The NavMesh",
+     "The lighting",
+     "That piece is taller than your character's standing view line, so it acts as full cover"
+    ],
+    "explain": "If players can't see over it, it's full cover. Decide which you want and build to that height."
+   },
+   {
+    "q": "Why write engagement distances down?",
+    "choices": [
+     "Epic requires it",
+     "So spacing stays consistent across encounters and other people can tune against it",
+     "It saves memory",
+     "It speeds up NavMesh building"
+    ],
+    "explain": "Written metrics are what let a team build spaces that play the same way."
+   }
+  ]
+ },
+ "CQ24": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a sequence that has a character and at least 2 shots. To make one, drag SKM_Manny_Simple from the folder Characters/Mannequins/Meshes into the level, click Cinematics in the main toolbar, choose Add Level Sequence with Shots with 2 shots, add a camera to each shot, and add the mannequin from the level to the master sequence. Add an Audio Track with Track (+) and drop a music Sound Wave at frame 0. To get one, drag a .wav file of your own into the Content Browser. For a first test any Sound Wave works, for example the engine sound WhiteNoise. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Add a second Audio Track for a footstep sound or a door sound. Trim its edges, and drag its end past the length of the clip so that it loops.",
+   "Drag the upper corners of the music section to make a fade in and a fade out. Then make two clips overlap and adjust the crossfade handles.",
+   "Expand the sound-effect track and set Attach to the character. Right-click the section, open Properties, and set an Attenuation Settings asset, which makes the sound quieter with distance. Move the camera away and listen to how the sound gets quieter.",
+   "Use Start Frame Offset (hold Shift and drag) to slide the sound inside its section, so that it lands exactly on the frame of the footstep.",
+   "Add the sequence to Movie Render Queue as a job (Window > Cinematics > Movie Render Queue). Add the WAV Audio export and a .png Sequence export to the job, and render 5 seconds."
+  ]
+ },
+ "CQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Import 3 short footstep .wav files by dragging them into the Content Browser. You can record three taps with a phone, or get free footstep sounds from Fab. For a first test, three short engine sounds also work, such as CompileSuccess, CompileFailed and 1kSineTonePing. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Create a Sound Cue named SC_Footsteps with Add, then Sounds, then Sound Cue.",
+   "In the Sound Cue Editor, add a Random node. Click Add input until it has 3 pins and connect one Wave Player to each pin. Enable Randomize Without Replacement, which plays all sounds once before any sound repeats.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9 and Pitch Max to 1.1. Keep Volume Min and Volume Max at the same value.",
+   "Create a Sound Attenuation asset named SA_Footsteps, which controls how the sound gets quieter with distance. Set Attenuation Function to Logarithmic, Shape to Sphere, Inner Radius to 200 and Falloff Distance to 1500. Add an Attenuation node before the Output node and set it to SA_Footsteps.",
+   "Press Play Cue several times. Watch the wires turn red and check that a different footstep plays each time.",
+   "Open a Level Sequence with a character, or make one: drag SKM_Manny_Simple into the level, create a Level Sequence, add the actor, and click the Camera button to add a camera. Under the character track, add SC_Footsteps to an Audio Track, so that the sound is attached to the character. Drag the playhead through the sequence and listen while the camera moves away."
+  ]
+ },
+ "CQ72": {
+  "checklist": [
+   "Create a project from the First Person template, or open one. Epic's guide uses sounds from the Starter Content, which current engine versions no longer include, so you use sounds of the engine. To see them, open the Settings menu of the Content Browser and turn on Show Engine Content. Click Add, then Audio, then MetaSound Source, and name the asset MSS_Bomb.",
+   "Click the Source button. In Attenuation Settings, create a new Sound Attenuation asset named SA_Bomb.",
+   "Build the graph. Drag from the On Play input and create a Wave Player (Mono) node. Set its Wave Asset to the engine sound WhiteNoise and turn on Loop. This is the sizzle. Connect its Out Mono pin to a Mono Mixer (2) node, and connect the Out pin of the mixer to the Out Mono output. Add a second Wave Player (Mono) for the explosion, and connect its Out Mono pin to the second input of the mixer and its On Finished pin to the On Finished output. Add a Random Get (WaveAsset:Array) node and connect its Value pin to the Wave Asset pin of the second Wave Player. Connect its On Next pin to the Play pin of the second Wave Player and to the Stop pin of the first one, so that the sizzle stops when the explosion starts. Drag from its In Array pin, choose Promote to Graph Variable, and add two short sounds to the array. Two explosion .wav files that you import are best. For a first test, the engine sounds CompileSuccess and CompileFailed work.",
+   "Drag from the Next pin of the Random Get node, choose Promote to Graph Input, and rename the new input Explode. Play the MetaSound and press the Execute arrow on the Explode node to hear the random explosion.",
+   "Make an Actor Blueprint named BP_Bomb with a Sphere component. From Event BeginPlay, call Set Life Span with 3 seconds, then call Spawn Sound Attached with MSS_Bomb, attach it to the Sphere, and promote its Return Value to a variable. From Event Destroyed, call Execute Trigger Parameter on that variable with In Name set to Explode. Place BP_Bomb in the level and test it in Play In Editor: you hear the sizzle, and after 3 seconds the bomb disappears and you hear one of the two sounds. Epic's guide does the same in the projectile Blueprint of an older First Person template.",
+   "Create MSS_Wind. Remove the UE.Source.OneShot interface and set Output Format to Stereo. Build a graph that goes from Noise to a One-Pole Low Pass Filter to a Stereo Mixer. Put an LFO on the cutoff (0.1 Hz, range 20 to 80), and put a float input named PawnSpeed on the gain.",
+   "In the Level Blueprint, call Spawn Sound 2D with MSS_Wind on BeginPlay. On Tick, take the length of the pawn velocity, pass it through Map Range Clamped (200 to 1000 into 0 to 1), and send it to Set Float Parameter with the name PawnSpeed."
+  ]
+ },
+ "GDQ50": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create two Widget Blueprints named WBP_CustomButton and WBP_MenuHUD.",
+   "In WBP_CustomButton, add a Button. Right-click it and choose Wrap With, then Size Box. On the Size Box, set Width Override to 300 and Height Override to 100.",
+   "In the graph, on Event Construct, call Set Style on the Button and promote the style input to a variable named ButtonStyle. In that variable, choose an image for Normal, for example any texture of the template or the engine, copy it to Hovered and Pressed, and give Hovered a tint.",
+   "Set ButtonStyle to Instance Editable and Expose on Spawn. Add an Event Dispatcher named ButtonClicked, and call it from the OnClicked event of the Button.",
+   "In WBP_MenuHUD, add a Vertical Box. From the Palette, under User Created, add three WBP_CustomButton widgets to it. Bind the ButtonClicked event of each button to a different Print String.",
+   "In the Level Blueprint, on BeginPlay, add a Create Widget node with WBP_MenuHUD, call Add to Viewport, and use Set Show Mouse Cursor with the value true. Press Play and click each button."
+  ]
+ },
+ "GDQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Import three short impact sounds as .wav files by dragging them into the Content Browser. You can record them with a phone or get free sounds from Fab. For a first test, three short engine sounds also work, such as CompileSuccess, CompileFailed and 1kSineTonePing. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Create a Sound Cue named SC_Hit. Add a Random node with the three waves as inputs. Set the Weights so that one wave is chosen twice as often as the others.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9, Pitch Max to 1.1, Volume Min to 0.8 and Volume Max to 1.0. Connect it to the Output node.",
+   "Add a Switch node before the Output node and set Int Parameter Name to Surface. Connect your SC_Hit chain to input 0 and a different wave for metal to input 1. In a Blueprint, play the cue with Spawn Sound at Location. Then call Set Integer Parameter with In Name Surface on the Audio Component that the node returns.",
+   "On the Output node, enable Override Concurrency and set Max Count to 3. Trigger the hit 10 times quickly, and compare what you hear with Max Count 1.",
+   "Make a MetaSound Source named MSS_Hit that plays a Wave Player when a Trigger Input named Impact fires. In a Blueprint, use Spawn Sound Attached and then Execute Trigger Parameter with In Name Impact.",
+   "Write 3 sentences that say what the Random node, the Modulator node and the Switch node each changed in how the hit sounds."
+  ]
+ },
+ "LDQ54": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a World Partition level: create one with File, New Level, Open World if you have none. In the Content Drawer, click + Add, open Miscellaneous, and choose HLOD Layer. Name it HLOD_Rocks and set its Layer Type to Merged Mesh.",
+   "Make a second HLOD Layer named HLOD_Trees and set its Layer Type to Instancing.",
+   "Place 20 rock meshes and 20 tree meshes far away from the player start. Stand-ins are fine: a sphere can stand in for a rock and a cone for a tree. You find both in the Place Actors panel under Shapes. Set the Mobility of all of them to Static.",
+   "Select the rocks and, in the Details panel, set their HLOD Layer property to HLOD_Rocks. Do the same for the trees with HLOD_Trees.",
+   "Open the Build menu and run Build HLODs. Wait until the build is finished.",
+   "In the viewport view mode menu, open Level of Detail Coloration and choose Hierarchical LOD Coloration. Move the camera close to the actors, where they are drawn green, and then far away, where the proxy is drawn blue.",
+   "Start Play In Editor and walk far away. Open the console and run the command wp.Runtime.ToggleDrawRuntimeHash2D to see which HLOD cells are loaded."
+  ]
+ },
+ "LDQ55": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a Landscape with a slope, or make one: create a new level, enter Landscape mode, choose New on the Manage tab, and raise a hill with the Sculpt tool. Press Shift+3 to enter Foliage mode.",
+   "Drag two Static Meshes from the Content Drawer into the Mesh List, for example SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template (any assets are fine). This creates a Static Mesh Foliage type for each mesh.",
+   "Select the Paint tool. Set Brush Size to 512 and Paint Density to 0.3. Paint both foliage types across a slope.",
+   "Hold Shift and paint to erase foliage. Clear a path through the foliage that is wide enough for a player.",
+   "In Filters, turn off Landscape and turn on Static Mesh. Try to paint on the landscape and note what happens.",
+   "Select the bush type and change Scale Min and Scale Max. Then use the Reapply tool to paint the new scale onto bushes that are already placed.",
+   "In the Foliage Details, set an End Cull Distance and a Start Cull Distance for the bush. These are the distances at which the bushes fade out and stop being drawn. Start Play In Editor and walk away to watch them disappear."
+  ]
+ },
+ "LDQ97": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Open a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Create a PCG graph named PCG_RockField. In it, connect these nodes in a chain: Get Landscape Data, then Surface Sampler, then Transform Points, then Static Mesh Spawner.",
+   "In Transform Points, set Max Rotation Z to 360 and enable Absolute Rotation. Set Scale Min to 0.5 and Scale Max to 1.2.",
+   "In Static Mesh Spawner, add two Mesh Entries: a big rock with Weight 3 and a small rock with Weight 1. If you have no rock meshes, any two meshes work as stand-ins, for example SM_ChamferCube and SM_Cylinder from the folder LevelPrototyping/Meshes of the template. A higher weight means the mesh is picked more often.",
+   "Open Graph Settings and add a float Parameter named PointsPerSqm. Connect it to the Points Per Square Meter override pin on the Surface Sampler.",
+   "Place a PCG Volume over the landscape, assign PCG_RockField to it, and click Generate. Then change PointsPerSqm in the Details panel and watch the result update.",
+   "Select the PCG component and click Save Instance. Name the instance PCGI_RockField_Dense and give it a higher PointsPerSqm.",
+   "In the graph, select the Surface Sampler and press D to see its debug points in the viewport. Then select the Transform Points node, press A to inspect it, and read the Attributes list."
+  ]
+ },
+ "LDQ99": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Work in a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode, and decide where the main route runs across it. Create a PCG graph named PCG_Scatter_Route. Start with a Get Landscape Data node connected to a Surface Sampler node.",
+   "Place two Volumes, for example Trigger Volumes, over the main route and give them the actor tag KeepOut. In the graph, add a Get Volume Data node and set its Actor Filter to find actors by the tag KeepOut.",
+   "Add a Difference node. Connect the sampler points to Source and the volumes to Differences. Set Density Function to Binary, which removes the points inside the volumes completely.",
+   "Add a Density Noise node, which gives each point a random density. Then add a Density Filter that keeps only the points with a density between 0.5 and 1.0.",
+   "Add a Self Pruning node set to Large to Small, which removes points that overlap. Add a Bounds Modifier before it, and test how changing the bounds changes the pruning.",
+   "Finish the graph with a Static Mesh Spawner that uses two bush meshes. If you have none, any two small meshes work as stand-ins, for example SM_ChamferCube and SM_Cylinder from the folder LevelPrototyping/Meshes of the template. Place a PCG Volume over the landscape, assign the graph and click Generate. Check in PIE that the route stays clear."
+  ]
+ },
+ "LDQ101": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Decide where the main route runs across it and where a combat space is, and mark both with a few cubes. Open Edit > Editor Preferences, go to the Experimental section, and enable Procedural Foliage.",
+   "Create a Procedural Foliage Spawner asset named PFS_Forest. Place it over the landscape and scale it so that it covers the play area.",
+   "Create two Static Mesh Foliage assets named FT_Tree_A and FT_Tree_B and give each one a mesh. If you have no tree meshes, SM_Cylinder and SM_QuarterCylinder from the folder LevelPrototyping/Meshes of the template can stand in for two kinds of tree. Add both to the Foliage Types array of PFS_Forest.",
+   "On FT_Tree_A, set Num Steps to 3, Initial Seed Density to 0.25 and Shade Radius to 50. On FT_Tree_B, set Overlap Priority to 1 and enable Spawns in Shade.",
+   "For both types, enable Align to Normal and Random Yaw under Placement. Then click Resimulate on the spawner to grow the forest.",
+   "Place one Procedural Foliage Blocking Volume over the main route and one over the combat space. Click Resimulate again.",
+   "Walk the route in PIE. Note any tree that still blocks a view the player needs, and fix it with the blocking volume."
+  ]
+ },
+ "EAQ11": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape with a path on it. If you have none, create a new level, open Landscape Mode, choose New on the Manage tab, and sculpt one hill with a path up to it. Open Foliage Mode and add two foliage types: one bush, and one small grass mesh or rock mesh. Free foliage from Fab works well. For a first test, SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template work as stand-ins.",
+   "Paint both types along the edges of the path. Hold Shift and paint to erase anything that lands on the path.",
+   "Open the bush foliage type and lower its Density. Stop when you can still see clearly where the edges of the path are.",
+   "Set the Collision Preset of the grass type to NoCollision, so that the player walks through it.",
+   "Walk the path in PIE. Nothing on the path should stop you or catch you."
+  ]
+ },
+ "LDQ6": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level, open Landscape Mode and choose New on the Manage tab. Decide where a path runs across it. Open Edit > Plugins, enable the Procedural Content Generation Framework (PCG) plugin and restart the editor. Right-click in the Content Browser, open PCG and choose PCG Graph. The graph holds the rules. Then drag a PCG Volume from the Place Actors panel onto the landscape, and set Graph on its PCG component in the Details panel. The volume is the box that marks where the graph works.",
+   "Open the graph. Add a Get Landscape Data node, a Surface Sampler node and a Static Mesh Spawner node, and connect them in that order. In the Static Mesh Spawner, add one entry under Mesh Entries and pick one rock mesh. If you have none, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in. Select the PCG Volume and click Generate in the Details panel. The rocks appear on the landscape inside the volume.",
+   "Move the volume away from the path, so that the scattered rocks do not block it."
+  ]
+ },
+ "LDQ8": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a goal and at least one room. If you have none, block out a quick one in a new level: a start, a goal about 40 m away, and one closed room on the way. Drag a looping sound from the Content Browser into the level, near the goal. This creates an Ambient Sound actor. You can import a .wav file of your own, open it and turn on Looping. If you have none, use the engine sound WhiteNoise. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Select the Ambient Sound actor. In the Details panel, under Attenuation, turn on Override Attenuation. Set Inner Radius and Falloff Distance so that the player can hear the sound from the start, and so that it is louder near the goal.",
+   "In the Place Actors panel, open Volumes and drag an Audio Volume around one room. In its Details panel, under Reverb, turn on Apply Reverb and pick a Reverb Effect. Walk into the room in PIE and listen to the change."
+  ]
+ },
+ "EAQ41": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a level with a floor. Create a material named M_LF_Caustic. Open it, and in the Details panel set Material Domain to Light Function.",
+   "Add a tiling noise texture or caustic texture, and make it move with a Panner node. Any tiling grayscale texture works, for example the engine textures T_Default_MacroVariation or Good64x64TilingNoiseHighFreq. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Connect the result to Emissive Color. Keep the values between 0 and 1.",
+   "Place a Spot Light with Mobility set to Movable and aim it at a floor. In the Details panel of the light, assign M_LF_Caustic to Light Function Material.",
+   "Change the X and Y values of Light Function Scale until the size of the pattern looks right. Also note what the Z value does.",
+   "Set Fade Distance so that the pattern fades out far from the camera. Then set Disabled Brightness to the average brightness of your pattern, so the light does not jump in brightness when the pattern fades.",
+   "Place an Exponential Height Fog, enable Volumetric Fog on it, and see the pattern appear in the fog.",
+   "Open the console and run ShowFlag.VisualizeLightFunctionAtlas 1. Check if your material appears in the atlas, which is one shared texture where Unreal stores light functions."
+  ]
+ },
+ "EAQ45": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a simple prop: your own mesh with a name that starts with SM_, or SM_Door of the template (search for its name in the Content Browser). Duplicate it, so that the original stays unchanged, and open the copy in the Static Mesh Editor.",
+   "In the Collision menu, add a Box Simplified Collision. Then add a Sphere Simplified Collision and see that both shapes now exist. Use Remove Collision to delete them.",
+   "Open a copy of a prop with a less simple shape, for example SM_Ramp or SM_QuarterCylinder from the folder LevelPrototyping/Meshes of the template. Try 10-DOP, 18-DOP and 26-DOP from the Collision menu and look at how the shapes differ.",
+   "Try Auto Convex Collision, which builds the collision from several simple shapes called hulls. Change Hull Count and Max Hull Verts, click Apply, and compare the result.",
+   "Build a collision by hand. Add a Box Simplified Collision, then move and scale it to fit one part of the prop. Duplicate it with Ctrl + D and fit the copies to the other parts.",
+   "Place the prop in a level, set Simulate Physics to true, and press Play. Then change the Collision Preset and see what changes."
+  ]
+ },
+ "EAQ48": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Project Settings, then Engine, then Rendering. Note whether Dynamic Global Illumination is set to Lumen, and whether Allow Static Lighting is turned on.",
+   "Open a prop whose name starts with SM_ in the Static Mesh Editor, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template. In the Details panel, expand LOD0 and then Build Settings. Find Generate Lightmap UVs, Min Lightmap Resolution, Source Lightmap Index and Destination Lightmap Index.",
+   "Set Min Lightmap Resolution to 64 and click Apply Changes. Then use the UV button in the toolbar to view the lightmap UV channel.",
+   "Under General Settings, check that Lightmap Resolution and Lightmap Coordinate Index match the channel you generated.",
+   "Write three lines that answer these questions: does this project bake its lighting or use Lumen, and does this prop need a lightmap UV at all?"
+  ]
+ },
+ "EAQ49": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a material named M_Blend2 that blends two textures with a Lerp node, and use the alpha of a Vertex Color node to control the blend. Any two textures that look different work, for example T_Quinn_01_D from the folder Characters/Mannequins/Textures/Quinn and T_GridChecker_A from LevelPrototyping/Textures. Place a mesh with many vertices in the level, for example a Sphere made in Modeling Mode with a high number of subdivisions, and apply the material to it.",
+   "Enter Mesh Paint mode. Choose the Vertex Weight paint method, and set Texture Weight Type to Alpha (Two Textures).",
+   "Set Paint Texture Weight Index to the second texture and paint dirt or moss on the lower part of the prop. Use Ctrl + [ and Ctrl + ] to make the brush smaller or larger.",
+   "Use Color View Mode to look at the Alpha channel. This shows you exactly where you painted.",
+   "Click To LODs so that the paint is copied to all LOD levels, which are the simpler versions of the mesh used at a distance. Then click Save.",
+   "Duplicate the prop. Use Copy on the painted prop and Paste on the new copy to move the paint across."
+  ]
+ },
+ "EAQ50": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a small test level that has a floor, a sloped ramp (a cube that you rotate) and a table, which can be a cube that you scale flat and lift off the floor.",
+   "In the toolbar of the Level Viewport, enable Surface Snapping and Rotate to Surface Normal. Drag five small props onto the ramp and see how they tilt to match the slope. Small cubes, cylinders and cones from the Place Actors panel work as props.",
+   "Set Surface Offset to 5 and place one prop, so you can see the small gap it creates. Then set Surface Offset back to 0.",
+   "Select a prop that floats in the air and press End. Watch it drop to the nearest surface below it.",
+   "Hold V and drag one prop so that its pivot snaps to a vertex of the table. A vertex is a corner point of a mesh.",
+   "In Modeling Mode, open Xform, then Edit Pivot, and move the pivot of a prop to Bottom. Then place the prop again with surface snapping."
+  ]
+ },
+ "EAQ51": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a level, arrange a small group of props that uses only Static Meshes. For example, build a table and two chairs from scaled cubes, and add a cylinder as a lamp.",
+   "Select all the actors and right-click one of them. Go to Level and choose Create Packed Level Actor. Set Pivot Type to Center Min Z, click Ok, and save it as BP_Kit_TableSet.",
+   "Drag three more copies of BP_Kit_TableSet into the level and rotate them.",
+   "Edit the Packed Level Actor: click Edit in the Outliner and move one chair. Then commit the change and see all copies update.",
+   "Select another group of the same kind, and this time use Create Level Instance to make a Level Instance. Note how it looks different in the Outliner.",
+   "Use the Break option on one instance and see the original actors come back."
+  ]
+ },
+ "EAQ58": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_Glass. Set Blend Mode to Translucent. Under Translucency, set Lighting Mode to Surface TranslucencyVolume so that the Refraction pin appears.",
+   "Add a Scalar Parameter named Opacity with the value 0.3 and connect it to Opacity. Add a Scalar Parameter named IOR with the value 1.52. Use a Fresnel node to drive a Lerp between 1.0 at the center and IOR at the edges, and connect the result to Refraction.",
+   "Create a Material Instance named MI_Glass and apply it to a sphere in front of a wall with a pattern, for example a cube with the grid material MI_PrototypeGrid_Gray of the template. Try IOR 1.0, 1.33, 1.52 and 2.42, and take a screenshot of each.",
+   "Add a Normal Map texture parameter and connect it to Normal. Any normal map works, for example T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template. See how the refraction breaks up.",
+   "Find Refraction Depth Bias in the Details panel of the material. Try a small value while you look at a close object through the glass.",
+   "This step is optional. Duplicate the material as M_Glass_Thin, and set Shading Model to Thin Translucent and Lighting Mode to Surface ForwardShading. Compare the highlights."
+  ]
+ },
+ "EAQ60": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Prepare three image files for one surface: a color image, a normal image and a roughness image, with a power-of-two size such as 1024x1024, saved as .png or .tga files. If you have none, export them from Unreal: in the folder Characters/Mannequins/Textures/Quinn of the template, right-click T_Quinn_01_D (color), T_Quinn_01_N (normal) and T_Quinn_01_MRA (a mask texture), choose Asset Actions, then Export, and save each one as an image file.",
+   "Also prepare one image whose size is not a power of two, for example 1000x700. A cropped screenshot or photo works.",
+   "Import all four images with the Import button in the Content Browser, or drag them in from your file explorer. Name them T_Wood_BC, T_Wood_N, T_Wood_R and T_Test_NPOT.",
+   "Double-click T_Wood_BC to open the Texture Asset Editor. In the Details panel, read the values Imported, Displayed, Max In-Game and Number of Mips.",
+   "Enable the Mip Level checkbox in the toolbar and step through the mips one by one. Watch the Displayed size change.",
+   "Open T_Test_NPOT and check which value Mip Gen Settings was given at import. Write the value down."
+  ]
+ },
+ "EAQ61": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a color texture in the Texture Asset Editor, for example T_Quinn_01_D from the folder Characters/Mannequins/Textures/Quinn of the template. Find the Compression category in the Details panel.",
+   "Note the value of Compression Settings, and the Format shown in the texture information at the top. Write down the Resource Size.",
+   "Open a packed mask texture, which is a texture that stores a different mask in each color channel. The template has one named T_Quinn_01_MRA in the same folder. Duplicate it and work on the copy. Change Compression Settings to BC7 and compare the Resource Size before and after.",
+   "Open the Oodle panel. Enable On-disk Sizes and read the values Uncompressed Size and Compressed Size (Estimate).",
+   "In the Oodle panel, enable Try Encodings and test the RDO Lambda values 0, 30 and 100. Look in the viewport for artifacts, which are small errors in the image caused by compression.",
+   "Open Project Settings, then Engine, then Texture Encoding, and find the Fast and Final settings. Do not change them."
+  ]
+ },
+ "EAQ62": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a normal map. Import one of your own, or duplicate T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template. Name it T_Test_N. Open it in the Texture Asset Editor and confirm that Compression Settings is set to Normalmap.",
+   "Make a material named M_NormalTest. Connect T_Test_N to the Normal input, and apply the material to a cube in a level that has one directional light.",
+   "In the Texture Asset Editor, turn Flip Green Channel on and off and watch the cube. Note which setting makes the bumps look raised and not sunken.",
+   "Enable Normalize after making Mips. Move the camera far away from the cube and compare the surface with the setting turned off.",
+   "Open a roughness texture or another grayscale texture, for example a copy of T_Quinn_01_MRA from the same folder. Set Composite Texture to T_Test_N and set Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power at 1 and at 4."
+  ]
+ },
+ "EAQ63": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and work in a level with a wall. Create a material named M_Decal_Crack. In the Details panel, set Material Domain to Deferred Decal and Blend Mode to Translucent.",
+   "Add a crack texture or a dirt texture to the graph. If you have none, use any texture with clear dark and light areas, such as T_GridChecker_A from the folder LevelPrototyping/Textures of the template, and use one of its channels as the mask. Connect its color to Base Color and its mask to Opacity. If you like, also connect a normal map to Normal.",
+   "Place a Decal Actor from the Visual Effects category of the Place Actors panel. Assign M_Decal_Crack to Decal Material, and rotate the actor so its arrow points at a wall.",
+   "Scale the Decal Actor with the scale tool, using a different amount on each axis. Watch how the projection fades at the edges of the box.",
+   "Place a second decal that overlaps the first one. Change Sort Order on one of them so that it draws on top of the other.",
+   "Put a Static Mesh inside the box of the decal and turn off Receives Decals on that mesh. Confirm that the decal no longer shows on it.",
+   "Switch the viewport to the Shader Complexity view mode. Look at the cost in the area where the two decals overlap."
+  ]
+ },
+ "EAQ64": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with several textured props. If you have none, drag about ten textured meshes into the level of the template, for example SKM_Manny_Simple and SKM_Quinn_Simple from the folder Characters/Mannequins/Meshes, several times each. Open the Build menu in the main menu bar and run Build Texture Streaming.",
+   "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips.",
+   "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change.",
+   "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green.",
+   "Type r.Streaming.PoolSize 50 in the console, play again, and look for blurry textures. Then set the value back to what it was before.",
+   "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it. Only note where it is."
+  ]
+ },
+ "EAQ68": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input.",
+   "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input.",
+   "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library.",
+   "Click Apply, and then save the asset.",
+   "Open a material of your own, or create a simple one named M_Ground with a color texture connected to Base Color, for example T_GridChecker_A of the template. Find MF_DirtMask in the Palette under your category and drag it into the graph. Give it any grayscale texture as Height, as a Texture Object, and multiply its result with the Base Color. Move the mouse over the node and check that your description appears as the tooltip.",
+   "Place a second copy in another way. Hold F and left-click in the graph to make an Unspecified Function node, and then assign MF_DirtMask to it in the Details panel.",
+   "Change something inside MF_DirtMask, for example the default value of Contrast, and click Apply. Confirm that both copies in M_Ground update."
+  ]
+ },
+ "EAQ70": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, under Materials, create a Material Layer asset named ML_Metal and another one named ML_Rust. In each one, build the surface with Set Material Attributes, and add a Vector Parameter for the color and a Scalar Parameter for the roughness.",
+   "Create a Material Layer Blend asset named MLB_Mask. In its graph, connect a mask texture parameter to the Alpha of the BlendMaterialAttributes node that is already there. Any grayscale texture with clear light and dark areas works as the mask, for example T_GridChecker_A from the folder LevelPrototyping/Textures of the template.",
+   "Create the base material and name it M_Layered. Select the Main Material Node and enable Use Material Attributes. Add a Material Attribute Layers node and connect it to the output.",
+   "Select the Material Attribute Layers node. In the Details panel, set the Background layer to ML_Metal.",
+   "Create a Material Instance named MI_Layered from M_Layered. Open it and go to the Layer Parameters tab. Add ML_Rust as a second layer and assign MLB_Mask as its blend.",
+   "In the Layer Parameters tab, override the color and the roughness of the rust layer. Click the Eye icon on the rust layer to hide and show it, and watch the metal show through.",
+   "Apply MI_Layered to a prop, such as a sphere, and take screenshots."
+  ]
+ },
+ "EAQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Right-click in the Content Browser, open Material and create a MaterialParameterCollection. Name it MPC_Scene.",
+   "Add a Scalar Parameter named Wetness with a default of 0, and a Vector Parameter named DirtTint. Save the asset.",
+   "Open two environment materials of your own. If you have none, make two simple ones, for example M_Wall and M_Floor, each with a different Base Color and a Roughness value. In each one, add a CollectionParameter node (search for 'collection'), and pick MPC_Scene and the Wetness parameter on it.",
+   "Use Wetness to lower the roughness and darken the base color, for example with a Lerp between the dry value and the wet value. Save both materials.",
+   "Apply the materials, or their instances, to different props in one level. Open MPC_Scene, change Wetness to 1, and watch every prop change at once.",
+   "In the Level Blueprint, add a Set Scalar Parameter Value node with Collection set to MPC_Scene and Parameter set to Wetness. Trigger it from a key press, then press Play and test it."
+  ]
+ },
+ "EAQ72": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_VertexBlend3 with three sets of textures, for example stone, moss and mud. Free surfaces from Fab work well. For a first test, any three textures that look different work, such as T_Quinn_01_D and T_Manny_01_D from the folder Characters/Mannequins/Textures and T_GridChecker_A from LevelPrototyping/Textures. The text below calls them stone, moss and mud.",
+   "Add one VertexColor node and two Lerp nodes. The first Lerp blends stone and moss, with the Green channel as its Alpha. The second Lerp blends that result with mud, with the Blue channel as its Alpha. Stone is the surface you see by default when the material compiles.",
+   "Do the same for the normal maps so that the blend is complete. Apply the material to a wall or floor mesh that has enough vertices, because the paint is stored on the vertices. A Sphere made in Modeling Mode with a high number of subdivisions works. If your mesh has too few vertices, add more with a remesh or subdivide tool in Modeling Mode, or in a 3D app.",
+   "Enter Mesh Paint mode and choose the Vertex Weights tab. Select the mesh, and set Texture Weight Type to RGB (Three Textures).",
+   "Set Paint Texture Weight Index to the moss texture and paint moss into the lower corners. Press X to swap the paint index and the erase index, and clean up the edges.",
+   "Switch the index to mud and paint a path. Hold SHIFT and use the left mouse button to erase mistakes."
+  ]
+ },
+ "EAQ73": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_WorldStone. Add a WorldAlignedTexture function, and connect a stone base color texture to it as a Texture Object, not as a Texture Sample. If you have no stone texture, T_GridChecker_A from the folder LevelPrototyping/Textures of the template works for the test.",
+   "Connect a Vector3 parameter to TextureSize and start with the value 200,200,200. Connect the XYZ Texture output to Base Color.",
+   "Add a WorldAlignedNormal function with the matching normal map and the same TextureSize. Connect its XYZ output to Normal.",
+   "Apply the material to three cubes that have different scales and rotations. Confirm that the stone has the same size on all of them.",
+   "Make a second material named M_WorldStone3Way that uses WorldCoordinate3Way. Give it a different texture, such as gravel, for the XY plane, which is the top. Adjust Blend Exponent until the seams are soft.",
+   "Rotate one cube during play or in Sequencer, and notice that the texture slides over the surface. This is called swimming. Write one line about when you would avoid this technique."
+  ]
+ },
+ "EAQ74": {
+  "done_when": "Send a screenshot of the M_BrickBump graph where BumpOffset goes into the UVs of the texture samples and the height goes into its Height input. Also send a viewport screenshot that shows the wall side by side with and without Bump Offset.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_BrickBump. You need a color texture, a normal map and a height map of the same surface. A height map is a grayscale texture in which bright areas are high and dark areas are low. A free brick surface from Fab includes all three. For a first test, the grid textures of the engine work: T_Default_Material_Grid_M for Base Color and as the height map, and T_Default_Material_Grid_N for Normal. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Connect the textures to Base Color and Normal, and connect a roughness texture or a Constant of 0.6 to Roughness.",
+   "Hold B and left-click in the graph to create a BumpOffset node. Connect its output to the UVs pin of every Texture Sample node that goes into Base Color, Roughness or Normal.",
+   "Add one more Texture Sample that holds your height map and connect one of its channels, for example R, to the Height input of BumpOffset. Do not connect BumpOffset to the UVs of this sample. The error on the node should disappear. In Epic's guide the height map is stored in the alpha channel of the color texture, so the guide duplicates that sample and uses its A output.",
+   "In the Details panel, change Height Ratio from 0.05 to 0.005 so the texture stops sliding too much. Click Apply and save.",
+   "Apply the material to a wall. Move the camera across the wall and compare it with a copy of the material that has no BumpOffset.",
+   "Look at the wall from a very low angle, almost along its surface, and note where the effect breaks."
+  ]
+ },
+ "EAQ75": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Nanite tessellation is experimental, so you have to turn it on. In the file Config/DefaultEngine.ini of the project (or in ConsoleVariables.ini), add r.Nanite.AllowTessellation=1 and r.Nanite.Tessellation=1. Then restart the editor.",
+   "Make a flat wall mesh: in Modeling Mode, create a Box that is wide, tall and thin, accept it as a Static Mesh, and name the asset SM_Wall. Open it in the Static Mesh Editor and enable Nanite on it.",
+   "Create a material named M_NaniteBrick. Select the Main Material Node and check Enable Tessellation under the Nanite settings. Connect a height texture with values from 0 to 1 to the Displacement pin, and also connect a matching normal map. A free brick or stone surface from Fab that includes a height map gives the best result. For a first test, the grid textures of the engine work: T_Default_Material_Grid_M as the height and T_Default_Material_Grid_N as the normal map. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Set Magnitude to a small value, for example 4, and set Center to 0.5 so the surface moves both in and out. Apply the material to SM_Wall.",
+   "Enable Displacement Fade, and set Start Fade Size and End Fade Size in pixels so that the effect disappears at a distance.",
+   "Compare this with the static option. In the Static Mesh Editor, under Nanite Settings, set Trim Relative Error to 0.04, add a Displacement Map with a Magnitude, and click Apply Changes.",
+   "Take a screenshot of the edge of the wall from a low angle with tessellation on, and another one with tessellation off."
+  ]
+ },
+ "EAQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a landscape material with a Landscape Layer Blend node that has 4 layers: Grass, Dirt, Rock and Snow, all set to LB Weight Blend. If you have one, duplicate it. If not, create one with a different plain color or texture for each layer, and a white color for Snow. Name it M_Land_WeightBlend, duplicate it, and name the copy M_Land_HeightBlend. Work in the copy.",
+   "Set Grass, Dirt and Rock to LB Height Blend. For each layer, connect the alpha of its texture, or a height mask, to the matching Height input.",
+   "Set Snow to LB Alpha Blend and move it to the end of the list. This fixes the black spots that appear where all height layers have the value zero.",
+   "Add a Landscape Layer Switch node around the Snow branch. It lets Unreal skip the snow textures on parts of the landscape that have no snow.",
+   "Add a Landscape Layer Sample node for Rock. Multiply it into Roughness so that painted rock looks a little wetter or drier than grass.",
+   "Create a Landscape in a new level and assign M_Land_HeightBlend to it. In Landscape Mode, open Paint and create a Weight-Blended layer info for each layer. Paint rock next to dirt and look at the height detail where they meet.",
+   "Compare with the plain blend. Assign M_Land_WeightBlend to the landscape and take one close screenshot of the border between rock and dirt with each material."
+  ]
+ },
+ "EAQ80": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a level with a Landscape that has a landscape material with a Landscape Layer Blend node. If you have none, create a Landscape and a simple material with two layers. Open Project Settings, then Engine, then Rendering, and find the Virtual Textures section. Enable virtual texture support and restart the editor.",
+   "Create a Runtime Virtual Texture asset named RVT_Ground. Set Virtual texture content to Base Color, Normal, Roughness, Specular, and keep border padding at 2 or more.",
+   "In the landscape material, enable Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node. Read RVT_Ground with a Runtime Virtual Texture Sample node, and send both paths through a Virtual Texture Feature Switch node.",
+   "Place a Runtime Virtual Texture Volume and assign RVT_Ground to it. Under Transform from Bounds, pick the landscape as Source Actor and click Set Bounds. Then add RVT_Ground to Draw in Virtual Textures on the landscape.",
+   "You need a road made with a landscape spline and a spline mesh. If you have none, draw a short spline with the Spline tool on the Manage tab of Landscape Mode and assign a long, flat box mesh under Landscape Spline Meshes. Open the material of the road mesh. Add a Runtime Virtual Texture Output node with Base Color and Roughness. Then select all spline segments and add RVT_Ground under Virtual Texture.",
+   "On the RVT Volume, enable Hide Primitives. Check that the road now exists only in the terrain texture.",
+   "Place a rock on the landscape. If you have no rock mesh, make a Sphere in Modeling Mode and scale it into a rough rock shape. Make a material for it named M_RockBlend. Sample RVT_Ground and blend its Base Color into the bottom of the rock so that the rock meets the ground softly. Set a Translucency Sort Priority on the road so that it is drawn above the rock."
+  ]
+ },
+ "EAQ81": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a level with a Landscape that has a hill and a landscape material. If you have none, create a Landscape, sculpt a hill, and assign a simple material with one color or texture. Open the landscape material. Add a Landscape Visibility Mask node and connect it to Opacity Mask. Keep Blend Mode set to Opaque. The pin looks greyed out, but connect it anyway.",
+   "Check the Visibility tool panel under Target Layers. It should show no warning about a missing Visibility Mask node.",
+   "In Landscape Mode, open Sculpt and pick the Visibility tool. Set a brush size that fits a cave mouth, and left-click on a hillside to paint a hole.",
+   "Hold Shift and left-click to erase part of the hole, and use this to shape the entrance.",
+   "Build the inside of the cave from a few Static Meshes. You can use free rocks from Fab, or shapes made in Modeling Mode that you scale and rotate. Fit the meshes into the hole so that no sky shows through.",
+   "Switch to Place mode and Play In Editor. Walk through the hole into the cave and confirm that there is no collision where you painted.",
+   "If the landscape has Enable Nanite turned on, click Build Data in the Nanite section and check that the hole is still correct."
+  ]
+ },
+ "EAQ82": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open an outdoor level with a ground, a Sky Light and a few rocks or bushes on the ground. Spheres and cones from the Place Actors panel work as stand-ins. Open Project Settings, then Engine, then Rendering, and find the Software Ray Tracing section. Enable Generate Mesh Distance Fields and restart the editor.",
+   "Set the Mobility of the Sky Light to Movable. Open Show, then Visualize, then Distance Fields Ambient Occlusion, and take a screenshot.",
+   "Open Show, then Visualize, then Mesh Distance Fields. Find a rock or a tree that looks blurry or mostly white.",
+   "Open that mesh in the Static Mesh Editor. In Build Settings, raise Distance Field Resolution Scale and apply. Read the size of the distance field in the corner of the viewport.",
+   "For a tree or bush with a masked leaf material, enable Two-Sided Distance Field Generation and compare the result in the visualizer.",
+   "If you painted the bush or a tree with Foliage Mode, enable Affect Distance Field Lighting on that foliage type only, and not on grass.",
+   "On the Sky Light, adjust Min Occlusion and Occlusion Contrast until the underside of the trees is dark but not black."
+  ]
+ },
+ "EAQ83": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with a Landscape, or create a new one. In Foliage Mode, add at least two Static Mesh Foliage types: a bush with a masked leaf material, and a rock. Free foliage and rocks from Fab work well. For a first test, SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template work as stand-ins. Paint a wide field of both.",
+   "On the bush type, set Start Cull Distance to 3000 and End Cull Distance to 5000. Fly the camera backward and watch whole groups vanish.",
+   "Open the bush material. Add a PerInstanceFadeAmount node and multiply it into the Opacity Mask, so the leaves thin out before the end distance. Fly backward again.",
+   "On the bush type, open Scalability and enable Enable Density Scaling. In the console, run foliage.DensityScale 0.3 and then foliage.DensityScale 1.0, and compare.",
+   "Enable Affect Distance Field Lighting on the bush type only. Leave it off for types that are like grass.",
+   "Sculpt the ground under some bushes again so that they float. Select those instances, move them above the ground, and press End to snap them down and attach them again.",
+   "If the map uses World Partition, find Instanced Foliage Grid Size in Project Settings and note the default value."
+  ]
+ },
+ "EAQ84": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open an interior level of your own that has Lumen turned on, or build a small room from cubes and fill it with props, including some with complex shapes such as chairs and shelves. You can build these from a few scaled cubes each, or use free props from Fab. Open View Mode, then Lumen, then Surface Cache. Take a screenshot and circle every pink area on it.",
+   "Open one pink prop (an SM_ mesh) in the Static Mesh Editor. If nothing is pink, pick the prop with the most complex shape. In Build Settings, raise Max Lumen Mesh Cards from 12 to 24 and click Apply Changes. Then check the Surface Cache view again.",
+   "In the console, run r.Lumen.Visualize.CardPlacement 1 and look at the cards on that mesh. Cards are the flat pieces Lumen uses to capture a surface. Set the value back to 0.",
+   "Open Show, then Visualize, then Mesh DistanceFields. Find one thin wall or window mesh that looks like a soft blob. In its Build Settings, set Distance Field Resolution Scale to 2.0 and click Apply Changes. Compare the result.",
+   "Place a Post Process Volume with Infinite Extent (Unbound) turned on, or use the one in your level. In it, set Lumen Scene View Distance to a small value and look at a far corner. Then set it back to the default.",
+   "Open Show, then Lumen, and untick Screen Traces. Take a screenshot of the same view with Screen Traces and without them.",
+   "Open Project Settings, then Engine, then Rendering. Write down whether Support Hardware Ray Tracing and Use Hardware Ray Tracing when available are turned on, and which Software Ray Tracing Mode is set."
+  ]
+ },
+ "EAQ85": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a Directional Light, some static props, a few foliage meshes with a wind material (one that uses World Position Offset), and one large building mesh without Nanite. To build it quickly: place a few cubes and cylinders as props, place a few cones as bushes and give them a material in which a Sine of a Time node, multiplied by a small vector, is connected to World Position Offset, and scale a cube into a large building block.",
+   "Open View Modes, then Virtual Shadow Map, then Cached Page. Keep the camera still and take a screenshot. Red pages that appear while the camera is still are cache invalidations, which means cached pages were thrown away.",
+   "Switch to the Shadow Casters visualization and find which objects cause the red pages. Check that their bounds, the invisible boxes around them, are not much bigger than the meshes.",
+   "Select the foliage meshes. In the Details panel, set Shadow Cache Invalidation Behavior to Rigid and check the Cached Page view again. Then set World Position Offset Disable Distance to a distance where you can no longer see the wind.",
+   "In the console, run r.ShaderPrintEnable 1 and then r.Shadow.Virtual.Stats 1. Write down the values Allocated, Cached and Invalidated. Rotate the Directional Light a little and watch Invalidated jump up.",
+   "Enable Nanite on the large building mesh. Move the camera slowly and compare the stats and the Cached Page view with before.",
+   "Write three lines: what caused most of the invalidations, what you changed, and what you would never do to a Directional Light while the game runs."
+  ]
+ },
+ "EAQ90": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Pick a small level with a Directional Light, a Sky Light, a few local lights and some props. If you have none, build a small room scene from cubes and other simple shapes in a new Basic level and add two Point Lights. Duplicate the level and name the copy L_Bake_01. Set the Directional Light and the Sky Light to Stationary, and the local lights to Static. Open Project Settings, then Rendering, and check that Allow Static Lighting is on.",
+   "Open Edit > Plugins, go to Built-In, then Editor, and enable GPU Lightmass. Before you restart, open Project Settings and enable Support Hardware Ray Tracing, Enable Virtual Texture Support and Enable Virtual Texture Lightmaps. Under Platforms, then Windows, set Default RHI to DirectX 12. Then restart.",
+   "Open Build > GPU Lightmass. Pick Bake What You See, keep the viewport in Realtime, and click Build Lighting. Move a prop while it bakes and watch the tiles update. Click Save, and then Cancel.",
+   "Now choose Full Bake. Turn Realtime off in the viewport with Ctrl+R and click Build Lighting. Write down how long it took.",
+   "Find one prop whose shadows look blotchy. Raise its Lightmap Resolution in the Details panel, bake again, and compare.",
+   "Take a screenshot of the baked level and one of the Lumen version from the same view. Write two lines on what each one does better."
+  ]
+ },
+ "EAQ93": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Take a simple prop that has Nanite enabled and one material slot, such as a brick block or a stone slab. A Box made in Modeling Mode with Nanite enabled works. Name it SM_Disp_Test. Get a height (displacement) texture for its surface. A free surface from Fab includes one, and for a first test any grayscale texture works, such as T_GridChecker_A from the folder LevelPrototyping/Textures of the template.",
+   "Open the prop in the Static Mesh Editor. Under Nanite Settings, set Trim Relative Error to 0.04.",
+   "Expand Displacement Maps and add one element (Index 0). Set its Texture to your height map, and set Magnitude to a small value. Start with 2. Click Apply Changes.",
+   "Check that Displacement UV Channel matches the UV channel your height map was made for. Then place the prop in a level.",
+   "Open View Modes, then Nanite Visualization, then Triangles. Compare the mesh with Magnitude 0 and with your Magnitude.",
+   "This step is optional. On a copy of the material, check Enable Tessellation under Nanite in the material Details, connect the height texture to Displacement, and set Magnitude and Center. Compare this tessellation, which happens while the game runs, with the baked result."
+  ]
+ },
+ "EAQ94": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Collect four props in a test level: a dense scanned rock, a tree made of masked leaf cards, a sky sphere or another big simple mesh, and a modular wall piece that you place 50 times. Free assets from Fab work well. If you have none, use stand-ins: a Sphere with a very high subdivision level from Modeling Mode as the dense rock, a cone as the tree, a very large sphere as the sky sphere, and a cube scaled into a wall piece.",
+   "For each prop, write one line that says Nanite or classic LODs. Give the reason from the Nanite documentation page, such as triangle count, instance count, occluder, VSM shadows or material type.",
+   "Enable Nanite on the props you chose. Open View Modes, then Nanite Visualization, then Mask, to confirm which are green (Nanite) and which are red (not Nanite).",
+   "Open the Overdraw visualization. Look at the tree and at any kit pieces that are stacked on each other, and note the brightest areas.",
+   "Open the rock in the Static Mesh Editor and compare its vertex count with its triangle count. If the vertex count is 2 times the triangle count or more, note that the normals are probably faceted, which means each triangle looks flat.",
+   "Type r.Nanite 0 and then r.Nanite 1 in the console, and watch stat unit each time. Add the result to your notes."
+  ]
+ },
+ "EAQ95": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Project Settings, then Engine, then Rendering, and enable Virtual Textures. Restart the editor if it asks you to.",
+   "Pick a prop for the test, for example a rock from Fab or a Sphere made in Modeling Mode. Name it SM_PaintTest and turn on Enable Nanite Support in its Nanite Settings. In the Static Mesh Editor, open the UV dropdown and check whether UV 0 overlaps or repeats. If it does, expand LOD 0, then Build Settings, enable Generate Lightmap UVs with Destination Lightmap Index 1, and click Apply Changes.",
+   "Under General Settings, set Mesh Paint Texture Coordinate Index to the UV channel you will paint on, for example 1.",
+   "Make a material named M_PaintTint. Add a Texture Sample with a MeshPaintTextureObject node connected to its Tex input, and set its UVs to the same index. Multiply its RGB with a base color texture, for example the color texture of the rock. Then send both paths through a MeshPaintTextureReplace node into Base Color.",
+   "Place the prop in the level and enter Mesh Paint Mode. Open the Texture Color tab and click Add. Paint dirt or moss on the lower part of the prop.",
+   "Set Mesh Paint Texture Resolution on the asset, for example to 512. Click Fix on the instance and check how the paint changes."
+  ]
+ },
+ "EAQ96": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a prop that does not use Nanite and has a curved part, for example a pipe or a barrel. A Cylinder made in Modeling Mode works. Make a copy and name it SM_Decal_Base.",
+   "In Modeling Mode, create a thin strip mesh that follows the curved surface closely, such as a bent plane a few units above the surface. Give its edges a small soft border. Name it SM_Decal_Strip.",
+   "Make a material named M_MeshDecal with Material Domain set to Deferred Decal and Blend Mode set to Translucent. Use a rust or grime texture with a soft alpha. If you have none, use any texture for the color, such as T_GridChecker_A of the template, and a soft gradient, such as a RadialGradientExponential node, for the Opacity. Apply the material to SM_Decal_Strip.",
+   "Place the strip on the prop. Move the camera far away and check if the strip cuts into the base mesh.",
+   "If it cuts in, do not move the mesh. Add a small World Position Offset along the normal in M_MeshDecal, which pushes the strip slightly outward, and compare the result.",
+   "Place a normal Decal Actor with the same texture on the same curved part. Look at both from a low angle and compare how much each one stretches."
+  ]
+ },
+ "EAQ105": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level with some thin geometry in view, such as a fence, wires or foliage. Cylinders that you scale into thin poles and wires work. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console.",
+   "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each.",
+   "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent.",
+   "Open Show, then Visualize, and enable Temporal Upscaler I/O. This is the VisualizeTemporalUpscaler view. Take a screenshot of the view that shows the input and the output.",
+   "Open Settings, then Engine Scalability Settings, and switch the Anti-Aliasing group between Medium and Epic. Look at the same thin geometry each time, such as a fence, wires or foliage.",
+   "Open the file Engine/Config/BaseScalability.ini and find the AntiAliasingQuality sections. Note two r.TSR variables that change between the quality levels."
+  ]
+ },
+ "EAQ108": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and work in a level with a floor or a Landscape. Enable the Procedural Content Generation Framework plugin. Then create a PCG Graph named PCG_FenceProps.",
+   "In PCG_FenceProps, connect these nodes in a row: Get Spline Data, then Spline Sampler, then Transform Points with a small random yaw and scale, then Static Mesh Spawner. Give the spawner three Mesh Entries, for example a post, a barrel and a crate, with different Weights, so some appear more often than others. Any three small meshes work, such as SM_Cylinder, SM_ChamferCube and SM_Cube from the folder LevelPrototyping/Meshes of the template.",
+   "Open the Graph Settings. Under Tool Data, set Display Name to Fence Props, add SplineTool to Compatible Tool Tags, and enable Is Preset.",
+   "Switch to PCG mode from the Modes dropdown. With nothing selected, choose the Draw Spline tool and pick your Fence Props preset. Draw an open spline along a path in the level and click Apply.",
+   "Duplicate the graph and name the copy PCG_Rubble. Remove the spline nodes, keep the spawner, and set Compatible Tool Tags to PaintTool. In PCG mode, use the Paint tool to paint rubble on the ground. Hold Shift to remove points that land on the path.",
+   "In the Raycast Rules, enable Ignore PCG Components. This stops you from painting on top of the props you already spawned."
+  ]
+ },
+ "EAQ109": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with a Landscape, or create a new level and make a Landscape in Landscape Mode. Open Editor Preferences, then Experimental, and enable Procedural Foliage. Create a Procedural Foliage Spawner named PFS_Forest and scale it over a flat area of the landscape.",
+   "Create two Static Mesh Foliage assets named SMF_TreeBig and SMF_TreeSmall and give each one a mesh. If you have no tree meshes, SM_Cylinder can stand in for the big tree and SM_ChamferCube for the small one. Both are in the folder LevelPrototyping/Meshes of the template. Add both to the Foliage Types of PFS_Forest and press Resimulate.",
+   "In SMF_TreeBig, set Shade Radius to 50 and Overlap Priority to 2. In SMF_TreeSmall, set Overlap Priority to 1 and enable Can Grow in Shade and Spawns in Shade. Press Resimulate and look at how the small trees fill the space around the big ones.",
+   "Change Num Steps to 0 on SMF_TreeBig and press Resimulate. Then set it back to 3. Lower Initial Seed Density until the edge of the forest looks natural.",
+   "In the Instance Settings of both types, set Cull Distance Max to 20000.",
+   "Place a Procedural Foliage Blocking Volume over an area that should stay free, such as a path or the place where a building would stand, and press Resimulate. No trees should appear inside the volume."
+  ]
+ },
+ "EAQ112": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a World Partition level, or create one with File, New Level, Open World. Place about ten large cubes as buildings and about twenty trees far from the Player Start. Cones from the Place Actors panel can stand in for trees. Open the Content Drawer and create two HLOD Layer assets (choose Miscellaneous, then HLOD Layer). Name one HLOD_Buildings and set its Layer Type to Merged Mesh. Name the other HLOD_Trees and set its Layer Type to Instancing.",
+   "On HLOD_Buildings, enable Generate Nanite Enabled Mesh and turn Merge Materials on. On HLOD_Trees, leave the Instancing settings at their defaults.",
+   "Select the building meshes and set their Mobility to Static. In the Details panel, set the HLOD property to HLOD_Buildings. Do the same for the tree actors, with HLOD_Trees.",
+   "In World Settings, set Default HLOD Layer to HLOD_Buildings, so that new static actors get a layer by default.",
+   "Run Build > Build HLODs. Then move the camera far away, or unload cells, and compare the view with HLODs on and off.",
+   "Open one of the generated HLOD actors and note its Cell Size and Loading Range. Write one line on why the trees used Instancing and the buildings used Merged Mesh."
+  ]
+ },
+ "EAQ14": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make 4 swatches, each a simple material on its own sphere: a rough dielectric, a glossy dielectric, a rough metal and a polished metal.",
+   "Keep the Base Color values of each swatch in a plausible range. Do not use pure black or pure white.",
+   "Add a normal map to one swatch. A normal map is a texture that fakes small bumps on the surface. The template has normal maps in the folder Characters/Mannequins/Textures, with names that end in _N. Compare the swatch with and without it.",
+   "Place the four spheres next to each other in one level, so that they are all under the same light. The level of the template works, and so does a lit scene of your own. Put a Text Render actor at each sphere as a label."
+  ]
+ },
+ "EAQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a color texture, a normal texture and a packed texture of the same surface. The template has such a set in the folder Characters/Mannequins/Textures/Quinn: T_Quinn_01_D is the color texture, T_Quinn_01_N is the normal texture and T_Quinn_01_MRA is the packed texture. You can also import your own files. A packed texture stores a different grayscale map in each color channel. Open each texture and check its sRGB setting and its compression settings.",
+   "Create a material named M_Surface and sample the three textures in it. Add a TexCoord node with a tiling parameter, so that you can change how many times the texture repeats.",
+   "Split the packed texture into its channels, so that you can use each channel on its own.",
+   "Apply the material to a large mesh, such as a cube scaled into a floor. Find one place where you can see the texture repeat. Fix it by changing the scale or by rotating the UVs."
+  ]
+ },
+ "EAQ16": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_Surface that reads a color texture and a normal texture, for example T_Quinn_01_D and T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template, or start from a textured material of your own. Give it scalar parameters (single numbers, for example for roughness and tiling), vector parameters (colors, for example a tint) and texture parameters.",
+   "Put the parameters in named groups. Give each one a sensible default value and a sort priority, which sets the order they are listed in.",
+   "Create 3 instances of the material that look like different materials."
+  ]
+ },
+ "EAQ17": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Build a landscape material that has 3 layers. Use a Landscape Layer Blend node, which is the node that mixes the layers based on where you paint. For the layers you can use free ground textures from Fab, such as grass, rock and dirt. For a first test, three plain colors also work.",
+   "Open a level of your own that has a Landscape, or create a new level, open Landscape Mode and choose New on the Manage tab. Assign your material to the landscape. Create the layer info objects, which are small assets that store where each layer is painted. Then paint all 3 layers on the landscape.",
+   "Stand at the height of a player and look at the ground. Keep the tiling scale sensible, so that the texture is not too large and not too small from there."
+  ]
+ },
+ "EAQ19": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Place three cubes in any level and scale them to different sizes as blockout meshes. Pick any texture, for example T_GridChecker_A from the folder LevelPrototyping/Textures of the template. Make a material that uses a world-aligned texture: add the WorldAlignedTexture node, connect a Texture Object node with your texture to its TextureObject input, and connect its XYZ Texture output to Base Color. Apply the material to blockout meshes that you have scaled to different sizes. The pattern keeps the same size on all of them.",
+   "Make a second material that uses a normal Texture Sample node, which follows the UVs of the mesh. Apply it to the same meshes, and compare the two results. Look at how the pattern stretches on the scaled meshes."
+  ]
+ },
+ "EAQ20": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a Landscape with a landscape material that has at least two paint layers. If you have none, create a new level, make a Landscape in Landscape Mode, and build a material with a Landscape Layer Blend node that has two layers, such as Grass and Dirt. You also need a Landscape Grass Type asset: right-click in the Content Browser, open Foliage, choose Landscape Grass Type, and add any small mesh to it, such as SM_Cylinder from the folder LevelPrototyping/Meshes of the template. In the landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick your Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears.",
+   "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
+  ]
+ },
+ "EAQ27": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a material with two surfaces, for example stone as the base and moss on top. Free surfaces from Fab work well. For a first test, two textures of the template that look different also work, such as T_Quinn_01_D and T_GridChecker_A. Add a Vertex Color node and use its red channel as the Alpha of a Lerp node between the two surfaces, so that red paint puts the second surface over the base surface.",
+   "Place a mesh with enough vertices in the level, for example a sphere, and apply the material. The paint is stored on the vertices, so a simple cube has too few. Use Mesh Paint mode to paint on the mesh.",
+   "Add a height-based blend, which uses a height texture to decide where the second surface appears first. This makes the edge look sharp and natural and not like a soft smear."
+  ]
+ },
+ "EAQ32": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Decide where a path runs across it. Make a PCG graph that scatters debris or rocks on the surface. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Right-click in the Content Browser, open PCG and choose PCG Graph. In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick a mesh under Mesh Entries. If you have no rock mesh, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in. Place a PCG Volume in the level, set Graph on its PCG component, and click Generate.",
+   "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, for example a Density Filter node after the Surface Sampler. It can also be an exclusion rule, which removes objects from an area, for example a Difference node that subtracts the points near a spline along the path."
+  ]
+ },
+ "EAQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Set up a Procedural Foliage Volume with 2 species. First open Edit > Editor Preferences, find the Experimental section and enable Procedural Foliage. Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Give each Static Mesh Foliage asset a mesh, for example trees of your own, or SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template as stand-ins. Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the area where the forest edge should be, and click Resimulate in its Details panel.",
+   "Tune the spacing settings in the two Static Mesh Foliage assets, such as Shade Radius, Initial Seed Density and Average Spread Distance, and click Resimulate after each change. Continue until the edge of the forest looks natural and not uniform."
+  ]
+ },
+ "PQ32": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_RotateActor with a Static Mesh that uses a cube mesh, such as SM_Cube from the folder LevelPrototyping/Meshes of the template. On Event Tick, call AddActorLocalRotation with Z = 2.0, and put it behind a Branch node that reads a Boolean variable named CanRotate.",
+   "Add a function named OverlappedPlayer with a Boolean input named Begin Overlap. Inside the function, use that input to set CanRotate.",
+   "Open the character Blueprint of the template, BP_ThirdPersonCharacter, and add a Sphere Collision component with Radius 200. Add the events OnComponentBeginOverlap and OnComponentEndOverlap for it.",
+   "Drag from the Other Actor pin and add a Cast To BP_RotateActor node. From the As BP Rotate Actor pin, call OverlappedPlayer. Pass True on the begin overlap event and False on the end overlap event.",
+   "Connect a Print String node to the Cast Failed pin, so you can see when the cast does not work. Place BP_RotateActor and one plain cube in the level.",
+   "Press Play and walk near both objects. The cube from BP_RotateActor should spin, and the plain cube should print the failed message."
+  ]
+ },
+ "PQ33": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Lamp with a Static Mesh component that uses a cylinder, and a Point Light component. Place BP_Lamp in the level. Epic's guide uses a ceiling light Blueprint from the Starter Content, which current engine versions no longer include.",
+   "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a variable named LampReference. Set its type to BP Lamp and choose Object Reference. Enable Instance Editable, which lets you set the value on the character placed in the level.",
+   "Add an event for the F key. Use a Flip Flop node and Set Visibility to turn the Point Light of the lamp on and off through LampReference.",
+   "Select the character in the level. In the Details panel, open the Lamp Reference dropdown and pick the lamp you placed. Press Play and press F.",
+   "Add a second variable named LampClass. Set its type to BP Lamp and choose Class Reference. Set its default value to BP_Lamp.",
+   "Add an event for the G key. Use Spawn Actor from Class with LampClass, and spawn the lamp at the player location plus 200 units forward.",
+   "Compare the icons of the two variables and the colors of their pins. Write one sentence that says what each variable holds."
+  ]
+ },
+ "PQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Blueprint Interface named BPI_Interact with one function named Interact. Click Compile and save it.",
+   "Make an Actor Blueprint named BP_Lamp with a Static Mesh component that uses a cylinder, and a Point Light component. Add a custom event named ToggleLight that uses Flip Flop and Set Visibility on the Point Light to turn the light on and off.",
+   "In BP_Lamp, open Class Settings and add BPI_Interact under Implemented Interfaces. Then add Event Interact to the graph and make it call ToggleLight.",
+   "Make a Blueprint named BP_Door with two Static Mesh components named Frame and Door. Add a custom event named OpenDoor that uses a Timeline named TM_Door, with an Alpha value that goes from 0 to 1. Use a Lerp node to turn the door Yaw to 90.",
+   "Add BPI_Interact to BP_Door in the same way. Implement Event Interact there and make it call OpenDoor.",
+   "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Interact (Message) and connect Other Actor to the Target pin.",
+   "Place BP_Lamp, BP_Door and a plain cube in the level. Press Play and walk near all three. Nothing should happen at the plain cube, because it does not use the interface."
+  ]
+ },
+ "PQ35": {
+  "brief": "An Event Dispatcher is a way for one Actor to announce that something happened, without knowing who is listening. Other Actors bind to the dispatcher, which means they sign up to be told, and they all react when it is called. This keeps Actors independent: the boss does not need to know about the doors. In this quest one trigger box announces that a boss died, and a door and several alarm lights react at the same time.",
+  "done_when": "Send a screenshot of the BP_BossDoor graph that shows Bind Event to OnBossDied, and a screenshot in Play mode with the door open and the alarm lights on at the same time.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_BossDied with a Box Collision component. Set its scale to 4, 4, 2 and turn off Hidden in Game so you can see the box while you play. Add an Event Dispatcher named OnBossDied.",
+   "On the OnComponentBeginOverlap event of the box, add the Call OnBossDied node. Place BP_BossDied in the level.",
+   "Make a Blueprint named BP_BossDoor with a Frame mesh and a Door mesh. Add a custom event named OpenDoor that uses a Timeline named TM_Door to rotate the door to Yaw 90.",
+   "In BP_BossDoor, add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Bind Event to OnBossDied and connect a custom event named BossDied that calls OpenDoor.",
+   "Make an Actor Blueprint named BP_AlarmLight with a Point Light component. Give the light a red color and turn off Visible on it, so the light starts off. Add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Assign OnBossDied on that reference, and make the new event call Toggle Visibility on the Point Light. Epic's guide uses an explosion Blueprint from the Starter Content here, which current engine versions no longer include.",
+   "Place the door and 3 alarm lights in the level. On each one, set BossDiedReference to the BP_BossDied you placed. Press Play and walk into the box.",
+   "Extra: on one alarm light, add an Unbind All Events node after it reacts. Walk into the box a second time. The other lights switch off again, and this one stays on because it no longer listens."
+  ]
+ },
+ "PQ67": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a mesh to HeavyMesh on that copy. In a real game this would be a large mesh. For the test any mesh works, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template.",
+   "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two.",
+   "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded.",
+   "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor.",
+   "Add an event for the B key that uses Load Asset Blocking instead. Open stat unit, and press B right after you start a fresh Play In Editor session. Then start again and press L. Write one line that says which one made the game hitch.",
+   "Add a second soft mesh variable and load both meshes one after the other. Write two lines: why the loaded mesh stays in memory after Set Static Mesh, and what would happen to a loaded object that nothing holds a hard reference to."
+  ]
+ },
+ "SQ2": {
+  "checklist": [
+   "Create a new project named UC_Sandbox from the Third Person template. Choose Blueprint as the project type and leave the other settings as they are.",
+   "Press Play and run around the level once.",
+   "Create and open a second project from the Blank template and compare the two. Notice that Blank has no pawn (no character to control) and no level art.",
+   "Close the Blank project. You can keep UC_Sandbox as a place to practice, but you do not have to: every quest tells you which template to start from."
+  ],
+  "quiz": [
+   {
+    "q": "When you create a new project you pick a template. What does the Third Person template give you that the Blank template does not?",
+    "choices": [
+     "Nothing, they are the same",
+     "A character you can play, a camera, input controls and a sample level",
+     "A project that only uses C++",
+     "Multiplayer already set up"
+    ],
+    "explain": "Third Person comes with a ready-made character and a small level, so you can press Play and walk around straight away."
+   },
+   {
+    "q": "When is the Blank template the right one to pick?",
+    "choices": [
+     "Never",
+     "When you want to build every system yourself, with nothing made for you",
+     "When you need a character",
+     "Only when you make a mobile game"
+    ],
+    "explain": "Blank is empty on purpose. It is the right start when you do not want any ready-made character, camera or level in your way."
+   },
+   {
+    "q": "The new-project window asks you to choose between Blueprint and C++. What does this choice decide?",
+    "choices": [
+     "Which renderer the project uses",
+     "Whether the project starts with C++ source files",
+     "Which Unreal version it uses",
+     "Which platform it is built for"
+    ],
+    "explain": "It only decides what the project starts with. A Blueprint project can still have C++ added to it later."
+   },
+   {
+    "q": "Old tutorials tell you to tick a Starter Content checkbox in the new-project window. You cannot find it in a current Unreal Engine version. Why?",
+    "choices": [
+     "Your install is broken",
+     "Current versions no longer include the Starter Content pack",
+     "It only appears for C++ projects",
+     "It only appears in the Blank template"
+    ],
+    "explain": "Starter Content was a pack of sample meshes, materials and sounds. Current engine versions no longer include it, so the quests here use the assets of the templates and of the engine."
+   },
+   {
+    "q": "You want a game where the camera looks down on the character from above. Which template gives you that as a starting point?",
+    "choices": [
+     "Blank",
+     "Top Down",
+     "First Person",
+     "Third Person"
+    ],
+    "explain": "The Top Down template starts with a character that is seen from above. First Person shows the world through the eyes of the character, and Third Person puts the camera behind the character."
+   }
+  ]
+ },
+ "SQ4": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Content Drawer with Ctrl+Space. This is the panel that shows all the files of your project.",
+   "Create a folder at /Content/UC/ and add these subfolders inside it: Maps, Meshes, Materials, Textures, and Blueprints.",
+   "Rename or duplicate one asset of each kind so that it has the correct prefix: SM_ for a Static Mesh, M_ for a material, MI_ for a Material Instance, T_ for a texture, BP_ for a Blueprint, and L_ for a level. You can copy assets from the template folders, such as LevelPrototyping and Characters, into your folders for this.",
+   "Save a level with the name L_Sandbox in the folder UC/Maps."
+  ]
+ },
+ "SQ8": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Find a material that has parameters. The template has one: M_PrototypeGrid in the folder LevelPrototyping/Materials.",
+   "Right-click the material, choose Create Material Instance, and name the new asset MI_Wall_Accent.",
+   "Open the instance and change one parameter in it, such as a color or the roughness.",
+   "Apply the instance to one wall in your level, for example by dragging it onto the wall. If your level has no wall, place a cube from the Place Actors panel, scale it into a wall, and use that."
+  ]
+ },
+ "TAQ17": {
+  "quiz": [
+   {
+    "q": "Your system came from the Simple Sprite Burst template. What must change so it draws a ribbon?",
+    "choices": [
+     "Set Sim Target to GPU",
+     "Add a second Sprite Renderer",
+     "Delete the Sprite Renderer and add a Ribbon Renderer",
+     "Change the material only"
+    ],
+    "explain": "The template uses a Sprite Renderer. The tutorial deletes it and adds a Ribbon Renderer."
+   },
+   {
+    "q": "DefaultRibbonMaterial does not show in the Material dropdown. What do you do?",
+    "choices": [
+     "In View Options, turn on Show Engine Content and Show Plugin Content",
+     "Import it from another project",
+     "Restart the editor",
+     "Enable Nanite"
+    ],
+    "explain": "The material is plugin content. Show Engine Content and Show Plugin Content make it visible."
+   },
+   {
+    "q": "Why set Emitter State Life Cycle Mode to System here?",
+    "choices": [
+     "It makes the ribbon wider",
+     "The system then calculates life cycle settings, which usually optimizes performance",
+     "It is required for any ribbon",
+     "It turns on collision"
+    ],
+    "explain": "Self mode is for full custom life cycle logic. System mode lets the system handle it, which usually optimizes performance."
+   },
+   {
+    "q": "The ribbon should be one continuous stream, not a single burst. Which module gives that?",
+    "choices": [
+     "Scale Color",
+     "Shape Location",
+     "Acceleration Force",
+     "Spawn Rate"
+    ],
+    "explain": "Spawn Rate creates a continuous stream of particles while the emitter is active."
+   },
+   {
+    "q": "Acceleration Force Z is set to -200. What happens if you make it +200?",
+    "choices": [
+     "The ribbon spirals upward instead of falling",
+     "The ribbon disappears",
+     "The ribbon gets wider",
+     "Nothing changes"
+    ],
+    "explain": "A negative Z makes the ribbon drop. A positive Z makes it spiral upward."
+   },
+   {
+    "q": "What does UV0 Tiling Distance do on a Ribbon Renderer?",
+    "choices": [
+     "Sets the ribbon width",
+     "Tiles UV channel 0 by the distance the ribbon travels, and turns off UV offset by age",
+     "Changes the draw order of emitters",
+     "Adds tessellation"
+    ],
+    "explain": "It tiles UV0 based on distance traveled. This disables offsetting the UVs by age."
+   },
+   {
+    "q": "When does Draw Direction usually make a visible difference?",
+    "choices": [
+     "On every opaque ribbon",
+     "Only on CPU emitters",
+     "When the material is translucent and the ribbon folds on itself",
+     "When the ribbon is straight"
+    ],
+    "explain": "The reference says Draw Direction usually matters only for translucent materials where the ribbon folds on itself."
+   },
+   {
+    "q": "With Tessellation Mode set to Custom, what does a smaller Tessellation Angle do?",
+    "choices": [
+     "Removes tessellation",
+     "Makes the ribbon thinner",
+     "Changes the ribbon color",
+     "Increases the amount of tessellation"
+    ],
+    "explain": "Smaller Tessellation Angle values increase the amount of tessellation."
+   }
+  ]
+ }
+}

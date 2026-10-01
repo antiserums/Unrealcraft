@@ -19,10 +19,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
     checklist:
-      - "Open a project made from the Third Person template. In the Content Browser, the panel that shows all your project files, find the asset named SKM_Quinn or SKM_Manny."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, the panel that shows all your project files, find the asset named SKM_Quinn_Simple or SKM_Manny_Simple."
       - "Drag the Skeletal Mesh from the Content Browser into the Level Viewport. Unreal creates a Skeletal Mesh Actor for you. Move it to an empty spot in the level."
       - "With the actor selected, look at the Details panel and find the Animation section. Set Animation Mode to Use Animation Asset, which means the actor plays one animation that you choose."
-      - "Set Anim to Play to one animation from the folder Content/Characters/Mannequins/Animations. For example, you can pick an idle or a run."
+      - "Set Anim to Play to one animation from the folder Content/Characters/Mannequins/Anims. For example, you can pick an idle or a run."
       - "Turn on Looping so the animation repeats. Then press Play and watch the mesh animate in the level."
       - "Try one more thing: drag a different Material onto the actor. If the mesh looks wrong, open that Material and enable the option Used with Skeletal Mesh."
     done_when: "Send a screenshot taken in Play mode that shows your Skeletal Mesh Actor in the middle of the animation. Also send a second screenshot of its Details panel that shows Animation Mode and Anim to Play."
@@ -72,7 +72,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequences-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-animation-system-in-unreal-engine"
     checklist:
-      - "In a Third Person project, open the folder Content/Characters/Mannequins. Find the Skeleton asset, one Skeletal Mesh (its name starts with SKM_) and one Animation Sequence."
+      - "Open a project made from the Third Person template, or create one. Open the folder Content/Characters/Mannequins. Find the Skeleton asset, one Skeletal Mesh (its name starts with SKM_) and one Animation Sequence."
       - "Double-click the Skeleton asset to open it. Look at the Skeleton Tree, which is the list of all bones. Find the root bone, the pelvis bone and one hand bone."
       - "Open the Skeletal Mesh asset. In its Asset Details panel, find the Skeleton property. Notice that it points to the same Skeleton asset you just opened."
       - "Open the Animation Sequence. In its Asset Details panel, find the Skeleton property again and see which Skeleton it uses."
@@ -126,11 +126,11 @@ quests:
     checklist:
       - "Create a new project from the Third Person template (choose Games, then Third Person). Press Play once and move around with the WASD keys and Space."
       - "Open the folder Content/Characters. Find the UE5 mannequins Quinn and Manny, and note which one the template uses by default."
-      - "Open the folder Content/Characters/Mannequins/Animations. Count how many animation sets there are, and open one animation from each set."
-      - "Open the Blueprint Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter. Select the Mesh component, and change its Skeletal Mesh property to SKM_Manny."
-      - "In the Animation section, set Animation Mode to Use Animation Blueprint and set Anim Class to ABP_Manny. Click Compile, save the Blueprint, and press Play."
-      - "Open the Rigs folder and find the assets CR_Mannequin_Body and CR_Mannequin_BasicFootIK. Read on the documentation page what each one is used for."
-    done_when: "Send a screenshot taken in Play mode with Manny as the player character, and a screenshot of the Animations folder. Add one line that names the two Control Rig assets in the Rigs folder."
+      - "Open the folder Content/Characters/Mannequins/Anims. Count how many animation sets there are, and open one animation from each set."
+      - "Open the Blueprint Content/ThirdPerson/Blueprints/BP_ThirdPersonCharacter. Select the Mesh component, and change its Skeletal Mesh property to SKM_Manny_Simple."
+      - "In the Animation section, check that Animation Mode is set to Use Animation Blueprint and that Anim Class is set to ABP_Unarmed. Quinn and Manny share one skeleton, so the same Animation Blueprint works for both. Click Compile, save the Blueprint, and press Play."
+      - "Open the folder Content/Characters/Mannequins/Rigs and find the Control Rig assets CR_Mannequin_Body and CR_Mannequin_FootIK. In older versions the second one is named CR_Mannequin_BasicFootIK. Read on the documentation page what each one is used for."
+    done_when: "Send a screenshot taken in Play mode with Manny as the player character, and a screenshot of the Anims folder. Add one line that names the two Control Rig assets you found in the Rigs folder."
     xp: 30
     verify_type: screenshot
     quiz:
@@ -139,17 +139,17 @@ quests:
         answer_index: 2
         explain: "The template starts with the feminine UE5 mannequin, Quinn. Manny is the male mannequin and is also included."
       - q: "Where are the mannequin animations stored in the template?"
-        choices: ["Content/Characters/Mannequins/Animations", "Content/LevelPrototyping", "Content/ThirdPerson/Blueprints", "Engine/Content/Animations"]
+        choices: ["Content/Characters/Mannequins/Anims", "Content/LevelPrototyping", "Content/ThirdPerson/Blueprints", "Engine/Content/Animations"]
         answer_index: 0
-        explain: "Animations for the mannequins live in Content/Characters/Mannequins/Animations. There are two sets, one per mannequin."
+        explain: "Animations for the mannequins are in Content/Characters/Mannequins/Anims, sorted into sets such as Unarmed, Pistol and Rifle. Quinn and Manny share one skeleton, so both use the same animations."
       - q: "To swap the player mesh to Manny, which Blueprint do you edit?"
-        choices: ["ABP_Manny", "BP_ThirdPersonCharacter in Content/ThirdPerson/Blueprints", "CR_Mannequin_Body", "The Level Blueprint"]
+        choices: ["ABP_Unarmed", "BP_ThirdPersonCharacter in Content/ThirdPerson/Blueprints", "CR_Mannequin_Body", "The Level Blueprint"]
         answer_index: 1
-        explain: "You open BP_ThirdPersonCharacter, select the Mesh component, and change its Skeletal Mesh, Animation Mode and Anim Class."
-      - q: "What is CR_Mannequin_BasicFootIK used for?"
+        explain: "You open BP_ThirdPersonCharacter, select the Mesh component, and change its Skeletal Mesh. The Animation Blueprint stays the same, because both mannequins share one skeleton."
+      - q: "What is the foot IK Control Rig of the mannequin (CR_Mannequin_FootIK) used for?"
         choices: ["Changing the mannequin's LODs", "Adjusting the feet to the terrain with IK", "Playing the run animation", "Spawning physics cubes"]
         answer_index: 1
-        explain: "The template's Animation Blueprints use the IK Rig system. CR_Mannequin_BasicFootIK adjusts the position of the feet to match the terrain."
+        explain: "The Animation Blueprint of the template runs this Control Rig to move the feet so that they match the ground. Older versions name it CR_Mannequin_BasicFootIK."
       - q: "What is CR_Mannequin_Body for?"
         choices: ["Posing and animating the mannequin directly in the editor", "Importing FBX files", "Controlling the camera distance", "Setting the mannequin's Materials"]
         answer_index: 0
@@ -173,12 +173,13 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-skeletal-mesh-pipeline-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-skeletal-meshes-using-fbx-in-unreal-engine"
     extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-using-interchange-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-animation-pipeline-in-unreal-engine"
     checklist:
-      - "Get an FBX file of a rigged character (a character that has bones) and one animation for it. If you have none, export one from Unreal: right-click SKM_Manny, choose Asset Actions, then Export, and export one animation the same way."
+      - "Open a project made from the Third Person template, or create one. Get an FBX file of a rigged character (a character that has bones) and one animation for it. If you have none, export one from Unreal: right-click SKM_Manny_Simple, choose Asset Actions, then Export, and export one animation the same way."
       - "Make a folder named Content/Import_Test. Click Import in the Content Browser and pick the mesh FBX file."
-      - "In the FBX Import Options window, leave Skeleton empty and keep Create Physics Asset turned on. Check the settings Import Uniform Scale and Convert Scene Unit, then click Import."
+      - "The import window opens. In current versions it is named Interchange Pipeline Configuration, and older versions show a window named FBX Import Options. The settings you need are in both. Leave Skeleton empty and keep Create Physics Asset turned on. Find the scale settings, Convert Scene Unit and the uniform scale (named Offset Uniform Scale in the new window and Import Uniform Scale in the old one), then click Import."
       - "Open the new Skeletal Mesh in the editor. Check that its size matches the mannequin, and check the list of bones in the Skeleton Tree."
       - "Now import the animation FBX file on its own. This time set Skeleton to the Skeleton you just created. Confirm that an Animation Sequence asset appears."
       - "Import the mesh a second time into another folder, but now select the existing Skeleton in the dropdown. Notice that Unreal does not create a new Skeleton asset this time."
@@ -232,7 +233,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-curves-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-editors-in-unreal-engine"
     checklist:
-      - "Open a run animation of the mannequin. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser."
+      - "Open a project made from the Third Person template, or create one. Open a run animation of the mannequin. In the current template the run animations have Jog in their names. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser."
       - "In Asset Details, set Rate Scale to 0.5 and press play to see the animation at half speed. Then set it back to 1. Also read the values of Number of Sampled Frames and Target Frame Rate."
       - "Find the setting Additive Anim Type and read its options. Leave it on No additive."
       - "Find the setting Enable Root Motion. In the Asset Details panel it is written as one word, EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock."
@@ -287,7 +288,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add (+), then Animation, then Animation Blueprint. Pick the mannequin Skeleton and name the new asset ABP_First."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Animation Blueprint. Pick the mannequin Skeleton and name the new asset ABP_First."
       - "Open ABP_First. Find these panels in the editor: Toolbar, Viewport, My Blueprint, Graph, Details and Anim Preview Editor."
       - "In the AnimGraph, drag an idle Animation Sequence from the Asset Browser into the graph. This creates a Sequence Player node. Connect it to the Output Pose node and click Compile."
       - "Watch the link between the two nodes pulse, which shows that the pose is flowing. Change the sequence to a run animation and click Compile again."
@@ -342,14 +343,14 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-get-animation-variables-in-animation-blueprints-in-unreal-engine"
     checklist:
-      - "Open ABP_First (from quest AQ14), or make a new Animation Blueprint for the mannequin Skeleton and name it ABP_Locomotion."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Animation Blueprint. Pick the mannequin Skeleton and name the new asset ABP_Locomotion. If you already have a simple Animation Blueprint of your own for this Skeleton, you can use that instead."
       - "In the AnimGraph, right-click and choose State Machines, then Add New State Machine. Name it Locomotion and connect it to the Output Pose node."
       - "Double-click the state machine to open it. Drag from the Entry node and choose Add State, and name the state Idle. Open the state, put the idle animation inside, and connect it to the state's Output Pose."
       - "Add a second state named Walk that contains a walk or run animation. Create one transition from Idle to Walk and one transition from Walk to Idle, because each transition only goes in one direction."
-      - "In the Event Graph, start from Event Blueprint Update Animation. Get the owning actor, cast it to your character, get Character Movement, get Velocity, and then use Vector Length XY. Promote the result to a variable named Speed."
+      - "In the Event Graph, start from Event Blueprint Update Animation. Use Try Get Pawn Owner, cast the result to BP_ThirdPersonCharacter, get Character Movement, get Velocity, and then use Vector Length XY. Promote the result to a variable named Speed."
       - "Open the transition rule from Idle to Walk and make it true when Speed > 10. Make the rule from Walk to Idle true when Speed <= 10. Then click Compile."
       - "Assign the Animation Blueprint to the Mesh component of BP_ThirdPersonCharacter, using the Anim Class property. Press Play and walk around. Then set the Duration of the Idle to Walk transition to 0.2 and compare how the change looks."
-    done_when: "Send a screenshot of the state machine graph that shows Idle, Walk and both transitions, and a screenshot of one transition rule that uses Speed. Also send a short clip, or two screenshots, of the character idle and walking in Play mode."
+    done_when: "Send a screenshot of the state machine graph that shows Idle, Walk and both transitions, and a screenshot of one transition rule that uses Speed. Also send a short video clip (30 seconds or less), or two screenshots, of the character idle and walking in Play mode."
     xp: 125
     verify_type: screenshot
     quiz:
@@ -397,9 +398,9 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-editor-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "Open the mannequin Skeleton asset. In the Skeleton Tree, right-click the bone hand_r and choose Add Socket. Name the socket hand_rSocket."
+      - "Open a project made from the Third Person template, or create one. Open the mannequin Skeleton asset. In the Skeleton Tree, right-click the bone hand_r and choose Add Socket. Name the socket hand_rSocket."
       - "In the Viewport menu, go to Character, then Bones, and enable Sockets so that you can see the socket. Move and rotate the socket until it sits in the palm of the hand. Save the Skeleton."
-      - "Right-click the socket, choose Add Preview Asset, and pick a simple prop mesh such as a cube or a Starter Content prop. Adjust the socket until the prop looks like the hand is holding it."
+      - "Right-click the socket, choose Add Preview Asset, and pick a simple prop mesh such as a cube or a cylinder. Adjust the socket until the prop looks like the hand is holding it."
       - "In BP_ThirdPersonCharacter, add a Static Mesh component that uses the same prop. Drag it onto the Mesh component to make it a child of the Mesh. Then set its Parent Socket property to hand_rSocket."
       - "In the Event Graph, add a key press event that calls Attach Component To Component (or Detach From Component). Give it the socket name and use the Snap to Target rules. Test it in Play mode."
       - "Copy the socket, select the bone hand_l, and use Paste Sockets To Selected Bone. Compare the two sockets."
@@ -453,14 +454,14 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/third-person-template-in-unreal-engine"
     checklist:
-      - "Make a new level named L_MotionStage. Build a flat floor of about 20 by 20 meters and one long wall. You can use simple geometry or the Level Prototyping meshes."
+      - "Open a project made from the Third Person template, or create one. Make a new level named L_MotionStage. Build a flat floor of about 20 by 20 meters and one long wall. You can use simple geometry or the Level Prototyping meshes."
       - "Add objects that show real sizes: a step of about 20 cm, a ledge of about 1 m, and a gap of about 2 m. Put a Text Render actor next to each one that shows its size."
       - "Light the stage with one Directional Light, one Sky Light, and one extra light that makes the mannequin easy to see from the front."
       - "Place a Skeletal Mesh Actor (Quinn or Manny). Set Animation Mode to Use Animation Asset, choose a run or walk sequence, and enable Looping."
-      - "Place a second mannequin and set its Anim Class to ABP_Manny or ABP_Quinn. This lets the mentor compare a looping animation asset with an Animation Blueprint."
+      - "Place a second mannequin and set its Anim Class to ABP_Unarmed, the Animation Blueprint of the template. This lets the mentor compare a looping animation asset with an Animation Blueprint."
       - "Add a Camera Actor that frames the whole stage. Record a clip of 10 to 20 seconds that shows the looping mannequin and the size marks. Recording the window with a capture tool is fine."
       - "Write 5 lines that say which sequence loops, how you checked the size of the mesh against the marks, and one thing you would change."
-    done_when: "Send a short clip of the stage with the looping mannequin, two screenshots (one of the marks with their labels, one of the lighting from the front), and your 5 lines. A mentor reviews your work."
+    done_when: "Send a short video clip (30 seconds or less) of the stage with the looping mannequin, two screenshots (one of the marks with their labels, one of the lighting from the front), and your 5 lines. A mentor reviews your work."
     xp: 250
     verify_type: mentor
     quiz: []
@@ -486,10 +487,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/testing-physics-assets-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-bodies-in-unreal-engine"
     checklist:
-      - "In the Content Browser, find the mannequin Physics Asset next to SKM_Manny. Its name starts with PA_. Double-click it to open the Physics Asset Editor."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, find the Physics Asset of the mannequin. In the current template it is PA_Mannequin in the folder Characters/Mannequins/Rigs. Double-click it to open the Physics Asset Editor."
       - "Look at the bodies and constraints on the mannequin. Select the shoulder body and count the bodies that are below it in the hierarchy."
       - "Open the Simulation dropdown, which is the arrow next to the Simulate button in the toolbar. Try Simulation first. Then try No Gravity and hold Ctrl while you click bodies to poke them. Then select the shoulder and try Selected Simulation."
-      - "In the Content Browser, right-click SKM_Manny and choose Create, then Physics Asset, then Create. Accept the default settings and compare the new asset with the original one."
+      - "In the Content Browser, right-click SKM_Manny_Simple and choose Create, then Physics Asset, then Create. Accept the default settings and compare the new asset with the original one."
       - "In BP_ThirdPersonCharacter, add a key press event. On the Mesh component, call Set Simulate Physics with the value true, and set its Collision Enabled to Physics Only or Collision Enabled. Set the collision of the Capsule to No Collision."
       - "Press Play, press the key, and watch the character fall as a ragdoll. Take a screenshot while it is falling."
     done_when: "Send a screenshot of the Physics Asset Editor with the mannequin bodies visible, a screenshot of the Blueprint nodes that start the ragdoll, and a screenshot in Play mode of the ragdoll on the floor."
@@ -543,13 +544,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Animation/Montage/MontageJumptoSection"
     checklist:
-      - "In the Content Browser, right-click an attack or interact Animation Sequence and choose Create, then Create AnimMontage. Name the new asset AM_Attack."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, right-click any Animation Sequence of the mannequin, for example a jump, and choose Create, then Create AnimMontage. Name the new asset AM_Attack. If you have an attack animation of your own, use that."
       - "Open the montage. Drag two more Animation Sequences from the Asset Browser into the same Slot track, so that the three animations play one after the other."
       - "Right-click the Montage track and create three Montage Sections named Start, Loop and End. Place one section header at the start of each animation."
       - "In the Montage Sections panel, click Clear to remove the existing links. Then link Start to Loop, and link Loop to Loop, so that the middle part repeats."
       - "Open Window > Anim Slot Manager. Add a Slot named FullBody, and set the Slot track of the montage to DefaultGroup.FullBody. Save the Skeleton, because Slots are stored on it."
-      - "In the AnimGraph of your Animation Blueprint, add a Slot node after the locomotion state machine. Set its Slot Name to FullBody."
-      - "In the Character Blueprint, use a Play Montage node to play AM_Attack when a key is pressed. On a second key, call Montage Jump to Section with the Section Name set to End."
+      - "Open the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions). In its AnimGraph, add a Slot node just before the Output Pose node, after the locomotion and any other nodes. Set its Slot Name to FullBody."
+      - "In BP_ThirdPersonCharacter, use a Play Montage node with the character's Mesh to play AM_Attack when a key is pressed. On a second key, call Montage Jump to Section with the Section Name set to End."
     done_when: "Send two screenshots: one of the Montage Sections panel that shows the links from Start to Loop and from Loop to Loop, and one of the Blueprint graph with Play Montage and Montage Jump to Section. Add one sentence that says what happens when you press the second key."
     xp: 115
     verify_type: screenshot
@@ -608,14 +609,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-masks-and-blend-profiles-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
     checklist:
-      - "In the Anim Slot Manager, add a Slot named UpperBody. Set your attack or wave montage (AM_UpperWave) to use the slot DefaultGroup.UpperBody."
-      - "In the AnimGraph, drag from the output of your locomotion state machine and add a New Save cached pose node. Name it LocomotionCache. A cached pose stores a result so that you can use it in more than one place."
+      - "Open a project made from the Third Person template, or create one. Right-click any Animation Sequence of the mannequin in which the arms move, choose Create, then Create AnimMontage, and name it AM_UpperWave. If you have a wave or attack animation of your own, use that. Open the montage, open Window > Anim Slot Manager, add a Slot named UpperBody, and set the Slot track of the montage to DefaultGroup.UpperBody."
+      - "Open the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions). In the AnimGraph, find the last node before the Output Pose node, drag from its output and add a New Save cached pose node. Name it LocomotionCache. A cached pose stores a result so that you can use it in more than one place."
       - "Add a Layered blend per bone node. Add a Use cached pose LocomotionCache node and connect it to the Base Pose input."
       - "Add a second Use cached pose LocomotionCache node and connect it to a Slot node that is set to DefaultGroup.UpperBody. Connect the Slot node to the Blend Poses 0 input."
-      - "Select the Layered blend per bone node. In its Details panel, expand Layer Setup and add one entry with Bone Name spine_01 and Blend Depth 1. Also check Mesh Space Rotation Blend."
-      - "In the Character Blueprint, add a key press event. First check Montage Is Playing, and then call Montage Play with AM_UpperWave only if the montage is not already playing."
+      - "Select the Layered blend per bone node. In its Details panel, expand Layer Setup and add one entry with Bone Name spine_01 and Blend Depth 1. Also check Mesh Space Rotation Blend. Connect the output of the node to the Output Pose node."
+      - "In BP_ThirdPersonCharacter, add a key press event. First check Montage Is Playing, and then call Montage Play with AM_UpperWave only if the montage is not already playing."
       - "Play in the editor, walk, and press the key. The legs should keep walking while the upper body plays the montage."
-    done_when: "Send a screenshot of the AnimGraph that shows the cached pose, the Slot node, and the Layered blend per bone node with its Layer Setup visible. Also send a short clip or GIF of the character walking while the upper body plays the montage."
+    done_when: "Send a screenshot of the AnimGraph that shows the cached pose, the Slot node, and the Layered blend per bone node with its Layer Setup visible. Also send a short video clip (30 seconds or less) of the character walking while the upper body plays the montage."
     xp: 115
     verify_type: screenshot
     quiz:
@@ -671,12 +672,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
     checklist:
-      - "Open an Animation Sequence that moves the character forward, such as a roll, a vault or a walk with root movement. Give it a clear name, or write down the name it has."
+      - "Open a project made from the Third Person template, or create one. You need an Animation Sequence that moves the root bone forward, such as a roll or a vault. If you have none, make one: duplicate a jump or walk animation of the mannequin and name the copy Anim_RootMove. Open it, go to the first frame, select the root bone in the Skeleton Tree and press Key in the toolbar. Then go to the last frame, move the root bone about 200 units forward in the viewport, and press Key again."
       - "In the viewport, open the Character menu, go to Bones, then Bone Drawing, and choose All Hierarchy so that all bones are drawn. Watch the red root bone and its red line while the animation plays."
       - "In the Character menu, go to Animation, then Root Motion, and try the options Ignore, Loop, and Loop and Reset. Note what each option does to the preview."
       - "In the Asset Details panel, check Enable Root Motion on the sequence. The panel writes it as one word, EnableRootMotion. Then create a montage from the sequence and name it AM_Roll."
-      - "Open the Animation Blueprint and click Class Defaults in the toolbar. Set Root Motion Mode to Root Motion from Montages Only."
-      - "In the Character Blueprint, play AM_Roll when a key is pressed. Play in the editor and press the key while the character is standing still."
+      - "Open the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and click Class Defaults in the toolbar. Set Root Motion Mode to Root Motion from Montages Only. Also make sure the AnimGraph has a Slot 'DefaultSlot' node before the Output Pose node, so that montages are shown."
+      - "In BP_ThirdPersonCharacter, add a key press event that plays AM_Roll with a Play Montage node and the character's Mesh. Play in the editor and press the key while the character is standing still."
       - "Open the console with the backtick key and type show collision. You can now see the capsule, the collision shape of the character, move together with the mesh."
     done_when: "Send a screenshot of the Animation Sequence with All Hierarchy bone drawing and the red root line, and a screenshot of the Class Defaults of the Animation Blueprint that shows Root Motion Mode. Add one sentence that describes what changed in the game after you turned on Enable Root Motion."
     xp: 110
@@ -709,7 +710,7 @@ quests:
       - q: "In the Animation Sequence Editor preview, what does Loop and Reset do?"
         choices: ["Plays with root motion and starts every loop from the root origin", "Plays with root motion and continues from where the last loop ended", "Ignores root motion", "Resets the Skeleton to the reference pose"]
         answer_index: 0
-        explain: "Loop continues from the previous end point. Loop and Reset starts each loop again from the root bone origin."
+        explain: "Loop continues from the point where the loop before it ended. Loop and Reset starts each loop again from the root bone origin."
       - q: "In a network game you want root motion from a montage to replicate. What does the documentation say you must do?"
         choices: ["Nothing, Play Montage replicates itself", "Set Root Motion Mode to Ignore Root Motion", "Replicate the Play Montage call yourself with an RPC", "Enable Force Root Lock"]
         answer_index: 2
@@ -736,7 +737,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-bipeds-with-ik-rig-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-solvers-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add (+), then Animation, then IK Rig. Pick the Skeletal Mesh of your character and name the new asset IK_MyCharacter."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then IK Rig. Pick the Skeletal Mesh of the character, for example SKM_Manny_Simple, and name the new asset IK_MyCharacter."
       - "In the Hierarchy panel, right-click the pelvis bone and set it as the pelvis (the retarget root). This tells Unreal which bone carries the movement of the whole body."
       - "Create retarget chains for Spine, Neck, Head, Left Arm, Right Arm, Left Leg and Right Leg. For each chain, select the bones from the first to the last, right-click, choose New Retarget Chain, and check the Chain Name that Unreal fills in for you."
       - "Select both foot bones, click Add (+) in the Hierarchy panel and choose New IK Goal. When Unreal asks for a Solver, pick Limb IK. A solver is the part that calculates how the limb bends."
@@ -802,13 +803,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-notifies-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
     checklist:
-      - "Build an actor that the player can interact with, named BP_Lever or BP_Chest. Give it a trigger volume and a prompt on screen. When the player presses the interact key inside the trigger volume, the actor tells the character to interact."
-      - "Create a montage named AM_Interact with at least two sections, Reach and Pull. Set it to a named Slot, FullBody or UpperBody, and make sure that this Slot exists in the AnimGraph of the character."
+      - "Open a project made from the Third Person template, or create one. Build an actor that the player can interact with, named BP_Lever or BP_Chest. Give it a trigger volume and a prompt on screen. When the player presses the interact key inside the trigger volume, the actor tells the character to interact."
+      - "Create a montage named AM_Interact from one or two Animation Sequences of the mannequin, or from your own, with at least two sections, Reach and Pull. Set it to a named Slot, FullBody or UpperBody, and make sure that this Slot exists in the AnimGraph of the character."
       - "Play AM_Interact with the Play Montage node. Use its On Completed output to unlock the player, and use On Interrupted to cancel the interaction cleanly."
       - "Add a Notify to the montage at the moment when the hand touches the object. When that notify fires, spawn a Niagara effect or play a sound at a socket on the hand."
       - "Add a second notify that fires On Notify Begin in the Play Montage node. Use it to change the state of the lever or chest, for example to open or pulled."
       - "Make it possible to interrupt the montage. A hit or a jump during the montage should stop it, and the actor should go back to its starting state."
-      - "Record a clip of 20 to 40 seconds. It must show the approach, the interaction, the effect at the right frame, the change of the actor state, and one attempt that is interrupted."
+      - "Record a short video clip (30 seconds or less). It must show the approach, the interaction, the effect at the right frame, the change of the actor state, and one attempt that is interrupted."
     done_when: "Send the clip described in the last step, a screenshot of the montage timeline with the sections and notifies visible, and a screenshot of the Blueprint graph with Play Montage, On Completed, On Interrupted and On Notify Begin connected. Add a short note that explains which Slot you used and why. A mentor reviews your work."
     xp: 250
     verify_type: mentor
@@ -832,13 +833,13 @@ quests:
     backup_url: null
     extra_urls: []
     checklist:
-      - "Open an Animation Sequence. In the timeline, open the drop-down of the Curves track, choose Add Curve..., then Create Curve, and name the curve Glow."
+      - "Open a project made from the Third Person template, or create one. Open an Animation Sequence of the mannequin. In the timeline, open the drop-down of the Curves track, choose Add Curve..., then Create Curve, and name the curve Glow."
       - "Click the drop-down of the new curve and choose Edit Curve. Add keys with the Enter key so that Glow goes from 0 up to 1 and back to 0 during the animation."
       - "Open Window > Anim Curves. Turn on the Material type for Glow, so that the curve can drive a material. Save the Skeleton when Unreal asks you to."
       - "Open the material of the character and add a scalar parameter named Glow. Multiply it into Emissive, the input that makes a material give off light. Watch the mesh glow while the animation plays."
-      - "In the Event Graph of the Animation Blueprint, call Get Curve Value with the Curve Name set to Glow. Show the result every tick with a Print String node."
+      - "In the Event Graph of the Animation Blueprint that the character uses, call Get Curve Value with the Curve Name set to Glow. Show the result every tick with a Print String node."
       - "Add a second curve, right-click it and choose Convert To Metadata. Note which value the curve outputs now."
-    done_when: "Send a screenshot of the Curve Editor with the Glow keys, a screenshot of the Anim Curves panel that shows Glow with the Material type turned on, and a screenshot or clip of the mesh glowing during playback."
+    done_when: "Send a screenshot of the Curve Editor with the Glow keys, a screenshot of the Anim Curves panel that shows Glow with the Material type turned on, and a screenshot or a short video clip (30 seconds or less) of the mesh glowing during playback."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -894,7 +895,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
     checklist:
-      - "In the AnimGraph, add a sequence player for a walk and one for a run, and connect both to a Blend node. Set the Blend Alpha to 0.5 and watch how the feet slide and do not move together."
+      - "Open a project made from the Third Person template, or create one. Create a new Animation Blueprint for the mannequin Skeleton and name it ABP_SyncTest. In its AnimGraph, add a sequence player for a walk animation and one for a run animation of the mannequin, and connect both to a Blend node. Connect the Blend node to Output Pose. Set the Blend Alpha to 0.5 and watch how the feet slide and do not move together."
       - "Select both sequence players. In the Details panel, find the Sync section, set Method to Sync Group and set Group Name to Locomotion. Watch the blend again."
       - "Open the walk sequence. Right-click the notify timeline at the moment the left foot lands, choose Add Sync Marker..., then New Sync Marker..., and name it LeftFootDown. Add a marker named RightFootDown for the right foot in the same way."
       - "Open the run sequence. Use Add Sync Marker..., then Existing Sync Markers, to add the same two marker names at the moments where the feet land in the run."
@@ -957,7 +958,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
     checklist:
-      - "Enable the FullBodyIK plugin in Edit > Plugins, and then restart the editor."
+      - "Open a project made from the Third Person template, or create one. Enable the FullBodyIK plugin in Edit > Plugins, and then restart the editor."
       - "Create a Control Rig named CR_Manny_FBIK for the mannequin skeletal mesh. Add controls, the handles you move in the viewport, for the head, both hands and both feet."
       - "In the rig graph, right-click and add the node Full Body IK from the Hierarchy category. Connect it to the Forwards Solve node, and set its Root to the pelvis bone."
       - "Add one Effector for each control. An effector is a point that the body tries to reach. Set the Bone of each effector, and connect a Get Transform node of the matching control to it."
@@ -1029,14 +1030,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-plugins-in-unreal-engine"
     checklist:
-      - "Enable the Motion Warping plugin. Pick an animation with root motion, such as a vault, a mantle or a punch. Open it and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion."
+      - "Open a project made from the Third Person template, or create one. Enable the Motion Warping plugin in Edit > Plugins and restart the editor. Pick an animation with root motion, such as a vault, a mantle or a punch. If you have none, make one: duplicate a jump animation of the mannequin, open the copy, select the root bone in the Skeleton Tree, press Key in the toolbar at the first frame, then move the root bone about 200 units forward at the last frame and press Key again. Open the animation and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion."
       - "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage."
       - "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target."
       - "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget."
-      - "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it."
+      - "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it. In the Animation Blueprint that the character uses, click Class Defaults and set Root Motion Mode to Root Motion from Montages Only, and make sure the AnimGraph has a Slot 'DefaultSlot' node before Output Pose."
       - "On an input action, do three things in this order: get the location of the Target Point, call Add or Update Warp Target from Transform with the Name VaultTarget, and then use Play Montage to play AM_Vault."
       - "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare the result."
-    done_when: "Send a short clip or two screenshots that show the character warping to the Target Point from two different start positions. Also send a screenshot of the Details panel of the Motion Warping notify."
+    done_when: "Send a short video clip (30 seconds or less), or two screenshots, that show the character warping to the Target Point from two different start positions. Also send a screenshot of the Details panel of the Motion Warping notify."
     xp: 180
     verify_type: screenshot
     quiz:
@@ -1100,11 +1101,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
     checklist:
-      - "Create an Animation Layer Interface named ALI_Character: in the Content Browser click Add, then Animation, then Animation Layer Interface (the documentation page calls this menu item Animation Interface). Add three layers named FullBody, UpperBody and IK."
+      - "Open a project made from the Third Person template, or create one. Create an Animation Layer Interface named ALI_Character: in the Content Browser click Add, then Animation, then Animation Layer Interface (the documentation page calls this menu item Animation Interface). Add three layers named FullBody, UpperBody and IK."
       - "Give the UpperBody layer and the IK layer a pose input. Put all three layers in one Group, and give the Group a name that is not the default name."
-      - "Open ABP_Base, the Animation Blueprint of your character. In Class Settings, add ALI_Character under Interfaces."
+      - "Create a new Animation Blueprint for the mannequin Skeleton and name it ABP_Base. In Class Settings, add ALI_Character under Interfaces. In the My Blueprint panel, open the FullBody layer and put a walk or run Sequence Player in it. Leave the UpperBody and IK layers as they are, so that they pass their input pose through. In BP_ThirdPersonCharacter, select the Mesh and set Anim Class to ABP_Base. If you have an Animation Blueprint of your own, you can use that instead."
       - "Drag the three layers into the AnimGraph in this order: FullBody, then UpperBody, then IK. Connect them one after the other, and connect the last one to Output Pose."
-      - "Create a second Animation Blueprint named ABP_Rifle that also implements ALI_Character. In its UpperBody layer, put a different animation or an aim offset."
+      - "Create a second Animation Blueprint named ABP_Rifle that also implements ALI_Character. In its UpperBody layer, put a different animation, for example a jump or fall pose of the mannequin, or an aim offset if you have one."
       - "In BP_ThirdPersonCharacter, add a key press event that calls Link Anim Class Layers. Use the Mesh as Target and ABP_Rifle as In Class."
       - "Press Play and press the key. Confirm that the upper body changes while the base locomotion keeps running."
     done_when: "Send a screenshot of the list of layers in ALI_Character, a screenshot of the AnimGraph of ABP_Base with the three layer nodes, and screenshots of the game view before and after Link Anim Class Layers."
@@ -1174,14 +1175,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-linking-in-unreal-engine"
     checklist:
-      - "Create a blend space named BS_Locomotion. It blends idle, walk and run animations based on Speed, and also on Direction if you have strafe (sideways) animations."
+      - "Open a project made from the Third Person template, or create one. The template has idle, walk, run and jump animations that you can use. The run animations have Jog in their names. Create a blend space named BS_Locomotion. It blends idle, walk and run animations based on Speed, and also on Direction if you have strafe (sideways) animations."
       - "Create ABP_Locomotion with a state machine that has four states: Locomotion (which plays BS_Locomotion), JumpStart, JumpLoop and JumpEnd. The transition rules read IsFalling and Speed from the character."
       - "Add an Animation Layer Interface with a layer named UpperBody that takes a pose input. Add the interface to ABP_Locomotion, and place the layer after the state machine in the AnimGraph."
       - "Create ABP_Locomotion_Upper, which implements the same interface. In it, blend an upper body animation over the input pose with a Layered Blend per Bone node that starts from the spine."
-      - "In the character Blueprint, link the upper body Animation Blueprint with Link Anim Class Layers when a key is pressed."
+      - "In BP_ThirdPersonCharacter, set the Anim Class of the Mesh to ABP_Locomotion, and link the upper body Animation Blueprint with Link Anim Class Layers when a key is pressed."
       - "Test all the transitions: stand, walk, run, jump from a run, land into a run, and the upper body layer while running."
-      - "Record a clip of 30 to 60 seconds. Write 5 to 10 lines about your transition rules and about what you would fix next."
-    done_when: "Send a video clip that shows idle to walk to run, a jump from a run with the landing, and the upper body layer active while the character moves. Also send screenshots of the state machine and of the layer graph, and your short written text. A mentor reviews your work."
+      - "Record a short video clip (30 seconds or less). Write 5 to 10 lines about your transition rules and about what you would fix next."
+    done_when: "Send a short video clip (30 seconds or less) that shows idle to walk to run, a jump from a run with the landing, and the upper body layer active while the character moves. Also send screenshots of the state machine and of the layer graph, and your short written text. A mentor reviews your work."
     xp: 300
     verify_type: mentor
     quiz: []
@@ -1206,9 +1207,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pose-blender-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pose-driver-in-unreal-engine"
     checklist:
-      - "In the Content Browser, right-click a short animation sequence, choose Create, then Create PoseAsset. Name it PA_Test, and type names for a few of the frames in the Pose Names field."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, right-click a short animation sequence of the mannequin, choose Create, then Create PoseAsset. Name it PA_Test, and type names for a few of the frames in the Pose Names field."
       - "Open PA_Test and look at the list of curves. There is one curve for each pose."
-      - "In an Animation Blueprint, drag PA_Test into the AnimGraph. This creates a Pose Blender node. Connect a sequence player or a Custom Curve to its input, because the node needs curve values to show a pose."
+      - "Create a new Animation Blueprint for the mannequin Skeleton, or open one of your own. Drag PA_Test into the AnimGraph. This creates a Pose Blender node. Connect a sequence player or a Custom Curve to its input, because the node needs curve values to show a pose."
       - "Right-click the Pose Blender node and choose Create Pose by Name Node. Pick one pose name, and drive its Alpha with a variable that goes from 0 to 1."
       - "Duplicate PA_Test. In the copy, enable Additive and click Convert to Additive Pose. Use this copy after an Apply Additive node, on top of a base sequence."
       - "Optional: add a Pose Driver node and assign the pose asset to it. Use Copy Poses from Pose Asset and set a Source Bone."
@@ -1277,11 +1278,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeleton-editor-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-sequence-editor-in-unreal-engine"
     checklist:
-      - "Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it BP_FootSyncModifier."
+      - "Open a project made from the Third Person template, or create one. Create a new Blueprint Class and choose Animation Modifier as the parent class. Name it BP_FootSyncModifier."
       - "Add a variable for the name of the foot bone, for example foot_l. Make the variable Instance Editable, so that you can change it later without opening the Blueprint."
       - "Implement the OnApply function. First add a Notify track named FootSync. Then loop through the frames with Get Bone Pose for Frame, and add a sync marker at the frame where the foot is lowest."
       - "Implement the OnRevert function so that it removes the FootSync notify track."
-      - "Open a walk animation and go to Window > Animation Data Modifiers. Click Add Modifier and choose BP_FootSyncModifier, set the bone name, and then choose Apply Modifier."
+      - "Open a walk animation of the mannequin and go to Window > Animation Data Modifiers. Click Add Modifier and choose BP_FootSyncModifier, set the bone name, and then choose Apply Modifier."
       - "Check the new track and its markers in the Notifies area. Then choose Revert Modifier and confirm that the track is gone."
       - "Now apply the modifier on the Skeleton instead of on one animation. Check that another animation also gets the track."
     done_when: "Send screenshots of the BP_FootSyncModifier graph that show OnApply and OnRevert. Also send a screenshot of a walk sequence that shows the generated FootSync track with its markers and the Animation Data Modifiers tab."
@@ -1349,14 +1350,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-matching-debugging-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-animation-sample-project-in-unreal-engine"
     checklist:
-      - "Enable the Pose Search plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor. Then get a set of locomotion animations with root motion, for example from the Game Animation Sample."
+      - "Motion Matching needs a set of locomotion animations with root motion, and the Third Person template does not have one. Epic's free Game Animation Sample project, which the Motion Matching documentation uses and which you get from Fab or the Epic Games Launcher, has such a set. Create a project from it, or use your own animations with root motion. Enable the Pose Search plugin if it is off: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
       - "Create PSS_Locomotion for your skeleton: in the Add menu choose Animation, then Motion Matching, then Pose Search Schema. Check that the Pose channel uses the bones of your left foot and your right foot."
       - "Create a Pose Search Database named PSD_Locomotion and set PSS_Locomotion as its Schema. Add loops, starts, stops and pivots (quick turns). Confirm that Root Motion is enabled on each sequence."
-      - "In ABP_MMCharacter, add a Motion Matching node with Database set to PSD_Locomotion. Connect it to a Pose History node, and connect the Pose History node to Output Pose. On the Pose History node, enable Generate Trajectory and add the collected bones."
+      - "Create a new Animation Blueprint for the same skeleton and name it ABP_MMCharacter. Add a Motion Matching node with Database set to PSD_Locomotion. Connect it to a Pose History node, and connect the Pose History node to Output Pose. On the Pose History node, enable Generate Trajectory and add the collected bones. Set ABP_MMCharacter as the Anim Class of a character that you can control."
       - "Play in the editor. Enable Should Filter Notifies and set Notify Recency Time Out. Then tune Continuing Pose Cost Bias until the character no longer switches between animations too often."
       - "Record 10 seconds with the Rewind Debugger, which you find under Tools > Debug. Open the Pose Search track and the Selection Table. Find one pose that was rejected and read the reason."
       - "Change the Weight of the Trajectory channel, for example from 3.0 to 1.0, and record again. Note what changed."
-    done_when: "Send a short clip of the character moving with Motion Matching, and a screenshot of the selection table in the Rewind Debugger with Channel Breakdown turned on. Add 5 lines that name your schema channels, say which database bias you changed and why, and describe one case where a state machine would still be the better choice."
+    done_when: "Send a short video clip (30 seconds or less) of the character moving with Motion Matching, and a screenshot of the selection table in the Rewind Debugger with Channel Breakdown turned on. Add 5 lines that name your schema channels, say which database bias you changed and why, and describe one case where a state machine would still be the better choice."
     xp: 250
     verify_type: writeup
     quiz:
@@ -1430,7 +1431,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-operation-stack-in-unreal-engine"
     checklist:
-      - "Pick a source character, for example the UE5 Mannequin, and a target character that has a different skeleton. Create one IK Rig for each and name them IKR_Source and IKR_Target."
+      - "Open a project made from the Third Person template, or create one. Pick a source character, for example the UE5 Mannequin, and a target character that has a different skeleton. The template has only one skeleton, so add a free character from Fab, Epic's asset store, to the project. Create one IK Rig for each and name them IKR_Source and IKR_Target."
       - "In each IK Rig, run Auto Create Retarget Chains and Set Pelvis. Read the notification that appears, and fix by hand any chain that the tool got wrong."
       - "Create an IK Retargeter named RTG_SourceToTarget: in the Add menu choose Animation, then IK Rig, then IK Retargeter. Click Add Default Ops. Check the chain mapping with Map All (Fuzzy), which matches chains by similar names, and fix any wrong chain."
       - "If the two characters stand in different reference poses, for example an A-pose and a T-pose, create a new retarget pose and use Auto Align. Do not edit the Default Pose."
@@ -1512,9 +1513,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/skeletal-mesh-lods-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/working-with-modular-characters-in-unreal-engine"
     checklist:
-      - "Spawn 50 or more copies of BP_CrowdCharacter, each with an Animation Blueprint. Type stat unit in the console to show the frame times, and note the game thread time."
+      - "Open a project made from the Third Person template, or create one. Set up the crowd assets: duplicate SKM_Manny_Simple and name the copy SK_CrowdCharacter, duplicate ABP_Unarmed and name the copy ABP_Crowd, and make a Character Blueprint named BP_CrowdCharacter whose Mesh uses SK_CrowdCharacter with ABP_Crowd as its Anim Class. Spawn 50 or more copies of BP_CrowdCharacter, for example with a loop in the Level Blueprint that calls Spawn Actor from Class in a grid. Type stat unit in the console to show the frame times, and note the game thread time."
       - "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon."
-      - "Enable the Animation Budget Allocator plugin. Set the Mesh Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play."
+      - "Enable the Animation Budget Allocator plugin. In BP_CrowdCharacter, select the Mesh and set its Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play."
       - "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh."
       - "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level. Each level has its own section, so you write four sections: [ViewDistanceQuality@0], [ViewDistanceQuality@1], [ViewDistanceQuality@2] and [ViewDistanceQuality@3], each with its own a.Budget.BudgetMs line below it. Test two of the levels."
       - "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD."
@@ -1592,14 +1593,14 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
     checklist:
-      - "Enable the Control Rig Modules plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
-      - "Create CR_Modular_Hero: in the Add menu choose Animation, then Control Rig, then Control Rig, and choose ModularRig. Set the Preview Mesh to your character."
+      - "Open a project made from the Third Person template, or create one. Enable the Control Rig Modules plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
+      - "Create CR_Modular_Hero: in the Add menu choose Animation, then Control Rig, then Control Rig, and choose ModularRig. Set the Preview Mesh to the mannequin, for example SKM_Manny_Simple, or to a character of your own."
       - "Drag the Spine module onto the unresolved socket. Then add Neck, both Legs, both Feet, Shoulders and Arms. For the fingers, select all finger sockets at once and drop one Finger module on them."
       - "Delete the modules of the left arm. Build them again by selecting the modules of the right arm and using Mirror in the Module Hierarchy."
       - "Make one connector unresolved on purpose, for example by renaming a bone or removing a socket. Then fix it with Use Selected or with the hierarchy dropdown. Take a screenshot of the red none before the fix and another one after the fix."
       - "Create your own module. Make a new Control Rig, choose Switch to Rig Module, and set its Name, Icon and Description. Add one Secondary connector with a Type Rule, and then add your module to CR_Modular_Hero."
       - "Drag CR_Modular_Hero into a level. Set keys for 3 poses in Sequencer, the animation timeline tool of Unreal, and take a screenshot of each pose."
-    done_when: "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module. Also send the screenshots of your 3 poses in Sequencer, or a short GIF of them. Add 4 lines about what your module does and how its connectors resolve."
+    done_when: "Send screenshots of the finished Module Hierarchy, of the unresolved connector before and after the fix, and of the Class Settings of your custom module. Also send the screenshots of your 3 poses in Sequencer, or a short video clip (30 seconds or less) of them. Add 4 lines about what your module does and how its connectors resolve."
     xp: 250
     verify_type: screenshot
     quiz:
@@ -1666,7 +1667,7 @@ quests:
     required: true
     capstone: true
     title: Control Rig kit
-    brief: "A kit is a folder that holds everything another person needs to animate a character: the mesh, the skeleton, the rig, the retargeter and a set of animations, with a short guide. The real test is that someone else can use it without your help. In this quest you build such a kit for a character that is not the Mannequin, give it to another member to try, and collect their feedback."
+    brief: "A kit is a folder that holds everything another person needs to animate a character: the mesh, the skeleton, the rig, the retargeter and a set of animations, with a short guide. The real test is that someone can use it with only the guide. In this quest you build such a kit for a character that is not the Mannequin, test it in an empty project, and write down what the test showed."
     time_min: 480
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/modular-control-rigs-in-unreal-engine"
     backup_url: null
@@ -1675,14 +1676,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
     checklist:
-      - "Pick a character that is not the Mannequin. It can be your own or a free one. Build CR_Kit_Character as a Modular Control Rig that contains at least one custom module you made yourself."
+      - "Open a project made from the Third Person template, or create one. Pick a character that is not the Mannequin. It can be your own, or a free one from Fab, Epic's asset store. Build CR_Kit_Character as a Modular Control Rig (enable the Control Rig Modules plugin for this) that contains at least one custom module you made yourself."
       - "Build IKR_Kit_Character and RTG_MannequinToKit. Retarget at least 12 Mannequin animations in one batch, including idle, walk, run, jump and two montages. Give the new files a clear suffix."
-      - "Fix the three worst retarget problems with ops, such as the retarget pose, Pin Bones or the FK Chains modes. Record a clip before and after each fix."
+      - "Fix the three worst retarget problems with ops, such as the retarget pose, Pin Bones or the FK Chains modes. Take a screenshot before and after each fix."
       - "Put everything in one folder named Content/Kits/<CharacterName>: the mesh, the skeleton, the rigs, the retargeter and the animations. Nothing in the folder may use assets from outside the folder, except assets that come with the engine."
       - "Write a file named README_Kit.md inside the folder. It explains how to open the rig, how to retarget more animations with the retargeter, and the known limits. Include one screenshot for each step."
-      - "Give the folder to another member. They must play one retargeted animation and set a key for one pose on the rig in Sequencer without asking you a question. Collect their feedback."
-      - "Record a clip of 60 seconds. It shows the rig posed in Sequencer, and then two retargeted animations playing in a level."
-    done_when: "Send the kit folder (or a zip file made with Migrate), the file README_Kit.md, the 60 second clip, the before and after clips of the three fixes, and the written feedback of your tester. A mentor reviews your work."
+      - "Test the kit. Right-click the folder, choose Migrate, and copy it into a new empty project. If another person can help you, let them do the test: they play one retargeted animation and set a key for one pose on the rig in Sequencer, using only your README. If nobody can, do the test yourself in the empty project. Write down what was unclear or missing."
+      - "Record a short video clip (30 seconds or less). It shows the rig posed in Sequencer, and then two retargeted animations playing in a level."
+    done_when: "Send the text of README_Kit.md, a screenshot of the kit folder in the Content Browser, the short video clip, the before and after screenshots of the three fixes, and your written notes from the test. A mentor reviews your work."
     xp: 400
     verify_type: mentor
     quiz: []
@@ -1708,13 +1709,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-use-the-machine-learning-deformer-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ml-deformer-sample-in-unreal-engine"
     checklist:
-      - "Enable the two plugins ML Deformer Framework and ML Deformer Neural Morph Model, and restart the editor."
-      - "Get training data: an Animation Sequence of random poses and a matching Geometry Cache (an .abc file). If you have no data from Maya, use the ML Deformer Sample from Fab."
+      - "Open any project, or create one from the Third Person template. Enable the two plugins ML Deformer Framework and ML Deformer Neural Morph Model in Edit > Plugins, and restart the editor."
+      - "Get training data: a Skeletal Mesh, an Animation Sequence of random poses and a matching Geometry Cache (an .abc file). If you have no data of your own from a 3D program, use Epic's ML Deformer Sample from Fab, which contains all three."
       - "If you import an Alembic file yourself, use these settings: set Import Type to Geometry Cache, turn Flatten Tracks off, set Compressed Position Precision to 0.001, and turn Store Imported Vertex Numbers on."
       - "Create MLD_Character with the Neural Morph Model: in the Add menu choose Animation, then Deformers, then ML Deformer. Assign the Skeletal Mesh, the Anim Sequence and the Geometry Cache. Enable Draw Deltas and move through 10 frames to check that the two meshes line up."
       - "In Network Inputs, click Add All Animated Bones, and then remove the twist, roll and helper bones. Set Mode to Local. Train first with a small Num Iterations, between 1000 and 3000."
       - "Switch to Testing mode. Compare Weight 0 with Weight 1, and show the Activations heat map. Then raise Delta Zero Threshold until the value GPU Memory (Morph Targets) drops and you still see no loss in quality."
-      - "In BP_MLCharacter, add an MLDeformer component and assign MLD_Character to it. Set the Mesh Deformer of the mesh to DefaultMLDeformerGraph. You must enable Show Engine and Plugin Content to find this asset."
+      - "Make an Actor Blueprint named BP_MLCharacter with a Skeletal Mesh component that uses the trained mesh. Add an MLDeformer component and assign MLD_Character to it. Set the Mesh Deformer of the mesh to DefaultMLDeformerGraph. You must enable Show Engine and Plugin Content to find this asset."
     done_when: "Send screenshots of the deltas debug view, of the heat map in Testing mode, of the Statistics section before and after your Delta Zero Threshold change, and of the Blueprint components. Add 5 lines that say which bones you removed and why, and give one case where you would NOT use the ML Deformer."
     xp: 120
     verify_type: screenshot
@@ -1789,14 +1790,14 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/clothing-tool-in-unreal-engine---properties-reference"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/panel-cloth-editor-overview"
     checklist:
-      - "Use a character whose cape, skirt or coat has its own material section. If you have none, add a simple cape mesh to SK_ClothCharacter and import it."
+      - "Open a project made from the Third Person template, or create one. Use a character whose cape, skirt or coat has its own material section, for example your own character or a free one from Fab, Epic's asset store. If you have none, you can practice on a copy of SKM_Manny_Simple: use one of its material sections as the cloth, and later paint the Max Distance mask so that only a small area, such as the lower back, is allowed to move."
       - "In the Skeletal Mesh Editor, click Section Selection and select the cape section. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character, which is used for collision."
       - "Right-click the section again and choose Apply Clothing Asset, then CA_Cape. Open Window > Clothing and click Activate Cloth Paint."
       - "Create a Max Distance mask. Paint the value 0 along the shoulders, so the cloth stays fixed there. Then use the Gradient tool to go down to a large value at the hem, the bottom edge of the cape. Hold H to preview the cloth."
       - "Add a Backstop Distance mask so that the cape cannot pass into the back of the character. Then tune these Config values: Damping, Gravity Scale and Collision Thickness. Set Wind Method to Accurate."
-      - "Play the character with a run animation and a turn for about 20 seconds, and take screenshots or record a short GIF of the cloth moving. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh."
-      - "Read the overview page of the Panel Cloth Editor. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
-    done_when: "Send screenshots of the Clothing panel with your masks and of the Config values you changed. Also send two screenshots or a short GIF of the cloth moving while the character runs and turns, and you can paste a link to a longer video. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
+      - "Play the character with a run animation and a turn for about 20 seconds, and take screenshots or record a short video clip of the cloth moving. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh."
+      - "Read the overview page of the Panel Cloth Editor in Epic's documentation. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
+    done_when: "Send screenshots of the Clothing panel with your masks and of the Config values you changed. Also send a short video clip (30 seconds or less), or two screenshots, of the cloth moving while the character runs and turns. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor."
     xp: 120
     verify_type: screenshot
     quiz:
@@ -1869,13 +1870,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automatic-blend-space-creation-in-unreal-engine"
     checklist:
-      - "Create a 2D Blend Space asset named BS_Strafe for your Mannequin skeleton. To do this, click Add, then Animation, then Blend Space."
+      - "Open a project made from the Third Person template, or create one. Create a 2D Blend Space asset named BS_Strafe for the Mannequin skeleton. To do this, click Add, then Animation, then Blend Space."
       - "In Asset Details, name the horizontal axis Direction with a range from -180 to 180. Name the vertical axis Speed with a range from 0 to 600."
       - "Set both Axis Functions to Locomotion. Choose Rightward Speed for the horizontal axis and Forward Speed for the vertical axis. Set Bone/Socket 1 and Bone/Socket 2 to the two foot bones."
       - "Drag idle, walk and run animations onto the graph and watch the analysis place them. If you see red triangles, which are very thin, fix them by moving the samples."
       - "On the Speed axis, set Smoothing Time to 0.2 and Smoothing Type to Spring Damper. Hold Ctrl and move the mouse in the graph, and watch the second crosshair follow with a delay."
       - "Set Notify Trigger Mode to Highest Weighted Animation, so that only the strongest animation fires its notifies."
-      - "In the Animation Blueprint of your character (its name starts with ABP_), add BS_Strafe as a Blendspace Player node. Drive its Direction and Speed inputs from variables."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. In its AnimGraph, add BS_Strafe as a Blendspace Player node. Drive its Direction and Speed inputs from variables."
     done_when: "Send a screenshot of the Blend Graph with Show Triangulation turned on and your samples placed. Also send a screenshot of Asset Details that shows the axis names, Smoothing Time and Notify Trigger Mode."
     xp: 60
     verify_type: screenshot
@@ -1931,12 +1932,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/automatic-blend-space-creation-in-unreal-engine"
     checklist:
-      - "Prepare 9 aim poses: center, up, down, left, right and the 4 corners. Open the Animation Sequence of each pose."
-      - "In each sequence, set Additive Anim Type to Mesh Space and set Base Pose Type to Selected animation frame. Set Base Pose Animation to your idle that aims forward, and set Ref Frame Index to 0."
-      - "Create an Aim Offset named AO_Aim for the same skeleton. To do this, click Add, then Animation, then Aim Offset. Set Preview Base Pose to the idle that aims forward."
+      - "Open a project made from the Third Person template, or create one. Prepare 9 aim poses: center, up, down, left, right and the 4 corners. If you have no aim poses, make simple ones: open the idle animation of the mannequin, pause it, rotate a spine bone in the Skeleton Tree so that the upper body leans in one direction, click Create Asset in the toolbar, choose Create Animation, then Current Pose, and save it with a clear name such as Aim_Up. Do this for all 9 poses, with no rotation for the center pose. Open the Animation Sequence of each pose."
+      - "In each sequence, set Additive Anim Type to Mesh Space and set Base Pose Type to Selected animation frame. Set Base Pose Animation to the center pose, which aims forward, and set Ref Frame Index to 0."
+      - "Create an Aim Offset named AO_Aim for the same skeleton. To do this, click Add, then Animation, then Aim Offset. Set Preview Base Pose to the center pose."
       - "Set both Axis Functions to Orientation. For the horizontal axis choose Axis Yaw, and for the vertical axis choose Axis Pitch. Set Bone/Socket to the bone of the hand that holds the weapon, set Bone Facing Axis to +X and Bone Right Axis to +Y."
       - "Drag the 9 poses into the graph and let the analysis place them. If needed, correct the axis ranges so that they go from -90 to 90."
-      - "In the Animation Blueprint of your character (its name starts with ABP_), add AO_Aim as a player node after the State Machine. Drive its Yaw and Pitch inputs with property access from the base aim rotation of the pawn."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. In its AnimGraph, add AO_Aim as a player node after the State Machine. Drive its Yaw and Pitch inputs with property access from the base aim rotation of the pawn."
       - "Set LOD Threshold on the Aim Offset node to 2, so the node stops running on the simpler, far away versions of the mesh."
     done_when: "Send a screenshot of the Aim Offset graph with all 9 samples placed, and a screenshot of the AnimGraph that shows the Aim Offset node with Yaw and Pitch bound and LOD Threshold set."
     xp: 60
@@ -1992,8 +1993,8 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/graphing-in-animation-blueprints-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "In the Animation Blueprint of your character (its name starts with ABP_), create an enum named E_Stance with the values Unarmed, Rifle and Pistol. Then create a variable named Stance of that type."
-      - "Add a Blend Poses by Enum node after your locomotion State Machine. Connect Stance to Active Enum Value. Add a pose input for each stance by right-clicking the node and choosing Add Blend Pin."
+      - "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. Create an enum named E_Stance with the values Unarmed, Rifle and Pistol. Then, in the Animation Blueprint, create a variable named Stance of that type."
+      - "Add a Blend Poses by Enum node after the locomotion State Machine. Connect Stance to Active Enum Value. Add a pose input for each stance by right-clicking the node and choosing Add Blend Pin. Connect the locomotion to the first input, and any two different animations of the mannequin, as Sequence Players, to the other two."
       - "In the Details panel, show the Blend Time pins, and set a different Blend Time for each pose: 0.1, 0.3 and 0.5."
       - "Add a Blend Poses by bool node for IsCrouched. Place an Inertialization node after it, close to the Output Pose."
       - "Add a Blend Multi node with three inputs, and drive it with a float variable named Alpha."
@@ -2052,11 +2053,11 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "Open your Mannequin Skeletal Mesh. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody."
+      - "Open a project made from the Third Person template, or create one. Open the Mannequin Skeletal Mesh, for example SKM_Manny_Simple. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody."
       - "Right-click the bone spine_01 and use Recursively Set Blend Scales to set it and all the bones below it to 1. Set the pelvis and the leg bones to 0."
-      - "In the Animation Blueprint of your character, add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect your locomotion as the base pose, and connect a Slot that plays an upper body montage as the blend pose."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. Add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect the locomotion as the base pose, and connect a Slot node as the blend pose, so that a montage played on that slot shows on the upper body only."
       - "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it Profile_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5."
-      - "In your State Machine, select the transition rule from Idle to Walk and set its Blend Profile to Profile_LegsFast. Also set the same profile on a Blend Poses by bool node."
+      - "In the State Machine of the Animation Blueprint, select a transition rule, for example the one from Idle to the walk and run state, and set its Blend Profile to Profile_LegsFast. Also set the same profile on a Blend Poses by bool node."
       - "Play in the editor. Compare how the character stops with the profile and without it."
     done_when: "Send a screenshot of the Skeleton Tree that shows the Blend column with the BM_UpperBody values, a screenshot of the Details panel of the Layered blend per bone node with Blend Mode set to Blend Mask, and a screenshot of the Details panel of a transition rule with Profile_LegsFast assigned."
     xp: 60
@@ -2112,13 +2113,13 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "From your Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save."
+      - "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions), open the copy, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. From the Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save."
       - "In the AnimGraph, add a Slot node after the State Machine and set its Slot Name to FullBody."
       - "Add a second Slot node and set it to UpperBody. Connect it to a Layered blend per bone node that uses a Branch Filter on spine_01, so that only the upper body plays the slot animation."
       - "Select the FullBody Slot node and enable Always Update Source Pose in its Details panel. With this setting on, the pose that goes into the Slot node keeps updating while a montage plays over it. With it off, that source pose is not updated during the montage. Write down in one line which behavior you need for your character."
-      - "Make two montages, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops."
-      - "In a Level Sequence, add your character and an Animation track. Right-click the animation section, open Properties, find Slot Name and type FullBody."
-    done_when: "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short GIF or two screenshots of AM_Emote interrupting AM_Reload."
+      - "Make two montages from any two Animation Sequences of the mannequin, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. In BP_ThirdPersonCharacter, play each one from its own key press event. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops."
+      - "Create a Level Sequence, add the character from the level to it, and add an Animation track with any animation. Right-click the animation section, open Properties, find Slot Name and type FullBody."
+    done_when: "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short video clip (30 seconds or less) or two screenshots of AM_Emote interrupting AM_Reload."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -2174,8 +2175,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-shortcuts-and-tips-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
     checklist:
-      - "Enable the Animation Insights plugin in Edit > Plugins, and restart the editor."
-      - "In the Animation Blueprint of your character, right-click two nodes, for example the State Machine and the Aim Offset, and choose Toggle Pose Watch on each. Open Window > Pose Watch Manager and give each pose watch a different color."
+      - "Open a project made from the Third Person template, or create one. Enable the Animation Insights plugin in Edit > Plugins, and restart the editor."
+      - "Open the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions). Right-click two nodes in the AnimGraph, for example the locomotion State Machine and the last node before Output Pose, and choose Toggle Pose Watch on each. Open Window > Pose Watch Manager and give each pose watch a different color."
       - "Open Tools > Debug > Rewind Debugger and also Tools > Debug > Rewind Debugger Details. Press Play, click Record, move around, and then pause."
       - "Pick your character with the Dropper tool. Select the Animation Blueprint track, and drag the red playhead to move through the recording."
       - "Double-click the Animation Blueprint in the Object Outliner. It opens linked to the recording. Watch the nodes, the variables and the state machine change while you move the playhead."
@@ -2235,11 +2236,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-get-animation-variables-in-animation-blueprints-in-unreal-engine"
     checklist:
-      - "Open the Animation Blueprint of your character (its name starts with ABP_). In the My Blueprint panel, go to Functions, open the Override dropdown, and choose Blueprint Thread Safe Update Animation."
+      - "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions), name the copy ABP_ThreadSafe, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. Its Event Graph already has update logic that you will replace. Open it. In the My Blueprint panel, go to Functions, open the Override dropdown, and choose Blueprint Thread Safe Update Animation."
       - "Create a function named UpdateMovement and enable Thread Safe in its Details panel. Inside the function, add a Property Access node and bind it to this path: Try Get Pawn Owner, then Get Movement Component, then Velocity."
       - "From the velocity, use Vector Length XY and promote the result to a variable named Speed. Make a bool variable named ShouldMove that is true when Speed >= 0.1. Also read IsFalling into a bool variable."
       - "Call UpdateMovement from Blueprint Thread Safe Update Animation. Then delete the old Update Animation event logic from the Event Graph."
-      - "Select your Aim Offset node. In its Details panel, under Functions, bind On Update to a new function that sets Yaw and Pitch. Use the Context and Node pins of that function."
+      - "Select a Blendspace Player or Sequence Player node inside the state machine, or an Aim Offset node if your Animation Blueprint has one. In its Details panel, under Functions, bind On Update to a new function. Open the function and look at its Context and Node pins: the function runs each time this node updates, and it is the place to set values for this one node, such as the Yaw and Pitch of an Aim Offset."
       - "Enable Warn About Blueprint Usage in Class Settings and compile. Fix every warning until the lightning icon, which means Fast Path, shows on your blend nodes."
     done_when: "Send a screenshot of the Thread Safe function graph with the Property Access node, a screenshot of the Blueprint Thread Safe Update Animation graph that calls it, and a screenshot of the Compiler Results with no Blueprint Usage warnings."
     xp: 65
@@ -2289,14 +2290,14 @@ quests:
     required_spine: false
     required: false
     title: "Linked Anim Graphs and Template ABPs"
-    brief: "A Linked Anim Graph lets you put a piece of animation logic into its own Animation Blueprint and then use it as one node inside another. A Template Animation Blueprint goes one step further: it is not tied to any skeleton, so many different characters can use it. Both keep a growing project from becoming one very large Blueprint. In this quest you build a small sway graph, link it into your main Animation Blueprint, and create and link a template."
+    brief: "A Linked Anim Graph lets you put a piece of animation logic into its own Animation Blueprint and then use it as one node inside another. A Template Animation Blueprint goes one step further: it is not tied to any skeleton, so many different characters can use it. Both keep a growing project from becoming one very large Blueprint. In this quest you build a small sway graph, link it into a main Animation Blueprint, and create and link a template."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-linking-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-editor-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "Create an Animation Blueprint named ABP_Sway for your Mannequin skeleton. In its AnimGraph, add an Input Pose node from the Misc category and rename it Source. Send it through an Apply Additive node with a small idle sway additive animation. Add a float variable named SwayAlpha and make it Instance Editable."
-      - "In your main Animation Blueprint, right-click the AnimGraph, open Linked Anim Blueprints and choose Linked Anim Graph. Set its Instance Class to ABP_Sway. Connect your locomotion to the Source pin and set SwayAlpha on the node."
+      - "Open a project made from the Third Person template, or create one. Make an additive animation: duplicate the idle animation of the mannequin, name the copy Idle_SwayAdditive, and in its Asset Details set Additive Anim Type to Local Space, with the first frame of the same animation as the base pose. Create an Animation Blueprint named ABP_Sway for the Mannequin skeleton. In its AnimGraph, add an Input Pose node from the Misc category and rename it Source. Send it through an Apply Additive node with the additive animation. Add a float variable named SwayAlpha and make it Instance Editable."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and use the copy as your main Animation Blueprint. Right-click its AnimGraph, open Linked Anim Blueprints and choose Linked Anim Graph. Set its Instance Class to ABP_Sway. Connect the locomotion to the Source pin and set SwayAlpha on the node."
       - "Create a Template Animation Blueprint named ABPT_SinglePlay. In the creation window, choose Template and do not pick a Skeleton. Add a Sequence Player. On its Sequence property, choose Bind, then Expose As Pin, and promote the pin to a public variable."
       - "Link ABPT_SinglePlay in your main Animation Blueprint, and set the exposed Sequence variable to an animation."
       - "On the Linked Anim Graph node, enable Receive Notifies from Linked Instances. Test it with a Skeleton Notify placed inside ABP_Sway."
@@ -2349,7 +2350,7 @@ quests:
     required_spine: false
     required: false
     title: "Keyframe a Control Rig in Sequencer"
-    brief: "Sequencer is the timeline tool of Unreal, used for cinematics and for animating by hand. A Control Rig gives a character controls that you can move, and a keyframe (or key) saves the position of a control at one moment in time. Unreal fills in the movement between the keys. In this quest you put a Control Rig in a level and set keys to make the character raise and lower an arm. Later Sequencer quests build on this skill."
+    brief: "Sequencer is the timeline tool of Unreal, used for cinematics and for animating by hand. A Control Rig gives a character controls that you can move, and a keyframe (or key) saves the position of a control at one moment in time. Unreal fills in the movement between the keys. In this quest you put a Control Rig in a level and set keys to make the character raise and lower an arm."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animating-with-control-rig-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
@@ -2357,7 +2358,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-animation-keyframes-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
     checklist:
-      - "Open a project that has a Control Rig asset for the mannequin. For example, use CR_Mannequin_Body from the Third Person template, or your own asset whose name starts with CR_."
+      - "Open a project made from the Third Person template, or create one. You need a Control Rig asset for the mannequin: use CR_Mannequin_Body from the template, or your own asset whose name starts with CR_."
       - "Drag the Control Rig asset from the Content Browser into the level. Notice that a new Level Sequence opens with a Skeletal Mesh track and a Control Rig track. Save it as LS_WaveTest."
       - "Expand the Control Rig track. Click one control in the track list, and confirm that the same control is selected in the viewport."
       - "At frame 0, select the hand and arm controls and press S in the viewport to set a key on them. Move the playhead to frame 30, raise the arm, and press S again. Do the same at frame 60 to bring the arm back down."
@@ -2419,7 +2420,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
     checklist:
-      - "Open LS_WaveTest, or any sequence with a Control Rig track. Switch to Animation Mode with the Mode dropdown. Then leave it with Shift+1 and enter it again with Shift+7."
+      - "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Switch to Animation Mode with the Mode dropdown. Then leave it with Shift+1 and enter it again with Shift+7."
       - "In the Anim Outliner, which lists the controls of the rig, select a hand control. In Anim Details, read its transform values and note that they are relative to the initial values of the control."
       - "Enable the Select tool in the Animation panel. Try to click the character mesh in the viewport, and confirm that you can only select controls."
       - "Pose the left arm and the left hand. Select those controls and click Create Pose in the Poses tool. Name the pose Pose_ArmRaise_L and capture a thumbnail, the small preview image."
@@ -2474,16 +2475,16 @@ quests:
     required_spine: false
     required: false
     title: "Tweens, Snapper and Motion Trails"
-    brief: "Animation Mode has small tools that save a lot of manual work. Tweens create an in-between key, a key placed between two other keys, with one slider. The Snapper makes one object follow another for a range of frames, for example a hand that holds a ball. Motion Trails draw the path of a control in the viewport so you can see and edit the movement. In this quest you try each of these tools, and also the Pivot tool, on your wave sequence."
+    brief: "Animation Mode has small tools that save a lot of manual work. Tweens create an in-between key, a key placed between two other keys, with one slider. The Snapper makes one object follow another for a range of frames, for example a hand that holds a ball. Motion Trails draw the path of a control in the viewport so you can see and edit the movement. In this quest you try each of these tools, and also the Pivot tool, on a sequence with a Control Rig."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-editor-mode-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animating-with-control-rig-in-unreal-engine"
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-animation-keyframes-in-unreal-engine"
     checklist:
-      - "In LS_WaveTest, set a key on a hand control at frame 0 and at frame 40, with a clear difference between the two poses. Put the playhead at frame 20."
+      - "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Switch to Animation Mode. Set a key on a hand control at frame 0 and at frame 40, with a clear difference between the two poses. Put the playhead at frame 20."
       - "Open Tweens from the Animation panel. Set the mode to Tween (TW), drag the slider to -0.5 and look at the new in-between key. Undo, switch to Push Pull (PP) and try the value 1."
-      - "Place a static mesh in the level, for example a ball named SM_Ball, and add it to the sequence. Open Snapper. Select the hand control and click Children, then select SM_Ball and click Parent."
+      - "Place a static mesh in the level, for example a sphere from the Place Actors panel that you name SM_Ball, and add it to the sequence. Open Snapper. Select the hand control and click Children, then select SM_Ball and click Parent."
       - "Set the snap range to frames 10 to 30. Enable Keep Offset and Snap Position, and then click Snap Animation. Move the playhead through the range and confirm that keys were baked (created on every frame) on the hand."
       - "Open Trails. Enable Show Trails and Show Keys for the hand control. Drag one key along the curve in the viewport. Turn on Show Marks and read where the motion is fast: the marks are far apart there."
       - "Use the Pivot tool: click Edit, move the pivot to the area of the elbow, click Pose, and rotate the hand around that point."
@@ -2543,7 +2544,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-blending-tools-in-unreal-engine"
     checklist:
-      - "Create a Level Sequence named LS_ClipBlend and add the mannequin Skeletal Mesh Actor to it. On its Animation track, add a walk clip at frame 0 and a run clip, placed so that the two sections overlap by about 15 frames."
+      - "Open a project made from the Third Person template, or create one, and drag SKM_Manny_Simple or SKM_Quinn_Simple into the level as a Skeletal Mesh Actor. Create a Level Sequence named LS_ClipBlend and add the mannequin Skeletal Mesh Actor to it. On its Animation track, add a walk clip at frame 0 and a run clip, placed so that the two sections overlap by about 15 frames."
       - "Drag the blend handle on the overlap. Right-click the blend curve and change the shape of the curve under Options. Play the sequence and watch the blend."
       - "Expand the Animation track. Set keys on the Weight of the run section so that it goes from 0 to 1 across the overlap."
       - "Hold Ctrl on the right edge of the walk clip and drag to change its Play Rate. Then right-click the clip and use Edit, then Auto Size, to restore its length. Split a clip in two with Ctrl+/."
@@ -2605,7 +2606,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sequencer-cinematic-toolbar-in-unreal-engine"
     checklist:
-      - "Create a Level Sequence named LS_KeyDrill with a static mesh prop named SM_Crate. With the actor selected, press S to create a Transform track and a full key. Move the playhead to other frames and use Shift+W to key the location only and Shift+E to key the rotation only."
+      - "Open any project, or create one from the Third Person template. Place a static mesh prop in the level, for example a cube, and name the actor SM_Crate. Create a Level Sequence named LS_KeyDrill and add the crate to it. With the actor selected, press S to create a Transform track and a full key. Move the playhead to other frames and use Shift+W to key the location only and Shift+E to key the rotation only."
       - "Enable Auto Key. Open Keyframe Options and choose Key Changed. Move the crate on the X axis only, and check which channels received keys. Then switch to Key Group and compare."
       - "Select all keys by dragging a selection box (a marquee) around them. Press 4 to make them Linear, and then 1 to make them Cubic (Auto). Hold Alt and drag a key to duplicate it. Use Ctrl+] to select all keys to the right of the playhead."
       - "Turn on Layer Bars and Key Bars in View Options. Scale the whole animation by dragging the edge of the Layer Bar, and change the timing of one pair of keys with a Key Bar."
@@ -2667,7 +2668,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/re-parent-control-rig-controls-in-real-time-in-unreal-engine"
     checklist:
-      - "Open LS_WaveTest in Animation Mode. Place a prop named SM_Cup in the level and add it to the sequence."
+      - "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track, in Animation Mode. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Place a small prop in the level, for example a cylinder that you name SM_Cup, and add it to the sequence."
       - "Select the IK control of the hand, click Add Constraint (+), choose Parent, and pick SM_Cup with the eyedropper. Move the playhead and confirm that the hand follows the cup. Look at the Constraints section, and at the compensating keys that were created in Sequencer to keep the hand in place."
       - "Move the cup after the constraint exists, so that the hand jumps suddenly. Put the playhead on the constraint key, right-click the constraint and choose Compensate Key. Confirm that the jump is gone."
       - "Add a LookAt constraint from the head control to the cup. Edit the Axis in the context menu of the constraint so that the face points at the cup correctly."
@@ -2730,12 +2731,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/motion-blending-tools-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
     checklist:
-      - "Open LS_ClipBlend, the sequence with the walk and run clips on the mannequin. On the character track, click Add (+) Track, then Control Rig, then FK Control Rig."
+      - "Open a project made from the Third Person template, or create one. Open a Level Sequence in which a mannequin Skeletal Mesh Actor plays a walk animation on its Animation track. To make one, drag SKM_Manny_Simple into the level, create a Level Sequence named LS_ClipBlend, add the actor, and add a walk clip. On the character track, click Add (+) Track, then Control Rig, then FK Control Rig."
       - "Right-click the FK Control Rig track and enable Additive. Select the head bone in the viewport and set a key at frame 0, then a key with a small head tilt at frame 20, and a key back at the first pose at frame 40. Play the sequence: the tilt is added on top of the walk."
       - "Right-click the FK track and use Select Bones Or Curves To Animate. Hide every bone except the spine, the neck, the head and the arms."
       - "Duplicate the character in a second sequence named LS_BakeFix. Right-click the Skeletal Mesh track and choose Edit With FK Control Rig. Enable Reduce Keys with a small Tolerance, and click Create."
       - "Fix one bad frame on the baked FK rig, for example an elbow that jumps. Then right-click the Skeletal Mesh track and choose Bake Animation Sequence. Save the result as AS_Walk_Fixed."
-      - "In LS_WaveTest, convert your Control Rig track to a layered track: right-click it and choose Convert To Layered. Check that your keys are now applied on top of an animation clip."
+      - "Now try a layered track. Drag the Control Rig asset CR_Mannequin_Body into the level, which opens a new sequence with a Control Rig track, and set two or three keys on a control. Right-click the Control Rig track and choose Convert To Layered. Check that your keys are now applied on top of an animation clip."
     done_when: "Send two screenshots. The first shows LS_ClipBlend with the Additive FK Control Rig track and the head tilt keys over the walk clip. The second shows the Content Browser with AS_Walk_Fixed next to the source clip. Add one line about additive and bake, and when you would choose each."
     xp: 60
     verify_type: screenshot
@@ -2792,12 +2793,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fk-control-rig-in-unreal-engine"
     checklist:
-      - "Open LS_KeyDrill. It must be a source Level Sequence, not a shot inside a master sequence. Select the crate actor and use Actions, then Export... Read every option in the FBX Export Options window, and then export with the default settings."
+      - "Open any project, or create one from the Third Person template. Open a Level Sequence in which a prop has keys on its Transform track. To make one, place a cube named SM_Crate, create a Level Sequence named LS_KeyDrill, add the cube, and set three keys with the S key at different frames and positions. It must be a source Level Sequence, not a shot inside a master sequence. Select the crate actor and use Actions, then Export... Read every option in the FBX Export Options window, and then export with the default settings."
       - "Export again with nothing selected. This time the whole sequence is exported. Compare the sizes of the two files."
-      - "Open the FBX file in any DCC or FBX viewer you have. Blender is fine. Set the time rate of the DCC to match the frame rate of the sequence. Move the keys of the crate, and then export the FBX with Z as the up axis."
+      - "Open the FBX file in any DCC or FBX viewer you have. Blender is free and works well. Set the time rate of the DCC to match the frame rate of the sequence. Move the keys of the crate, and then export the FBX with Z as the up axis."
       - "Back in Sequencer, right-click the crate track and choose Import. Look at the options Force Front XAxis and Create Cameras in the Import FBX window, and then import. Confirm that the keys changed."
       - "Also try the import from the Actions menu with nothing selected. Note how Unreal matches objects by their names."
-      - "For a sequence with a character, right-click the Skeletal Mesh track and use Bake Animation Sequence to make an asset named AS_Export_Test. Open it in the Animation Sequence editor."
+      - "For a sequence with a character, for example one where you dragged SKM_Manny_Simple into the level and gave it an animation clip, right-click the Skeletal Mesh track and use Bake Animation Sequence to make an asset named AS_Export_Test. Open it in the Animation Sequence editor."
     done_when: "Send a short text of 6 to 10 lines that covers the FBX Export options you used, the DCC you edited in and its time setting, what changed after the import, and one warning from the documentation page that applies to your sequence. Attach one screenshot of the keys after you imported them again."
     xp: 60
     verify_type: writeup
@@ -2855,7 +2856,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/rigging-with-control-rig-in-unreal-engine"
     checklist:
-      - "Right-click the mannequin skeletal mesh, choose Create, then Control Rig. Rename the new asset CR_Manny_FKArm."
+      - "Open a project made from the Third Person template, or create one. Right-click the mannequin skeletal mesh, for example SKM_Manny_Simple, and choose Create, then Control Rig. Rename the new asset CR_Manny_FKArm."
       - "In the Rig Hierarchy, select the bones upperarm_l, lowerarm_l and hand_l. Right-click and choose New, then Add Controls For Selected."
       - "Select the bones of the right arm, hold Alt and use the same command again. Holding Alt opens a dialog. In it, set Output Format to Hierarchy and Suffix to _ctrl."
       - "Create a Null named arms_grp. Drag the top control of each arm onto it, so that both become its children."
@@ -2911,7 +2912,7 @@ quests:
     required_spine: false
     required: false
     title: Custom control shapes and a shape library
-    brief: "Each control in a Control Rig has a shape and a color that the animator sees in the viewport. Clear shapes and a color rule, such as blue for the left side and red for the right side, make a rig easy to read for anyone who uses it. The shapes come from a shape library, an asset that lists the available shapes. In this quest you give your controls shapes and colors, and add your own arrow shape to a copy of the library."
+    brief: "Each control in a Control Rig has a shape and a color that the animator sees in the viewport. Clear shapes and a color rule, such as blue for the left side and red for the right side, make a rig easy to read for anyone who uses it. The shapes come from a shape library, an asset that lists the available shapes. In this quest you give the controls of a rig shapes and colors, and add your own arrow shape to a copy of the library."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-shapes-and-control-shape-library-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
@@ -2919,11 +2920,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/controls-bones-and-nulls-in-control-rig-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-editor-in-unreal-engine"
     checklist:
-      - "Open a Control Rig that has at least four controls, for example CR_Manny_FKArm from quest AQ55."
+      - "Open a project made from the Third Person template, or create one. Open a Control Rig that has at least four controls, with some on the left and some on the right side of the body. If you have none, make one: right-click SKM_Manny_Simple, choose Create, then Control Rig, select the upper arm and hand bones of both arms in the Rig Hierarchy, right-click and choose New, then Add Controls For Selected."
       - "Select each control in turn. In the Details panel, under Control Shape, pick a different Shape. Set the controls of the left side to blue and the controls of the right side to red."
       - "In the Settings of the Content Browser, enable Show Engine Content and Show Plugin Content. Find the shape library in this folder: Engine, then Plugins, then Control Rig Content, then Controls."
       - "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRSL_Project, and open it."
-      - "Model or export a simple .fbx shape, such as a flat arrow or a ring. Import it with Import Textures turned off and Material Import Method set to Do Not Create Material. Name it SM_CtrlArrow."
+      - "Make a simple static mesh for your shape, such as a flat arrow or a ring. In Modeling Mode, the Arrow shape tool creates one for you: accept the tool and rename the new Static Mesh asset SM_CtrlArrow. You can also import an .fbx file of your own. If you do, turn off the import of materials and textures in the import window, because a control shape does not need them."
       - "In CRSL_Project, add an element to the Shapes array (the documentation page still uses the old name, Gizmos). Set Shape Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin."
       - "In your Control Rig, open Class Settings and add CRSL_Project under Shape Libraries (the documentation page calls this property Gizmo Library). Then set the Shape of one control to Arrow."
     done_when: "Send two screenshots. The first shows CRSL_Project open with the Shapes array and your Arrow entry. The second shows the Control Rig viewport with the Arrow shape on one control, and the blue and red colors on the other controls."
@@ -2975,7 +2976,7 @@ quests:
     required_spine: false
     required: false
     title: "Backwards Solve: bake an animation onto your rig"
-    brief: "Normally a Control Rig works forwards: you move the controls and the bones follow. This is called Forwards Solve. Backwards Solve is the opposite direction, where the bones of an existing animation move the controls. With it you can bake an animation onto your rig, which means the animation is copied to keys on the controls, and then you can edit the motion inside Unreal. In this quest you add a Backwards Solve to a rig, bake a walk animation onto it in Sequencer, and change one key."
+    brief: "Normally a Control Rig works forwards: you move the controls and the bones follow. This is called Forwards Solve. Backwards Solve is the opposite direction, where the bones of an existing animation move the controls. With it you can bake an animation onto a rig, which means the animation is copied to keys on the controls, and then you can edit the motion inside Unreal. In this quest you add a Backwards Solve to a rig, bake a walk animation onto it in Sequencer, and change one key."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-in-unreal-engine"
@@ -2983,11 +2984,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/controls-bones-and-nulls-in-control-rig-in-unreal-engine"
     checklist:
-      - "Open a Control Rig that drives the arms and the head of the mannequin with FK controls. CR_Manny_FKArm from quest AQ55 is fine."
+      - "Open a project made from the Third Person template, or create one. Open a Control Rig that drives the arms and the head of the mannequin with FK controls. If you have none, make one: right-click SKM_Manny_Simple, choose Create, then Control Rig, and name it CR_Manny_FK. In the Rig Hierarchy, select the upper arm, lower arm and hand bones of both arms and the head bone, right-click and choose New, then Add Controls For Selected. In the graph, add a Set Transform node for each bone, connect a Get Transform node of its control to it, and connect them in a chain that starts at Forwards Solve."
       - "Right-click the graph, open Events and add Backwards Solve. For each control, connect a Get Transform node of its bone to a Set Transform node of the control."
       - "In the toolbar, switch Solve Direction to Backwards Solve. In Preview Scene Settings, set Preview Controller to Use Specified Animation and pick a walk animation."
       - "Confirm that the border of the viewport is yellow and that the controls follow the animation. Then try the option Backwards and Forwards, and note the blue border."
-      - "Create a Level Sequence named LS_BakeTest. Add the mannequin to it, and add the same walk animation to its track."
+      - "Create a Level Sequence named LS_BakeTest. Drag SKM_Manny_Simple into the level, add this actor to the sequence, and add the same walk animation to its Animation track."
       - "Right-click the character track, choose Bake To Control Rig, and pick your rig. Enable Reduce Keys with a Tolerance of 0.1, and click Create."
       - "Move one baked key on an arm control to change the walk. Move the playhead through the sequence to see the change."
     done_when: "Send two screenshots. The first shows the Control Rig editor in Backwards Solve mode with the yellow border and the controls matching the animation. The second shows Sequencer with the Control Rig track, the baked keys, and one edited key on an arm control."
@@ -3047,12 +3048,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-editor-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-debugging-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add, then Animation, then Control Rig. Choose ControlRig and name the asset CR_FunctionLibrary. Do not assign a skeletal mesh to it."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add, then Animation, then Control Rig. Choose ControlRig and name the asset CR_FunctionLibrary. Do not assign a skeletal mesh to it."
       - "In the My Blueprint panel, add a function named SetControlsVisible. In the Details panel, set its Access Specifier to Public so that other rigs can use it."
       - "Select the Entry node of the function and add two inputs. The first is named Items, with the type Rig Element Key, set as an Array. The second is named Visible, with the type Boolean, set as Single."
       - "Inside the function, add a For Each node and a Set Control Visibility node. Connect them between the Entry node and the Return node."
       - "In Node Settings, set Category to Team, add the Keywords 'hide show', and write a Description. Also give the node a color."
-      - "Open a character rig, such as CR_Manny_FKArm. Right-click the graph, open the Team category and choose SetControlsVisible. Connect it to Forwards Solve and give it an array of hand controls."
+      - "Open a character rig that has hand controls. If you have none, make one: right-click SKM_Manny_Simple, choose Create, then Control Rig, select the two hand bones in the Rig Hierarchy, right-click and choose New, then Add Controls For Selected. Right-click the graph, open the Team category and choose SetControlsVisible. Connect it to Forwards Solve and give it an array of hand controls."
       - "Right-click the shared node and choose Localize Function, which makes a local copy inside this rig. Compare the local copy with the shared version."
     done_when: "Send two screenshots. The first shows CR_FunctionLibrary with the public SetControlsVisible function and the inputs of its Entry node. The second shows the graph of the character rig with the shared function node, with its folder path in the header, and a second localized copy."
     xp: 60
@@ -3111,7 +3112,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/controls-bones-and-nulls-in-control-rig-in-unreal-engine"
     checklist:
-      - "Use a skeletal mesh that has a long chain of bones, such as a tail, a tentacle, or a spine with at least six bones. Create a Control Rig named CR_Tail for it."
+      - "Open a project made from the Third Person template, or create one. Use a skeletal mesh that has a long chain of bones, such as a tail, a tentacle, or a spine with at least six bones. The mannequin works: its chain from spine_01 up to the head has enough bones. Create a Control Rig named CR_Tail for it."
       - "Create four controls, placed at even distances along the chain. Name them tail_ctrl_01 to tail_ctrl_04."
       - "Add a Spline From Points node and give it four points. Connect the Translation of each control to one point, in order from the root of the chain to the tip."
       - "Add a Draw Spline node, connect it to Forwards Solve, and connect the Spline pin. Move the controls to check that the curve follows them."
@@ -3175,7 +3176,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/controls-bones-and-nulls-in-control-rig-in-unreal-engine"
     checklist:
-      - "Create a Control Rig named CR_Crane for a simple skeletal prop, such as a crane arm or a lamp. Use the mannequin if you have no prop. Add a control named Tip_ctrl that drives the last bone."
+      - "Open a project made from the Third Person template, or create one. Create a Control Rig named CR_Crane for a simple skeletal prop, such as a crane arm or a lamp. Use the mannequin if you have no prop, and treat one arm as the crane arm. Add a control named Tip_ctrl that drives the last bone of the chain, for example a hand bone."
       - "Create an Actor Blueprint named BP_Crane. Add a Skeletal Mesh Component to it that uses the prop mesh."
       - "Add a Control Rig Component, which you find in the Animation category. Set its Control Rig Class to CR_Crane, and turn off Draw Bones."
       - "In the Details panel, click Add next to On Pre Initialize. In the event that is created, call Add Mapped Skeletal Mesh and give it your Skeletal Mesh Component. This connects the rig to the mesh."
@@ -3239,9 +3240,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprints-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-create-control-rigs-in-unreal-engine"
     checklist:
-      - "Create a Control Rig named CR_Manny_LookAt for the mannequin. Add a Vector variable named LookTarget and a Float variable named LookWeight. Click the Eye icon next to each one in My Blueprint to make them instance-editable."
+      - "Open a project made from the Third Person template, or create one. Create a Control Rig named CR_Manny_LookAt for the mannequin: right-click SKM_Manny_Simple and choose Create, then Control Rig. Add a Vector variable named LookTarget and a Float variable named LookWeight. Click the Eye icon next to each one in My Blueprint to make them instance-editable."
       - "On Forwards Solve, aim the head bone at LookTarget. You can use an Aim node or your own rotation logic. Blend the result by LookWeight."
-      - "Open ABP_Manny, or make a new Animation Blueprint. In the Anim Graph, right-click, open Misc and add a Control Rig node. Place it after your locomotion pose and before the Output Pose."
+      - "Open ABP_Unarmed, the Animation Blueprint of the template character, or make a new Animation Blueprint. In the Anim Graph, right-click, open Misc and add a Control Rig node. Place it after the locomotion pose and before the Output Pose."
       - "In the Details panel of the node, set Control Rig Class to CR_Manny_LookAt. Under Input, enable Use Pin for LookTarget and for LookWeight."
       - "In the Event Graph, on each update, set LookTarget to the location of the player camera and set LookWeight to 1."
       - "Add a Float animation curve to one animation. On LookWeight, choose that curve with Use Curve and stop using the pin. Compare the result."
@@ -3303,7 +3304,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-forwards-solve-and-backwards-solve-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/control-rig-debugging-in-unreal-engine"
     checklist:
-      - "Open CR_Manny_FKArm, or any other mannequin rig. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose."
+      - "Open a project made from the Third Person template, or create one. Open a Control Rig for the mannequin. If you have none, right-click SKM_Manny_Simple, choose Create, then Control Rig, and open the new asset. In the My Blueprint panel, add a variable named RestPose with the type Rig Pose."
       - "Drag RestPose into the graph and choose Set. Add a Get Pose Cache node and connect its Pose pin to the Value pin. Connect the Set node to the Construction Event, so that the starting A-pose is stored. The documentation page still uses the old name of this event, Setup Event."
       - "Add a second Rig Pose variable named ArmsPose. Fill it with a Get Pose Cache node that has Element Type set to Bones, and whose Items to Set input comes from a Get Children node of the left upperarm bone."
       - "On Forwards Solve, add an Apply Pose Cache node that reads RestPose. Add a Float variable named RestWeight and connect it to the Weight pin."
@@ -3366,7 +3367,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-in-unreal-engine"
     checklist:
-      - "Create an IK Rig named IK_BodyMover for the UE5 Mannequin or for your own two-legged character. To create it, click Add (+), then Animation, then IK Rig."
+      - "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_BodyMover for the UE5 Mannequin or for your own two-legged character. To create it, click Add (+), then Animation, then IK Rig."
       - "Select foot_l and foot_r, right-click and choose New IK Goal. When Unreal asks for a Solver, pick Limb IK. Set thigh_l and thigh_r as the root of each Limb IK: right-click the bone and choose Set Root Bone on Selected Solver."
       - "In the Solver Stack, click Add New Solver and add Body Mover. Set pelvis as its root bone. Connect both foot goals to it: right-click each goal and choose Connect Goal to Selected Solver."
       - "Drag Body Mover to the top of the Solver Stack, so that it is calculated first. Read the numbers next to the solver names, which show the order."
@@ -3429,7 +3430,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
     checklist:
-      - "Create an IK Rig named IK_FBIK for the UE5 Mannequin. In the toolbar, click Auto Create IK and look at what it made: an FBIK solver, goals and bone settings."
+      - "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_FBIK for the UE5 Mannequin. In the toolbar, click Auto Create IK and look at what it made: an FBIK solver, goals and bone settings."
       - "Delete that result and build your own. Click Add New Solver and choose Full Body IK, and set pelvis as its root. Then add IK Goals on hand_l, hand_r, foot_l and foot_r, and connect all four to the solver."
       - "Drag the hand_r goal far to the front. The pelvis rotates too much. Select the FBIK solver, right-click pelvis and choose Add Settings to Selected Bone. Raise Rotation Stiffness until the hips stay calm."
       - "Add bone settings on foot_l. Set the Limit of the Z axis to Limited with Min -50 and Max 40, as in the example from the documentation. Move the foot goal and check the ankle."
@@ -3492,14 +3493,14 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-in-unreal-engine"
     checklist:
-      - "Open an IK Rig that has a Limb IK on the right arm. You can reuse IK_BodyMover or make a new one named IK_Reach. Select the hand_r goal and enable Expose Position and Expose Rotation."
+      - "Open a project made from the Third Person template, or create one. Create an IK Rig named IK_Reach for the mannequin: click Add (+), then Animation, then IK Rig, and pick SKM_Manny_Simple. Select hand_r, right-click, choose New IK Goal and pick Limb IK as the solver. Then select upperarm_r, right-click and choose Set Root Bone on Selected Solver. If you already have an IK Rig with a Limb IK on the right arm, you can use that. Select the hand_r goal and enable Expose Position and Expose Rotation."
       - "In the Animation Blueprint of the Third Person character, right-click the AnimGraph and add an IK Rig node from the Misc category. Set its Rig Definition Asset to your IK Rig. Place the node after the locomotion logic and before Output Pose."
       - "In the Details panel of the node, under Goals, set the hand_r goal to Manual Input with the space World. Add a Vector variable named ReachTarget and connect it to the position pin of the goal."
-      - "In BP_ThirdPersonCharacter, set ReachTarget to the world location of a target actor on every tick, or on a key press. Press Play and watch the hand follow the target."
+      - "Place a cube in the level as the target actor. In BP_ThirdPersonCharacter, get a reference to the cube, for example with an Instance Editable Actor variable or with Get Actor of Class, and pass its world location to the ReachTarget variable of the Animation Blueprint on every tick, or on a key press. Press Play and watch the hand follow the target."
       - "Add a Float variable named ReachAlpha and connect it to the Position Alpha of the goal. Change it between 0 and 1, and confirm that the IK blends off and on."
       - "Switch the space of the goal to Additive and give it a small offset. Compare this with World. Turn on Enable Debug Draw and set Debug Scale to 2 to see the goal in the viewport."
       - "Try the Bone goal type: snap the hand goal to a socket bone such as ik_hand_r. Describe what this is useful for."
-    done_when: "Send a screenshot of the AnimGraph with the IK Rig node and its exposed pins, a screenshot of the Details of the node showing the Goals section, and a short clip or screenshot of the hand reaching the target in Play mode. Add two lines about the difference you saw between World and Additive."
+    done_when: "Send a screenshot of the AnimGraph with the IK Rig node and its exposed pins, a screenshot of the Details of the node showing the Goals section, and a short video clip (30 seconds or less) or a screenshot of the hand reaching the target in Play mode. Add two lines about the difference you saw between World and Additive."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -3554,7 +3555,7 @@ quests:
     backup_url: null
     extra_urls: []
     checklist:
-      - "In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root."
+      - "Open a project made from the Third Person template, or create one. In the Animation Blueprint of the Third Person character, add a Two Bone IK node after the locomotion logic. Set IK Bone to foot_l. The node builds its chain from the two bones above: calf_l is the joint and thigh_l is the root."
       - "Turn on Enable Debug Draw. In the preview, move the Effector Location, shown in red, and the Joint Target Location, shown in green. Watch the knee point toward the green target."
       - "Set Effector Location Space to World. In the Event Graph, do a Line Trace from foot_l down to the floor, and store the hit location in a Vector variable named FootTarget_L. Connect this variable to Effector Location."
       - "Select the Two Bone IK node. In its Details panel, set Joint Target Location Space to Bone Space and choose calf_l as the Joint Target bone. Then type a small value, for example 30, into one axis of Joint Target Location and watch the green target in the preview. Use the axis that moves the green target in front of the knee, so that the knee bends forward in a natural way."
@@ -3617,7 +3618,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fabrik-animation-blueprint-in-unreal-engine"
     checklist:
-      - "Make an actor named BP_Button: a small box with a Scene component named PressPoint on top of it. Place it at hand height near the player start."
+      - "Open a project made from the Third Person template, or create one. Make an actor named BP_Button: a small box with a Scene component named PressPoint on top of it. Place it at hand height near the player start."
       - "In the AnimGraph of the Animation Blueprint of the Third Person character, convert the pose to component space, add a CCDIK node, and then convert back to local space before Output Pose."
       - "On the CCDIK node, set Tip Bone to index_03_l and Root Bone to clavicle_l. Set Effector Location Space to World Space, as in the example from the documentation."
       - "Add a Vector variable named ButtonLocation and a Float variable named PressAlpha. When the player overlaps BP_Button, set ButtonLocation to the world location of PressPoint. Connect both variables to the node."
@@ -3681,7 +3682,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-retargeting-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/retargeting-operation-stack-in-unreal-engine"
     checklist:
-      - "Pick a source character (the UE5 Mannequin, which is in an A-pose) and a target character with a different reference pose, for example a T-pose character from Fab. Make an IK Rig for each with Auto Create Retarget Chains, and create an IK Retargeter named RTG_PoseFix."
+      - "Open a project made from the Third Person template, or create one. Pick a source character (the UE5 Mannequin, which is in an A-pose) and a target character with a different reference pose, for example your own character or a free T-pose character from Fab, Epic's asset store. Make an IK Rig for each with Auto Create Retarget Chains, and create an IK Retargeter named RTG_PoseFix."
       - "Click Edit Retarget Pose in the toolbar. With Target selected, click Create (+), then Create, and name the new pose Target_Aligned. Do not edit the Default Pose."
       - "Open Auto Align and choose Align All Bones with Alignment Method set to Direction. Then click Snap Character to Ground. After that, try Mesh as the method on the arms only, with Align Selected and Children, and compare."
       - "Turn on Edit Mode and fix one bone by hand. In the Details panel, type 0, 0, 0 to send the bone back to the reference pose, and then set a small value. Drag Retarget Pose Blend between 0 and 1 to see your changes."
@@ -3744,9 +3745,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
     checklist:
-      - "Open RTG_PoseFix, or make a new retargeter between two two-legged characters with different proportions. Click Add Default Ops and write down the ops that appear."
+      - "Open a project made from the Third Person template, or create one. Open an IK Retargeter between two two-legged characters with different proportions, or make a new one. Manny and Quinn from the template work, because their bodies have different proportions: create an IK Rig for SKM_Manny_Simple and one for SKM_Quinn_Simple, use Auto Create Retarget Chains in each, and create an IK Retargeter with Manny as the source and Quinn as the target. Click Add Default Ops and write down the ops that appear."
       - "Select FK Chains. Use Map All (Fuzzy), and then Hide Mapped Chains to see which chains are left without a match. Fix every unmapped chain by hand."
-      - "Select the LeftArm chain. Switch Rotation Mode between Interpolated and One to One while a wave animation plays. Then do the same on a finger chain. Note which mode fits each chain better."
+      - "Select the LeftArm chain. Switch Rotation Mode between Interpolated and One to One while an animation in which the arms move plays. Then do the same on a finger chain. Note which mode fits each chain better."
       - "On the Spine chain, set Translation Mode to Globally Scaled, then to Absolute, and then back to None. Note what looked broken."
       - "Add a Pole Vector Alignment op below FK Chains. On LeftLeg, set Align Alpha to 1 and try a Static Angular Offset of 15. Watch the knee."
       - "Add a Stretch Chains op. On the arm chains, set Match Source Length to 1, and then set Scale Chain Length to 1.1. Compare the position of the wrists."
@@ -3807,13 +3808,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ik-rig-animation-retargeting-in-unreal-engine"
     checklist:
-      - "In the IK Rig of the target, give the LeftLeg and RightLeg chains an IK Goal, using Add Chain and Goal with Limb IK. In the retargeter, select Run IK Rig. Confirm that Enable IK is on for both leg chains, and that the goals are drawn when Draw Final Goals is on."
+      - "Open a project made from the Third Person template, or create one. Open an IK Retargeter between two characters, or make one: create an IK Rig for SKM_Manny_Simple and one for SKM_Quinn_Simple, use Auto Create Retarget Chains in each, create an IK Retargeter with Manny as the source and Quinn as the target, and click Add Default Ops. In the IK Rig of the target, give the LeftLeg and RightLeg chains an IK Goal, using Add Chain and Goal with Limb IK. In the retargeter, select Run IK Rig. Confirm that Enable IK is on for both leg chains, and that the goals are drawn when Draw Final Goals is on."
       - "Under Run IK Rig, add a Floor Constraint sub-op. On both leg chains, turn Enable Floor Constraint on and set Alpha to 1. Enable Use Foot, and adjust Heel Offset and Toe Offset until the feet stop sinking into the floor in a walk animation."
       - "Add a Stride Warp IK Goals sub-op. Set Direction Source to Goals and Forward Direction to Y, and enable it on the leg chains. Set Warp Forwards to 0.7 and then to 1.3, and watch the length of the steps."
       - "Add a Speed Plant IK Goals sub-op. Read its settings, and write down which animation curve it needs and which Blend Method you would pick for a run. Leave the op disabled if your animations have no speed curve."
       - "Open Override Sets and create a set named OS_LongStride. Right-click the Stride Warp op and add Warp Forwards to the set with the value 1.3. Turn the set on and off in the editor."
       - "Open Variables and add a Float variable named StrideScale. Bind it to Warp Forwards inside OS_LongStride."
-      - "In the Animation Blueprint of the target, add a Retarget Pose From Mesh node and set the retargeter on it. Add OS_LongStride to Override Set to Apply, and connect a variable to the StrideScale pin. Press Play and change the value."
+      - "Create an Animation Blueprint for the target character. In its AnimGraph, add a Retarget Pose From Mesh node and set the retargeter on it. Add OS_LongStride to Override Set to Apply, and connect a variable to the StrideScale pin. To test it, make a Character Blueprint in which the source mesh plays an animation and the target mesh is a child component of it with this Animation Blueprint. Press Play and change the value."
     done_when: "Send screenshots of the Run IK Rig sub-stack with Floor Constraint and Stride Warp, of the Override Sets panel with OS_LongStride, and of the Retarget Pose From Mesh node with the override set and the StrideScale pin. Add three lines: the heel and toe offsets you used, the Warp Forwards value that looked right, and what Speed Planting needs to work."
     xp: 65
     verify_type: screenshot
@@ -3871,8 +3872,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-compression-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/root-motion-in-unreal-engine"
     checklist:
-      - "Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
-      - "Open a landing animation that has root motion, and go to Window > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers."
+      - "Open a project made from the Third Person template, or create one. Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor."
+      - "You need a landing animation in which the root bone moves down to the ground. If you have none, make one: duplicate the land animation of the mannequin, open the copy, select the root bone in the Skeleton Tree, move it about 100 units up at the first frame and press Key in the toolbar, then go to the last frame and press Key with the root at its normal height. Turn on Enable Root Motion in Asset Details. Open the animation and go to Window > Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers."
       - "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details."
       - "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time."
       - "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround."
@@ -3925,17 +3926,17 @@ quests:
     required_spine: false
     required: false
     title: "Mirror Data Table: one animation, both sides"
-    brief: "Mirroring flips an animation from left to right, so a step that starts with the left foot becomes a step that starts with the right foot. You then need to make only half of the animations. A Mirror Data Table is the asset that tells Unreal which left bone matches which right bone, and it can also swap notifies and sync markers. In this quest you create the table for your character and mirror the pose in an Animation Blueprint with the Mirror node."
+    brief: "Mirroring flips an animation from left to right, so a step that starts with the left foot becomes a step that starts with the right foot. You then need to make only half of the animations. A Mirror Data Table is the asset that tells Unreal which left bone matches which right bone, and it can also swap notifies and sync markers. In this quest you create the table for the mannequin and mirror the pose in an Animation Blueprint with the Mirror node."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/mirroring-animation-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-blend-nodes-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add (+), then Animation, then Mirror Data Table. Pick the Skeleton of your character and name the asset MDT_Character."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Mirror Data Table. Pick the Skeleton of the mannequin, or of your own character, and name the asset MDT_Character."
       - "Open the table and check that Unreal filled in the left and right bones for you. Set Mirror Axis to X. Make sure that the central bones (pelvis, spine, neck and head) have the same bone in Name and in Mirrored Name. Add any rows that are missing."
       - "Add one row with Mirror Entry Type set to Sync Marker (or Animation Notify) for a left and right pair that you use, for example FootL and FootR."
-      - "In ABP_Character, right-click the AnimGraph and add the Mirror node from the Mirroring category. Connect your locomotion pose to it. Create a bool variable named IsMirrored and connect it to the Mirror pin."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions), name the copy ABP_Character and open it. Right-click the AnimGraph and add the Mirror node from the Mirroring category. Connect the locomotion pose to it. Create a bool variable named IsMirrored and connect it to the Mirror pin."
       - "On the Mirror node, set Blend Time on Mirror State Change to 0.2. Add an Inertialization node after the Mirror node, because the blend time needs it."
       - "Turn IsMirrored on and off in the preview. Check that the pose with the left foot forward becomes a pose with the right foot forward, and that the notifies still fire."
       - "Optional: in a custom Notify State Blueprint, use Is Triggered By Mirrored Animation with a Branch node to decide whether a Print String runs."
@@ -3998,12 +3999,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/applying-a-physics-constraint-profile-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/troubleshooting-common-physics-asset-errors-in-unreal-engine"
     checklist:
-      - "Open the Physics Asset of your character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow."
+      - "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (PA_Mannequin in the folder Characters/Mannequins/Rigs), or the one of your own character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow."
       - "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends."
       - "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V."
       - "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies."
       - "Open Window > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values."
-      - "Use BP_RagdollPawn, a Blueprint with a Skeletal Mesh Component that has Collision Enabled and ignores the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Press Play and compare with the default profile."
+      - "Create an Actor Blueprint named BP_RagdollPawn with a Skeletal Mesh Component that uses SKM_Manny_Simple. Set the collision of the component to Collision Enabled, and set it to ignore the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Place the Blueprint in a level, press Play and compare with the default profile."
     done_when: "Send a screenshot of the elbow constraint with its arc in the viewport and the Details panel. Also send a screenshot of the Profiles tab that shows CP_Stiff assigned, and a screenshot of the Blueprint graph that applies it."
     xp: 65
     verify_type: screenshot
@@ -4060,10 +4061,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-bodies-reference-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-a-new-physics-asset-in-unreal-engine"
     checklist:
-      - "Pick a character with a hanging part, such as a ponytail, a chain, a tail or a hose. Right-click the Skeletal Mesh, choose Create, then Physics Asset, then Create, and name the asset PHYS_Secondary. Keep only the bodies of the hanging chain, and the bodies of the head, the back and the arms that it can touch."
+      - "Open a project made from the Third Person template, or create one. Pick a character with a hanging part, such as a ponytail, a chain, a tail or a hose. If you have none, use the mannequin and treat its left arm, from upperarm_l down to hand_l, as the hanging chain. Right-click the Skeletal Mesh, choose Create, then Physics Asset, then Create, and name the asset PHYS_Secondary. Keep only the bodies of the hanging chain, and the bodies of the head, the back and the arms that it can touch."
       - "In the Skeleton Tree, right-click the bodies of the chain and choose Collision, then Enable Collision All. Set their Physics Mode to Simulated. Set every other body to Kinematic, which means physics does not move it."
       - "Set Mass (kg) so that the body nearest to the parent is the heaviest and each next body has half the mass. Set Linear Damping and Angular Damping to about 5.0 on the simulated bodies. Press Simulate to test."
-      - "In ABP_Character, after your pose, add a Component To Local conversion node and a RigidBody node. Set Override Physics Asset to PHYS_Secondary. Keep Simulation Space set to Component Space."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions), name the copy ABP_Character, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. In its AnimGraph, after the last pose node, add a RigidBody node, which also adds the conversion nodes to and from component space. Set Override Physics Asset to PHYS_Secondary. Keep Simulation Space set to Component Space."
       - "Expand Sim Space Settings. Set Master Alpha to 1, Velocity Scale Z to 0.5, Max Angular Velocity to about 10, and Max Linear Acceleration to a few hundred. Run the game and spin the character."
       - "In the Event Graph, add a custom event named OnTeleport that calls Reset Dynamics on the Anim Instance. Trigger this event after you teleport the character, so the simulation starts fresh."
     done_when: "Send a screenshot of PHYS_Secondary that shows the simulated chain bodies with their Mass values, and a screenshot of the Details of the RigidBody node with your Sim Space Settings."
@@ -4123,12 +4124,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-profiles-for-bodies-and-constraints-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-asset-editor-in-unreal-engine---tools-and-profiles"
     checklist:
-      - "Open the Physics Asset of the character and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody."
+      - "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (PA_Mannequin in the folder Characters/Mannequins/Rigs) and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody."
       - "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled."
       - "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset."
-      - "Create BP_PhysAnimPawn with a Skeletal Mesh Component. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01."
+      - "Create an Actor Blueprint named BP_PhysAnimPawn with a Skeletal Mesh Component that uses SKM_Manny_Simple. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01."
       - "In the Event Graph, connect three nodes after BeginPlay. First, call Set Skeletal Mesh Component with the Physical Animation Component as target. Second, call Apply Physical Animation Profile Below with Body Name set to BoneName, Profile Name set to PAP_UpperBody, and Include Self on. Third, call Set All Bodies Below Simulate Physics with BoneName, New Simulate on and Include Self on."
-      - "Set the mesh to play a looping animation. Play in the editor and push the character with a physics cube. The upper body should follow the animation and also react to the hits."
+      - "Set the mesh to play a looping animation: set Animation Mode to Use Animation Asset and pick an idle. Place the Blueprint in a level and place a cube with Simulate Physics turned on next to it. Play in the editor and push the cube into the character. The upper body should follow the animation and also react to the hits."
       - "Try Orientation Strength 100 and then 5000. Note how closely the pose still follows the animation in each case."
     done_when: "Send a screenshot of the Profiles tab with PAP_UpperBody assigned, with the graph nodes filled, and a screenshot of the BeginPlay graph. Add one line about what changed between Orientation Strength 100 and 5000."
     xp: 65
@@ -4186,13 +4187,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-kinematic-bodies-with-simulated-parents-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/physics-bodies-reference-for-unreal-engine"
     checklist:
-      - "In the Event Graph of ABP_Character, add a custom event named HitBone with a Name input. On the mesh, call Set All Bodies Below Simulate Physics with that bone, New Simulate on and Include Self on."
-      - "Add a Timeline named TL_HitBlend with a length of 0.6 s and a float track that goes from 0 to 1 and back to 0. On every tick of the Timeline, send its value to Set All Bodies Below Physics Blend Weight for the same bone."
+      - "Open a project made from the Third Person template, or create one. Create a Character Blueprint named BP_HitDummy. Set its Mesh to SKM_Manny_Simple with the Anim Class ABP_Unarmed, and set the collision preset of the Mesh so that collision is enabled and the Visibility channel is blocked. Place one in the level. In its Event Graph, add a custom event named HitBone with a Name input. In it, call Set All Bodies Below Simulate Physics on the Mesh with that bone, New Simulate on and Include Self on."
+      - "In BP_HitDummy, add a Timeline named TL_HitBlend with a length of 0.6 s and a float track that goes from 0 to 1 and back to 0. Play it from the start at the end of HitBone. On every update of the Timeline, send its value to Set All Bodies Below Physics Blend Weight for the same bone."
       - "On the Finished output of the Timeline, call Set All Bodies Below Simulate Physics with New Simulate off, so that the simulation stops."
-      - "In BP_Character, detect a hit with a line trace or a projectile. Take the Hit Bone Name from the hit result, and call HitBone on the Anim Instance."
-      - "Open the Physics Asset. Select hand_l and hand_r and set their Physics Type to Kinematic. Set Physics Update Mode to Component Transform is Kinematic. Simulate with the jump loop animation, and watch the hands stay on the animation."
-      - "Play in the editor. Shoot the character in the arm, and then in the leg. Check that the part that was hit blends into physics and back to the animation."
-    done_when: "Send a short clip or three screenshots of a hit blending in and out. Also send a screenshot of the Event Graph with the timeline and both Set All Bodies Below nodes."
+      - "In BP_ThirdPersonCharacter, add a key press event that does a Line Trace by Channel from the camera forward, with Trace Complex turned on. Break the hit result, cast the Hit Actor to BP_HitDummy, take the Hit Bone Name, and call HitBone with it."
+      - "Open the Physics Asset of the mannequin. Select hand_l and hand_r and set their Physics Type to Kinematic. Set Physics Update Mode to Component Transform is Kinematic. Simulate with the jump loop animation, and watch the hands stay on the animation."
+      - "Play in the editor. Aim at the arm of the dummy and press the key, and then do the same on the leg. Check that the part that was hit blends into physics and back to the animation."
+    done_when: "Send a short video clip (30 seconds or less), or three screenshots, of a hit blending in and out. Also send a screenshot of the Event Graph with the timeline and both Set All Bodies Below nodes."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4248,12 +4249,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/groom-asset-editor-user-guide-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/hair-rendering-and-simulation-in-unreal-engine"
     checklist:
-      - "Get a groom asset. It can be a MetaHuman hair groom or any imported Alembic (.abc) groom. Double-click it to open the Groom Asset Editor."
+      - "Open any project, or create one from the Third Person template, and enable the Groom plugin in Edit > Plugins. Get a groom asset. No template includes one, so use a MetaHuman hair groom from Epic, a free groom from Fab, or any Alembic (.abc) groom that you import with the Alembic Groom Importer plugin. Double-click it to open the Groom Asset Editor."
       - "In the Show menu of the viewport, turn on Guide and Guide Influence. Take a screenshot of the simulation guides and their colored clumps, the groups of strands that follow one guide."
       - "In the Physics panel, turn on Enable Simulation. Set Niagara Solver to Groom Rods. Note the values of Sub Steps and Iteration Count."
       - "Lower Bend Stiffness a little and raise Bend Damping. Edit the Bend Stiffness Scale curve so that the tip of the hair (x = 1) is softer than the root (x = 0)."
       - "In the LOD panel, set Simulation to Disable on your last LOD, the simplest version used at far distances."
-      - "Place the groom on a character with a Groom component. On the component, set Physics Asset to the physics asset of the character, which is used for collision. Enable Override Settings, then turn Local Simulation on and set Local Bone to head. Run with the character and watch the hair."
+      - "Place the groom on a character with a Groom component, for example on the Mesh of BP_ThirdPersonCharacter or on the character the groom came with. On the component, set Physics Asset to the physics asset of the character, which is used for collision. Enable Override Settings, then turn Local Simulation on and set Local Bone to head. Run with the character and watch the hair."
     done_when: "Send two screenshots: one of the Physics panel of the Groom Asset Editor with your values, and one of the Details of the Groom component with Override Settings, Physics Asset and Local Bone filled in. Add one line about what Bend Damping changed."
     xp: 60
     verify_type: screenshot
@@ -4309,9 +4310,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-compression-codec-reference-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add (+), then Animation, then Advanced, then Bone Compression Settings. Name the asset BCS_Quality. Add one codec (a compression method): Anim Compress Per Track Compression. Set Error Threshold to 0.05 and enable Force Below Threshold."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add (+), then Animation, then Advanced, then Bone Compression Settings. Name the asset BCS_Quality. Add one codec (a compression method): Anim Compress Per Track Compression. Set Error Threshold to 0.05 and enable Force Below Threshold."
       - "Create BCS_Small in the same way, with two codecs: Anim Compress Remove Linear Keys and Anim Compress Removes Every Second Key. Set Error Threshold to 0.5."
-      - "Duplicate a run animation twice and name the copies A_Run_Quality and A_Run_Small. In the Asset Details panel of each copy, under Compression, assign the matching Bone Compression Settings asset. Note the size or memory that is shown for each."
+      - "Duplicate a run animation of the mannequin twice and name the copies A_Run_Quality and A_Run_Small. In the Asset Details panel of each copy, under Compression, assign the matching Bone Compression Settings asset. Note the size or memory that is shown for each."
       - "Open BCS_Small and change Max Pos Diff on the Remove Linear Keys codec. Click the Compress button in the toolbar, and read the dialog that shows how many assets will be compressed."
       - "Create a Curve Compression Settings asset named CCS_Default. Note its default values for Max Curve Error and Error Sample Rate. Assign it to A_Run_Quality."
       - "Play both animations side by side in the Animation Sequence Editor. Look for foot sliding or shaking on the small one."
@@ -4363,21 +4364,22 @@ quests:
     required_spine: false
     required: false
     title: "FBX animation import: one clip per file"
-    brief: "Animations made in another 3D program come into Unreal as FBX files. The import settings decide which Skeleton the animation belongs to, which frames are imported, and how many frames per second are used. Mistakes here are among the most common animation problems, and they are easy to avoid. In this quest you import one animation per file onto an existing Skeleton, and then import a second one with a limited frame range."
+    brief: "Animations made in another 3D program come into Unreal as FBX files. The import settings decide which Skeleton the animation belongs to, which frames are imported, and how many frames per second are used. Current versions of Unreal show these settings in the Interchange import window, and older versions show them in a window named FBX Import Options. In this quest you import one animation per file onto an existing Skeleton, and then import a second one with a limited frame range."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-animations-using-fbx-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-animation-pipeline-in-unreal-engine"
     extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-using-interchange-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
     checklist:
-      - "Export one animation from your DCC tool (Blender, Maya or 3ds Max) with the Animations checkbox enabled. Export only the skeleton, and put one animation in each file."
+      - "Open a project made from the Third Person template, or create one. Get an FBX file that holds one animation for the mannequin skeleton. If you use a DCC tool (Blender, Maya or 3ds Max), export one animation with the Animations checkbox enabled, export only the skeleton, and put one animation in each file. If you have no such tool, export one from Unreal: right-click an animation of the mannequin, choose Asset Actions, then Export, and save it as an FBX file."
       - "In the Content Browser, go to the folder where the animation should be stored. Click Import and pick the FBX file."
-      - "In the FBX Import Options, set Skeleton to your existing Skeleton. For the UE5 mannequins this is the asset named SK_Mannequin. Do not create a new one."
-      - "Open the Animation section. Set Animation Length to Animated Time, and turn off Use Default Sample Rate so that the frame rate is read from the file."
-      - "Type a name in Override Animation Name, for example A_Wave. Then click Import."
-      - "Import a second animation, but this time use Set Range and import only the first 20 frames. Compare the two Animation Sequences."
+      - "The import window opens. In current versions it is named Interchange Pipeline Configuration, and older versions show FBX Import Options. Set Skeleton to your existing Skeleton. For the UE5 mannequins this is the asset named SK_Mannequin. Do not leave it empty, because then a new Skeleton is created. In the new window, also turn on Import Only Animations, which needs a Skeleton to be set."
+      - "Open the Animations section. Set Animation Length to the option that imports only the range of frames that contain animation: it is named Animation Time in the new window and Animated Time in the old one. Let the frame rate come from the file: in the new window, leave Use 30Hz to Bake Bone Animation off and Custom Bone Animation Sample Rate at 0, and in the old window, turn off Use Default Sample Rate."
+      - "Give the animation a name, for example A_Wave: type it into Asset Name in the Common section of the new window, or into Override Animation Name in the old one. Then click Import."
+      - "Import a second animation, or the same file again with another name. This time set Animation Length to Set Range and type a Frame Import Range that covers only the first 20 frames. Compare the two Animation Sequences."
       - "Open each sequence in the Animation Sequence Editor. Check the number of frames, and check that the Skeleton is the one you chose."
-    done_when: "Send one screenshot of the FBX Import Options dialog with your Skeleton, Animation Length and Override Animation Name set, and one screenshot of the two imported Animation Sequences in the Content Browser. Add one sentence that says how many frames each one has."
+    done_when: "Send one screenshot of the import window with your Skeleton, Animation Length and the name of the animation set, and one screenshot of the two imported Animation Sequences in the Content Browser. Add one sentence that says how many frames each one has."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4385,30 +4387,30 @@ quests:
         choices: ["FBX 2020.2", "FBX 2016", "FBX 2013", "FBX 2024"]
         answer_index: 0
         explain: "The docs say the Unreal Engine FBX import pipeline uses FBX 2020.2. Another version may cause incompatibilities."
-      - q: "You import an animation FBX without a skeletal mesh. What does the docs say is required?"
+      - q: "You import an animation FBX without a skeletal mesh. What do the docs say is required?"
         choices: ["A Physics Asset", "An existing Skeleton must be specified", "A Skeletal Mesh in the same folder", "A Material for the mesh"]
         answer_index: 1
-        explain: "When importing animation on its own, you must specify an existing Skeleton in the import options."
+        explain: "When you import an animation on its own, you must specify an existing Skeleton in the import window. In the Interchange window, Import Only Animations requires a Skeleton."
       - q: "You import a skeletal mesh and its animation in one FBX and leave the name field empty. What is the Animation Sequence named by default?"
         choices: ["After the FBX file name", "After the Skeletal Mesh name", "After the root bone of the skeleton", "AnimSequence_0"]
         answer_index: 2
         explain: "When animation is imported together with a Skeletal Mesh, the sequence is named after the root bone by default. You can rename it later."
       - q: "Your exported time range is longer than the actual keyframes in the file. Which Animation Length option imports only the frames that have animation?"
-        choices: ["Exported Time", "Set Range", "Animated Time", "Frame Import Range"]
+        choices: ["Source Timeline", "Set Range", "Animation Time (named Animated Time in the older FBX Import Options window)", "Frame Import Range"]
         answer_index: 2
-        explain: "Animated Time imports the range of frames that have animation. Exported Time uses the range defined at export, and Set Range lets you type start and end frames."
-      - q: "Use Default Sample Rate is enabled. What sample rate does the animation get?"
+        explain: "Animation Time imports the range of frames that contain animation. Source Timeline (Exported Time in the older window) uses the range defined in the file, and Set Range uses the frames you type into Frame Import Range."
+      - q: "In the import window, Use 30Hz to Bake Bone Animation is turned on. What sample rate does the animation get?"
         choices: ["24 frames per second", "60 frames per second", "The rate stored in the FBX file", "30 frames per second"]
         answer_index: 3
-        explain: "With Use Default Sample Rate on, the default of 30 frames per second is used. Turn it off to let the system read the rate from the FBX file."
+        explain: "With this option on, all animation curves are sampled at 30 frames per second. The older FBX Import Options window has a similar option named Use Default Sample Rate. With the option off and Custom Bone Animation Sample Rate at 0, the importer finds the best rate from the file."
       - q: "Your animation has non-uniform scale on some bones. What does the docs say about importing scale?"
         choices: ["Scale is never imported for animations", "Scale imports without extra options, and the engine only saves scale that is not 1", "You must enable Import Scale Tracks first", "Scale is baked into the mesh instead"]
         answer_index: 1
         explain: "Unreal supports non-uniform scale animations. Scale imports automatically, and for memory reasons the engine only stores scale when it is not 1."
       - q: "You want a curves-only animation and do not want any bone transform data. Which option do you turn off?"
-        choices: ["Import Bone Track", "Import Custom Attribute", "Remove Redundant Keys", "Preserve Local Transform"]
+        choices: ["Import Bone Tracks", "Import Attributes as Curves or Animation Attribute", "Remove Redundant Keys", "Use T0 As Ref Pose"]
         answer_index: 0
-        explain: "Import Bone Track imports bone transform tracks. Turning it off discards them, which the docs say is useful for curves-only animations."
+        explain: "Import Bone Tracks imports the bone transform tracks found in the file. With it turned off they are left out, which is useful for curves-only animations. The older window writes the name as Import Bone Track."
       - q: "Many DCC tools such as Maya cannot save several animations in one FBX. Which tool does the docs name as one that can, so Unreal imports all of them from a single file?"
         choices: ["Blender", "Motion Builder", "Houdini", "ZBrush"]
         answer_index: 1
@@ -4434,13 +4436,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-blueprint-two-bone-ik-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-masks-and-blend-profiles-in-unreal-engine"
     checklist:
-      - "Open the Skeleton of your character in the Animation Editor. In the Skeleton Tree, right-click the root bone, choose Add Virtual Bone, and pick hand_l as the target. Do the same for hand_r."
+      - "Open a project made from the Third Person template, or create one. Open the Skeleton of the mannequin, or of your own character, in the Animation Editor. In the Skeleton Tree, right-click the root bone, choose Add Virtual Bone, and pick hand_l as the target. Do the same for hand_r."
       - "Preview an animation and watch the two VB bones follow the hands. Save the Skeleton."
       - "In the Options menu of the Skeleton Tree, choose Add Blend Mask. Name the mask BM_NoVirtualBones and set both virtual bones to 0.0."
-      - "In your Animation Blueprint, ABP_Character, add two Slot nodes: one set to DefaultSlot and a second one named AdditiveSlot. Connect them to an Apply Additive node."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions), name the copy ABP_Character, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. In its AnimGraph, add two Slot nodes: one set to DefaultSlot and a second one named AdditiveSlot, which you first add in the Anim Slot Manager. Connect them to an Apply Additive node."
       - "Put a Layered Blend per Bone node between AdditiveSlot and Apply Additive. Set its Blend Mode to Blend Mask and pick BM_NoVirtualBones."
       - "Add a Two Bone IK node for each arm. Set IKBone to the hand, set Effector Location Space to Bone Space, and set Effector Target to the matching virtual bone. Enable Take Rotation from Effector Space."
-      - "Play an additive head look or breathing animation on AdditiveSlot. Check that the hands stay where they are in the base pose."
+      - "Make an additive animation: duplicate an animation in which the upper body moves, such as the idle, and set Additive Anim Type to Local Space in its Asset Details. Create a montage from it, set its Slot track to AdditiveSlot, and play it from a key press in BP_ThirdPersonCharacter. Check that the hands stay where they are in the base pose."
     done_when: "Send one screenshot of the Skeleton Tree that shows both virtual bones under root, and one screenshot of the AnimGraph with the Slots, the Layered Blend per Bone node set to Blend Mask, and the Two Bone IK nodes. Add one sentence that says what changed when the additive animation was playing."
     xp: 60
     verify_type: screenshot
@@ -4497,11 +4499,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-editor-in-unreal-engine"
     checklist:
-      - "In the Content Browser, click Add, then Blueprint Class. Open All Classes and pick AnimNotify. Name the new class AN_Footstep."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, click Add, then Blueprint Class. Open All Classes and pick AnimNotify. Name the new class AN_Footstep."
       - "In AN_Footstep, use the Override dropdown to add Received Notify. In it, print the name of the owner of the Skeletal Mesh Component, and play a sound at the foot socket."
       - "Override Get Notify Name, so that the notify shows a clear label on the timeline."
       - "Create a second Blueprint with the parent class AnimNotifyState and name it ANS_Trail. Override Received Notify Begin, Received Notify Tick and Received Notify End, and put a Print String in each."
-      - "Open a walk Animation Sequence. Add AN_Footstep at each moment where a foot lands, and add one ANS_Trail across the middle of the animation."
+      - "Open a walk Animation Sequence of the mannequin. Add AN_Footstep at each moment where a foot lands, and add one ANS_Trail across the middle of the animation."
       - "Select one AN_Footstep on the timeline. In the Details panel, set Notify Trigger Chance to 0.5 and Trigger Weight Threshold to 0.5. Play in the editor and watch the printed output."
       - "Right-click the Notify area and open Manage Notifies. Use Find References on one Skeleton Notify to see where it is used."
     done_when: "Send one screenshot of the AN_Footstep graph with the Received Notify override, and one screenshot of the Animation Sequence timeline that shows both custom notifies. Add one sentence that says what Trigger Weight Threshold 0.5 changed."
@@ -4560,8 +4562,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/pose-blender-in-unreal-engine"
     checklist:
-      - "Make a short Animation Sequence with 3 poses for one shoulder: arm down, arm forward and arm up. Right-click it and create a Pose Asset named PA_ShoulderFix."
-      - "In your Animation Blueprint, add a Pose Driver node after the locomotion pose. Set its Pose Asset to PA_ShoulderFix."
+      - "Open a project made from the Third Person template, or create one. Make a short Animation Sequence with 3 poses for one shoulder: arm down, arm forward and arm up. One way: duplicate the idle animation of the mannequin, open the copy, select upperarm_l in the Skeleton Tree, and press Key in the toolbar at the first frame. Then go to a frame in the middle, rotate the bone so that the arm points forward, and press Key, and do the same at the last frame with the arm up. Right-click the sequence and create a Pose Asset named PA_ShoulderFix."
+      - "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. Add a Pose Driver node after the locomotion pose. Set its Pose Asset to PA_ShoulderFix."
       - "Add upperarm_l as a Source Bone, the bone whose movement the node reads. Set Drive Source to Rotation and Drive Output to Drive Poses."
       - "In the Tool dropdown, choose Copy All from PoseAsset to create the pose targets. Then choose Auto Scale."
       - "Set Solver Type to Interpolative and enable Eval from Ref Pose. Compile, and rotate the arm in the preview to watch the poses blend."
@@ -4616,7 +4618,7 @@ quests:
     required_spine: false
     required: false
     title: "Montage blend settings and multi-slot montages"
-    brief: "A montage does not start and stop in an instant. It blends in from the current pose and blends out again at the end, and the length of these blends decides if an action feels quick or slow. A montage can also have more than one Slot track, so the same montage can play a different animation depending on the state of the character, for example standing or lying down. In this quest you tune the blend settings of a reload montage and add a second Slot track to it."
+    brief: "A montage does not start and stop in an instant. It blends in from the current pose and blends out again at the end, and the length of these blends decides if an action feels quick or slow. A montage can also have more than one Slot track, so the same montage can play a different animation depending on the state of the character, for example standing or lying down. In this quest you tune the blend settings of a montage and add a second Slot track to it."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-editor-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-montage-in-unreal-engine"
@@ -4624,12 +4626,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blend-masks-and-blend-profiles-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-slots-in-unreal-engine"
     checklist:
-      - "Open a reload montage named AM_Reload, or create one from a reload Animation Sequence."
+      - "Open a project made from the Third Person template, or create one. Open a reload montage of your own, or create a montage named AM_Reload from any Animation Sequence of the mannequin that stands in for a reload: right-click it and choose Create, then Create AnimMontage."
       - "In Asset Details, set the Blend Time of Blend In to 0.1 and the Blend Time of Blend Out to 0.4. Set Blend Out Trigger Time to 0.3, and test the difference in Play In Editor."
       - "Turn off Enable Auto Blend Out and play the montage. Note what the character does at the end. Then turn the setting on again."
-      - "Right-click the Slot track and choose New Slot. Set the new track to a second Slot in the same Slot Group, for example DefaultGroup.Prone."
-      - "Drag a prone reload sequence (a reload done lying down) into the new track. Make both tracks the same length."
-      - "In the Character Blueprint, use Play Montage and a Branch on a bool variable named IsProne to pick which Slot plays. In the AnimGraph, add a Slot node for each of the two slots."
+      - "Open Window > Anim Slot Manager and add a Slot named Prone to the DefaultGroup. Then right-click the Slot track of the montage and choose New Slot. Set the new track to DefaultGroup.Prone."
+      - "Drag a second, different Animation Sequence into the new track. It stands in for a reload done lying down. Make both tracks the same length."
+      - "In BP_ThirdPersonCharacter, add a key press event that calls Play Montage with AM_Reload. Add a bool variable named IsProne to the character. In the AnimGraph of the Animation Blueprint that the character uses, add a Slot node for each of the two slots and use a Blend Poses by bool node on IsProne to choose which Slot node is shown."
       - "Set In Play Rate to 2.0 on one of the calls, and check that the montage plays at double speed."
     done_when: "Send one screenshot of the Asset Details of the montage with your Blend In, Blend Out and Blend Out Trigger Time values, and one screenshot of the montage timeline with two Slot tracks. Add one sentence that says what happened when Enable Auto Blend Out was off."
     xp: 60
@@ -4679,8 +4681,8 @@ quests:
     subjects: [animation, animation-blueprint, performance, optimization]
     required_spine: false
     required: false
-    title: "Thread-safe AnimBP and Fast Path"
-    brief: "In a scene with many characters, animation is often the largest cost on the Game Thread, the main line of work of the game. Two techniques reduce this cost. Thread safe functions let the update logic of an Animation Blueprint run on other threads, and Fast Path lets AnimGraph nodes read their values directly, without running Blueprint logic. In this quest you clean an Animation Blueprint until every node uses Fast Path, move its logic into a thread safe function, and try Update Rate Optimizations, which update far away characters less often."
+    title: "Cheaper crowds: update rates and fixed bounds"
+    brief: "In a scene with many characters, animation is often the largest cost on the Game Thread, the main line of work of the game. Some of that cost can be saved on the Skeletal Mesh Component, without changing the Animation Blueprint. Update Rate Optimizations, or URO, update the animation of far away characters less often, and fixed bounds stop Unreal from recalculating the size of each character on every frame. In this quest you build a small crowd, turn on these options, and measure what they change."
     time_min: 75
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-optimization-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/animation-budget-allocator-in-unreal-engine"
@@ -4688,14 +4690,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/how-to-get-animation-variables-in-animation-blueprints-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/graphing-in-animation-blueprints-in-unreal-engine"
     checklist:
-      - "Open ABP_Character. In Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Compile and read the Compiler Results."
-      - "Find every AnimGraph node that does not have the lightning icon. Move any math, for example a multiply on Speed, out of the AnimGraph and store the result in a variable."
-      - "In the My Blueprint panel, add a new function named GetLocomotionData. In its Details panel, enable Thread Safe."
-      - "Use the Override dropdown to add Blueprint Thread Safe Update Animation, and call GetLocomotionData from it."
-      - "Inside the function, add a Property Access node. Use Bind to read the Velocity of the owning Pawn, and store Speed and Direction in variables."
-      - "Delete the old Event Graph logic that set those variables. Compile until there are no warnings."
-      - "On the Skeletal Mesh Component of your character, turn on Enable Update Rate Optimizations and Display Debug Update Rate Optimizations. Then press Play and walk away from the character."
-    done_when: "Send one screenshot of the Compiler Results with no Fast Path warnings and the AnimGraph nodes showing lightning icons, and one screenshot of the Thread Safe function with the Property Access node. Add one sentence that says what the URO debug display showed at a distance."
+      - "Open a project made from the Third Person template, or create one. Make a Character Blueprint named BP_CrowdDummy whose Mesh uses SKM_Manny_Simple with the Anim Class ABP_Unarmed. Place 20 or more copies in a level, in rows that lead away from the Player Start. Press Play, type stat unit in the console, and write down the Game time."
+      - "Open BP_CrowdDummy and select the Mesh component. In the Details panel, find the Optimization section and turn on Enable Update Rate Optimizations. In the same panel, turn on Display Debug Update Rate Optimizations, which shows the update rate of each character on screen while the game runs."
+      - "Press Play. Stand close to the crowd, then walk far away from it, and watch how the debug display on the characters changes with distance. Take a screenshot at each distance."
+      - "On the same Mesh component, search the Details panel for Component Use Fixed Skel Bounds and turn it on. The component now skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not calculated again on every frame. To see the bounds, open the Show menu of the viewport, then Advanced, then Bounds, and compare with the option on and off."
+      - "Open the walk or run animation that the crowd plays and look at its Notifies track. Notifies run on the game thread after the animation work is done, so write one line that says which of them are Blueprint notifies and why the documentation advises notifies that are not Blueprint based."
+      - "Run stat unit again with all options on and compare the Game time with your first number. Read the part about Update Rate Optimizations on the documentation page linked on this quest, and note which plugin it recommends in place of URO for controlling how often Animation Blueprints are evaluated."
+    done_when: "Send one screenshot in Play mode with the URO debug display visible on characters that are near and far, and one screenshot of the Details panel of the Mesh component with the three options turned on. Add the stat unit Game time before and after, and one sentence that says what the URO debug display showed at a distance."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -4703,34 +4704,34 @@ quests:
         choices: ["The AnimGraph", "The Event Graph logic", "The State Machine transitions", "The Slot nodes"]
         answer_index: 1
         explain: "The Event Graph runs each tick, sequentially on the Game Thread, and is generally the most expensive part. The docs advise reducing it as much as possible."
-      - q: "How do you make a Blueprint function usable in Blueprint Thread Safe Update Animation?"
-        choices: ["Mark it Pure", "Enable the Thread Safe property in the function's Details panel", "Put it in a Function Library", "Name it with the prefix TS_"]
+      - q: "Where do you turn on Update Rate Optimizations for a character?"
+        choices: ["In Project Settings, under Rendering", "On the Skeletal Mesh Component, in the Optimization section of its Details panel, with Enable Update Rate Optimizations", "In the Class Settings of the Animation Blueprint", "In the Skeleton asset"]
         answer_index: 1
-        explain: "Create the function in My Blueprint, open its Details and enable Thread Safe. Then call it from the Thread Safe Update Animation override."
-      - q: "A Thread Safe function needs the owning character's velocity. What is the safe way to read it?"
-        choices: ["Cast to the character and read the variable directly", "Have the character push the value into the AnimBP every tick", "Use a Property Access node and Bind it to the property", "Read it in the Event Graph and copy it"]
+        explain: "URO is a setting of each Skeletal Mesh Component. You find Enable Update Rate Optimizations in the Optimization section of its Details panel."
+      - q: "What does Component Use Fixed Skel Bounds do?"
+        choices: ["It locks the mesh to its most detailed LOD", "It stops the animation when the character is hidden", "It skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not recalculated every frame", "It makes the collision capsule static"]
         answer_index: 2
-        explain: "Thread Safe functions cannot access non-thread-safe Blueprints directly. Property Access reads the data safely, and data must be pulled by the AnimBP, not pushed to it."
-      - q: "What does the lightning icon on an AnimGraph node mean?"
-        choices: ["The node is using Fast Path", "The node has a compile error", "The node runs on the Game Thread", "The node is a Slot"]
+        explain: "With this option on, the component uses the fixed bounds defined in the Skeletal Mesh. The bounding volume used for culling is then not recalculated on each frame, which improves performance."
+      - q: "Which property shows the URO rate of each character on screen while the game runs?"
+        choices: ["Display Debug Update Rate Optimizations", "Warn About Blueprint Usage", "Enable Lazy Evaluation", "Component Use Fixed Skel Bounds"]
         answer_index: 0
-        explain: "Nodes with the lightning icon read variables through Fast Path, copying parameters instead of calling the Blueprint Virtual Machine."
-      - q: "You add a multiply node between a float variable and a Blend Space input. What happens to Fast Path on that node?"
-        choices: ["Nothing, math is allowed", "Fast Path is lost and the lightning icon disappears after compile", "The Blend Space becomes thread safe", "The variable is cached"]
+        explain: "Display Debug Update Rate Optimizations is a property of the Skeletal Mesh Component. It shows the update rate on screen during the simulation."
+      - q: "Which plugin do the docs recommend in place of URO for controlling how often Animation Blueprints are evaluated?"
+        choices: ["Pose Search", "Animation Budget Allocator", "Motion Warping", "Control Rig Modules"]
         answer_index: 1
-        explain: "Any Blueprint logic in the AnimGraph stops that node from using Fast Path. Do the math elsewhere and read the result as a member variable."
-      - q: "Which of these constructs can the compiler still optimize with Fast Path?"
-        choices: ["A Break Transform node", "A Cast node", "A function call", "Members of a nested struct such as a split Rotator pin"]
+        explain: "The page recommends the Animation Budget Allocator plugin for controlling the tick rate of Animation Blueprint evaluation."
+      - q: "Animation Notifies run on the game thread after the worker threads have finished. What do the docs advise for them?"
+        choices: ["Use Blueprint notifies wherever you can", "Store every notify on the Skeleton", "Turn all notifies off at a distance", "Make them non-Blueprint based, to avoid calls into the Blueprint Virtual Machine"]
         answer_index: 3
-        explain: "Fast Path supports member variables, negated booleans and members of nested structs. Break Transform does conversions, so it is not Fast Path."
-      - q: "Your character uses root motion for movement. What does the docs say about parallel animation updates?"
+        explain: "Notifies are part of the work done on the main thread after the parallel animation task. The docs say they should not be Blueprint based, because each one would call into the Blueprint Virtual Machine."
+      - q: "Your character uses root motion for movement. What do the docs say about parallel animation updates?"
         choices: ["They are faster with root motion", "The parallel update cannot happen because character movement is not multi-threaded", "Root motion has no effect on threading", "Root motion forces the AnimGraph onto a worker thread"]
         answer_index: 1
         explain: "If root motion is required for character movement, the update cannot run in parallel, because character movement runs on the game thread."
-      - q: "What update rate does the docs suggest as a target when using Update Rate Optimizations at distance?"
+      - q: "What update rate do the docs suggest as a target when using Update Rate Optimizations at distance?"
         choices: ["60Hz with interpolation on", "30Hz with interpolation on", "15Hz and under, with interpolation disabled", "1Hz for all characters"]
         answer_index: 2
-        explain: "The docs recommend targeting 15Hz and under at appropriate distances and disabling interpolation. It also suggests the Animation Budget Allocator instead of URO."
+        explain: "The docs recommend targeting 15Hz and under at appropriate distances and disabling interpolation."
     flavors:
       _default: {why: "Animation is often the biggest game-thread cost in a crowd scene. Thread-safe updates and Fast Path move that work off the critical path."}
       animation: {why: "A clean AnimBP is one that other people can profile and trust. This quest teaches the two rules that keep it fast.", do: "Enable Component Use Fixed Skel Bounds on a background character and note what the docs say it skips."}
@@ -4751,8 +4752,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-skeletal-mesh-lods-using-fbx-in-unreal-engine"
     checklist:
-      - "Open Edit > Project Settings and search for Skeletal Mesh Reduction. Make sure that the plugin property is set to SkeletalMeshReduction."
-      - "Open the Skeletal Mesh of your character, SK_Character. In Asset Details, under LOD Settings, set Number of LODs to 4 and click Apply Changes. Save the LODSettings asset next to the mesh."
+      - "Open a project made from the Third Person template, or create one. Open Edit > Project Settings and search for Skeletal Mesh Reduction. Make sure that the plugin property is set to SkeletalMeshReduction."
+      - "Duplicate SKM_Manny_Simple and name the copy SK_Character, or use the Skeletal Mesh of your own character. Open it. In Asset Details, under LOD Settings, set Number of LODs to 4 and click Apply Changes. Save the LODSettings asset next to the mesh."
       - "Use the LOD menu of the viewport to look at LOD 1, LOD 2 and LOD 3. Write down the triangle count of each one."
       - "In LOD Picker, enable Custom so that the sections of all LODs are visible. In LOD 3, add the head bone and both hand bones to Bones to Prioritize, set Weight of Prioritization to 5000, and click Regenerate LOD."
       - "In the Reduction Settings of LOD 2, change Termination Criterion to Max Triangles and set a triangle count. Regenerate the LOD and compare."
@@ -4812,13 +4813,13 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/data-validation-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Open Edit > Plugins and confirm that the Data Validation plugin is enabled."
+      - "Open a project made from the Third Person template, or create one. Open Edit > Plugins and confirm that the Data Validation plugin is enabled."
       - "In the Content Browser, click Add, then Blueprint Class. Search All Classes for EditorValidatorBase, pick it, and name the new class EUV_AnimNaming."
       - "Override the function Can Validate Asset. Make it return true only when the asset is an Animation Sequence."
       - "Override the function Validate Loaded Asset. If the name of the asset starts with A_, call Asset Passes. If it does not, call Asset Fails with a message such as Animation names must start with A_."
       - "Compile and save. Restart the editor, because validators are found when the editor starts."
-      - "Rename one animation to a wrong name. Right-click it and choose Asset Actions, then Validate Assets. Read the result in the Message Log."
-      - "Right-click your Animations folder and choose Validate Assets in Folder to check everything at once. Fix the names until the whole folder passes."
+      - "Make a folder named Content/ValidateTest and copy five animations of the mannequin into it. Rename one of them so that its name starts with A_. Right-click one of the others and choose Asset Actions, then Validate Assets. Read the result in the Message Log."
+      - "Right-click the ValidateTest folder and choose Validate Assets in Folder to check everything at once. Fix the names until the whole folder passes."
     done_when: "Send one screenshot of the Validate Loaded Asset graph of EUV_AnimNaming with both Asset Passes and Asset Fails, and one screenshot of the Message Log that shows a failed animation. Add one sentence that says how many assets failed in your folder the first time."
     xp: 60
     verify_type: screenshot

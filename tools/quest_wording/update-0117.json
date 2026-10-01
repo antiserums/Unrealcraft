@@ -1,0 +1,225 @@
+{
+ "CQ53": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and create a Level Sequence named LS_Extras. Drag SKM_Manny from the Content Browser into Sequencer three times, so that you get three spawnable extras.",
+   "Give each extra a different idle or walk loop on its Animation track. Shift the sections in time so that the extras do not move in step with each other.",
+   "Place four more Skeletal Mesh Actors in the level and select them. Right-click the track of one extra, open Assign Actor and choose Add Selected. Notice the yellow chevron and the count next to the track name.",
+   "On the track that is now bound to several actors, key a Transform or a property once. Check that all the bound actors change.",
+   "Right-click a spawnable track, open Spawnable, and set Spawned Object Owner to External. Play, then stop. Write down what happens to the actor.",
+   "Place one more character in front as the hero, for example SKM_Quinn. Add a Cine Camera and film a shot of 5 seconds with the hero in front and the extras moving behind."
+  ]
+ },
+ "CQ54": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Drag the Control Rig asset of the mannequin, CR_Mannequin_Body, from the Content Browser into the level. A Level Sequence with a Control Rig track opens. If you already have such a sequence, you can use it. Place a Static Mesh prop, such as a cube or a cylinder, near the hand and name it SM_Prop.",
+   "Select SM_Prop in the viewport. In the Animation panel, click Add Constraint (+) and choose Parent, then use the eyedropper to pick the hand control. Move the hand and check that the prop follows it.",
+   "Move the playhead 48 frames later. Use the key button to add a key that deactivates the constraint. Animate the prop falling to a table. Drag the playhead over the release and look for a sudden jump (a pop). Fix it with Compensate Key while the playhead is on the constraint key.",
+   "Select the control of the other hand. Add a LookAt constraint to SM_Prop. Change its Axis so that the hand aims correctly.",
+   "Select the hand control and open Spaces. Add SM_Prop as a custom space and switch to it at one frame. Then switch back to Parent at a later frame.",
+   "Right-click the Parent constraint and choose Bake. Then open the Constraints Manager actor and count your constraints."
+  ]
+ },
+ "CQ55": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. You need a Level Sequence that has at least 2 shots. To make one, click Cinematics in the main toolbar, choose Add Level Sequence with Shots with 2 shots, and add a camera to each shot. Open Window > Cinematics > Movie Render Queue and add a job for it. Check the Map field in Job Details and type your name in Author.",
+   "Click Settings for the job. Add EXR Sequence and Anti-Aliasing with Temporal 4. Click Load/Save Preset and choose Save As Preset. Save it as MPC_Final, which is a Movie Pipeline Primary Config asset.",
+   "Expand the job to see its shots and click Edit on one shot. Add Anti-Aliasing with Temporal 8. Try to add an Export setting and notice that you cannot. Use Save As Preset and name it MPSC_Hero, which is a Movie Pipeline Shot Config asset.",
+   "Add a second job with another sequence. Any other Level Sequence works, for example one of the two shots. In its Settings dropdown, pick MPC_Final. Then click Unsaved Queue, choose Save Queue As, and save the queue as MPQ_Weekly.",
+   "Click the name MPC_Final in the Settings column, change Output Directory, and close the window. Then double-click MPC_Final in the Content Browser and see that the change is not there. Set the directory in the asset editor and click Save.",
+   "Remove both jobs from the queue. Pick MPQ_Weekly from the queue menu and confirm that both jobs come back with their presets.",
+   "Click Render (Local). Open the Output link and confirm that both jobs rendered into the directory you set in the asset."
+  ]
+ },
+ "CQ56": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. You need a Level Sequence with a camera. To make one, choose Add Level Sequence in the Cinematics dropdown of the main toolbar and click the Camera button in Sequencer. In Movie Render Queue, add a job for it. In the Settings column, click the arrow next to Unsaved Config and choose Movie Render Graph (Beta). Under Create New Asset, click Movie Render Graph and save it as MRG_Base.",
+   "Open MRG_Base. Find the Globals chain and click each of its nodes: Sampling Method, Global Output Settings, Warm Up Settings and Global Game Overrides. Set the output directory and the resolution in Global Output Settings.",
+   "In the Members tab, under OUTPUTS, click + and name the output beauty. Build this chain of nodes: Render Layer, then Deferred Renderer, then PNG Output File Type, then Output. Set the File Name to {sequence_name}.{layer_name}.{frame_number}.",
+   "Right-click the Sampling Method node and expose the TemporalSampleCount pin. Right-click the pin and choose Promote to Variable. Go back to the queue and set the variable to 4 on the job.",
+   "Open the Active Render Settings tab and click Evaluate Graph to see the final settings. Break the chain between the renderer and the output, evaluate again, and then reconnect it.",
+   "Right-click the Deferred Renderer node and choose Disable. Evaluate, then enable the node again. Click Render (Local) and check the names of the PNG files.",
+   "Click the three dots next to Quick Render in the main toolbar and open Quick Render Settings. Set After Render to Open Output Directory and render the Current Viewport."
+  ]
+ },
+ "CQ57": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a shot of 48 frames with a moving character and a Niagara effect. To make one, create a Level Sequence, click the Camera button in Sequencer, add SKM_Manny with a walk animation, and place a Niagara System made from one of the templates, such as a fountain, in view. Add the shot to Movie Render Queue. Add the Anti-Aliasing setting with Spatial 1 and Temporal 4, turn on Override Anti-Aliasing, and set the method to None. Render it to PNG. This is render A.",
+   "Render B: use Spatial 2 and Temporal 8 (16 samples in total) with the method TemporalAA. Add Console Variables and set r.TemporalAASamples to 16. Compare the edges with render A.",
+   "Render C: use the same settings as B, but delete the console variable. Look for sample positions that repeat, which you see as less smooth edges.",
+   "Add a Camera Cuts section that starts 24 frames before the start of the playback range. Enable Use Camera Cut for Warm Up and Render Warm Up Frames, and set Engine Warm Up Count to 24. Compare the Niagara effect on frame 1 with render A.",
+   "Add Debug Options and enable Write All Samples. Render only 2 frames with Custom Playback Range. Open the sample images that are saved next to the output.",
+   "Set Output Frame Step to 2 for a quick preview. Count the output files.",
+   "Switch the job to a Movie Render Graph. Show where the temporal count is set (the Sampling Method node) and where the spatial count and the AntiAliasing Method are set (the Deferred Renderer node)."
+  ],
+  "quiz": [
+   {
+    "q": "Which anti-aliasing method is listed as not supported when you use Override Anti-Aliasing?",
+    "choices": [
+     "FXAA",
+     "TemporalAA",
+     "MSAA",
+     "None"
+    ],
+    "explain": "The Anti Aliasing Method list has None, FXAA, TemporalAA and MSAA, and MSAA is marked Not supported."
+   },
+   {
+    "q": "TAA is on and you use more than 8 samples. Why can extra samples stop helping?",
+    "choices": [
+     "The GPU limits samples to 8",
+     "r.TemporalAASamples (default 8) limits how many unique positions are chosen for anti-aliasing",
+     "Temporal samples are ignored with TAA",
+     "PNG cannot store more than 8 samples"
+    ],
+    "explain": "With TAA enabled the number of unique positions is limited by r.TemporalAASamples, which defaults to 8. Set the method to None or raise the variable to Spatial x Temporal."
+   },
+   {
+    "q": "You set a very high Temporal Sample Count. What does the documentation warn about?",
+    "choices": [
+     "The delta time becomes too small for the engine and you get warnings after the render",
+     "The output becomes black",
+     "Spatial samples are disabled",
+     "Motion blur is removed"
+    ],
+    "explain": "Too many temporal samples create too small a delta time for the engine to handle, which results in warnings after a render."
+   },
+   {
+    "q": "What does Use Camera Cut for Warm Up do?",
+    "choices": [
+     "It adds a camera cut track to the output",
+     "It renders the camera cut twice",
+     "It determines the warm-up frame count from the Camera Cut section before the start time and evaluates those frames during warm-up",
+     "It disables Engine Warm Up Count"
+    ],
+    "explain": "The warm-up length comes from the camera cut section before the start time. Those frames are evaluated, so cloth or particles can continue their motion from the shot before."
+   },
+   {
+    "q": "How is Render Warm Up Count different from Engine Warm Up Count?",
+    "choices": [
+     "They are the same setting with two names",
+     "Render Warm Up Count ticks the game thread but never renders",
+     "Render Warm Up Count only works with the Path Tracer",
+     "Render Warm Up Count rebuilds the TAA history with samples taken at the same time without ticking the engine, right before rendering starts"
+    ],
+    "explain": "Render Warm Up Count builds the temporal history after a camera cut clears it. All samples are taken at the same time and it happens regardless of the Engine Warm Up Count."
+   },
+   {
+    "q": "Engine Warm Up frames are ticked but not rendered by default. Which option submits them to the GPU, and why would you?",
+    "choices": [
+     "Use LODZero, for foliage",
+     "Render Warm Up Frames, for content like GPU particles or virtual texturing that must render to warm up",
+     "Write All Samples, for debugging",
+     "Override Anti-Aliasing, for TAA"
+    ],
+    "explain": "Render Warm Up Frames sends each Engine Warm Up frame to the GPU. This matters when content must actually render to warm up, such as GPU particles or virtual textures."
+   },
+   {
+    "q": "What does the Write All Samples debug option write to disk?",
+    "choices": [
+     "Every single render sample so you can inspect individual temporal or spatial sub-samples",
+     "Only the final accumulated frames",
+     "A log file with sample counts",
+     "A RenderDoc capture per frame"
+    ],
+    "explain": "Write All Samples writes every render sample produced by the GPU next to the output so you can see sub-sample renders without accumulation."
+   },
+   {
+    "q": "Output Frame Step is set to 2. What is true about the skipped frames?",
+    "choices": [
+     "The game does not tick for them",
+     "They are rendered at half resolution",
+     "They are written as black frames",
+     "The game still ticks for them so results stay consistent, and the feature is experimental"
+    ],
+    "explain": "With a frame step the skipped frames still tick the game to keep results close to rendering every frame. The docs mark the feature as experimental."
+   }
+  ]
+ },
+ "CQ58": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. You need a shot of 24 frames: any Level Sequence with a camera works, and you can make one with Add Level Sequence and the Camera button in Sequencer. Make a job for it in Movie Render Queue. Add EXR Sequence with Compression set to PIZ and Multilayer turned on. Add Color Output and enable Disable Tone Curve. Render, and open one EXR file in a viewer that shows pixel values above 1.",
+   "Open Edit > Plugins, enable Apple ProRes Media (in the Media Players section) and restart the editor. Add Apple ProRes [10-12bit] with the codec Apple ProRes 422 HQ, and add WAV Audio. Render, and check the .mov file and the .wav file.",
+   "Install ffmpeg. Open Edit > Project Settings > Plugins > Movie Pipeline CLI Encoder. Set Executable Path, set Video Codec to libvpx-vp9, Audio Codec to libvorbis, and Output File Extension to mkv. Then run MovieRenderPipeline.DumpCLIEncoderCodecs in the Output Log.",
+   "Add Command Line Encoder with Quality set to High, and also add a .jpg Sequence and WAV Audio. Render, and play the .mkv file.",
+   "Add Final Cut Pro XML with Data Source set to Sequence Data. Open the XML file in a text editor and find the shot names.",
+   "Switch the job to a Movie Render Graph. Add an Apple ProRes Movie Output Type node and open its Quality list. Note the default value.",
+   "Write a small table with these columns: format, bit depth, alpha yes or no, audio yes or no, and when you would use it."
+  ]
+ },
+ "CQ59": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Project Settings > Engine > Rendering > Default Settings. Enable Alpha Output and Support Primitive Alpha Holdout (Deferred). Restart the editor if it asks.",
+   "You need a shot with characters and a background. If you have none, drag two mannequins into a level that has a floor and a few cubes behind them, create a Level Sequence, and add a camera with the Camera button. Rename the character actors so that their names start with CHAR_. Put the background actors in an Outliner folder named BG.",
+   "Open a Movie Render Graph asset, or make a new one: in Movie Render Queue, add the shot as a job, click the arrow next to its config in the Settings column, choose Movie Render Graph and create a new graph. Add a Collection node named col_Chars with a Condition Group that uses Actor Name CHAR_*. Add a second Collection named col_BG that uses Editor Folder BG. Click the arrow icon in the Details panel to select the members of a collection in the level.",
+   "Make a render layer named rl_Chars with this chain: Render Layer, then a Modifier named mod_HideBG, then Deferred Renderer, then EXR, then Output. In the Modifier, set Collections to col_BG and turn on Is Hidden, Cast Shadows While Hidden and Affect Indirect Lighting While Hidden.",
+   "Make a render layer named rl_BG with this chain: a Modifier named mod_HoldChars, then Deferred Renderer, then EXR, then Output. In the Modifier, set Collections to col_Chars and turn on Holdout.",
+   "Add a Set Metadata Attributes node to rl_Chars, with the key artist and your name as the value. Keep the File Name {sequence_name}.{layer_name}.{frame_number}.",
+   "Render 24 frames. Open both EXR files, and check the alpha of the holdout region and the EXR metadata."
+  ]
+ },
+ "CQ60": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with a lit level, a hero object such as a mannequin, and a Level Sequence with a camera. Open Project Settings and make sure that Default RHI is DirectX 12 and that Support Hardware Ray Tracing and Enable Path Tracing are on. Restart the editor if you changed them. In Movie Render Queue, add the sequence as a job and make a Movie Render Graph for it named MRG_PT.",
+   "Build two render layers on the same job. The layer rl_Hero uses the Path Traced Renderer node with Spatial 8 and Reference Motion Blur on. The layer rl_BG uses the Deferred Renderer node. Set the temporal count to 4 in Sampling Method.",
+   "Insert a Branch node before the renderer in rl_Hero. Promote its condition to a bool variable (true or false) named bUsePathTracer. Set it on each job in the queue and render once each way.",
+   "Make a Blueprint named BP_PTPasses: an Actor with a Post Process Volume that has Infinite Extent (Unbound) and a high Priority. Add two custom events named RenderDiffuse and RenderSpecular that set the checkboxes under Path Tracer Lighting Components.",
+   "In a legacy MRQ config, add Console Variables with this Start Console Command: Ke * RenderSpecular. Duplicate the job and give it a second config that calls Ke * RenderDiffuse.",
+   "Render the queue. Compare the specular-only frame and the diffuse-only frame, and compare the time per frame of each job.",
+   "Write down where the Reference Motion Blur option is found and why the deferred layer does not have it."
+  ]
+ },
+ "CQ61": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with a lit level and a Level Sequence that has a camera move of 48 frames. In Project Settings, make sure that Default RHI is DirectX 12 and that Support Hardware Ray Tracing and Enable Path Tracing are on. Open Edit > Plugins and confirm that NFORDenoise and NNEDenoiser are enabled. Open Project Settings > NNE Denoiser. Pick an Open Image Denoise asset (balanced) and set Runtime Type to RDG. If no assets show, tick Show Engine Content and Show Plugin Content in the browse settings.",
+   "Set the viewport to Path Tracing. Place a Post Process Volume with Infinite Extent (Unbound) turned on, or use the one in your level, and enable Denoiser in it. Run r.PathTracing.Denoiser.Name NNEDenoiser in the console. Then compare the fast and the high quality OIDN assets on one still image.",
+   "Open a Movie Render Graph that has a Path Traced Renderer node. To make one, add your sequence as a job in Movie Render Queue, switch its config to Movie Render Graph, create a new graph named MRG_PT, and build the chain Render Layer, Path Traced Renderer, PNG or EXR output, Output. Select the Path Traced Renderer node. Under Denoiser, enable Denoiser Type and set it to Temporal. Set Frame Count to 2. Render the camera move of 48 frames, and search the Output Log for LogNFORDenoise.",
+   "Render the same shot with Frame Count 0. Compare the flicker between frames in a viewer.",
+   "Now do it the legacy way. In an MRQ config, add Console Variables with r.PathTracing.SpatialDenoiser.Type 1 and r.NFOR.FrameCount 2, and enable Denoiser in the Post Process Volume. Look at the first and the last frames of the shot.",
+   "Enable Reference Motion Blur with Temporal 8. Compare the render time with the time when Reference Motion Blur is off.",
+   "Write 5 lines that say which setup was cleanest, which was fastest, and what the log line showed."
+  ]
+ },
+ "CQ62": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. You need a shot of 12 frames: any Level Sequence with a Cine Camera works. Make a job for it in Movie Render Queue. Add the Camera setting with Overscan Percentage 0.1 and export EXR. Render. Open a frame in a viewer that shows the EXR data window, and note the pixel size.",
+   "Render the same job to PNG. Compare the image size and the framing with the EXR.",
+   "Remove the overscan from MRQ. Set the Overscan property on the Cine Camera Actor itself, render again, and confirm that the value was passed through. Then set a different value in MRQ and see which one wins.",
+   "Add High Resolution with Output 3840x2160, Tile Count 2, Overlap Ratio 0.1 and Texture Sharpness Bias -1. Render with depth of field on. Watch the preview window during the render.",
+   "If you have a character with subsurface skin (skin that lets light pass a little way into it), such as a MetaHuman, put it in the shot. Enable Override Sub Surface Scattering and raise Burley Sample Count. Compare the skin at a tile seam, the line where two tiles meet. If you have no such character, look at the tile seams on the objects in your shot and note if you can see them.",
+   "Add a second Cine Camera to the shot. In the Camera setting, enable Render All Cameras, and set Output Directory so that it ends with {camera_name}/. Render.",
+   "Add {overscan_percentage} and {tile_count} to the File Name Format. Then switch the job to Movie Render Graph and check if a High Resolution node exists."
+  ]
+ },
+ "CQ63": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a lit level. Place a Post Process Volume named PPV_Shot. In its Details panel, set Priority to 10 and leave Infinite Extent (Unbound) off. Scale it so that your camera will be inside it. Place a second one named PPV_World with Infinite Extent on and Priority 0.",
+   "Create a Level Sequence named SEQ_Grade and click the Camera button in the Sequencer toolbar, which adds a Cine Camera and a Camera Cuts track. Select PPV_Shot and add it with Add Track (+), then Actor To Sequencer.",
+   "On the PPV_Shot track, click Add Track (+) and open Settings. This submenu lists the post process settings of the volume. Add the property tracks Vignette Intensity, Bloom Intensity and Saturation (found under Color Grading > Global).",
+   "Key Vignette Intensity with the value 0 at frame 0 and 0.8 at the last frame. Key Bloom Intensity so that it is highest in the middle of the shot. Right-click each float section, open Display and choose Show Curve.",
+   "Key Saturation (under Color Grading > Global) so that the picture goes from full color to almost gray over the shot. Drag the playhead to check that the values change smoothly between the keys.",
+   "Add PPV_World to the sequence too. Key its Blend Weight from 1 to 0 across the shot. Drag the playhead and watch which volume wins at each point.",
+   "Play the shot. Write a short text that says which property tracks changed smoothly between keys and which did not."
+  ]
+ },
+ "CQ64": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Frame a shot of a lit level and take a high-resolution screenshot of it. Open it in an image editor such as Photoshop or GIMP. Add adjustment layers, for example Vibrance and Brightness/Contrast, until you like the look.",
+   "Open a neutral LUT image of 256x16 pixels (a 16x16x16 table laid out flat). You can download one from the documentation page linked on this quest. Drag your adjustment layers onto it and save it as T_LUT_ShotLook.png. Import the file into the project.",
+   "Open T_LUT_ShotLook in the Texture Editor. Set Mip Gen Settings to NoMipMaps and Texture Group to Color Lookup Table.",
+   "Place a Post Process Volume named PPV_Shot in the level and turn on Infinite Extent (Unbound). On it, go to Color Grading > Global and enable Color Grading LUT. Assign the texture and set Color Grading LUT Intensity to 1. Compare this with an intensity of 0.5.",
+   "Open Window > Color Grading and select PPV_Shot in the Object Mixer panel. Rebuild the same look with the Shadows, Midtones and Highlights wheels. Then set LUT Intensity back to 0.",
+   "Place a Cine Camera Actor. Create a Color Grading collection named ShotA and add PPV_Shot and the Cine Camera to it. Use the Solo icon (headphones) to check the camera on its own.",
+   "Write three lines that say what the LUT gave you quickly, and why the documentation says to finish with the Color Grading properties."
+  ]
+ },
+ "CQ65": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and place a character or prop to light, for example SKM_Manny. Open Window > Light Mixer. Use its Add button to place three Spot Lights around the subject, and name them SL_Key, SL_Fill and SL_Rim. Aim them like a three-point rig.",
+   "Hover over a column header and click the three-dot Overflow Menu. Add the columns Intensity, Light Color and Attenuation Radius. Set the intensity of the fill light to about half of the key light, directly in the panel.",
+   "Select SL_Key, SL_Fill and SL_Rim with Ctrl-click. Right-click, choose Select or Add Collection, and name the collection ShotA_Rig. Click the collection tab and confirm that only the three lights show.",
+   "Solo SL_Rim with the dash icon under the Headphones column, so that only this light is on. Take a viewport frame. Then click the headphones icon to bring the other lights back.",
+   "Open Window > Env. Light Mixer and set Property Details to Normal. Tune the intensity of the sun (the Directional Light) so that your rig is still clearly visible.",
+   "In a Level Sequence, add SL_Key to Sequencer. Then select all three lights, right-click the binding, open Assign Actor and choose Add Selected. Key one dip of Intensity on this track, which now controls all three lights.",
+   "Write two lines about when you would mute lights (eye icon) and when you would solo them (headphones) while you light a shot."
+  ]
+ }
+}

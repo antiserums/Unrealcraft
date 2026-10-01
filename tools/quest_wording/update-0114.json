@@ -1,0 +1,249 @@
+{
+ "CQ14": {
+  "brief": "A shot that you can only see in the viewport cannot be shared with anyone. Movie Render Queue, often shortened to MRQ, is the tool that renders a Level Sequence to image files at final quality. In this quest you enable the tool, add a sequence as a render job, choose a few settings, save them as a preset, and render about 60 frames as PNG images.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a Level Sequence with a camera in it. If you have none, click the Cinematics dropdown in the main toolbar, choose Add Level Sequence, click the Camera button in the Sequencer toolbar, and set two keys on the Transform track of the camera. Then enable the Movie Render Pipeline plugin: open Edit > Plugins, look under Built-In, and turn it on. Restart the editor if it asks you to.",
+   "Open Window > Cinematics > Movie Render Queue. Click + Render and add the Level Sequence, or drag it in from the Content Browser.",
+   "Click Unsaved Config* to open the settings of the job. Use + Setting to add .png Sequence [8bit], Deferred Rendering and Anti-aliasing.",
+   "In Anti-aliasing, set Spatial Sample Count to 1 and Temporal Sample Count to 8. Enable Override Anti Aliasing Mode and set it to None.",
+   "In Output, set an Output Directory, which is the folder where the images are saved. Keep the resolution 1920x1080. Enable Use Custom Playback Range and render only about 60 frames.",
+   "Open Presets and choose Save As Preset. Name the preset MRQ_Preview. Then click Render (Local) and wait until the preview window closes.",
+   "Open the output folder with the link in the Output column and check the PNG files."
+  ]
+ },
+ "CQ15": {
+  "brief": "This quest is one complete cinematic, from building to final frames. You build a short sequence from shots, start it from gameplay, and render it to image files. Everything you need to build is listed in the steps, and you may reuse your own earlier work where it fits.",
+  "done_when": "Send a short video clip (30 seconds or less) of the sequence playing in Play In Editor after you enter the trigger, a screenshot of the Level Blueprint, a screenshot of the Shots track, and a screenshot of the folder that lists the rendered PNG files, together with your 5-line note. A mentor reviews your work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Build LS_First, a master sequence that is 15 seconds long. It needs a Shots track with at least 2 shots, and each shot has its own Cine Camera.",
+   "Put a character with at least one Animation clip in one of the shots, for example SKM_Manny with a walk animation. Blend or trim the clip so that it fits the shot.",
+   "Add a Camera Cuts track so that the master sequence cuts between the two cameras at a clear moment in the action.",
+   "Start LS_First from the Level Blueprint with a Box Trigger. Use Set Playback Position with the value 0 and then Play. Add an F key event that skips the sequence with Go to End and Stop.",
+   "Add LS_First to Movie Render Queue (Window > Cinematics > Movie Render Queue, with the Movie Render Pipeline plugin enabled). In the settings of the job, use a .png Sequence [8bit] export with Deferred Rendering and an Anti-aliasing setting with a Temporal Sample Count of 8, and render the full 15 seconds as a PNG sequence.",
+   "Write 5 lines that say what each shot shows and name one problem you fixed."
+  ]
+ },
+ "CQ16": {
+  "brief": "Take Recorder is a tool that records what happens while the game runs and saves it as a Level Sequence. Recording a character or a camera is often faster than setting keys by hand. Each recording is called a take, and every take is saved, so you keep all your attempts. In this quest you record the player character walking around, review the recording, and record a second take.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, so that you have a player character. Enable the Take Recorder plugin in Edit > Plugins and restart the editor.",
+   "Open Window > Cinematics > Take Recorder. Set the Slate name to Walk and the take number to 1. The slate is the name that groups your takes.",
+   "Add the player character as a source, which is a thing that will be recorded. Click + Source and choose From Actor, or drag the character from the Outliner into Sources. If the character only exists while the game runs, press Play first and then pick it. Set Record Type to Spawnable.",
+   "Also add Camera Cuts as a source.",
+   "Press Play in the editor, then click the red Record button. Walk and turn for about 10 seconds. Then press the button again, or press Esc, to stop.",
+   "Click Review Last Recording. Then open the Takes Browser and find the take under Cinematics > Takes.",
+   "Record a second take with the same slate. Check that the take number went up to 2."
+  ]
+ },
+ "CQ17": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any Level Sequence, or make a new one with the Cinematics dropdown in the main toolbar and Add Level Sequence. Click Add Track (+), then Event Track, then Trigger. Add a key at frame 60.",
+   "Right-click the key, open Properties, then Unbound, and choose Create New Endpoint. The Director Blueprint opens. Rename the endpoint to SpawnFX.",
+   "In the Director Blueprint, connect SpawnFX to a Spawn Emitter at Location node, or to a node that prints a string, so that something visible happens.",
+   "Select the endpoint and click Add Parameter (+). Name the parameter Scale and make it a float, which is a number with decimals. On the key, set the Payload value to 2.0, and use the value in the graph.",
+   "Place a Point Light in the level and add it to the sequence with Track (+), then Actor to Sequencer. Add a second Event Track under this light. Use Quick Bind to call Set Visibility on it.",
+   "Enable Call In Editor on the first key. Drag the playhead over frame 60 and see the event fire without pressing Play."
+  ]
+ },
+ "CQ18": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a Level Sequence with a camera move. If you have none, choose Add Level Sequence in the Cinematics dropdown of the main toolbar, click the Camera button in Sequencer, and set two keys on the camera. Enable the Movie Render Pipeline plugin if it is off. Open Window > Cinematics > Movie Render Queue and add the sequence as a job. Check that the Map field shows the correct level.",
+   "Open the Settings of the job. Delete the default .jpg Sequence [8bit] export. Add an EXR Sequence and a .png Sequence [8bit].",
+   "Add the Anti-Aliasing setting. Set Temporal Sample Count to 8 and Spatial Sample Count to 1. Enable Override Anti-Aliasing and set the method to None.",
+   "Add the Console Variables setting. Add one variable that raises quality, for example a higher value for r.MotionBlurQuality. Note that the variable goes back to its old value after the render.",
+   "In Output, set File Name Format to {sequence_name}/{shot_name}.{frame_number} and enable Auto Version. Set the Output Directory to a folder named Renders.",
+   "Save the settings as a preset named MRQ_Final. Then click Render (Local).",
+   "Extra: switch the job to Movie Render Graph and make a new graph asset. Find where Temporal Samples and Spatial Samples are set in the graph."
+  ],
+  "quiz": [
+   {
+    "q": "Temporal sampling and spatial sampling both add samples. Why does the documentation say it is usually more efficient to put samples into temporal sampling?",
+    "choices": [
+     "Temporal samples render faster because the GPU skips lighting",
+     "Both give the same anti-aliasing pattern for still objects, and temporal samples also blur moving objects, which hides aliasing",
+     "Spatial samples only work with the Path Tracer",
+     "Temporal samples do not tick the engine, so there is no extra cost"
+    ],
+    "explain": "Any mix of spatial and temporal gives the same offset pattern, so still objects look the same. Temporal samples also produce motion blur on moving objects, which hides aliasing."
+   },
+   {
+    "q": "You set 16 total samples and leave Temporal Anti-Aliasing (TAA) on. What does the documentation recommend?",
+    "choices": [
+     "Nothing, TAA always benefits from more samples",
+     "Switch the export to EXR so the extra samples are stored",
+     "Enable Override Anti-Aliasing and set the method to None, or raise r.TemporalAASamples to match the sample count",
+     "Lower the Output Frame Rate so TAA has more time per frame"
+    ],
+    "explain": "TAA limits the number of unique sample positions to r.TemporalAASamples, which defaults to 8. With more than 8 samples you should disable TAA (None) or raise that variable."
+   },
+   {
+    "q": "With Temporal Sample Count above 1, what extra step may be needed in Sequencer?",
+    "choices": [
+     "Extend tracks to cover the time just before the sequence start; some tracks like animation and audio cannot be auto-expanded",
+     "Convert all cameras to possessables",
+     "Delete the Camera Cuts track so every camera is sampled",
+     "Set the sequence frame rate to 60 fps"
+    ],
+    "explain": "The sequence is evaluated on both sides of each frame. Sections are auto-expanded when possible, but animation and audio sections are skipped and you are told to expand them by hand."
+   },
+   {
+    "q": "What does the Console Variables setting do with the variables you add?",
+    "choices": [
+     "Writes them into DefaultEngine.ini permanently",
+     "Applies them only in the editor viewport, not in the render",
+     "Applies them when the render begins and reverts them when the render completes",
+     "Sends them to the remote render farm only"
+    ],
+    "explain": "Console Variables are set when the render begins so you can use quality settings too expensive for real-time preview. They are reverted after the render."
+   },
+   {
+    "q": "Which statement about the EXR Sequence export is correct?",
+    "choices": [
+     "EXR applies the sRGB encoding curve like PNG",
+     "EXR clamps values to the 0 to 1 range, so no HDR is kept",
+     "EXR keeps HDR values, and disabling the Tone Curve writes linear values that can go far above 1",
+     "EXR requires the Apple ProRes plugin"
+    ],
+    "explain": "EXR preserves HDR values and no sRGB curve is applied. With the Tone Curve disabled, linear values are written in a 0 to 100 or higher range."
+   },
+   {
+    "q": "Where do you disable the Tone Curve for a render without using an OCIO workflow?",
+    "choices": [
+     "In the Game Overrides setting",
+     "In the Color Output setting",
+     "In the Burn In setting",
+     "In the High Resolution setting"
+    ],
+    "explain": "Color Output overrides the color space with an OCIO config, and it can also disable the Tone Curve part of post-processing even without OCIO."
+   },
+   {
+    "q": "You render frames -2 to 10 and your compositing tool cannot read negative frame numbers. Which Output property solves this?",
+    "choices": [
+     "Zero Pad Frame Numbers",
+     "Handle Frame Count",
+     "Output Frame Step",
+     "Frame Number Offset"
+    ],
+    "explain": "Frame Number Offset adds a number to every frame number when writing files, so -2, -1, 0, 1 can become 98, 99, 100, 101."
+   },
+   {
+    "q": "Why does Movie Render Queue have a Render Warm Up Count?",
+    "choices": [
+     "To let the GPU driver load shaders before the first job",
+     "To rebuild the temporal history after a camera cut, so the first frame is anti-aliased without ghosts of the camera angle before the cut",
+     "To give cloth and particles time to settle before rendering",
+     "To check that the output directory is writable"
+    ],
+    "explain": "The TAA history is cleared at each camera cut to avoid ghosts. Render Warm Up samples rebuild that history right before rendering starts. Engine Warm Up Count is the one for cloth and particles."
+   },
+   {
+    "q": "In Movie Render Graph, how are the anti-aliasing sample settings organized differently from the MRQ config?",
+    "choices": [
+     "Both are on the Game Overrides node",
+     "Temporal samples are global in the Sampling Method node, and spatial samples are per render layer on the Renderer node",
+     "Both are set on the File Type Output node",
+     "MRG has no sample settings; it always uses 1 sample"
+    ],
+    "explain": "MRG splits them because temporal samples must be set globally, while spatial samples and the anti-aliasing method can differ per render layer on the Renderer node."
+   },
+   {
+    "q": "Which feature is listed as NOT yet supported when using Movie Render Graph?",
+    "choices": [
+     "EXR output",
+     "Console Variables",
+     "High Resolution (tiled) rendering",
+     "Path Tracer rendering"
+    ],
+    "explain": "The transition page lists nDisplay, High Resolution Rendering, Apple ProRes, Final Cut Pro XML, Prestreaming Recorder and 32-bit post process material rendering as unsupported in MRG."
+   }
+  ]
+ },
+ "CQ19": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a sequence that has at least 2 shots. To make one, click Cinematics in the main toolbar, choose Add Level Sequence with Shots, set Number of Shots to 2, and add a camera to each shot. Place a hero mesh in the level as the main subject, for example SKM_Manny. In shot 1, drag a Spot Light from the Place Actors panel into Sequencer, so that it becomes a Spawnable. Name it L_Key_Shot01.",
+   "Set the Mobility of the light to Movable. Set the character or hero mesh (the main subject of the shot) to Movable too.",
+   "On L_Key_Shot01, open Light, then Advanced, and enable only Lighting Channel 1. On the hero mesh, enable Channel 1 in its Lighting category. Confirm that this light does not light the background.",
+   "Add keyframes on the Intensity track and the Light Color track, so that the key light changes during shot 1.",
+   "Add a Post Process Volume and enable Infinite Extent. Set Exposure Metering Mode to Manual and choose a fixed Exposure Compensation. Drag the playhead between the shots and confirm that the brightness does not drift.",
+   "Do the same for shot 2 with a second spawnable light. Play the sequence and check that each light exists only in its own shot."
+  ]
+ },
+ "CQ20": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in any lit level with a few objects. Place a Post Process Volume and name it PPV_Grade_Base. Enable Infinite Extent (Unbound) and set Priority to 0. This volume holds the look of the whole project.",
+   "In PPV_Grade_Base, set the Film settings (Slope, Toe, Shoulder) once. Do not change them again after that.",
+   "Add a second volume named PPV_Shot02 around one area of the level, the place where a second shot would be filmed. Give it Priority 1 and a Blend Radius. Grade it in Color Grading: first use Global (Saturation, Contrast, Gamma), then Shadows and Highlights.",
+   "Set Temperature Type to White Balance. Adjust Temp until white objects look white under the main light of the level.",
+   "Take a high-resolution screenshot and build a LUT from it in an image editor. Import the LUT, set Mip Gen Settings to NoMipMaps and Texture Group to Color Lookup Table, and try it in Color Grading, under Global. Then turn the LUT off and match the same look with the grading wheels.",
+   "Place a Cine Camera Actor. On it, set Post Process Blend Weight to 1 and add a small Vignette. This way the camera carries its own lens look.",
+   "Extra: create an OpenColorIO Configuration Asset and add a Color Output setting to a Movie Render Queue job."
+  ]
+ },
+ "CQ21": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Level Sequence named LS_Bindings. Place a prop in the level, for example a cube, select it and add it with Track (+), then Actor to Sequencer. This is a Possessable. Add keyframes to its Transform.",
+   "Drag a Skeletal Mesh or a Blueprint from the Content Browser into an empty area of Sequencer. Notice the lightning bolt icon. This is a Spawnable.",
+   "Right-click the possessable prop and choose Convert to Spawnable. Play the sequence and watch the Outliner as the actor appears and disappears.",
+   "Right-click the spawnable track, open the Spawnable category and set Spawned Object Owner to External. Play again and confirm that the actor stays after the sequence ends. Then set it back to This Sequence.",
+   "On the Spawn track, trim the section so that the actor spawns 1 second after the sequence starts.",
+   "Right-click a possessable track and open Assign Actor. Use Replace with Selected to bind the track to a different actor of the same class.",
+   "Extra: make a track follow the real player. Right-click the track of a character, open Convert Selected Binding(s) To, then Replaceable from Director Blueprint, then Quick Bind, and choose Resolve to Player Pawn. Unreal now creates a small function in the Director Blueprint of the sequence that finds the player pawn when the sequence plays. Test it in Play In Editor."
+  ]
+ },
+ "CQ22": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Level Sequence named LS_Follow. It needs a moving character or a prop that travels across the set. To make one, drag SKM_Manny into the level, add it to the sequence, give it a walk clip on its Animation track, and set two keys on its Transform track so that it moves about 10 m.",
+   "Add a Cine Camera Actor named CAM_Track. In Current Camera Settings, open Lookat Tracking Settings and enable Look at Tracking. Set Actor to Track to the character, and set a Relative Offset so that the head is framed. Enable Draw Debug Look at Tracking Position to check the point the camera aims at.",
+   "Set Look at Tracking Interp Speed to a value above 0. Compare how the camera follows with this value and with 0.",
+   "Set Focus Method to Tracking and choose the same actor. Enable Draw Debug Focus Plane and Smooth Focus Changes.",
+   "Place a Camera Rig Rail. Add spline points and curve the track. Attach CAM_Track by dragging it onto the rail in the Outliner. Add the rail to Sequencer and keyframe Current Position on Rail from 0 to 1.",
+   "Add a Camera Rig Crane with a second camera named CAM_Crane. Keyframe Crane Pitch, Crane Yaw and Crane Arm Length so that the camera rises and reveals the scene.",
+   "On the Transform track of one camera, right-click a rotation channel and choose Override with Double Perlin Noise. This adds small random movement for a light handheld feel. Set a low Amplitude."
+  ]
+ },
+ "CQ23": {
+  "brief": "This quest is a complete scene that you take from an empty level to graded final frames. It combines shots, an animated character, following cameras, lighting for each shot, color grading, and a final render. You build a scene of 30 to 45 seconds and write a short breakdown that explains your choices. Everything you need to build is listed in the steps.",
+  "done_when": "Send a short video clip (30 seconds or less) cut from the scene, a screenshot of the master sequence in Sequencer with the shots expanded, a screenshot of the MRQ settings, and your written breakdown. You can add a link to the full video. A mentor reviews your work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Build a scene of 30 to 45 seconds named LS_Scene_Master. It needs at least 3 shots in a Shots track, and each shot is its own Level Sequence.",
+   "Put one animated character in the scene, for example SKM_Manny, with an Animation track that has at least 2 clips. Characters, cameras and shot lights must be Spawnables, which are actors that the sequence creates when it plays.",
+   "Use at least one following camera (Look at Tracking, a rail or a crane) and one static camera. Place your cuts on an action, not at random moments.",
+   "Light each shot with spawnable lights. Use a lighting channel for the hero in at least one shot. Lock the exposure with Manual metering.",
+   "Grade the picture. Use one base Post Process Volume for the look of the project, and at least one grade for a single shot with a different Priority.",
+   "Render with Movie Render Queue. Render a PNG sequence and EXR files, with a Temporal Sample Count of at least 4 and TAA disabled. Save the settings as a preset named MRQ_Scene.",
+   "Encode the PNG files to a video with any tool. Also cut a clip of 30 seconds or less from it that shows your best shots. Write a half-page breakdown with the shot list, what each camera does, what the grade does, and your render settings."
+  ]
+ },
+ "CQ24": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Open a sequence that has a character and at least 2 shots. To make one, click Cinematics in the main toolbar, choose Add Level Sequence with Shots with 2 shots, add a camera to each shot, and add SKM_Manny from the level to the master sequence. Add an Audio Track with Track (+) and drop a music Sound Wave at frame 0. The Audio folder of the Starter Content has music and sound effects that you can use.",
+   "Add a second Audio Track for a footstep sound or a door sound. Trim its edges, and drag its end past the length of the clip so that it loops.",
+   "Drag the upper corners of the music section to make a fade in and a fade out. Then make two clips overlap and adjust the crossfade handles.",
+   "Expand the sound-effect track and set Attach to the character. Right-click the section, open Properties, and set an Attenuation Settings asset, which makes the sound quieter with distance. Move the camera away and listen to how the sound gets quieter.",
+   "Use Start Frame Offset (hold Shift and drag) to slide the sound inside its section, so that it lands exactly on the frame of the footstep.",
+   "Add the sequence to Movie Render Queue as a job (Window > Cinematics > Movie Render Queue). Add the WAV Audio export and a .png Sequence export to the job, and render 5 seconds."
+  ]
+ },
+ "CQ25": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the toolbar, click Cinematics and choose Add Level Sequence with Shots. Name it SEQ_Master. Set Number of Shots to 3, Shot Prefix to sh, Shot Num Digits to 4 and Shot Increment to 10.",
+   "Open the first shot (sh0010). Add a Cine Camera, a Camera Cuts section and one keyframed camera move. Do the same for sh0020 and sh0030, each with a different framing.",
+   "Right-click sh0020 and choose New Take. Save it in the same folder. Change the camera move in the take. Then open the Takes menu and confirm that the star is on the new take.",
+   "Right-click each shot and choose Edit Meta Data. Enter your name, the date and a one-line note. Hover over a shot to see the tooltip.",
+   "Give each shot a different Color Tint. Right-click the shot, open Properties and set Color Tint.",
+   "Add one light to SEQ_Master (the root sequence) and add the same light to sh0010. Keyframe a different color in each of the two sequences. Right-click sh0010, open Properties and change Hierarchical Bias to -50, then back to 0. Watch which color wins each time.",
+   "Write a short naming and folder rule for your team in a text file next to SEQ_Master. It should cover the shot prefix, the number of digits, the take separator and the folder where takes are saved."
+  ]
+ },
+ "CQ26": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and enable Movie Render Queue Additional Render Passes. Restart the editor.",
+   "You need a short shot of 24 to 48 frames with a camera and a few actors in view. If you have none, choose Add Level Sequence in the Cinematics dropdown of the main toolbar, click the Camera button in Sequencer, and set two keys on the camera. Open Movie Render Queue and add a job for this shot.",
+   "Under Deferred Rendering, enable Disable Multisample Effects. In Additional Post Process Materials, enable both MovieRenderQueue_WorldDepth and MovieRenderQueue_MotionVectors.",
+   "Add the Object Ids pass and set Id Type to Actor. This pass gives every actor its own mask.",
+   "Add the Anti-Aliasing setting. Set Spatial Sample Count to 8, turn on Override Anti Aliasing, and set the method to None.",
+   "Remove the other exports. Add EXR Sequence and enable Multilayer. Set File Name Format to {render_pass}/{sequence_name}.{frame_number}.",
+   "Render the job. Open the output folder, and open one EXR file in an image viewer or compositing tool that can read layers. Find the Object Ids (cryptomatte), WorldDepth and MotionVectors layers."
+  ]
+ }
+}

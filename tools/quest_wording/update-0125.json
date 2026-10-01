@@ -1,0 +1,131 @@
+{
+ "LDQ41": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level with a floor, for example a new Basic level. In the toolbar at the top of the Level Viewport, turn on the Drag Grid and set it to 100 units. Objects now move in steps of 100 units.",
+   "Place 6 cube meshes (SM_Cube or a Modeling Mode Box) and arrange them into a room. Move them only while the grid is on, and make sure there are no gaps between them.",
+   "Set the Rotation Grid to 90 degrees. Rotate one wall piece and check that it lands exactly on a 90 degree step.",
+   "Place one more cube as a prop, lift it into the air, and press the End key. Watch it drop onto the floor below it. This is called surface snapping.",
+   "Rotate one cube so that it forms a sloped block. Turn on Surface Snapping with the option Rotate to Surface Normal. Drag the prop onto the sloped block and see that it tilts to match the slope.",
+   "Hold the V key and move one cube so that its corner vertex (a corner point of the mesh) snaps to a vertex of another cube.",
+   "Open Edit > Editor Preferences, go to Viewports, and scroll to the Snap category. Turn on Use Power of Two Snap Size and look at the new grid sizes that you can choose."
+  ]
+ },
+ "LDQ42": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level. Switch to Modeling Mode by pressing Shift+5. If Modeling Mode is missing, enable the plugin named Modeling Tools Editor Mode first.",
+   "In the Create category, open CubeGrid. Click and drag in the viewport to select a group of grid cells for a floor.",
+   "Press E to pull the floor up by one cell. Then hold Ctrl and drag to pull walls up around the edge of the floor.",
+   "Press Ctrl+E to make the grid cells bigger, and add one large platform. Then press Ctrl+Q to make the cells smaller again, and build a set of steps.",
+   "Press Z to enter Corner Mode. Pull only two corners of a cell so that the cell becomes a ramp. Press Z again to apply the change.",
+   "Press R to show the grid gizmo, the handle that moves the grid, and move it to a new position. Build a small second room there.",
+   "Set Output Type to Static Mesh and press Accept. Name the new asset SM_Blockout_Room."
+  ]
+ },
+ "LDQ43": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level. In Modeling Mode, open the Create category and choose Box to place a box. Set Output Type to Static Mesh and click Accept.",
+   "Open the Model category and click PolyGroup Edit. Then click the box to start editing it.",
+   "In the Selection Filter, choose faces. Select the top face and run Extrude, which pulls the face outward. Set Distance Mode to Fixed and Distance to 200.",
+   "Select one side face and run Inset, which makes a smaller face inside it. Then Extrude that smaller face inward to make a doorway.",
+   "Switch the Selection Filter to edges. Select the top edges and run Bevel, which cuts the sharp edges into small slopes.",
+   "Use Shift+Click to add faces to a selection and Ctrl+Click to remove one face from it. Then run Push Pull on the group of faces you selected.",
+   "Press Enter to accept the changes. Save the mesh with the name SM_Blockout_Pillar."
+  ]
+ },
+ "LDQ44": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level with a floor. In Modeling Mode, open the Create category and choose Draw Spline. Set Output Mode to Empty Actor, which makes a new empty actor that holds the spline.",
+   "Set Draw Mode to Tangent Drag. Under Raycast Targets, keep only Ground Planes turned on. Draw a curved path with 5 points, and at one of the points click without dragging to make a sharp corner.",
+   "Press Enter to accept the spline. In the Outliner, rename the new actor to SplinePath_Main.",
+   "Draw a second spline with Draw Mode set to Free Draw, and turn Loop on so the path closes into a ring. Accept it and name it SplinePath_Loop.",
+   "Place one blockout cube next to the first path. Open the Xform category, select the cube, and run the Pattern tool. Choose Line and tile 8 copies in the direction of the path.",
+   "Run Pattern again on a cube, this time with Circle, to make a ring of pillars around the loop. Then click Accept."
+  ]
+ },
+ "LDQ45": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level with a floor. Build a small guard post from 5 to 8 blockout meshes. Add one PlayerStart or one trigger to it, or any other actor that is not a Static Mesh.",
+   "Select all of these actors, right-click, open Level, and choose Create Level Instance. Set Pivot Type to Center Min Z, which puts the pivot at the center and at the lowest point. Save it as LI_GuardPost.",
+   "Copy LI_GuardPost three times across the map. Edit one copy (right-click, open Level, then choose Edit), move a wall, and then click Commit Changes in the Details panel. Check that all copies changed.",
+   "Build a second kit that uses only Static Meshes, for example a bridge. Select it, right-click, open Level, and choose Create Packed Level Actor. Save it as PLA_Bridge.",
+   "Place PLA_Bridge three times in the level. Open its Blueprint with the Edit button in the Outliner and look at what it contains.",
+   "Write 3 lines that say which of the two you would use for a repeated building, which one you would use for a gameplay setup, and why."
+  ]
+ },
+ "LDQ46": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a blockout level that has at least two floors. If you have none, build a small one in a new level from cubes: a ground floor and an upper floor, each with a few walls and two blocks that stand for doors. Then open the Layers panel with Window > Layers.",
+   "Select all blocks of floor 1. Right-click in the Layers panel and choose Add Selected Actors to New Layer. Rename the new layer to Floor_1.",
+   "Do the same for floor 2 and name that layer Floor_2. Then make an empty layer named Doors, and drag every door block from the Outliner onto it.",
+   "Click the eye icon on Floor_2 to hide that layer. Take a screenshot of the clean top view of Floor_1.",
+   "Double-click the Doors layer to select all doors. Then right-click Floor_1 and choose Append Actors to Selection, which adds its actors to what is already selected.",
+   "Press See Contents on Floor_1 to see the actors in the layer. Use the type buttons to select only the StaticMeshActors."
+  ]
+ },
+ "LDQ47": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a blockout level, or build a small one in a new level: about ten cubes as walls, floors and doors, and two or three lights. Rename the Actors so each name starts with a clear prefix: Wall_, Floor_, Door_ or Light_. Put them in Outliner folders that have the same names.",
+   "Type Wall in the search box of the Outliner. Then type Wall Door and notice that fewer Actors show, or none at all, because an Actor must match all the search terms.",
+   "Type -Light to hide all lights from the list. Then type +Door and check that an Actor named Door matches but one named DoorFrame does not.",
+   "Open the Filter drop-down and save your search as a custom filter named BlockoutWalls.",
+   "Right-click a column header and turn on one extra column, for example Type. Then drag its edge to resize it.",
+   "Select an Actor in the viewport and press F while the Outliner is focused, and see what happens. Then select an Actor in the Outliner and press F again.",
+   "Open Window > Outliner and add a second Outliner panel. Give it a different filter than the first one."
+  ]
+ },
+ "LDQ48": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and search for geometry script. Enable the Geometry Script plugin and restart the editor.",
+   "Create a new Blueprint Class that uses GeneratedDynamicMeshActor as its parent class. Name it BP_ProceduralGen.",
+   "In the Event Graph, add the event named Event On Rebuild Generated Mesh. Promote its Target Mesh pin to a private variable named DynamicMesh.",
+   "Add an Append Box node. Make a public Vector variable named BoxSize, turn on Instance Editable and Show 3D widget for it, and set its default to 200,200,200. Split the variable and connect it to the box dimensions.",
+   "Add Get Compute Mesh Pool, then Request and Release Mesh, then Append Cylinder. Promote the temporary mesh to a variable named BoolMesh. Then add Apply Mesh Boolean with Operation set to Subtract and with BoolMesh as the Tool Mesh.",
+   "Add two more Vector variables with 3D widgets, named BoolLocation and BoolSize, to control the cylinder. Compile, drag BP_ProceduralGen into the level, and drag the 3D widgets to change the shape.",
+   "Create a function named Bake Static Mesh and turn on Call in Editor for it, which shows it as a button in the Details panel. In the function, use Copy Mesh to Static Mesh to copy the result into a variable named TargetMesh."
+  ]
+ },
+ "LDQ49": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a Landscape, or create a small one: make a new level, enter Landscape mode and choose New on the Manage tab. Enter Landscape mode and select the Sculpt tab.",
+   "With the Sculpt tool, click and drag to raise a hill. Then hold Shift and drag to lower a valley next to it.",
+   "Select the Flatten tool. Set Flatten Mode to Raise and make a flat plateau on the side of the hill. Notice that the parts that are higher than the plateau do not change.",
+   "Select the Ramp tool. Click two points, one on the plateau and one down in the valley. Set Ramp Width and Side Falloff, then click Add Ramp.",
+   "Select the Erosion tool, which wears the terrain down the way weather does. Lower the Threshold and paint the steep side of the hill. Watch how the steep side erodes faster.",
+   "Select the Hydro tool, which simulates rain. Raise Rain Amount and paint a few strokes on the hill to add water channels.",
+   "Start Play In Editor and walk up the ramp to check that a character can climb it."
+  ]
+ },
+ "LDQ50": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a Landscape that has a Landscape Material with at least two layers, for example Grass and Dirt. If you have none, make a simple one: create a material, add a Landscape Layer Blend node with two layers named Grass and Dirt, connect a green color to the first and a brown color to the second, and connect the node to Base Color. Then create a Landscape in a new level and assign the material to it.",
+   "Enter Landscape mode and open the Paint tab. In Target Layers, click the Plus icon next to each layer and create a Weight-Blended layer info object. This is a small asset that stores where the layer is painted.",
+   "Select the Dirt layer and paint a path across the grass. Watch the grass go away in the places where you paint.",
+   "Hold Ctrl+Shift and paint on the path. Notice that you cannot fully remove the dirt this way.",
+   "Open the Layers section and add a new Edit Layer named PaintDetails. Select it and paint a second path on it.",
+   "Click the eye icon on PaintDetails a few times to hide and show your second path.",
+   "In the viewport, open the Lit menu, then Visualizers, and turn on Layer Contribution. Take a screenshot with the PaintDetails layer highlighted."
+  ]
+ },
+ "LDQ51": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Plugins, enable the Water plugin, and restart the editor. Use a Landscape that has Enable Edit Layers checked, because the water needs this to change the terrain. To make one, create a new level, enter Landscape mode, choose New on the Manage tab, and check Enable Edit Layers before you click Create. Sculpt one low area and one slope.",
+   "From the Place Actors panel, drag a Water Body Lake into a low area. Move its spline points to shape the lake, and watch the terrain carve itself under the water.",
+   "Drag in a Water Body River and lay it from the lake up a slope. Give the spline points different heights so that the river runs downhill into the lake.",
+   "Select one spline point of the river and set its River Width, Depth and Velocity. Then right-click the spline and enable Visualize Water Velocity.",
+   "In the Content Browser, right-click, open Water, and choose Water Waves to create an asset. Name it WW_Calm. In it, lower Max Amplitude and set Num Waves to 8.",
+   "Select the lake and assign WW_Calm to its Water Waves Asset slot. Compare how the lake looks now with how it looked with the default asset.",
+   "Start Play In Editor and walk into the lake to see the underwater post-process, the visual effect that appears when the camera is under water."
+  ]
+ },
+ "LDQ52": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a new level with File > New Level and choose Open World. Save it as L_WP_Test.",
+   "Open Window > World Partition > World Partition Editor. Drag on the map to mark a region, then right-click and choose Load Region from Selection.",
+   "Place 10 cubes far apart inside the loaded region. Select one cube and find the World Partition section in the Details panel. Look at the option Is Spatially Loaded, which means the actor loads only when a player is near.",
+   "Turn off Is Spatially Loaded on one cube and rename that cube to Cube_AlwaysLoaded.",
+   "Open World Settings and find World Partition Setup. Enable Preview Grids and write down the values of Cell Size and Loading Range.",
+   "Drag a Location Volume from the Place Actors panel, place it around your cubes, and save. Then find its region in the World Partition window.",
+   "Start Play In Editor and walk away from the cubes until they unload. Then come back and see them load again."
+  ]
+ }
+}

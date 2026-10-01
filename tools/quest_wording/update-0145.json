@@ -1,0 +1,125 @@
+{
+ "TAQ1": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open any level that has a few meshes, lights and materials in it. The level of the template is fine.",
+   "Pick one camera view and keep it for the whole quest. Take a screenshot of it in the Lit, Unlit and Wireframe view modes.",
+   "Switch to the Detail Lighting view mode, and then to Lighting Only. Look at what changes on surfaces that use normal maps, which are textures that add small surface detail.",
+   "Switch to the Shader Complexity view mode, which colors each surface by how expensive its material is to draw. Find the most expensive color on the screen and note which object it is.",
+   "Switch to the Light Complexity view mode. Note which surface is affected by the most lights.",
+   "When you are done, switch the viewport back to Lit."
+  ]
+ },
+ "TAQ2": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level and start Play In Editor (PIE), which runs the game inside the editor.",
+   "Press the ~ key to open the console, the line where you can type commands. Type stat fps and press Enter, then type stat unit and press Enter.",
+   "Write down the Frame, Game, Draw (rendering thread) and GPU times. They are shown in milliseconds.",
+   "Stop PIE. Add something heavy to the level, for example 20 movable point lights close together, or many translucent planes.",
+   "Start PIE again with stat unit turned on. Write down the new numbers.",
+   "Compare the two sets of numbers and see which time grew the most. That time shows where your bottleneck is."
+  ]
+ },
+ "TAQ3": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, make a folder named TechArt. Inside it, make the sub-folders Meshes, Materials, Textures, FX and Tools.",
+   "Move or create at least 6 assets in these folders. Use a mix of meshes, materials, material instances and textures. You can duplicate assets that came with the template, or create new empty ones.",
+   "Rename each asset in the form Prefix_AssetName_Descriptor. For example: SM_Crate, M_Crate, MI_Crate_Red, T_Crate_BaseColor and T_Crate_Normal.",
+   "After you have moved things, right-click the TechArt folder and choose Fix Up Redirectors. Redirectors are small leftover files that point from the old location of an asset to the new one, and this command cleans them up.",
+   "Type T_ in the search box of the Content Browser. Check that only textures show up.",
+   "Write a short naming rule of 5 lines for your own project and save it in a text file."
+  ]
+ },
+ "TAQ4": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_FenceRow. Add an Instanced Static Mesh component, which draws many copies of one mesh in a cheap way, and give it a simple mesh such as a cube or a fence post.",
+   "Add a variable named Count of type Integer and a variable named Spacing of type Float. Click the eye icon next to each one so that it is open. This makes both variables Instance Editable, which means you can change them on each copy in the level.",
+   "Open the Construction Script. First call Clear Instances on the component, and then add a For Loop that goes from 0 to Count - 1.",
+   "Inside the loop, call Add Instance. Give it a relative location where X is Index * Spacing, so each new copy is placed a little further along.",
+   "Place BP_FenceRow in the level. Change Count and Spacing in the Details panel and watch the fence rebuild itself.",
+   "Place a second copy of BP_FenceRow and give it different values."
+  ]
+ },
+ "TAQ5": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose FX, then Niagara System. Pick a template that spawns particles all the time, such as Fountain.",
+   "Name the new asset FXS_TestFountain. Double-click it to open it in the Niagara Editor.",
+   "Find the Spawn Rate module in the Emitter Update group. Change the rate, which is the number of new particles each second, and watch the preview.",
+   "In the Particle Spawn group, open the Initialize Particle module. Set Lifetime Mode to Random and enter a Minimum and a Maximum, so each particle lives for a different time.",
+   "Change the particle Color in the Initialize Particle module.",
+   "Drag FXS_TestFountain from the Content Browser into a level, and check that it looks right there."
+  ]
+ },
+ "TAQ6": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and look in the Scripting category. Enable the Python Editor Script Plugin and Editor Scripting Utilities, and then restart the editor.",
+   "Open the Output Log. Next to the input line at the bottom, switch the input from Cmd to Python. Then type this line and press Enter: unreal.log(\"Hello from Python\")",
+   "Select 3 or more assets in the Content Browser.",
+   "In the Python console, type this line and press Enter: print([a.get_name() for a in unreal.EditorUtilityLibrary.get_selected_assets()])",
+   "Save the same code in a file named list_selected.py inside the Content/Python folder of the project (create the folder if it does not exist). Add the line import unreal at the top of the file.",
+   "Run the file with Tools > Execute Python Script, and check the result in the Output Log. The documentation page lists this command under the File menu, where it was in older versions."
+  ]
+ },
+ "TAQ7": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In a folder of your choice, for example TechArt/Tools, right-click and choose Editor Utilities, then Editor Utility Blueprint. Pick AssetActionUtility as the parent class, and name the new asset EUB_AssetActions.",
+   "Open it and add a function named AddPrefix. Give the function a String input called Prefix.",
+   "Inside the function, add Get Selected Assets and connect it to a For Each Loop. In the loop, call Rename Asset, and make the new name from Prefix followed by the old object name.",
+   "Click Compile and then Save. Make a few test assets that have no prefix in their names.",
+   "Select the test assets in the Content Browser and right-click them. Run your action from the Scripted Asset Actions menu.",
+   "Add a check to the function so the action skips assets whose names already start with the prefix."
+  ]
+ },
+ "TAQ8": {
+  "brief": "Textures are the images that materials use, and they take up a large part of a game's memory. A few settings on each texture decide how good it looks and how much memory it costs. One of them is sRGB, which should be on for color images and off for images that store data. In this quest you bring three textures for one asset into a project and give each one the correct settings.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need three textures for one asset: a color map, a normal map and a packed mask. A packed mask stores a different grayscale image in each color channel. Import your own image files, or duplicate three textures of the template mannequin from the folder Characters/Mannequins/Textures: a color map (name ending in _D), a normal map (_N) and a packed mask (_MRA). Name them T_Crate_BaseColor, T_Crate_Normal and T_Crate_ORM.",
+   "Double-click each texture to open it in the Texture Editor. Keep sRGB turned on for the color map, and turn sRGB off for the mask.",
+   "Set Compression Settings on two of them: choose Normalmap for the normal map and Masks for the mask texture.",
+   "Set a Texture Group for each texture, for example World and WorldNormalMap.",
+   "Note the Resource Size of each texture, which is how much memory it uses. Then set LOD Bias to 1 on one texture and note its new size.",
+   "Import one more texture whose size is not a power of two (powers of two are sizes such as 512 or 1024). A cropped screenshot saved as a PNG file works. Check how many mips it has. Mips are the smaller copies of a texture that are used when it is far away."
+  ]
+ },
+ "TAQ9": {
+  "brief": "A test bed is a small level that you build only for testing. It gives you one known place where you can check materials, effects and tools. In this quest you build a lit test room with a prop that builds itself, a Niagara effect and tidy folders, and you measure what the room costs. Everything you need to build is listed in the steps, and you may reuse your own earlier work where it fits.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a small room in a level named L_TA_TestBed. It needs a floor, walls, one directional light and at least two point lights.",
+   "Put a notes board in the room, made from a text render or a textured plane. On it, list the view modes and stat commands you use to check the room.",
+   "Place a prop that builds itself in the room, with at least two different settings. If you have none, make an Actor Blueprint named BP_FenceRow with an Instanced Static Mesh component and two Instance Editable variables, Count and Spacing. In its Construction Script, call Clear Instances and then Add Instance in a For Loop, with X set to the loop index times Spacing.",
+   "Place one Niagara system in the room. Its name should start with FXS_. You can make one from the Fountain template with FX, then Niagara System in the Content Browser.",
+   "Keep all the assets of the room in a folder named TechArt and give them the correct prefixes, such as BP_, FXS_, M_ and L_. If you have a right-click tool that renames assets, use it here.",
+   "Check the room in the Lit view mode, in the Shader Complexity view mode, and with stat unit. Write down the numbers you see.",
+   "Write 5 lines that say what the room tests, what the most expensive thing in it is, and one fix you would try."
+  ]
+ },
+ "TAQ10": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Pick a mesh with at least a few thousand triangles. Two options that everyone has: make a Sphere with a high subdivision level in Modeling Mode, or copy SM_MatPreviewMesh_01 from the engine content (turn on Show Engine Content in the settings of the Content Browser to see it). Duplicate the mesh and name the copy SM_Rock_LODTest.",
+   "Double-click it to open it in the Static Mesh Editor. In the LOD Settings section, set LOD Group to SmallProp and accept the change when the editor asks.",
+   "Check that Auto Compute LOD Distances is turned on. Note the triangle count of each LOD.",
+   "Make a second copy of the mesh and set it up by hand. Set Number of LODs to 4, and then set Percent Triangles to 75, 25 and 12 for LOD1, LOD2 and LOD3.",
+   "Place both meshes in a level. Turn on the LOD Coloration view mode, which gives each LOD its own color, and move the camera away slowly."
+  ]
+ },
+ "TAQ11": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, right-click, choose Material, and then click Material Parameter Collection. Name the new asset MPC_World.",
+   "Open MPC_World. Add a Scalar Parameter (a single number) named Wetness with a default of 0, and a Vector Parameter (a color) named WorldTint with a default of white.",
+   "Open two different materials of your own. If you have none, make two simple ones named M_Rock and M_Ground, each with a different color connected to Base Color and a value of 0.8 connected to Roughness. In each one, add a Collection Parameter node set to MPC_World. Use Wetness to darken Base Color and to lower Roughness, and multiply Base Color by WorldTint.",
+   "Place meshes that use both materials, or instances of them, in a test level. Change Wetness in MPC_World and watch every mesh update at once.",
+   "Make a Blueprint named BP_WeatherControl. On Begin Play, use a Timeline that goes from 0 to 1 over 5 seconds to drive a Set Scalar Parameter Value node. On that node, set Collection to MPC_World and Parameter to Wetness.",
+   "Add a key press event that calls Set Vector Parameter Value to change WorldTint to a warm evening color.",
+   "Start Play in Editor and test both parts: first the world gets wet, and then the tint changes when you press the key."
+  ]
+ },
+ "TAQ12": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Niagara system named FXS_Fountain from a simple emitter template. For example, use Fountain, or Simple Sprite Burst with a Spawn Rate module added.",
+   "In the Parameters panel, add a User parameter of type float named SpawnRate, and a User parameter of type Linear Color named TintColor.",
+   "Link the Spawn Rate module to User SpawnRate, and link the particle Color to User TintColor. Give both parameters sensible default values.",
+   "Place FXS_Fountain in a level. Select it and check that both values show in the Details panel under Override Parameters.",
+   "Make a Blueprint named BP_FountainController that has a Niagara component, or a reference to the system you placed. On a key press, call Set Niagara Variable (Float) for SpawnRate and Set Niagara Variable (LinearColor) for TintColor.",
+   "Start Play in Editor and press the key. Confirm that the effect changes its rate and color, and that you did not have to edit the Niagara asset."
+  ]
+ }
+}

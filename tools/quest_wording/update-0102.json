@@ -1,0 +1,249 @@
+{
+ "GDQ1": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Lamp in the folder /Content/UC/Blueprints (create the folder if it does not exist yet). Add a Static Mesh component and a Point Light component under the root component. Give the Static Mesh component any mesh, for example a cylinder from the engine's basic shapes.",
+   "Add a variable of type Linear Color named LightColor and a variable of type Float named Height. Tick Instance Editable (the eye icon) on both, so that you can change them on each copy in the level.",
+   "Open the Construction Script. Set the color of the light from LightColor, and set the relative Z location of the mesh from Height.",
+   "Place 3 copies of the lamp in the level. Give each one a different color and height in the Details panel, and watch them update without pressing Play.",
+   "Open the Event Graph. On the BeginPlay event, use a Print String node to print the name of the lamp, so that you can see the part that runs during the game."
+  ]
+ },
+ "GDQ2": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_TriggerZone with a Box Collision component as its root. Add a Vector variable named BoxSize, give it a default value such as 200, 200, 100, and turn on Instance Editable. In the Construction Script, call Set Box Extent on the Box Collision and connect BoxSize to it. Now you can change the size of the box on each copy in the level from the Details panel.",
+   "Add the On Component Begin Overlap event. Compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues.",
+   "Add the On Component End Overlap event with the same filter. After the filter, add a Print String node with the text \"left zone\".",
+   "Push a physics cube (a cube with Simulate Physics turned on) into the zone. Confirm that nothing fires.",
+   "Also place a Trigger Box from the editor in the level, and handle its overlap once in the Level Blueprint. This way you have seen both ways to do it."
+  ]
+ },
+ "GDQ3": {
+  "done_when": "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the door opening and reversing halfway. Also send a screenshot of the Timeline curve and the graph.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Door. Add a Static Mesh component with a cube that you scale to the shape of a door, and a Box Collision component that is larger than the door, so that the player touches it before reaching the door. If you already have a door Blueprint of your own, you can use that instead. In the Event Graph, add a Timeline named TL_Open with one float track that goes from 0 to 1 over 1.0 s. Ease the curve: right-click the keys and choose Auto.",
+   "Connect the output of the track to a Lerp (Rotator) or Lerp (Vector) node. Connect the result of the Lerp to Set Relative Rotation or Set Relative Location on the door mesh.",
+   "Add the events On Component Begin Overlap and On Component End Overlap for the Box Collision. In each one, compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues. Connect Begin Overlap to the Play input of the Timeline, and End Overlap to the Reverse input.",
+   "Make the variable OpenAngle (or OpenOffset) Instance Editable, so that each door can open in a different way.",
+   "Start PIE. Step into the trigger and out again when the door is halfway through its motion. The door should reverse from where it is and not snap."
+  ]
+ },
+ "GDQ4": {
+  "done_when": "Send a screenshot of both lever graphs, and a short video clip (30 seconds or less) or two PIE screenshots that show one lever opening the gate and another lever switching the lamp.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create two Actor Blueprints. BP_Gate has a cube mesh and a custom event named Open that hides the mesh and turns off its collision. BP_Lever has a small mesh and a Box Collision. Version A: in BP_Lever, add an Instance Editable variable named Target of type BP_Gate (Object Reference). When the player overlaps the Box Collision of the lever, call the Open event of the gate.",
+   "Place a lever and a gate in the level. Select the lever, and in the Details panel use the eyedropper next to Target to pick the gate. Test it in PIE.",
+   "Version B: create a Blueprint Interface named BPI_Activatable with a function named Activate. Implement it on BP_Gate and on a second Actor Blueprint that you make now, such as a lamp with a Point Light that switches on, or a platform that moves.",
+   "Change the type of the lever's Target variable to Actor, and call Activate (Message) on it. Point one lever at the gate and another lever at the lamp.",
+   "Leave the Target of one lever empty and press Play. Read the Accessed None error in the Message Log. Then add an Is Valid check before the call, so that an empty Target does not cause an error."
+  ]
+ },
+ "LDQ27": {
+  "brief": "A beat is one part of a level that has its own job, such as a calm start, a moment of pressure, or a reward. A beat chart is a small table that describes each beat before you build anything. Planning on one page first saves hours of rebuilding later. In this quest you write a beat chart with three beats and sketch the route, all before you open the editor.",
+  "checklist": [
+   "Before you open the editor, make a table on one page with 3 rows: Intro, Tension and Payoff.",
+   "Give the table these columns: location, player goal, what the player does (the mechanic), what they see first, the feeling you want, and intensity (from 1 to 5).",
+   "Mark where each Blueprint interaction will be placed. Plan at least two, for example a trigger that starts something, a door that opens, or a lever that opens a gate.",
+   "Draw a simple top-down sketch of the route. A photo of a paper drawing or any drawing tool is fine.",
+   "Read the page once more as if you had never seen the idea. Check that every beat has a goal and a mechanic, and that the intensity changes from beat to beat. Keep the page: when you build the level, you can compare the result with this plan."
+  ]
+ },
+ "LDQ28": {
+  "done_when": "Send your metrics sheet as text or as a screenshot, and a screenshot of your metrics gym.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the character Blueprint BP_ThirdPersonCharacter. From the Capsule and Character Movement components, write down the capsule radius and half-height, Max Walk Speed, Jump Z Velocity, Max Step Height and Walkable Floor Angle.",
+   "Build a small metrics gym, which is a test level for measuring the character. Create a new level named L_MetricsGym and build it from cubes: ledges every 25 cm up to 250 cm, gaps every 50 cm, and ramps at 30°, 45° and 50°. If you already have a level like this, you can use it.",
+   "Start PIE and record the real numbers: the highest ledge you can jump onto, the widest gap you can jump over, and the steepest ramp you can walk up.",
+   "Add rules for spaces: door width and height, corridor width (for 1 player and for 2 players), cover height, and stair step size.",
+   "Put everything in a sheet, such as a spreadsheet or a document. Write the engine version at the top. Paste the sheet as text into your proof, or take a screenshot of it."
+  ]
+ },
+ "LDQ29": {
+  "done_when": "Send three screenshots from PIE that show the locked feedback, the key pickup and the door opening, and a screenshot of the door's graph. A short video clip (30 seconds or less) also works in place of the three screenshots.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Key from a mesh and a Sphere Collision. In its On Component Begin Overlap event, compare Other Actor with Get Player Pawn and use a Branch, so that only the player can pick it up. When the player picks it up, set a boolean (true or false) variable named HasKey on the player. To reach the player, use Cast to BP_ThirdPersonCharacter and add the HasKey variable to that Blueprint. Then call Destroy Actor.",
+   "Make an Actor Blueprint named BP_LockedDoor with a door mesh and a Box Collision. When the player overlaps it, check HasKey. If it is true, open the door: the simplest way is to hide the door mesh and turn off its collision, and a nicer way is a Timeline that rotates the door. If it is false, show feedback, such as a Print String, a red light, or a sound.",
+   "Place the door so that the player sees it locked BEFORE they find the key.",
+   "Put the key in a place where getting it is a small detour. It should not be a search for a hidden object.",
+   "Test for soft locks. Can the key fall out of reach? Can the player get stuck behind the door?"
+  ],
+  "quiz": [
+   {
+    "q": "Why should the player see the locked door before finding the key?",
+    "choices": [
+     "It loads faster",
+     "The key then has a known purpose and the player knows where to go back to",
+     "Keys can't spawn before doors",
+     "It's required for NavMesh"
+    ],
+    "explain": "Show the lock first, then the key. Picking up the key then means something."
+   },
+   {
+    "q": "The player walks into the locked door and nothing happens. What's missing?",
+    "choices": [
+     "Locked feedback, so the player knows it's a lock and not a bug",
+     "A second key",
+     "More lights everywhere",
+     "A Level Streaming volume"
+    ],
+    "explain": "A message, a sound or a red light tells them it's locked."
+   },
+   {
+    "q": "What is a soft lock?",
+    "choices": [
+     "A door with no collision",
+     "A save file",
+     "A state where the player can't progress without restarting",
+     "A key with a timer"
+    ],
+    "explain": "A key stuck behind a closed door or knocked off a ledge are classic soft locks."
+   },
+   {
+    "q": "Where should the door check for the key?",
+    "choices": [
+     "On Event Tick, every frame",
+     "In the Construction Script",
+     "In World Settings",
+     "When the player overlaps the door, by reading the player's HasKey"
+    ],
+    "explain": "Check on interaction. Nothing needs to run until the player arrives."
+   },
+   {
+    "q": "The key is a pickup with a sphere trigger. Why do you compare Other Actor with the player pawn before you set HasKey?",
+    "choices": [
+     "Because overlap events only work with a Branch node",
+     "Because anything can overlap the trigger, and only the player should be able to pick up the key",
+     "Because the key would not be visible without it",
+     "Because Destroy Actor needs it as an input"
+    ],
+    "explain": "A physics object or an AI character can also touch the trigger. The filter makes sure that only the player picks up the key."
+   }
+  ]
+ },
+ "LDQ30": {
+  "brief": "A NavMesh, short for navigation mesh, is a map of the floor areas where AI characters can walk. Unreal builds it for you inside a Nav Mesh Bounds Volume. If the NavMesh has gaps, AI characters cannot cross them, and it is better to find this out now than later during a fight. In this quest you show the NavMesh on a route through a level, send a simple AI walker along it, and fix one gap.",
+  "checklist": [
+   "Open any level that has a floor, some steps or ramps and at least one doorway. The level of the Third Person template works, and so does a level you built yourself. Pick a route from one end of the level to the other. Place a Nav Mesh Bounds Volume in the level and scale it until it covers your whole route.",
+   "Press P in the viewport to show the navigation. Walkable areas turn green. Note the gaps at doors, stairs and ledges.",
+   "Create a Character Blueprint named BP_Walker and place it in the level. On BeginPlay, use an AI MoveTo node to send it to a Target Point at the end of your route. Add a Print String to both On Success and On Fail.",
+   "Start PIE and watch it walk. Fix one spot where the green area breaks: widen a door, lower a step, or add a ramp.",
+   "If your doors move, open Project Settings, go to Navigation Mesh, and set Runtime Generation to Dynamic. Then test the walker again with a door closed."
+  ]
+ },
+ "LDQ31": {
+  "checklist": [
+   "Pick a level that you built. If you have none, build a small one first: three rooms in a row, joined by doorways, with a clear goal in the last room. Find one person to play it, such as another learner, a friend or a family member. Give them your level: let them play at your computer, or share your screen and let them tell you what to do.",
+   "Tell them only what a real player would know: the controls and the goal. Say nothing about the route.",
+   "Watch silently. Use a notes template with these fields: time, where, what they did, what they said, and hesitations or backtracks (moments when they stop or go back).",
+   "If they ask for help, answer \"What would you try?\" and note the question.",
+   "After they finish, ask 3 open questions: What were you trying to do? Where did you get stuck? What stood out?",
+   "Write your top 3 issues. Rank them by how often they happened and how much they blocked progress."
+  ]
+ },
+ "LDQ32": {
+  "brief": "Level design works in a loop: you plan the level, build it, test it with another person, and then change it. This quest takes you through the whole loop once. You plan three beats (parts of a level that each have their own job), build one small level from the plan, run a playtest, and change at least one thing because of what you saw.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. First write a beat chart: a table with the rows Intro, Tension and Payoff, and for each row the location, the player goal, what the player does, and an intensity from 1 to 5. Then build a level named L_Beats_01 from it, with each beat in its own space. If you already have a beat chart of your own, you can use it.",
+   "Include at least 2 different Blueprint interactions. For example, build a key that the player picks up to unlock a door, and a lever that opens a gate.",
+   "Build to the metrics of your character. Before you build, test in PIE how high the character can jump, how wide a gap it can cross and how steep a ramp it can walk, and write the numbers down. Every gap, ledge and door in the level should fit these numbers.",
+   "Run one playtest with one other person. Tell them only the controls and the goal, watch silently, and write down where they stop, go back or ask for help.",
+   "Change at least one thing based on the playtest. Then update the beat chart so that it matches what you built."
+  ],
+  "done_when": "Send a writeup with a short video clip (30 seconds or less) that shows the 3 beats, or three screenshots with one per beat. Add the final beat chart, your metrics numbers, your playtest notes, and 2 to 3 lines on what you changed and why. A peer or a mentor must approve it.",
+  "quiz": [
+   {
+    "q": "What counts as 2 Blueprint interacts for this capstone?",
+    "choices": [
+     "Two copies of the same door",
+     "Two different interactions, like a key-locked door and a lever-driven gate",
+     "Two Print Strings",
+     "One door opened twice"
+    ],
+    "explain": "They must be different mechanics, each doing a job in a beat."
+   },
+   {
+    "q": "Your playtester got lost in the tension beat. What does the turn-in need?",
+    "choices": [
+     "Nothing, playtests are optional",
+     "A new level",
+     "The notes, what you changed in response, and an updated beat chart",
+     "A longer clip"
+    ],
+    "explain": "The capstone is about iterating. Show the change and why you made it."
+   },
+   {
+    "q": "How long can the video clip that you send be?",
+    "choices": [
+     "30 seconds or less",
+     "5 minutes",
+     "Any length",
+     "10 seconds exactly"
+    ],
+    "explain": "Short clips get reviewed. If your level takes longer to play, cut between the beats, or send one screenshot per beat."
+   },
+   {
+    "q": "A reviewer spots a gap the character can't clear. Which document should have prevented it?",
+    "choices": [
+     "The beat chart",
+     "The playtest notes",
+     "The engine release notes",
+     "The metrics sheet"
+    ],
+    "explain": "Gaps and ledges come from your measured metrics, with margin."
+   },
+   {
+    "q": "Who approves this capstone?",
+    "choices": [
+     "The Quartermaster automatically",
+     "A peer or mentor, after the quiz",
+     "Nobody",
+     "Epic Games"
+    ],
+    "explain": "Rank 2 verification is quiz plus artifact, approved by a person."
+   }
+  ]
+ },
+ "LDQ21": {
+  "done_when": "Send a short video clip (30 seconds or less) that shows you riding the platform, or two screenshots from PIE that show you on the platform at two different positions. Also send a screenshot of the graph.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in any level. Build an Actor Blueprint named BP_Platform with a Static Mesh for the floor piece. Add two Vector variables named PointA and PointB and turn on Instance Editable for both, so that you can set them on each copy in the level. In the Event Graph, add a Timeline with one float track that goes from 0 to 1 and back to 0, and turn on Loop. Connect BeginPlay to Play. On Update, use a Lerp (Vector) node from PointA to PointB with the track as Alpha, and connect the result to Set Relative Location on the mesh.",
+   "Ride the platform in PIE and check that you do not slide off."
+  ]
+ },
+ "LDQ22": {
+  "brief": "A trap is a place in the level that hurts the player, such as spikes or fire. Unreal has a damage system for this: the Apply Damage node sends damage to an actor, and a Pain Causing Volume is a ready-made volume that damages anything inside it. A fair trap can be seen before it hurts. In this quest you add one trap to a level and make sure the player gets a warning.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any level, for example the level of the template. Add one trap to it, such as spikes or fire. The quick way is a Pain Causing Volume: drag one from the Place Actors panel, under Volumes, and set Damage Per Sec in its Details panel. The other way is a Blueprint with a Box Collision that calls Apply Damage on the Other Actor when something overlaps it. Your character only loses health if its Blueprint handles Event AnyDamage.",
+   "Warn the player. Make the trap visible before it hurts them."
+  ]
+ },
+ "LDQ23": {
+  "done_when": "Send a short video clip (30 seconds or less) that shows you reaching the checkpoint, falling, and appearing at the checkpoint again. Three screenshots from PIE of these three moments also work.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Your character is then BP_ThirdPersonCharacter. Add a checkpoint trigger that stores a respawn transform. A transform is the location and rotation where the player will appear again. Make an Actor Blueprint named BP_Checkpoint with a Box Collision. When the player overlaps it, cast Other Actor to your character and store the transform of the checkpoint in a Transform variable named RespawnTransform on the character.",
+   "Make a fall send the player back. Kill Z, the height in the World Settings below which actors are destroyed, removes the character and does not bring it back, so build your own kill volume above that height. Make an Actor Blueprint named BP_KillZone with a large Box Collision under the level. When the player overlaps it, cast Other Actor to your character and call Set Actor Transform with RespawnTransform, which moves the player back to the last checkpoint."
+  ]
+ },
+ "LDQ24": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a Widget Blueprint named WBP_Prompt: in the Content Browser click Add, then User Interface, then Widget Blueprint, and choose User Widget. Open it, drag a Text widget from the Palette into the designer, and type a single line such as Press E to use.",
+   "Make an interactable, which is an object the player can use: an Actor Blueprint named BP_Interactable with a cube mesh and a Box Collision that is larger than the cube. Place it in the level. Show the widget on Begin Overlap when the player is near it, and hide it on End Overlap. To do this, on Begin Overlap call Create Widget with the class WBP_Prompt, store the result in a variable, and call Add to Viewport. On End Overlap, call Remove from Parent on that variable."
+  ]
+ },
+ "LDQ25": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a gate: an Actor Blueprint named BP_Gate with a cube mesh and two custom events. Open hides the mesh and turns off its collision, and Close shows the mesh and turns its collision on again. Place it in the level.",
+   "Build a pressure plate that opens the gate only while a physics cube sits on it. Make an Actor Blueprint named BP_PressurePlate with a flat mesh and a Box Collision just above it. Add an Instance Editable variable named Gate of type BP_Gate, place the plate, and pick the gate with the eyedropper in the Details panel. On Begin Overlap, call Open on the gate, and on End Overlap, call Close. For the cube, place a cube mesh, set its Mobility to Movable, and turn on Simulate Physics and Generate Overlap Events in its Details panel. Without Generate Overlap Events the plate does not notice the cube.",
+   "Filter the plate so that only the cube counts, or only the player counts. One way is to give the cube an Actor Tag such as Cube, and check Actor Has Tag on Other Actor before you open the gate. Decide which one counts, and say why."
+  ],
+  "done_when": "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the puzzle before and after it is solved. Add one line that says what the plate reacts to and why."
+ },
+ "LDQ26": {
+  "brief": "Sound tells the player that their action worked, or that it did not. A door that makes one sound when it opens and a different sound when it is locked is much easier to understand. In this quest you add two sounds to a simple door.",
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Make an Actor Blueprint named BP_SoundDoor with a cube mesh in the shape of a door, a Box Collision, and an Instance Editable boolean (true or false) variable named IsLocked. If you already have a door or lever Blueprint, you can use that instead.",
+   "On the Begin Overlap event of the Box Collision, add a Branch on IsLocked. After each output of the Branch, add a Play Sound at Location node. Pick a sound in its Sound pin, for example one from the Audio folder of the Starter Content, and connect Get Actor Location to its Location pin. You can also add an Audio Component and call Play on it.",
+   "Use one sound for when the door is locked and a different sound for when it opens. Place two copies in the level, one locked and one not, and test both in PIE."
+  ],
+  "done_when": "Send a screenshot of the graph that shows both sound nodes. A screenshot has no audio, so if you can, also send a short video clip (30 seconds or less) with sound."
+ }
+}

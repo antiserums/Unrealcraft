@@ -1,0 +1,126 @@
+{
+ "PQ31": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Containers and place it in the level. Add a String variable named Names. Click the Variable Type icon next to the type and pick the Array container, so the variable holds a list of Strings.",
+   "Click Compile. Then open Class Defaults and add 4 default items to Names (for example Apple, Banana, Cherry, Date).",
+   "Add a second String variable and turn it into a Set (the { } option in the same container menu). Try to add the same item twice and read the warning that appears.",
+   "Add a Map variable with a String key and an Integer value, and name it Scores. Add 3 key-value pairs in the defaults.",
+   "On Event BeginPlay, add a For Each Loop node that goes through Names. Use Print String to print each item together with its index.",
+   "Use the Find node on Scores with one key, and print the value it returns. Then use Contains Item on the Set and print the result.",
+   "Press Play. Read the Output Log and check the order of the printed items and their index numbers."
+  ]
+ },
+ "PQ32": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_RotateActor with a Static Mesh that uses a cube mesh, such as Shape_Cube from the Starter Content or the Cube from the engine's basic shapes. On Event Tick, call AddActorLocalRotation with Z = 2.0, and put it behind a Branch node that reads a Boolean variable named CanRotate.",
+   "Add a function named OverlappedPlayer with a Boolean input named Begin Overlap. Inside the function, use that input to set CanRotate.",
+   "Open the character Blueprint of the template, BP_ThirdPersonCharacter, and add a Sphere Collision component with Radius 200. Add the events OnComponentBeginOverlap and OnComponentEndOverlap for it.",
+   "Drag from the Other Actor pin and add a Cast To BP_RotateActor node. From the As BP Rotate Actor pin, call OverlappedPlayer. Pass True on the begin overlap event and False on the end overlap event.",
+   "Connect a Print String node to the Cast Failed pin, so you can see when the cast does not work. Place BP_RotateActor and one plain cube in the level.",
+   "Press Play and walk near both objects. The cube from BP_RotateActor should spin, and the plain cube should print the failed message."
+  ]
+ },
+ "PQ33": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Place Blueprint_CeilingLight from the Blueprints folder of the Starter Content in the level.",
+   "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a variable named LampReference. Set its type to Blueprint Ceiling Light and choose Object Reference. Enable Instance Editable, which lets you set the value on the character placed in the level.",
+   "Add an event for the F key. Use a Flip Flop node and Set Visibility to turn the lamp's Point Light 1 on and off through LampReference.",
+   "Select the character in the level. In the Details panel, open the Lamp Reference dropdown and pick the lamp you placed. Press Play and press F.",
+   "Add a second variable named LampClass. Set its type to Blueprint Ceiling Light and choose Class Reference. Set its default value to Blueprint_CeilingLight.",
+   "Add an event for the G key. Use Spawn Actor from Class with LampClass, and spawn the lamp at the player location plus 200 units forward.",
+   "Compare the icons of the two variables and the colors of their pins. Write one sentence that says what each variable holds."
+  ]
+ },
+ "PQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Create a Blueprint Interface named BPI_Interact with one function named Interact. Click Compile and save it.",
+   "Duplicate Blueprint_CeilingLight from the Blueprints folder of the Starter Content and name the copy BP_Lamp. Add a custom event named ToggleLight that uses Flip Flop and Set Visibility on Point Light 1 to turn the light on and off.",
+   "In BP_Lamp, open Class Settings and add BPI_Interact under Implemented Interfaces. Then add Event Interact to the graph and make it call ToggleLight.",
+   "Make a Blueprint named BP_Door with two Static Mesh components named Frame and Door. Add a custom event named OpenDoor that uses a Timeline named TM_Door, with an Alpha value that goes from 0 to 1. Use a Lerp node to turn the door Yaw to 90.",
+   "Add BPI_Interact to BP_Door in the same way. Implement Event Interact there and make it call OpenDoor.",
+   "In the character Blueprint of the template, BP_ThirdPersonCharacter, add a Sphere Collision component with Radius 200. On its begin overlap event, call Interact (Message) and connect Other Actor to the Target pin.",
+   "Place BP_Lamp, BP_Door and a plain cube in the level. Press Play and walk near all three. Nothing should happen at the plain cube, because it does not use the interface."
+  ]
+ },
+ "PQ35": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Make a Blueprint named BP_BossDied with a Box Collision component. Set its scale to 4, 4, 2 and turn off Hidden in Game so you can see the box while you play. Add an Event Dispatcher named OnBossDied.",
+   "On the OnComponentBeginOverlap event of the box, add the Call OnBossDied node. Place BP_BossDied in the level.",
+   "Make a Blueprint named BP_BossDoor with a Frame mesh and a Door mesh. Add a custom event named OpenDoor that uses a Timeline named TM_Door to rotate the door to Yaw 90.",
+   "In BP_BossDoor, add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Bind Event to OnBossDied and connect a custom event named BossDied that calls OpenDoor.",
+   "Make a copy of Blueprint_Effect_Explosion from the Blueprints folder of the Starter Content. Turn off Auto Activate on both of its components. Add an Instance Editable variable named BossDiedReference with the type BP_BossDied Object Reference. On BeginPlay, use Assign OnBossDied on that reference, and make the new event Activate both components.",
+   "Place the door and 3 explosions in the level. On each one, set BossDiedReference to the BP_BossDied you placed. Press Play and walk into the box.",
+   "Extra: on one explosion, add an Unbind All Events node after it fires. Test that this explosion does not fire a second time."
+  ]
+ },
+ "PQ36": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Function Library. Name it BFL_Utils.",
+   "Add a function named DistanceXY with two Vector inputs and one Float output. Mark it as Pure, which means it only returns a value and changes nothing. Build the math from the two inputs.",
+   "Add a second function named PrintWithPrefix with a String input. Leave it impure (do not check Pure). Inside, it calls Print String with a prefix in front of the text.",
+   "In any Actor Blueprint, call both functions on Event Tick and on BeginPlay. Notice that the pure function has no exec pins, the white pins that set the order of execution.",
+   "Set a Category on both functions. Then right-click in a graph and check that the functions appear under that category in the menu.",
+   "Change the number of inputs on DistanceXY and look at the node where you call it. Click Compile and see the warning go away."
+  ]
+ },
+ "PQ37": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, create a new asset by choosing Blueprints, then Blueprint Macro Library. Pick Actor as the Parent Class and name the library BML_Flow.",
+   "Add a macro named CheckScore. Give it an Integer input named Score, an input exec pin named Test, and two output exec pins named Win and Lose. Inside the macro, compare Score to 10 to decide which output runs.",
+   "Add a macro named WaitThenPrint with a String input and a Delay node inside. Notice that a Delay is allowed in a macro.",
+   "Select each macro and, in the Details panel, set an Instance Color and a Category for it.",
+   "In an Actor Blueprint, use CheckScore on BeginPlay and connect one Print String to Win and another to Lose. Then use WaitThenPrint.",
+   "Change something in the macro in the library. Then compile the Actor Blueprint and confirm that the change appears there."
+  ]
+ },
+ "PQ38": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a Blueprint named BP_Post with a Static Mesh. Add an Integer variable named Count with a default of 3, and make it Instance Editable so you can change it on each placed copy.",
+   "In the Construction Script, add a loop that runs Count times. In each pass, use Add Static Mesh Component, and place the meshes 150 units apart.",
+   "Place BP_Post in the level. Change Count in the Details panel and watch the meshes update in the editor, before you press Play.",
+   "Add Event BeginPlay and make it print Hello. Add Event End Play and make it print the End Play Reason. Press Play and then stop.",
+   "Add an Instance Editable Linear Color variable and turn on Expose on Spawn for it. In the Level Blueprint, use Spawn Actor from Class with BP_Post and set the color on the spawn node.",
+   "Write down which script ran in the editor and which one ran only in Play."
+  ]
+ },
+ "PQ39": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint Actor named BP_LifeProbe with a Static Mesh that is a cube. On Event BeginPlay, add a Print String that prints the actor name plus 'BeginPlay'.",
+   "Add Event End Play. Make it print the actor name plus 'EndPlay' and also the End Play Reason.",
+   "In the Construction Script, add a Print String that prints 'Construct'. Drag BP_LifeProbe into the level and watch the message appear before you press Play.",
+   "In the Level Blueprint, add an event for key 1 that uses Spawn Actor from Class to spawn BP_LifeProbe at the player location. Add an event for key 2 that calls Destroy Actor on the last probe you spawned.",
+   "Press Play. Press 1 and then 2. Read the Output Log and note the order of the messages: Construct, BeginPlay, EndPlay.",
+   "Spawn a probe and stop Play In Editor (PIE) while the probe is still alive. Check the log: End Play fires again, and this time the reason is End Play in Editor."
+  ]
+ },
+ "PQ40": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint Actor named BP_Lantern and keep the default Scene root. Add a Static Mesh Component for the pole, a second Static Mesh for the lamp head, and a Point Light.",
+   "In the Components window, drag the lamp head onto the pole so that it becomes a child of the pole. Then drag the Point Light onto the lamp head.",
+   "Select the pole and move it in the viewport. Confirm that the head and the light move with it. Then move only the head and confirm that only the light follows.",
+   "Select each component, press F2, and rename them to Pole, Head and Light. Check the new names in the My Blueprint panel.",
+   "Add a Rotating Movement Component. Press Play and see the lantern spin. Notice that this component has no transform in the viewport, which means it has no position of its own.",
+   "Add a Box Component named Trigger. In the Details panel, click Add Event and pick On Component Begin Overlap. Make it print a string when the player walks into the box."
+  ]
+ },
+ "PQ41": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Ball with a Static Mesh sphere as its root, and set the scale to 0.3. Set its Mobility to Movable so that it can move during play. Place one ball in the level.",
+   "Open the Third Person character (BP_ThirdPersonCharacter). Open its Skeletal Mesh in the Skeleton editor and note the name of a socket or bone on the right hand (for example hand_r).",
+   "In the character, add an event for the E key. Call Get All Actors Of Class with BP_Ball and take index 0 from the result. Then call Attach Actor To Component with Parent set to the character Mesh and Socket Name set to the hand bone. Set Location Rule and Rotation Rule to Snap to Target.",
+   "Add an event for the Q key. Call Detach From Actor on the same ball, with Location Rule set to Keep World.",
+   "Press Play. Walk near the ball, press E, then run around and watch the ball follow the hand. Press Q and confirm that the ball stays where you dropped it.",
+   "Change the Location Rule of the attach node to Keep World and test again. Note what is different."
+  ]
+ },
+ "PQ42": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place six cubes in a test level and select three of them. In the Details panel, find the Tags property in the Actor section and add the tag Breakable to each of the three.",
+   "Make an Actor Blueprint named BP_TagScanner. On BeginPlay, call Get All Actors with Tag with Tag set to Breakable. Print the length of the array it returns. You should see 3.",
+   "Loop through the array. For each actor, call Actor Has Tag with Breakable and print the actor name. Then try the tag Wall and see that it returns false.",
+   "Make a Blueprint named BP_Crate with two Static Mesh Components. Select one component and add the component tag Lid in the Tags property of its Details panel. In BeginPlay, call Find Component by Tag with the class Static Mesh Component and the tag Lid, and set the material of the result to something red.",
+   "Change one call in the scanner to Get All Actors Of Class with Tag, with the class Static Mesh Actor and the tag Breakable. Compare the count with the one from before.",
+   "Write two lines for your proof: one that says when a tag is easier than a new Blueprint class, and one that says why the tag search should not run every frame."
+  ]
+ }
+}

@@ -77,7 +77,7 @@ quests:
       - "Read the Gameplay Ability System overview page in the Unreal Engine documentation. You can skip the code samples if you like."
       - "Write a one-line definition for each of these five terms: Ability System Component, Gameplay Ability, Attribute, Gameplay Effect, and Gameplay Tag."
       - "Pick a mechanic from a game you know, such as a dash, a heal or a stun. Describe how it works using those five terms."
-      - "Name one thing in your own levels that could apply a Gameplay Effect, for example a hazard, a pickup or a zone."
+      - "Name one thing in a game level that could apply a Gameplay Effect, for example a hazard, a pickup or a zone."
     done_when: "Send your five one-line definitions and your description of the mechanic. You also need to pass the quiz of this quest."
     xp: 60
     verify_type: quiz
@@ -116,7 +116,7 @@ quests:
     required: false
     taster: true
     title: "One lighting pass on your loop"
-    brief: "Players look first at the brightest part of the screen and at the places with the most contrast. This means lighting is a tool for guiding the player, not only for making a level look good. In this quest you do one lighting pass on the level that has your pickup game, so that the pickups and the way to them are easy to see."
+    brief: "Players look first at the brightest part of the screen and at the places with the most contrast. This means lighting is a tool for guiding the player, not only for making a level look good. In this quest you do one lighting pass on a level with pickups, so that the pickups and the way to them are easy to see."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lighting-the-environment-in-unreal-engine"
     backup_url: TODO_URL
@@ -126,7 +126,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/light-types-and-their-mobility-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/auto-exposure-in-unreal-engine"
     checklist:
-      - "Open the level that contains the pickup and win loop you built earlier. Move the camera to the view the player has at the start, and save a camera bookmark there (Ctrl plus a number key)."
+      - "Open any project, or create one from the Third Person template. Open a level of your own that has pickups to collect. If you have none, create a new level with File, New Level, Empty Level, build two or three rooms from cubes with one dead end, and place three small spheres as pickups. Move the camera to the view the player has at the start, and save a camera bookmark there (Ctrl plus a number key). Take the before screenshot now."
       - "Set up the basic lighting with the Env. Light Mixer window. Use it to add a Directional Light, a Sky Light, a Sky Atmosphere and Height Fog."
       - "Make each pickup stand out. You can put a small Point Light on it, or you can place the pickup in the brightest area."
       - "Make the dead ends darker or less noticeable, so that the player sees the route to the pickups first."
@@ -178,12 +178,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/module-3-create-a-coin-pickup-with-modeling-tools-and-blueprints"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/game-mode-and-game-state-in-unreal-engine"
     checklist:
-      - "Create a Blueprint named BP_UUGameMode as a child of the GameMode of your template. Give it an Integer variable named Collected, and an Integer variable named Target that is Instance Editable and set to 3. Then set BP_UUGameMode as the GameMode Override of the level."
-      - "Make a Blueprint named BP_Coin with a mesh and a sphere trigger that only reacts to the player (as you did in SQ9). On overlap, use Get Game Mode, then Cast to BP_UUGameMode, then call a function named AddCoin, and after that call Destroy Actor."
+      - "Open a project made from the Third Person template, or create one. Create a Blueprint named BP_UUGameMode as a child of the GameMode of the template: right-click the GameMode Blueprint of the template in the Content Browser and choose Create Child Blueprint Class. Give it an Integer variable named Collected, and an Integer variable named Target that is set to 3. Then set BP_UUGameMode as the GameMode Override of the level in World Settings."
+      - "Make a Blueprint named BP_Coin with a mesh and a Sphere Collision. In its On Component Begin Overlap event, compare Other Actor with Get Player Pawn and use a Branch, so that the coin only reacts to the player. Then use Get Game Mode, then Cast to BP_UUGameMode, then call a function named AddCoin, and after that call Destroy Actor."
       - "Inside the AddCoin function, add 1 to Collected. Then use a Branch node that checks whether Collected >= Target."
       - "On the True output of the Branch, show a win message. A Print String node is enough, and a widget on screen is a bonus."
       - "Place 3 coins in the level in spots where the player has to move around to reach them. Play in the editor (PIE) until you win."
-    done_when: "Send two or three screenshots, or a GIF of less than 30 seconds, taken while playing in the editor, that show you collecting all 3 coins and the win message appearing. Also send a screenshot of the AddCoin function."
+    done_when: "Send a short video clip (30 seconds or less), or two or three screenshots, taken while playing in the editor, that show you collecting all 3 coins and the win message appearing. Also send a screenshot of the AddCoin function."
     xp: 60
     verify_type: screenshot
     quiz:
@@ -223,7 +223,7 @@ quests:
     required: false
     taster: true
     title: "Master material from scratch (small)"
-    brief: "A master material is one material built with parameters, which are values such as a color or a roughness that you leave open to change. From it you make Material Instances, which are light copies that only change those parameters. This way one material can give many objects different looks. In this quest you build a small master material and three instances, and use their colors to show the player what each object in your level is for."
+    brief: "A master material is one material built with parameters, which are values such as a color or a roughness that you leave open to change. From it you make Material Instances, which are light copies that only change those parameters. This way one material can give many objects different looks. In this quest you build a small master material and three instances, and use their colors to show the player what each object in a level is for."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/artist-03-create-materials-and-material-instances"
     backup_url: TODO_URL
@@ -232,11 +232,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/unreal-engine-materials"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-materials-in-unreal-engine"
     checklist:
-      - "Create a new material named M_UC_Master in the folder /Content/UC/Materials."
+      - "Open any project, or create one from the Third Person template. Create a new material named M_UC_Master in the folder /Content/UC/Materials (create the folder if it does not exist yet)."
       - "Add these parameters to it: a Vector parameter named BaseColor, two Scalar parameters named Roughness and Metallic, and a Scalar parameter named EmissiveStrength. Multiply EmissiveStrength by the color and connect the result to the Emissive input."
       - "Give every parameter a Group in its Details panel. Groups keep the parameter list tidy when you open an instance."
       - "Make 3 Material Instances from it: MI_Gameplay_Interact (bright, with a little emissive glow), MI_Gameplay_Hazard (red), and MI_Gameplay_Neutral (matte gray)."
-      - "Apply the instances to the interactable objects you built in your earlier quests, so that players can tell the role of each object by its color."
+      - "Apply the instances to three objects in a level: one that the player can use, one that is a hazard, and one that is only scenery. If your level has no such objects, place three cubes that stand for them. Players should be able to tell the role of each object by its color."
     done_when: "Send a screenshot of the master material graph, and a screenshot of the 3 instances applied in your level."
     xp: 60
     verify_type: screenshot

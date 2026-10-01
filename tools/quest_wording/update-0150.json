@@ -1,0 +1,141 @@
+{
+ "TAQ61": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the Console Variables Editor plugin and restart the editor. Then open the panel from Window > Console Variables.",
+   "Click Add Console Variable and add r.ScreenPercentage. Set it to 50 and watch the viewport get blurry, then set it back to 100.",
+   "Hover over the value field and read the Custom, Preset and Startup values in the tooltip. Untick the row and see the value go back to the startup value. Then tick it again.",
+   "Add the command stat unit through the same input box. This command shows frame times on screen. Then use Search All with the text lumen|screen percentage, and add one Lumen variable from the global list with Add CVAR.",
+   "Open the Presets panel and save the list as a preset named CVP_DailyCheck.",
+   "In the Show menu of the viewport, turn Particles Sprite off and on again. Then press Alt + C to turn the Collision view on and off."
+  ]
+ },
+ "TAQ62": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Editor Preferences. In the Auto Save section, check that Enable AutoSave is on. Set Frequency in Minutes and Warning in Seconds to values you like.",
+   "Go to Level Editor, then Viewports, then Controls. Pick the Flight Camera Control type you prefer (for example Use WASD Only When Right Mouse Button is Held) and try it in the viewport.",
+   "Turn on Highlight Objects Under Mouse Cursor. Then move the mouse over a few actors in the viewport to see the effect.",
+   "In the Content Browser section, turn on Auto Reimport Textures. Then edit a texture source file outside Unreal and confirm that Unreal imports it again by itself.",
+   "Open the Keyboard Shortcuts section and bind a new shortcut to a command you use often. If a warning says the keys are already taken, decide between Override, which removes the old binding, and cancel.",
+   "Click Export at the top of the Keyboard Shortcuts editor and save your keybinds as an .ini file."
+  ]
+ },
+ "TAQ63": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara Emitter asset named FXE_TA_HitBase (the Fountain template is fine). Set a Spawn Rate, a Lifetime range and a Sprite Size range that you like, and save it.",
+   "Open FXE_TA_HitBase. In Emitter Properties, under Asset Options, set Library Visibility so that the emitter shows in the library. Categories in the Niagara Asset Browser come from tags, so create a Niagara Asset Tag Definitions asset with a tag named TA Hits. Then right-click the emitter in the Content Browser, choose Manage Tags, and give it that tag.",
+   "Right-click FXE_TA_HitBase in the Content Browser and choose Create Niagara System. Name the system FXS_TA_HitVariants.",
+   "In FXS_TA_HitVariants, right-click the System Overview and choose Add Emitter. Add FXE_TA_HitBase two more times, so the system has three emitters. Rename the three emitters to Concrete, Glass and Wood.",
+   "In Glass, override the color in Initialize Particle. In Wood, add a Gravity Force module. Leave Concrete unchanged.",
+   "Open FXE_TA_HitBase again and change its Spawn Rate. Go back to FXS_TA_HitVariants and confirm that all three children picked up the new rate but kept their own overrides.",
+   "In one child, click the reset arrow next to an overridden value to set it back to the value of the parent."
+  ]
+ },
+ "TAQ64": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System named FXS_TA_Embers from the Fountain template and drag it into a level.",
+   "In Particle Spawn, open Initialize Particle. Enable Sprite Rotation and set the mode to Direct Angle (Degrees). Then click the dropdown arrow next to the value, choose Dynamic Inputs, then Random Range Float, and set the range from -10 to 30.",
+   "In Add Velocity, click the dropdown arrow next to the value and choose Dynamic Inputs, then Random Range Vector. Give it a small range for X and Y and a larger range for Z.",
+   "In Particle Update, open Scale Color. Turn off Scale RGB, and apply the Smooth Ramp Down template to the Scale Alpha curve so each particle fades out over its life.",
+   "Add a Scale Sprite Size module to Particle Update. Set Scale Factor to a curve so that particles grow and then shrink. Then open Window > Curves and edit the same curve in that panel.",
+   "Chain two dynamic inputs: on any float value, pick a dynamic input, and then pick another dynamic input on one of its own inputs. Note the result.",
+   "Find the Library Only checkbox in the dynamic input list. Uncheck it and see which extra entries appear in the list."
+  ]
+ },
+ "TAQ65": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System named FXS_TA_Fireworks with an emitter named Rocket (CPU sim, from the Sprite Burst or Fountain template). Give the rockets a lifetime of about 2 s and a strong upward velocity.",
+   "In the Rocket emitter, open Emitter Properties and enable Requires Persistent ID. Events need this so that each particle can be identified.",
+   "In the Particle Update group of Rocket, click the + button. Under Events, add Generate Location Event and Generate Death Event.",
+   "Add a second emitter named Trail. Click the + button next to Emitter Properties and add an Event Handler. Set Source to the location event of Rocket, set Execution Mode to Spawned Particles and set Spawn Number to 3. Then add a Receive Location Event module.",
+   "Add a third emitter named Explosion. Add an Event Handler with Source set to the death event of Rocket and a Spawn Number of about 60, and add a Receive Death Event module. Give the explosion particles a short lifetime and a random sphere velocity.",
+   "As a test, set Execution Mode to Every Particle on the Trail handler and watch what happens. Then set it back to Spawned Particles.",
+   "Optional: add a Collision module to Rocket and then a Generate Collision Event. Make the explosion also start when a rocket hits something."
+  ]
+ },
+ "TAQ66": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Niagara System named FXS_TA_MeshSpawn from the Fountain template. Remove the modules Add Velocity in Cone and Shape Location.",
+   "In Particle Spawn, add a Static Mesh Location module. Set its Static Mesh data interface to a simple mesh. The Sphere from the engine's basic shapes is fine, and you see it in the asset picker when Show Engine Content is turned on. Confirm that particles appear on the surface of the mesh.",
+   "Add a second emitter. In its Particle Spawn group, add a Skeletal Mesh Location module and point the data interface at a skeletal mesh. The mannequin of the template works (its name starts with SKM_). Try both bone/socket sampling and surface sampling.",
+   "In the second emitter, replace the Sprite Renderer with a Mesh Renderer, which draws each particle as a 3D mesh. Set Particle Mesh to a small mesh. Enable Override Materials and add a material that has the Niagara Mesh Particles flag checked.",
+   "In Initialize Particle, set the Sprite attributes to Unset, because a Mesh Renderer does not use them. Set Mesh Scale Mode to Random Uniform with a small range.",
+   "On the Mesh Renderer, set Facing Mode to Velocity and compare the result with Default.",
+   "Place the system in the level next to the source mesh, and check that the particles follow its surface."
+  ]
+ },
+ "TAQ67": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and search for Niagara. Enable Niagara Fluids, accept the Beta warning and restart the editor.",
+   "Right-click in the Content Drawer and choose Niagara System. Under Niagara Fluids, then 3D Gas, pick Grid3D_Gas_Explosion. Name the system FXS_TA_GasExplosion and drag it into the level.",
+   "Select the system in the level. In the Details panel, under Override Parameters, set WorldSpaceSize to 300, 300, 600 and ResolutionMaxAxis to 300. Turn ShowOverlays off and on again to restart the explosion.",
+   "Add a Sphere above the explosion, inside the bounds of the simulation. Add an actor tag named collider to the sphere, and watch the gas flow around it.",
+   "Open the system. In Grid3D_Gas_CONTROLS_Emitter, open Emitter Summary. Set Density Dissipation to 3.0, Temperature Dissipation to 1.5, Velocity Dissipation to 0.8 and Temperature Buoyancy to 3.5. Dissipation is how fast a value fades away, and buoyancy makes hot gas rise.",
+   "In the Render section, set Render Density Gain to 0.5. Switch Render Temperature to Curve and edit the color curve.",
+   "Note the frame time with ResolutionMaxAxis at 300 and then at 150, and write both numbers down."
+  ]
+ },
+ "TAQ68": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System named FXS_Fountain from the Default System and add the Fountain emitter to it. Rename the emitter to Fountain-R.",
+   "Create a second system from the FountainLightweight template and name it FXS_Fountain_LW. Rename its emitter to Fountain-LW, set Spawn Rate to 300 and set Scale Color to red.",
+   "Make a new Basic level named NiagaraLWTest. Place FXS_Fountain in a grid of 20 by 20 copies, and then place FXS_Fountain_LW in a second grid of 20 by 20 copies.",
+   "Open Tools, then Debug, then Niagara Debugger. In the HUD section, enable Show Overview, and set the Debug Overview dropdown to Performance.",
+   "Select each system in the Outliner. Write down the Game Thread Average for the regular version and for the lightweight version.",
+   "Turn the overlay off and run the console command stat UNIT. Compare the Frame and Draw values for both grids.",
+   "In FXS_Fountain_LW, try to add a dynamic input to a module, and note what happens."
+  ]
+ },
+ "TAQ69": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Niagara System named FXS_TA_Scratch from the Fountain template and drag it into the level.",
+   "In Particle Update, click the + button and choose New Scratch Pad Module. Confirm that the Scratch Pad panel opens and that an empty module is already in your stack.",
+   "In the scratch module, add a float input named Strength. Read Particles.Position, push the particle sideways by Strength * Particles.NormalizedAge, and write the result back to Particles.Position. Click Apply and watch the viewport.",
+   "Now open Window > Scratch Pad. Click the + button next to Dynamic Inputs and make a scratch dynamic input that returns a float from a sine of Engine.Time. Attach it to Sprite Size in Initialize Particle.",
+   "Right-click the scratch module in the Scratch Script Selector and choose Create Asset. Name the asset NMS_TA_SidePush.",
+   "Delete the scratch version from the stack and add the NMS_TA_SidePush asset from the library in its place. Confirm that the effect looks the same.",
+   "Add a Set new or existing parameter directly item to the stack. Use it to create a new Particle float parameter that stores the push amount."
+  ]
+ },
+ "TAQ70": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the Niagara MRQ Support plugin and the Niagara SIM Caching plugin, and restart the editor.",
+   "Create a Level Sequence named LS_TA_FXShot with a Cine Camera and a Camera Cuts track. Place any looping Niagara system (a fountain is fine) where the camera can see it.",
+   "Drag the system from the Outliner into Sequencer. Add a Niagara Component track, and then a Niagara System Life Cycle Track. Set the Section Range so that the red bar starts about one second into the shot.",
+   "Scrub back and forth with the default mode. Then right-click the Life Cycle track, set Age Update Mode to Desired Age, and scrub again. Note the difference.",
+   "Open the system and turn on Determinism in the Emitter Properties of each emitter. This makes the random values the same every time. Scrub again and confirm that the simulation repeats.",
+   "Set a Warmup Time on the system instance, so that the fountain is already flowing on the first frame of the Life Cycle track.",
+   "Add a User Parameter track under the Niagara Component track. Add keys to it so that the value changes during the shot."
+  ]
+ },
+ "TAQ71": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a Material Function named MF_TA_Wear. It should make a surface darker and rougher where a mask says so. Plan the interface first: before you place a node, write the list of inputs on paper with a name, a type and a default for each one.",
+   "Add these Function Inputs: BaseColor (Vector3), Roughness (Scalar), WearMask (Texture Object), WearAmount (Scalar) and UseDetail (Static Bool). Give every input a Description and a Sort Priority, so that they appear in the order you planned.",
+   "Set a Preview Value on WearAmount and turn on Use Preview Value As Default. Leave BaseColor without a default, so that anyone who uses the function must connect it.",
+   "Inside the function, connect WearMask to a Texture Sample node, because a Texture Object cannot be sampled by itself. Use a StaticSwitch node that is driven by the UseDetail input to add or skip an extra detail texture.",
+   "Add two Function Outputs named Color and Roughness, and give them Descriptions and Sort Priorities. Click Apply, and then save.",
+   "In a test material named M_TA_WearTest, hold F and left-click to place an Unspecified Function node, and assign MF_TA_Wear to it. Hover over each pin to read your tooltips. Connect nothing to WearAmount and confirm that the preview default is used.",
+   "Connect a Scalar (a value with 1 channel) to the BaseColor input and note what the compiler says. Then fix the connection."
+  ]
+ },
+ "TAQ72": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open an expensive material that you already have. If you have none, build one named M_TA_Tiered with a detail normal, a parallax-style UV trick and two extra texture layers.",
+   "Add a QualitySwitch node before the Normal input. Connect the full detail network to High, a cheaper version (base normal only) to Default, and a flat normal constant to Low. Leave the Medium and Epic inputs empty. An empty input uses what is connected to Default.",
+   "Add a second QualitySwitch node on Base Color. Here High keeps all layers, and Low uses only one texture sample.",
+   "Add a FeatureLevelSwitch node on the whole Base Color result. Connect a single static texture to ES3.1 and connect the switched network to Default.",
+   "In the viewport, open the Performance and Scalability menu and change Material Quality Level between Low, Medium and High. In older versions this setting is under Settings in the main toolbar. Take a screenshot of the same mesh at each level.",
+   "Open the Stats panel and write down the instruction count that the editor shows. Write one line about which branch you think the editor preview is showing."
+  ]
+ },
+ "TAQ73": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a material named M_TA_CustomUV. Select the main material node and set Num Customized UVs to 2. Two CustomizedUV pins appear on the node.",
+   "Build two UV setups. The first is a tiling setup: a TexCoord node multiplied by a Scalar Parameter named Tiling. The second is a world-space mapping: the Y and Z of WorldPosition divided by a scale. Plug the tiling into CustomizedUV0 and the world mapping into CustomizedUV1.",
+   "Add two Texture Sample nodes. Leave the first one with no UV input, because it then reads TexCoord 0. Give the second one a TexCoord node with index 1. Blend the two samples into Base Color.",
+   "Duplicate the material as M_TA_PixelUV. In the copy, move the same UV math into the UV inputs of the Texture Sample nodes, so that it runs in the pixel shader. Compare the instruction counts in the Stats panel of both materials.",
+   "Now add a non-linear operation (a Sine of the UV) to CustomizedUV0. Apply the material to a 1x1 plane and to a subdivided plane, which is a plane with many more vertices, and compare the result.",
+   "Write two lines: which math you would keep in Customized UVs and which math you would not, and why."
+  ]
+ }
+}

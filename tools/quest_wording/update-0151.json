@@ -1,0 +1,147 @@
+{
+ "TAQ74": {
+  "checklist": [
+   "Use a test project with Substrate enabled. To make one, create a project from the Third Person template, turn on Substrate materials in Project Settings under Rendering, and restart the editor. You need an old style material that uses Base Color, Metallic and Roughness. If you have none, make a simple copper material with a Base Color of about 0.95, 0.64, 0.54, Metallic 1 and Roughness 0.3. Duplicate it and name the copy M_TA_LegacyCopper. Right-click its root node and choose Convert to Substrate. Look at the Slab node that appears and at how the old inputs were connected to it.",
+   "Build a material named M_TA_SubCopper by hand. Use a Substrate Slab, and set Diffuse Albedo and F0 from the copper values in the F0 table on the page (F0 linear is about 0.95, 0.64, 0.54).",
+   "Make a third material named M_TA_SubHelper and add a Substrate Metalness-To-DiffuseAlbedo-F0 helper node to it. Feed your old Base Color, Specular and Metallic into the node and connect its outputs to the Slab. Compare the result with the version you built by hand.",
+   "On M_TA_SubCopper, add a Second Roughness and set Second Roughness Weight to 0.5. Then make a copy, try Fuzz Amount 0.3 on it, and see which of the two looks like fabric.",
+   "Set the Sub-Surface Type on a Slab to Diffusion, and then to Simple Volume. Read the tag at the bottom of the Slab node each time.",
+   "Open Window > Substrate and read whether any of your materials was simplified. Switch the GBuffer format of the project to the other option, restart, and check again.",
+   "Write three lines: which legacy inputs map to which Slab inputs, and which feature disappeared in Blendable GBuffer."
+  ]
+ },
+ "TAQ75": {
+  "brief": "A Material Instance is a copy of a material in which you can change parameters, such as colors and numbers, without building the material again. An instance can also be the child of another instance, so a chain of instances can share values. If the parameters in the parent material are sorted into named groups in a clear order, the instance is easy for artists to fill in. In this quest you put the parameters of a master material into groups, build a chain of instances, and learn how overrides behave.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a master material of your own. If you have none, make one named M_Master_Prop with these parameters: a color tint, a roughness value, a rust color, a rust amount, and a UV tiling and a UV offset for a texture. In the Details panel of every parameter, set a Group: 00_Base, 01_Surface or 02_UVs. Set Sort Priority on the UV tiling and offset parameters so that they sit next to each other.",
+   "Deselect all nodes. In the Details panel of the material, expand Group Sorting, then Parameter Group Data, and set Group Sort Priority so that the groups are in the same order as the pins of the main node.",
+   "Create an instance named MI_Prop_Metal from the master. Then create MI_Prop_Metal_Rusty as a child of MI_Prop_Metal, which makes it an instance of an instance. In the child, override only the rust parameters.",
+   "Open MI_Prop_Metal_Rusty and click the Hierarchy button in the toolbar. Read the Parent Chain and open the parent from that menu.",
+   "In the child, set Two Sided under Material Property Overrides. Confirm that the parent and the other instances of the same parent did not change.",
+   "Change a value in a parameter field that is not checked, close the editor, open it again, and note what happened. Then set a custom preview mesh and reopen the editor to confirm that it was saved.",
+   "If the master has a static switch, press the Show Hidden Parameters button and note what appears."
+  ]
+ },
+ "TAQ76": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create a material named M_TA_CPD with a Vector Parameter named ColorParam and a Scalar Parameter named EmissivePower. Select each one and enable Use Custom Primitive Data. Give ColorParam the Primitive Data Index 0, and give EmissivePower the index 4, because the vector uses the indices 0 to 3.",
+   "In the Material Editor, open Window > Custom Primitive Data and confirm that both parameters are listed with their indices.",
+   "Place 25 copies of one Static Mesh that uses M_TA_CPD. On each actor, expand Custom Primitive Data Defaults on the Static Mesh Component, and set a different color on a few of the actors.",
+   "Make a Blueprint named BP_TA_CPDProp with a Static Mesh Component. On Begin Play, call Set Custom Primitive Data Vector (Data Index 0) and Set Custom Primitive Data Float (Data Index 4) with random values. Place 25 of these in the level too.",
+   "Make a second Blueprint named BP_TA_MIDProp that does the same thing with Create Dynamic Material Instance and Set Vector Parameter Value. Place 25 of these.",
+   "Press G to switch to Game View, run the console command stat scenerendering, and write down the Mesh draw calls. Then run r.MeshDrawCommand.DynamicInstancing 0, read the number again, and set the variable back to 1.",
+   "Write two lines that compare the draw-call numbers of the CPD group and the MID group."
+  ]
+ },
+ "TAQ77": {
+  "brief": "A static switch is a material parameter that turns a part of the material on or off when the shader is compiled, so the unused part costs nothing while the game runs. The cost is that every different combination of switch values needs its own compiled shader, called a permutation. Too many permutations make compiling and cooking slow and use more memory. In this quest you add static switches to a master material, check its instances with the Material Analyzer, and lower the number of permutations.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a master material of your own, or make a small one named M_Master_Prop with a color parameter, a normal map, an emissive color and a packed mask texture, which is a texture that stores a different mask in each color channel. The texture T_Manny_01_MRA of the template mannequin is such a texture. Add three StaticSwitchParameter nodes named UseDetailNormal, UseEmissive and UseWear, and let each one turn a part of the graph on or off. Add one StaticComponentMaskParameter that picks the channel of the packed mask texture. Give them all a Group.",
+   "Find any place where you multiplied a mask texture by a Vector Parameter to pick a channel, and replace it with the StaticComponentMaskParameter.",
+   "Create eight instances. Make half of them share the same switch values, and give the other half unique combinations. Also give each instance a different color.",
+   "Open Tools, then Audit, then Material Analyzer. Pick your master in Material to Analyze, and read the instance list and the Static Switch Parameters column.",
+   "Read the suggestion list below the hierarchy. Click Create Local Collection on one suggestion, and open the collection in the Content Browser.",
+   "Create one new intermediate instance that holds the shared switch values, and reparent the grouped instances to it. Then remove the static overrides from the children, and run the analyzer again.",
+   "Write two lines: how many permutations you had before and after. Count them by counting the unique switch combinations."
+  ]
+ },
+ "TAQ78": {
+  "brief": "Every pixel that a material covers costs some GPU time, and this cost depends on how many instructions and texture samples the material uses. Much of that cost comes from simple settings and habits, not from complex math. The Shader Complexity view mode colors the scene from green (cheap) to red and white (expensive), so you can find the worst material fast. In this quest you find the most expensive material in a scene, make it cheaper without changing how it looks, and measure the result.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a small scene that has 5 or more different materials: a scene of your own, or the level of the template with a few mannequins and props added. Press Alt+8 (or run viewmode shadercomplexity) and take a screenshot. Find the most expensive material on screen.",
+   "Open that material. If it belongs to the template or the engine, duplicate it, assign the copy and work on the copy. Open Window > Stats and Window > Platform Stats, and write down the instruction counts and the number of texture samplers.",
+   "With the main node selected, look at the Usage flags in the Details panel. Turn off any Used with flag that this material does not need (for example Used with Mesh Particles). Note that Automatically Set Usage in Editor is on by default.",
+   "If the material is matte (its roughness is near 1 everywhere), enable Fully Rough and read the Stats again. Compare the look in the viewport.",
+   "Duplicate the material and try one more change: remove a Transform node if you also use VertexColor, or replace a runtime channel multiply with a static mask. Compare the Stats before and after.",
+   "Open Window, then Shader Code, then HLSL Code for your platform. Find the line that samples your biggest texture, just to see the code that the editor generates.",
+   "Take the Shader Complexity screenshot again. Write three lines: what you changed, how many instructions you saved, and what you refused to change because the look would suffer."
+  ]
+ },
+ "TAQ79": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Widget. Name it EUW_SelectionInspector.",
+   "In the Designer, add a Vertical Box. Put a Text Block for a title, a Button named Btn_Refresh, and a Scroll Box for the results inside it.",
+   "When Btn_Refresh is clicked, get the selected Level Actors. For each actor, add a Text Block with its label and class name to the Scroll Box.",
+   "Add a second button named Btn_SelectAll. It selects every actor whose label starts with the text that is typed in an Editable Text Box.",
+   "Right-click the asset and choose Run Editor Utility Widget. Dock the panel next to a Level Editor tab, and confirm that it now appears under Tools > Editor Utility Widgets.",
+   "Create a second widget named EUW_Launcher with one button. When the button is clicked, get the Editor Utility Subsystem and call Spawn And Register Tab with EUW_SelectionInspector, so that the panel can be opened from another tool.",
+   "Note which Editor Scripting nodes you could NOT find when you searched for them from a normal Actor Blueprint."
+  ]
+ },
+ "TAQ80": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In a test level, place at least 20 Static Mesh Actors with mixed settings. For example, turn Cast Shadow off on some of them and give them different Mobility values.",
+   "Select all of them in the Outliner, right-click, and choose Edit Selection in Property Matrix.",
+   "In the Pinned Columns panel, pin Mobility and Cast Shadow so that they appear as columns in the table. Remove one column that was added automatically by clicking its header with the middle mouse button.",
+   "Sort the table by the Cast Shadow column to find the actors with the wrong value. Select those rows and set the value once, so that all selected rows change together.",
+   "Use Edit Components in the Property Matrix on the same selection to change a setting of the Static Mesh Component that the actors share.",
+   "In the Content Browser, select 10 textures. Right-click them, choose Asset Actions, then Edit Selection in Property Matrix, and set the same Texture Group on all of them.",
+   "Click the save icon in the Property Matrix and confirm that the assets are saved."
+  ]
+ },
+ "TAQ81": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a folder named Content/Test and copy a few Static Meshes and textures of the template into it. Rename the copies so that some of them have no SM_ or T_ prefix. Enable the Python Editor Script Plugin and the Editor Scripting Utilities plugin, and then restart the editor.",
+   "Create the folder Content/Python and a script in it named fix_names.py. The script imports unreal and lists all assets under /Game/Test with unreal.EditorAssetLibrary.",
+   "For each Static Mesh that does not have the SM_ prefix and each Texture that does not have the T_ prefix, rename it with EditorAssetLibrary.rename_asset. Never use os.rename, because that breaks the references between assets.",
+   "For each texture, read one setting with get_editor_property and set one setting (for example the LOD group) with set_editor_property. Then save the asset.",
+   "Run the script from the Python console in the Output Log, and check the log lines that it prints.",
+   "Create an Editor Utility Widget named EUW_PyFixer with one button. The button uses the Execute Python Script node with an input pin for the folder path and an output pin for the count of renamed assets.",
+   "Open Project Settings, then Plugins, then Python, and add fix_names.py to Startup Scripts. Restart the editor and confirm that the script runs."
+  ]
+ },
+ "TAQ82": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Editor Utility Blueprint named EUB_ActorActions with the parent class ActorActionUtility.",
+   "Add a function named Set Material Slot 0 with two inputs: a Material Object Reference and a Boolean named 'Only Static Meshes'. Keep Call In Editor checked.",
+   "In the function, use Get Selection Set to get the selected actors, loop over them, and set the material on their Static Mesh Component. Also handle the case where the material input is empty.",
+   "Open Class Defaults and add Static Mesh Actor to Supported Classes, so that the action does not appear on lights or cameras.",
+   "Add a Custom Event named 'Snap To Ground' with Call In Editor checked. It does a line trace (an invisible ray) down from each selected actor and moves the actor to the point that the ray hits.",
+   "Compile and save. Then select 3 Static Mesh Actors in the viewport, right-click them, and run both actions from the Scripted Actor Actions sub-menu. The documentation page calls this menu Scripted Actions."
+  ]
+ },
+ "TAQ83": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and confirm that the Data Validation plugin is enabled.",
+   "Create an Editor Utility Blueprint named EUB_NameValidator with the parent class EditorValidatorBase.",
+   "Override the function Can Validate Asset so that it returns true only for Static Mesh and Texture2D objects.",
+   "Override the function Validate Loaded Asset. If the name starts with SM_ for a Static Mesh or T_ for a texture, call Asset Passes. If it does not, call Asset Fails with a clear message. Make sure that every path through the function calls one of the two.",
+   "Save a texture named badname. Validation runs when you save, and your message appears in the Message Log.",
+   "Right-click a test folder and choose Validate Assets in Folder. Then right-click one Blueprint, choose Asset Actions, and try Validate Assets and Dependencies.",
+   "Write down the command line for running the validation as a commandlet on a build machine. A commandlet is a small program that the engine runs without opening the editor window."
+  ]
+ },
+ "TAQ84": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Editor Utility Blueprint named EUB_ImportWatcher with the parent class EditorUtilityObject.",
+   "Override the Run function. In it, print a log line, and bind a custom event to the asset-imported event of the Import Subsystem, so that your event runs each time an asset is imported.",
+   "In the bound custom event, read the name of the created object. Print a warning if the name does not start with the expected prefix (SM_, T_, and so on).",
+   "Compile, save, and close the editor. Open the file Config/DefaultEditorPerProjectUserSettings.ini, or create it if it does not exist. Add the section [/Script/Blutility.EditorUtilitySubsystem] with a StartupObjects line for your class.",
+   "Restart the editor and import an FBX or PNG file with a bad name. Check the Output Log for your warning.",
+   "In a normal Actor Blueprint named BP_TestRig, add a Custom Event with Call in Editor checked and no inputs. Place the Blueprint in the level and press the button of the event in the Details panel."
+  ]
+ },
+ "TAQ85": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Editor Utility Widget named EUW_SubsystemTour. In its graph, right-click and search for 'subsystems' to see the categories. Take a screenshot of the list.",
+   "Add a button that gets the Editor Actor Subsystem and prints the count of all level actors and the count of selected actors.",
+   "Add a button that gets the Editor Asset Subsystem. It checks whether an asset path that is typed in a text box exists, and prints the result.",
+   "Add a button that gets the Editor Utility Subsystem and opens another Editor Utility Widget with Spawn And Register Tab.",
+   "In the Python console, get the same editor subsystem with unreal.get_editor_subsystem(...) and call one function on it.",
+   "Write two sentences about when you would pick an Editor subsystem and when you would pick a Game Instance subsystem."
+  ]
+ },
+ "TAQ86": {
+  "brief": "Every Blueprint class could also be written in C++, the programming language of the engine. In C++, a header is the file that lists the variables, functions and components of a class without the logic inside them. Unreal can show you what the header of a Blueprint would look like, which makes a later move to C++ easier to understand. In this quest you open this preview for a Blueprint and try its settings.",
+  "done_when": "Send a screenshot of the C++ Header Preview window for the Blueprint with a Sort Method that is not the default and with your custom style, plus your 3-sentence note.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Pick a Blueprint class with at least 4 variables, 2 functions, 1 component and 1 event dispatcher. If you have none, make an Actor Blueprint named BP_ToolRig and add these to it. The functions can be empty.",
+   "Right-click the Blueprint in the Content Browser and choose Preview Equivalent C++ Header.",
+   "In the C++ Header Preview window, find each of the 4 kinds of elements in the generated text. Note which macros are used for a variable and for a function.",
+   "Open Settings and switch Sort Method between None, Sort By Access Specifier and Sort For Optimal Padding. Note how the order of the variables changes.",
+   "Change the Font Size and one Style color (for example Keyword), and set a new Selection Color.",
+   "Do the same with a Blueprint Struct and compare the output. To make one, right-click in the Content Browser, choose Blueprints, then Structure, and add two or three fields.",
+   "Write 3 sentences: which sort method you would use before you move this class to C++, and why."
+  ]
+ }
+}

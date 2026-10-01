@@ -19,7 +19,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-properties-in-unreal-engine"
     checklist:
-      - "Make a new level and choose Empty Level. Then place a Directional Light and a Sky Atmosphere from the Place Actors panel."
+      - "Open any project, or create one from the Third Person template. Make a new level and choose Empty Level. Then place a Directional Light and a Sky Atmosphere from the Place Actors panel."
       - "Select the Directional Light and enable Atmosphere Sun Light in its Details panel. This tells the sky to use this light as the sun. Check that Atmosphere Sun Light Index is 0."
       - "Hold Right Ctrl + L and move the mouse to rotate the sun. Find a low sun angle that looks like a sunset, and a high sun angle that looks like noon."
       - "On the Directional Light, turn on Use Temperature. Try a Temperature of 6500 K and then 3000 K, and note how the color of the light changes."
@@ -75,7 +75,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/point-lights-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/rectangular-area-lights-in-unreal-engine"
     checklist:
-      - "Build a small dark room with a floor and 3 walls, and put a few props inside. Set the Directional Light and the Sky Light to a very low brightness, or delete them, so the room is dark."
+      - "Open any project, or create one from the Third Person template. In a new level, build a small dark room from cubes with a floor and 3 walls, and put a few props inside, such as spheres and cylinders. Set the Directional Light and the Sky Light to a very low brightness, or delete them, so the room is dark."
       - "Place a Point Light. Change Attenuation Radius, which is how far the light reaches, until the light stops at the walls. Then set Source Radius to 20 and look at the highlight on a smooth prop."
       - "Place a Spot Light and aim it at the floor. Set Inner Cone Angle to 20 and Outer Cone Angle to 40. Then try 35 and 40, and compare how soft the edge of the light is."
       - "Place a Rect Light that acts as a TV screen. Set Source Width to 100 and Source Height to 60. Rotate it so its X axis points into the room, because a Rect Light only shines along its X axis."
@@ -132,7 +132,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/movable-light-mobility-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/static-light-mobility-in-unreal-engine"
     checklist:
-      - "Open a small test level that has a floor and a few props. Place five Point Lights close together so that the areas they light overlap."
+      - "Open any project, or create one from the Third Person template. Open a small test level that has a floor and a few props, for example a new Basic level with a few cubes. Place five Point Lights close together so that the areas they light overlap."
       - "Set all five lights to Stationary. Look at the light icons in the viewport and find the one that shows a red X."
       - "Open View Mode, then Optimization Viewmodes, then click Stationary Light Overlap. Take a screenshot that shows the red overlap."
       - "Change one light to Movable and one light to Static. Then check the overlap view again and see what changed."
@@ -184,8 +184,8 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Open Project Settings, then Engine, then Rendering. Confirm that Dynamic Global Illumination Method and Reflection Method are both set to Lumen. Note whether Generate Mesh Distance Fields is turned on."
-      - "Build a small room with one open door and a bright white floor. Place a strong Directional Light outside so that light bounces into the room through the door."
+      - "Open any project, or create one from the Third Person template. Open Project Settings, then Engine, then Rendering. Confirm that Dynamic Global Illumination Method and Reflection Method are both set to Lumen. Note whether Generate Mesh Distance Fields is turned on."
+      - "In a new level, build a small room from cubes with one open door and a bright white floor. Place a strong Directional Light outside so that light bounces into the room through the door."
       - "Add a Post Process Volume and enable Infinite Extent (Unbound), so that its settings apply to the whole level."
       - "In the Post Process Volume, under Global Illumination, try Final Gather Quality at 1 and then at 4. Compare the noise in the dark corners of the room."
       - "Set Max Trace Distance to a very small value, for example 200, and watch what happens in the corners. Then set it back to its old value."
@@ -237,12 +237,12 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-shadow-maps-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Open Project Settings, then Engine, then Rendering, and find the Shadows section. Confirm that Shadow Map Method is set to Virtual Shadow Maps."
-      - "Place a tall thin mesh, such as a pole or a fence, on a floor. Add a Directional Light with Mobility set to Movable, and rotate it to a low angle so the shadow is long."
+      - "Open any project, or create one from the Third Person template, and work in a level with a floor. Open Project Settings, then Engine, then Rendering, and find the Shadows section. Confirm that Shadow Map Method is set to Virtual Shadow Maps."
+      - "Place a tall thin mesh, such as a cylinder scaled into a pole, on the floor. Add a Directional Light with Mobility set to Movable, or use the one in the level, and rotate it to a low angle so the shadow is long."
       - "On the Directional Light, set Source Angle to 0.5 and then to 3. Watch the shadow: it should be sharp at the base of the pole and softer far away from it."
       - "Place a Movable Point Light near a prop. Change Source Radius from 0 to 10 and compare the penumbra, which is the soft edge of the shadow."
-      - "Open Show, then Visualize, then Virtual Shadow Map, and pick the Cached Page view. Move the camera and watch the green and red pages. Green pages are reused from the last frame, and red pages had to be drawn again."
-      - "Add a mesh whose material uses World Position Offset, which moves the surface of the mesh, for example wind on foliage. See how this mesh keeps showing red pages."
+      - "Open Show, then Visualize, then Virtual Shadow Map, and pick the Cached Page view. Move the camera and watch the green and red pages. Green pages are reused from the frame before, and red pages had to be drawn again."
+      - "Add a mesh whose material uses World Position Offset, which moves the surface of the mesh, as wind does on foliage. To make one, create a material, multiply a Sine of a Time node by a small vector such as 0, 0, 20, connect it to World Position Offset, and apply it to a sphere. See how this mesh keeps showing red pages."
       - "On the Directional Light, compare Contact Shadow Length at 0 and at 0.1. Decide if it adds anything to the picture when Virtual Shadow Maps are on."
     done_when: "Send two screenshots: one of the pole shadow with Source Angle 3 that shows the shadow sharp at the base and softer further away, and one of the Cached Page view with red and green pages visible."
     xp: 55
@@ -290,8 +290,8 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-light-functions-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Create a material named M_LF_Caustic. Open it, and in the Details panel set Material Domain to Light Function."
-      - "Add a tiling noise texture or caustic texture, and make it move with a Panner node. Connect the result to Emissive Color. Keep the values between 0 and 1."
+      - "Open any project, or create one from the Third Person template, and work in a level with a floor. Create a material named M_LF_Caustic. Open it, and in the Details panel set Material Domain to Light Function."
+      - "Add a tiling noise texture or caustic texture, and make it move with a Panner node. Any tiling grayscale texture works, for example the engine textures T_Default_MacroVariation or Good64x64TilingNoiseHighFreq. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Connect the result to Emissive Color. Keep the values between 0 and 1."
       - "Place a Spot Light with Mobility set to Movable and aim it at a floor. In the Details panel of the light, assign M_LF_Caustic to Light Function Material."
       - "Change the X and Y values of Light Function Scale until the size of the pattern looks right. Also note what the Z value does."
       - "Set Fade Distance so that the pattern fades out far from the camera. Then set Disabled Brightness to the average brightness of your pattern, so the light does not jump in brightness when the pattern fades."
@@ -345,7 +345,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
     checklist:
-      - "Open an outdoor level that has some difference in height, such as a hill or a Landscape. Open Place Actors, then Visual Effects, and place an Exponential Height Fog."
+      - "Open any project, or create one from the Third Person template. Open an outdoor level that has some difference in height, such as a hill or a Landscape. The level of the template works, or you can make a new level with a sculpted Landscape. Open Place Actors, then Visual Effects, and place an Exponential Height Fog if the level has none."
       - "Move the fog actor up and down on the Z axis and watch where the thick fog sits. Then set Fog Height Falloff to a smaller value and to a larger value and compare."
       - "Set Fog Inscattering Color and Directional Inscattering Color to two clearly different colors. Look toward the sun, and then look away from it, to see where each color is used."
       - "Open Second Fog Data, which is a second layer of fog. Give this layer a small density and a Fog Height Offset so that it sits in a valley."
@@ -399,13 +399,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-atmosphere-component-in-unreal-engine"
     checklist:
-      - "Start from your level from quest EAQ36, which has a Directional Light and a Sky Atmosphere. Place a Sky Light and set its Mobility to Movable."
+      - "Open any project, or create one from the Third Person template. Make a new Empty Level with a floor. Place a Directional Light and a Sky Atmosphere, and enable Atmosphere Sun Light on the Directional Light so that the sky uses it as the sun. If you already have a level with this sun and sky, you can use it. Place a Sky Light and set its Mobility to Movable."
       - "Place a chrome sphere, which is a sphere with a material that has Roughness 0 and Metallic 1. You will use it to see the reflection of the sky."
       - "Rotate the sun to a sunset. Notice that the sphere and the lighting on the ground do not change until you press Recapture in the Details panel of the Sky Light."
       - "Enable Real Time Capture on the Sky Light. Rotate the sun again and watch the reflection and the lighting follow it."
       - "Change Cubemap Resolution from 128 to 64, and then to 256. Compare the reflection on the sphere each time."
       - "Open the Advanced section and enable Lower Hemisphere is Solid Color. Note what changes under overhangs, which are places that are covered from above."
-      - "Switch Source Type to SLS Specified Cubemap and pick any HDRI, which is a picture of a full sky. Then switch back to SLS Captured Scene."
+      - "Switch Source Type to SLS Specified Cubemap and pick any HDRI, which is a picture of a full sky. The engine content has HDRI cubemaps: turn on Show Engine Content in the settings of the asset picker to find one. Then switch back to SLS Captured Scene."
     done_when: "Send two screenshots of the chrome sphere at sunset: one taken before Recapture, where the sky reflection is old, and one with Real Time Capture enabled. The Details panel of the Sky Light must be visible."
     xp: 55
     verify_type: screenshot
@@ -452,14 +452,15 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-static-meshes-using-fbx-in-unreal-engine"
     extra_urls:
+      - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-assets-using-interchange-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-import-options-reference-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/importing-static-mesh-lods-using-fbx-in-unreal-engine"
     checklist:
-      - "In your 3D app, make a small prop such as a crate, a barrel or a lamp. Put it at the origin, which is the zero point of the scene, so that the origin is at one corner or at the bottom center of the prop."
-      - "Triangulate the mesh in your 3D app before you export it, which means turning all its faces into triangles. Then export it as FBX. Unreal uses the version FBX 2020.2."
-      - "In Unreal, click Add/Import in the Content Browser and choose your FBX file. In the FBX Import Options window, look at Import Uniform Scale, Convert Scene Unit and Generate Lightmap UVs before you click Import."
+      - "Open a project made from the Third Person template, or create one. Make a small prop such as a crate, a barrel or a lamp in a 3D app such as Blender, which is free. Put it at the origin, which is the zero point of the scene, so that the origin is at one corner or at the bottom center of the prop. If you have no 3D app, build the prop in Modeling Mode in Unreal, then right-click the new Static Mesh, choose Asset Actions, then Export, and save it as an FBX file."
+      - "If you use a 3D app, triangulate the mesh before you export it, which means turning all its faces into triangles. Then export it as FBX. Unreal uses the version FBX 2020.2."
+      - "In Unreal, click Add/Import in the Content Browser and choose your FBX file. The import window opens. In current versions it is named Interchange Pipeline Configuration, and older versions show a window named FBX Import Options. Before you click Import, look at three settings: the uniform scale (Offset Uniform Scale in the new window, Import Uniform Scale in the old one), Convert Scene Unit, and Generate Lightmap UVs."
       - "Name the asset SM_<PropName>, with the name of your prop in place of <PropName>. Open it in the Static Mesh Editor and check its size and its pivot."
-      - "If the scale is wrong, import the file again with a different Import Uniform Scale. Do not fix it by scaling the actor in the level."
+      - "If the scale is wrong, import the file again with a different uniform scale. Do not fix it by scaling the actor in the level."
       - "Place SM_<PropName> in a level next to the default mannequin, which is 180 cm tall, or next to a 100 cm cube, to check its size."
     done_when: "Send a screenshot of the Static Mesh Editor that shows SM_<PropName>, and one screenshot of the prop in the level next to an object that shows its size. Add one line that says where your pivot is."
     xp: 55
@@ -480,11 +481,11 @@ quests:
       - q: "Your FBX has three separate props. What does the importer do by default?"
         choices: ["It refuses to import more than one mesh", "It always merges them into one Static Mesh", "It imports only the first mesh", "It makes three separate Static Mesh assets"]
         answer_index: 3
-        explain: "Multiple Static Meshes in one FBX become multiple assets unless you enable Combine Meshes at import."
+        explain: "Multiple Static Meshes in one FBX become multiple assets unless you turn on the option that combines them at import. It is named Combine Static Meshes in the current import window and Combine Meshes in the older one."
       - q: "Your prop arrives 100 times too small because the 3D app used meters. Which import option is made for this?"
         choices: ["Bake Pivot in Vertex", "Remove Degenerates", "Convert Scene Unit", "Force Front XAxis"]
         answer_index: 2
-        explain: "Convert Scene Unit converts the FBX units of measurement to Unreal's unit, centimeters. Import Uniform Scale is another way to fix scale."
+        explain: "Convert Scene Unit converts the FBX units of measurement to Unreal's unit, centimeters. The uniform scale option of the import window (Offset Uniform Scale, or Import Uniform Scale in the older window) is another way to fix scale."
       - q: "What does the Generate Lightmap UVs import option do?"
         choices: ["It makes a set of unique, non-overlapping UVs for static lighting", "It deletes the texture UVs", "It makes the mesh use Nanite", "It bakes the lighting into vertex colors"]
         answer_index: 0
@@ -509,9 +510,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/fbx-static-mesh-pipeline-in-unreal-engine"
     checklist:
-      - "Open a simple prop in the Static Mesh Editor. You can use SM_Door from Starter Content or your own mesh with a name that starts with SM_."
+      - "Open a project made from the Third Person template, or create one. Pick a simple prop: your own mesh with a name that starts with SM_, or SM_Door of the template (search for its name in the Content Browser). Duplicate it, so that the original stays unchanged, and open the copy in the Static Mesh Editor."
       - "In the Collision menu, add a Box Simplified Collision. Then add a Sphere Simplified Collision and see that both shapes now exist. Use Remove Collision to delete them."
-      - "Open a prop with a more complex shape, for example SM_Chair. Try 10-DOP, 18-DOP and 26-DOP from the Collision menu and look at how the shapes differ."
+      - "Open a copy of a prop with a less simple shape, for example SM_Ramp or SM_QuarterCylinder from the folder LevelPrototyping/Meshes of the template. Try 10-DOP, 18-DOP and 26-DOP from the Collision menu and look at how the shapes differ."
       - "Try Auto Convex Collision, which builds the collision from several simple shapes called hulls. Change Hull Count and Max Hull Verts, click Apply, and compare the result."
       - "Build a collision by hand. Add a Box Simplified Collision, then move and scale it to fit one part of the prop. Duplicate it with Ctrl + D and fit the copies to the other parts."
       - "Place the prop in a level, set Simulate Physics to true, and press Play. Then change the Collision Preset and see what changes."
@@ -564,7 +565,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/boolean-tool-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/polygroup-edit-tool-in-unreal-engine"
     checklist:
-      - "Press SHIFT+5 to enter Modeling Mode. If Modeling Mode is missing, enable the plugin named Modeling Tools Editor Mode first."
+      - "Open any project, or create one from the Third Person template, and open any level. Press SHIFT+5 to enter Modeling Mode. If Modeling Mode is missing, enable the plugin named Modeling Tools Editor Mode first."
       - "In the Create category, place a Box with Output Type set to Static Mesh. This is the body of your prop. Then place a Cylinder that cuts into the Box."
       - "Select the Box first, and then the Cylinder. Open Model, then Boolean, and use Difference A - B to cut a hole in the Box. Click Accept."
       - "Select the result and open Model, then PolyGroup Edit. Select the top face and use Extrude to add a lip. Then select the outer edges and use Bevel. Click Accept."
@@ -618,7 +619,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-uv-channels-with-static-meshes-in-unreal-engine"
     checklist:
-      - "Take the SM_Quick_ prop from quest EAQ46, or any other mesh made in Modeling Mode. Right-click it in the Content Browser and open the UV Editor."
+      - "Open any project, or create one from the Third Person template. You need a mesh made in Modeling Mode, with UVs that are not clean yet. If you have none, enter Modeling Mode, create a Box as a Static Mesh, and cut a hole into it with a Cylinder and the Boolean tool. Right-click the mesh in the Content Browser and open the UV Editor."
       - "In Display, turn on a checker texture as the background. Look at the 3D Viewport and find places where the checker squares are stretched."
       - "Run AutoUV with the default method, Patch Builder, and click Apply. Then look at the checker squares again."
       - "Use the Seam tool to cut one seam on an edge that players will not see. A seam is a cut that lets the surface unfold flat. Then use Unwrap on that island, which is one connected piece of the UV map."
@@ -665,7 +666,7 @@ quests:
     required_spine: false
     required: false
     title: Lightmap UVs or Lumen
-    brief: "Baked lighting is light that Unreal calculates once in the editor and stores in textures called lightmaps. A mesh that uses baked lighting needs a special UV channel, the lightmap UV, where no two faces share the same space. Projects that use Lumen calculate light while the game runs and do not need lightmaps at all. In this quest you find out which kind of lighting your project uses and look at the lightmap settings of one prop."
+    brief: "Baked lighting is light that Unreal calculates once in the editor and stores in textures called lightmaps. A mesh that uses baked lighting needs a special UV channel, the lightmap UV, where no two faces share the same space. Projects that use Lumen calculate light while the game runs and do not need lightmaps at all. In this quest you find out which kind of lighting a project uses and look at the lightmap settings of one prop."
     time_min: 40
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/understanding-lightmapping-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/generating-lightmap-uvs-in-unreal-engine"
@@ -673,8 +674,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/global-illumination-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Engine, then Rendering. Note whether Dynamic Global Illumination is set to Lumen, and whether Allow Static Lighting is turned on."
-      - "Open a prop whose name starts with SM_ in the Static Mesh Editor. In the Details panel, expand LOD0 and then Build Settings. Find Generate Lightmap UVs, Min Lightmap Resolution, Source Lightmap Index and Destination Lightmap Index."
+      - "Open a project made from the Third Person template, or create one. Open Project Settings, then Engine, then Rendering. Note whether Dynamic Global Illumination is set to Lumen, and whether Allow Static Lighting is turned on."
+      - "Open a prop whose name starts with SM_ in the Static Mesh Editor, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template. In the Details panel, expand LOD0 and then Build Settings. Find Generate Lightmap UVs, Min Lightmap Resolution, Source Lightmap Index and Destination Lightmap Index."
       - "Set Min Lightmap Resolution to 64 and click Apply Changes. Then use the UV button in the toolbar to view the lightmap UV channel."
       - "Under General Settings, check that Lightmap Resolution and Lightmap Coordinate Index match the channel you generated."
       - "Write three lines that answer these questions: does this project bake its lighting or use Lumen, and does this prop need a lightmap UV at all?"
@@ -725,7 +726,7 @@ quests:
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/mesh-paint-mode-in-unreal-engine"
     extra_urls: []
     checklist:
-      - "Make a material named M_Blend2 that blends two textures with a Lerp node, and use the alpha of the vertex color to control the blend. Apply the material to a prop (an SM_ mesh) that is placed in the level."
+      - "Open a project made from the Third Person template, or create one. Make a material named M_Blend2 that blends two textures with a Lerp node, and use the alpha of a Vertex Color node to control the blend. Any two textures that look different work, for example T_Quinn_01_D from the folder Characters/Mannequins/Textures/Quinn and T_GridChecker_A from LevelPrototyping/Textures. Place a mesh with many vertices in the level, for example a Sphere made in Modeling Mode with a high number of subdivisions, and apply the material to it."
       - "Enter Mesh Paint mode. Choose the Vertex Weight paint method, and set Texture Weight Type to Alpha (Two Textures)."
       - "Set Paint Texture Weight Index to the second texture and paint dirt or moss on the lower part of the prop. Use Ctrl + [ and Ctrl + ] to make the brush smaller or larger."
       - "Use Color View Mode to look at the Alpha channel. This shows you exactly where you painted."
@@ -779,8 +780,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/edit-pivot-tool-in-unreal-engine"
     checklist:
-      - "Make a small test level that has a floor, a sloped ramp and a table mesh."
-      - "In the toolbar of the Level Viewport, enable Surface Snapping and Rotate to Surface Normal. Drag five small props onto the ramp and see how they tilt to match the slope."
+      - "Open a project made from the Third Person template, or create one. Make a small test level that has a floor, a sloped ramp (a cube that you rotate) and a table, which can be a cube that you scale flat and lift off the floor."
+      - "In the toolbar of the Level Viewport, enable Surface Snapping and Rotate to Surface Normal. Drag five small props onto the ramp and see how they tilt to match the slope. Small cubes, cylinders and cones from the Place Actors panel work as props."
       - "Set Surface Offset to 5 and place one prop, so you can see the small gap it creates. Then set Surface Offset back to 0."
       - "Select a prop that floats in the air and press End. Watch it drop to the nearest surface below it."
       - "Hold V and drag one prop so that its pivot snaps to a vertex of the table. A vertex is a corner point of a mesh."
@@ -832,7 +833,7 @@ quests:
     backup_url: null
     extra_urls: []
     checklist:
-      - "In a level, arrange a small group of props that uses only Static Meshes. For example, use a table, two chairs and a lamp."
+      - "Open a project made from the Third Person template, or create one. In a level, arrange a small group of props that uses only Static Meshes. For example, build a table and two chairs from scaled cubes, and add a cylinder as a lamp."
       - "Select all the actors and right-click one of them. Go to Level and choose Create Packed Level Actor. Set Pivot Type to Center Min Z, click Ok, and save it as BP_Kit_TableSet."
       - "Drag three more copies of BP_Kit_TableSet into the level and rotate them."
       - "Edit the Packed Level Actor: click Edit in the Outliner and move one chair. Then commit the change and see all copies update."
@@ -886,7 +887,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
     checklist:
-      - "Open a small level that has two rooms or two clearly different areas. A template level is fine."
+      - "Open a project made from the Third Person template, or create one. Open a small level that has two rooms or two clearly different areas. The level of the template is fine."
       - "Place a Post Process Volume and name it PPV_Global. In Post Process Volume Settings, turn on Infinite Extent (Unbound) so it affects the whole level, and keep Priority at 0."
       - "Place a second Post Process Volume around one room and name it PPV_Room. Leave Infinite Extent off and set Priority to 100."
       - "In PPV_Room, override one setting that is easy to see. For example, open Color Grading, then Global, and set Saturation to 0.2."
@@ -943,8 +944,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-cameras-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "Open a level that has a dark interior and a bright exterior. If you do not have one, build a box with one open door."
-      - "In your global Post Process Volume, open Lens, then Exposure, and set Metering Mode to Auto Exposure Histogram. In the viewport, turn on Show > Visualize > HDR (Eye Adaptation) and watch the graph as you move from dark to bright."
+      - "Open a project made from the Third Person template, or create one. Open a level that has a dark interior and a bright exterior. If you do not have one, build a closed box from cubes with one open door in a new Basic level."
+      - "Place a Post Process Volume and turn on Infinite Extent (Unbound), or use the global volume your level already has. In it, open Lens, then Exposure, and set Metering Mode to Auto Exposure Histogram. In the viewport, turn on Show > Visualize > HDR (Eye Adaptation) and watch the graph as you move from dark to bright."
       - "Override Speed Up and Speed Down. Try Speed Up 10 with Speed Down 1, and then the reverse. Note which one feels more like real eyes."
       - "Override Exposure Compensation. Try -1 and then +1, and note what happens to the image."
       - "Place a Cine Camera Actor and pilot it with Ctrl+Shift+P, which means you look through it. In the camera's own post process settings, set Metering Mode to Manual and turn on Apply Physical Camera Exposure."
@@ -999,8 +1000,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
     checklist:
-      - "Pick one camera view in a scene that already has lighting. Take a screenshot before you change anything, so you have the ungraded picture."
-      - "In the Post Process Volume, open Color Grading, then Temperature. Keep Temperature Type on White Balance. Move Temp up and down and note which direction makes the image warm."
+      - "Open any project, or create one from the Third Person template. Pick one camera view in a level that already has lighting, such as the level of the template, and save it as a camera bookmark with Ctrl+1. Take a screenshot before you change anything, so you have the ungraded picture."
+      - "Place a Post Process Volume with Infinite Extent (Unbound) turned on, or use the one your level already has. In it, open Color Grading, then Temperature. Keep Temperature Type on White Balance. Move Temp up and down and note which direction makes the image warm."
       - "Adjust Tint a little to remove any green or magenta color that covers the whole image."
       - "Open Color Grading, then Global, and do the main work here. Set Saturation, Contrast and Gamma until the image has the mood you want."
       - "Use a small amount of Offset under Global to make the shadows lighter or darker."
@@ -1055,8 +1056,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "In a scene that has lighting, place a few spheres with different colors and one with a strong emissive material, which is a material that glows. Take a reference screenshot."
-      - "In the Post Process Volume, open the Film category. Override Slope and move it up and down. Note which direction makes the image darker."
+      - "Open any project, or create one from the Third Person template. In a level that has lighting, such as the level of the template, place a few spheres with different colors and one with a strong emissive material, which is a material that glows. Take a reference screenshot."
+      - "Place a Post Process Volume with Infinite Extent (Unbound) turned on, or use the one your level already has. In it, open the Film category. Override Slope and move it up and down. Note which direction makes the image darker."
       - "Override Toe and Shoulder, one at a time. Watch what happens to the darkest and the brightest areas of the image."
       - "Raise the emissive brightness of one sphere by a large amount. Watch how its color changes as it gets very bright."
       - "Put Slope, Toe and Shoulder back to their default values. Write one line about when the Film settings should be changed."
@@ -1113,8 +1114,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/reflections-captures-in-unreal-engine"
     checklist:
-      - "Build a small room. Give the floor plane a material named M_Floor_Shiny with Roughness 0.1, and add a few colored props. Put one tall prop just outside the camera view."
-      - "In the Post Process Volume, open Reflections and set Method to Lumen. Take a screenshot. Then change Max Roughness To Trace and watch the floor."
+      - "Open any project, or create one from the Third Person template. In a new level, build a small room from cubes. Give the floor a material named M_Floor_Shiny with Roughness 0.1, and add a few colored props. Put one tall prop just outside the camera view."
+      - "Place a Post Process Volume with Infinite Extent (Unbound) turned on. In it, open Reflections and set Method to Lumen. Take a screenshot. Then change Max Roughness To Trace and watch the floor."
       - "Set Method to Screen Space Reflections. Look at the floor near the edge of the screen and find where the prop that is outside the view disappears from the reflection. Take a screenshot."
       - "Place a Sphere Reflection Capture in the room, and change Method to None. Observe how the capture alone reflects the room. Take a screenshot."
       - "Open Project Settings, then Rendering, then Reflections, and turn on Support global clip plane for Planar Reflections. Restart the editor, and then place a Planar Reflection Actor on the floor. Take a screenshot."
@@ -1170,9 +1171,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lit-translucency-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
     checklist:
-      - "Create a material named M_Blend_Test with a colored Base Color. This is the opaque starting point that you copy in the next steps. Place four spheres in front of a wall, one for each blend mode you will try."
-      - "Duplicate the material and name the copy M_Blend_Masked. Set its Blend Mode to Masked. Connect a striped texture to Opacity Mask and try two different Opacity Mask Clip Values. Apply it to the first sphere."
-      - "Duplicate M_Blend_Test again and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity. Apply it to the second sphere."
+      - "Open any project, or create one from the Third Person template, and work in any lit level. Create a material named M_Blend_Test with a colored Base Color. This is the opaque starting point that you copy in the next steps. Place four spheres in front of a wall, one for each blend mode you will try."
+      - "Duplicate the material and name the copy M_Blend_Masked. Set its Blend Mode to Masked. Connect a pattern with clear light and dark areas to Opacity Mask, for example a striped or checker texture, or a Checker Pattern node, and try two different Opacity Mask Clip Values. Apply it to the first sphere."
+      - "Duplicate M_Blend_Test again and name the copy M_Blend_Translucent. Set its Blend Mode to Translucent and connect a gradient to Opacity, for example one channel of a Texture Coordinate node. Apply it to the second sphere."
       - "Duplicate again to make M_Blend_Additive, with Blend Mode Additive, and M_Blend_Modulate, with Blend Mode Modulate, set to Unlit, and with the color connected to Emissive. Apply them to the third and fourth sphere. Move two spheres so that they overlap, and look at the area where they overlap."
       - "On M_Blend_Translucent, open the Translucency section in the Details panel. Place a Point Light nearby and compare these three Lighting Mode values: Volumetric NonDirectional, Surface TranslucencyVolume and Surface ForwardShading."
       - "Take one screenshot with all four blend modes visible, and one screenshot with the three lighting modes side by side."
@@ -1226,10 +1227,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lit-translucency-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-fresnel-in-your-unreal-engine-materials"
     checklist:
-      - "Create a material named M_Glass. Set Blend Mode to Translucent. Under Translucency, set Lighting Mode to Surface TranslucencyVolume so that the Refraction pin appears."
+      - "Open a project made from the Third Person template, or create one. Create a material named M_Glass. Set Blend Mode to Translucent. Under Translucency, set Lighting Mode to Surface TranslucencyVolume so that the Refraction pin appears."
       - "Add a Scalar Parameter named Opacity with the value 0.3 and connect it to Opacity. Add a Scalar Parameter named IOR with the value 1.52. Use a Fresnel node to drive a Lerp between 1.0 at the center and IOR at the edges, and connect the result to Refraction."
-      - "Create a Material Instance named MI_Glass and apply it to a sphere in front of a textured wall. Try IOR 1.0, 1.33, 1.52 and 2.42, and take a screenshot of each."
-      - "Add a Normal Map texture parameter and connect it to Normal. The texture T_Water_N from Starter Content works well. See how the refraction breaks up."
+      - "Create a Material Instance named MI_Glass and apply it to a sphere in front of a wall with a pattern, for example a cube with the grid material MI_PrototypeGrid_Gray of the template. Try IOR 1.0, 1.33, 1.52 and 2.42, and take a screenshot of each."
+      - "Add a Normal Map texture parameter and connect it to Normal. Any normal map works, for example T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template. See how the refraction breaks up."
       - "Find Refraction Depth Bias in the Details panel of the material. Try a small value while you look at a close object through the glass."
       - "This step is optional. Duplicate the material as M_Glass_Thin, and set Shading Model to Thin Translucent and Lighting Mode to Surface ForwardShading. Compare the highlights."
     done_when: "Send four labeled screenshots of the sphere with IOR 1.0, 1.33, 1.52 and 2.42, and one more screenshot with the normal map turned on."
@@ -1274,20 +1275,20 @@ quests:
     required_spine: false
     required: false
     title: Substrate awareness
-    brief: "Substrate is the newer material system in Unreal Engine 5. Instead of the classic inputs such as Base Color and Metallic, you describe a surface with a building block called a Slab, and you connect it to one input named Front Material. Here F0 is the amount of light a surface reflects when you look straight at it: low for plastic, high for metal. In this quest you check if your project uses Substrate and build two simple Slab materials so that the system is familiar when you meet it."
+    brief: "Substrate is the newer material system in Unreal Engine 5. Instead of the classic inputs such as Base Color and Metallic, you describe a surface with a building block called a Slab, and you connect it to one input named Front Material. Here F0 is the amount of light a surface reflects when you look straight at it: low for plastic, high for metal. In this quest you check if a project uses Substrate and build two simple Slab materials so that the system is familiar when you meet it."
     time_min: 45
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/overview-of-substrate-materials-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/substrate-materials-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Rendering, and check whether Substrate materials is enabled in your project. Write down what you found, and also the GBuffer Format."
+      - "Open any project, or create one from the Third Person template. Open Project Settings, then Rendering, and check whether Substrate materials is enabled in the project. Write down what you found, and also the GBuffer Format."
       - "Create a material named M_Substrate_Test. If Substrate is on, add a Substrate Slab node and connect it to the Front Material input on the root node."
       - "Set Diffuse Albedo to a color, F0 to 0.04 (which is a plastic) and Roughness to 0.3. Apply the material to a sphere."
       - "Duplicate the material. Set F0 to a bright color (which is a metal) and Diffuse Albedo to black. Apply it to a second sphere and compare the two."
-      - "Open any old material that does not use Substrate. Right-click the root node and read the Convert to Substrate option. Do NOT convert a material that other people share. Use a copy instead."
+      - "Open any old material that does not use Substrate, for example a copy of a material from the template. Right-click the root node and read the Convert to Substrate option. Do NOT convert a material that other people share. Use a copy instead."
       - "Write two lines: one that says what a Slab is made of, and one that says what happens to a converted material if Substrate is turned off."
-    done_when: "Send a screenshot of the M_Substrate_Test graph with the Slab connected to Front Material, a screenshot of the two spheres side by side, and the two lines from the last step."
+    done_when: "Send a screenshot of the M_Substrate_Test graph with the Slab connected to Front Material, a screenshot of the two spheres side by side, and the two lines that you wrote in step 6."
     xp: 55
     verify_type: screenshot
     quiz:
@@ -1336,8 +1337,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-asset-editor-in-unreal-engine"
     checklist:
-      - "Prepare three images for one surface: a color image, a normal image and a roughness image. Use a power-of-two size such as 1024x1024, and save them as .png or .tga files."
-      - "Also prepare one image whose size is not a power of two, for example 1000x700."
+      - "Open a project made from the Third Person template, or create one. Prepare three image files for one surface: a color image, a normal image and a roughness image, with a power-of-two size such as 1024x1024, saved as .png or .tga files. If you have none, export them from Unreal: in the folder Characters/Mannequins/Textures/Quinn of the template, right-click T_Quinn_01_D (color), T_Quinn_01_N (normal) and T_Quinn_01_MRA (a mask texture), choose Asset Actions, then Export, and save each one as an image file."
+      - "Also prepare one image whose size is not a power of two, for example 1000x700. A cropped screenshot or photo works."
       - "Import all four images with the Import button in the Content Browser, or drag them in from your file explorer. Name them T_Wood_BC, T_Wood_N, T_Wood_R and T_Test_NPOT."
       - "Double-click T_Wood_BC to open the Texture Asset Editor. In the Details panel, read the values Imported, Displayed, Max In-Game and Number of Mips."
       - "Enable the Mip Level checkbox in the toolbar and step through the mips one by one. Watch the Displayed size change."
@@ -1390,9 +1391,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-format-support-and-settings-in-unreal-engine"
     checklist:
-      - "Open T_Wood_BC, or any other color texture, in the Texture Asset Editor. Find the Compression category in the Details panel."
+      - "Open a project made from the Third Person template, or create one. Open a color texture in the Texture Asset Editor, for example T_Quinn_01_D from the folder Characters/Mannequins/Textures/Quinn of the template. Find the Compression category in the Details panel."
       - "Note the value of Compression Settings, and the Format shown in the texture information at the top. Write down the Resource Size."
-      - "Open a packed mask texture, which is a texture that stores a different mask in each color channel, or import one. Change Compression Settings to BC7 and compare the Resource Size before and after."
+      - "Open a packed mask texture, which is a texture that stores a different mask in each color channel. The template has one named T_Quinn_01_MRA in the same folder. Duplicate it and work on the copy. Change Compression Settings to BC7 and compare the Resource Size before and after."
       - "Open the Oodle panel. Enable On-disk Sizes and read the values Uncompressed Size and Compressed Size (Estimate)."
       - "In the Oodle panel, enable Try Encodings and test the RDO Lambda values 0, 30 and 100. Look in the viewport for artifacts, which are small errors in the image caused by compression."
       - "Open Project Settings, then Engine, then Texture Encoding, and find the Fast and Final settings. Do not change them."
@@ -1444,11 +1445,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-inputs-in-unreal-engine"
     checklist:
-      - "Import a normal map and name it T_Brick_N. Open it in the Texture Asset Editor and confirm that Compression Settings is set to Normalmap."
-      - "Make a material named M_NormalTest. Connect T_Brick_N to the Normal input, and apply the material to a cube in a level that has one directional light."
+      - "Open a project made from the Third Person template, or create one. You need a normal map. Import one of your own, or duplicate T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template. Name it T_Test_N. Open it in the Texture Asset Editor and confirm that Compression Settings is set to Normalmap."
+      - "Make a material named M_NormalTest. Connect T_Test_N to the Normal input, and apply the material to a cube in a level that has one directional light."
       - "In the Texture Asset Editor, turn Flip Green Channel on and off and watch the cube. Note which setting makes the bumps look raised and not sunken."
       - "Enable Normalize after making Mips. Move the camera far away from the cube and compare the surface with the setting turned off."
-      - "Open a roughness texture. Set Composite Texture to T_Brick_N and set Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power at 1 and at 4."
+      - "Open a roughness texture or another grayscale texture, for example a copy of T_Quinn_01_MRA from the same folder. Set Composite Texture to T_Test_N and set Composite Texture Mode to CTM_RoughnessFromNormalAlpha. Try Composite Power at 1 and at 4."
     done_when: "Send two screenshots of the lit cube: one with Flip Green Channel off and one with it on. Add one line that says which one is correct for your normal map."
     xp: 55
     verify_type: screenshot
@@ -1497,8 +1498,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
     checklist:
-      - "Create a material named M_Decal_Crack. In the Details panel, set Material Domain to Deferred Decal and Blend Mode to Translucent."
-      - "Add a crack texture or a dirt texture to the graph. Connect its color to Base Color and its mask to Opacity. If you like, also connect a normal map to Normal."
+      - "Open a project made from the Third Person template, or create one, and work in a level with a wall. Create a material named M_Decal_Crack. In the Details panel, set Material Domain to Deferred Decal and Blend Mode to Translucent."
+      - "Add a crack texture or a dirt texture to the graph. If you have none, use any texture with clear dark and light areas, such as T_GridChecker_A from the folder LevelPrototyping/Textures of the template, and use one of its channels as the mask. Connect its color to Base Color and its mask to Opacity. If you like, also connect a normal map to Normal."
       - "Place a Decal Actor from the Visual Effects category of the Place Actors panel. Assign M_Decal_Crack to Decal Material, and rotate the actor so its arrow points at a wall."
       - "Scale the Decal Actor with the scale tool, using a different amount on each axis. Watch how the projection fades at the edges of the box."
       - "Place a second decal that overlaps the first one. Change Sort Order on one of them so that it draws on top of the other."
@@ -1554,13 +1555,13 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/building-texture-streaming-data-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/texture-streaming-configuration-in-unreal-engine"
     checklist:
-      - "Open a level with several textured props. Open the Build menu in the main menu bar and run Build Texture Streaming."
+      - "Open a project made from the Third Person template, or create one. Open a level with several textured props. If you have none, drag about ten textured meshes into the level of the template, for example SKM_Manny_Simple and SKM_Quinn_Simple from the folder Characters/Mannequins/Meshes, several times each. Open the Build menu in the main menu bar and run Build Texture Streaming."
       - "Play in the editor, open the console and type STAT STREAMING. Read the values Texture Pool, Streaming Pool and Wanted Mips."
       - "Walk close to a prop and then far away from it. Watch the values Visible Mips and Cached Mips change."
       - "Stop playing. In the View Mode menu of the viewport, open the texture streaming accuracy view modes and look at Primitive Distance Accuracy. Note any meshes that are red or green."
       - "Type r.Streaming.PoolSize 50 in the console, play again, and look for blurry textures. Then set the value back to what it was before."
       - "Open one texture in the Texture Asset Editor and find the Never Stream checkbox. Do not enable it. Only note where it is."
-    done_when: "Send one screenshot of STAT STREAMING on screen while you play. Also send one screenshot of the Primitive Distance Accuracy view mode, with a short line about what the colors on your meshes mean."
+    done_when: "Send one screenshot of STAT STREAMING on screen while you play. Also send one screenshot of the Primitive Distance Accuracy view mode, with a short line about what the colors on the meshes mean."
     xp: 55
     verify_type: screenshot
     quiz:
@@ -1608,12 +1609,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/coordinates-material-expressions-in-unreal-engine"
     checklist:
-      - "In a project that has the Starter Content, create a material named M_DetailWall. Drag in the textures T_Brick_Clay_Old_D, T_Brick_Clay_Old_N, T_Ground_Gravel_D and T_Ground_Moss_N."
-      - "Add the DetailTexturing material function, which is in the Misc category. Then right-click the gravel texture and the moss texture and choose Convert To Texture Object for each."
-      - "Connect the brick textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal."
+      - "Open a project made from the Third Person template, or create one. Create a material named M_DetailWall. You need a base color texture and a base normal map for the wall, and a second color texture and normal map for the fine detail. Free surfaces from Fab work well. For a first test, use T_Quinn_01_D and T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template as the base, and T_GridChecker_A from LevelPrototyping/Textures and the engine texture T_Default_Material_Grid_N as the detail. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Drag all four textures into the graph."
+      - "Add the DetailTexturing material function, which is in the Misc category. Then right-click the two detail textures and choose Convert To Texture Object for each."
+      - "Connect the base textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal."
       - "Add three Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, and set each one to 1. Connect them to the function."
-      - "Make a Material Instance named MI_DetailWall. Try Scale at 1, 5 and 10, and look at a wall from very close each time."
-      - "Add a TextureCoordinate node in front of the brick textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
+      - "Make a Material Instance named MI_DetailWall and apply it to a cube that you scale into a wall. Try Scale at 1, 5 and 10, and look at the wall from very close each time."
+      - "Add a TextureCoordinate node in front of the base textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
     done_when: "Send two close-up screenshots of the wall in the level, one with Scale 1 and one with Scale 10. Also send one screenshot of the M_DetailWall graph."
     xp: 55
     verify_type: screenshot
@@ -1663,8 +1664,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/streaming-virtual-texturing-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtime-virtual-texturing-in-unreal-engine"
     checklist:
-      - "On the Virtual Texturing documentation page, read the table that compares Runtime Virtual Textures with Streaming Virtual Textures. Write one sentence about each."
-      - "Import a large color texture with a power-of-two size (4096x4096 is enough) and name it T_Big_BC. Use it in a material named M_BigTest and put that material on a plane."
+      - "Open any project, or create one from the Third Person template. On the Virtual Texturing documentation page linked on this quest, read the table that compares Runtime Virtual Textures with Streaming Virtual Textures. Write one sentence about each."
+      - "Import a large color texture with a power-of-two size (4096x4096 is enough) and name it T_Big_BC. If you have no such image, make one in any image editor by resizing a photo to 4096x4096. Use it in a material named M_BigTest and put that material on a plane."
       - "In the Content Browser, right-click T_Big_BC and choose Convert to Virtual Texture. Read the list of materials in the Convert To window and click Ok."
       - "Open M_BigTest. Confirm that the Texture Sample node now shows VT in its corner and uses a Virtual sampler type."
       - "Play in the editor. In the console, type stat virtualtexturing, and then r.VT.Borders 1. Move around and look at the grid. Turn the grid off with r.VT.Borders 0."
@@ -1709,19 +1710,19 @@ quests:
     required_spine: false
     required: false
     title: Bring a Megascans surface in from Fab
-    brief: "Fab is the online store of Epic Games for 3D content, and you can open it inside the Unreal editor. Megascans is a large library of surfaces and objects that were scanned from the real world, and many of them are free on Fab. A scanned surface is a quick way to get a material that looks real. In this quest you find a free Megascans surface in Fab, add it to your project, and apply it in your level."
+    brief: "Fab is the online store of Epic Games for 3D content, and you can open it inside the Unreal editor. Megascans is a large library of surfaces and objects that were scanned from the real world, and many of them are free on Fab. A scanned surface is a quick way to get a material that looks real. In this quest you find a free Megascans surface in Fab, add it to a project, and apply it in a level."
     time_min: 35
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/fab-window-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/quixel-bridge-plugin-for-unreal-engine"
     checklist:
-      - "Open the Fab window with Window > Fab, which is in the Get Content section, or with the Fab button next to Add+ in the Content Drawer. If it is missing, open Edit > Plugins and enable the Fab plugin."
+      - "Open any project, or create one from the Third Person template. Open the Fab window with Window > Fab, which is in the Get Content section, or with the Fab button next to Add+ in the Content Drawer. If it is missing, open Edit > Plugins and enable the Fab plugin."
       - "Open the Account menu and choose Fab settings. Under Megascans, read the Preferred Quality Tier, and set it to Medium if it is not already."
       - "Use the Price filter to show only free products, and use the product type panel to show surfaces. Pick one Quixel surface, open its preview, and read its license and the formats it includes."
       - "Click Add to My Library. Then open My Library and click the + icon on the tile of the surface to download it into your project."
       - "Find the new assets in the Content Browser. Open the material instance and note which textures it uses, such as color, normal and packed mask."
-      - "Apply the surface to a plane or a cube in your level."
+      - "Apply the surface to a plane or a cube in any level."
     done_when: "Send one screenshot of the surface applied in the level, and one screenshot of the Content Browser that shows the imported texture set."
     xp: 50
     verify_type: screenshot
@@ -1770,11 +1771,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-functions-in-unreal-engine"
     checklist:
-      - "Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input."
+      - "Open a project made from the Third Person template, or create one. Right-click in the Content Browser, open Material and create a Material Function. Name it MF_DirtMask. It will be a mask that darkens grooves, using a height texture and a Contrast input."
       - "Inside the function, add a Function Input of type Texture Object named Height, and a scalar Function Input named Contrast. Build the mask and connect it to the Output Result node. Write a description on each input."
       - "Click on the empty background of the graph. In the Details panel, write a Description for the function and set Library Categories Text to a category such as Unrealcraft. Then turn on Expose to Library."
       - "Click Apply, and then save the asset."
-      - "Open one of your materials, such as M_Ground. Find MF_DirtMask in the Palette under your category and drag it into the graph. Move the mouse over the node and check that your description appears as the tooltip."
+      - "Open a material of your own, or create a simple one named M_Ground with a color texture connected to Base Color, for example T_GridChecker_A of the template. Find MF_DirtMask in the Palette under your category and drag it into the graph. Give it any grayscale texture as Height, as a Texture Object, and multiply its result with the Base Color. Move the mouse over the node and check that your description appears as the tooltip."
       - "Place a second copy in another way. Hold F and left-click in the graph to make an Unspecified Function node, and then assign MF_DirtMask to it in the Details panel."
       - "Change something inside MF_DirtMask, for example the default value of Contrast, and click Apply. Confirm that both copies in M_Ground update."
     done_when: "Send two screenshots: one of the MF_DirtMask function graph with the Details panel showing Description, Library Categories Text and Expose to Library turned on, and one of M_Ground with the function placed and its tooltip visible. Add one line that says which category you used."
@@ -1833,12 +1834,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-attributes-expressions-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/layering-materials-in-unreal-engine"
     checklist:
-      - "Create a Material Function named MF_Layer_Chrome. Add a Make Material Attributes node, which packs all material inputs into one wire, and connect it to Output Result. Build a chrome look with Metallic 1 and a low roughness, and add a Vector3 Function Input named Tint."
+      - "Open any project, or create one from the Third Person template. Create a Material Function named MF_Layer_Chrome. Add a Make Material Attributes node, which packs all material inputs into one wire, and connect it to Output Result. Build a chrome look with Metallic 1 and a low roughness, and add a Vector3 Function Input named Tint."
       - "Create a second function named MF_Layer_Snow in the same way, with Make Material Attributes connected to Output Result. Give it a pale blue tint, make it non-metallic, and use a medium roughness."
       - "Create a material named M_SnowyChrome. Click the background of the graph and turn on Use Material Attributes in the Details panel."
       - "Drag both functions into the graph. From the Palette, add the nodes MatLayerBlend_Simple and WorldAlignedBlend."
       - "Connect the chrome function to the Base input of MatLayerBlend_Simple and the snow function to its Top input. Connect WorldAlignedBlend to its Alpha input. Set Blend Sharpness to 10, and add a scalar parameter named BlendBias on Blend Bias."
-      - "Save the material. Create a Material Instance named MI_SnowyChrome and apply it to a prop. Rotate the prop to confirm that the snow stays on the faces that point up."
+      - "Save the material. Create a Material Instance named MI_SnowyChrome and apply it to a prop, for example a sphere or a cone. Rotate the prop to confirm that the snow stays on the faces that point up."
       - "This step is optional. In one layer, replace Make Material Attributes with Set Material Attributes and add only the attributes you need."
     done_when: "Send a screenshot of the M_SnowyChrome graph that shows both layer functions, MatLayerBlend_Simple and WorldAlignedBlend. Also send a viewport screenshot of the rotated prop with the snow still on top. Add one line with your BlendBias value."
     xp: 65
@@ -1895,13 +1896,13 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-attributes-expressions-in-unreal-engine"
     checklist:
-      - "In the Content Browser, under Materials, create a Material Layer asset named ML_Metal and another one named ML_Rust. In each one, build the surface with Set Material Attributes, and add a Vector Parameter for the color and a Scalar Parameter for the roughness."
-      - "Create a Material Layer Blend asset named MLB_Mask. In its graph, connect a mask texture parameter to the Alpha of the BlendMaterialAttributes node that is already there."
+      - "Open a project made from the Third Person template, or create one. In the Content Browser, under Materials, create a Material Layer asset named ML_Metal and another one named ML_Rust. In each one, build the surface with Set Material Attributes, and add a Vector Parameter for the color and a Scalar Parameter for the roughness."
+      - "Create a Material Layer Blend asset named MLB_Mask. In its graph, connect a mask texture parameter to the Alpha of the BlendMaterialAttributes node that is already there. Any grayscale texture with clear light and dark areas works as the mask, for example T_GridChecker_A from the folder LevelPrototyping/Textures of the template."
       - "Create the base material and name it M_Layered. Select the Main Material Node and enable Use Material Attributes. Add a Material Attribute Layers node and connect it to the output."
       - "Select the Material Attribute Layers node. In the Details panel, set the Background layer to ML_Metal."
       - "Create a Material Instance named MI_Layered from M_Layered. Open it and go to the Layer Parameters tab. Add ML_Rust as a second layer and assign MLB_Mask as its blend."
       - "In the Layer Parameters tab, override the color and the roughness of the rust layer. Click the Eye icon on the rust layer to hide and show it, and watch the metal show through."
-      - "Apply MI_Layered to a prop and take screenshots."
+      - "Apply MI_Layered to a prop, such as a sphere, and take screenshots."
     done_when: "Send a screenshot of the Layer Parameters tab of MI_Layered that shows the Background layer, the rust layer, its blend asset and one overridden parameter. Also send a viewport screenshot of the prop with the rust blend visible."
     xp: 65
     verify_type: screenshot
@@ -1955,9 +1956,9 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-material-parameter-collections-in-unreal-engine"
     backup_url: null
     checklist:
-      - "Right-click in the Content Browser, open Material and create a MaterialParameterCollection. Name it MPC_Scene."
+      - "Open a project made from the Third Person template, or create one. Right-click in the Content Browser, open Material and create a MaterialParameterCollection. Name it MPC_Scene."
       - "Add a Scalar Parameter named Wetness with a default of 0, and a Vector Parameter named DirtTint. Save the asset."
-      - "Open two of your existing environment materials. In each one, add a CollectionParameter node (search for 'collection'), and pick MPC_Scene and the Wetness parameter on it."
+      - "Open two environment materials of your own. If you have none, make two simple ones, for example M_Wall and M_Floor, each with a different Base Color and a Roughness value. In each one, add a CollectionParameter node (search for 'collection'), and pick MPC_Scene and the Wetness parameter on it."
       - "Use Wetness to lower the roughness and darken the base color, for example with a Lerp between the dry value and the wet value. Save both materials."
       - "Apply the materials, or their instances, to different props in one level. Open MPC_Scene, change Wetness to 1, and watch every prop change at once."
       - "In the Level Blueprint, add a Set Scalar Parameter Value node with Collection set to MPC_Scene and Parameter set to Wetness. Trigger it from a key press, then press Play and test it."
@@ -2016,9 +2017,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-vertex-color-material-for-mesh-painting-in-unreal-engine"
     checklist:
-      - "Create a material named M_VertexBlend3 with three sets of textures, for example stone, moss and mud."
+      - "Open a project made from the Third Person template, or create one. Create a material named M_VertexBlend3 with three sets of textures, for example stone, moss and mud. Free surfaces from Fab work well. For a first test, any three textures that look different work, such as T_Quinn_01_D and T_Manny_01_D from the folder Characters/Mannequins/Textures and T_GridChecker_A from LevelPrototyping/Textures. The text below calls them stone, moss and mud."
       - "Add one VertexColor node and two Lerp nodes. The first Lerp blends stone and moss, with the Green channel as its Alpha. The second Lerp blends that result with mud, with the Blue channel as its Alpha. Stone is the surface you see by default when the material compiles."
-      - "Do the same for the normal maps so that the blend is complete. Apply the material to a wall or floor mesh that has enough vertices. If it has too few, subdivide it in your 3D app."
+      - "Do the same for the normal maps so that the blend is complete. Apply the material to a wall or floor mesh that has enough vertices, because the paint is stored on the vertices. A Sphere made in Modeling Mode with a high number of subdivisions works. If your mesh has too few vertices, add more with a remesh or subdivide tool in Modeling Mode, or in a 3D app."
       - "Enter Mesh Paint mode and choose the Vertex Weights tab. Select the mesh, and set Texture Weight Type to RGB (Three Textures)."
       - "Set Paint Texture Weight Index to the moss texture and paint moss into the lower corners. Press X to swap the paint index and the erase index, and clean up the edges."
       - "Switch the index to mud and paint a path. Hold SHIFT and use the left mouse button to erase mistakes."
@@ -2075,7 +2076,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/texturing-material-functions-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/material-functions-in-unreal-engine"
     checklist:
-      - "Create a material named M_WorldStone. Add a WorldAlignedTexture function, and connect the stone base color to it as a Texture Object, not as a Texture Sample."
+      - "Open a project made from the Third Person template, or create one. Create a material named M_WorldStone. Add a WorldAlignedTexture function, and connect a stone base color texture to it as a Texture Object, not as a Texture Sample. If you have no stone texture, T_GridChecker_A from the folder LevelPrototyping/Textures of the template works for the test."
       - "Connect a Vector3 parameter to TextureSize and start with the value 200,200,200. Connect the XYZ Texture output to Base Color."
       - "Add a WorldAlignedNormal function with the matching normal map and the same TextureSize. Connect its XYZ output to Normal."
       - "Apply the material to three cubes that have different scales and rotations. Confirm that the stone has the same size on all of them."
@@ -2134,13 +2135,13 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-bump-offset-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/placing-material-expressions-and-functions-in-unreal-engine"
     checklist:
-      - "Create a material named M_BrickBump. Use these Starter Content textures: T_Brick_Clay_New_D for Base Color, the red channel of T_Brick_Clay_New_M for Roughness, and T_Brick_Clay_New_N for Normal."
-      - "Hold B and left-click in the graph to create a BumpOffset node. Connect its output to the UVs pin of all three Texture Sample nodes."
-      - "Duplicate the diffuse Texture Sample with Ctrl + D, and connect its A (alpha) output to the Height input of BumpOffset. The error on the node should disappear."
+      - "Open a project made from the Third Person template, or create one. Create a material named M_BrickBump. You need a color texture, a normal map and a height map of the same surface. A height map is a grayscale texture in which bright areas are high and dark areas are low. A free brick surface from Fab includes all three. For a first test, the grid textures of the engine work: T_Default_Material_Grid_M for Base Color and as the height map, and T_Default_Material_Grid_N for Normal. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Connect the textures to Base Color and Normal, and connect a roughness texture or a Constant of 0.6 to Roughness."
+      - "Hold B and left-click in the graph to create a BumpOffset node. Connect its output to the UVs pin of every Texture Sample node that goes into Base Color, Roughness or Normal."
+      - "Add one more Texture Sample that holds your height map and connect one of its channels, for example R, to the Height input of BumpOffset. Do not connect BumpOffset to the UVs of this sample. The error on the node should disappear. In Epic's guide the height map is stored in the alpha channel of the color texture, so the guide duplicates that sample and uses its A output."
       - "In the Details panel, change Height Ratio from 0.05 to 0.005 so the texture stops sliding too much. Click Apply and save."
       - "Apply the material to a wall. Move the camera across the wall and compare it with a copy of the material that has no BumpOffset."
       - "Look at the wall from a very low angle, almost along its surface, and note where the effect breaks."
-    done_when: "Send a screenshot of the M_BrickBump graph where BumpOffset goes into the UVs of the three samples and the height goes into its Height input. Also send a viewport screenshot that shows the wall side by side with and without Bump Offset."
+    done_when: "Send a screenshot of the M_BrickBump graph where BumpOffset goes into the UVs of the texture samples and the height goes into its Height input. Also send a viewport screenshot that shows the wall side by side with and without Bump Offset."
     xp: 55
     verify_type: screenshot
     quiz:
@@ -2195,9 +2196,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
     checklist:
-      - "Nanite tessellation is experimental, so you have to turn it on. In the file Config/DefaultEngine.ini of your project (or in ConsoleVariables.ini), add r.Nanite.AllowTessellation=1 and r.Nanite.Tessellation=1. Then restart the editor."
-      - "Open a flat wall or floor mesh (SM_Wall) in the Static Mesh Editor and enable Nanite on it."
-      - "Create a material named M_NaniteBrick. Select the Main Material Node and check Enable Tessellation under the Nanite settings. Connect a height texture with values from 0 to 1 to the Displacement pin, and also connect a matching normal map."
+      - "Open a project made from the Third Person template, or create one. Nanite tessellation is experimental, so you have to turn it on. In the file Config/DefaultEngine.ini of the project (or in ConsoleVariables.ini), add r.Nanite.AllowTessellation=1 and r.Nanite.Tessellation=1. Then restart the editor."
+      - "Make a flat wall mesh: in Modeling Mode, create a Box that is wide, tall and thin, accept it as a Static Mesh, and name the asset SM_Wall. Open it in the Static Mesh Editor and enable Nanite on it."
+      - "Create a material named M_NaniteBrick. Select the Main Material Node and check Enable Tessellation under the Nanite settings. Connect a height texture with values from 0 to 1 to the Displacement pin, and also connect a matching normal map. A free brick or stone surface from Fab that includes a height map gives the best result. For a first test, the grid textures of the engine work: T_Default_Material_Grid_M as the height and T_Default_Material_Grid_N as the normal map. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content."
       - "Set Magnitude to a small value, for example 4, and set Center to 0.5 so the surface moves both in and out. Apply the material to SM_Wall."
       - "Enable Displacement Fade, and set Start Fade Size and End Fade Size in pixels so that the effect disappears at a distance."
       - "Compare this with the static option. In the Static Mesh Editor, under Nanite Settings, set Trim Relative Error to 0.04, add a Displacement Map with a Magnitude, and click Apply Changes."
@@ -2250,20 +2251,20 @@ quests:
     required_spine: false
     required: false
     title: "Height blend without black spots"
-    brief: "A landscape material usually has several layers, such as grass, dirt and rock, that you paint on the terrain. With a plain blend, the border between two layers is a soft, even fade. With a height blend, the material uses a height map so that, for example, dirt fills the gaps between rocks first, which looks much more real. In this quest you change a landscape material to height blending and avoid the black spots that this method can cause."
+    brief: "A landscape material usually has several layers, such as grass, dirt and rock, that you paint on the terrain. With a plain blend, the border between two layers is a soft, even fade. With a height blend, the material uses a height map so that, for example, dirt fills the gaps between rocks first, which looks much more real. In this quest you build a landscape material with height blending and avoid the black spots that this method can cause."
     time_min: 70
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-materials-in-unreal-engine"
     backup_url: null
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-paint-mode-in-unreal-engine"
     checklist:
-      - "Duplicate your landscape material and name the copy M_Land_HeightBlend. In its Landscape Layer Blend node, keep 4 layers: Grass, Dirt, Rock and Snow."
+      - "Open a project made from the Third Person template, or create one. You need a landscape material with a Landscape Layer Blend node that has 4 layers: Grass, Dirt, Rock and Snow, all set to LB Weight Blend. If you have one, duplicate it. If not, create one with a different plain color or texture for each layer, and a white color for Snow. Name it M_Land_WeightBlend, duplicate it, and name the copy M_Land_HeightBlend. Work in the copy."
       - "Set Grass, Dirt and Rock to LB Height Blend. For each layer, connect the alpha of its texture, or a height mask, to the matching Height input."
       - "Set Snow to LB Alpha Blend and move it to the end of the list. This fixes the black spots that appear where all height layers have the value zero."
       - "Add a Landscape Layer Switch node around the Snow branch. It lets Unreal skip the snow textures on parts of the landscape that have no snow."
       - "Add a Landscape Layer Sample node for Rock. Multiply it into Roughness so that painted rock looks a little wetter or drier than grass."
-      - "In Landscape Mode, open Paint and create a Weight-Blended layer info for each layer. Paint rock next to dirt and look at the height detail where they meet."
-      - "Compare with the old material. Take one close screenshot of the border between rock and dirt with each material."
+      - "Create a Landscape in a new level and assign M_Land_HeightBlend to it. In Landscape Mode, open Paint and create a Weight-Blended layer info for each layer. Paint rock next to dirt and look at the height detail where they meet."
+      - "Compare with the plain blend. Assign M_Land_WeightBlend to the landscape and take one close screenshot of the border between rock and dirt with each material."
     done_when: "Send two close screenshots of the same border between rock and dirt, one with the height blend and one with the plain weight blend. Also send one screenshot of the Details panel of the Layer Blend node that shows the four Blend Types."
     xp: 60
     verify_type: screenshot
@@ -2320,12 +2321,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-blueprint-brushes-in-unreal-engine"
     checklist:
-      - "Open a level whose landscape uses edit layers. New landscapes have edit layers turned on by default. In Landscape Mode, open Sculpt and find the Layers list."
+      - "Open any project, or create one from the Third Person template. Open a level whose landscape uses edit layers, or create a new level and a new Landscape with Enable Edit Layers turned on. In Landscape Mode, open Sculpt and find the Layers list."
       - "Rename the default layer to Base. Add three layers with the + icon and name them SculptDetails, PaintDetails and Splines. For the last one, choose Spline Edit Layer."
       - "Select SculptDetails and sculpt a few small bumps and a ditch. Then turn on Lit > Visualizers > Layer Contribution and take a screenshot of the highlight."
       - "Set the heightmap Alpha of SculptDetails to a negative value and watch the bumps become dents. Then set it back to 1."
       - "Hide the layer with the eye icon, and then show it again. Lock the Base layer with the lock icon and try to sculpt on it."
-      - "Select PaintDetails and switch to Paint mode. Paint one material layer, so that the paint is stored only on this edit layer. Turn its visibility off and on to compare."
+      - "Select PaintDetails and switch to Paint mode. Paint one material layer, so that the paint is stored only on this edit layer. For this the landscape needs a material with paint layers. A simple material with a Landscape Layer Blend node and two layers with different colors is enough. Turn the visibility of the edit layer off and on to compare."
       - "Drag SculptDetails above PaintDetails in the stack. Then right-click a layer and read the context menu, which has options such as Collapse, Clear Sculpt Layer and Show Only Selected."
     done_when: "Send a screenshot of the Layers list with four named layers, one of which is a Spline edit layer. Also send a screenshot of the Layer Contribution visualizer that shows your SculptDetails layer."
     xp: 60
@@ -2383,11 +2384,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-edit-layers-in-unreal-engine"
     checklist:
-      - "In Landscape Mode, open Manage and choose Spline. Hold Ctrl and left-click to place 6 to 8 control points for a road across a hill. To extend the road, hold Alt and drag with the left mouse button from an end point."
+      - "Open a project made from the Third Person template, or create one. Open a level with a Landscape that has a hill and uses edit layers, or create one: make a new level, add a Landscape with Enable Edit Layers turned on, and sculpt a hill. For the paint step, the landscape needs a material with a paint layer named Dirt or Road. A simple material with a Landscape Layer Blend node and two layers with different colors is enough. In Landscape Mode, open Manage and choose Spline. Hold Ctrl and left-click to place 6 to 8 control points for a road across the hill. To extend the road, hold Alt and drag with the left mouse button from an end point."
       - "Select all control points with Ctrl+A. Set Half-Width to about 300 and Side Falloff to about 400. Press End to snap the points to the landscape."
       - "Add a Spline Edit Layer in the edit layer stack. Watch the terrain rise or get cut to fit the road."
-      - "Select all segments of the spline. Set Layer Name to your Dirt (or Road) paint layer so that the road paints itself onto the terrain."
-      - "Under Landscape Spline Meshes, assign a road Static Mesh. Turn on Scale to Width and set the correct Forward Axis for your mesh."
+      - "Select all segments of the spline. Set Layer Name to the Dirt (or Road) paint layer so that the road paints itself onto the terrain."
+      - "Under Landscape Spline Meshes, assign a road Static Mesh. If you have none, make one in Modeling Mode: a long, flat Box that you accept as a Static Mesh. Turn on Scale to Width and set the correct Forward Axis for the mesh."
       - "On one segment that goes downhill, turn off Raise Terrain and keep Lower Terrain. The road then cuts into the slope and does not build a bank of earth under itself."
       - "Select a segment and use the scale tool to drag a tangent, which is the handle that controls the curve. Use it to smooth one sharp bend."
     done_when: "Send one screenshot of the road from above with the spline visible and the terrain deformed. Also send one screenshot taken while playing in the editor, standing on the road mesh where it cuts through the hill."
@@ -2446,7 +2447,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/water-system-in-unreal-engine"
     checklist:
-      - "Enable the Water plugin and restart the editor. Use a landscape that has Enable Edit Layers turned on. Place a Water Body Ocean and shape its closed spline into a coastline."
+      - "Open any project, or create one from the Third Person template. Enable the Water plugin and restart the editor. Use a landscape that has Enable Edit Layers turned on. To make one, create a new level and a new Landscape with that option checked. Place a Water Body Ocean and shape its closed spline into a coastline."
       - "Select the WaterZone actor. Under Rendering, in Far Distance, note the value of Far Distance Mesh Extent, and check that the ocean reaches the horizon."
       - "Place a Water Body River that runs from inland down to the ocean. Give its points different heights, and set River Width and Depth for each point."
       - "In the Terrain settings of the river, set Blend Mode to Min. This makes sure the river never raises the terrain inside the area the ocean has carved."
@@ -2502,20 +2503,20 @@ quests:
     required_spine: false
     required: false
     title: "Roads and rocks blended with RVT"
-    brief: "A Runtime Virtual Texture, or RVT, is a large texture that Unreal fills in while the game runs, usually with the colors of the landscape. Other materials can then read it. Roads can be drawn into it so they become part of the ground, and rocks can take the ground color at their base so they do not look pasted on. In this quest you set up an RVT for your landscape, draw the road into it, and make a rock blend into the ground."
+    brief: "A Runtime Virtual Texture, or RVT, is a large texture that Unreal fills in while the game runs, usually with the colors of the landscape. Other materials can then read it. Roads can be drawn into it so they become part of the ground, and rocks can take the ground color at their base so they do not look pasted on. In this quest you set up an RVT for a landscape, draw a road into it, and make a rock blend into the ground."
     time_min: 90
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtimevirtual-texturing-quick-start-in-unreal-engine"
     backup_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/runtime-virtual-texturing-in-unreal-engine"
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/virtual-texturing-settings-and-properties-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Engine, then Rendering, and find the Virtual Textures section. Enable virtual texture support and restart the editor."
+      - "Open a project made from the Third Person template, or create one. You need a level with a Landscape that has a landscape material with a Landscape Layer Blend node. If you have none, create a Landscape and a simple material with two layers. Open Project Settings, then Engine, then Rendering, and find the Virtual Textures section. Enable virtual texture support and restart the editor."
       - "Create a Runtime Virtual Texture asset named RVT_Ground. Set Virtual texture content to Base Color, Normal, Roughness, Specular, and keep border padding at 2 or more."
-      - "In your landscape material, enable Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node. Read RVT_Ground with a Runtime Virtual Texture Sample node, and send both paths through a Virtual Texture Feature Switch node."
+      - "In the landscape material, enable Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node. Read RVT_Ground with a Runtime Virtual Texture Sample node, and send both paths through a Virtual Texture Feature Switch node."
       - "Place a Runtime Virtual Texture Volume and assign RVT_Ground to it. Under Transform from Bounds, pick the landscape as Source Actor and click Set Bounds. Then add RVT_Ground to Draw in Virtual Textures on the landscape."
-      - "Open the material of the road mesh from quest EAQ78, or of any spline mesh. Add a Runtime Virtual Texture Output node with Base Color and Roughness. Then select all spline segments and add RVT_Ground under Virtual Texture."
+      - "You need a road made with a landscape spline and a spline mesh. If you have none, draw a short spline with the Spline tool on the Manage tab of Landscape Mode and assign a long, flat box mesh under Landscape Spline Meshes. Open the material of the road mesh. Add a Runtime Virtual Texture Output node with Base Color and Roughness. Then select all spline segments and add RVT_Ground under Virtual Texture."
       - "On the RVT Volume, enable Hide Primitives. Check that the road now exists only in the terrain texture."
-      - "Make a material named M_RockBlend. Sample RVT_Ground and blend its Base Color into the bottom of a rock mesh so that the rock meets the ground softly. Set a Translucency Sort Priority on the road so that it is drawn above the rock."
+      - "Place a rock on the landscape. If you have no rock mesh, make a Sphere in Modeling Mode and scale it into a rough rock shape. Make a material for it named M_RockBlend. Sample RVT_Ground and blend its Base Color into the bottom of the rock so that the rock meets the ground softly. Set a Translucency Sort Priority on the road so that it is drawn above the rock."
     done_when: "Send a before and after screenshot of the base of a rock where it meets the ground. Also send a screenshot in Game View of the road drawn into the RVT with the spline mesh hidden."
     xp: 65
     verify_type: screenshot
@@ -2565,7 +2566,7 @@ quests:
     required_spine: false
     required: false
     title: "Cut a cave into the landscape"
-    brief: "A landscape is built from a heightmap, which stores only one height for each point on the ground. Because of this, a landscape alone cannot have a cave or a tunnel. The solution is to paint a hole in the landscape and build the cave from separate meshes behind it. In this quest you prepare your landscape material for holes, paint a cave mouth with the Visibility tool, and fit a cave interior into it."
+    brief: "A landscape is built from a heightmap, which stores only one height for each point on the ground. Because of this, a landscape alone cannot have a cave or a tunnel. The solution is to paint a hole in the landscape and build the cave from separate meshes behind it. In this quest you prepare a landscape material for holes, paint a cave mouth with the Visibility tool, and fit a cave interior into it."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-visibility-tool-in-unreal-engine"
     backup_url: null
@@ -2573,11 +2574,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/landscape-materials-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-nanite-with-landscapes-in-unreal-engine"
     checklist:
-      - "Open your landscape material. Add a Landscape Visibility Mask node and connect it to Opacity Mask. Keep Blend Mode set to Opaque. The pin looks greyed out, but connect it anyway."
+      - "Open a project made from the Third Person template, or create one. You need a level with a Landscape that has a hill and a landscape material. If you have none, create a Landscape, sculpt a hill, and assign a simple material with one color or texture. Open the landscape material. Add a Landscape Visibility Mask node and connect it to Opacity Mask. Keep Blend Mode set to Opaque. The pin looks greyed out, but connect it anyway."
       - "Check the Visibility tool panel under Target Layers. It should show no warning about a missing Visibility Mask node."
       - "In Landscape Mode, open Sculpt and pick the Visibility tool. Set a brush size that fits a cave mouth, and left-click on a hillside to paint a hole."
       - "Hold Shift and left-click to erase part of the hole, and use this to shape the entrance."
-      - "Build the inside of the cave from a few Static Meshes. You can use a rock kit or Modeling Mode. Fit the meshes into the hole so that no sky shows through."
+      - "Build the inside of the cave from a few Static Meshes. You can use free rocks from Fab, or shapes made in Modeling Mode that you scale and rotate. Fit the meshes into the hole so that no sky shows through."
       - "Switch to Place mode and Play In Editor. Walk through the hole into the cave and confirm that there is no collision where you painted."
       - "If the landscape has Enable Nanite turned on, click Build Data in the Nanite section and check that the hole is still correct."
     done_when: "Send one screenshot from outside that shows the cave mouth in the landscape, and one screenshot taken while playing in the editor from inside the cave looking out."
@@ -2637,12 +2638,12 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/distance-field-ambient-occlusion-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-distance-field-ambient-occlusion-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Engine, then Rendering, and find the Software Ray Tracing section. Enable Generate Mesh Distance Fields and restart the editor."
-      - "In your terrain scene, set the Mobility of the Sky Light to Movable. Open Show, then Visualize, then Distance Fields Ambient Occlusion, and take a screenshot."
+      - "Open a project made from the Third Person template, or create one. Open an outdoor level with a ground, a Sky Light and a few rocks or bushes on the ground. Spheres and cones from the Place Actors panel work as stand-ins. Open Project Settings, then Engine, then Rendering, and find the Software Ray Tracing section. Enable Generate Mesh Distance Fields and restart the editor."
+      - "Set the Mobility of the Sky Light to Movable. Open Show, then Visualize, then Distance Fields Ambient Occlusion, and take a screenshot."
       - "Open Show, then Visualize, then Mesh Distance Fields. Find a rock or a tree that looks blurry or mostly white."
       - "Open that mesh in the Static Mesh Editor. In Build Settings, raise Distance Field Resolution Scale and apply. Read the size of the distance field in the corner of the viewport."
       - "For a tree or bush with a masked leaf material, enable Two-Sided Distance Field Generation and compare the result in the visualizer."
-      - "In Foliage Mode, enable Affect Distance Field Lighting on the tree type only, and not on grass."
+      - "If you painted the bush or a tree with Foliage Mode, enable Affect Distance Field Lighting on that foliage type only, and not on grass."
       - "On the Sky Light, adjust Min Occlusion and Occlusion Contrast until the underside of the trees is dark but not black."
     done_when: "Send a screenshot of the Mesh Distance Fields visualizer that shows your improved rock or tree. Also send a lit before and after of the same spot, with DFAO on and off."
     xp: 60
@@ -2700,7 +2701,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/mesh-distance-fields-in-unreal-engine"
     checklist:
-      - "Open a landscape level that has at least two Static Mesh Foliage types: a bush with a masked leaf material, and a rock. Paint a wide field of both."
+      - "Open a project made from the Third Person template, or create one. Open a level with a Landscape, or create a new one. In Foliage Mode, add at least two Static Mesh Foliage types: a bush with a masked leaf material, and a rock. Free foliage and rocks from Fab work well. For a first test, SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template work as stand-ins. Paint a wide field of both."
       - "On the bush type, set Start Cull Distance to 3000 and End Cull Distance to 5000. Fly the camera backward and watch whole groups vanish."
       - "Open the bush material. Add a PerInstanceFadeAmount node and multiply it into the Opacity Mask, so the leaves thin out before the end distance. Fly backward again."
       - "On the bush type, open Scalability and enable Enable Density Scaling. In the console, run foliage.DensityScale 0.3 and then foliage.DensityScale 1.0, and compare."
@@ -2756,7 +2757,7 @@ quests:
     required_spine: false
     required: false
     title: Find the pink in the Lumen Scene
-    brief: "Lumen does not light the real scene directly. It builds a simpler copy called the Lumen Scene, and it stores the look of each surface in a Surface Cache. When a mesh is missing from this cache, it shows as pink in the debug view, and the bounced light around it looks wrong. In this quest you use the Lumen view modes to find those pink areas in your own level and fix one of them."
+    brief: "Lumen does not light the real scene directly. It builds a simpler copy called the Lumen Scene, and it stores the look of each surface in a Surface Cache. When a mesh is missing from this cache, it shows as pink in the debug view, and the bounced light around it looks wrong. In this quest you use the Lumen view modes to find those pink areas in a level and fix one of them."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-technical-details-in-unreal-engine"
     backup_url: null
@@ -2764,11 +2765,11 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-performance-guide-for-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/lumen-global-illumination-and-reflections-in-unreal-engine"
     checklist:
-      - "Open one of your interior levels that has Lumen turned on. Open View Mode, then Lumen, then Surface Cache. Take a screenshot and circle every pink area on it."
-      - "Open one pink prop (an SM_ mesh) in the Static Mesh Editor. In Build Settings, raise Max Lumen Mesh Cards from 12 to 24 and click Apply Changes. Then check the Surface Cache view again."
+      - "Open a project made from the Third Person template, or create one. Open an interior level of your own that has Lumen turned on, or build a small room from cubes and fill it with props, including some with complex shapes such as chairs and shelves. You can build these from a few scaled cubes each, or use free props from Fab. Open View Mode, then Lumen, then Surface Cache. Take a screenshot and circle every pink area on it."
+      - "Open one pink prop (an SM_ mesh) in the Static Mesh Editor. If nothing is pink, pick the prop with the most complex shape. In Build Settings, raise Max Lumen Mesh Cards from 12 to 24 and click Apply Changes. Then check the Surface Cache view again."
       - "In the console, run r.Lumen.Visualize.CardPlacement 1 and look at the cards on that mesh. Cards are the flat pieces Lumen uses to capture a surface. Set the value back to 0."
       - "Open Show, then Visualize, then Mesh DistanceFields. Find one thin wall or window mesh that looks like a soft blob. In its Build Settings, set Distance Field Resolution Scale to 2.0 and click Apply Changes. Compare the result."
-      - "In your Post Process Volume, set Lumen Scene View Distance to a small value and look at a far corner. Then set it back to the default."
+      - "Place a Post Process Volume with Infinite Extent (Unbound) turned on, or use the one in your level. In it, set Lumen Scene View Distance to a small value and look at a far corner. Then set it back to the default."
       - "Open Show, then Lumen, and untick Screen Traces. Take a screenshot of the same view with Screen Traces and without them."
       - "Open Project Settings, then Engine, then Rendering. Write down whether Support Hardware Ray Tracing and Use Hardware Ray Tracing when available are turned on, and which Software Ray Tracing Mode is set."
     done_when: "Send three screenshots: the Surface Cache view before your fix, the Surface Cache view after your fix, and the Mesh DistanceFields view of the mesh you changed. Add three lines that say what was pink, what you changed, and whether the project uses Hardware or Software Ray Tracing."
@@ -2827,7 +2828,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
     checklist:
-      - "Open a level that has a Directional Light, some static props, a few foliage meshes with a wind material (one that uses World Position Offset), and one large building mesh without Nanite."
+      - "Open a project made from the Third Person template, or create one. Open a level that has a Directional Light, some static props, a few foliage meshes with a wind material (one that uses World Position Offset), and one large building mesh without Nanite. To build it quickly: place a few cubes and cylinders as props, place a few cones as bushes and give them a material in which a Sine of a Time node, multiplied by a small vector, is connected to World Position Offset, and scale a cube into a large building block."
       - "Open View Modes, then Virtual Shadow Map, then Cached Page. Keep the camera still and take a screenshot. Red pages that appear while the camera is still are cache invalidations, which means cached pages were thrown away."
       - "Switch to the Shadow Casters visualization and find which objects cause the red pages. Check that their bounds, the invisible boxes around them, are not much bigger than the meshes."
       - "Select the foliage meshes. In the Details panel, set Shadow Cache Invalidation Behavior to Rigid and check the Cached Page view again. Then set World Position Offset Disable Distance to a distance where you can no longer see the wind."
@@ -2891,8 +2892,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/hardware-ray-tracing-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/ray-tracing-performance-guide-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Engine, then Rendering, and find the Direct Lighting section. Enable MegaLights, and accept the prompt that asks to enable Support Hardware Ray Tracing. Restart the editor."
-      - "Build a dark hall with a floor, walls and pillars. Place at least 20 Movable local lights: Point Lights, Spot Lights, and 2 Rect Lights with a Source Texture. Turn Cast Shadows on for all of them."
+      - "Open any project, or create one from the Third Person template. Open Project Settings, then Engine, then Rendering, and find the Direct Lighting section. Enable MegaLights, and accept the prompt that asks to enable Support Hardware Ray Tracing. Restart the editor."
+      - "In a new level, build a dark hall from cubes with a floor, walls and pillars. Place at least 20 Movable local lights: Point Lights, Spot Lights, and 2 Rect Lights with a Source Texture (any texture works). Turn Cast Shadows on for all of them."
       - "Add a Post Process Volume with Infinite Extent turned on. Use its MegaLights setting to turn MegaLights off, and read the number from stat GPU. Then turn MegaLights on again and compare the number."
       - "Open View Modes, then MegaLights, then Light Complexity. Move the mouse over a wall between many lights, and take a screenshot of the list of lights and their weight ratios."
       - "Find one light that is partly inside a wall or reaches very far. Make its Source Width, Source Height, cone angle or Attenuation Radius smaller until it no longer shines through geometry."
@@ -2956,9 +2957,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/spot-lights-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-physical-lighting-units-in-unreal-engine"
     checklist:
-      - "Download one free IES profile from the website of a lighting manufacturer. The documentation page names Lithonia and Philips. Import it with the Add button of the Content Browser, or drag and drop the file."
+      - "Open any project, or create one from the Third Person template. Download one free IES profile from the website of a lighting manufacturer. The documentation page linked on this quest names Lithonia and Philips. Import it with the Add button of the Content Browser, or drag and drop the file. If you cannot download one, use a copy of a profile that comes with the engine, for example Complex_IES in the engine folder EngineLightProfiles. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content."
       - "Open the imported IES asset in the Texture Editor. Write down its Brightness, which is given in candelas, and the read-only value Texture Multiplier."
-      - "In a dark room, place a Point Light, a Spot Light and a Rect Light on the same wall. Under Light Profiles, assign the same IES Texture to each of them. Take a screenshot of all three."
+      - "Build a dark room from cubes in a new level. Place a Point Light, a Spot Light and a Rect Light on the same wall. Under Light Profiles, assign the same IES Texture to each of them. Take a screenshot of all three."
       - "Set the Outer Cone Angle of the Spot Light to 30, and then to 80. Watch where the profile is cut off."
       - "On the Point Light, enable Use IES Intensity. Try IES Intensity Scale at 1.0 and at 0.25. Then disable Use IES Intensity and compare with the light's own Intensity."
       - "In the Texture Editor, set Brightness to 0 and save. Look at the Point Light with Use IES Intensity turned on. Put the original value back afterwards."
@@ -3021,7 +3022,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/environment-light-mixer-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/sky-lights-in-unreal-engine"
     checklist:
-      - "Start from a level that has a Directional Light with Atmosphere Sun Light turned on, a Sky Atmosphere, and a Sky Light with Real Time Capture turned on. Open Window > Env. Light Mixer and use it to add a Volumetric Cloud."
+      - "Open any project, or create one from the Third Person template. Start from a level that has a Directional Light with Atmosphere Sun Light turned on, a Sky Atmosphere, and a Sky Light with Real Time Capture turned on. A new Basic level has these actors, and you can add missing ones with the Env. Light Mixer. Open Window > Env. Light Mixer and use it to add a Volumetric Cloud if the level has none."
       - "In the Content Browser, enable Show Engine Content and find the folder Engine/EngineSky/VolumetricClouds. Make a Material Instance of the cloud material in your own Content folder, and name it MI_Clouds_01. Assign it to the Volumetric Cloud component."
       - "In MI_Clouds_01, change Layout_GlobalCoverage, the Layout_CloudType channels and Cloud_GlobalDensity until you have a sky that is partly cloudy. Add a little wind with Layout_WindControls."
       - "On the Directional Light, enable Cast Cloud Shadows. Try a small and a large Cloud Shadow Extent, and try Cloud Shadow Map Resolution Scale at 0.5 and at 2. Take a screenshot of the cloud shadows on the ground."
@@ -3085,8 +3086,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/exponential-height-fog-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/local-fog-volumes-in-unreal-engine"
     checklist:
-      - "Open an outdoor level that has a low area. Place an Exponential Height Fog, enable Volumetric Fog on it, and keep the Fog Density low. Give the Directional Light a Volumetric Scattering Intensity of 1."
-      - "Create a material named M_FogSphere and set Material Domain to Volume. Make a SphereMask that compares Absolute World Position with Particle Position and takes its radius from Particle Radius. Multiply it by a tiling noise texture and connect the result to Extinction. Connect a constant 1 to Albedo."
+      - "Open any project, or create one from the Third Person template. Open an outdoor level that has a low area, or create a new level with a Landscape and sculpt a valley. Place an Exponential Height Fog, enable Volumetric Fog on it, and keep the Fog Density low. Give the Directional Light a Volumetric Scattering Intensity of 1."
+      - "Create a material named M_FogSphere and set Material Domain to Volume. Make a SphereMask that compares Absolute World Position with Particle Position and takes its radius from Particle Radius. Multiply it by a tiling noise texture, for example a noise or cloud texture from the engine content, or by a Noise node, and connect the result to Extinction. Connect a constant 1 to Albedo."
       - "Create a simple Niagara sprite system named FXS_LowFog with a few large, slow particles. Assign M_FogSphere in its Sprite Renderer. Place the system in the low area."
       - "Save a camera bookmark. Take a screenshot of the valley with FXS_LowFog hidden and another with it visible, both from that same bookmark."
       - "Place a Spot Light in the fog. Turn Cast Volumetric Shadow off and on, and read stat GPU or profilegpu for both cases."
@@ -3150,7 +3151,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/generating-lightmap-uvs-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/volumetric-lightmaps-in-unreal-engine"
     checklist:
-      - "Duplicate your diorama level and name the copy L_Bake_01. Set the Directional Light and the Sky Light to Stationary, and the local lights to Static. Open Project Settings, then Rendering, and check that Allow Static Lighting is on."
+      - "Open any project, or create one from the Third Person template. Pick a small level with a Directional Light, a Sky Light, a few local lights and some props. If you have none, build a small room scene from cubes and other simple shapes in a new Basic level and add two Point Lights. Duplicate the level and name the copy L_Bake_01. Set the Directional Light and the Sky Light to Stationary, and the local lights to Static. Open Project Settings, then Rendering, and check that Allow Static Lighting is on."
       - "Open Edit > Plugins, go to Built-In, then Editor, and enable GPU Lightmass. Before you restart, open Project Settings and enable Support Hardware Ray Tracing, Enable Virtual Texture Support and Enable Virtual Texture Lightmaps. Under Platforms, then Windows, set Default RHI to DirectX 12. Then restart."
       - "Open Build > GPU Lightmass. Pick Bake What You See, keep the viewport in Realtime, and click Build Lighting. Move a prop while it bakes and watch the tiles update. Click Save, and then Cancel."
       - "Now choose Full Bake. Turn Realtime off in the viewport with Ctrl+R and click Build Lighting. Write down how long it took."
@@ -3212,7 +3213,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "Open a level that has a dark interior and a door to a bright exterior. In the global Post Process Volume, set Metering Mode to Auto Exposure Histogram."
+      - "Open a project made from the Third Person template, or create one. Open a level that has a dark interior and a door to a bright exterior, or build a closed box from cubes with one open door in a new Basic level. Place a Post Process Volume with Infinite Extent (Unbound) turned on as the global volume, if the level has none, and set its Metering Mode to Auto Exposure Histogram."
       - "Open Project Settings, then Rendering, then Default Settings, and enable Extend default luminance range in Auto Exposure settings. Note that Min Brightness and Max Brightness are now shown in EV100."
       - "Turn on Show > Visualize > HDR (Eye Adaptation). Stand outside and then inside, and write down the Average Scene EV100 for both places."
       - "Create a Curve Float asset named CF_ExposureComp (click Add, then Miscellaneous, then Curve). Add a key at your outdoor EV100 with the value -0.5, and a key at your indoor EV100 with the value +0.5. Assign the asset to Exposure Compensation Curve, and watch Exposure Compensation (Curve) change as you walk."
@@ -3275,7 +3276,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-virtualized-geometry-in-unreal-engine"
     checklist:
-      - "Pick a dense prop with 100k triangles or more, such as a rock or statue from Fab or Megascans. Duplicate it and name the copy SM_Fallback_Test. In the Static Mesh Editor, under Nanite Settings, turn on Enable Nanite Support."
+      - "Open any project, or create one from the Third Person template. Pick a dense prop with 100k triangles or more, such as a free rock or statue from Fab, Epic's asset store. If you have none, make a dense mesh in Modeling Mode: create a Sphere with a very high subdivision level and accept it as a Static Mesh. Duplicate the mesh and name the copy SM_Fallback_Test. In the Static Mesh Editor, under Nanite Settings, turn on Enable Nanite Support."
       - "In the Static Mesh Editor, press Ctrl + N to switch between the full Nanite mesh and the fallback mesh. Write down the triangle count of each."
       - "Set Fallback Target to Fallback Relative Error (some versions show this option as Relative Error). Try the value 1.0 and then 0.1. Click Apply Changes each time and compare the triangle count of the fallback mesh."
       - "Set Keep Triangle Percent to 50 and Trim Relative Error to 0.05, and click Apply. Compare the Resource Size in the asset details before and after."
@@ -3337,7 +3338,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/nanite-technical-details"
     checklist:
-      - "Take a simple prop that has Nanite enabled and one material slot, such as a brick block or a stone slab. Name it SM_Disp_Test. Get a height (displacement) texture for its surface, for example from a Fab surface."
+      - "Open a project made from the Third Person template, or create one. Take a simple prop that has Nanite enabled and one material slot, such as a brick block or a stone slab. A Box made in Modeling Mode with Nanite enabled works. Name it SM_Disp_Test. Get a height (displacement) texture for its surface. A free surface from Fab includes one, and for a first test any grayscale texture works, such as T_GridChecker_A from the folder LevelPrototyping/Textures of the template."
       - "Open the prop in the Static Mesh Editor. Under Nanite Settings, set Trim Relative Error to 0.04."
       - "Expand Displacement Maps and add one element (Index 0). Set its Texture to your height map, and set Magnitude to a small value. Start with 2. Click Apply Changes."
       - "Check that Displacement UV Channel matches the UV channel your height map was made for. Then place the prop in a level."
@@ -3403,7 +3404,7 @@ quests:
     community_urls:
       - {title: "Nanite | Inside Unreal (Unreal Engine channel)", url: "https://www.youtube.com/watch?v=TMorJX3Nj6U"}
     checklist:
-      - "Collect four props in a test level: a dense scanned rock, a tree made of masked leaf cards, a sky sphere or another big simple mesh, and a modular wall piece that you place 50 times."
+      - "Open a project made from the Third Person template, or create one. Collect four props in a test level: a dense scanned rock, a tree made of masked leaf cards, a sky sphere or another big simple mesh, and a modular wall piece that you place 50 times. Free assets from Fab work well. If you have none, use stand-ins: a Sphere with a very high subdivision level from Modeling Mode as the dense rock, a cone as the tree, a very large sphere as the sky sphere, and a cube scaled into a wall piece."
       - "For each prop, write one line that says Nanite or classic LODs. Give the reason from the Nanite documentation page, such as triangle count, instance count, occluder, VSM shadows or material type."
       - "Enable Nanite on the props you chose. Open View Modes, then Nanite Visualization, then Mask, to confirm which are green (Nanite) and which are red (not Nanite)."
       - "Open the Overdraw visualization. Look at the tree and at any kit pieces that are stacked on each other, and note the brightest areas."
@@ -3466,10 +3467,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-a-material-and-mesh-for-texture-color-painting-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/mesh-paint-mode-in-unreal-engine"
     checklist:
-      - "Open Project Settings, then Engine, then Rendering, and enable Virtual Textures. Restart the editor if it asks you to."
-      - "Pick a Nanite prop named SM_PaintTest. In the Static Mesh Editor, open the UV dropdown and check whether UV 0 overlaps or repeats. If it does, expand LOD 0, then Build Settings, enable Generate Lightmap UVs with Destination Lightmap Index 1, and click Apply Changes."
+      - "Open a project made from the Third Person template, or create one. Open Project Settings, then Engine, then Rendering, and enable Virtual Textures. Restart the editor if it asks you to."
+      - "Pick a prop for the test, for example a rock from Fab or a Sphere made in Modeling Mode. Name it SM_PaintTest and turn on Enable Nanite Support in its Nanite Settings. In the Static Mesh Editor, open the UV dropdown and check whether UV 0 overlaps or repeats. If it does, expand LOD 0, then Build Settings, enable Generate Lightmap UVs with Destination Lightmap Index 1, and click Apply Changes."
       - "Under General Settings, set Mesh Paint Texture Coordinate Index to the UV channel you will paint on, for example 1."
-      - "Make a material named M_PaintTint. Add a Texture Sample with a MeshPaintTextureObject node connected to its Tex input, and set its UVs to the same index. Multiply its RGB with your base color texture. Then send both paths through a MeshPaintTextureReplace node into Base Color."
+      - "Make a material named M_PaintTint. Add a Texture Sample with a MeshPaintTextureObject node connected to its Tex input, and set its UVs to the same index. Multiply its RGB with a base color texture, for example the color texture of the rock. Then send both paths through a MeshPaintTextureReplace node into Base Color."
       - "Place the prop in the level and enter Mesh Paint Mode. Open the Texture Color tab and click Add. Paint dirt or moss on the lower part of the prop."
       - "Set Mesh Paint Texture Resolution on the asset, for example to 512. Click Fix on the instance and check how the paint changes."
     done_when: "Send a screenshot of the painted prop in the level, and a screenshot of M_PaintTint with the MeshPaintTextureObject and MeshPaintTextureReplace nodes. Add one line with the UV index you used."
@@ -3528,9 +3529,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/decal-actors-in-unreal-engine"
     checklist:
-      - "Pick a prop that does not use Nanite and has a curved part, for example a pipe or a barrel. Make a copy and name it SM_Decal_Base."
+      - "Open a project made from the Third Person template, or create one. Pick a prop that does not use Nanite and has a curved part, for example a pipe or a barrel. A Cylinder made in Modeling Mode works. Make a copy and name it SM_Decal_Base."
       - "In Modeling Mode, create a thin strip mesh that follows the curved surface closely, such as a bent plane a few units above the surface. Give its edges a small soft border. Name it SM_Decal_Strip."
-      - "Make a material named M_MeshDecal with Material Domain set to Deferred Decal and Blend Mode set to Translucent. Use a rust or grime texture with a soft alpha. Apply the material to SM_Decal_Strip."
+      - "Make a material named M_MeshDecal with Material Domain set to Deferred Decal and Blend Mode set to Translucent. Use a rust or grime texture with a soft alpha. If you have none, use any texture for the color, such as T_GridChecker_A of the template, and a soft gradient, such as a RadialGradientExponential node, for the Opacity. Apply the material to SM_Decal_Strip."
       - "Place the strip on the prop. Move the camera far away and check if the strip cuts into the base mesh."
       - "If it cuts in, do not move the mesh. Add a small World Position Offset along the normal in M_MeshDecal, which pushes the strip slightly outward, and compare the result."
       - "Place a normal Decal Actor with the same texture on the same curved part. Look at both from a low angle and compare how much each one stretches."
@@ -3589,7 +3590,7 @@ quests:
     backup_url: null
     extra_urls: []
     checklist:
-      - "Build a small corner of a building from 8 to 12 kit pieces, such as walls, a pillar and trims. Use at least two materials and include one Nanite piece. Use the same pillar mesh three times."
+      - "Open any project, or create one from the Third Person template. Build a small corner of a building from 8 to 12 kit pieces, such as walls, a pillar and trims. If you have no kit, make the pieces from boxes in Modeling Mode. Use at least two materials and include one piece with Nanite enabled. Use the same pillar mesh three times."
       - "Select all pieces. Open Actor, then Merge Actors, then Merge Actor Settings. With the Merge method selected, turn off Pivot Point at Zero, turn on Generate Nanite Enabled Mesh, and keep Merge Materials off. Run the Merge and save the result as SM_Corner_Merge."
       - "Open SM_Corner_Merge and count its material sections. Compare that number with the number of materials you used."
       - "Undo the merge or place the pieces again. Select only the three identical pillars and run Batch. Look at the result in the Outliner."
@@ -3651,7 +3652,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-sockets-with-static-meshes-in-unreal-engine"
     checklist:
-      - "In Modeling Mode, make three kit pieces with sizes that fit a grid of 100: SM_Kit_Wall (400 long, 20 thick and 400 high), SM_Kit_Corner (20 x 20 and 400 high) and SM_Kit_Floor (400 x 400 and 20 thick). Use Edit Pivot to set the pivot of each piece to a bottom back corner."
+      - "Open any project, or create one from the Third Person template, and work in any level with a floor. In Modeling Mode, make three kit pieces with sizes that fit a grid of 100: SM_Kit_Wall (400 long, 20 thick and 400 high), SM_Kit_Corner (20 x 20 and 400 high) and SM_Kit_Floor (400 x 400 and 20 thick). Use Edit Pivot to set the pivot of each piece to a bottom back corner."
       - "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size and note how the Drag Grid dropdown in the viewport toolbar changes. Then turn it off again, because this kit is built on a grid of 100."
       - "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100 and the rotation to 90. Build a closed room from at least 12 pieces."
       - "Hold V while you drag one wall so that its pivot snaps to a vertex, a corner point, of the wall next to it. Look at the seam from close up."
@@ -3713,8 +3714,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-uv-channels-with-static-meshes-in-unreal-engine"
     checklist:
-      - "Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. Make a material named M_Trim from it, and also prepare a checkerboard material for testing."
-      - "Take a kit piece with a flat face and a trim edge, from quest EAQ98 or a new one. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard."
+      - "Open any project, or create one from the Third Person template. Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. For a first test, an image with three horizontal strips in different colors, made in any image editor, is enough. Make a material named M_Trim from it, and also prepare a checkerboard material for testing."
+      - "Take a kit piece with a flat face and a trim edge. If you have none, make a wall in Modeling Mode: a Box that is 400 long, 20 thick and 400 high. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard."
       - "Open UVs, then XFormUV. Scale and move each island so that the main face sits on the stone strip of T_Trim and the trim edge sits on the metal strip. Hold Shift to move several islands together."
       - "Open UVs, then Layout. Set Layout Type to Stack for islands that should share the same strip. Set Layout Type to Transform when you need to scale or move all UVs together."
       - "Assign M_Trim and check the mesh in the level. If an island looks stretched, fix it with Unwrap."
@@ -3776,7 +3777,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/color-management-with-opencolorio-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/apply-color-conversion-to-the-level-viewport-and-play-in-editor-with-opencolorio-in-unreal-engine"
     checklist:
-      - "Check that the OpenColorIO plugin is enabled. It is on by default in new projects."
+      - "Open any project, or create one from the Third Person template, and open any lit level. Check that the OpenColorIO plugin is enabled. It is on by default in new projects."
       - "In the Content Browser, right-click and choose Miscellaneous, then OpenColorIO Configuration. Name the asset OCIO_Scene."
       - "Open OCIO_Scene. Keep the Configuration File at ocio://default, which is the built-in ACES CG config."
       - "Under Desired Color Spaces, add only two entries: a linear sRGB source and an sRGB monitor display view."
@@ -3839,11 +3840,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "Place a Post Process Volume named PPV_Bloom with Infinite Extent enabled. Put one strong emissive object or light source in view."
+      - "Open any project, or create one from the Third Person template, and work in a dark place, such as a closed room built from cubes. Place a Post Process Volume named PPV_Bloom with Infinite Extent enabled. Put one strong emissive object or light source in view."
       - "Open Lens, then Bloom, and keep Method on Standard. Try Intensity at 0, 1 and 5. Then set a Threshold so that only your bright source glows."
       - "Switch Method to Convolution. Assign the default kernel texture, or your own, and compare the shape of the glow."
       - "Open the kernel texture. Check that Mip Gen Settings is set to No Mipmaps and that Never Stream is enabled."
-      - "Enable Dirt Mask Texture and assign a small dirt texture. The documentation recommends a size that is not a power of two, for example 960 x 540, because Unreal then makes no mipmaps for it and does not stream it. Set Dirt Mask Intensity so that the dirt only shows near the bright source."
+      - "Enable Dirt Mask Texture and assign a small dirt texture. You can make one in any image editor: a black image with a few soft gray smudges. The documentation recommends a size that is not a power of two, for example 960 x 540, because Unreal then makes no mipmaps for it and does not stream it. Set Dirt Mask Intensity so that the dirt only shows near the bright source."
       - "Switch back to Standard and use stat gpu to note the difference in frame time between the two methods."
     done_when: "Send three screenshots of the same view: Standard bloom, Convolution bloom, and Convolution with the Dirt Mask. Add one line with the two stat gpu numbers."
     xp: 60
@@ -3901,7 +3902,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/bloom-in-unreal-engine"
     checklist:
-      - "Use PPV_Bloom, or make a new Post Process Volume named PPV_Lens with Infinite Extent. Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the brightest light makes a flare."
+      - "Open any project, or create one from the Third Person template, and work in a level with at least one strong light in view. Make a Post Process Volume named PPV_Lens with Infinite Extent enabled, or use an unbound volume that you already have. Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the brightest light makes a flare."
       - "Change BokehSize and BokehShape. Then edit one Tint entry and change its Alpha, which moves that flare along the screen."
       - "Open Lens, then Chromatic Aberration. Set a small Intensity, and raise Start Offset so that the center of the image stays clean."
       - "Open Lens, then Image Effects. Set Vignette Intensity to a low value that darkens only the corners."
@@ -3963,7 +3964,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/post-process-effects-in-unreal-engine"
     checklist:
-      - "Place a Cine Camera Actor named CineCam_DOF and pilot it, so you look through it. Put your main prop about 4 to 7 m in front of it, with other objects behind it and in front of it."
+      - "Open any project, or create one from the Third Person template. Place a main prop, such as a mannequin or a cube, with other objects behind it and in front of it, and a small bright light in the background. Place a Cine Camera Actor named CineCam_DOF about 4 to 7 m from the main prop and pilot it, so you look through it."
       - "Set Focus Method to Manual and enable Draw Debug Focus Plane, which shows a colored plane at the focus distance. Change Manual Focus Distance until the plane sits on your main prop."
       - "Set Current Focal Length to 50 mm, then 75 mm, then 100 mm. Note how the field of view and the blur of the background change."
       - "Set Current Aperture to f/1.4, then f/2.8, then f/5.6, and compare the blur of the background."
@@ -4026,7 +4027,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/temporal-super-resolution-in-unreal-engine"
     checklist:
-      - "Add a prop that rotates or moves. A Blueprint named BP_Fan with a Rotating Movement component is enough. Also add a Post Process Volume named PPV_Motion with Infinite Extent."
+      - "Open any project, or create one from the Third Person template. Add a prop that rotates or moves. A Blueprint named BP_Fan with a Rotating Movement component is enough. Also add a Post Process Volume named PPV_Motion with Infinite Extent."
       - "Under Motion Blur, set Amount to 0 and take a screenshot while the prop moves. Then set Amount to 0.5 and compare."
       - "Set Max to a small value, for example 5, and then to a large value. Note how far the blur can reach across the screen."
       - "Set Target FPS to 30, then 60, then 0. Note which value gives the most blur."
@@ -4088,7 +4089,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/screen-percentage-with-temporal-upscale-in-unreal-engine"
     checklist:
-      - "Open your environment scene. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console."
+      - "Open any project, or create one from the Third Person template. Open a level with some thin geometry in view, such as a fence, wires or foliage. Cylinders that you scale into thin poles and wires work. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console."
       - "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each."
       - "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent."
       - "Open Show, then Visualize, and enable Temporal Upscaler I/O. This is the VisualizeTemporalUpscaler view. Take a screenshot of the view that shows the input and the output."
@@ -4150,7 +4151,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/using-lookup-tables-for-color-grading-in-unreal-engine"
     checklist:
-      - "Read the ACES Viewing Transform section of the documentation. Write the three steps LMT, RRT and ODT in your own words."
+      - "Open any project, or create one from the Third Person template. Read the ACES Viewing Transform section of the documentation page linked on this quest. Write the three steps LMT, RRT and ODT in your own words."
       - "In the console, set r.AllowHDR 1. Then set r.HDR.Display.OutputDevice 3 and r.HDR.Display.ColorGamut 2. Write down what each value means."
       - "Play in a new window and press Alt+Enter to switch to exclusive fullscreen. Set r.HDR.EnableHDROutput 1 and look at the result."
       - "If you have an HDR display, check that its HDR mode is on and note how the highlights changed. If you do not have one, describe what you saw and why the documentation page says it may not work."
@@ -4212,9 +4213,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/cinematic-depth-of-field-in-unreal-engine"
     checklist:
-      - "Create a Level Sequence named LS_Stills with a Cine Camera Actor in a Camera Cuts track. Keep Sequencer open."
+      - "Open any project, or create one from the Third Person template, and place a main prop to frame, such as a mannequin or a group of cubes. Create a Level Sequence named LS_Stills and click the Camera button in Sequencer, which adds a Cine Camera Actor with a Camera Cuts track. Keep Sequencer open."
       - "In the Perspective menu of the viewport, enable Cinematic Viewport."
-      - "Open Film Overlays and turn on Grid (3x3). Frame your main prop so it sits on one of the points where the lines cross."
+      - "Open Film Overlays and turn on Grid (3x3). Frame the main prop so it sits on one of the points where the lines cross."
       - "Turn on Action Safe and Title Safe. Change the Custom Safe percentage and give it a new color."
       - "Enable Letterbox Mask at 2.35:1. On the camera, enable Constrain Aspect Ratio so that the mask matches the filmback, which is the sensor size of the camera."
       - "Use the playback controls at the bottom of the viewport to move through the sequence. Read the camera and filmback information shown above them."
@@ -4276,10 +4277,10 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-framework-node-reference-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview"
     checklist:
-      - "Enable the Procedural Content Generation Framework plugin. Then create a PCG Graph named PCG_FenceProps."
-      - "In PCG_FenceProps, connect these nodes in a row: Get Spline Data, then Spline Sampler, then Transform Points with a small random yaw and scale, then Static Mesh Spawner. Give the spawner three Mesh Entries (a post, a barrel and a crate) with different Weights, so some appear more often than others."
+      - "Open a project made from the Third Person template, or create one, and work in a level with a floor or a Landscape. Enable the Procedural Content Generation Framework plugin. Then create a PCG Graph named PCG_FenceProps."
+      - "In PCG_FenceProps, connect these nodes in a row: Get Spline Data, then Spline Sampler, then Transform Points with a small random yaw and scale, then Static Mesh Spawner. Give the spawner three Mesh Entries, for example a post, a barrel and a crate, with different Weights, so some appear more often than others. Any three small meshes work, such as SM_Cylinder, SM_ChamferCube and SM_Cube from the folder LevelPrototyping/Meshes of the template."
       - "Open the Graph Settings. Under Tool Data, set Display Name to Fence Props, add SplineTool to Compatible Tool Tags, and enable Is Preset."
-      - "Switch to PCG mode from the Modes dropdown. With nothing selected, choose the Draw Spline tool and pick your Fence Props preset. Draw an open spline along a path in your level and click Apply."
+      - "Switch to PCG mode from the Modes dropdown. With nothing selected, choose the Draw Spline tool and pick your Fence Props preset. Draw an open spline along a path in the level and click Apply."
       - "Duplicate the graph and name the copy PCG_Rubble. Remove the spline nodes, keep the spawner, and set Compatible Tool Tags to PaintTool. In PCG mode, use the Paint tool to paint rubble on the ground. Hold Shift to remove points that land on the path."
       - "In the Raycast Rules, enable Ignore PCG Components. This stops you from painting on top of the props you already spawned."
     done_when: "Send one screenshot of the level that shows the props placed along the spline and the painted rubble. Also send one screenshot of PCG_FenceProps with its Tool Data settings visible."
@@ -4338,12 +4339,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/foliage-mode-in-unreal-engine"
     checklist:
-      - "Open Editor Preferences, then Experimental, and enable Procedural Foliage. Create a Procedural Foliage Spawner named PFS_Forest and scale it over a flat area of a landscape."
-      - "Create two Static Mesh Foliage assets named SMF_TreeBig and SMF_TreeSmall. Add both to the Foliage Types of PFS_Forest and press Resimulate."
+      - "Open a project made from the Third Person template, or create one. Open a level with a Landscape, or create a new level and make a Landscape in Landscape Mode. Open Editor Preferences, then Experimental, and enable Procedural Foliage. Create a Procedural Foliage Spawner named PFS_Forest and scale it over a flat area of the landscape."
+      - "Create two Static Mesh Foliage assets named SMF_TreeBig and SMF_TreeSmall and give each one a mesh. If you have no tree meshes, SM_Cylinder can stand in for the big tree and SM_ChamferCube for the small one. Both are in the folder LevelPrototyping/Meshes of the template. Add both to the Foliage Types of PFS_Forest and press Resimulate."
       - "In SMF_TreeBig, set Shade Radius to 50 and Overlap Priority to 2. In SMF_TreeSmall, set Overlap Priority to 1 and enable Can Grow in Shade and Spawns in Shade. Press Resimulate and look at how the small trees fill the space around the big ones."
       - "Change Num Steps to 0 on SMF_TreeBig and press Resimulate. Then set it back to 3. Lower Initial Seed Density until the edge of the forest looks natural."
       - "In the Instance Settings of both types, set Cull Distance Max to 20000."
-      - "Place a Procedural Foliage Blocking Volume over your path or over the place where a building stands, and press Resimulate. No trees should appear inside the volume."
+      - "Place a Procedural Foliage Blocking Volume over an area that should stay free, such as a path or the place where a building would stand, and press Resimulate. No trees should appear inside the volume."
     done_when: "Send two screenshots, one of the forest before the blocking volume and one after it. Also send one screenshot of the Procedural settings of SMF_TreeSmall (Collision, Clustering and Growth)."
     xp: 60
     verify_type: screenshot
@@ -4400,11 +4401,11 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/geometry-scripting-through-blueprints-in-unreal-engine"
     checklist:
-      - "Open Edit > Plugins, search for geometry script, and enable the Geometry Script plugin. Restart the editor."
+      - "Open any project, or create one from the Third Person template. Open Edit > Plugins, search for geometry script, and enable the Geometry Script plugin. Restart the editor."
       - "Create a Blueprint with the parent class GeneratedDynamicMeshActor and name it BP_GS_RockScatter. Add three public variables: Count (Integer, default 30), Radius (Float, default 800) and Seed (Integer). Make all three Instance Editable, so you can change them in the Details panel."
       - "In the Event Graph, add the event named Event On Rebuild Generated Mesh. Promote its Target Mesh pin to a variable named DynamicMesh."
       - "Make a Random Stream from Seed and add a loop that runs Count times. In each step of the loop, build a Transform with a random position inside Radius, a random yaw and a random scale. Then use Append Box (or Append Sphere) to add a shape to DynamicMesh at that transform."
-      - "Place BP_GS_RockScatter in your level. Change Count, Radius and Seed in the Details panel and watch the scatter rebuild."
+      - "Place BP_GS_RockScatter in any level. Change Count, Radius and Seed in the Details panel and watch the scatter rebuild."
       - "Write two lines in your notes: why the same Target Mesh pin goes in and out of every node, and why you should not use this actor for 5000 instanced rocks."
     done_when: "Send one screenshot of the level with the scattered rocks and one screenshot of the Event Graph. Add your two lines of notes to the message."
     xp: 60
@@ -4463,9 +4464,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/instanced-static-mesh-component-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/modeling-mode-in-unreal-engine"
     checklist:
-      - "Open Modeling Mode with Shift+5. Select one fence post mesh and open XForm, then Pattern. Use the Line shape to make a row of 12 posts. Set the output type to Instanced Static Mesh and accept."
-      - "Select a floor tile and use Pattern with the Grid shape to make a floor of 6x6 tiles. Add a small rotation jitter, a little random rotation, so the tiles do not all look the same."
-      - "Select a torch or column mesh and use Pattern with the Circle shape to place 8 copies around a center. This time, output them as single actors."
+      - "Open any project, or create one from the Third Person template, and work in any level with a floor. Open Modeling Mode with Shift+5. Make three simple meshes with the Box and Cylinder tools: a thin tall fence post, a flat floor tile and a column. Select the fence post and open XForm, then Pattern. Use the Line shape to make a row of 12 posts. Set the output type to Instanced Static Mesh and accept."
+      - "Select the floor tile and use Pattern with the Grid shape to make a floor of 6x6 tiles. Add a small rotation jitter, a little random rotation, so the tiles do not all look the same."
+      - "Select the column mesh and use Pattern with the Circle shape to place 8 copies around a center. This time, output them as single actors."
       - "Select the 8 single actors and run XForm, then Harvest Instances. This turns them into one ISM actor, which is one actor that holds all the instances."
       - "Open XForm, then ISMEd, on the fence row. Delete two instances and move one. Then replace one instance with a different mesh and look at the list of components."
       - "Compare the Outliner before and after. Count the actors in the fence row and in the circle after you harvested it."
@@ -4525,9 +4526,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-partition---data-layers-in-unreal-engine"
     checklist:
-      - "In a World Partition level, open the Content Drawer and create two HLOD Layer assets (choose Miscellaneous, then HLOD Layer). Name one HLOD_Buildings and set its Layer Type to Merged Mesh. Name the other HLOD_Trees and set its Layer Type to Instancing."
+      - "Open a project made from the Third Person template, or create one. Open a World Partition level, or create one with File, New Level, Open World. Place about ten large cubes as buildings and about twenty trees far from the Player Start. Cones from the Place Actors panel can stand in for trees. Open the Content Drawer and create two HLOD Layer assets (choose Miscellaneous, then HLOD Layer). Name one HLOD_Buildings and set its Layer Type to Merged Mesh. Name the other HLOD_Trees and set its Layer Type to Instancing."
       - "On HLOD_Buildings, enable Generate Nanite Enabled Mesh and turn Merge Materials on. On HLOD_Trees, leave the Instancing settings at their defaults."
-      - "Select your building meshes and set their Mobility to Static. In the Details panel, set the HLOD property to HLOD_Buildings. Do the same for the tree actors, with HLOD_Trees."
+      - "Select the building meshes and set their Mobility to Static. In the Details panel, set the HLOD property to HLOD_Buildings. Do the same for the tree actors, with HLOD_Trees."
       - "In World Settings, set Default HLOD Layer to HLOD_Buildings, so that new static actors get a layer by default."
       - "Run Build > Build HLODs. Then move the camera far away, or unload cells, and compare the view with HLODs on and off."
       - "Open one of the generated HLOD actors and note its Cell Size and Loading Range. Write one line on why the trees used Instancing and the buildings used Merged Mesh."
@@ -4587,7 +4588,7 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/level-instancing-in-unreal-engine"
     checklist:
-      - "Place 100 copies of one book mesh or brick mesh as separate Static Mesh Actors. In the console, type stat unit and stat rhi, and note the number of draw calls."
+      - "Open any project, or create one from the Third Person template. Place 100 copies of one small mesh, such as a book or a brick, as separate Static Mesh Actors. A cube scaled to the size of a brick works. In the console, type stat unit and stat rhi, and note the number of draw calls."
       - "Select all 100 actors. Open Actor, then Merge Actors, then Merge Actor Settings. Choose the Batch method and click Merge Actors. Note the draw calls again."
       - "Open the Details panel of the new actor. Click one instance and confirm that you can only edit its transform. Then change the material on the component and see all instances update."
       - "Create a Blueprint named BP_Shelf with an Instanced Static Mesh component. Set its Static Mesh, and add 10 instances with the + button in the Instances category."
@@ -4649,10 +4650,10 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/actor-editor-context-in-unreal-engine"
     checklist:
-      - "In a World Partition level, open the Content Browser and create three Data Layer assets (choose Miscellaneous, then Data Layer). Name them DL_Dressing_Base with the Editor type, DL_Dressing_Winter with the Runtime type, and DL_Dressing_Summer with the Runtime type."
+      - "Open a project made from the Third Person template, or create one. Open a World Partition level, or create one with File, New Level, Open World. Open the Content Browser and create three Data Layer assets (choose Miscellaneous, then Data Layer). Name them DL_Dressing_Base with the Editor type, DL_Dressing_Winter with the Runtime type, and DL_Dressing_Summer with the Runtime type."
       - "Open Window > World Partition > Data Layer Outliner. Drag each asset into it to create a Data Layer Instance."
-      - "Right-click DL_Dressing_Base in the outliner and choose Make Current Data Layer. Place your permanent props and confirm that they are assigned to the layer automatically. Then choose Clear Current Data Layers."
-      - "Decorate one area twice. Assign snow piles and bare trees to DL_Dressing_Winter, and assign flowers and leafy trees to DL_Dressing_Summer. Use Add Selected Actors to Selected Data Layer to assign them."
+      - "Right-click DL_Dressing_Base in the outliner and choose Make Current Data Layer. Place a few permanent props, such as cubes for walls and rocks, and confirm that they are assigned to the layer automatically. Then choose Clear Current Data Layers."
+      - "Decorate one area twice. Assign snow piles and bare trees to DL_Dressing_Winter, and assign flowers and leafy trees to DL_Dressing_Summer. Simple stand-ins are fine: white spheres and gray cones for winter, small colored spheres and green cones for summer. Use Add Selected Actors to Selected Data Layer to assign them."
       - "Set Initial Runtime State so that Summer is Activated and Winter is Unloaded. Use the visibility checkbox and the Loaded In Editor checkbox to look at each version."
       - "In the Level Blueprint, add a key press event. Use the Data Layer Subsystem to set Winter to Activated and Summer to Unloaded. Test it while playing in the editor."
     done_when: "Send two screenshots of the same area, one in its Winter version and one in its Summer version. Also send a screenshot of the Data Layer Outliner that shows all three layers and their types."
@@ -4711,12 +4712,12 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     checklist:
-      - "Set three world bookmarks (1, 2 and 3) on views of your decorated area. Bookmarks let you return to the same view, so every capture can be repeated."
+      - "Open any project, or create one from the Third Person template. Open a level with a decorated area: a scene of your own, or the level of the template with a few props added. Set three world bookmarks (1, 2 and 3) on views of this area. Bookmarks let you return to the same view, so every capture can be repeated."
       - "Open Viewport Options, then High Resolution Screenshot. Set the Screenshot Size Multiplier to 2 and capture bookmark 1. Find the file in the folder Saved/Screenshots/Windows."
       - "Press Specify Region and drag a region around one group of props. Capture again, and then clear the region."
-      - "Enable Include Buffer Visualization Targets and capture bookmark 2. Open the BaseColor image and the Roughness image, and check that your props are still easy to read without lighting."
+      - "Enable Include Buffer Visualization Targets and capture bookmark 2. Open the BaseColor image and the Roughness image, and check that the props are still easy to read without lighting."
       - "Select one main prop and enable Render CustomDepth Pass in its Details panel. In the screenshot tool, enable Use custom depth as mask, and capture a cutout of the prop."
-      - "Play in the editor, open the console and run HighResShot 2 for bookmark 3. Name the files Review_<area>_<bookmark> and post them together."
+      - "Play in the editor, open the console and run HighResShot 2 for bookmark 3. Name the files Review_<area>_<bookmark> and send them together."
     done_when: "Send three review captures of the same bookmarks, the BaseColor buffer image, and the custom depth cutout. All files must be named as the checklist says."
     xp: 55
     verify_type: screenshot

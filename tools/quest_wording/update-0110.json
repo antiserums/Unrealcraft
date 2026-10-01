@@ -1,0 +1,131 @@
+{
+ "AQ49": {
+  "brief": "Animation Mode has small tools that save a lot of manual work. Tweens create an in-between key, a key placed between two other keys, with one slider. The Snapper makes one object follow another for a range of frames, for example a hand that holds a ball. Motion Trails draw the path of a control in the viewport so you can see and edit the movement. In this quest you try each of these tools, and also the Pivot tool, on a sequence with a Control Rig.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Switch to Animation Mode. Set a key on a hand control at frame 0 and at frame 40, with a clear difference between the two poses. Put the playhead at frame 20.",
+   "Open Tweens from the Animation panel. Set the mode to Tween (TW), drag the slider to -0.5 and look at the new in-between key. Undo, switch to Push Pull (PP) and try the value 1.",
+   "Place a static mesh in the level, for example a sphere from the Place Actors panel that you name SM_Ball, and add it to the sequence. Open Snapper. Select the hand control and click Children, then select SM_Ball and click Parent.",
+   "Set the snap range to frames 10 to 30. Enable Keep Offset and Snap Position, and then click Snap Animation. Move the playhead through the range and confirm that keys were baked (created on every frame) on the hand.",
+   "Open Trails. Enable Show Trails and Show Keys for the hand control. Drag one key along the curve in the viewport. Turn on Show Marks and read where the motion is fast: the marks are far apart there.",
+   "Use the Pivot tool: click Edit, move the pivot to the area of the elbow, click Pose, and rotate the hand around that point."
+  ]
+ },
+ "AQ50": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and drag SKM_Manny or SKM_Quinn into the level as a Skeletal Mesh Actor. Create a Level Sequence named LS_ClipBlend and add the mannequin Skeletal Mesh Actor to it. On its Animation track, add a walk clip at frame 0 and a run clip, placed so that the two sections overlap by about 15 frames.",
+   "Drag the blend handle on the overlap. Right-click the blend curve and change the shape of the curve under Options. Play the sequence and watch the blend.",
+   "Expand the Animation track. Set keys on the Weight of the run section so that it goes from 0 to 1 across the overlap.",
+   "Hold Ctrl on the right edge of the walk clip and drag to change its Play Rate. Then right-click the clip and use Edit, then Auto Size, to restore its length. Split a clip in two with Ctrl+/.",
+   "Put the playhead at the start of the run clip. Right-click the run clip, choose Match With This Bone In Previous Clip, and pick a foot bone or the pelvis bone. Then enable Show Root Motion Trail on the track.",
+   "Right-click a section, open Properties, and set When Finished to Keep State. Check what is different when the sequence ends."
+  ]
+ },
+ "AQ51": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place a static mesh prop in the level, for example a cube, and name the actor SM_Crate. Create a Level Sequence named LS_KeyDrill and add the crate to it. With the actor selected, press S to create a Transform track and a full key. Move the playhead to other frames and use Shift+W to key the location only and Shift+E to key the rotation only.",
+   "Enable Auto Key. Open Keyframe Options and choose Key Changed. Move the crate on the X axis only, and check which channels received keys. Then switch to Key Group and compare.",
+   "Select all keys by dragging a selection box (a marquee) around them. Press 4 to make them Linear, and then 1 to make them Cubic (Auto). Hold Alt and drag a key to duplicate it. Use Ctrl+] to select all keys to the right of the playhead.",
+   "Turn on Layer Bars and Key Bars in View Options. Scale the whole animation by dragging the edge of the Layer Bar, and change the timing of one pair of keys with a Key Bar.",
+   "Open the Curve Editor and select the Location Z curve. Enable Weighted Tangents on one key and stretch a tangent. Buffer the curve, which stores a copy of it, then change the curve, and then apply the buffered curve back.",
+   "On a curve with many keys, open the Filter Tool and use Simplify. Note how many keys were removed."
+  ]
+ },
+ "AQ52": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track, in Animation Mode. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Place a small prop in the level, for example a cylinder that you name SM_Cup, and add it to the sequence.",
+   "Select the IK control of the hand, click Add Constraint (+), choose Parent, and pick SM_Cup with the eyedropper. Move the playhead and confirm that the hand follows the cup. Look at the Constraints section, and at the compensating keys that were created in Sequencer to keep the hand in place.",
+   "Move the cup after the constraint exists, so that the hand jumps suddenly. Put the playhead on the constraint key, right-click the constraint and choose Compensate Key. Confirm that the jump is gone.",
+   "Add a LookAt constraint from the head control to the cup. Edit the Axis in the context menu of the constraint so that the face points at the cup correctly.",
+   "Select the control of the other hand. With the Spaces section open, press Tab in the viewport and switch the control to World at frame 20. Move the body control and confirm that this hand stays in place.",
+   "Click Bake... in Spaces and bake the hand back to Parent with Reduce Keys turned on. Then right-click the parent constraint and choose Bake for it as well."
+  ]
+ },
+ "AQ53": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Level Sequence in which a mannequin Skeletal Mesh Actor plays a walk animation on its Animation track. To make one, drag SKM_Manny into the level, create a Level Sequence named LS_ClipBlend, add the actor, and add a walk clip. On the character track, click Add (+) Track, then Control Rig, then FK Control Rig.",
+   "Right-click the FK Control Rig track and enable Additive. Select the head bone in the viewport and set a key at frame 0, then a key with a small head tilt at frame 20, and a key back at the first pose at frame 40. Play the sequence: the tilt is added on top of the walk.",
+   "Right-click the FK track and use Select Bones Or Curves To Animate. Hide every bone except the spine, the neck, the head and the arms.",
+   "Duplicate the character in a second sequence named LS_BakeFix. Right-click the Skeletal Mesh track and choose Edit With FK Control Rig. Enable Reduce Keys with a small Tolerance, and click Create.",
+   "Fix one bad frame on the baked FK rig, for example an elbow that jumps. Then right-click the Skeletal Mesh track and choose Bake Animation Sequence. Save the result as AS_Walk_Fixed.",
+   "Now try a layered track. Drag the Control Rig asset CR_Mannequin_Body into the level, which opens a new sequence with a Control Rig track, and set two or three keys on a control. Right-click the Control Rig track and choose Convert To Layered. Check that your keys are now applied on top of an animation clip."
+  ]
+ },
+ "AQ54": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a Level Sequence in which a prop has keys on its Transform track. To make one, place a cube named SM_Crate, create a Level Sequence named LS_KeyDrill, add the cube, and set three keys with the S key at different frames and positions. It must be a source Level Sequence, not a shot inside a master sequence. Select the crate actor and use Actions, then Export... Read every option in the FBX Export Options window, and then export with the default settings.",
+   "Export again with nothing selected. This time the whole sequence is exported. Compare the sizes of the two files.",
+   "Open the FBX file in any DCC or FBX viewer you have. Blender is free and works well. Set the time rate of the DCC to match the frame rate of the sequence. Move the keys of the crate, and then export the FBX with Z as the up axis.",
+   "Back in Sequencer, right-click the crate track and choose Import. Look at the options Force Front XAxis and Create Cameras in the Import FBX window, and then import. Confirm that the keys changed.",
+   "Also try the import from the Actions menu with nothing selected. Note how Unreal matches objects by their names.",
+   "For a sequence with a character, for example one where you dragged SKM_Manny into the level and gave it an animation clip, right-click the Skeletal Mesh track and use Bake Animation Sequence to make an asset named AS_Export_Test. Open it in the Animation Sequence editor."
+  ]
+ },
+ "AQ55": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Right-click the mannequin skeletal mesh, for example SKM_Manny, and choose Create, then Control Rig. Rename the new asset CR_Manny_FKArm.",
+   "In the Rig Hierarchy, select the bones upperarm_l, lowerarm_l and hand_l. Right-click and choose New, then Add Controls For Selected.",
+   "Select the bones of the right arm, hold Alt and use the same command again. Holding Alt opens a dialog. In it, set Output Format to Hierarchy and Suffix to _ctrl.",
+   "Create a Null named arms_grp. Drag the top control of each arm onto it, so that both become its children.",
+   "Select hand_l_ctrl. In the Details panel, set Value Type to Rotator, so that this control can only rotate.",
+   "Select upperarm_l_ctrl. Under Transform, click Min and Max, enable the Z rotation channel, and set the limits to -50 and 50. Enable Draw Limits to see them in the viewport.",
+   "In the graph, add a Set Transform node for each bone and connect a Get Transform node of its control to it. Connect all of them in a chain that starts at Forwards Solve. Move a control in the viewport to test the rig."
+  ]
+ },
+ "AQ56": {
+  "brief": "Each control in a Control Rig has a shape and a color that the animator sees in the viewport. Clear shapes and a color rule, such as blue for the left side and red for the right side, make a rig easy to read for anyone who uses it. The shapes come from a shape library, an asset that lists the available shapes. In this quest you give the controls of a rig shapes and colors, and add your own arrow shape to a copy of the library.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Control Rig that has at least four controls, with some on the left and some on the right side of the body. If you have none, make one: right-click SKM_Manny, choose Create, then Control Rig, select the upper arm and hand bones of both arms in the Rig Hierarchy, right-click and choose New, then Add Controls For Selected.",
+   "Select each control in turn. In the Details panel, under Control Shape, pick a different Shape. Set the controls of the left side to blue and the controls of the right side to red.",
+   "In the Settings of the Content Browser, enable Show Engine Content and Show Plugin Content. Find the shape library in this folder: Engine, then Plugins, then Control Rig Content, then Controls.",
+   "Do not edit the library that comes with the engine. Duplicate it into your project, name the copy CRSL_Project, and open it.",
+   "Make a simple static mesh for your shape, such as a flat arrow or a ring. In Modeling Mode, the Arrow shape tool creates one for you: accept the tool and rename the new Static Mesh asset SM_CtrlArrow. You can also import an .fbx file of your own. If you do, turn off the import of materials and textures in the import window, because a control shape does not need them.",
+   "In CRSL_Project, add an element to the Shapes array (the documentation page still uses the old name, Gizmos). Set Shape Name to Arrow, set Static Mesh to SM_CtrlArrow, and set a Transform that fits the size of the mannequin.",
+   "In your Control Rig, open Class Settings and add CRSL_Project under Shape Libraries (the documentation page calls this property Gizmo Library). Then set the Shape of one control to Arrow."
+  ]
+ },
+ "AQ57": {
+  "brief": "Normally a Control Rig works forwards: you move the controls and the bones follow. This is called Forwards Solve. Backwards Solve is the opposite direction, where the bones of an existing animation move the controls. With it you can bake an animation onto a rig, which means the animation is copied to keys on the controls, and then you can edit the motion inside Unreal. In this quest you add a Backwards Solve to a rig, bake a walk animation onto it in Sequencer, and change one key.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Control Rig that drives the arms and the head of the mannequin with FK controls. If you have none, make one: right-click SKM_Manny, choose Create, then Control Rig, and name it CR_Manny_FK. In the Rig Hierarchy, select the upper arm, lower arm and hand bones of both arms and the head bone, right-click and choose New, then Add Controls For Selected. In the graph, add a Set Transform node for each bone, connect a Get Transform node of its control to it, and connect them in a chain that starts at Forwards Solve.",
+   "Right-click the graph, open Events and add Backwards Solve. For each control, connect a Get Transform node of its bone to a Set Transform node of the control.",
+   "In the toolbar, switch Solve Direction to Backwards Solve. In Preview Scene Settings, set Preview Controller to Use Specified Animation and pick a walk animation.",
+   "Confirm that the border of the viewport is yellow and that the controls follow the animation. Then try the option Backwards and Forwards, and note the blue border.",
+   "Create a Level Sequence named LS_BakeTest. Drag SKM_Manny into the level, add this actor to the sequence, and add the same walk animation to its Animation track.",
+   "Right-click the character track, choose Bake To Control Rig, and pick your rig. Enable Reduce Keys with a Tolerance of 0.1, and click Create.",
+   "Move one baked key on an arm control to change the walk. Move the playhead through the sequence to see the change."
+  ]
+ },
+ "AQ58": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, click Add, then Animation, then Control Rig. Choose ControlRig and name the asset CR_FunctionLibrary. Do not assign a skeletal mesh to it.",
+   "In the My Blueprint panel, add a function named SetControlsVisible. In the Details panel, set its Access Specifier to Public so that other rigs can use it.",
+   "Select the Entry node of the function and add two inputs. The first is named Items, with the type Rig Element Key, set as an Array. The second is named Visible, with the type Boolean, set as Single.",
+   "Inside the function, add a For Each node and a Set Control Visibility node. Connect them between the Entry node and the Return node.",
+   "In Node Settings, set Category to Team, add the Keywords 'hide show', and write a Description. Also give the node a color.",
+   "Open a character rig that has hand controls. If you have none, make one: right-click SKM_Manny, choose Create, then Control Rig, select the two hand bones in the Rig Hierarchy, right-click and choose New, then Add Controls For Selected. Right-click the graph, open the Team category and choose SetControlsVisible. Connect it to Forwards Solve and give it an array of hand controls.",
+   "Right-click the shared node and choose Localize Function, which makes a local copy inside this rig. Compare the local copy with the shared version."
+  ]
+ },
+ "AQ59": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Use a skeletal mesh that has a long chain of bones, such as a tail, a tentacle, or a spine with at least six bones. The mannequin works: its chain from spine_01 up to the head has enough bones. Create a Control Rig named CR_Tail for it.",
+   "Create four controls, placed at even distances along the chain. Name them tail_ctrl_01 to tail_ctrl_04.",
+   "Add a Spline From Points node and give it four points. Connect the Translation of each control to one point, in order from the root of the chain to the tip.",
+   "Add a Draw Spline node, connect it to Forwards Solve, and connect the Spline pin. Move the controls to check that the curve follows them.",
+   "Select all the bones of the chain together, from the root to the tip. Drag them into the graph and choose Create Item Array.",
+   "Add a Fit Chain on Spline Curve node. Connect Items, the Spline and the execution line. Set Primary Axis to the direction in which the chain points.",
+   "Switch Spline Mode between Hermite and BSpline and compare the curves. Then set Alignment to Stretched and after that to Front, and compare what happens when you pull a control far away."
+  ]
+ },
+ "AQ60": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Control Rig named CR_Crane for a simple skeletal prop, such as a crane arm or a lamp. Use the mannequin if you have no prop, and treat one arm as the crane arm. Add a control named Tip_ctrl that drives the last bone of the chain, for example a hand bone.",
+   "Create an Actor Blueprint named BP_Crane. Add a Skeletal Mesh Component to it that uses the prop mesh.",
+   "Add a Control Rig Component, which you find in the Animation category. Set its Control Rig Class to CR_Crane, and turn off Draw Bones.",
+   "In the Details panel, click Add next to On Pre Initialize. In the event that is created, call Add Mapped Skeletal Mesh and give it your Skeletal Mesh Component. This connects the rig to the mesh.",
+   "Add a Static Mesh Component named Hook. In Mapped Elements, add an entry with these values: Component Name Hook, Element Type Control, Element Name Tip_ctrl, Direction Output.",
+   "Enable Update in Editor. Move Tip_ctrl, either with Set Control Transform from the component in the Event Graph or with a Timeline, and confirm that Hook follows it.",
+   "Turn on the option Enable Lazy Evaluation, and note the Position Threshold value that is shown."
+  ]
+ }
+}

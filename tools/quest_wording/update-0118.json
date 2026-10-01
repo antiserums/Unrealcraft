@@ -1,0 +1,130 @@
+{
+ "CQ66": {
+  "done_when": "Send a screenshot of SEQ_Lights that shows PL_Lamp with Intensity and Light Color keys and SL_Sign with a Perlin noise Intensity channel. Also send a short video clip (30 seconds or less), or two frames, that show the flicker, and your two lines.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Work in a dark room: build a closed room from cubes in a new level, or use a dark place in a level of your own. Place a Point Light named PL_Lamp and a Spot Light named SL_Sign in it, and add an Exponential Height Fog from the Place Actors panel if the level has none. Create a Level Sequence named SEQ_Lights and add both lights with Add Track (+), then Actor To Sequencer.",
+   "Make a fade. Select the Intensity track of PL_Lamp and press Enter at frame 0. Move the playhead to the end and type a new intensity value in the track, which makes the second key.",
+   "Animate the color. Select the Light Color track and press Enter. Double-click the key and pick a warm color. Add a second color key later in the shot and pick a cold color.",
+   "Make a flicker. On SL_Sign, right-click the Intensity track and choose Override with Double Perlin Noise. Right-click again, open Double Perlin Noise Parameters, and set Frequency and Amplitude until it looks like a broken neon sign.",
+   "The noise moves up and down around 0. Add a base section with a fixed intensity and put the noise on an additive section, so that the light never goes fully dark.",
+   "Enable Volumetric Fog on the Exponential Height Fog. Play the flicker and look for trails of light in the fog. Then set Volumetric Scattering Intensity of SL_Sign to 0 and compare.",
+   "Write two lines that say which light you keyed by hand, which one uses noise, and why."
+  ]
+ },
+ "CQ67": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level that has an Exponential Height Fog, or add one from the Place Actors panel. Place a subject, such as a mannequin or a cube, and a Point Light near it as a lamp. Place two Local Fog Volumes from the Place Actors panel, or from Create, then Visual Effects. Name them LFV_Ground and LFV_Beam. Put LFV_Ground low behind the subject and LFV_Beam near the lamp. Only scale them equally on all axes.",
+   "On LFV_Ground, set a small Radial Fog Density and a larger Height Fog Density. Adjust Height Fog Falloff and Height Fog Offset until the fog sits on the floor.",
+   "On LFV_Beam, set Fog Albedo to a warm color and add a small Fog Emissive. Compare Scattering Distribution 0 and 0.8 while you look toward the lamp and away from it.",
+   "Make the two volumes overlap. Set Fog Sort Priority so that LFV_Ground is drawn behind LFV_Beam. Take a frame.",
+   "Enable Volumetric Fog on the Exponential Height Fog. Note what happens to the sorting. On the lamp, set Volumetric Scattering Intensity to 2 and turn on Cast Volumetric Shadow. Take a second frame.",
+   "Run the console command profilegpu once with the volumetric shadow on and once with it off. Write the two costs in a text note.",
+   "Add both fog volumes to a Level Sequence. Key the Radial Fog Density of LFV_Beam from 0 to its full value during the shot."
+  ]
+ },
+ "CQ68": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place two subjects in a level, such as two mannequins or two cubes. Place a Cine Camera Actor named CC_Focus so that one subject is near, at about 3 m, and one is far, at about 10 m. Pilot the camera from the Perspective menu of the viewport.",
+   "In Lens Settings, set Min FStop to 1.4, Max FStop to 8.0 and Diaphragm Blade Count to 5. Set Current Focal Length to 75 mm. Try Current Aperture 1.4, 2.8 and 5.6, and take a frame of each.",
+   "Set Focus Method to Manual and enable Draw Debug Focus Plane. Move Manual Focus Distance from the near subject to the far one. Turn the debug plane off before you take the final frames.",
+   "In the viewport, open Show > Visualize > Depth of Field Layers. Find the green, black and blue areas in your shot.",
+   "Add CC_Focus to a Level Sequence. Key Manual Focus Distance so that the focus moves from near to far over 2 seconds. Enable Smooth Focus Changes and test two values of Focus Smoothing Interp Speed.",
+   "Switch Focus Method to Tracking and pick the far subject as the tracked actor. Move the actor and watch the focus follow it.",
+   "Write three lines that give the f-stop you chose for the final rack focus and say why the bokeh (the shape of blurred bright spots) looked like a polygon at one setting."
+  ]
+ },
+ "CQ69": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a dark shot: a closed room made from cubes, with a bright emissive sign or a strong lamp in it. Place a Post Process Volume named PPV_Shot and turn on Infinite Extent (Unbound). On PPV_Shot, open Lens, then Bloom. Compare Intensity 0, 1 and 5 with the Standard method, and take frames.",
+   "Set Threshold to -1 and look at the whole image. Then raise Threshold until only the sign blooms. Note both values.",
+   "Switch Method to Convolution. You need a kernel texture, the image that gives the bloom its shape. Use the default bloom kernel from the engine content (turn on Show Engine Content in the settings of the Content Browser to find it), or import an .exr file with a bright center and name it T_BloomKernel. If you import your own, open it in the Texture Editor, set Mip Gen Settings to NoMipmaps and turn on Never Stream.",
+   "Assign the kernel as Convolution Kernel. Try Convolution Scale 1.0 and 0.5 and note the change.",
+   "Make a smudge texture in any image editor: a black image with a few soft gray smudges, with a size that is not a power of two, for example 1920 x 1080. Import it as T_DirtMask. Enable Dirt Mask Texture and assign it. Adjust Dirt Mask Intensity and Dirt Mask Tint so that the smudge only shows near the sign.",
+   "Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the sign makes a flare. Change one Tints entry, where RGB is the color and Alpha is the position.",
+   "Add Chromatic Aberration Intensity and Vignette Intensity as the final touch. Run profilegpu once with Convolution on and once with Standard, and write three lines about what each lens effect cost you."
+  ]
+ },
+ "CQ70": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and check that OpenColorIO is enabled. Open Edit > Project Settings > Rendering > Working Color Space and write down the current value. Leave it at the default.",
+   "In the Content Browser, right-click and choose Miscellaneous, then OpenColorIO Configuration. Name it OCIO_Shot. Open it and keep Configuration File at ocio://default.",
+   "Under Desired Color Spaces, click Add (+) and pick a linear working space and a display view, for example an sRGB monitor output. Add only what you need. Save the asset.",
+   "In the level viewport, click View Mode and choose OCIO Display. Select OCIO_Shot, set the source and the destination, and click Enable Display. Take one frame with it on and one with it off.",
+   "You need a short shot: any Level Sequence with a camera works, and you can make one with Add Level Sequence in the Cinematics dropdown and the Camera button in Sequencer. Add it to Movie Render Queue as a job. Add the Color Output setting, assign OCIO_Shot and the same source and destination. Render 10 frames of the shot as EXR.",
+   "Render the same 10 frames again with Color Output removed. Open one frame from each render side by side.",
+   "Write three lines that say what changed between the two renders, and where the documentation says the viewport inserts the OCIO conversion."
+  ]
+ },
+ "CQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Import 3 short footstep .wav files, or use 3 short Sound Waves from the Audio folder of the Starter Content. Create a Sound Cue named SC_Footsteps with Add, then Sounds, then Sound Cue.",
+   "In the Sound Cue Editor, add a Random node. Click Add input until it has 3 pins and connect one Wave Player to each pin. Enable Randomize Without Replacement, which plays all sounds once before any sound repeats.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9 and Pitch Max to 1.1. Keep Volume Min and Volume Max at the same value.",
+   "Create a Sound Attenuation asset named SA_Footsteps, which controls how the sound gets quieter with distance. Set Attenuation Function to Logarithmic, Shape to Sphere, Inner Radius to 200 and Falloff Distance to 1500. Add an Attenuation node before the Output node and set it to SA_Footsteps.",
+   "Press Play Cue several times. Watch the wires turn red and check that a different footstep plays each time.",
+   "Open a Level Sequence with a character, or make one: drag SKM_Manny into the level, create a Level Sequence, add the actor, and click the Camera button to add a camera. Under the character track, add SC_Footsteps to an Audio Track, so that the sound is attached to the character. Drag the playhead through the sequence and listen while the camera moves away."
+  ]
+ },
+ "CQ73": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. Install FFmpeg on your PC. Note the full path to the file ffmpeg.exe.",
+   "Open Edit > Project Settings > Plugins > Movie Pipeline CLI Encoder. Set Executable Path to your ffmpeg.exe.",
+   "In the Output Log, run MovieRenderPipeline.DumpCLIEncoderCodecs and find the codec names. A codec is the method used to compress video or audio. Set Video Codec to libvpx-vp9, Audio Codec to libvorbis, and Output File Extension to mkv. This is the example from the documentation page.",
+   "Set Encode Settings High to -crf 20 -b:v 0. Leave the Command Line Format and the input formats at their defaults.",
+   "Open Movie Render Queue and add a Level Sequence as a job. Any sequence with a camera works, and it is best if it also has an Audio Track with a sound. In Settings, add .jpg Sequence [8bit], WAV Audio and Command Line Encoder. Set Quality to High. Leave Delete Source Files off.",
+   "Click Render (Local). Open the .mkv file and check that the picture and the audio play together.",
+   "Extra: set File Name Format Override on the encoder to {sequence_name}_master, so that one movie is made even when the shots go to separate folders. Render again with Delete Source Files on."
+  ]
+ },
+ "CQ74": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and enable Subtitles and Closed Captions. Restart the editor.",
+   "Pick a dialogue Sound Wave. You can record one with Take Recorder or import a short .wav file. Right-click it and choose Scripted Actions, then Sound, then Add Blank Subtitle.",
+   "Open the new subtitle asset. Set Text to your line (press Shift + Enter to start a second line), set Subtitle Type to Subtitle and Priority to 1. Look at Duration Type: Use Sound Duration ends the subtitle when the sound ends, and Use Duration Property shows it for the number of seconds you type in Duration. Pick one. Add a second subtitle with a Start Offset for the second sentence.",
+   "Open a Level Sequence, or create one with Add Level Sequence in the Cinematics dropdown and add a camera with the Camera button. Add the Sound Wave on an Audio Track, and drag the subtitle asset onto a subtitle track. Trim the section so that it ends when the spoken line ends. Drag the playhead and watch the text appear.",
+   "Open Edit > Project Settings > Game > Subtitles and Closed Captions. Open DefaultSubtitleWidget and change the font size and the color of the subtitles. Play in the editor and check the new look.",
+   "In Movie Render Queue, add the Burn In setting to the job and render 48 frames. Open a frame and read the job name, level name, camera focal length and frame numbers in the burn-in."
+  ]
+ },
+ "CQ75": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Movie Render Pipeline plugin enabled. Open Edit > Plugins, go to Media Players, and enable Apple ProRes Media. Restart the editor.",
+   "Open a sequence that has at least 3 shots in a Shot track. To make one, click Cinematics in the main toolbar, choose Add Level Sequence with Shots with 3 shots, and add a camera to each shot. Add it as a job in Movie Render Queue. In Settings, add Apple ProRes [10-12bit] with the codec Apple ProRes 422 HQ, and add WAV Audio.",
+   "Add Final Cut Pro XML and set Data Source to Sequence Data. In Output, set File Name Format to {sequence_name}/{shot_name}, so that every shot gets its own file.",
+   "Click Render (Local). Check the output folder: it should hold one .mov file for each shot, a .wav file and the .xml file.",
+   "Import the XML file into editing software, such as DaVinci Resolve (which has a free version), Premiere or Final Cut. Confirm that the shots are in the right order and have the right lengths.",
+   "Extra: use the older Render Movie dialog with Output Format set to Video Sequence, {shot} in the file name, and Write Edit Decision List turned on. Import the EDL (edit decision list) and the clips into your editor. Change one cut and export an EDL. Then right-click the Shot track in Sequencer and choose Import EDL."
+  ]
+ },
+ "CQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, with the Take Recorder plugin enabled. Open Window > Cinematics > Take Recorder and click the Settings (gear) button. In User Settings, set Countdown to 3 and turn Auto Lock off. In the Take Recorder settings, turn Record Timecode on and keep Record Sources Into Sub Sequences on.",
+   "Add these sources: the player character (with From Actor), Camera Cuts, and Microphone Audio. In the microphone source, set Audio Asset Name to {slate}_T{take} and Audio Sub Directory to Audio.",
+   "Click Presets in the Sources panel and choose Save As Preset. Name the preset TP_Dialogue.",
+   "Set the Slate to Line01 and add a short description. Press Play, then press Record. Speak one line while you move the character, and press Esc to stop.",
+   "Record a second take. Then try to set the take number back to 1, and click the warning to see it correct the number.",
+   "Click Review Last Recording. Double-click the subscene of the character, open the Properties of a section and find the timecode under Section Range Start. Then open the Takes Browser in columns view and read the metadata."
+  ]
+ },
+ "CQ77": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins and make sure that Live Link and Live Link Hub are enabled. Restart the editor. Open Tools > Live Link Hub. Confirm that your editor is listed in the Clients panel and that the editor shows the green Live Link Connected banner.",
+   "Open Window > Live Link. If no Live Link Hub source is listed, add it with + Add Source.",
+   "In Live Link Hub, click + Add Source and connect a real-time source that you have, such as the Unreal VCam app on a phone or tablet, a face app on a phone, or a motion capture tool. Confirm that the subject appears in the Subjects panel of the Hub and in the Live Link panel of the editor with a green light.",
+   "Place a Cine Camera Actor and add a Live Link Controller component to it. Set Subject Representation to your subject and check which Component to Control was chosen. Move the source and watch the camera move.",
+   "In the Live Link panel, click Presets and choose Save As Preset. Name it LLP_Shot. Then open Edit > Project Settings > Plugins > Live Link and set Default Live Link Preset to LLP_Shot.",
+   "Open Take Recorder. Click + Source and choose From Live Link, set the Subject Name, and enable Use Source Timecode. Record a take of 10 seconds and review it in Sequencer."
+  ]
+ },
+ "CQ78": {
+  "brief": "A review of a shot usually happens with other people. Multi-User Editing lets several Unreal Editors join one shared session, so everyone sees the same level, the same changes and the same sequence playback at the same moment. In this quest you start a session, join it from a second editor, review a shot together, and save the changes of the session into the project.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and make sure it has a Level Sequence with a camera and a light in the level. Open Edit > Plugins, go to Editor, and enable Multi-User Editing. Restart the editor. In Project Settings > Plugins > Multi-User Editing, turn on Enable Multi-User Toolbar Button and set a Display Name and an Avatar Color. Restart again.",
+   "Click the Multi-User button in the toolbar (it says Browse). In the Multi-User Browser, click Launch to start a server. Click Create a New Session, name it ShotReview and confirm.",
+   "Open a second Unreal Editor with this project. This can be a teammate on the same network, or a second editor on your own PC. Set a different Display Name and color, open the Multi-User Browser, and join ShotReview.",
+   "Open the same Level Sequence in both editors. Press Play in one editor and watch it play in the other. Try to stop it from the other editor and note what happens.",
+   "In one editor, move a light in the shot. In the other editor, see the change and the new entry in the change history of the session. Then right-click the sequence asset, open Multi-User and choose Lock Asset(s). Try to save the asset from the other editor.",
+   "In the first editor, click the arrow of the Source Control button and choose Persist Session Changes. Check the modified files and apply. Then leave the session and delete it from the Multi-User Browser."
+  ]
+ }
+}

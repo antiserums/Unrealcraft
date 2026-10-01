@@ -1,0 +1,130 @@
+{
+ "AQ37": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the two plugins ML Deformer Framework and ML Deformer Neural Morph Model in Edit > Plugins, and restart the editor.",
+   "Get training data: a Skeletal Mesh, an Animation Sequence of random poses and a matching Geometry Cache (an .abc file). If you have no data of your own from a 3D program, use Epic's ML Deformer Sample from Fab, which contains all three.",
+   "If you import an Alembic file yourself, use these settings: set Import Type to Geometry Cache, turn Flatten Tracks off, set Compressed Position Precision to 0.001, and turn Store Imported Vertex Numbers on.",
+   "Create MLD_Character with the Neural Morph Model: in the Add menu choose Animation, then Deformers, then ML Deformer. Assign the Skeletal Mesh, the Anim Sequence and the Geometry Cache. Enable Draw Deltas and move through 10 frames to check that the two meshes line up.",
+   "In Network Inputs, click Add All Animated Bones, and then remove the twist, roll and helper bones. Set Mode to Local. Train first with a small Num Iterations, between 1000 and 3000.",
+   "Switch to Testing mode. Compare Weight 0 with Weight 1, and show the Activations heat map. Then raise Delta Zero Threshold until the value GPU Memory (Morph Targets) drops and you still see no loss in quality.",
+   "Make an Actor Blueprint named BP_MLCharacter with a Skeletal Mesh component that uses the trained mesh. Add an MLDeformer component and assign MLD_Character to it. Set the Mesh Deformer of the mesh to DefaultMLDeformerGraph. You must enable Show Engine and Plugin Content to find this asset."
+  ]
+ },
+ "AQ38": {
+  "done_when": "Send screenshots of the Clothing panel with your masks and of the Config values you changed. Also send a short video clip (30 seconds or less), or two screenshots, of the cloth moving while the character runs and turns. Add 5 lines that say what each mask does, how you fixed the clipping, and your note about the Panel Cloth Editor.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Use a character whose cape, skirt or coat has its own material section, for example your own character or a free one from Fab, Epic's asset store. If you have none, you can practice on a copy of SKM_Manny: use one of its material sections as the cloth, and later paint the Max Distance mask so that only a small area, such as the lower back, is allowed to move.",
+   "In the Skeletal Mesh Editor, click Section Selection and select the cape section. Right-click it and choose Create Cloth Asset from Selection. Name the asset CA_Cape and set the Physics Asset of the character, which is used for collision.",
+   "Right-click the section again and choose Apply Clothing Asset, then CA_Cape. Open Window > Clothing and click Activate Cloth Paint.",
+   "Create a Max Distance mask. Paint the value 0 along the shoulders, so the cloth stays fixed there. Then use the Gradient tool to go down to a large value at the hem, the bottom edge of the cape. Hold H to preview the cloth.",
+   "Add a Backstop Distance mask so that the cape cannot pass into the back of the character. Then tune these Config values: Damping, Gravity Scale and Collision Thickness. Set Wind Method to Accurate.",
+   "Play the character with a run animation and a turn for about 20 seconds, and take screenshots or record a short video clip of the cloth moving. Fix one clipping problem, a place where the cloth goes through the body, by changing a mask and not the mesh.",
+   "Read the overview page of the Panel Cloth Editor in Epic's documentation. Write 3 lines about when you would use the Dataflow-based cloth asset in place of this legacy (older) tool."
+  ]
+ },
+ "AQ39": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a 2D Blend Space asset named BS_Strafe for the Mannequin skeleton. To do this, click Add, then Animation, then Blend Space.",
+   "In Asset Details, name the horizontal axis Direction with a range from -180 to 180. Name the vertical axis Speed with a range from 0 to 600.",
+   "Set both Axis Functions to Locomotion. Choose Rightward Speed for the horizontal axis and Forward Speed for the vertical axis. Set Bone/Socket 1 and Bone/Socket 2 to the two foot bones.",
+   "Drag idle, walk and run animations onto the graph and watch the analysis place them. If you see red triangles, which are very thin, fix them by moving the samples.",
+   "On the Speed axis, set Smoothing Time to 0.2 and Smoothing Type to Spring Damper. Hold Ctrl and move the mouse in the graph, and watch the second crosshair follow with a delay.",
+   "Set Notify Trigger Mode to Highest Weighted Animation, so that only the strongest animation fires its notifies.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and open the copy. In its AnimGraph, add BS_Strafe as a Blendspace Player node. Drive its Direction and Speed inputs from variables."
+  ]
+ },
+ "AQ40": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Prepare 9 aim poses: center, up, down, left, right and the 4 corners. If you have no aim poses, make simple ones: open the idle animation of the mannequin, pause it, rotate a spine bone in the Skeleton Tree so that the upper body leans in one direction, click Create Asset in the toolbar, choose Create Animation, then Current Pose, and save it with a clear name such as Aim_Up. Do this for all 9 poses, with no rotation for the center pose. Open the Animation Sequence of each pose.",
+   "In each sequence, set Additive Anim Type to Mesh Space and set Base Pose Type to Selected animation frame. Set Base Pose Animation to the center pose, which aims forward, and set Ref Frame Index to 0.",
+   "Create an Aim Offset named AO_Aim for the same skeleton. To do this, click Add, then Animation, then Aim Offset. Set Preview Base Pose to the center pose.",
+   "Set both Axis Functions to Orientation. For the horizontal axis choose Axis Yaw, and for the vertical axis choose Axis Pitch. Set Bone/Socket to the bone of the hand that holds the weapon, set Bone Facing Axis to +X and Bone Right Axis to +Y.",
+   "Drag the 9 poses into the graph and let the analysis place them. If needed, correct the axis ranges so that they go from -90 to 90.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and open the copy. In its AnimGraph, add AO_Aim as a player node after the State Machine. Drive its Yaw and Pitch inputs with property access from the base aim rotation of the pawn.",
+   "Set LOD Threshold on the Aim Offset node to 2, so the node stops running on the simpler, far away versions of the mesh."
+  ]
+ },
+ "AQ41": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and open the copy. Create an enum named E_Stance with the values Unarmed, Rifle and Pistol. Then, in the Animation Blueprint, create a variable named Stance of that type.",
+   "Add a Blend Poses by Enum node after the locomotion State Machine. Connect Stance to Active Enum Value. Add a pose input for each stance by right-clicking the node and choosing Add Blend Pin. Connect the locomotion to the first input, and any two different animations of the mannequin, as Sequence Players, to the other two.",
+   "In the Details panel, show the Blend Time pins, and set a different Blend Time for each pose: 0.1, 0.3 and 0.5.",
+   "Add a Blend Poses by bool node for IsCrouched. Place an Inertialization node after it, close to the Output Pose.",
+   "Add a Blend Multi node with three inputs, and drive it with a float variable named Alpha.",
+   "In the Anim Preview Editor, change Stance and IsCrouched. Watch how the pulsing pose links change to show which pose is active."
+  ]
+ },
+ "AQ42": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Mannequin Skeletal Mesh, for example SKM_Manny. In the Skeleton Tree, open Options and choose Add Blend Mask. Name the mask BM_UpperBody.",
+   "Right-click the bone spine_01 and use Recursively Set Blend Scales to set it and all the bones below it to 1. Set the pelvis and the leg bones to 0.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and open the copy. Add a Layered blend per bone node. Set its Blend Mode to Blend Mask and pick BM_UpperBody. Connect the locomotion as the base pose, and connect a Slot node as the blend pose, so that a montage played on that slot shows on the upper body only.",
+   "Go back to the Skeleton Tree, open Options and choose Add Time Blend Profile. Name it Profile_LegsFast. Set the pelvis and the upper body bones to 1.0 and the leg bones to 0.5.",
+   "In the State Machine of the Animation Blueprint, select a transition rule, for example the one from Idle to the walk and run state, and set its Blend Profile to Profile_LegsFast. Also set the same profile on a Blend Poses by bool node.",
+   "Play in the editor. Compare how the character stops with the profile and without it."
+  ]
+ },
+ "AQ43": {
+  "done_when": "Send a screenshot of the Anim Slot Manager that shows both slots in the Actions group, a screenshot of the AnimGraph with both Slot nodes, and a short video clip (30 seconds or less) or two screenshots of AM_Emote interrupting AM_Reload.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn), open the copy, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. From the Animation Blueprint, open Window > Anim Slot Manager. Add two slots named FullBody and UpperBody. Add a group named Actions, move both slots into it, and save.",
+   "In the AnimGraph, add a Slot node after the State Machine and set its Slot Name to FullBody.",
+   "Add a second Slot node and set it to UpperBody. Connect it to a Layered blend per bone node that uses a Branch Filter on spine_01, so that only the upper body plays the slot animation.",
+   "Select the FullBody Slot node and enable Always Update Source Pose in its Details panel. With this setting on, the pose that goes into the Slot node keeps updating while a montage plays over it. With it off, that source pose is not updated during the montage. Write down in one line which behavior you need for your character.",
+   "Make two montages from any two Animation Sequences of the mannequin, both in the group Actions: AM_Reload on the slot UpperBody and AM_Emote on the slot FullBody. In BP_ThirdPersonCharacter, play each one from its own key press event. Play AM_Reload, and then play AM_Emote before the first one ends. Confirm that the reload stops.",
+   "Create a Level Sequence, add the character from the level to it, and add an Animation track with any animation. Right-click the animation section, open Properties, find Slot Name and type FullBody."
+  ]
+ },
+ "AQ44": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Animation Insights plugin in Edit > Plugins, and restart the editor.",
+   "Open the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn). Right-click two nodes in the AnimGraph, for example the locomotion State Machine and the last node before Output Pose, and choose Toggle Pose Watch on each. Open Window > Pose Watch Manager and give each pose watch a different color.",
+   "Open Tools > Debug > Rewind Debugger and also Tools > Debug > Rewind Debugger Details. Press Play, click Record, move around, and then pause.",
+   "Pick your character with the Dropper tool. Select the Animation Blueprint track, and drag the red playhead to move through the recording.",
+   "Double-click the Animation Blueprint in the Object Outliner. It opens linked to the recording. Watch the nodes, the variables and the state machine change while you move the playhead.",
+   "During a PIE (Play In Editor) session, type ShowDebug ANIMATION in the console and take a screenshot. Also try the command DisplayAll with the class of your Animation Blueprint and one variable."
+  ]
+ },
+ "AQ45": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn), name the copy ABP_ThreadSafe, and set it as the Anim Class of the Mesh in BP_ThirdPersonCharacter. Its Event Graph already has update logic that you will replace. Open it. In the My Blueprint panel, go to Functions, open the Override dropdown, and choose Blueprint Thread Safe Update Animation.",
+   "Create a function named UpdateMovement and enable Thread Safe in its Details panel. Inside the function, add a Property Access node and bind it to this path: Try Get Pawn Owner, then Get Movement Component, then Velocity.",
+   "From the velocity, use Vector Length XY and promote the result to a variable named Speed. Make a bool variable named ShouldMove that is true when Speed >= 0.1. Also read IsFalling into a bool variable.",
+   "Call UpdateMovement from Blueprint Thread Safe Update Animation. Then delete the old Update Animation event logic from the Event Graph.",
+   "Select a Blendspace Player or Sequence Player node inside the state machine, or an Aim Offset node if your Animation Blueprint has one. In its Details panel, under Functions, bind On Update to a new function. Open the function and look at its Context and Node pins: the function runs each time this node updates, and it is the place to set values for this one node, such as the Yaw and Pitch of an Aim Offset.",
+   "Enable Warn About Blueprint Usage in Class Settings and compile. Fix every warning until the lightning icon, which means Fast Path, shows on your blend nodes."
+  ]
+ },
+ "AQ46": {
+  "brief": "A Linked Anim Graph lets you put a piece of animation logic into its own Animation Blueprint and then use it as one node inside another. A Template Animation Blueprint goes one step further: it is not tied to any skeleton, so many different characters can use it. Both keep a growing project from becoming one very large Blueprint. In this quest you build a small sway graph, link it into a main Animation Blueprint, and create and link a template.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an additive animation: duplicate the idle animation of the mannequin, name the copy Idle_SwayAdditive, and in its Asset Details set Additive Anim Type to Local Space, with the first frame of the same animation as the base pose. Create an Animation Blueprint named ABP_Sway for the Mannequin skeleton. In its AnimGraph, add an Input Pose node from the Misc category and rename it Source. Send it through an Apply Additive node with the additive animation. Add a float variable named SwayAlpha and make it Instance Editable.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Manny or ABP_Quinn) and use the copy as your main Animation Blueprint. Right-click its AnimGraph, open Linked Anim Blueprints and choose Linked Anim Graph. Set its Instance Class to ABP_Sway. Connect the locomotion to the Source pin and set SwayAlpha on the node.",
+   "Create a Template Animation Blueprint named ABPT_SinglePlay. In the creation window, choose Template and do not pick a Skeleton. Add a Sequence Player. On its Sequence property, choose Bind, then Expose As Pin, and promote the pin to a public variable.",
+   "Link ABPT_SinglePlay in your main Animation Blueprint, and set the exposed Sequence variable to an animation.",
+   "On the Linked Anim Graph node, enable Receive Notifies from Linked Instances. Test it with a Skeleton Notify placed inside ABP_Sway.",
+   "Double-click the Linked Anim Graph node to jump into the linked asset, and confirm that it opens."
+  ]
+ },
+ "AQ47": {
+  "brief": "Sequencer is the timeline tool of Unreal, used for cinematics and for animating by hand. A Control Rig gives a character controls that you can move, and a keyframe (or key) saves the position of a control at one moment in time. Unreal fills in the movement between the keys. In this quest you put a Control Rig in a level and set keys to make the character raise and lower an arm.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a Control Rig asset for the mannequin: use CR_Mannequin_Body from the template, or your own asset whose name starts with CR_.",
+   "Drag the Control Rig asset from the Content Browser into the level. Notice that a new Level Sequence opens with a Skeletal Mesh track and a Control Rig track. Save it as LS_WaveTest.",
+   "Expand the Control Rig track. Click one control in the track list, and confirm that the same control is selected in the viewport.",
+   "At frame 0, select the hand and arm controls and press S in the viewport to set a key on them. Move the playhead to frame 30, raise the arm, and press S again. Do the same at frame 60 to bring the arm back down.",
+   "Add a second character: place a Skeletal Mesh Actor and add it to the sequence. On its track, click Add Track (+), then Control Rig, then Control Rig Classes. Hide one rig with the eye icon in the Anim Outliner, and then show it again.",
+   "Play the sequence. Adjust any key so that the motion has a clear start, a clear highest point and a clear return."
+  ]
+ },
+ "AQ48": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Level Sequence that has a Control Rig track. To make one, drag the Control Rig asset CR_Mannequin_Body from the Content Browser into the level and save the sequence that opens. Switch to Animation Mode with the Mode dropdown. Then leave it with Shift+1 and enter it again with Shift+7.",
+   "In the Anim Outliner, which lists the controls of the rig, select a hand control. In Anim Details, read its transform values and note that they are relative to the initial values of the control.",
+   "Enable the Select tool in the Animation panel. Try to click the character mesh in the viewport, and confirm that you can only select controls.",
+   "Pose the left arm and the left hand. Select those controls and click Create Pose in the Poses tool. Name the pose Pose_ArmRaise_L and capture a thumbnail, the small preview image.",
+   "Reset the pose. Select the controls of the right side, enable Mirror in the Poses tool and paste the pose. Check that the naming fields match the names in your rig, for example _l_ and _r_.",
+   "Enable Key in the Poses tool. On a new frame, set the Blend Pose slider to 0.5 to apply half of the pose."
+  ]
+ }
+}

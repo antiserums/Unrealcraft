@@ -1,0 +1,104 @@
+{
+ "EAQ106": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Read the ACES Viewing Transform section of the documentation page linked on this quest. Write the three steps LMT, RRT and ODT in your own words.",
+   "In the console, set r.AllowHDR 1. Then set r.HDR.Display.OutputDevice 3 and r.HDR.Display.ColorGamut 2. Write down what each value means.",
+   "Play in a new window and press Alt+Enter to switch to exclusive fullscreen. Set r.HDR.EnableHDROutput 1 and look at the result.",
+   "If you have an HDR display, check that its HDR mode is on and note how the highlights changed. If you do not have one, describe what you saw and why the documentation page says it may not work.",
+   "Set r.HDR.UI.CompositeMode 1 and r.HDR.UI.Level 1.5. Then look at a HUD or a menu widget to see how the user interface is shown.",
+   "Reset everything with r.HDR.EnableHDROutput 0 and r.HDR.Display.OutputDevice 0."
+  ]
+ },
+ "EAQ107": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and place a main prop to frame, such as a mannequin or a group of cubes. Create a Level Sequence named LS_Stills and click the Camera button in Sequencer, which adds a Cine Camera Actor with a Camera Cuts track. Keep Sequencer open.",
+   "In the Perspective menu of the viewport, enable Cinematic Viewport.",
+   "Open Film Overlays and turn on Grid (3x3). Frame the main prop so it sits on one of the points where the lines cross.",
+   "Turn on Action Safe and Title Safe. Change the Custom Safe percentage and give it a new color.",
+   "Enable Letterbox Mask at 2.35:1. On the camera, enable Constrain Aspect Ratio so that the mask matches the filmback, which is the sensor size of the camera.",
+   "Use the playback controls at the bottom of the viewport to move through the sequence. Read the camera and filmback information shown above them.",
+   "Open a second Perspective viewport and turn off Allow Cinematic Control on it. Confirm that only the first viewport follows the sequence camera."
+  ]
+ },
+ "EAQ108": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on, and work in a level with a floor or a Landscape. Enable the Procedural Content Generation Framework plugin. Then create a PCG Graph named PCG_FenceProps.",
+   "In PCG_FenceProps, connect these nodes in a row: Get Spline Data, then Spline Sampler, then Transform Points with a small random yaw and scale, then Static Mesh Spawner. Give the spawner three Mesh Entries, for example a post, a barrel and a crate, with different Weights, so some appear more often than others. Any three small meshes work, such as props from the Starter Content or a cube, a cylinder and a cone.",
+   "Open the Graph Settings. Under Tool Data, set Display Name to Fence Props, add SplineTool to Compatible Tool Tags, and enable Is Preset.",
+   "Switch to PCG mode from the Modes dropdown. With nothing selected, choose the Draw Spline tool and pick your Fence Props preset. Draw an open spline along a path in the level and click Apply.",
+   "Duplicate the graph and name the copy PCG_Rubble. Remove the spline nodes, keep the spawner, and set Compatible Tool Tags to PaintTool. In PCG mode, use the Paint tool to paint rubble on the ground. Hold Shift to remove points that land on the path.",
+   "In the Raycast Rules, enable Ignore PCG Components. This stops you from painting on top of the props you already spawned."
+  ]
+ },
+ "EAQ109": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Open a level with a Landscape, or create a new level and make a Landscape in Landscape Mode. Open Editor Preferences, then Experimental, and enable Procedural Foliage. Create a Procedural Foliage Spawner named PFS_Forest and scale it over a flat area of the landscape.",
+   "Create two Static Mesh Foliage assets named SMF_TreeBig and SMF_TreeSmall and give each one a mesh. If you have no tree meshes, a tall cone can stand in for the big tree and the bush from the Starter Content for the small one. Add both to the Foliage Types of PFS_Forest and press Resimulate.",
+   "In SMF_TreeBig, set Shade Radius to 50 and Overlap Priority to 2. In SMF_TreeSmall, set Overlap Priority to 1 and enable Can Grow in Shade and Spawns in Shade. Press Resimulate and look at how the small trees fill the space around the big ones.",
+   "Change Num Steps to 0 on SMF_TreeBig and press Resimulate. Then set it back to 3. Lower Initial Seed Density until the edge of the forest looks natural.",
+   "In the Instance Settings of both types, set Cull Distance Max to 20000.",
+   "Place a Procedural Foliage Blocking Volume over an area that should stay free, such as a path or the place where a building would stand, and press Resimulate. No trees should appear inside the volume."
+  ]
+ },
+ "EAQ110": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins, search for geometry script, and enable the Geometry Script plugin. Restart the editor.",
+   "Create a Blueprint with the parent class GeneratedDynamicMeshActor and name it BP_GS_RockScatter. Add three public variables: Count (Integer, default 30), Radius (Float, default 800) and Seed (Integer). Make all three Instance Editable, so you can change them in the Details panel.",
+   "In the Event Graph, add the event named Event On Rebuild Generated Mesh. Promote its Target Mesh pin to a variable named DynamicMesh.",
+   "Make a Random Stream from Seed and add a loop that runs Count times. In each step of the loop, build a Transform with a random position inside Radius, a random yaw and a random scale. Then use Append Box (or Append Sphere) to add a shape to DynamicMesh at that transform.",
+   "Place BP_GS_RockScatter in any level. Change Count, Radius and Seed in the Details panel and watch the scatter rebuild.",
+   "Write two lines in your notes: why the same Target Mesh pin goes in and out of every node, and why you should not use this actor for 5000 instanced rocks."
+  ]
+ },
+ "EAQ111": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in any level with a floor. Open Modeling Mode with Shift+5. Make three simple meshes with the Box and Cylinder tools: a thin tall fence post, a flat floor tile and a column. Select the fence post and open XForm, then Pattern. Use the Line shape to make a row of 12 posts. Set the output type to Instanced Static Mesh and accept.",
+   "Select the floor tile and use Pattern with the Grid shape to make a floor of 6x6 tiles. Add a small rotation jitter, a little random rotation, so the tiles do not all look the same.",
+   "Select the column mesh and use Pattern with the Circle shape to place 8 copies around a center. This time, output them as single actors.",
+   "Select the 8 single actors and run XForm, then Harvest Instances. This turns them into one ISM actor, which is one actor that holds all the instances.",
+   "Open XForm, then ISMEd, on the fence row. Delete two instances and move one. Then replace one instance with a different mesh and look at the list of components.",
+   "Compare the Outliner before and after. Count the actors in the fence row and in the circle after you harvested it."
+  ]
+ },
+ "EAQ112": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Open a World Partition level, or create one with File, New Level, Open World. Place about ten large cubes as buildings and about twenty trees far from the Player Start. Cones or the bush from the Starter Content can stand in for trees. Open the Content Drawer and create two HLOD Layer assets (choose Miscellaneous, then HLOD Layer). Name one HLOD_Buildings and set its Layer Type to Merged Mesh. Name the other HLOD_Trees and set its Layer Type to Instancing.",
+   "On HLOD_Buildings, enable Generate Nanite Enabled Mesh and turn Merge Materials on. On HLOD_Trees, leave the Instancing settings at their defaults.",
+   "Select the building meshes and set their Mobility to Static. In the Details panel, set the HLOD property to HLOD_Buildings. Do the same for the tree actors, with HLOD_Trees.",
+   "In World Settings, set Default HLOD Layer to HLOD_Buildings, so that new static actors get a layer by default.",
+   "Run Build > Build HLODs. Then move the camera far away, or unload cells, and compare the view with HLODs on and off.",
+   "Open one of the generated HLOD actors and note its Cell Size and Loading Range. Write one line on why the trees used Instancing and the buildings used Merged Mesh."
+  ]
+ },
+ "EAQ113": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place 100 copies of one small mesh, such as a book or a brick, as separate Static Mesh Actors. A cube scaled to the size of a brick works. In the console, type stat unit and stat rhi, and note the number of draw calls.",
+   "Select all 100 actors. Open Actor, then Merge Actors, then Merge Actor Settings. Choose the Batch method and click Merge Actors. Note the draw calls again.",
+   "Open the Details panel of the new actor. Click one instance and confirm that you can only edit its transform. Then change the material on the component and see all instances update.",
+   "Create a Blueprint named BP_Shelf with an Instanced Static Mesh component. Set its Static Mesh, and add 10 instances with the + button in the Instances category.",
+   "Duplicate BP_Shelf and name the copy BP_Shelf_HISM. Use a Hierarchical Instanced Static Mesh component in it. Write two lines: which component you would use for 5000 static pebbles, and which one for a project that uses only Nanite.",
+   "On the ISM, enable Per Instance Custom Data by setting Num Custom Data Floats to 1. Use this value in the material to control the color, so that two shelves can look different without a new material instance."
+  ]
+ },
+ "EAQ114": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a World Partition level, or create one with File, New Level, Open World. Open the Content Browser and create three Data Layer assets (choose Miscellaneous, then Data Layer). Name them DL_Dressing_Base with the Editor type, DL_Dressing_Winter with the Runtime type, and DL_Dressing_Summer with the Runtime type.",
+   "Open Window > World Partition > Data Layer Outliner. Drag each asset into it to create a Data Layer Instance.",
+   "Right-click DL_Dressing_Base in the outliner and choose Make Current Data Layer. Place a few permanent props, such as cubes for walls and rocks, and confirm that they are assigned to the layer automatically. Then choose Clear Current Data Layers.",
+   "Decorate one area twice. Assign snow piles and bare trees to DL_Dressing_Winter, and assign flowers and leafy trees to DL_Dressing_Summer. Simple stand-ins are fine: white spheres and gray cones for winter, small colored spheres and green cones for summer. Use Add Selected Actors to Selected Data Layer to assign them.",
+   "Set Initial Runtime State so that Summer is Activated and Winter is Unloaded. Use the visibility checkbox and the Loaded In Editor checkbox to look at each version.",
+   "In the Level Blueprint, add a key press event. Use the Data Layer Subsystem to set Winter to Activated and Summer to Unloaded. Test it while playing in the editor."
+  ]
+ },
+ "EAQ115": {
+  "brief": "When other people review your art, they need pictures that show the same view before and after a change, at a size where small details are visible. Unreal has a High Resolution Screenshot tool for this, and bookmarks that bring the camera back to exactly the same view. In this quest you save three bookmarks and use the tool to take large captures, a capture of one region, images without lighting, and a cutout of one prop.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level with a decorated area: a scene of your own, or the level of the template with a few props added. Set three world bookmarks (1, 2 and 3) on views of this area. Bookmarks let you return to the same view, so every capture can be repeated.",
+   "Open Viewport Options, then High Resolution Screenshot. Set the Screenshot Size Multiplier to 2 and capture bookmark 1. Find the file in the folder Saved/Screenshots/Windows.",
+   "Press Specify Region and drag a region around one group of props. Capture again, and then clear the region.",
+   "Enable Include Buffer Visualization Targets and capture bookmark 2. Open the BaseColor image and the Roughness image, and check that the props are still easy to read without lighting.",
+   "Select one main prop and enable Render CustomDepth Pass in its Details panel. In the screenshot tool, enable Use custom depth as mask, and capture a cutout of the prop.",
+   "Play in the editor, open the console and run HighResShot 2 for bookmark 3. Name the files Review_<area>_<bookmark> and send them together."
+  ]
+ }
+}

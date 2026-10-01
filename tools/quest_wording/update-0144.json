@@ -1,0 +1,437 @@
+{
+ "PQ56": {
+  "done_when": "Send one screenshot taken in Play mode with the Gameplay Debugger overlay visible, the AI pawn selected, and at least two categories shown (for example AI and Navmesh).",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a NavMeshBoundsVolume and one AI pawn. To make the pawn, duplicate BP_ThirdPersonCharacter, delete its input nodes, and on BeginPlay call AI Move To toward a Target Point that you place in the level. Any AI of your own that moves works too.",
+   "Press Play to start Play In Editor (PIE). Press the apostrophe (') key to open the Gameplay Debugger.",
+   "Point the camera at the AI pawn and press the apostrophe key again to select it.",
+   "Use the keys of the numeric keypad to turn the Navmesh category on and off. Also turn on the AI category, which shows basic data about the pawn and its controller. The documentation page calls this category Basic.",
+   "Open Edit > Project Settings, go to Gameplay Debugger, and look at the Input section. Do not change anything there.",
+   "Type ToggleDebugCamera in the console (or press ;) to get a free debug camera, and orbit around the pawn."
+  ]
+ },
+ "PQ95": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a class named ANetCrate with Actor as the parent. In the constructor, set bReplicates = true.",
+   "Add UPROPERTY(ReplicatedUsing=OnRep_Health) int32 Health and UPROPERTY(Replicated) int32 SecretCode. Include Net/UnrealNetwork.h in the .cpp file.",
+   "Override GetLifetimeReplicatedProps. Call Super first, and then add DOREPLIFETIME(ANetCrate, Health) and DOREPLIFETIME_CONDITION(ANetCrate, SecretCode, COND_OwnerOnly).",
+   "Write the function OnRep_Health(int32 LastHealth), which runs on clients when Health changes. Add a UE_LOG in it that prints the old value and the new value.",
+   "Add a function named DamageCrate that runs only on the server and lowers Health by 10. Call it from a key press in a Blueprint child named BP_NetCrate, but only on the Authority pin of a Switch Has Authority node.",
+   "Set Play In Editor to 2 players and Play As Listen Server. Press the key in the server window. Check the Output Log of the client for the OnRep line with the old and new values.",
+   "Write 3 sentences that say why SecretCode never reaches the second client, and what NotReplicated would be used for."
+  ]
+ },
+ "PQ96": {
+  "checklist": [
+   "Open a C++ project made from the Third Person template, or create one with C++ selected. You need an IDE such as Visual Studio to compile. In the C++ Character class of the template, add UFUNCTION(Server, Reliable, WithValidation) void ServerFire(int32 Ammo). Write ServerFire_Implementation and ServerFire_Validate, and make the validate function return false when Ammo < 0.",
+   "Add UFUNCTION(NetMulticast, Unreliable) void MulticastFireFX(). In its _Implementation function, spawn a sound or a particle effect at the actor.",
+   "Add UFUNCTION(Client, Reliable) void ClientShowHit(). In its _Implementation function, print a message on the screen.",
+   "In ServerFire_Implementation, call MulticastFireFX and ClientShowHit. Bind ServerFire to an input key on the owning client, the client that controls this character.",
+   "In a Blueprint child, add a Custom Event named Multicast_Cheer. In its Details, set Replicates to Multicast and leave it unreliable. Call it from a second key.",
+   "Test with 2 players and Play As Listen Server. Press both keys in the client window. Note which window plays the effect and which window shows the hit message.",
+   "Call ServerFire with Ammo = -1 from the client and watch what happens to that client."
+  ]
+ },
+ "PQ97": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Component named BP_RoleLabel. On Begin Play, it adds a Text Render component above the owner. Then, every 0.5 s with a timer, it sets the text to the Get Local Role and Get Remote Role of the owner.",
+   "Add BP_RoleLabel to BP_ThirdPersonCharacter. Make two simple Actor Blueprints, each with a cube mesh: BP_NetCrate with Replicates turned on in its Class Defaults, and BP_Rock with Replicates turned off. Place one of each in the level and add the component to both.",
+   "Play with 3 players and Play As Listen Server. In the server window, read the labels on your own pawn, on another pawn, on the crate and on the rock.",
+   "Open a client window and read the same four labels. Write them into a small table with the columns actor, window, local role and remote role.",
+   "While the game is running, select the crate in the server world. In its Details panel, find the Role and Remote Role values and compare them with your text.",
+   "Lower Net Update Frequency on BP_NetCrate to 1 and move the crate with a timeline on the server. Watch how the movement looks on the client."
+  ]
+ },
+ "PQ98": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Play drop-down in the Level Editor toolbar. Set Number of Players to 3 and Net Mode to Play As Listen Server. Press Play and note the title of each window.",
+   "Stop the game. Set Net Mode to Play As Client with Number of Players 1 and play again. Write one sentence that says what is different and where the server is.",
+   "Open Editor Preferences and go to Level Editor, then Play. Turn on Enable Network Emulation, set Emulation Target to Everyone, and choose the profile Bad. Play as a client, walk around, and note how it feels.",
+   "Set the profile to Custom with 250 ms for the minimum and maximum latency and 10% packet loss in both directions. Make a replicated test actor: an Actor Blueprint with a cube mesh, Replicates and Replicate Movement turned on, that moves back and forth on the server with a Timeline. Play again and watch how the cube updates in the client window.",
+   "In BP_ThirdPersonCharacter, add a breakpoint on Begin Play. In the debug world drop-down of the Blueprint Editor, pick Client 1 only. Play with 2 players and count how many times the breakpoint hits.",
+   "Turn off Run Under One Process, play with 2 players, and compare the start time with the earlier run. Then turn the setting back on."
+  ]
+ },
+ "PQ99": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Play it with 2 players, Play As Listen Server, and the network emulation profile Bad on Everyone. You set the profile in Editor Preferences, under Level Editor, then Play. Move the client character and watch it in the server window.",
+   "In BP_ThirdPersonCharacter, print Get Local Role each second. Confirm which window is the autonomous proxy, which is the authority and which is the simulated proxy for that character.",
+   "Make BP_Rock, an Actor with a Static Mesh and with Replicates on. Move it with a Timeline on Begin Play, but only on the Authority pin. Play and note if the client sees it move. Then turn Replicate Movement on and compare.",
+   "In BP_ThirdPersonCharacter, set Max Walk Speed to 3000 on Begin Play, but only when Has Authority is false. Play with emulation on and describe what the server does to the client pawn.",
+   "Read the Movement Replication Summary table on the documentation page. Draw the 9 steps as a small diagram on paper or in a drawing tool, with three columns: autonomous proxy, server and simulated proxy.",
+   "Write 3 sentences that say why ServerMove is an unreliable RPC and what ClientAdjustPosition does."
+  ]
+ },
+ "PQ100": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Lantern with Replicates on and Replicate Movement on. Add a Custom Event named Server_Toggle and set it to Run on Server and Reliable. It flips a replicated bool named bLit, and the OnRep function of bLit updates a point light.",
+   "Place one BP_Lantern in the level. In BP_ThirdPersonCharacter, on the E key, get the nearest BP_Lantern and call Server_Toggle on it. Play with 2 players and press E in the client window. Note if the light changes.",
+   "Add a second key, F, that calls a Server event named Server_Pickup on the character. On the server, this event calls Set Owner on the lantern with the character as the new owner, and attaches the lantern to the hand.",
+   "After the pickup, press E again from the client. Note the difference, and explain it with the owning connection rule.",
+   "On Begin Play of the lantern, start printing Get Owner every second. Compare what the server window and the client windows print before and after the pickup.",
+   "Write 3 sentences: who owns a pawn on the server, how an actor component finds its owning connection, and why a lantern with no owner cannot run a Server RPC from a client."
+  ]
+ },
+ "PQ101": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Beacon with Replicates on and a Static Mesh that has collision. In Class Defaults, in the Replication section, set Net Cull Distance Squared to 90000 (3 m squared).",
+   "Spawn one BP_Beacon on the server while the game runs. Play with 2 players and walk the client away from the beacon. Note the distance at which it disappears on the client, and check that it still exists in the server window.",
+   "Turn on Always Relevant on BP_Beacon and do the test again. Then turn on Only Relevant To Owner and do it once more.",
+   "Make an Actor Blueprint named BP_Sign with Replicates on, a replicated string named Message, and a text render that is updated in OnRep. Set Net Dormancy to Initial in Class Defaults and place the sign in the level.",
+   "Add a key on the server that sets Message with a normal Set node, and watch the client. Then call Flush Net Dormancy on the sign before the Set node and watch again.",
+   "Write 4 sentences: what relevancy does to a dynamic actor on the client, what dormancy does instead, and which of your two actors is a good candidate for each."
+  ]
+ },
+ "PQ102": {
+  "title": "Record a Networking Insights session",
+  "official_url": "https://dev.epicgames.com/documentation/en-us/unreal-engine/networking-insights-in-unreal-engine",
+  "brief": "Networking Insights is the part of Unreal Insights that shows the network traffic of your game. It reads a trace, which is a recording made while the game runs, and shows every packet that was sent or received and what was inside it. You cannot lower the amount of data your game sends until you can see what is sending it. In this quest you record a short multiplayer session with network tracing turned on, open it in Networking Insights, and find the biggest users.",
+  "checklist": [
+   "Use a project made from the Third Person template, or create one, and close the editor. Start Unreal Insights first: run UnrealInsights.exe from the folder Engine/Binaries/Win64 of your engine and leave it open.",
+   "Start the editor from a command prompt with network tracing turned on, for example: UnrealEditor.exe YourProject.uproject -trace=net -NetTrace=1 -tracehost=localhost. The argument -tracehost=localhost is needed in the editor, because the editor runs its own data store for trace data.",
+   "In the editor, play with 2 players and Play As Listen Server. Move both characters and jump around for about 30 seconds. Then stop playing and close the editor.",
+   "In Unreal Insights, open the newest trace from the list of sessions. Open the Networking Insights window from the menu of Unreal Insights. In the connection selection area, pick a Game Instance and a Connection, and switch Connection Mode between outgoing and incoming data.",
+   "In the Packet Overview panel, hover over a packet to read its index, size and status. Click one large packet to select it, and hold Shift and click to select several. Dropped packets are shown in red.",
+   "Look at the Packet Content panel for your selection and find the character in it, with its replicated properties and remote function calls. Tick By NetId and type the NetId of one object to filter the view. Then filter by type and turn on Highlight.",
+   "Open the Net Stats panel and sort it by total size. Write down the top 3 entries. Then write 3 sentences: which object or remote function call used the most data, one idea to reduce it, and why the reported packet size can be larger than what really goes over the wire."
+  ],
+  "done_when": "Send a screenshot of Networking Insights with the Packet Overview and the Packet Content of a selected packet, and a screenshot of the Net Stats panel sorted by total size. Add your 3 sentences.",
+  "quiz": [
+   {
+    "q": "Which command-line arguments record a networking trace?",
+    "choices": [
+     "-stats on its own",
+     "-netprofile=true",
+     "-log -verbose",
+     "-trace=net together with -NetTrace=1, or another value above zero"
+    ],
+    "explain": "The trace needs the net channel (-trace=net) and a NetTrace verbosity greater than zero, for example -NetTrace=1."
+   },
+   {
+    "q": "You record from the editor. Which extra argument does the documentation say you need, and why?",
+    "choices": [
+     "-game, because the editor cannot record traces",
+     "-nosound, to keep the trace small",
+     "-windowed, so that Unreal Insights can attach",
+     "-tracehost=localhost, because the editor runs its own data store for trace data"
+    ],
+    "explain": "The editor runs its own data store for trace data, so you need to specify the tracehost to collect network trace data while running in the editor."
+   },
+   {
+    "q": "Which panel shows a timeline of the packets and their sizes?",
+    "choices": [
+     "Packet Overview",
+     "Packet Content",
+     "Net Stats",
+     "Net Stats Counters"
+    ],
+    "explain": "The Packet Overview panel visualizes the packets that were transmitted or received during the game, with their sizes."
+   },
+   {
+    "q": "What does the Packet Content panel show?",
+    "choices": [
+     "The frame rate of each client",
+     "A list of all levels that were loaded",
+     "What is inside the selected packets, such as replicated objects, properties and remote function calls",
+     "The CPU time of the server"
+    ],
+    "explain": "Packet Content reveals the content of the selected packet or packets: replicated objects, properties and remote function calls."
+   },
+   {
+    "q": "How are dropped packets shown in the Packet Overview?",
+    "choices": [
+     "In red",
+     "In green",
+     "They are not shown at all",
+     "With a dotted outline"
+    ],
+    "explain": "Dropped packets are displayed in red."
+   },
+   {
+    "q": "Which selection decides whether you see incoming or outgoing data?",
+    "choices": [
+     "Game Instance",
+     "Connection Mode",
+     "Connection",
+     "Net Stats"
+    ],
+    "explain": "Connection Mode controls whether incoming or outgoing data is shown. Game Instance and Connection choose whose data you look at."
+   },
+   {
+    "q": "The trace reports the size of each packet. How does this size relate to the data that really goes over the wire?",
+    "choices": [
+     "It is always exactly the same",
+     "It counts every packet twice",
+     "It is the size before compression, so the real data may be smaller",
+     "It only counts the packet headers"
+    ],
+    "explain": "The reported size of each packet is the size before compression, so the actual data on the wire may be smaller than what the report shows."
+   },
+   {
+    "q": "How do you select several packets at once in the Packet Overview?",
+    "choices": [
+     "Double-click one packet",
+     "Hold Shift and click",
+     "Press Ctrl+A in the Net Stats panel",
+     "You can only select one packet"
+    ],
+    "explain": "Click selects one packet. Hold Shift and click to select several packets."
+   }
+  ]
+ },
+ "PQ103": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an actor named BP_SlowSpawner that spawns 200 actors in one frame when you press a key, and writes one line to the log with Print String at that moment. Set Auto Receive Input to Player 0 in its Class Defaults, and place it in the level.",
+   "Record a trace of a Play In Editor (PIE) session in which you press the key. Open the trace in Unreal Insights and go to the Timing Insights window.",
+   "In the Frames panel, click the tall bar that belongs to the spawn frame. Then look at the track of the Game thread in the Timing panel.",
+   "Open the Timers panel and set the Modes dropdown to Instance. Sort the list by Inclusive time and find the spawn work.",
+   "Double-click the spawn timer to plot it in the main graph. Then select it and read the Callers and Callees panels, which show what calls it and what it calls.",
+   "Use the Log panel to find your own log line from the spawn frame. Click the line to jump to that moment.",
+   "Write down the name of the timer, its Inclusive time and Exclusive time, and one caller."
+  ]
+ },
+ "PQ104": {
+  "title": "Stat groups and a trace",
+  "brief": "A stat command is a console command that shows live numbers about the running game on the screen, such as the time spent in ticks. The stats are sorted into groups. They are the fastest way to see what your game is doing right now. To study a session later, you record a trace and open it in Unreal Insights. Older versions recorded stat files for the Profiler tab of the Session Frontend, but that tab no longer exists in the current engine. In this quest you try several stat groups, record a trace, and open it in Unreal Insights.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Start Play In Editor (PIE), open the console and run stat Help. Then run stat List Groups and note three groups that you did not know.",
+   "Make an Actor Blueprint named BP_StatTest that does a little work on Event Tick, for example a loop that adds numbers, and place it in the level. Run stat Game, stat TickGroups and stat Dumpticks. Find the tick of BP_StatTest in the output.",
+   "Run stat Levels in a level that has at least one streaming sub-level. To add one, open Window > Levels and create a new sub-level from the Levels menu. Note the colour of each level in the list.",
+   "Record a trace: click Trace in the bar at the bottom of the editor window and choose Start Trace. You can also open Tools > Session Frontend, go to the Trace Control tab and click Start Trace there. Play for 20 seconds, stop playing, and then stop the trace.",
+   "Open the trace in Unreal Insights: in the Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Go to the Timing Insights window and open the Timers panel.",
+   "Sort the timers by time and find the most expensive Game thread timer in the capture. Write it down."
+  ],
+  "done_when": "Send two screenshots: the Editor viewport with stat Game and stat Levels visible, and Unreal Insights with your trace loaded and the Timers panel visible. Add the name of the most expensive timer.",
+  "quiz": [
+   {
+    "q": "Which command lists every stat command?",
+    "choices": [
+     "stat All",
+     "stat Help",
+     "stat Quick",
+     "stat Engine"
+    ],
+    "explain": "stat Help lists all stat commands. stat List shows groups or sets of statistics."
+   },
+   {
+    "q": "Which stat command dumps info about tick functions?",
+    "choices": [
+     "stat Dumpticks",
+     "stat TickGroups",
+     "stat Game",
+     "stat Tickables"
+    ],
+    "explain": "stat Dumpticks dumps info about tick functions. stat TickGroups shows performance per tick group."
+   },
+   {
+    "q": "In stat Levels, a level shown in blue means what?",
+    "choices": [
+     "Loaded and visible",
+     "Loaded but not visible",
+     "Pre-loading",
+     "Unloaded but still in memory until garbage collection"
+    ],
+    "explain": "Blue means the level is unloaded but still in memory; it is cleaned up when garbage collection runs. Green is loaded and visible."
+   },
+   {
+    "q": "In the current engine, which tab of the Session Frontend lets you start and stop a trace?",
+    "choices": [
+     "Automation",
+     "Console",
+     "Trace Control",
+     "Screen Comparison"
+    ],
+    "explain": "The Session Frontend has the tabs Session Browser, Trace Control, Console, Automation and Screen Comparison. Trace Control has the Start Trace and Stop Trace commands. The old Profiler tab no longer exists."
+   },
+   {
+    "q": "You stopped playing but forgot to stop the trace. What is the risk?",
+    "choices": [
+     "The trace is deleted",
+     "Nothing, a trace always stops together with PIE",
+     "The trace keeps recording the editor and its file keeps growing",
+     "The Editor crashes"
+    ],
+    "explain": "A trace that you started from the editor records the editor process, not only the PIE session. It keeps running until you stop it, so the file keeps growing."
+   },
+   {
+    "q": "Which tool opens a recorded trace for analysis?",
+    "choices": [
+     "Unreal Insights",
+     "The Output Log",
+     "The Material Editor",
+     "The Blueprint Debugger"
+    ],
+    "explain": "Unreal Insights opens traces. Its Timing Insights window shows the frames, the threads and the timers of the recording."
+   },
+   {
+    "q": "Which stat command is the recommended starting point to decide where to profile?",
+    "choices": [
+     "stat Memory",
+     "stat Object",
+     "stat RHI",
+     "stat Unit"
+    ],
+    "explain": "stat Unit shows overall frame time plus game thread, render thread and GPU times; the docs call it a great starting point."
+   },
+   {
+    "q": "Which stat is described as the single most important one for rendering-thread performance?",
+    "choices": [
+     "Visible section count under stat InitViews",
+     "Frame time under stat Unit",
+     "Draw calls under stat RHI",
+     "Triangle count under stat Engine"
+    ],
+    "explain": "stat InitViews notes that Visible section count is the most important stat for rendering-thread performance."
+   }
+  ]
+ },
+ "PQ105": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Use a C++ actor of your own that fires at a target, or make a simple one named AProjectileTurret with a Fire function that picks a target location in front of it and is called from a timer every 2 seconds. Add IVisualLoggerDebugSnapshotInterface to the list of classes that it inherits from.",
+   "Override GrabDebugSnapshot and put it inside #if ENABLE_VISUAL_LOG. In it, add one category with two values: the target name and the cooldown.",
+   "In the fire function, call UE_VLOG with a log category and the verbosity Verbose to log the target and its location.",
+   "Add UE_VLOG_LOCATION for the target point, and UE_VLOG_ARROW to draw an arrow from the muzzle to the target.",
+   "Add UE_VLOG_CONE for the detection cone. It takes the origin, direction, length, angle and colour.",
+   "Open Tools > Debug > Visual Logger. Play in PIE and fire. Then stop and drag the timeline to move through the recording.",
+   "Select your actor in the Actor list and expand your snapshot category."
+  ]
+ },
+ "PQ106": {
+  "brief": "The Gameplay Debugger is the overlay that shows live data about a selected actor during play. It sorts its data into categories, such as Navmesh and AI, and it also works on clients in a network game. With C++ you can add a category that shows your own data. The documentation page still describes an older way to do this, with component classes and an .ini file. The current engine uses a category class that you register in code. In this quest you add one category named MyData that shows a single value.",
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Add GameplayDebugger to the dependency modules in the Build.cs file of the project. Place a NavMeshBoundsVolume and an AI pawn in a level. A copy of the template character with its input removed, which walks to a point with AI Move To, is enough.",
+   "In PIE, point at the AI pawn and press the apostrophe key to open the Gameplay Debugger. Use the keys of the numeric keypad to switch categories on and off.",
+   "Open the file Engine/Source/Runtime/GameplayDebugger/Public/GameplayDebuggerCategory.h in your engine folder and read the comment at the top. It explains the two sides of a category: CollectData runs where the game has authority and gathers the data, and DrawData runs locally and shows it.",
+   "Create a class named FGameplayDebuggerCategory_MyData that derives from FGameplayDebuggerCategory, inside an #if WITH_GAMEPLAY_DEBUGGER block. Override CollectData(APlayerController* OwnerPC, AActor* DebugActor). In it, read one value from the debug actor, for example its speed, and call AddTextLine with a colour tag, such as {red}Speed: {white} followed by the number.",
+   "Give the class a static function named MakeInstance that returns a new instance as a TSharedRef<FGameplayDebuggerCategory>. Register the category when your game module starts: call IGameplayDebugger::Get().RegisterCategory with the name MyData, a delegate made with IGameplayDebugger::FOnGetCategory::CreateStatic for MakeInstance, and the state EGameplayDebuggerCategoryState::EnabledInGameAndSimulate. Then call NotifyCategoriesChanged. Call UnregisterCategory when the module shuts down.",
+   "Build the project. Play, select the AI pawn with the apostrophe key, and find MyData in the category list at the top of the overlay. Check that your value is shown in colour.",
+   "Open Project Settings, go to Gameplay Debugger, and look at the Input section to see the activation key."
+  ],
+  "done_when": "Send a screenshot taken in Play mode with the Gameplay Debugger overlay that shows your MyData category and your value in colour. Also send a screenshot of your code that registers the category.",
+  "quiz": [
+   {
+    "q": "Which key opens the Gameplay Debugger by default?",
+    "choices": [
+     "Tilde (~)",
+     "Apostrophe (')",
+     "Semicolon (;)",
+     "F8"
+    ],
+    "explain": "The apostrophe key or the EnableGDT cheat activates it. Semicolon opens the Debug Camera."
+   },
+   {
+    "q": "Why does the Gameplay Debugger only replicate data from enabled categories?",
+    "choices": [
+     "To save replication channel bandwidth",
+     "Because disabled categories are not compiled",
+     "To avoid crashes on clients",
+     "Because only the server can see categories"
+    ],
+    "explain": "Only enabled categories are replicated, which saves the replication channel's bandwidth."
+   },
+   {
+    "q": "Which function of a category runs on the side that has authority (the server, or a standalone game) to gather the data?",
+    "choices": [
+     "DrawData",
+     "OnDataPackReplicated",
+     "CreateDebugSceneProxy",
+     "CollectData"
+    ],
+    "explain": "CollectData is called in the category that has authority. The text lines and shapes that it adds are replicated, so a client can see the state of the server."
+   },
+   {
+    "q": "Can you extend the Gameplay Debugger with Blueprint only?",
+    "choices": [
+     "Yes, with a Blueprint subclass",
+     "Yes, with an Editor Utility Widget",
+     "No, it can only be extended with C++",
+     "Only in Simulate mode"
+    ],
+    "explain": "The page says it can only be extended with C++. Blueprint projects can use it as-is."
+   },
+   {
+    "q": "Which function of a category runs locally on every tick to show the gathered data?",
+    "choices": [
+     "CollectData",
+     "DrawData",
+     "AddShape",
+     "MarkDataPackDirty"
+    ],
+    "explain": "DrawData is called locally in every tick to present the data. Everything added with AddTextLine and AddShape is shown before DrawData is called."
+   },
+   {
+    "q": "Where do you tell the current engine about your custom category?",
+    "choices": [
+     "Project Settings > Input",
+     "DefaultGame.ini under [Debug]",
+     "In code, with IGameplayDebugger::Get().RegisterCategory, best in the startup of the module that owns the category",
+     "The GameMode class defaults"
+    ],
+    "explain": "Categories must be registered and unregistered in code. The engine header recommends doing this in the Startup and Shutdown of the owning module."
+   },
+   {
+    "q": "What does AddTextLine do with a tag such as {green} inside the text?",
+    "choices": [
+     "Prints the tag as normal text",
+     "Selects a category",
+     "Adds a new line",
+     "Changes the active colour from that point"
+    ],
+    "explain": "Colour tags in the text change the active colour, so one line can show several colours."
+   },
+   {
+    "q": "Which section of Project Settings > Gameplay Debugger changes the activation key?",
+    "choices": [
+     "Display",
+     "Add-Ons",
+     "Input",
+     "Rendering"
+    ],
+    "explain": "Input holds activation keys and category shortcuts; Display has canvas padding and text shadow; Add-Ons has AI, EQS and similar."
+   }
+  ]
+ },
+ "PQ107": {
+  "checklist": [
+   "Use a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make a C++ actor named ALeakyCache that allocates a large TArray in BeginPlay and does not free it until EndPlay.",
+   "Start UnrealInsights.exe from the folder Engine/Binaries/Win64 before you run the game.",
+   "Run your project from a command prompt, with the memory trace channel active from the start of the process. To do this, add the argument -trace=default,memory to the command line, for example: UnrealEditor.exe YourProject.uproject -game -trace=default,memory",
+   "Load a level with 20 ALeakyCache actors and wait a moment. Then open a different level and stop the session.",
+   "Open the .utrace file and select Menu > Memory Insights. Read the Total Allocated Memory graph.",
+   "In the Investigation panel, run a Memory Leaks query. Put the markers A and B around the first level, and the marker C after the level change.",
+   "Group the result by Alloc Callstack and find the allocation of your ALeakyCache."
+  ]
+ },
+ "PQ108": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a test level with an actor named BP_HeavyTick that runs a big loop on Tick. Add a switch, for example a key press in the Level Blueprint, that spawns 50 of them.",
+   "In the viewport menu, enable Show FPS. Then open Stat, then Engine, and enable FPS and Unit.",
+   "Run stat Unit and stat UnitGraph. Read the values Frame, Game, Draw, GPU and RHIT before you spawn the actors and after.",
+   "Run stat Hitches and stat DumpHitches. Set t.HitchFrameTimeThreshold and cause a spike. Find the HITCH line in the Output Log.",
+   "Now replace the heavy actors with 500 high-poly meshes and repeat the test. For the mesh, you can make a Sphere with a very high subdivision level in Modeling Mode, with Nanite turned off. Compare which thread time grows.",
+   "Write a short table with these columns: test, Frame ms, Game ms, Draw ms, GPU ms, and your verdict (CPU-bound or GPU-bound)."
+  ]
+ },
+ "PQ109": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile. Make BP_MathWorker. On Tick, it loops 10,000 times and adds up vector distances. Spawn 20 of them.",
+   "Make AMathWorkerCpp, which runs the same loop in its C++ Tick. Spawn 20 of them in a second test.",
+   "Run the game with -trace=default,AssetLoadTime -statnamedevents, so that the Blueprint names show in Insights.",
+   "Record a trace for each test. In Timing Insights, with the Game Frame mode, compare the timers of the Game thread.",
+   "Rewrite BP_MathWorker so that the loop runs on a Timer every 0.5 s and not on Tick. Measure again.",
+   "Use Blueprint Header View to generate a .h file from BP_MathWorker, and compare it with your C++ class.",
+   "Write down the three numbers (Blueprint tick, C++ tick, Blueprint timer) and your rule for when to convert."
+  ]
+ },
+ "PQ110": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio for the C++ steps. Make BP_Churn. In a loop, it spawns 500 small actors and destroys them 2 seconds later.",
+   "Run stat GC and stat UnitGraph in PIE. Watch for the spike when the collector runs.",
+   "Open Project Settings and go to Engine, then Garbage Collection. Lower Time Between Purging Pending Kill Objects and compare the size of the spike.",
+   "In a C++ class, hold one object in a raw pointer and one object in a TObjectPtr that is marked with UPROPERTY. Destroy the object and log both pointers.",
+   "Replace the raw pointer with a TWeakObjectPtr, and check IsValid after the destroy.",
+   "Add a Collect Garbage call at a loading screen or at a level change, and confirm that the spike moves to that moment.",
+   "Write down the size of the spike before and after the tuning, and which pointer became null."
+  ]
+ }
+}

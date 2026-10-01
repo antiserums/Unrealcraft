@@ -1,0 +1,216 @@
+{
+ "PQ1": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Start Play In Editor (PIE), which means pressing Play to run the game inside the editor. Open the console with the backtick key, which on most keyboards is the key above Tab. Run the command stat fps, then stat unit, and then stat none, which hides the stats again.",
+   "Open the Show menu of the viewport and toggle two show flags, for example Collision and Bounds. A show flag turns one kind of visual information on or off. Note what each of the two shows you.",
+   "In any Blueprint, for example the Level Blueprint or the character Blueprint of the template, add a Print String node on the BeginPlay event, which runs when the game starts. Give the node a custom color, a Key, and a duration of 5 seconds.",
+   "Run the same Print String twice with the same Key. Note that the second message replaces the first one on the screen instead of appearing as a new line under it.",
+   "Write down 5 console commands that you would want to use in every debug session."
+  ]
+ },
+ "PQ2": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Window, then Output Log. Use its filter so that it shows only warnings and errors.",
+   "Open a Blueprint that has some logic in it. The character Blueprint of the template, BP_ThirdPersonCharacter, works well, and so does a Blueprint of your own. Select a node, for example the Jump node, and press F9 to set a breakpoint on it, which makes the game pause when that node runs. Then play in the editor (PIE) and do the action that makes the node run.",
+   "While the game is paused, press F10 two times to step over two nodes, which means running them one at a time. Then hover the mouse over a variable to read its value.",
+   "Right-click a pin and choose Watch This Value. Then open the Blueprint Debugger window and read the value there.",
+   "Remove the breakpoint. Play again and confirm that PIE now runs straight through without pausing."
+  ]
+ },
+ "PQ3": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Third Person character Blueprint. Also open its GameMode, the Blueprint that sets the rules of the game and decides which character the player uses.",
+   "Follow one input through the graph. Start at the Input Action event, which is the node that fires when the player presses a key or moves a stick, and end at the node that moves the character.",
+   "List the components on the character, which are the parts shown in the Components panel. Write what each one is for.",
+   "Find where the length of the camera boom is set. The camera boom is the arm that holds the camera behind the character. Change the length once to see the effect, and then set it back to the old value."
+  ]
+ },
+ "PQ4": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a level named L_TestHarness in the folder UC/Maps (create the folder if it does not exist yet). Give it a flat floor, a Player Start, and one pad for each system you plan to test. A pad is just a marked area on the floor. Plan at least two pads, for example one for a pickup and one for a door.",
+   "Add a Text Render actor next to each pad. Set its text to the name of that pad so you can read what the pad is for.",
+   "Place an interactable object on one pad. If you have none, make a simple one: an Actor Blueprint with a cube mesh and a Box Collision that prints a message with Print String when something overlaps it. Confirm that it works in PIE (Play In Editor) and also in Simulate, the mode that runs the level without a player. In Simulate, drop a physics cube onto the pad to trigger it.",
+   "Set the GameMode Override of the level, which you find in the World Settings panel. This makes the level always start with the same GameMode, so it always starts the same way."
+  ]
+ },
+ "PQ8": {
+  "brief": "A debug room is a test level where each area shows one way to find problems. Building one proves that you can set up a space for testing and that you can explain your tests to another person. In this quest you build a small debug room with three pads, and you write notes so that someone else can repeat each test.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a debug room in a new level: a flat floor, a Player Start, and at least 3 pads, which are marked areas on the floor with a Text Render actor as a label. If you already have a test level of your own, you can extend that. Each pad must show one debug technique.",
+   "Give each pad a small Actor Blueprint with a Box Collision that reacts when the player steps on it. Make one pad write a message to the Output Log only (a Print String with Print to Screen turned off). Make one pad use Print String with Keys. Give one pad a Blueprint that is ready for a breakpoint, which is a mark that pauses the game on a node you choose.",
+   "Write notes for each test. Say how to reproduce the test, which means the steps to run it again, and say what output you expect to see.",
+   "Run stat unit in the room and write down the numbers it shows. Add one line that says what these numbers mean."
+  ]
+ },
+ "PQ6": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Start a trace from the editor: click Trace in the bar at the bottom of the editor window and choose Start Trace. Then play any level for 10 seconds, stop playing, and choose Stop Trace in the same menu.",
+   "Open the trace in Unreal Insights: in the same Trace menu, choose Unreal Insights (Session Browser) and open the newest trace in the list. Find the Game thread and the Render thread. A thread is one line of work that the engine runs; the Game thread runs the game logic and the Render thread prepares what is drawn.",
+   "Take a screenshot of the timing view of one frame."
+  ]
+ },
+ "PQ9": {
+  "done_when": "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the win happening, and add your 2 lines.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create two Blueprints: BP_UUGameMode with Game Mode Base as the parent class, and BP_UUGameState with Game State Base as the parent class. In the Class Defaults of BP_UUGameMode, set Game State Class to BP_UUGameState, and set Default Pawn Class to the character of the template so that you can still walk around. In the World Settings of a test level, set GameMode Override to BP_UUGameMode, so the level uses them when it runs.",
+   "In BP_UUGameState, add an Integer variable named Collected that stores a score or a count of collected items. Add a function named AddPoint that adds 1 to it.",
+   "In BP_UUGameMode, add an Integer variable named Target with the value 3, and a Custom Event named CheckWin. In CheckWin, use Get Game State, cast it to BP_UUGameState and read Collected. When the count reaches Target, the GameMode declares a win. To test it, make a simple pickup: an Actor Blueprint with a sphere mesh and a Sphere Collision that, when the player overlaps it, calls AddPoint and then CheckWin and destroys itself. Place three of them in the level.",
+   "Print or log the win message one time only. Put a Do Once node in front of the Print String, or use a Boolean variable named HasWon. The message must not appear again on every frame.",
+   "Write 2 lines that say why the score is stored in the GameState and not in the GameMode."
+  ]
+ },
+ "PQ10": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. The template already uses Enhanced Input, so you can look at its Input folder as an example. Create an Input Action asset named IA_Interact. Add it to an Input Mapping Context, either a new one or one that already exists, and give it a key.",
+   "On the BeginPlay event, which runs when the game starts, add the mapping context to the player. Without this step the player's keys do nothing.",
+   "On the character, handle the Triggered event of IA_Interact. When it fires, write to the log which actor the character is facing.",
+   "Add one modifier or one trigger to the mapping, for example Hold, which fires only after the key is held down for a moment. Note what changes in how the action behaves."
+  ]
+ },
+ "PQ11": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and make a new Actor Blueprint for this test. Choose one small behavior, such as printing a message and changing the color of a light, and build it three times in the same Blueprint: once as a function, once as a macro, and once as a custom event.",
+   "Try to add a Delay node inside each of the three. A Delay node makes the graph wait for some time. Note where the editor allows it and where it does not.",
+   "Try to call each of the three from another Blueprint. Note which ones you can reach from there.",
+   "Write a table with 3 rows, one for each of the three. In each row, say when you would pick that one."
+  ]
+ },
+ "PQ12": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an enum named E_PickupType with 3 values. Then create a struct named S_PickupInfo that holds a name, a value, and a type.",
+   "Create a Data Asset class: make a new Blueprint Class with Primary Data Asset as its parent, name it DA_PickupBase, and add a variable of type S_PickupInfo to it. Then create 2 Data Asset instances from it (right-click in the Content Browser, open Miscellaneous, choose Data Asset and pick your class), each one describing a different pickup.",
+   "Make one pickup Blueprint, an Actor with a mesh and a Sphere Collision, that has an Instance Editable variable of your Data Asset type. When the player overlaps it, it prints the name and the value that it reads from the Data Asset. It must not use hardcoded variables, which are values typed directly into the Blueprint.",
+   "Place a pickup in the level and change which Data Asset it uses. Confirm that the pickup behaves differently and that you did not need to edit the graph."
+  ]
+ },
+ "PQ13": {
+  "brief": "A log message is a line of text that your game writes to the Output Log window. A good warning says what went wrong and which actor it happened on, so you find a bug in seconds and not in hours. An Is Valid check tests that a reference really points to an object before you use it. In this quest you add these checks and warnings to a small Blueprint and then break something on purpose to see the warning work.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Take one Print String node in any Blueprint and turn off its Print to Screen option, so that it writes only to the log. Run the game and find the message in the Output Log.",
+   "Use a Blueprint of your own that uses actor references, or make a small one: an Actor Blueprint named BP_Button with an Instance Editable variable named Target of type Actor, which destroys the Target when the player overlaps the button. An actor reference is a variable that points to an actor in the level. Add an Is Valid check before every place where the reference is used.",
+   "When a check fails, log a clear warning. Include the name of the owning actor in the message so you know where the problem is.",
+   "Break one reference on purpose, for example by leaving it empty. Run the game and confirm that the warning tells you where to look."
+  ]
+ },
+ "PQ19": {
+  "brief": "A game loop is the full circle of play: the player does something, the game counts it, and at some point the game says the player has won. Building a full loop proves that separate pieces work together. In this quest you join pickups, a score, input and warnings into one small game, and then you package it, which means building a version that runs outside the editor. Everything you need to build is listed in the steps, and you may reuse your own earlier work where it fits.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a pickup Blueprint that gets its values, such as a name and a point value, from a Data Asset (a Blueprint class with Primary Data Asset as its parent, and two Data Asset instances made from it). The pickups must talk to the player through a Blueprint Interface, which is a list of functions that different Blueprints can share. For example, the character calls an Interact function of the interface on the pickup.",
+   "Keep the score in a GameState Blueprint, and let a GameMode Blueprint declare the win when the score reaches a target. Set both in the World Settings of your level.",
+   "For at least one pickup type, make the player interact with it through an Enhanced Input action: create an Input Action named IA_Interact, add it to the Input Mapping Context of the template with a key, and handle it on the character.",
+   "Add an Is Valid check and a log warning for every actor reference that you use.",
+   "When the player wins, restart the level or show a simple win message.",
+   "Package a development build, which is a version of the game that runs without the editor: use the Platforms button in the main toolbar, choose your platform and then Package Project. Play it outside the editor one time and record a short clip."
+  ],
+  "done_when": "Send a short video clip (30 seconds or less) of the packaged build running, in which you win once. Add a short written description of how the pieces connect."
+ },
+ "PQ14": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make two simple Actor Blueprints: BP_Button, with a mesh and a Box Collision that counts as pressed when the player overlaps it, and BP_Lamp, with a Point Light and a function that switches the light on and off. Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react.",
+   "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
+  ]
+ },
+ "PQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of the character of the template, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen.",
+   "Update the widget from the GameState when the score changes. If your project has no GameState with a score, make one: a Blueprint with Game State Base as its parent and an Integer variable named Score, set as the Game State Class of a GameMode Blueprint that the level uses. Add a key event on the character that adds 1 to the score, so that you can test. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+  ]
+ },
+ "PQ16": {
+  "done_when": "Send a short video clip (30 seconds or less), or two to three screenshots from PIE, that show the player touching the kill volume and standing at the checkpoint again.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a GameMode Blueprint as a child of the GameMode of the template and set it as the GameMode Override of a level in World Settings. Add a kill volume to the level: an Actor Blueprint with a large Box Collision, placed below the floor. When the player overlaps it, the player must respawn, which means appear again, at the last checkpoint they reached. The simple way is to call an event on the GameMode that moves the player back with Set Actor Transform.",
+   "Store the last checkpoint in a place where the GameMode can read it, for example a Transform variable named LastCheckpoint in the GameMode itself or in the GameState. Make a checkpoint Blueprint with a Box Collision that writes its own transform into that variable when the player overlaps it."
+  ]
+ },
+ "PQ20": {
+  "checklist": [
+   "Install the IDE and the workloads that the page Coder 01: Set Up and Compile a C++ Project, linked on this quest, lists for your platform. A workload is a set of extra tools that the IDE needs for a kind of work.",
+   "Create a new project from the Third Person template with C++ selected. You can also add a C++ class to a Blueprint project that you already have, or to a copy of it, with Tools, then New C++ Class. When you do this, the project becomes a C++ project.",
+   "Generate the project files and open the solution in the IDE. Then build the Editor target with the configuration Development Editor.",
+   "Start the Unreal editor from the IDE with the debugger attached. The debugger is the tool that lets you pause the program and look inside it.",
+   "Set one breakpoint in your class, which is a mark on a line where the program will pause. Then make that line run so the program stops on it."
+  ]
+ },
+ "PQ21": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio, set up as Epic's documentation describes. Create a C++ actor class named AUUDebugActor with Tools, then New C++ Class. Give it a float variable marked with UPROPERTY, and use the specifiers EditAnywhere and BlueprintReadWrite.",
+   "Add a second property that uses the specifier VisibleAnywhere. Compile, and note what is different about this property in the Details panel.",
+   "Add a function marked with UFUNCTION(BlueprintCallable) that writes the float to the log.",
+   "Make a Blueprint child of your class that calls that function on BeginPlay, and place the Blueprint in any level.",
+   "Write a short table of the specifiers you used. For each one, say what it does."
+  ]
+ },
+ "PQ22": {
+  "brief": "C++ code often needs to let a Blueprint decide what happens at a certain moment. Unreal gives you two main tools for this. A BlueprintImplementableEvent is a function that C++ calls but only a Blueprint fills in. A BlueprintNativeEvent has a default version written in C++ that a Blueprint may replace. In this quest you add one of each to a C++ actor and use both from a Blueprint child, which is a Blueprint made from your C++ class.",
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. Create a C++ actor class with Tools, then New C++ Class, or use an actor class of your own. Add a BlueprintImplementableEvent named OnActivated to it. Call it from your C++ code, for example in BeginPlay.",
+   "Add a BlueprintNativeEvent named OnReset. Write its C++ version, which is a function with _Implementation at the end of its name, and make it write a line to the log. Call OnReset from BeginPlay as well, so that you can see it run.",
+   "Create a Blueprint child of your actor. In it, implement OnActivated and override OnReset. In the OnReset override, call the parent version one time.",
+   "Write 2 lines that say when you would use each of the two kinds of event."
+  ]
+ },
+ "PQ23": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. Create a C++ actor class with Tools, then New C++ Class, or use an actor class of your own. In the constructor of the actor, create a root scene component, a static mesh, and a box collision. Use the function CreateDefaultSubobject for each one. The constructor is the function that runs when the object is created.",
+   "Attach the components to each other with SetupAttachment. Mark them with UPROPERTY(VisibleAnywhere) so that you can see them in the editor.",
+   "Write a class that is based on UActorComponent, for example UUSpinComponent. Make it tick, which means run every frame, and rotate its owner, the actor it belongs to.",
+   "Add your component to a Blueprint actor. Then change its values in the Details panel until the motion looks right."
+  ]
+ },
+ "PQ24": {
+  "checklist": [
+   "Open a C++ project that has at least one class of your own with a function, for example an actor that writes to the log in BeginPlay. If you have none, create a project from the Third Person template with C++ selected and add such an actor with Tools, then New C++ Class. With the editor open, change the body of a function, which is the code inside it. Apply the change with Live Coding by pressing Ctrl+Alt+F11.",
+   "Add a new UPROPERTY to your class and use Live Coding again. Note what happens.",
+   "Close the editor. Build the project from the IDE, and then open the editor again.",
+   "Write your rule. Say which changes are safe to apply with Live Coding and which changes need a restart."
+  ]
+ },
+ "PQ25": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. Declare a log category named LogUU in a header file with DECLARE_LOG_CATEGORY_EXTERN, and define it in a .cpp file with DEFINE_LOG_CATEGORY.",
+   "Create a C++ actor class with Tools, then New C++ Class, or use an actor of your own. From its BeginPlay function, write three messages with UE_LOG: one with the verbosity Log, one with Warning, and one with Error. Place the actor in a level and press Play.",
+   "In the Output Log, set the filter so that it shows only the LogUU category.",
+   "Open the console and use the log command to change the verbosity of your category. Confirm that messages of the lower levels no longer appear."
+  ]
+ },
+ "PQ26": {
+  "brief": "Most Unreal projects use C++ and Blueprint together. A common pattern is a base class in C++ that holds the core logic, and a Blueprint child where designers set values and add small changes. How you split the work decides who can change what without asking a programmer. In this quest you plan such a split for a pickup that the player collects, on paper.",
+  "checklist": [
+   "Read the documentation page Coding in Unreal Engine: Blueprint vs. C++, which is linked on this quest. Write down one thing that the page says is better done in Blueprint and one thing that is better done in C++.",
+   "Take a simple gameplay piece as your example: a pickup that the player collects, which adds to a score. If you have built something similar, use your own. Make a sketch of how you would split it into a C++ base class and a Blueprint child.",
+   "Decide which values get the specifier EditDefaultsOnly, which get BlueprintReadOnly, and which stay private. A specifier is a word in the UPROPERTY macro that controls what the editor and Blueprints can do with the value.",
+   "Expose one delegate that Blueprints can assign to, for an event that designers care about. A delegate is a signal that other code can listen to."
+  ]
+ },
+ "PQ30": {
+  "brief": "On a team, programmers often write a base class in C++ and other people build on it with Blueprint children, which are Blueprints made from that class. To do this well, your class must be easy to tune, must warn clearly when it is set up wrong, and must be explained in writing. In this quest you build such a base actor, make two Blueprint children from it, and show the result to a mentor.",
+  "done_when": "Send your README as text, a screenshot of the header file of your base class, and a short video clip (30 seconds or less) that shows both Blueprint children working. The quest is complete when a mentor has reviewed your work and approves.",
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. Write a C++ base actor, for example AUUPickupBase. Build its components in the constructor, the function that runs when the object is created.",
+   "Expose the values that people will want to tune with UPROPERTY. Add at least one BlueprintNativeEvent that has a default version in C++.",
+   "Declare your own log category, for example LogUU, with DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY, and write log messages through it. Add clear warnings for the cases where the actor is set up badly.",
+   "Make 2 Blueprint children. They may differ only in their data and in one override. Place both of them in a test level.",
+   "Write a short README file. Say what is in C++, what is in Blueprint, and how a designer would add a third child.",
+   "Record a short video clip (30 seconds or less) that shows both Blueprint children working in PIE."
+  ]
+ },
+ "PQ27": {
+  "checklist": [
+   "Create a project for this quest as the tutorial page Coder 03: Configure Character Movement with C++, which is linked on this quest, describes, or use a copy of a C++ project of your own. Follow the page in that project.",
+   "Expose 2 movement values so that a Blueprint child, a Blueprint made from your C++ class, can tune them."
+  ]
+ },
+ "PQ28": {
+  "checklist": [
+   "Open a C++ project, or create one as the tutorial page describes. Follow the tutorial page Coder 05: Manage Item and Data, which is linked on this quest, and define a Data Asset class for items in C++.",
+   "In the editor, create 2 item assets from your class."
+  ]
+ },
+ "PQ29": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. Pick an actor class of your own with a function that runs during play, or add a new actor with Tools, then New C++ Class, and give it a Tick function that does some work, such as a loop that adds numbers. Add a named CPU scope around that function with the macro TRACE_CPUPROFILER_EVENT_SCOPE, so that the time spent in that function is recorded under the name you give it. Place the actor in a level.",
+   "Capture a trace while the game runs: click Trace in the bar at the bottom of the editor window, choose Start Trace, play for 10 seconds, and choose Stop Trace. Then open the trace in Unreal Insights and find your scope in the timing view."
+  ]
+ }
+}

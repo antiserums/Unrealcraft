@@ -1,0 +1,275 @@
+{
+ "GDQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Read the Logging page that is linked on this quest, with the parts Log Verbosity, Console Command and On-screen debug messages.",
+   "Make a Blueprint Function Library named BPL_Telemetry with a function named LogEvent. Give it two inputs: EventName of type Name and Value of type Float. Inside, build the string EVT,<game time>,<EventName>,<Value>. Then call Print String with Print to Screen off and Print to Log on.",
+   "Call LogEvent from at least three places: when the player dies, when an enemy is killed, and when an item is picked up. Use the event names Death, Kill and Pickup. If your project has no enemies or pickups yet, make a simple pickup (an Actor Blueprint with a Sphere Collision that calls LogEvent and destroys itself when the player overlaps it), and add two key press events on the character that stand in for a kill and a death.",
+   "Add a second Print String on pickup with Print to Screen on, a Duration of 2, and a Key named PickupMsg. Pick up two items quickly and notice that the new message replaces the old one and they do not stack.",
+   "Play for 2 minutes. Open Window > Output Log and filter for EVT. Then open the newest .txt file in the Saved/Logs folder and find the same lines there.",
+   "Copy the EVT lines into a spreadsheet, split them at the commas, and count the kills and the deaths. Write 2 sentences about one balance change that the data suggests.",
+   "Set Print to Log to off on the Death call and play again. Confirm that the Death line no longer appears in the Output Log, and explain why in one line."
+  ]
+ },
+ "GDQ72": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Read the Console Variables Editor page that is linked on this quest. Enable the Console Variables Editor plugin and restart the editor. Open Window > Console Variables and dock the panel.",
+   "Click Add Console Variable and add t.MaxFPS with the value 30 and r.ScreenPercentage with the value 70. Look up both in the Console Variables Reference and note their default values.",
+   "Add the command stat unit. Note whether it appeared in the suggestion list while you were typing.",
+   "Move the mouse over the value of t.MaxFPS and read the Custom, Preset and Startup values. Uncheck the row, play, and confirm that the frame limit is gone. Then check the row again.",
+   "Open the Presets panel and save the list as Playtest_LowEnd. Clear the list, add only t.MaxFPS with the value 0, and save it as Playtest_Default. Load each preset and watch what happens to the values.",
+   "Type lumen|screen percentage in the search box and click Search All. Explain in one line what the pipe character and the space mean.",
+   "Open Project Settings, go to Plugins, then Console Variables Editor, and enable Add All Changed Console Variables to Current Preset. Change a CVar from the console, which you open with the ~ key, and confirm that it appears in the list."
+  ]
+ },
+ "GDQ73": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Add a Blueprint Class with the parent CameraShakeBase and name it CS_HitSmall. Set Root Shake Pattern to Perlin Noise Camera Shake Pattern. Give Rotation Pitch an Amplitude of about 1 and a Frequency of about 25. Set Duration to 0.25 and Blend In/Out to 0.05, and enable Single Instance.",
+   "Make a second shake named CS_Explosion with the same pattern, but with a larger Amplitude of about 5, a Duration of 0.8 and a Blend Out of 0.3. Leave Single Instance off.",
+   "In BP_ThirdPersonCharacter, add an Input Action or a key event for a punch. On the event, call Get Player Camera Manager, and then call Start Camera Shake with Shake Class CS_HitSmall and Scale 1.0.",
+   "Make a Blueprint named BP_Barrel with a Static Mesh and a Box Collision. When the player begins to overlap the box, call Play World Camera Shake with Shake CS_Explosion and Epicenter set to the location of the barrel. Set Inner Radius to 200, Outer Radius to 1500 and Falloff to 1.0.",
+   "Place three barrels at different distances. Press Play, walk into them, and note how the shake gets weaker with distance.",
+   "Test the punch shake by pressing the key many times quickly. Then turn Single Instance off on CS_HitSmall and press quickly again. Write 2 sentences about the difference you saw."
+  ]
+ },
+ "GDQ74": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Dummy with a Static Mesh and a Box Collision, and place one in the level. In BP_ThirdPersonCharacter, add a key event for a punch that does a Sphere Trace forward with a radius of 60 and a length of 150, and finds a BP_Dummy.",
+   "Make a custom event named HitStop with a Float input named Duration. It calls Set Global Time Dilation with 0.05. Then it calls Set Timer by Event with Time set to Duration and Looping off. The event of the timer calls Set Global Time Dilation with 1.0.",
+   "Before the hit stop starts, store Get Real Time Seconds in a variable. When time returns to 1.0, print Get Real Time Seconds minus the stored value. Test with Duration 0.1, see how many real seconds the stop lasted, and write down the number.",
+   "During the hit stop, print Get Time Seconds, Get Unpaused Time Seconds, Get Audio Time Seconds and Get Real Time Seconds on the same tick. Note which ones move slowly and which ones do not.",
+   "Add a Get Global Time Dilation check at the start of HitStop. If the value is not 1.0, do nothing. This stops a second hit from breaking the first stop.",
+   "After the punch, add a Delay of 0.1 that spawns a small debug text. Compare how long the Delay waits during the hit stop with how long the timer waits. Write 2 sentences about what you measured."
+  ]
+ },
+ "GDQ75": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a gamepad for this quest. In the Content Browser, click Add and choose Input, then Force Feedback Effect. Name the asset FF_HitLight. In its one channel, enable only Affects Right Small. Hold Shift and click on the curve to add two keys: (0, 1.0) and (0.15, 0).",
+   "Make a second effect named FF_Explosion with two channels. Channel 0 uses Affects Left Large with the keys (0, 1.0), (0.4, 0.6) and (0.8, 0). Channel 1 uses Affects Right Small with the keys (0, 0), (0.1, 0.8) and (0.3, 0). With a gamepad connected, move the mouse over the asset icon and press the play button to preview each effect.",
+   "In BP_ThirdPersonCharacter, add a key or gamepad button event for a punch. On it, call Get Player Controller and then Client Play Force Feedback with FF_HitLight. Give it the Tag Hit.",
+   "Make a Blueprint named BP_ExplosiveBarrel. When the player begins to overlap it, call Spawn Force Feedback at Location with FF_Explosion at the location of the barrel and with Auto Destroy on. Give it an attenuation asset, so that the rumble gets weaker with distance.",
+   "Add a looping test. One key calls Client Play Force Feedback with Looping on and the Tag Engine. Another key calls Client Stop Force Feedback with the same Tag. Confirm that the loop stops.",
+   "Write 2 sentences that say which motors you used for the light hit and which for the explosion, and why."
+  ]
+ },
+ "GDQ76": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Import or pick three short impact Sound Waves. The Audio folder of the Starter Content has some. Create a Sound Cue named SC_Hit. Add a Random node with the three waves as inputs. Set the Weights so that one wave is chosen twice as often as the others.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9, Pitch Max to 1.1, Volume Min to 0.8 and Volume Max to 1.0. Connect it to the Output node.",
+   "Add a Switch node before the Output node and set Int Parameter Name to Surface. Connect your SC_Hit chain to input 0 and a different wave for metal to input 1. In a Blueprint, play the cue with Spawn Sound at Location. Then call Set Integer Parameter with In Name Surface on the Audio Component that the node returns.",
+   "On the Output node, enable Override Concurrency and set Max Count to 3. Trigger the hit 10 times quickly, and compare what you hear with Max Count 1.",
+   "Make a MetaSound Source named MSS_Hit that plays a Wave Player when a Trigger Input named Impact fires. In a Blueprint, use Spawn Sound Attached and then Execute Trigger Parameter with In Name Impact.",
+   "Write 3 sentences that say what the Random node, the Modulator node and the Switch node each changed in how the hit sounds."
+  ]
+ },
+ "GDQ77": {
+  "brief": "Niagara is the visual effects system of Unreal. It creates particles, which are many small images that move and fade, for effects such as sparks or dust. A short burst of particles at the point of a hit shows the player exactly where and when the hit happened. In this quest you build a small burst effect and spawn it from a Blueprint at the place where a punch lands.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Right-click in the Content Browser, choose FX, then Niagara System. Pick the Simple Sprite Burst template and name the system FXS_HitBurst. Rename the emitter to HitBurst.",
+   "In Emitter Update, in Emitter State, set Loop Behavior to Once and Loop Duration to 1. In Spawn Burst Instantaneous, set Spawn Count to 12.",
+   "In Particle Spawn, set Lifetime to a random value from 0.2 to 0.4. Add Shape Location with Shape Primitive set to Sphere and a small radius. Then add the module Add Velocity from the Velocity group, with Velocity Mode set to From Point and a speed of about 300. If the stack shows an error, click Fix Issue.",
+   "In Particle Update, add the Drag module from the Forces group and set Drag to 5. Keep Scale Color, so that the burst fades out.",
+   "In BP_ThirdPersonCharacter, add a key event for a punch that does a Line Trace by Channel from the character about 150 units forward, and place a cube in the level to hit. Where the trace hits, call Spawn System at Location with System Template FXS_HitBurst at the Impact Point and with Auto Destroy on. Rotate it so that it faces along the Impact Normal.",
+   "Make a second call with Spawn System Attached, attached to the root component of the hit actor, with Location Type set to Keep Relative Offset. If the hit actor has a skeletal mesh, you can set Attach Point Name to a socket or a bone. Move the target and note which burst follows it.",
+   "Drag FXS_HitBurst into the level one time, next to the character, to check its size. Then remove it."
+  ]
+ },
+ "GDQ78": {
+  "checklist": [
+   "Open a project made from the Third Person template with Starter Content, or create one. Pick an attack animation for the Third Person mannequin. If you have none, any short animation of the mannequin can stand in for a punch. Right-click it and create an Animation Montage named AM_Punch. Make sure that the montage plays through a slot that the Animation Blueprint of the character uses: its AnimGraph needs a Slot 'DefaultSlot' node before Output Pose.",
+   "In AM_Punch, add a notify track named Feel. Right-click at the moment the fist reaches the target, choose Add Notify, and then Play Niagara Particle Effect, and pick any Niagara System, for example one that you make from the Simple Sprite Burst template. Then add a Sound notify with any short sound and a Pitch Multiplier of 1.1. Set Attach Name to the hand socket or bone.",
+   "Add a Montage Notify named HitFrame at the same frame. In BP_ThirdPersonCharacter, play the montage from a key event with the Play Montage node. From On Notify Begin, check that the Notify Name equals HitFrame, and then run your hit logic. A Print String with the text Hit is enough, and a trace with damage is a bonus.",
+   "Add a Montage Notify Window named Cancel over the last third of the animation. When On Notify Begin runs with the name Cancel, allow the next input to interrupt the montage. When On Notify End runs, stop allowing it.",
+   "Set the Montage Tick Type of the HitFrame notify to Branching Point. Set a Notify Trigger Chance of 0.5 on the sound notify, and play the montage 10 times to hear the sound skip.",
+   "Write 3 sentences: why the hit is in the animation and not on the input, what the Cancel window does for the feel, and why you chose Branching Point."
+  ]
+ },
+ "GDQ79": {
+  "checklist": [
+   "Create a material named M_PP_Damage. In the Details panel, set Material Domain to Post Process and set Blendable Location to After Tonemapping.",
+   "Build the graph. Add a SceneTexture node set to PostProcessInput0, which gives you the color of the scene. Make a round mask from Screen Position, using the distance from the point 0.5, 0.5. Use a Lerp node to blend from the scene color to a red color. For the blend amount, multiply the mask by a Scalar Parameter named Intensity with the default value 0. Connect the result to Emissive Color.",
+   "Make a Material Instance named MI_PP_Damage. Add an unbound Post Process Volume to the level, which is a volume that affects the whole level. Add MI_PP_Damage to its Blendables array, under Post Process Materials.",
+   "Open a project made from the Third Person template for this step, or create one. In BP_ThirdPersonCharacter, on Begin Play, call Create Dynamic Material Instance with MI_PP_Damage as the parent and store the result in a variable. A dynamic instance is a copy of the material that a Blueprint can change while the game runs. Then call Add or Update Blendable on the Camera Component with this dynamic instance and a Weight of 1, so that the camera uses the copy you can change. Add a key press event that stands in for taking damage. On it, call Set Scalar Parameter Value on the dynamic instance to set Intensity to 1.0, and then bring it back to 0 over 0.5 seconds with a Timeline.",
+   "Test it. With the default Intensity of 0, confirm that the screen looks unchanged. Then change the default of the parameter to 1 and confirm that the red vignette is always on. Set it back to 0.",
+   "Write 2 sentences: why the default parameter value must make the screen look as if nothing happened, and why you chose After Tonemapping."
+  ],
+  "quiz": [
+   {
+    "q": "Which material output should a post process material use to write the new color?",
+    "choices": [
+     "Base Color",
+     "Opacity",
+     "World Position Offset",
+     "Emissive Color"
+    ],
+    "explain": "The docs say the material should only use Emissive Color to output the new color, with the Material Domain set to Post Process."
+   },
+   {
+    "q": "Which Blendable Location is the preferred one for performance?",
+    "choices": [
+     "Before Tonemapping",
+     "After Tonemapping",
+     "Before Translucency",
+     "Replacing the Tonemapper"
+    ],
+    "explain": "After Tonemapping is the preferred location for performance because the color is LDR and needs less precision and bandwidth."
+   },
+   {
+    "q": "You want to read the scene color that the pass before yours produced. Which is the correct approach per the docs?",
+    "choices": [
+     "SceneTexture with PostProcessInput0",
+     "The SceneColor expression",
+     "A Texture Sample of the render target",
+     "Particle Color"
+    ],
+    "explain": "The typical post process input comes from the pass before and is accessed through the SceneTexture expression using PostProcessInput0. Using SceneColor might not give the right results."
+   },
+   {
+    "q": "Two volumes blend two instances of the same post process material. What decides the order of blending between those instances?",
+    "choices": [
+     "The Blendable Priority on the material",
+     "The Priority on the Post Process Volume",
+     "The Blend Radius",
+     "The material name, alphabetically"
+    ],
+    "explain": "The Priority on the Post Process Volume affects blending order for multiple instances of the same blendable material. Blendable Priority on the material orders different blendable materials."
+   },
+   {
+    "q": "Why does the docs call a setup bad when the material parameter defaults do not make the pass look like it has no effect?",
+    "choices": [
+     "The material will not compile",
+     "You see a hard transition when the camera enters the volume's blend radius",
+     "The volume becomes unbound",
+     "The pass costs twice as much"
+    ],
+    "explain": "A good setup has default values that make the pass appear to have no effect, for example multiply by white or lerp with 0. Then entering the blend radius gives a smooth transition instead of a hard one."
+   },
+   {
+    "q": "What does the docs advise about using post process materials in general?",
+    "choices": [
+     "Use them for all color correction",
+     "Use them sparingly and only when needed; prefer Post Process Volume settings when they can do the job",
+     "Always place them Before Translucency",
+     "They replace the need for Post Process Volumes"
+    ],
+    "explain": "Post Process Materials should be used sparingly. For color correction, bloom, depth of field and similar, the built-in Post Process Volume settings are optimized and more efficient."
+   },
+   {
+    "q": "You want an outline only on enemies. Which mesh setting makes them available to a post process material?",
+    "choices": [
+     "Cast Shadow",
+     "Translucent Sort Priority",
+     "Receive Decals",
+     "Render Custom Depth"
+    ],
+    "explain": "Custom Depth renders chosen meshes into a separate depth buffer. It is enabled on the mesh with Render Custom Depth, and a Custom Depth Stencil Value can then mask specific objects."
+   },
+   {
+    "q": "When you blend a material instance through a Post Process Volume, which properties get blended?",
+    "choices": [
+     "Only properties whose checkbox is ticked",
+     "All material instance properties, ticked or not",
+     "Only scalar parameters",
+     "Only the Blendable Priority"
+    ],
+    "explain": "All material instance properties are blended, whether the checkbox is checked or not. This differs from post process settings, where an unchecked property has no effect."
+   }
+  ]
+ },
+ "GDQ80": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Input Action named IA_Attack of the type bool, and a second one named IA_HeavyAttack. Add IA_Attack to the Input Mapping Context of the template on a keyboard key and on a gamepad face button. Add a mapping of the same key for IA_HeavyAttack with a Hold trigger that has a Hold Time Threshold of 0.4.",
+   "In BP_ThirdPersonCharacter, add the IA_Attack event. Print a separate line from each of the Started, Triggered and Completed pins. Watch the order of the lines in the log for one press.",
+   "Make a montage named AM_Punch from any short animation of the mannequin, and make sure the Animation Blueprint of the character has a Slot 'DefaultSlot' node before Output Pose. Add a Boolean variable named IsBusy that is true while the punch montage plays. From the Started pin of IA_Attack, check IsBusy. If it is false, attack: set IsBusy to true and play the montage with Play Montage. If it is true, store Get Real Time Seconds in a Float variable named BufferedAt.",
+   "When the montage ends, set IsBusy to false. Then check if Get Real Time Seconds minus BufferedAt is less than 0.25. If it is, attack again and clear BufferedAt. This is your input buffer.",
+   "Test with quick double presses. Then set the buffer window to 0.05 and to 1.0 and feel the difference. Pick a value and write why you chose it.",
+   "Add a Chorded Action trigger so that IA_HeavyAttack only fires while a Block action is held. Type showdebug enhancedinput in the console to see the actions.",
+   "Write 3 sentences that say what the buffer does for a player who presses early, and which Trigger State you used to start it."
+  ]
+ },
+ "GDQ81": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create BP_GM_Rounds with the parent class Game Mode (not Game Mode Base), and create BP_GS_Rounds with the parent class Game State. In the Class Defaults of BP_GM_Rounds, set Game State Class to BP_GS_Rounds and Default Pawn Class to the template character.",
+   "Open World Settings and set GameMode Override to BP_GM_Rounds for the level you test in.",
+   "In BP_GM_Rounds, override the function Ready To Start Match so that it returns a Boolean variable named bReady with the default false. In the character or the Level Blueprint, bind a key that sets bReady to true on the Game Mode. Press Play: the pawn must NOT appear until you press the key.",
+   "On Begin Play of BP_GM_Rounds, add a looping timer of 1 second that prints Get Match State. Watch the state move from WaitingToStart to InProgress.",
+   "Add a second key that calls End Match. Confirm that the printed state becomes WaitingPostMatch. Also confirm that actors keep ticking, which you can see because your timer keeps printing.",
+   "In BP_GS_Rounds, add an Integer variable named RoundNumber. When the match starts, add 1 to it and show it on screen with a Print String.",
+   "Write 3 sentences: which class holds the rules, which class holds the shared state, and why the state must be in the Game State and not in the Game Mode."
+  ]
+ },
+ "GDQ82": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Game Mode Blueprint named BP_GM_Respawn with the parent class Game Mode, set its Default Pawn Class to the template character, and set it as the GameMode Override of your level in World Settings. If you already have a Game Mode Blueprint of your own, you can use that. Add the events OnPostLogin, OnRestartPlayer and OnLogout. Print the name of the controller in each one. Press Play and read the order of the printed lines.",
+   "Make a Player State Blueprint named BP_PS_Lives with an Integer variable Lives that has the default 3. Set it as Player State Class on the Game Mode.",
+   "In the character, add a key press that calls Destroy Actor on the character itself to act as a death. You can use your health system if you have one. Before the character is destroyed, tell the Game Mode through a custom event named PlayerDied and pass the Controller.",
+   "In PlayerDied, subtract 1 from Lives on the Player State of that controller. If Lives is above 0, use Set Timer by Event with 3 seconds, and then call Restart Player with the Controller. If Lives is 0, print OUT OF LIVES and do not respawn the player.",
+   "Place two Player Start actors. Set Player Start Tag to Checkpoint on one of them. In OnRestartPlayer, or before Restart Player, call Find Player Start with Incoming Name Checkpoint. Then use Restart Player at Player Start, so that the respawn uses the tagged start.",
+   "If a Player Start shows the label BADsize, move it out of the geometry until the label is gone."
+  ]
+ },
+ "GDQ83": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create BP_PS_Score with the parent Player State and an Integer variable Score. Create BP_GS_Score with the parent Game State and the variables TeamScore (Integer), TargetScore (Integer, default 10) and bGameOver (Boolean). Set Score and TeamScore to Replicated. Create a Game Mode Blueprint named BP_GM_Score with the parent Game Mode, assign both classes and the template character as Default Pawn Class in its Class Defaults, and set it as the GameMode Override of your level.",
+   "In the Game Mode, create a function named AddScore with the inputs Controller and Amount. It adds Amount to Score on the Player State of that controller, and to TeamScore on the Game State. Never write these values from the pickup itself.",
+   "Make a Blueprint named BP_ScoreOrb. When a pawn overlaps it, get the Game Mode and call AddScore with the Controller of the pawn and the amount 1. Then the orb destroys itself.",
+   "In AddScore, after adding, compare TeamScore with TargetScore. When the target is reached, set bGameOver to true and call End Match. If you use Game Mode Base, print WIN.",
+   "Make a small widget named WBP_Scores. It calls Get Game State, casts the result to BP_GS_Score, and loops over Player Array. It lists the Score of each player, the TeamScore, and the server world time from Get Server World Time Seconds.",
+   "Test with 2 players in Play In Editor with the Listen Server mode. Both windows must show the same TeamScore and the Score of each player.",
+   "Write 4 sentences: one each for Game Mode, Game State and Player State that says what you stored there and why, and one about what you did NOT store in the Game Mode."
+  ]
+ },
+ "GDQ84": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Actor Blueprint named BP_WaveDirector. Add the variables Wave (Integer, 0), MaxWaves (Integer, 5) and WaveTime (Float, 20.0), and a Timer Handle variable named WaveHandle.",
+   "On Begin Play, use Set Timer by Event with Looping on and the time WaveTime, bound to a custom event named NextWave. Store the result in WaveHandle. NextWave adds 1 to Wave and spawns Wave x 2 enemies. Any pawn or a cube is fine as an enemy.",
+   "Add a trigger named BP_SafeZone. When the player enters it, call Pause Timer by Handle with WaveHandle. When the player leaves, call Unpause Timer by Handle. Print Get Timer Remaining Time by Handle on both events, to prove that the remaining time did not change during the pause.",
+   "Add a debug widget, or a Print String every 0.5 s, that shows Get Timer Remaining Time by Handle and Get Timer Elapsed Time by Handle. Check that elapsed plus remaining equals WaveTime.",
+   "In NextWave, when Wave reaches MaxWaves, call Clear and Invalidate Timer by Handle and print WAVES DONE. Then read Get Timer Remaining Time by Handle one more time and note what value an invalid handle returns.",
+   "Add a key that calls Set Timer by Event again with the same WaveHandle but with the time 5.0. Notice that the old 20-second timer is replaced and that you do not get two timers."
+  ]
+ },
+ "GDQ85": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Game Mode Blueprint named BP_GM_Travel with the parent class Game Mode and the template character as Default Pawn Class, or use a Game Mode of your own with that parent. Make two small maps named L_Arena_A and L_Arena_B, each with a floor and a Player Start. In World Settings, set GameMode Override to this Game Mode on both. Give each map a floor of a different color, so that you can tell them apart.",
+   "Make an almost empty map named L_Transition with only a floor. Open Project Settings, go to Maps & Modes, and set Transition Map to L_Transition.",
+   "In the Class Defaults of the Game Mode, turn on Use Seamless Travel.",
+   "Add a key press event in the character that stands in for the end of a round and runs a server travel to the other map. In a Blueprint, use Execute Console Command with the text servertravel L_Arena_B, or ask a programmer to expose ServerTravel. Run it only from the server.",
+   "Seamless travel does not work in a normal Play In Editor session, so test it as a standalone game. Open the dropdown next to the Play button, set Number of Players to 2 and Net Mode to Play As Listen Server, and choose Standalone Game. Trigger the travel. Both windows must arrive in L_Arena_B, and the client must stay connected without a reconnect.",
+   "Now turn Use Seamless Travel off and play again. Describe the difference that you see in the client window.",
+   "Write 3 sentences: which travel type you used, why the transition map exists, and one thing that was kept across the travel."
+  ]
+ },
+ "GDQ86": {
+  "brief": "World Settings is a panel with settings that belong to one map only. There you can give a map its own Game Mode, its own gravity and its own Kill Z, the depth below which a falling actor is destroyed. These settings win over the project defaults for that map. This is the cheapest way to make two levels play differently. In this quest you make a copy of a map with a different Game Mode, lower gravity and a different Kill Z.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Project Settings, go to Maps & Modes, and look at Default GameMode. Expand Selected GameMode and note which Default Pawn Class is shown.",
+   "Duplicate the map of the template, or a test map of your own, and name the copy L_Moon. Open Window > World Settings and set GameMode Override to a new BP_GM_Moon. Make BP_GM_Moon a child of the default Game Mode that uses a different Default Pawn Class or HUD. A copy of the template character with a different Max Walk Speed is enough as the other pawn.",
+   "In World Settings, in the Physics section, override World Gravity in L_Moon so that the jump is clearly higher. Leave the original map unchanged.",
+   "In World Settings, in the World section, change the Kill Z so that an actor that falls off the arena is destroyed quickly. Kill Z is the depth an actor can fall to before it is destroyed. Cut a hole in the floor to test it.",
+   "Use the search box of World Settings to find the Game Mode group, and confirm that your override is listed there.",
+   "Play the original map and then L_Moon. Write 3 sentences: which map used which Game Mode, which setting had priority, and what changed in the physics."
+  ]
+ },
+ "GDQ87": {
+  "brief": "A game loop that works when you play alone in the editor can still fail in multiplayer. The host of a listen server is also the server, so the host sees values that other players may never receive. A slow or unstable network makes this worse. Unreal can run several players in the editor and can imitate a bad connection. In this quest you play a small round loop with two players, as a client only, and under bad network conditions, and you list what breaks.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a small round loop with a score and a round timer. If you have none, build one: a Game State Blueprint with a replicated Integer named Score and a replicated Float named TimeLeft, a Game Mode Blueprint that uses it and lowers TimeLeft once per second with a looping timer, a pickup that adds 1 to Score when a pawn overlaps it, and a widget that shows Score and TimeLeft. Open the Play drop-down. Set Number of Players to 2 and Net Mode to Play As Listen Server. Play the loop. Note which window shows the round timer and the score correctly and which does not.",
+   "Switch Net Mode to Play As Client with Number of Players set to 1, and play again. Anything that only worked because the host was also the server will now fail. List what broke.",
+   "Open Editor Preferences, then Level Editor, then Play. These are the Play In settings. Enable Network Emulation, set Emulation Target to Everyone, and set Network Emulation Profile to Bad. Play with 2 players and watch the round timer and the score updates.",
+   "Change the profile to Custom. Set the incoming latency, which is the delay, to 200 to 400 ms, with 5 percent packet loss. Play one more time.",
+   "Open your Game Mode or Game State Blueprint. In the debug world drop-down, pick Client 1, and add a breakpoint on your score event. Confirm that the breakpoint only triggers for that world.",
+   "Write 5 sentences. Say which values must come from the Game State to look the same for both players, and what looked wrong under the Bad profile. Also write one design rule that you will follow, for example to show the timer from server time and not from a local countdown."
+  ]
+ },
+ "GDQ88": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit > Plugins and enable Game Features and Modular Gameplay. Both are in the Gameplay category. Then restart the editor.",
+   "In the Plugins window, click Add and choose Game Feature (Content Only). Name the plugin GF_DoubleJump. Check in the Content Browser that it is stored under /Plugins/GameFeatures/.",
+   "Inside the content folder of the plugin, create a Data Asset of the class GameFeatureData. Name it GF_DoubleJump, the same name as the plugin.",
+   "Inside the plugin, create an Actor Component named BPC_DoubleJump. On Begin Play, get the owner, cast it to Character, and set Jump Max Count to 2. Keep all the jump logic in the component. The character only needs one node: in BP_ThirdPersonCharacter, on Begin Play, call Add Game Framework Component Receiver with Self as the Receiver. Without this node, the character does not receive components from a Game Feature.",
+   "Open the GF_DoubleJump Data Asset. In Actions, add one Add Components action. Set the Actor Class to BP_ThirdPersonCharacter, not to the base Actor class, and set the Component Class to BPC_DoubleJump. Leave Client and Server both turned on.",
+   "Restart the editor one time, because the Data Asset loads at startup. Press Play and confirm that you can double jump. Then remove the action or disable the plugin, play again, and confirm that the double jump is gone.",
+   "Write 3 sentences: why the component is stored in the plugin, why you chose the character class and not Actor, and what other Action type you could use for a debug cheat."
+  ]
+ }
+}

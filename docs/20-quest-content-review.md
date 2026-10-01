@@ -3,22 +3,59 @@
 Checked on 2026-10-01 against Epic's documentation for Unreal Engine 5.8 (dev.epicgames.com).
 The first version of this file was a list of suspicions. Each one has now been checked and sorted into one of four lists.
 
-All fixes are in `tools/quest_wording/update-0001.json` to `update-0008.json` and were put into the curriculum with
-`tools/quest_wording.py apply`. Only page text changed (intro, steps, "done when", and a few names inside quiz text).
-Nothing was tested inside the engine.
+There were two passes. The first pass is in `tools/quest_wording/update-0001.json` to `update-0008.json`. The second
+pass is in `update-0101.json` to `update-0160.json`. Both were put into the curriculum with `tools/quest_wording.py apply`.
+Only page text changed (title, docs link, intro, steps, "done when", quiz text). Nothing was run inside the editor, but
+the second pass checked asset names, templates and engine settings in the files of a local Unreal Engine 5.8 install.
+
+Where both passes changed the same quest, the second pass wins. The lists under "Fixed" that have no "second pass" in
+their heading describe the first pass.
 
 How to read the source of a fix:
 
 - **docs** = confirmed on the named Epic documentation page for 5.8.
+- **local** = confirmed in the files of a local Unreal Engine 5.8 install (templates, engine content, engine source).
 - **known** = changed from knowledge of UE5, with no docs page that confirms it. Where the docs page still shows an
   older name, the quest now gives both names.
 - **text** = a fix inside the quest set (names that did not match, proof that could not be sent, a missing step).
 
 ## Fixed
 
+### Second pass: things that were removed from the engine
+- Starter Content (all quests): the pack is no longer part of the engine, so no quest asks for it any more. 32 quests named it before this pass. Every such step now uses assets of the Third Person template (the mannequin textures T_Quinn_01_D, _N and _MRA, the LevelPrototyping meshes and T_GridChecker_A), engine content (basic shapes, grid textures, WhiteNoise and the compile sounds, the light profiles in EngineLightProfiles), shapes from Modeling Mode, or a small asset the quest makes itself. Hand-fixed steps: AQ16, CQ24, CQ71, CQ72, GDQ50, GDQ76, LDQ6, LDQ8, LDQ26, LDQ35 (quiz), LDQ54, LDQ55, LDQ97, LDQ99, LDQ101, EAQ3, EAQ11, EAQ14 to EAQ17, EAQ19, EAQ20, EAQ27, EAQ32, EAQ34, EAQ41, EAQ45, EAQ48 to EAQ51, EAQ58, EAQ60 to EAQ65, EAQ68, EAQ70 to EAQ76, EAQ80 to EAQ85, EAQ87, EAQ90, EAQ93 to EAQ96, EAQ105, EAQ108, EAQ109, EAQ112, PQ32 to PQ35, PQ67, SQ2 (step and quiz question 4), SQ4, SQ8, TAQ17 (quiz), TAQ55, TAQ56, TAQ57. local: `TemplateProjectDefs.h` marks StarterContent as deprecated in 5.6 ("Ability to add Starter Content has been removed"), `GameProjectUtils::IsEngineStarterContentAvailable` returns false, and the install has no Starter Content pack.
+- PQ33, PQ34: the lamp is now a small Blueprint the quest makes (BP_Lamp), not Blueprint_CeilingLight. PQ35: the explosions are now alarm lights the quest makes (BP_AlarmLight). text.
+- CQ72: uses engine sounds and a bomb Blueprint the quest makes, because the First Person template has no projectile and no Starter Content sounds any more. local.
+- TAQ55, TAQ56, TAQ57: rewritten without Starter Content materials and without the emitter of another quest; they use the default sprite material of Niagara or a simple smoke material the quest makes. local.
+- PQ102: rewritten around Networking Insights. New title "Record a Networking Insights session" (was "Record a Network Profiler session"), new docs link (networking-insights-in-unreal-engine), all quiz questions rewritten. docs: Networking Insights; local: NetworkProfiler.exe is not in the 5.8 install.
+- PQ104: rewritten around Unreal Insights traces. New title "Stat groups and a trace" (was "Stat groups and stat files"); quiz questions 4 to 6 replaced. local: the Session Frontend of 5.8 has the tabs Session Browser, Trace Control, Console, Automation and Screen Comparison, and no Profiler tab.
+- PQ106: rewritten around the current way to extend the Gameplay Debugger (a class derived from FGameplayDebuggerCategory, registered in code with IGameplayDebugger). Quiz questions 3, 5, 6 and 7 replaced. local: GameplayDebugger module headers.
+- PQ56: names the default Gameplay Debugger categories of 5.8. local.
+- Template names (many animation quests, CQ48, AQ11, AQ17, AQ34, AQ61, AQ76, AQ84): the template Animation Blueprint is ABP_Unarmed (ABP_Manny and ABP_Quinn are given as the older names), the meshes are SKM_Manny_Simple and SKM_Quinn_Simple, the animation folder is Characters/Mannequins/Anims, the physics asset is PA_Mannequin in Characters/Mannequins/Rigs, and the foot IK rig is CR_Mannequin_FootIK. AQ11 quiz questions 2, 3 and 4 updated. local.
+- AQ4, AQ33, CQ50: no longer say that the template may include the UE4 mannequin; a second skeleton comes from a free Fab character. local.
+- GDQ30, GDQ37: now start from the First Person template with the Arena Shooter variant, because the plain First Person template has no weapon. GDQ37 uses BP_ShooterProjectileBase. GDQ47 (step and quiz question 6) and GDQ43 (step and quiz question 2) name the current Blueprints (BP_ShooterProjectileBase, BP_HorrorCharacter). local.
+
+### Second pass: duplicates
+- AQ84: was almost the same quest as AQ45 (thread safe Animation Blueprint and Fast Path). AQ45 stays. AQ84 is now about cheaper crowds: Update Rate Optimizations, fixed skeletal bounds and notifies. New title "Cheaper crowds: update rates and fixed bounds" (was "Thread-safe AnimBP and Fast Path"); quiz questions 2 to 6 replaced. docs: Animation Optimization.
+- Looked at and left alone, because the angle or the specialization is different: LDQ89 and EAQ38, LDQ54 and EAQ112, LDQ104 and EAQ78, LDQ101 and EAQ109.
+
+### Second pass: older info
+- AQ12, AQ79, EAQ44, TAQ39: the import steps now follow the Interchange window (Interchange Pipeline Configuration) and say that older versions show FBX Import Options. Quiz questions updated in AQ79 (2, 4, 5, 7), EAQ44 (4, 5) and TAQ39 (1, 2). docs: Importing Assets Using Interchange, Interchange Import Reference; local: FBX import through Interchange is on by default in 5.8.
+- TAQ38, TAQ40: import wording aligned with the same window. docs.
+- TAQ97: the vehicle mesh now comes from the Vehicle template (SKM_SportsCar), not from an old sample project. local.
+- LDQ120: the Collab Viewer template is in the 5.8 install, so the quest stays as it is. local.
+- GDQ61: reworded so that it does not depend on the old replicator setup. known.
+- EAQ3, EAQ87: the engine light profiles are offered next to a downloaded IES file. local.
+
+### Second pass: things that could not be verified
+- SQ15: the bad help post is now on the quest page; no pinned example in Discord. text.
+- SQ16, SQ17: the steps and the proof no longer ask for a Discord post or link; you write what you did on the quest page. text. (The step checks still need a change, see "Still open".)
+- GDQ7, LDQ40: no Critique-wanted tag and no #showcase post; the proof is sent on the quest page. Quiz questions that asked about the Discord tag were replaced (GDQ7 questions 4 and 5, LDQ40 question 2). text.
+- SQ1: quiz question 1 no longer has a Discord channel as a choice, and question 5 no longer asks about a numbered rule in #welcome. text.
+- LDQ27, LDQ31, LDQ34, EAQ35, AQ36, CQ29, CQ23, GDQ25, GDQ38, TAQ23, TAQ29, PQ19, PQ30: no zip files, no unnamed pages, no long videos; proof is screenshots or a short video clip (30 seconds or less) sent on the quest page. text.
+- All proofs: "GIF" and "link to a video" wording replaced with "a short video clip (30 seconds or less)" or screenshots. text.
+
 ### Starter Quests
 - SQ13: says where High Resolution Screenshot is (Viewport Options menu, top left of the viewport). docs: Taking Screenshots.
-- SQ15: still points to the pinned example, but gives a fallback bad post to rewrite if it is missing. text.
 
 ### Animation
 - AQ28: menu item given as Animation Layer Interface, with the docs name (Animation Interface) next to it. known; the docs page (Animation Blueprint Linking) says Animation Interface.
@@ -60,7 +97,6 @@ How to read the source of a fix:
 - GDQ79: the dynamic material instance is now put on the camera with Add or Update Blendable. known.
 - GDQ85: the test now runs as Standalone Game with two players, because seamless travel does not work in a normal Play In Editor session. known.
 - GDQ88: the character now registers itself with Add Game Framework Component Receiver. docs: Game Features and Modular Gameplay (the page shows the C++ call AddReceiver in BeginPlay; the Blueprint node name is known).
-- GDQ7, LDQ40: both now say "Critique-wanted post in #showcase"; "/critique" is gone. LDQ40 also says "A mentor reviews your work" and asks for a video link plus screenshots. text.
 - GDQ9: step 2 now includes watching the AI use the Smart Object; proof is screenshots or a GIF. text.
 - GDQ2: step 1 now explains the BoxSize variable and Set Box Extent. known.
 - GDQ3, GDQ4, GDQ5, GDQ10: proof no longer needs a clip. text.
@@ -75,7 +111,6 @@ How to read the source of a fix:
 - LDQ79: step 5 rewritten as an emergency stop with clear Timeline inputs. known.
 - LDQ89, LDQ94: the steps now name the linked page to read. text.
 - LDQ102: step 5 now names Create New Static Mesh Asset from Mesh and Copy Mesh to Static Mesh. known; the Lyra page does not name the nodes.
-- LDQ28: now uses L_MetricsGym from LDQ11. text.
 - LDQ34: the Behavior Tree option now points to the pages linked on the quest, not to a Discord channel; proof no longer needs a clip. text.
 - LDQ23: steps now build a checkpoint and a kill zone that moves the player back, and explain why Kill Z alone is not enough; proof is screenshots. known.
 - LDQ21, LDQ22, LDQ24, LDQ25, LDQ26: steps now give the Blueprint nodes and settings; clip proofs became screenshots or a GIF. known.
@@ -125,7 +160,6 @@ How to read the source of a fix:
 ### Tech art
 - TAQ47: Sampler Type is now Masks. known.
 - TAQ43: step 4 rewritten. known.
-- TAQ55, TAQ57: "the sprite smoke quest" is now quest TAQ56; TAQ55 says the two materials are in the Starter Content. text; the material location is known.
 - TAQ18: names the linked page that has the blur code. text.
 - TAQ1: proof now lists 7 views, with Lighting Only. text.
 - TAQ99: step 3 now reads Tangent X and Tangent Z from the Skinned Mesh node. docs: How to Create a Custom Deformer Graph.
@@ -141,7 +175,7 @@ How to read the source of a fix:
 
 ## Checked, no change needed
 
-- Choices made during the rewording: the id mapping fits. LDQ13 points to LDQ11 (metrics gym). LDQ18 points to EAQ10 (locked exposure) and LDQ17 (bookmarks). LDQ20 points to LDQ11, LDQ14, LDQ15, LDQ16, LDQ17, LDQ18 and EAQ10. LDQ27 and LDQ32 point to GDQ2 to GDQ4, LDQ27, LDQ28, LDQ29 and LDQ31. LDQ29 and GDQ3 point to GDQ2 and GDQ3. Every quest id named on a page exists.
+- First pass only: the quest ids named on pages were checked and fitted. The second pass removed all quest ids from page and quiz text (see "Self-contained quests").
 - O1 to O4, EAQ22, EAQ23, TAQ23, PQ18, LDQ27, PQ8, AQ23, AQ29, AQ36: the choices made in the rewording read correctly.
 - CQ61: the console variables are right. docs: NFOR Denoiser.
 - CQ30, CQ46: Unreal VCam is the current app name; only CQ44 was different.
@@ -163,32 +197,44 @@ How to read the source of a fix:
 
 ## Still open
 
-- AQ79, EAQ44, TAQ39: the 5.8 docs pages still describe the FBX Import Options dialog. Newer engine versions import FBX through Interchange, which shows a different dialog with other option names. Not confirmed which dialog a learner sees in 5.8.
-- AQ28: could not confirm the exact menu label in the editor (Animation Layer Interface or Animation Interface). The page now gives both.
-- GDQ61: the steps match the 5.8 docs page (Debug AI show flag, GameplayDebuggingReplicator), but that page looks like old content. Needs a test in the engine.
+- SQ16, SQ17: the page text no longer asks for a Discord link, but each quest still has a step check `link: showcase` (on: others / on: own), and `api/app/routers/submit.py` only accepts a Discord link for it. The wording tool cannot change checks. The check should become a `min_length` text check.
+- Docs links that are not web pages: SQ15 (`discord://#help-desk`), SQ16, SQ17, GDQ7, LDQ40 (`discord://#showcase`), and the quests with `TODO_URL` (SQ14 and others). They were left, because a new link has to be a fetched Epic page that fits the quest.
+- Flavor lines that name another quest (the tool cannot edit flavors): AQ2 (AQ7), GDQ8 (GDQ6), EAQ34 (EAQ11), PQ93 (PQ61), PQ94 (PQ25), PQ25 (PQ13), PQ27 (PQ30), PQ28 (PQ12), SQ1 (SQ11), TAQ15 (TAQ14). These are the 10 hits that `quest_wording.py refs` still prints.
+- PQ19: proof type is still "package". The text now asks for screenshots and a short clip; the type itself cannot be changed with the tool.
+- Extra links that should be added by hand: the Interchange pages on AQ12, AQ79, EAQ44 and TAQ39; PQ102 still lists the old Network Profiler page as an extra link.
+- Quests that still need something from outside a template, with the source named in the step: AQ4, AQ33, AQ36, AQ38, AQ68, CQ50, CQ51 (a free character from Fab, because the template has only one skeleton), AQ32 (Game Animation Sample), AQ77, CQ52, TAQ101, TAQ102 (a groom, from a MetaHuman or Fab), CQ49 (MetaHuman), CQ30, CQ44, CQ46, CQ77 (a phone or tablet), AQ54, TAQ98, TAQ100 (a 3D modeling program), TAQ103 (RenderDoc).
+- GDQ37: the projectile Blueprint of the Arena Shooter variant (BP_ShooterProjectileBase) exists in 5.8, but its graph was not opened, so the step says to find its hit event or add Event Hit.
+- TAQ17: the Niagara "new system" window differs between versions; the step still names New system from selected emitters.
+- AQ28: could not confirm the exact menu label in the editor (Animation Layer Interface or Animation Interface). The page gives both.
 - GDQ56: r.DebugSafeZone.TitleRatio comes from knowledge; the docs page does not list it any more.
-- LDQ120: the Collab Viewer template still has docs pages for 5.8, but it was not confirmed that the template ships with the current engine.
-- PQ102: the docs page for the standalone Network Profiler still exists, but it was not confirmed that NetworkProfiler.exe ships with the current engine. Networking Insights is the newer tool.
 - PQ50: the Revision Control menu names (Connect to Revision Control, Submit Content) come from knowledge; the Editor Preferences section name was not confirmed.
 - PQ53: the cast example gives a warning or a note depending on the version; not confirmed which.
+- PQ102, PQ104: where the Trace and Networking Insights menus sit in the editor (status bar, Unreal Insights window) comes from knowledge.
 - TAQ99: the docs table names the kernel input "Tangent Y" while the graph reads Tangent Z. Step 4 still copies the docs table.
 - TAQ58: the steps follow the docs page value for value, but they are still dense. Needs a pass in the engine.
-- TAQ100: the steps are goals. The docs page (Panel Cloth Editor Overview) has no click paths or node names either, so they could not be written out.
-- TAQ97: where the Vehicle Game sample is today (Launcher Samples tab or Fab) was not confirmed.
+- TAQ100: the steps are goals. The docs page (Panel Cloth Editor Overview) has no click paths or node names either.
 - LDQ114, PQ52: these still say "Scripted Actions" in titles and intros. Only the menu name in TAQ82 was aligned.
-- Quiz text that still uses ranks or "turn-in": LDQ20, LDQ28, LDQ30, LDQ32, LDQ40, SQ11, PQ17. Quiz wording was not restyled.
-- Screenshot quests whose proof says "a short clip or screenshots": AQ15, AQ20, AQ24, AQ27, AQ65, AQ76, CQ8, CQ30, CQ66, GDQ52, LDQ53, LDQ79, LDQ109, SQ9. They can be done with screenshots, so they were left as they are.
+- Quiz text that still uses ranks or "turn-in": LDQ20, LDQ28, LDQ30, LDQ32, LDQ40, SQ11, PQ17. Quiz wording was not restyled. LDQ20 quiz question 2 still has an arrow in it.
+- O1 (rules quiz) and one wrong choice in GDQ6 still name Discord channels. O1 is the quiz about the server rules, so this was left.
 
 ## Needs an owner decision
 
-- AQ84 and AQ45: almost the same quest (thread safe Animation Blueprint and Fast Path). Keep both, merge, or change one?
-- SQ16, SQ17: the proof is a Discord link, but work is reviewed on the site. Is that intended?
-- SQ14: asks for a video file (its step has a video check), but uploads accept images only. Allow video for this quest, or change the quest?
-- PQ19: proof type is "package" and asks for a zip file or a clip. How should a build be sent?
-- Mentor and writeup quests that ask for a video or a zip file (AQ17, AQ23, AQ29, AQ32, AQ36, CQ15, CQ23, CQ48, GDQ19, GDQ25, GDQ32, GDQ38, LDQ32, TAQ23, TAQ29): should these become "paste a link to a video"?
-- PQ104: built on the Session Frontend Profiler and .uestats files, which Unreal Insights replaced. The correct quiz answer is the old tool. Rewrite the quest and quiz around Unreal Insights, or retire it?
-- PQ106: built on the UE4 way to extend the Gameplay Debugger (component and HUD component classes registered in the ini file). UE5 uses a different system (a category class registered in code). Rewrite the quest and quiz, or retire it?
-- GDQ7, LDQ40, SQ15: they depend on things in Discord (a Critique-wanted tag in #showcase, a template and a pinned bad example in #help-desk). Do these exist on the server?
-- TAQ55 needs the emitter from TAQ56, which has a higher number. Swap the order, or add a prerequisite?
+- LDQ115 and TAQ80: both are the Property Matrix quest, with almost the same steps and quiz, in two specializations (level design and tech art). Keep both because each specialization stands alone, or change one?
 - TAQ55 to TAQ60: emitter and system names (FX_Smoke, SmokeSystem, BeamSystem and so on) follow Epic's tutorial pages word for word and not the FXS_ / FXE_ convention. Rename them, or keep them the same as the tutorials?
-- AQ79, EAQ44, TAQ39: if the site should teach the Interchange import dialog and not the FBX Import Options dialog, these three quests and their quizzes need a rewrite.
+- Stand-in assets: where a quest used a Starter Content rock, bush, chair or brick texture, it now uses a template or engine asset (a grid texture, a chamfered cube, a mannequin texture) and says that a free Fab asset gives a better result. If the site should ship its own small asset pack, these steps could point to it.
+
+## Self-contained quests
+
+Rule applied: a quest may need knowledge that is taught elsewhere, but no step may need an asset, a level, a Blueprint
+or a project that only another quest creates. Every quest starts from a named Epic template (Blank, Third Person,
+First Person, Top Down, Vehicle, or a named variant), from engine content, or from assets that the quest itself makes.
+Where a step needed something built before, the quest now says "use your own, or make it like this" with the smallest
+setup that works. Quest ids and phrases such as "as you did in" are gone from page and quiz text. Capstone quests list
+what to build. Quiz questions that only made sense through another quest were replaced, with the right answer in the
+same position.
+
+- 718 of the 729 quests changed in the second pass. Almost all of them changed for this rule.
+- 634 quests got a start line that names the template to open or create.
+- 54 quests named another quest id in page or quiz text. Now none does.
+- `quest_wording.py refs` listed 85 quests at the start. It now lists 10, all of them flavor lines (see "Still open").
+- Quests where the setup is long, because the thing that was needed is large (an asset setup, not a lesson): AQ6, AQ8, AQ21, AQ27, AQ40, AQ71, AQ76, GDQ87, PQ8, EAQ20, EAQ76, EAQ80, and the capstones LDQ20, LDQ32, LDQ40, EAQ12, EAQ24, EAQ35, GDQ19, PQ19, TAQ9. GDQ57 and GDQ61 point to Epic's Behavior Tree Quick Start for the setup.

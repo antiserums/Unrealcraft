@@ -1,0 +1,114 @@
+{
+ "LDQ111": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the plugins Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects. Restart the editor if it asks you to.",
+   "Make a montage from any animation of the mannequin: right-click it and choose Create, then Create AnimMontage. Create BP_SO_Behavior_PlayMontage with the parent class Gameplay Behavior. Override OnTriggeredCharacter: get the Skeletal Mesh Component of the Avatar, call Play Montage with your montage, and connect both On Completed and On Interrupted to End Behavior.",
+   "Create BP_SO_BehaviorConfig with the parent class Gameplay Behavior Config. Set its Behavior Class to BP_SO_Behavior_PlayMontage.",
+   "Create a Data Asset of the class Smart Object Definition and name it SO_Definition_PlayMontage. Add one Slot, and add a Gameplay Behavior Smart Object Behavior Definition that points to BP_SO_BehaviorConfig.",
+   "Create an Actor Blueprint named BP_SO_Bench with a Smart Object component, and set its Definition Asset to SO_Definition_PlayMontage. Place 3 or more of them in the level.",
+   "Create a Blackboard named BB_SO_Agent with a key of the type SO Claim Handle. Build two tasks: BTT_FindSmartObject, which uses Find Smart Objects in a box around the pawn, claims a random result and stores the handle, and BTT_UseSmartObject, which calls Use Claimed Gameplay Behavior Smart Object.",
+   "Build a Behavior Tree named BT_SO_Agent. Under a Selector, add a Sequence with Find, Use and a Wait of 2.0 with a deviation of 0.5, and next to it add a Wait of 5 as the fallback. Make the agent: a copy of BP_ThirdPersonCharacter without input nodes, with an AIController Blueprint that runs the tree on Event On Possess. Place the agent, add a NavMeshBoundsVolume and click Simulate."
+  ]
+ },
+ "LDQ112": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an AIController Blueprint named AIC_Guard and add an AIPerception component to it. Add an AI Sight config with Sight Radius 1500, Lose Sight Radius 2000, Peripheral Vision Half Angle 45, Detect Neutrals turned on, and Max Age 5.",
+   "Add an AI Hearing config with Hearing Range 1200 and Detect Neutrals turned on. Set Dominant Sense to Sight.",
+   "On the event On Target Perception Updated, break the AIStimulus struct and print the value of Successfully Sensed together with the name of the actor. This lets you see when something enters or leaves the guard's senses.",
+   "In the player character, add an AIPerception Stimuli Source component. Enable Auto Register as Source and add Sight to Register as Source for Senses. Give the player the tag Player.",
+   "Open Project Settings, go to Engine, then AI System, and enable Forget Stale Actors. With this, guards forget the player after the Max Age time.",
+   "Make the guard: duplicate BP_ThirdPersonCharacter, name the copy BP_Guard, delete its input nodes, and set its AI Controller Class to AIC_Guard. Build a small stealth room from cubes with two cover walls, and place the guard in it. Play, press the apostrophe key and then Numpad 4, and check the sight cone and the hearing circle. Sneak behind the guard and confirm that it does not detect you outside the half angle."
+  ]
+ },
+ "LDQ113": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, right-click and choose Editor Utilities, then Editor Utility Widget. Name the new asset EUW_LDMetrics.",
+   "Add a Text block and a button named Measure to the widget. When the button is clicked, use the node Get Selection Set to read the actors that are selected in the level.",
+   "If exactly two actors are selected, calculate the distance between them and show it in the Text block.",
+   "Add three reference rows that show your metrics: door width, jump height and corridor width. Use the numbers of your own blockouts, or these examples for the template character: door width 140 cm, jump height 100 cm, corridor width 300 cm.",
+   "Compare the measured distance with the door width. Show OK or TOO NARROW in the Text block.",
+   "Right-click the asset and choose Run Editor Utility Widget. Dock the tab that opens next to the Details panel.",
+   "Place two cubes in a level as blockout walls with a gap between them, select both, and press Measure. Check that the number and the OK or TOO NARROW text update."
+  ]
+ },
+ "LDQ114": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick ActorActionUtility as the parent class and name the asset EUB_LDActions.",
+   "Add a function named Add Tag with one String input. It must loop over the result of Get Selection Set and add the tag to each actor.",
+   "Add a second function named Rename With Prefix with one String input. It renames each selected actor to Prefix_Number, which means the prefix, an underscore and a number.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the actions only appear for static meshes.",
+   "Click Compile and Save. Select ten blockout meshes in the viewport, for example ten cubes that you place now or ten meshes of the template level, right-click, and run Add Tag with the value Cover.",
+   "Run Rename With Prefix with the value Cover on the same selection. Check the new names in the Outliner.",
+   "Select one actor that is not a static mesh, such as a light, and confirm that the Scripted Actions menu does not show your actions."
+  ]
+ },
+ "LDQ115": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level that has many Static Mesh Actors. The level of the template works, and so does a blockout of your own. Set the Mobility of three of the meshes to Movable, so that there is something to find. In the Outliner, select all the Static Mesh Actors.",
+   "Right-click the selection and choose Edit Selection in Property Matrix.",
+   "In the Pinned Columns panel, pin Mobility, Cast Shadow and Actor Tags so that they show as columns. Remove one of the automatic columns by clicking its header with the middle mouse button.",
+   "Sort the Mobility column. Find every actor that is Movable by mistake, select them, and set them all to Static in one edit.",
+   "Select five rows with Ctrl+click and turn Cast Shadow off for all of them at once.",
+   "Hover the mouse over a column header to read the path of the property. Note it for your text.",
+   "Click the save icon in the Property Matrix, and then save the level."
+  ]
+ },
+ "LDQ116": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the Level Snapshots plugin and restart the editor.",
+   "Open a blockout level of your own, or the level of the template. Click the Level Snapshot button in the main toolbar. Name the snapshot Base_v1 and add a description.",
+   "Move five meshes that work as cover, delete one, and add a new one. Then take a second snapshot named Variant_Open.",
+   "Open the Level Snapshots window, select Base_v1, and click Restore Level Snapshot. Check that all your changes are reverted.",
+   "Undo the restore. Then give two cover actors the tag KeepMe.",
+   "Add a Filter Group with the filter Actor Has Tag, set to KeepMe. Click Refresh Results and restore only those actors from Base_v1.",
+   "Negate the filter by clicking its green bar, which makes it select the opposite. Note for your text what the result list shows now."
+  ]
+ },
+ "LDQ117": {
+  "brief": "Python is a programming language that the Unreal Editor can run to automate editor work. Python scripts only work in the editor, not in the game. A short script can count and measure everything in a level in a moment, which replaces a long time of counting by hand. In this quest you write a small script that reports how many actors of each class are in a level and how big its cover objects are.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level with a number of actors in it, such as the level of the template, and give three or more meshes the actor tag Cover in their Details panel. Enable the Python Editor Script Plugin and the Editor Scripting Utilities plugin. Restart the editor.",
+   "In the Output Log, switch the console input from Cmd to Python. Type import unreal, and then print(unreal.__doc__), to test that Python works.",
+   "Create a file named level_report.py in the folder YourProject/Content/Python. The script must import unreal and get all actors of the level.",
+   "Make the script count the actors per class and print one line for each class, sorted by count. Also print the total number.",
+   "Make the script print the size of the bounding box of every actor that has the tag Cover, in meters. The bounding box is the smallest box that fits around the actor.",
+   "Run the file with File > Execute Python Script. Then run it again from the list of Recent Python scripts.",
+   "Open Project Settings, go to Plugins, then Python, and add the script to Startup scripts. Restart the editor and check the Output Log."
+  ]
+ },
+ "LDQ118": {
+  "brief": "Sequencer is the tool in Unreal for making camera shots and cutscenes, and a Level Sequence is the asset that stores them. A flythrough is a camera move that travels through the level and shows it in the order you want. Because it plays the same way every time, reviewers always see the space as you intended. In this quest you make a flythrough of a level with keyframes at four landmarks and with labelled marks on the timeline.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a blockout level of your own, or the level of the template, and choose four landmarks in it, for example the entrance, a place where the route splits, the largest open space, and the exit. Click the cinematics icon in the main toolbar and choose Add Level Sequence. Name the sequence LS_Flythrough_Blockout.",
+   "In Sequencer, click Create Camera. This makes a Cine Camera Actor and a Camera Cut Track, the track that decides which camera is shown.",
+   "Enable Camera Lock on the Camera Cut Track, so that the viewport looks through the camera. Fly the camera to the first landmark and add a key for its transform at frame 0. A key stores a value at one point in time.",
+   "Add keys for the camera at the three other landmarks. Make each move between landmarks 3 to 5 seconds long.",
+   "At each landmark, right-click the time bar and choose Add Mark. Give each mark a Label with the name of the landmark, and a Color.",
+   "Move to the last key and press the ] hotkey to set the End Time of the sequence there. Play the sequence with looping turned on.",
+   "Open the Curve Editor and smooth one camera move that looks too harsh."
+  ]
+ },
+ "LDQ119": {
+  "brief": "Movie Render Queue is the tool that turns a Level Sequence into image or video files on your disk. It renders every frame at full quality, even when your computer cannot play the sequence smoothly in the editor. A rendered flythrough is the easiest thing to show when you ask others to review a level. In this quest you render a flythrough as a series of PNG images and save the settings so that you can render again after each change.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a Level Sequence in which a camera moves through a level. If you have none, choose Add Level Sequence in the Cinematics menu of the main toolbar, click the Camera button in Sequencer, and set three or four keys on the Transform track of the camera at different places in the level. Open Edit > Plugins, find Movie Render Queue in the Rendering section, enable it, and restart the editor.",
+   "Open Window > Cinematics > Movie Render Queue. Click + Render and pick the flythrough sequence.",
+   "Check that the Map field in Job Details points to the level that the sequence was made in.",
+   "Click Unsaved Config to open the settings. Delete the entry .jpg Sequence [8bit] and add .png Sequence [8bit]. Keep Deferred Rendering.",
+   "In Output, set the Output Directory to a folder named Review_Flythrough, and set the resolution to 1280x720.",
+   "Click Render (Local) and wait until the preview window closes. Then open the output folder with the Output link of the job.",
+   "Save the job list as a Queue Preset named MPQ_LevelReview, so that you can render again after each change to the level."
+  ]
+ },
+ "LDQ120": {
+  "checklist": [
+   "Create a new project from the Collab Viewer template and open it in the editor. In the New Project window, look for it in the Architecture category.",
+   "Package the project for Windows into a folder named CollabReview. To do this, open the Platforms menu, choose Windows, and click Package Project.",
+   "Run the packaged .exe file. Enter a display name and start with Host a session, or with Single Session if you are alone.",
+   "Press Spacebar to open the menu, choose Measurement, then Add, and measure a doorway. Hold Shift when you place the second point to snap the line to an axis.",
+   "Choose Annotation, then Annotate Text, and place three labels with review notes. Then paint one stroke around a problem area.",
+   "Use the Save button to save the session as Review_01. Quit the program and start it again, and then load Review_01 from the menu next to Save.",
+   "Optional: ask one member to join your session on the same network and add one note."
+  ]
+ }
+}

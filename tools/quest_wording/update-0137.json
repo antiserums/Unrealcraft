@@ -1,0 +1,114 @@
+{
+ "EAQ95": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Open Project Settings, then Engine, then Rendering, and enable Virtual Textures. Restart the editor if it asks you to.",
+   "Pick a prop for the test, for example a duplicate of the rock from the Props folder of the Starter Content. Name it SM_PaintTest and turn on Enable Nanite Support in its Nanite Settings. In the Static Mesh Editor, open the UV dropdown and check whether UV 0 overlaps or repeats. If it does, expand LOD 0, then Build Settings, enable Generate Lightmap UVs with Destination Lightmap Index 1, and click Apply Changes.",
+   "Under General Settings, set Mesh Paint Texture Coordinate Index to the UV channel you will paint on, for example 1.",
+   "Make a material named M_PaintTint. Add a Texture Sample with a MeshPaintTextureObject node connected to its Tex input, and set its UVs to the same index. Multiply its RGB with a base color texture, for example the color texture of the rock. Then send both paths through a MeshPaintTextureReplace node into Base Color.",
+   "Place the prop in the level and enter Mesh Paint Mode. Open the Texture Color tab and click Add. Paint dirt or moss on the lower part of the prop.",
+   "Set Mesh Paint Texture Resolution on the asset, for example to 512. Click Fix on the instance and check how the paint changes."
+  ]
+ },
+ "EAQ96": {
+  "checklist": [
+   "Open a project that has the Starter Content, or create one from the Third Person template with Starter Content turned on. Pick a prop that does not use Nanite and has a curved part, for example a pipe or a barrel. A Cylinder made in Modeling Mode works. Make a copy and name it SM_Decal_Base.",
+   "In Modeling Mode, create a thin strip mesh that follows the curved surface closely, such as a bent plane a few units above the surface. Give its edges a small soft border. Name it SM_Decal_Strip.",
+   "Make a material named M_MeshDecal with Material Domain set to Deferred Decal and Blend Mode set to Translucent. Use a rust or grime texture with a soft alpha. If you have none, use any texture from the Starter Content for the color and a soft gradient, such as a RadialGradientExponential node, for the Opacity. Apply the material to SM_Decal_Strip.",
+   "Place the strip on the prop. Move the camera far away and check if the strip cuts into the base mesh.",
+   "If it cuts in, do not move the mesh. Add a small World Position Offset along the normal in M_MeshDecal, which pushes the strip slightly outward, and compare the result.",
+   "Place a normal Decal Actor with the same texture on the same curved part. Look at both from a low angle and compare how much each one stretches."
+  ]
+ },
+ "EAQ97": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a small corner of a building from 8 to 12 kit pieces, such as walls, a pillar and trims. If you have no kit, make the pieces from boxes in Modeling Mode. Use at least two materials and include one piece with Nanite enabled. Use the same pillar mesh three times.",
+   "Select all pieces. Open Actor, then Merge Actors, then Merge Actor Settings. With the Merge method selected, turn off Pivot Point at Zero, turn on Generate Nanite Enabled Mesh, and keep Merge Materials off. Run the Merge and save the result as SM_Corner_Merge.",
+   "Open SM_Corner_Merge and count its material sections. Compare that number with the number of materials you used.",
+   "Undo the merge or place the pieces again. Select only the three identical pillars and run Batch. Look at the result in the Outliner.",
+   "Select the whole corner again and run Approximate. Save the result as SM_Corner_Approx. Open it and compare its triangle count and materials with SM_Corner_Merge.",
+   "Place the original pieces, SM_Corner_Merge and SM_Corner_Approx side by side. Compare them from close up and from far away."
+  ]
+ },
+ "EAQ98": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in any level with a floor. In Modeling Mode, make three kit pieces with sizes that fit a grid of 100: SM_Kit_Wall (400 long, 20 thick and 400 high), SM_Kit_Corner (20 x 20 and 400 high) and SM_Kit_Floor (400 x 400 and 20 thick). Use Edit Pivot to set the pivot of each piece to a bottom back corner.",
+   "Open Edit > Editor Preferences, then Viewports, then Snap. Enable Use Power of Two Snap Size and note how the Drag Grid dropdown in the viewport toolbar changes. Then turn it off again, because this kit is built on a grid of 100.",
+   "Turn on the Drag Grid and the Rotation Grid in the viewport toolbar. Set the drag grid to 100 and the rotation to 90. Build a closed room from at least 12 pieces.",
+   "Hold V while you drag one wall so that its pivot snaps to a vertex, a corner point, of the wall next to it. Look at the seam from close up.",
+   "Open SM_Kit_Wall in the Static Mesh Editor and open Window > Socket Manager. Create a socket named Lamp and set its Relative Location to the center of the wall at head height.",
+   "In the level, place a Point Light and right-click it. Choose Attach To, pick SM_Kit_Wall and then the Lamp socket. Reset the Location of the light so it snaps to the socket. Repeat this on two more walls."
+  ]
+ },
+ "EAQ99": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Get or paint a trim sheet texture named T_Trim, with horizontal strips such as a metal band, a wood plank and a stone moulding. For a first test, an image with three horizontal strips in different colors, made in any image editor, is enough. Make a material named M_Trim from it, and also prepare a checkerboard material for testing.",
+   "Take a kit piece with a flat face and a trim edge. If you have none, make a wall in Modeling Mode: a Box that is 400 long, 20 thick and 400 high. In Modeling Mode, open UVs, then Project. Choose Plane, use Auto Fit and accept. Set Preview Material to Checkerboard.",
+   "Open UVs, then XFormUV. Scale and move each island so that the main face sits on the stone strip of T_Trim and the trim edge sits on the metal strip. Hold Shift to move several islands together.",
+   "Open UVs, then Layout. Set Layout Type to Stack for islands that should share the same strip. Set Layout Type to Transform when you need to scale or move all UVs together.",
+   "Assign M_Trim and check the mesh in the level. If an island looks stretched, fix it with Unwrap.",
+   "Open the Static Mesh Editor and look at the list of UV channels. Note which channel holds your trim UVs."
+  ]
+ },
+ "EAQ100": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and open any lit level. Check that the OpenColorIO plugin is enabled. It is on by default in new projects.",
+   "In the Content Browser, right-click and choose Miscellaneous, then OpenColorIO Configuration. Name the asset OCIO_Scene.",
+   "Open OCIO_Scene. Keep the Configuration File at ocio://default, which is the built-in ACES CG config.",
+   "Under Desired Color Spaces, add only two entries: a linear sRGB source and an sRGB monitor display view.",
+   "In the Level Viewport, open View Mode, then OCIO Display. Pick OCIO_Scene, set the source and the destination, and then click Enable Display.",
+   "Turn Enable Display on and off and compare the tone of your scene. Note what changed in the highlights, the brightest parts of the image.",
+   "This step is optional. In a camera Blueprint, add a Create In-Game OpenColorIO Display Extension node on BeginPlay and test it while playing in the editor."
+  ]
+ },
+ "EAQ101": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a dark place, such as a closed room built from cubes. Place a Post Process Volume named PPV_Bloom with Infinite Extent enabled. Put one strong emissive object or light source in view.",
+   "Open Lens, then Bloom, and keep Method on Standard. Try Intensity at 0, 1 and 5. Then set a Threshold so that only your bright source glows.",
+   "Switch Method to Convolution. Assign the default kernel texture, or your own, and compare the shape of the glow.",
+   "Open the kernel texture. Check that Mip Gen Settings is set to No Mipmaps and that Never Stream is enabled.",
+   "Enable Dirt Mask Texture and assign a small dirt texture. You can make one in any image editor: a black image with a few soft gray smudges. The documentation recommends a size that is not a power of two, for example 960 x 540, because Unreal then makes no mipmaps for it and does not stream it. Set Dirt Mask Intensity so that the dirt only shows near the bright source.",
+   "Switch back to Standard and use stat gpu to note the difference in frame time between the two methods."
+  ]
+ },
+ "EAQ102": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a level with at least one strong light in view. Make a Post Process Volume named PPV_Lens with Infinite Extent enabled, or use an unbound volume that you already have. Open Lens, then Lens Flares. Set Intensity, and raise Threshold until only the brightest light makes a flare.",
+   "Change BokehSize and BokehShape. Then edit one Tint entry and change its Alpha, which moves that flare along the screen.",
+   "Open Lens, then Chromatic Aberration. Set a small Intensity, and raise Start Offset so that the center of the image stays clean.",
+   "Open Lens, then Image Effects. Set Vignette Intensity to a low value that darkens only the corners.",
+   "Open Film Grain. Set a low Film Grain Intensity, and give the shadows more grain than the highlights.",
+   "Take one screenshot with all four effects on, and one with all four set to 0."
+  ]
+ },
+ "EAQ103": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Place a main prop, such as a mannequin or a cube, with other objects behind it and in front of it, and a small bright light in the background. Place a Cine Camera Actor named CineCam_DOF about 4 to 7 m from the main prop and pilot it, so you look through it.",
+   "Set Focus Method to Manual and enable Draw Debug Focus Plane, which shows a colored plane at the focus distance. Change Manual Focus Distance until the plane sits on your main prop.",
+   "Set Current Focal Length to 50 mm, then 75 mm, then 100 mm. Note how the field of view and the blur of the background change.",
+   "Set Current Aperture to f/1.4, then f/2.8, then f/5.6, and compare the blur of the background.",
+   "Set Diaphragm Blade Count to 5 and Min FStop to 1.4. Look at the bokeh shape, which is the shape of a blurred point of light, on a small bright light in the background.",
+   "Open Show, then Advanced, then Depth of Field Layers. Use this view to check which areas are foreground, in focus and background.",
+   "Make sure Engine Scalability is set to Epic or Cinematic before you judge the bokeh."
+  ]
+ },
+ "EAQ104": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Add a prop that rotates or moves. A Blueprint named BP_Fan with a Rotating Movement component is enough. Also add a Post Process Volume named PPV_Motion with Infinite Extent.",
+   "Under Motion Blur, set Amount to 0 and take a screenshot while the prop moves. Then set Amount to 0.5 and compare.",
+   "Set Max to a small value, for example 5, and then to a large value. Note how far the blur can reach across the screen.",
+   "Set Target FPS to 30, then 60, then 0. Note which value gives the most blur.",
+   "Lower Per Object Size from its default value and check whether small moving props get more blur.",
+   "Open Show, then Visualize, then Motion Blur, and take a screenshot of the velocity view."
+  ]
+ },
+ "EAQ105": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level with some thin geometry in view, such as a fence, wires or foliage. Thin cylinders or bushes from the Starter Content work. In the Viewport Options menu, open Stat, then Engine, and enable TSR. You can also type stat tsr in the console.",
+   "In Viewport Options, open Screen Percentage and enable Custom Override. Set it to 100, then 66, then 50. Write down the values TSR feed and TSR 1spp for each.",
+   "Open Stat, then Advanced, and enable GPU. Note the cost of TemporalSuperResolution at 100 percent and at 50 percent.",
+   "Open Show, then Visualize, and enable Temporal Upscaler I/O. This is the VisualizeTemporalUpscaler view. Take a screenshot of the view that shows the input and the output.",
+   "Open Settings, then Engine Scalability Settings, and switch the Anti-Aliasing group between Medium and Epic. Look at the same thin geometry each time, such as a fence, wires or foliage.",
+   "Open the file Engine/Config/BaseScalability.ini and find the AntiAliasingQuality sections. Note two r.TSR variables that change between the quality levels."
+  ]
+ }
+}

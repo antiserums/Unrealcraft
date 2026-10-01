@@ -1,0 +1,132 @@
+{
+ "TAQ87": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins, enable the Geometry Script plugin, and restart the editor.",
+   "Create a Blueprint from the GeneratedDynamicMeshActor class and name it BP_GS_Blockout.",
+   "In the Event Graph, add Event On Rebuild Generated Mesh, which runs each time the actor changes. Promote its Target Mesh pin to a private variable named DynamicMesh.",
+   "Add an Append Box node, which adds a box to the mesh. Drive its size from a public Vector variable named BoxSize, with Instance Editable and Show 3D Widget turned on.",
+   "Add a Get Compute Mesh Pool node, then a Request and Release Mesh node, which gives you a temporary mesh, and then an Append Cylinder node. Store the result as BoolMesh.",
+   "Add an Apply Mesh Boolean node with DynamicMesh as Target Mesh, BoolMesh as Tool Mesh, and the operation Subtract, which cuts the cylinder out of the box. Expose BoolLocation and BoolSize as 3D widgets.",
+   "Add a function named Bake Static Mesh with Call in Editor turned on. It uses Copy Mesh to Static Mesh to write the result into a TargetMesh variable. Place the actor in a level and bake it."
+  ]
+ },
+ "TAQ88": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Editor Utility Blueprint of the type Actor Action Utility and name it ActorAU_Simplify.",
+   "Add a function named Simplify Mesh with Call In Editor turned on and an integer input named Triangle Count.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the action only shows for those actors.",
+   "Use Get Selected Actors, then a For Each loop, then Cast to StaticMeshActor, then Get Static Mesh. Use Add Unique to put each mesh into a local Static Mesh array named SM_Array, so that each asset is in the list only once.",
+   "Loop over SM_Array. For each mesh, use Request and Release from Global Pool to get a temporary mesh, and then use Copy Mesh from Static Mesh to copy the asset into it.",
+   "Add an Apply Simplify to Triangle Count node. Then use Copy Mesh to Static Mesh to write the result back into the same asset.",
+   "Duplicate a Modeling Mode primitive (for example a dense sphere) and select it. Right-click it, open Scripted Actor Actions, choose Simplify Mesh, and enter a triangle count."
+  ]
+ },
+ "TAQ89": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in a level with a floor or a Landscape. Enable the Procedural Content Generation Framework plugin, and also its Geometry Script Interop plugin.",
+   "Make a PCG graph named PCG_Scatter. It samples points and spawns two static meshes that have different Weight values, so one mesh appears more often than the other. Any two meshes work, for example a cube and a cylinder.",
+   "Add Graph Parameters for the density and for the mesh scale. Use them in the graph in place of fixed values.",
+   "Create a PCG Graph Instance of PCG_Scatter, and change a parameter on the instance only.",
+   "Use PCG_Scatter as a subgraph inside a second graph. Override a parameter through the pin on the subgraph node.",
+   "Change the Graph Settings so that Node Filter shows only the categories that your tool needs. Then mark the graph as a Template.",
+   "Select one node and press the D key to debug it, and select another node and press the E key to disable it. Take screenshots."
+  ]
+ },
+ "TAQ90": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, with the Procedural Content Generation Framework plugin enabled. Open a World Partition level, or create one with File, New Level, Open World. Add a large PCG Volume with a graph that spawns big rocks and small grass meshes. Simple stand-ins work, such as large scaled spheres for the rocks and small cones for the grass.",
+   "Enable Partitioned generation on the PCG Component, which splits the result into grid cells. Set Partition Grid Size on the PCGWorldActor.",
+   "Enable Hierarchical Generation in the graph. Put a Grid Size node with a large grid before the rock sampler, and another Grid Size node with a small grid before the grass sampler.",
+   "Use the Unbounded grid size for a mesh sampler that should run only once. Then apply grid sizes to the nodes that come after it.",
+   "Set Generation Trigger to Generate at Runtime. Set the Generation Radii for each grid size, with larger values for larger grids.",
+   "Turn on Use Frustum Culling and test with Play In Editor (PIE). Open the Debug Object Tree to see the grid sizes on the nodes.",
+   "Assign the PCG volume to a Data Layer and confirm that the generated actors are placed in the same layer."
+  ]
+ },
+ "TAQ91": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a mesh in Modeling Mode that has PolyGroups, which are named groups of faces (a box with a few extrusions works). Name it SM_UVTest.",
+   "Right-click the mesh in the level and open the UV Editor.",
+   "Use the Seam tool in Split mode to cut seams. Then use Sew to join one seam back together.",
+   "Run Unwrap with the ExpMap method, and then with the SpectralConformal method. Compare the distortion with the help of the checker background.",
+   "Run Layout in Repack mode, which arranges the islands so they do not overlap. Then try Stack on two islands that share a texture.",
+   "In Display, enable a texture background and turn on the UDIM labels. Move one island into the tile 1002.",
+   "Add a second UV channel with Channels. Then click Apply to save the changes to the mesh."
+  ]
+ },
+ "TAQ92": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Build a small structure out of 10 or more static meshes, and make some of them Nanite meshes. Boxes and other shapes made in Modeling Mode work, with Enable Nanite Support turned on for some of them. Note how many triangles and how many materials the structure has.",
+   "Select the actors and open Actor, then Merge Actors, then Merge Actor Settings. Run Simplify with Screen Size set for a view from far away. Save the result as SM_Proxy_Simplify.",
+   "Run Approximate with Output Type set to Mesh and Materials and Simplify Method set to Fixed Triangle Count. Save the result as SM_Proxy_Approx.",
+   "In the Approximate settings, enable Base Capping (Convex Solid) and Fill Gaps, and run it again. Compare the result with the one before.",
+   "Try the Ground Clipping option Cut And Fill With ZPlane, so that no part of the proxy hangs below the ground.",
+   "Open both proxies in the Static Mesh Editor. Compare their triangle count, material count and texture quality.",
+   "Write a short note that says which method you would use for this set of meshes and why."
+  ]
+ },
+ "TAQ93": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a Blueprint named BP_ShelfBooks with an Instanced Static Mesh component that uses a cube scaled to the shape of a book. In the Construction Script, add N instances in a row, each with a small random tilt.",
+   "Set Num Custom Data Floats to 1 on the component. Write a random value for each instance with the Set Custom Data Value node.",
+   "Make a material named M_Book that reads PerInstanceCustomData at index 0 and uses it to tint each book. Apply the material to the ISM.",
+   "Place 30 copies of a prop in the level as separate actors, for example a cube or a cylinder. Open Modeling Mode, go to the XForm category, and use Harvest Instances to combine them into one ISM.",
+   "Use the ISM Editor tool to move some instances, and replace one instance with another mesh. Note what happens to the list of components.",
+   "Select another group of actors and run Actor, then Merge Actors, then Batch. Compare the result with Harvest Instances.",
+   "Compare the stat unit values and the draw counts before and after you batch the actors."
+  ]
+ },
+ "TAQ94": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Import or create a plain cube. Use Tri Select to put the two triangles of each side into one PolyGroup, so that each side becomes a quad (a face with four corners).",
+   "Set Face Color Mode to By Group, which colors each group differently, and check that the groups are correct.",
+   "Open PolyGroup Edit. Use Extrude on the top face to pull it out, then use Inset on it to make a smaller face inside, and then use Bevel on the edges to make them less sharp.",
+   "Use Insert Edge Loop with Position Mode set to Even and Number of Loops set to 2. Then try the Distance Offset mode.",
+   "Merge two side faces into one PolyGroup. Then use Decompose to split it back into one group per triangle.",
+   "Run Simplify by Groups and check the result in the wireframe.",
+   "In the UVs section, use Planar Projection on one face, and check it with the checkerboard material."
+  ]
+ },
+ "TAQ95": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit > Plugins, look in the Animation section, and enable the Skeletal Mesh Editing Tools plugin. Restart the editor.",
+   "Pick a simple static mesh prop that should bend, for example an antenna, a lamp arm or a tall cylinder made in Modeling Mode. Right-click it in the Content Browser, choose Convert to Skeletal Mesh, and pick Create New for the Skeleton. Name the result SK_Antenna.",
+   "Open the new Skeletal Mesh SK_Antenna, not the Skeleton asset. In the toolbar of the Skeletal Mesh Editor, click Editing Tools and choose the Skeleton mode. With the Edit Skeleton tool in Add mode (N), select the root bone and drag three new bones up the prop, one after the other. Click Accept.",
+   "Select the three new bones together and rename the first one to seg_##1, so that they become seg_001, seg_002 and seg_003. In Edit mode, use Orient with Primary X and Orient Children turned on, so that all bones point the same way.",
+   "Switch to the Skin mode and run Bind Skin with Binding Type set to Geodesic Voxel and Max Influences set to 4. Then open Edit Weights, select a bone, and paint with the Brush in Add mode. Hold Shift to Relax (smooth) the weights where two bones meet, and click Accept.",
+   "Test the rig: select seg_002 in the Skeleton Tree, rotate it with the gizmo, and check that the prop bends smoothly. If the bend looks bad, go back and paint the weights again."
+  ]
+ },
+ "TAQ96": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Blueprint Class with the parent Animation Modifier (search for it under All Classes) and name it BP_BoneHeightCurveModifier.",
+   "Add two variables and mark both as Instance Editable: BoneName (type Name) and CurveName (type Name, with the default value BoneHeight).",
+   "Implement the OnApply event with nodes from the Animation Blueprint Library. First add a Curve track with CurveName, and then loop over the frames of the sequence. For each frame, call Get Bone Pose for Frame with BoneName, read the Z of the location, convert the frame to a time with Get Time at Frame, and add a float curve key at that time.",
+   "Implement the OnRevert event so that it removes the curve track again.",
+   "Open a walk or jump Animation Sequence of the template mannequin, go to Window > Animation Data Modifiers, click Add Modifier and pick BP_BoneHeightCurveModifier. Set BoneName to a bone whose parent is the root (for example pelvis), because Get Bone Pose returns values in local space, which means relative to the parent bone.",
+   "Right-click the modifier and choose Apply Modifier. Check that the BoneHeight curve now appears in the sequence. Then choose Revert, and confirm that the curve is gone.",
+   "Add the same modifier to the Skeleton asset and apply it there. Open a second sequence and confirm that the curve was added to it too."
+  ]
+ },
+ "TAQ97": {
+  "checklist": [
+   "Get a vehicle skeletal mesh that has wheel bones. The easiest source is a new project made from the Vehicle template in the Games category, which includes the skeletal mesh SKM_SportsCar. Work in that project. Open Edit > Plugins, look in the Physics category, and make sure ChaosVehiclesPlugin is enabled. The documentation page uses a Buggy from an older sample project, and the steps are the same for any vehicle mesh.",
+   "Create two Blueprints from the class ChaosVehicleWheel. Name one BP_WheelFront, with Affected by Steering on and Axle Type set to front. Name the other BP_WheelRear, with Affected by Handbrake and Affected by Engine on. Set Wheel Radius to match the size of the visible wheel in cm. You can measure the wheel in the Skeletal Mesh Editor.",
+   "Create the physics asset: right-click the skeletal mesh, choose Create, then Physics Asset, then Create and Assign, with Single Convex Hull. In the Physics Asset Editor, select all wheel bones, set Primitive Type to Sphere and click Re-generate Bodies. Then select the suspension bones and choose Collision, then No Collision.",
+   "Create a Curve Float asset named TorqueCurve (under Miscellaneous, then Curve). Give it the shape of an upside-down U, where X is the engine RPM and Y is the torque, the turning force of the engine.",
+   "Create an Animation Blueprint named ABP_Vehicle with the parent class VehicleAnimationInstance and the Skeleton of the vehicle. In the AnimGraph, connect Mesh Space Ref Pose to Wheel Controller for WheeledVehicle, then to Component To Local, then to Output Pose. If the mesh has suspension bones, add Look At nodes so that they follow the wheel joints.",
+   "Create a Blueprint named BP_Vehicle from WheeledVehiclePawn. Set the Skeletal Mesh and the Anim Class, and turn on Simulate Physics. On the Vehicle Movement Component, fill Wheel Setups with a Wheel Class and a Bone Name for each of the four wheels, using the names of the wheel bones from the Skeleton Tree of the mesh, and set the Torque Curve External Curve to TorqueCurve. Add a Spring Arm and a Camera.",
+   "Make a Game Mode with BP_Vehicle as the Default Pawn, and set it as GameMode Override in World Settings. Add key events for the throttle and the steering in BP_Vehicle and connect them to Set Throttle Input and Set Steering Input, and press Play. Watch the wheels spin and steer."
+  ]
+ },
+ "TAQ98": {
+  "checklist": [
+   "This quest needs a DCC (Maya, 3ds Max or Blender, which is free). In it, take a simple skinned mesh and duplicate it. Move some vertices on the copy (for example an Inflate or a Wink shape) and create a blend shape or morph channel from the copy. In Maya, the name in Unreal will be [BlendShapeNode]_[BlendShape]. In 3ds Max, it is the name of the Morpher channel, and the Morpher must sit before Skin in the stack.",
+   "Export the base mesh and its joints to an FBX file. In the export dialog, enable Animations and all the Deformed Models options (in Maya) or the Deformations options (in Max).",
+   "Open any project, or create one from the Third Person template. Import the file into Unreal with Import Morph Targets enabled in the import window, and name the result SK_MorphTest. Open it and drag the weight from 0 to 1 in the Morph Target Previewer.",
+   "Open Show, then Mesh Overlay, and turn on Selected MorphTarget Vertices. Select the morph target to see which vertices it moves. Then right-click it and use Copy Morph Target Names.",
+   "Create an Animation Blueprint named ABP_MorphTest. In the Event Graph, add a float variable named Amount and call Set Morph Target on each update, with Target set to self, Morph Target Name set to the name you copied, and Value set to Amount. Assign the Animation Blueprint to a mesh in the level and change Amount in the Details panel.",
+   "Open Project Settings, then Rendering, then Optimizations, and find Use GPU for computing morph targets. Write one line about when you would turn it on."
+  ]
+ }
+}

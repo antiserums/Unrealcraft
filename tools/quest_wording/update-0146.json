@@ -1,0 +1,118 @@
+{
+ "TAQ13": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, right-click, choose Editor Utilities, and then click Editor Utility Widget. Name the new asset EUW_ActorTools.",
+   "Open it. In the Designer, the tab where you lay out the panel, add a Vertical Box with two Buttons inside. Label the buttons Randomize Rotation and Snap Scale 1.",
+   "Build the logic for Randomize Rotation. Get the selected level actors (for example with Get Selection Set), loop over them, and set a random Yaw on each one. Yaw is the rotation around the up axis.",
+   "Build the logic for Snap Scale 1. Loop over the selected actors and set the scale of each one to 1, 1, 1.",
+   "Add a Text block to the panel that shows how many actors the last click changed.",
+   "In the Content Browser, right-click EUW_ActorTools and choose Run Editor Utility Widget. Drag the new tab and dock it next to the Details panel.",
+   "Select 5 or more props in a level, for example cubes that you place now, and test both buttons."
+  ]
+ },
+ "TAQ14": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open Edit, then Plugins, and check that the Data Validation plugin is enabled.",
+   "Right-click a content folder and choose Validate Assets in Folder. Read the results in the Message Log.",
+   "Create a new Blueprint Class and pick EditorValidatorBase as its parent class. Name it EV_TextureNaming.",
+   "Override the function Can Validate Asset. Make it return true only when the asset is a Texture2D, so the rule is used for textures only.",
+   "Override the function Validate Loaded Asset. If the asset name does not start with T_, call Asset Fails with a clear message. Otherwise call Asset Passes. Every path through the function must end in one of these two calls.",
+   "Save the Blueprint, and restart the editor if the validator is not picked up. Then import or rename one texture so its name has no T_, and run Validate Assets on it."
+  ]
+ },
+ "TAQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Build a material named M_Master_Prop with clear parameters, such as a color tint, a roughness value, and a texture switch or a scale. Put the parameters in groups and give them names that artists will understand.",
+   "Make at least 3 Material Instances from it, with names that start with MI_, that look clearly different. Use them on props in one small scene.",
+   "Build one Niagara system, with a name that starts with FXS_, that has at least one User parameter (for example SpawnRate or TintColor). You may drive it from an MPC value instead. MPC is short for Material Parameter Collection.",
+   "Make one Blueprint, with a name that starts with BP_, that changes that value during play. It can use a key press, a trigger or a timer.",
+   "If you use an MPC, let the same value also change M_Master_Prop, so that the props and the effect react together.",
+   "Write a short usage note for artists. It should list each parameter, its safe range, and which Blueprint call drives the effect.",
+   "Record a short video clip (30 seconds or less), or take before and after screenshots, in Play In Editor (PIE)."
+  ]
+ },
+ "TAQ16": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a Niagara system named FXS_BouncingSparks that uses a fountain emitter. Place it above a floor and a box in a test level.",
+   "In the Particle Update group, click the + button and choose Collision, then Collision, to add the Collision module. Keep it right before the solver module in the stack.",
+   "Set Bounce Restitution to about 0.4 and Friction to about 0.2. Restitution controls how much speed a particle keeps after a bounce. Check that the sparks bounce off the floor.",
+   "Duplicate the emitter. On the copy, open Emitter Properties and set Sim Target to GPU. Keep the first emitter on CPU.",
+   "On the GPU copy, try the options of GPU Collision Type. Turn the camera so the floor leaves the screen, and note what changes.",
+   "Write 3 lines that say what each version used to find surfaces, and which version you would ship for this effect."
+  ]
+ },
+ "TAQ18": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a new material named M_TA_CustomBlur. Add a Custom node to the graph. You can find it with the right-click search or in the Custom category of the Palette.",
+   "Select the Custom node. In its Inputs array, add four inputs named Tex, UV, r and dist. Set Output Type to a 3-channel float. Copy the blur code from the Custom Material Expressions page that is linked on this quest, and paste it into the Code field.",
+   "Connect a Texture Object node to Tex, a TexCoord node to UV, and two Scalar Parameters to r and dist. Set Description to 'Box Blur' so that the title of the node is clear.",
+   "Add one extra output to the node with Additional Outputs, for example a luminance (brightness) value, and use it somewhere in the graph.",
+   "Build a second, simple effect two times: once in a Custom node and once with built-in nodes (for example Sin, Multiply by a parameter, and Add). Compare the two instruction counts in the Stats panel. A lower count means a cheaper material.",
+   "Write 3 short lines that say when you would keep the Custom node here, and when you would replace it with nodes."
+  ]
+ },
+ "TAQ19": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. You need a level with a Landscape that has a landscape material. If you have none, create a Landscape in a new level and give it a simple material with a Landscape Layer Blend node and two layers with different colors. Open Project Settings and go to Engine, then Rendering, then the Virtual Textures section. Turn on Enable virtual texture support, and then restart the editor.",
+   "Create a Runtime Virtual Texture asset named RVT_Terrain. Set its type to Base Color, Normal, Roughness, Specular.",
+   "In the landscape material, turn on Use Material Attributes. Write the layer blend into a Runtime Virtual Texture Output node, read it back with a Runtime Virtual Texture Sample node, and send both through a Virtual Texture Feature Switch node.",
+   "Place a Runtime Virtual Texture Volume in the level and assign RVT_Terrain to it. Under Transform from Bounds, use Set Bounds on the landscape so the volume covers it. Then add RVT_Terrain to the Draw in Virtual Textures list of the landscape.",
+   "Place a rock on the landscape. Any mesh works as the rock, for example a sphere that you scale and push halfway into the ground. Make a material for it named M_TA_RockBlend. In this material, sample RVT_Terrain and blend its Base Color into the bottom of the rock, so that the rock meets the ground softly.",
+   "Add a plane mesh with a masked material that works like a decal and writes to the RVT. Set Draw in Main Pass to Never on the plane, and turn off its collision.",
+   "Run the console command stat virtualtexturing and note the cost in ms (milliseconds)."
+  ]
+ },
+ "TAQ20": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. In the Content Browser, create a Niagara module script named NMS_TA_PullToPoint. Open it in the Script Editor.",
+   "Add two Module Inputs named TargetPosition and Strength. Read Particle.Position, calculate the direction to the target and store it in a Module Local (a value that exists only inside this module), and then write a new Particle.Velocity.",
+   "In Script Details, set Module Usage Bitmask to the particle scripts, and fill in a Category, a Description and Keywords. Turn on Expose to Library so the module shows up when you add modules. Then click Compile.",
+   "Add the module to the Particle Update group of a system named FXS_TA_PullTest. Check that the particles move toward the target.",
+   "In the module script, click Versioning and enable it. Mark version 1.0 as the exposed version.",
+   "Add a new minor version. In it, add an input named Falloff and write a Change Description. Then set this version as exposed and visible. In FXS_TA_PullTest, switch the module to the new version from the Selection panel."
+  ]
+ },
+ "TAQ21": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a test level named L_TA_Profile that has a known heavy moment. For example, use 50 Niagara systems, or many actors that spawn at the same time.",
+   "In the toolbar at the bottom of the editor, open the Trace menu. Check which channels are turned on, and click Start Trace. Then play in PIE for about 20 seconds.",
+   "Right before the heavy moment, add a Trace Bookmark, which is a marker you can find later in the recording. You can do this from the Trace menu or with the trace.bookmark command. Then stop the trace.",
+   "Open the trace from the Unreal Insights Session Browser. In the Frames panel, find the tallest frame, which is the slowest one, and select it.",
+   "In the Timers panel, sort by exclusive time, which is the time spent in a function itself without the functions it calls. Pick the top timer, and use Callers and Callees to see where it sits in the code.",
+   "Change one thing to fix the problem and capture a second trace. Compare the same timer in both traces over a longer time range."
+  ]
+ },
+ "TAQ22": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Enable the Scriptable Tools Editor Mode plugin. Also enable Geometry Script if you need its nodes. Then restart the editor.",
+   "Create an Editor Utility Blueprint with the parent class EditorScriptableModularBehaviorTool and name it BP_Tool_PlaceProp. Set its Tool Name, Category and Tooltip.",
+   "Create a Blueprint named BP_ToolProps_PlaceProp with the parent class ScriptableInteractiveToolPropertySet. This holds the settings of the tool. Give it the public variables Mesh, MinScale and MaxScale. Add it to the tool in On Script Setup with the node Add Property Set of Type.",
+   "Add a Single Click Behavior to the tool. In the IfHitByClick function, do a line trace along the click ray and return the hit. When a click happens, spawn the chosen mesh at the hit point with a random scale.",
+   "Show short instructions to the user with Display User Help Message. Save the property set when the tool shuts down, and restore it when the tool is set up.",
+   "Open the Scriptable Tools mode in the editor and place 10 props with your tool."
+  ]
+ },
+ "TAQ23": {
+  "brief": "A tool is only finished when another person can use it without you in the room. That means it must solve a real problem, handle wrong input, and come with a short guide. In this quest you pick a slow, repeated editor task, build a tool that does it, write a usage page, and test that the tool can be used with only that page.",
+  "done_when": "Send a short video clip (30 seconds or less) or screenshots of the tool in use, the one-page usage document, the before and after example with times, and the feedback from the test together with the fix you made. A mentor reviews it.",
+  "checklist": [
+   "Ask one other person who works in Unreal, such as an artist or another learner, which slow and repeated task annoys them. If you have nobody to ask, pick such a task from your own work, for example renaming assets or placing many props. Write the task down in one sentence.",
+   "Choose one form for your tool: an Editor Utility Widget, a Scriptable Tool, or a Python script. Explain your choice in two lines.",
+   "Build the tool. It must check its input and show a clear message when something is wrong. It must not fail without a message.",
+   "Use at least one of these features where it fits: Data Validation, Material Parameter Collections, custom Niagara modules, or Runtime Virtual Textures.",
+   "Write a usage document of one page. It should say what the tool does, how to open it, what each setting does, and one known limit.",
+   "Record a before and after example: the same task done by hand and done with the tool, with the time each one took.",
+   "Give the tool and the document to the other person. They must use it without your help. If you work alone, wait a day and then use the tool yourself by following only the document. Write down what was confusing, and fix one of those things."
+  ]
+ },
+ "TAQ24": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Effect Type named EFT_TA_Ambient. In the Content Browser, choose FX, then Niagara Effect Type.",
+   "Open it. Under Budget Scaling, set Max Global Budget Usage and one curve, for example Max Distance Scale by Global Budget Use.",
+   "Assign EFT_TA_Ambient to two Niagara systems in their System Properties. If you have no systems, make two from templates such as Fountain with FX, then Niagara System. Place about 30 copies of them in a level named L_TA_FXBudget.",
+   "Open Tools > Debug > Niagara Debugger. Turn on the Debug HUD, Debug Overview and Show Global Budget Info. Set System Debug Verbosity to Basic.",
+   "Turn off System Show Active Only in World, so that culled systems are shown too. Walk around in PIE and watch systems get culled.",
+   "In the FX Outliner, turn on Perf and Capture. Sort the list by average time and note the system that costs the most."
+  ]
+ }
+}

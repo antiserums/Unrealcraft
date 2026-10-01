@@ -1,0 +1,164 @@
+{
+ "AQ13": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a run animation of the mannequin. In the current template the run animations have Jog in their names. Find the six areas of the editor: Toolbar, Asset Details / Skeleton Tree, Viewport, Details / Preview Scene Settings, Asset Editor, and Asset Browser.",
+   "In Asset Details, set Rate Scale to 0.5 and press play to see the animation at half speed. Then set it back to 1. Also read the values of Number of Sampled Frames and Target Frame Rate.",
+   "Find the setting Additive Anim Type and read its options. Leave it on No additive.",
+   "Find the setting Enable Root Motion. In the Asset Details panel it is written as one word, EnableRootMotion. Turn it on, watch what changes in the viewport, and then turn it off again. Also read the options of Root Motion Root Lock.",
+   "Select a bone in the Skeleton Tree and rotate it a little in the viewport. Press Key in the Toolbar and see the additive track appear in the timeline. Then undo the change.",
+   "In the timeline, open the menu of the Curves track and choose Add Curve..., then Create Curve, and name the curve TestCurve. Open Window > Anim Curves to see it. Delete the curve afterwards and save the Skeleton."
+  ]
+ },
+ "AQ17": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a new level named L_MotionStage. Build a flat floor of about 20 by 20 meters and one long wall. You can use simple geometry or the Level Prototyping meshes.",
+   "Add objects that show real sizes: a step of about 20 cm, a ledge of about 1 m, and a gap of about 2 m. Put a Text Render actor next to each one that shows its size.",
+   "Light the stage with one Directional Light, one Sky Light, and one extra light that makes the mannequin easy to see from the front.",
+   "Place a Skeletal Mesh Actor (Quinn or Manny). Set Animation Mode to Use Animation Asset, choose a run or walk sequence, and enable Looping.",
+   "Place a second mannequin and set its Anim Class to ABP_Unarmed, the Animation Blueprint of the template. This lets the mentor compare a looping animation asset with an Animation Blueprint.",
+   "Add a Camera Actor that frames the whole stage. Record a clip of 10 to 20 seconds that shows the looping mannequin and the size marks. Recording the window with a capture tool is fine.",
+   "Write 5 lines that say which sequence loops, how you checked the size of the mesh against the marks, and one thing you would change."
+  ]
+ },
+ "AQ18": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, find the Physics Asset of the mannequin. In the current template it is PA_Mannequin in the folder Characters/Mannequins/Rigs. Double-click it to open the Physics Asset Editor.",
+   "Look at the bodies and constraints on the mannequin. Select the shoulder body and count the bodies that are below it in the hierarchy.",
+   "Open the Simulation dropdown, which is the arrow next to the Simulate button in the toolbar. Try Simulation first. Then try No Gravity and hold Ctrl while you click bodies to poke them. Then select the shoulder and try Selected Simulation.",
+   "In the Content Browser, right-click SKM_Manny_Simple and choose Create, then Physics Asset, then Create. Accept the default settings and compare the new asset with the original one.",
+   "In BP_ThirdPersonCharacter, add a key press event. On the Mesh component, call Set Simulate Physics with the value true, and set its Collision Enabled to Physics Only or Collision Enabled. Set the collision of the Capsule to No Collision.",
+   "Press Play, press the key, and watch the character fall as a ragdoll. Take a screenshot while it is falling."
+  ]
+ },
+ "AQ29": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. The template has idle, walk, run and jump animations that you can use. The run animations have Jog in their names. Create a blend space named BS_Locomotion. It blends idle, walk and run animations based on Speed, and also on Direction if you have strafe (sideways) animations.",
+   "Create ABP_Locomotion with a state machine that has four states: Locomotion (which plays BS_Locomotion), JumpStart, JumpLoop and JumpEnd. The transition rules read IsFalling and Speed from the character.",
+   "Add an Animation Layer Interface with a layer named UpperBody that takes a pose input. Add the interface to ABP_Locomotion, and place the layer after the state machine in the AnimGraph.",
+   "Create ABP_Locomotion_Upper, which implements the same interface. In it, blend an upper body animation over the input pose with a Layered Blend per Bone node that starts from the spine.",
+   "In BP_ThirdPersonCharacter, set the Anim Class of the Mesh to ABP_Locomotion, and link the upper body Animation Blueprint with Link Anim Class Layers when a key is pressed.",
+   "Test all the transitions: stand, walk, run, jump from a run, land into a run, and the upper body layer while running.",
+   "Record a short video clip (30 seconds or less). Write 5 to 10 lines about your transition rules and about what you would fix next."
+  ]
+ },
+ "AQ33": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick a source character, for example the UE5 Mannequin, and a target character that has a different skeleton. The template has only one skeleton, so add a free character from Fab, Epic's asset store, to the project. Create one IK Rig for each and name them IKR_Source and IKR_Target.",
+   "In each IK Rig, run Auto Create Retarget Chains and Set Pelvis. Read the notification that appears, and fix by hand any chain that the tool got wrong.",
+   "Create an IK Retargeter named RTG_SourceToTarget: in the Add menu choose Animation, then IK Rig, then IK Retargeter. Click Add Default Ops. Check the chain mapping with Map All (Fuzzy), which matches chains by similar names, and fix any wrong chain.",
+   "If the two characters stand in different reference poses, for example an A-pose and a T-pose, create a new retarget pose and use Auto Align. Do not edit the Default Pose.",
+   "Preview 3 animations in the Asset Browser. Fix one problem you can see by changing an op setting. For example, change FK Chains Rotation Mode on the fingers, or add a Pin Bones op for a weapon bone.",
+   "Now retarget a batch. In the Content Browser, select 10 or more source Animation Sequences, right-click them and choose Retarget Animation Assets. Turn off Auto Generate Retargeter, pick RTG_SourceToTarget, use Add Suffix so the new files get a clear name, and export.",
+   "Create one Override Set, for example IsHoldingWeapon, that changes one property of an op. Show it on the Retarget Pose From Mesh node."
+  ]
+ },
+ "AQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Set up the crowd assets: duplicate SKM_Manny_Simple and name the copy SK_CrowdCharacter, duplicate ABP_Unarmed and name the copy ABP_Crowd, and make a Character Blueprint named BP_CrowdCharacter whose Mesh uses SK_CrowdCharacter with ABP_Crowd as its Anim Class. Spawn 50 or more copies of BP_CrowdCharacter, for example with a loop in the Level Blueprint that calls Spawn Actor from Class in a grid. Type stat unit in the console to show the frame times, and note the game thread time.",
+   "In ABP_Crowd, open Class Settings, find the Optimization section and enable Warn About Blueprint Usage. Move the Event Graph logic into a Thread Safe function that uses Property Access. Continue until the AnimGraph nodes show the Fast Path lightning icon.",
+   "Enable the Animation Budget Allocator plugin. In BP_CrowdCharacter, select the Mesh and set its Component Class to SkeletalMeshComponentBudgeted, turn on Auto Calculate Significance, and call Enable Animation Budget at Begin Play.",
+   "Run the game with the console command a.Budget.Debug.Enabled 1, and turn on Stat, then Advanced, then AnimationBudgetAllocator. Take a screenshot of the graph and of the numbers shown over each mesh.",
+   "Open the file Config/DefaultScalability.ini and add a value for a.Budget.BudgetMs for each quality level. Each level has its own section, so you write four sections: [ViewDistanceQuality@0], [ViewDistanceQuality@1], [ViewDistanceQuality@2] and [ViewDistanceQuality@3], each with its own a.Budget.BudgetMs line below it. Test two of the levels.",
+   "Open SK_CrowdCharacter, set Number of LODs to 4 and click Apply Changes. Add Bones to Prioritize on the face or the hands with a high Weight of Prioritization, and click Regenerate LOD.",
+   "Compare stat unit before and after your changes, and write the numbers down."
+  ]
+ },
+ "AQ61": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Control Rig named CR_Manny_LookAt for the mannequin: right-click SKM_Manny_Simple and choose Create, then Control Rig. Add a Vector variable named LookTarget and a Float variable named LookWeight. Click the Eye icon next to each one in My Blueprint to make them instance-editable.",
+   "On Forwards Solve, aim the head bone at LookTarget. You can use an Aim node or your own rotation logic. Blend the result by LookWeight.",
+   "Open ABP_Unarmed, the Animation Blueprint of the template character, or make a new Animation Blueprint. In the Anim Graph, right-click, open Misc and add a Control Rig node. Place it after the locomotion pose and before the Output Pose.",
+   "In the Details panel of the node, set Control Rig Class to CR_Manny_LookAt. Under Input, enable Use Pin for LookTarget and for LookWeight.",
+   "In the Event Graph, on each update, set LookTarget to the location of the player camera and set LookWeight to 1.",
+   "Add a Float animation curve to one animation. On LookWeight, choose that curve with Use Curve and stop using the pin. Compare the result.",
+   "Disable Transfer Pose in Global Space, and check that the result is the same on this skeleton."
+  ]
+ },
+ "AQ73": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (PA_Mannequin in the folder Characters/Mannequins/Rigs), or the one of your own character. In the Skeleton Tree, open Options and enable Show Constraints. Select the constraint of the left elbow.",
+   "Use the 1, 2 and 3 keys to switch Swing1, Swing2 and Twist between Limited and Locked. Make a hinge, which means one of them is Limited and the other two are Locked. Set the limit angle to about 120 degrees. Rotate the constraint so that the green arc matches the way a real elbow bends.",
+   "Copy the constraint with Ctrl+C. Select the constraint of the right elbow and paste with Ctrl+V.",
+   "Simulate with No Gravity first to check the alignment, and then simulate normally. If the ragdoll shakes, add a small amount of Linear Damping and Angular Damping on the bodies.",
+   "Open Window > Profiles. Under Constraint Profiles, click New and name the profile CP_Stiff. Select both arm constraints and press Assign. Set Limit Stiffness and Limit Damping to stiffer values.",
+   "Create an Actor Blueprint named BP_RagdollPawn with a Skeletal Mesh Component that uses SKM_Manny_Simple. Set the collision of the component to Collision Enabled, and set it to ignore the Pawn channel. On BeginPlay, call Set Constraint Profile for All with CP_Stiff. Then call Set All Bodies Below Simulate Physics with the bone spine_01, New Simulate on and Include Self on. Place the Blueprint in a level, press Play and compare with the default profile."
+  ]
+ },
+ "AQ75": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the Physics Asset of the mannequin (PA_Mannequin in the folder Characters/Mannequins/Rigs) and go to Window > Profiles. Under Physical Animation Profiles, click New and name the profile PAP_UpperBody.",
+   "In the Skeleton Tree or in the Physics Graph, select spine_01 and every body below it. Press Assign. Check that the nodes in the graph change from shaded to filled.",
+   "With those bodies selected, set the profile to the starting values from the documentation page: Orientation Strength 1000, Angular Velocity Strength 100, Position Strength 1000, Velocity Strength 100, Max Linear Force 0 and Max Angular Force 0. Save the asset.",
+   "Create an Actor Blueprint named BP_PhysAnimPawn with a Skeletal Mesh Component that uses SKM_Manny_Simple. Set its collision preset so that collision is enabled, Object Type is Pawn, and the Pawn channel is ignored. Add a Physical Animation Component. Add a Name variable named BoneName with the value spine_01.",
+   "In the Event Graph, connect three nodes after BeginPlay. First, call Set Skeletal Mesh Component with the Physical Animation Component as target. Second, call Apply Physical Animation Profile Below with Body Name set to BoneName, Profile Name set to PAP_UpperBody, and Include Self on. Third, call Set All Bodies Below Simulate Physics with BoneName, New Simulate on and Include Self on.",
+   "Set the mesh to play a looping animation: set Animation Mode to Use Animation Asset and pick an idle. Place the Blueprint in a level and place a cube with Simulate Physics turned on next to it. Play in the editor and push the cube into the character. The upper body should follow the animation and also react to the hits.",
+   "Try Orientation Strength 100 and then 5000. Note how closely the pose still follows the animation in each case."
+  ]
+ },
+ "AQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Character Blueprint named BP_HitDummy. Set its Mesh to SKM_Manny_Simple with the Anim Class ABP_Unarmed, and set the collision preset of the Mesh so that collision is enabled and the Visibility channel is blocked. Place one in the level. In its Event Graph, add a custom event named HitBone with a Name input. In it, call Set All Bodies Below Simulate Physics on the Mesh with that bone, New Simulate on and Include Self on.",
+   "In BP_HitDummy, add a Timeline named TL_HitBlend with a length of 0.6 s and a float track that goes from 0 to 1 and back to 0. Play it from the start at the end of HitBone. On every update of the Timeline, send its value to Set All Bodies Below Physics Blend Weight for the same bone.",
+   "On the Finished output of the Timeline, call Set All Bodies Below Simulate Physics with New Simulate off, so that the simulation stops.",
+   "In BP_ThirdPersonCharacter, add a key press event that does a Line Trace by Channel from the camera forward, with Trace Complex turned on. Break the hit result, cast the Hit Actor to BP_HitDummy, take the Hit Bone Name, and call HitBone with it.",
+   "Open the Physics Asset of the mannequin. Select hand_l and hand_r and set their Physics Type to Kinematic. Set Physics Update Mode to Component Transform is Kinematic. Simulate with the jump loop animation, and watch the hands stay on the animation.",
+   "Play in the editor. Aim at the arm of the dummy and press the key, and then do the same on the leg. Check that the part that was hit blends into physics and back to the animation."
+  ]
+ },
+ "AQ84": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a Character Blueprint named BP_CrowdDummy whose Mesh uses SKM_Manny_Simple with the Anim Class ABP_Unarmed. Place 20 or more copies in a level, in rows that lead away from the Player Start. Press Play, type stat unit in the console, and write down the Game time.",
+   "Open BP_CrowdDummy and select the Mesh component. In the Details panel, find the Optimization section and turn on Enable Update Rate Optimizations. In the same panel, turn on Display Debug Update Rate Optimizations, which shows the update rate of each character on screen while the game runs.",
+   "Press Play. Stand close to the crowd, then walk far away from it, and watch how the debug display on the characters changes with distance. Take a screenshot at each distance.",
+   "On the same Mesh component, search the Details panel for Component Use Fixed Skel Bounds and turn it on. The component now skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not calculated again on every frame. To see the bounds, open the Show menu of the viewport, then Advanced, then Bounds, and compare with the option on and off.",
+   "Open the walk or run animation that the crowd plays and look at its Notifies track. Notifies run on the game thread after the animation work is done, so write one line that says which of them are Blueprint notifies and why the documentation advises notifies that are not Blueprint based.",
+   "Run stat unit again with all options on and compare the Game time with your first number. Read the part about Update Rate Optimizations on the documentation page linked on this quest, and note which plugin it recommends in place of URO for controlling how often Animation Blueprints are evaluated."
+  ]
+ },
+ "AQ4": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick one source animation of the template character. Also pick a second character that has a different skeleton from the first one. The template has only one skeleton, so add a free character from Fab, Epic's asset store, to the project.",
+   "In the Content Browser, right-click the source animation and choose Retarget Animations. The Retarget Animations window opens. Set Target Preview Mesh to the Skeletal Mesh of the second character and leave Auto Generate Retargeter turned on, so that Unreal sets up the retarget for you. Select your animation in the list, click Export Animations, and pick a folder for the new animation.",
+   "In the same window, click Export Retarget Assets to save the IK Rig assets and the IK Retargeter asset that Unreal generated. Open them and fix one problem that you can see, for example in the feet, the hands or the root."
+  ]
+ },
+ "AQ7": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. The template character comes with idle, walk and run animations. The run animations have Jog in their names. In the Content Browser, click Add, then Animation, then Blend Space, and pick the Skeleton of your character. Open the new asset. In Asset Details, under Axis Settings, open Horizontal Axis, name it Speed, and set Maximum Axis Value to the Max Walk Speed of your character. You find Max Walk Speed on the Character Movement component in the Blueprint of the character.",
+   "Drag an idle animation, a walk animation and a run animation from the Asset Browser onto the bottom line of the grid. Put each one at the speed it was authored for, which means the speed the animation was made to move at: idle at 0, and walk and run at their own speeds. Hold Ctrl and move the mouse over the grid to preview the blend.",
+   "Make a copy of the AnimBP: right-click it and choose Duplicate. In the copy, select the Blend Space Player node and pick your blend space in its Details panel. Select the Mesh in the Blueprint of your character and set Anim Class to the copy. Play in the editor (PIE) and check whether the feet slide."
+  ]
+ },
+ "CQ48": {
+  "done_when": "Send a short video clip (30 seconds or less) of the end of the cutscene, where the game takes over again. Also send screenshots that show the Slot node in the Animation Blueprint, the Properties of the animation section with Slot Name, and the Level Blueprint with Set Binding by Tag. Add one line that says if the blend at the end looked smooth.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and open ABP_Unarmed, the Animation Blueprint of the template character. In Window > Anim Slot Manager, add a slot named CineSlot and save.",
+   "In the AnimGraph, add a Slot node and set its Slot Name to CineSlot. Connect it directly before the Output Pose node.",
+   "Create a Level Sequence named LS_Outro. Drag BP_ThirdPersonCharacter from the Content Browser into Sequencer to make a spawnable proxy, a stand-in for the player. Add a short animation and a camera with a Camera Cut.",
+   "Open the Properties of the animation section and set Slot Name to CineSlot. Drag a blend-out at the end of the section. On the transform section, set When Finished to Keep State.",
+   "On the Camera Cut track, enable Can Blend and add a blend-out region. On the Cine Camera, disable Constrain Aspect Ratio.",
+   "Right-click the character track and add the tag Player. In the Level Blueprint, call Set Binding by Tag with Get Player Pawn, then Play the sequence.",
+   "On the Level Sequence Actor, enable Disable Movement Input and Disable Look at Input. Play in the editor and check if there is a pop at the end."
+  ]
+ },
+ "CQ50": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Get a second two-legged character that has a different skeleton. The template has only one skeleton, so add a free character from Fab, Epic's asset store, to the project. Keep the Mannequin from the template as the source.",
+   "Try the quick way first. Right-click an Animation Sequence of the Mannequin and choose Retarget Animation Assets. Set Target Preview Mesh to your new character and export one clip with the suffix _Auto.",
+   "Now do it by hand. Create an IK Rig for each mesh with Add (+), then Animation, then IK Rig. In each rig, right-click the pelvis or hip bone and choose Set Retarget Root.",
+   "In each IK Rig, make chains for Spine, Left Arm, Right Arm, Neck, Head, Left Leg and Right Leg. Select the bones of a chain and use New Retarget Chain from Selected Bones, and choose No Goal.",
+   "Create an IK Retargeter from the source rig with Add (+), then Animation, then IK Retargeter. Set the Target IKRig Asset. Check the Chain Mapping and the reference poses of both characters.",
+   "Preview a walk clip, then use Export Selected Animations. Put the exported clip on your new character in a Level Sequence named LS_Retarget and frame it with a camera."
+  ]
+ },
+ "GDQ30": {
+  "checklist": [
+   "Open a project made from the First Person template, or create one. Enable the GameplayStateTree plugin and the StateTree plugin. Then restart the editor.",
+   "Create a StateTree named ST_ShootingTarget and choose the StateTreeComponentSchema. Create an Actor Blueprint named BP_ShootingTarget with a Static Mesh and a StateTree component that is set to ST_ShootingTarget. Add an integer variable HitCount that goes up by one in On Component Hit, and add a custom event named DelayedDestroy.",
+   "In ST_ShootingTarget, set Context Actor Class to BP_ShootingTarget. Add two states named Idle and Dead. On Idle, add a transition with the trigger On Tick that goes to Dead, and give it an Integer Compare condition that checks if Actor > Hit Count is greater or equal to 5.",
+   "Create a task Blueprint named STT_Destroy with the parent StateTreeTaskBlueprintBase, and add an Actor variable in the category Context. Override ExitState and call DelayedDestroy there. In the Dead state, add the tasks Debug Text, Delay with 2.0, and STT_Destroy. Add a transition with the trigger On State Completed that goes to Tree Succeeded.",
+   "Create an Actor Blueprint named BP_SplineActor with a Spline, which is a curved path. Create an evaluator named STE_GetSpline that uses TreeStart and Find Nearest Actor, and has an output variable SplineActor in the category Output. Create a task named STT_MoveAlongSpline that uses Tick to call Set Actor Location along the spline, and calls Finish Task at the end.",
+   "Add a child state named MoveAlongSpline under Idle. Add the task STT_MoveAlongSpline to it, and bind its Spline Actor to the output of the evaluator. Place both actors in the level and close the spline loop. Then press Play, pick up a weapon in the level, and shoot the target."
+  ]
+ }
+}

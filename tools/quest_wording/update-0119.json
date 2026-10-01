@@ -1,0 +1,182 @@
+{
+ "GDQ12": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Click Play, click inside the viewport, and move around. Then press Shift+F1 to get the mouse cursor back without stopping the game.",
+   "Click Pause, and then click Frame Skip a few times to move the game forward one frame at a time. Then click Eject, which lets go of the character, and select an actor in the level.",
+   "Change one value on that actor. Then right-click the actor and choose Keep Simulation Changes. Stop the game with Esc and confirm that the change is still there.",
+   "Press Alt+S to start Simulate. Notice that no player character appears in the level. Then stop.",
+   "Open the Play options, which is the button with three vertical dots next to Play. Run the level once as New Editor Window and once as Standalone Game.",
+   "While the game runs in the editor, press the tilde key to open the console, a line where you can type commands. Type stat fps to show the frame rate."
+  ]
+ },
+ "GDQ13": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit, then Project Settings, then Maps & Modes, and read which class is set as Default GameMode.",
+   "Expand Selected GameMode. Note the Default Pawn Class, which is the character the player controls, and the Player Controller Class.",
+   "Open the World Settings tab and find GameMode Override. This setting can change the Game Mode for this one level only. Note if it is set.",
+   "Create a new Blueprint Class with Game Mode Base as its parent, and name it GM_Toy. Open it and set its Default Pawn Class to BP_ThirdPersonCharacter.",
+   "In World Settings, set GameMode Override to GM_Toy. Press Play to confirm that the character still appears.",
+   "Draw a small diagram that shows this chain: Level (World Settings) leads to Game Mode, and Game Mode leads to Pawn/Character and Player Controller."
+  ]
+ },
+ "GDQ14": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Lamp. Add a Point Light component and a Cube mesh to it.",
+   "Add a Float variable named Intensity and a Linear Color variable named LightColor. Click the eye icon next to each variable to make it Instance Editable, which means you can change it on each lamp in the level.",
+   "Set Category to Tuning on both variables. Write a Tooltip, a short help text, for each one. Check that the eye icon turns green.",
+   "Open the Construction Script, the graph that runs when the actor is placed or changed in the editor. There, set the intensity and the color of the light from the two variables.",
+   "Select the Intensity variable. In the Details panel, set a Slider Range, for example from 0 to 5000.",
+   "Place three BP_Lamp instances in a level. In the Details panel, give each lamp a different Intensity and a different color.",
+   "Add a Boolean variable named StartOn and enable Expose on Spawn for it. Then click Compile and save the Blueprint."
+  ]
+ },
+ "GDQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, so that you have a player character to walk into the switch. Create an Actor Blueprint named BP_Switch with a Box Collision and a Cube mesh. Add the On Component Begin Overlap event for the box, which runs when something enters the box.",
+   "Connect the overlap event to a FlipFlop node. Make output A set the cube material to red and output B set it to blue. Press Play and walk in and out of the box.",
+   "Replace the FlipFlop with a DoOnce node. Add a second Box Collision named ResetZone, and connect its overlap event to the Reset input of the DoOnce.",
+   "Add a Branch node before the DoOnce that checks a Boolean variable named IsPowered. Make IsPowered Instance Editable, so you can change it on the actor in the level.",
+   "Add a Gate node. Connect Event Tick to Enter, the ResetZone overlap to Open, and the main overlap to Close. Connect Exit to a Print String node with the text tick.",
+   "Use a Sequence node to print A and then B from one overlap. Watch the order of the two messages in the log."
+  ]
+ },
+ "GDQ16": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Actor Blueprint named BP_Spawner and place it in the level. On Begin Play, add a Delay node with a Duration of 2.0, and after it a Print String node with the text ready.",
+   "Add a Custom Event named Tick2. Add a Set Timer by Event node with Time 1.0 and Looping turned on, and connect its Event pin to Tick2. Make Tick2 print a counter that goes up by one each time.",
+   "Right-click the Return Value pin of the timer node and promote it to a variable named TimerHandle. The handle is the reference you need to control the timer later.",
+   "Add a Box Collision. On its overlap event, call Clear and Invalidate Timer by Handle with TimerHandle. Play and confirm that the counter stops.",
+   "On the timer node, set Initial Start Delay to 3.0. Play and watch when the first message appears.",
+   "Try to call the Delay node twice quickly from a key press. Note what happens the second time."
+  ]
+ },
+ "GDQ17": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create an Actor Blueprint named BP_Coin. Add a Capsule Collision, and then add a Sphere mesh as a child of the capsule. Set the Collision Presets of the mesh to NoCollision, so only the capsule detects the player.",
+   "Add a Rotating Movement component so that the coin spins. Add an Integer variable named Value, set it to 1, and make it Instance Editable.",
+   "Open BP_ThirdPersonCharacter and add an Integer variable named Score.",
+   "In BP_Coin, right-click the Capsule in the Components panel, choose Add Event, and then choose On Component Begin Overlap.",
+   "Drag from the Other Actor pin and add a Cast to BP_ThirdPersonCharacter node, which checks that the thing that touched the coin is the player character. On success, set Score on the character to Score + Value.",
+   "After that, add a Print String node that shows the new Score, then a Delay of 0.2, and then a Destroy Actor node with its target set to self.",
+   "Place 5 coins in the level and give one of them a Value of 5. Press Play and collect all of them."
+  ]
+ },
+ "GDQ18": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open BP_ThirdPersonCharacter and add an Integer variable named Score, if it does not have one yet. Create a Widget Blueprint with User Widget as its parent, and name it WBP_Score. Add a Canvas Panel as the root, which is the first widget that holds all the others.",
+   "Add a Horizontal Box, anchor it to the top-left corner, and set its Position to 20,20. Inside it, add two Text widgets: one with the text Score : and one that you name txtScore.",
+   "Switch to the Graph. On Event Construct, get the player character, cast it to BP_ThirdPersonCharacter, and promote the result to a variable named MyCharacter.",
+   "Go back to the Designer and select txtScore. Next to Text, click Bind and then Create Binding. In the function that opens, return the Score of MyCharacter.",
+   "In BP_ThirdPersonCharacter, on Event BeginPlay, add a Create Widget node with the class WBP_Score. Promote its result to a variable named HUD, and then call Add to Viewport to show it on screen.",
+   "Make something change the Score, so that you can test the widget. If you have a pickup that adds to Score, place a few in the level. If not, add a keyboard event to BP_ThirdPersonCharacter, for example for the E key, that adds 1 to Score. Press Play and change the Score. The number on screen must update."
+  ]
+ },
+ "GDQ19": {
+  "brief": "A toy space is the smallest thing that is still a game: one action for the player, one room, and one number on screen. Building it lets you combine several skills in one piece of work, from tunable variables to timers, pickups and widgets. In this quest you plan a small room around one player action, build it with simple shapes, tune it, and record one full run. Everything you need to build is listed in the steps.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Pick ONE player verb, which is one action the player does, such as jump, dash, collect or push. Sketch a node map on paper with 3 to 5 spaces, and write what the verb does in each space.",
+   "Graybox one room in a new level, which means you build it with basic shapes only and no art. Every space must use the verb.",
+   "Build one actor for the verb with a name that starts with BP_Toy_. It must have at least one Float variable that is Instance Editable (click the eye icon next to it), with its Category set to Tuning and a Tooltip.",
+   "In the logic of that actor, use at least one flow control node (Branch, Gate, DoOnce or FlipFlop) and one timer or Delay node.",
+   "Add a pickup or a trigger that changes a variable, for example a coin that adds 1 to a Score variable on the character when the player overlaps it. Show that number on screen with a Widget Blueprint that you add to the viewport.",
+   "Tune the speed or the jump of the character for the room, on the Character Movement component of BP_ThirdPersonCharacter. Test the room in Play In Editor, and one time as Standalone Game from the Play options.",
+   "Record a short video clip (30 seconds or less) that shows one full run. Write 5 lines that name the verb, the tunable value, and what you changed after testing."
+  ],
+  "done_when": "Send these four things: the short video clip, a photo of your paper node map, a screenshot of the tuning variable in the Details panel, and your 5-line note. A mentor reviews your work."
+ },
+ "GDQ20": {
+  "brief": "Debugging means finding out why your logic does something you did not expect, for example why a value is wrong. Blueprints have tools for this: a breakpoint pauses the game at a node you choose, a watch shows the value of a pin, and Print String writes a message on screen. In this quest you use these tools on a simple coin pickup.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a coin pickup that changes a Score value. If you have none, make one: add an Integer variable named Score to BP_ThirdPersonCharacter, and create an Actor Blueprint named BP_Coin with a Sphere Collision that, on overlap, casts Other Actor to BP_ThirdPersonCharacter and sets Score to Score + 1. Place a few coins in the level. Open BP_Coin, right-click the Set Score node and choose Add Breakpoint. Press Play and walk into a coin, and the game pauses at that node.",
+   "While the game is paused, move the mouse over the Score pin and read its value. Then right-click the pin and choose Watch this value.",
+   "Open Tools > Blueprint Debugger. Look at the Call Stack and the Execution Trace, which show the path the logic took. Then resume the game.",
+   "Right-click the breakpoint and choose Disable Breakpoint. Confirm that the red octagon is now only an outline. Play again and check that the game does not pause.",
+   "Add a Print String node with a Key named score and a Duration of 5. Collect several coins and notice that the new message replaces the old one.",
+   "On one Print String node, change Print to Log to false. Then check the Output Log to see the difference."
+  ],
+  "quiz": [
+   {
+    "q": "How does an active breakpoint look on a node?",
+    "choices": [
+     "A solid red octagon in the upper-left corner",
+     "A yellow triangle",
+     "A blue circle",
+     "A red outline around the whole node"
+    ],
+    "explain": "An active breakpoint is a solid red octagon; a disabled one is an outline of a red octagon."
+   },
+   {
+    "q": "A breakpoint shows as a yellow icon with an exclamation point. What does that mean?",
+    "choices": [
+     "It is disabled",
+     "It is invalid and will never be reached; recompiling may fix it",
+     "It has been hit",
+     "It is shared with other developers"
+    ],
+    "explain": "A yellow exclamation icon marks an invalid breakpoint location; compiling the Blueprint can sometimes resolve it."
+   },
+   {
+    "q": "You watch a pin on a node that has not executed yet. What do you see?",
+    "choices": [
+     "The default value",
+     "Zero",
+     "A message saying no debug information is available",
+     "The last saved value"
+    ],
+    "explain": "Pin values only update when the node executes at least once; before that a message is shown instead of a value."
+   },
+   {
+    "q": "A teammate opens your project. Do they get your breakpoints too?",
+    "choices": [
+     "Yes, they are saved in the Blueprint asset",
+     "No, they are saved in your project .ini files and not duplicated for others",
+     "Only if the Blueprint is compiled",
+     "Only in Standalone mode"
+    ],
+    "explain": "Breakpoints persist between editor sessions in your .ini files but are not duplicated for other developers."
+   },
+   {
+    "q": "Which function is at the top of the Call Stack when a breakpoint is hit?",
+    "choices": [
+     "Event BeginPlay",
+     "The Level Blueprint",
+     "The oldest function",
+     "The function currently executing"
+    ],
+    "explain": "The currently executing function is listed at the top, with calling functions below it."
+   },
+   {
+    "q": "On Print String, what does the Key input do?",
+    "choices": [
+     "Makes the message replace any on-screen message with the same key",
+     "Sets the text color",
+     "Sends the message to a file",
+     "Delays the message"
+    ],
+    "explain": "If a non-empty Key is given, the message replaces existing on-screen messages that have the same key."
+   }
+  ]
+ },
+ "GDQ21": {
+  "checklist": [
+   "Read the Gameplay Framework overview page linked on this quest, and the pages Controllers, Pawn, Characters and Player Controllers that it links to.",
+   "Open a project made from the Third Person template, or create one. Make a Blueprint named BP_Drone from the Pawn class, not from Character. Add a Static Mesh and a Camera to it.",
+   "Make a Blueprint named BP_MyPlayerController from the Player Controller class. Add an Input Action that calls Possess on BP_Drone, and a second one that possesses the player Character again.",
+   "Open the Game Mode that the level uses (in the template its name starts with BP_ThirdPerson and ends with GameMode) and set Player Controller Class to BP_MyPlayerController.",
+   "Place one BP_Drone in the level. In Play In Editor, switch control between the Character and the Drone.",
+   "Add an Integer variable named Score to BP_MyPlayerController, and add a Score Integer to the Character too. Switch between the pawns and watch which value survives.",
+   "Write 5 lines that say which class should own the input, the score and the mesh in your game, and why."
+  ]
+ },
+ "GDQ22": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Read the node page for Apply Damage that is linked on this quest, and look up Event AnyDamage, Event PointDamage and Apply Radial Damage in the same Blueprint API reference.",
+   "Make a Blueprint named BP_Target from Actor and add a Static Mesh. Add a float variable Health with the value 100 and a float variable MaxHealth with the value 100.",
+   "In BP_Target, add Event AnyDamage. Subtract Damage from Health and print Health. When Health <= 0, play a sound or an effect and then call Destroy Actor.",
+   "Make a Blueprint named BP_Hazard from Actor and add a Box Collision. On overlap, call Apply Damage on the other actor with Base Damage 25, and set Damage Causer to Self.",
+   "Make a Blueprint named BP_Bomb. When it overlaps the player, call Apply Radial Damage at the location of the bomb, with Base Damage 50 and Damage Radius 400.",
+   "Place 3 BP_Target actors around BP_Bomb, and put one of them behind a wall. Press Play and check which targets take damage.",
+   "Write 3 lines that say what Event Instigator and Damage Causer mean, and which one you passed."
+  ]
+ }
+}

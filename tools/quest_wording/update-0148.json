@@ -1,0 +1,255 @@
+{
+ "TAQ37": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a prop mesh in the Static Mesh Editor, for example SM_ChamferCube or SM_Ramp from the folder LevelPrototyping/Meshes of the template. To keep the original unchanged, duplicate it first and work on the copy.",
+   "Read the stats text in the corner of the viewport: LOD count, Triangles, Vertices, UV channels and Num Collision Primitives. Write these numbers down.",
+   "Click UV in the toolbar. Show UV Channel 0 in the viewport, and then UV Channel 1. A UV channel is a flat layout of the mesh surface that tells textures where to go.",
+   "Open the Collision menu and choose Remove Collision. Then add an 18DOP Simplified Collision from the same menu. Turn Show > Simple Collision on and off to see the new shape.",
+   "In the Details panel, find LOD Settings and the Number of LODs value. Set the LOD picker to LOD 0.",
+   "Open Window > Socket Manager, and note that this panel is not shown by default. Then save the mesh."
+  ]
+ },
+ "TAQ38": {
+  "brief": "A socket is a named point on a mesh where you can attach other things. For example, a door frame can have one socket for a door and one for a torch. When the mesh moves, everything attached to its sockets moves with it. In this quest you add two sockets to a mesh that stands in for a door frame, and attach an effect and a door to them in a level.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Duplicate SM_Cube from the folder LevelPrototyping/Meshes, name the copy SM_SocketFrame, and open it in the Static Mesh Editor. It stands in for a door frame. Then open Window > Socket Manager.",
+   "Click Create Socket and name the socket Fire. Set its Relative Location so that it sits on top of the mesh.",
+   "Create a second socket named Door and set its Relative Location so that it sits at one side of the mesh, near the floor. Save the mesh.",
+   "Place SM_SocketFrame in a level. Make an effect to attach: right-click in the Content Browser, choose FX, then Niagara System, pick the Fountain template, and place the new system in the level.",
+   "Right-click the effect actor, choose Attach To, then SM_SocketFrame, and then pick the socket Fire. In the Details panel, reset the Location of the effect actor so that it snaps to the socket.",
+   "Place SM_Door from the folder LevelPrototyping/Interactable/Door/Meshes in the level, or any other mesh, and attach it to the Door socket in the same way. Move SM_SocketFrame and check that both attached actors move with it."
+  ],
+  "done_when": "Send one screenshot of the Socket Manager that shows both sockets, and one screenshot of the level with the effect and the door attached to the mesh.",
+  "quiz": [
+   {
+    "q": "Where is a new socket placed when you first create it?",
+    "choices": [
+     "At the center of the mesh bounds",
+     "At the origin of the Static Mesh",
+     "At the camera position",
+     "At the last clicked vertex"
+    ],
+    "explain": "A new socket starts at the origin of the Static Mesh. For the door frame that is the bottom center."
+   },
+   {
+    "q": "How do you open the Socket Manager?",
+    "choices": [
+     "It is open by default",
+     "Window > Socket Manager in the Static Mesh Editor",
+     "Right-click the mesh in the level",
+     "Edit > Sockets"
+    ],
+    "explain": "In the Static Mesh Editor, click the Window menu and choose Socket Manager. It appears next to the Details panel."
+   },
+   {
+    "q": "You attach an effect to the Fire socket but it does not move to the socket. What fixes it?",
+    "choices": [
+     "Recreate the socket",
+     "Reset the actor's Location in the Transform section of Details",
+     "Set Simulate Physics",
+     "Rename the socket"
+    ],
+    "explain": "After attaching, the child's location is relative to the parent. Resetting Location to 0,0,0 snaps it to the socket."
+   },
+   {
+    "q": "After attaching, you move the door frame. What happens to the attached fire?",
+    "choices": [
+     "It stays where it was",
+     "It is detached",
+     "It is deleted",
+     "It moves with the frame"
+    ],
+    "explain": "Transformations on the Static Mesh also affect attached objects. You can still move the child on its own too."
+   },
+   {
+    "q": "Why does the guide make a second socket for the door instead of reusing Fire?",
+    "choices": [
+     "A socket can hold only one object",
+     "The door's origin is at its bottom corner, so it would float and clip on the Fire socket",
+     "Sockets cannot be reused",
+     "The Fire socket is hidden"
+    ],
+    "explain": "The door mesh of the guide has its origin at the bottom corner. A socket placed for that origin keeps the door in the frame correctly."
+   },
+   {
+    "q": "Which viewport shortcut shows sockets in the Static Mesh Editor?",
+    "choices": [
+     "Alt + S",
+     "Alt + V",
+     "Alt + N",
+     "Alt + P"
+    ],
+    "explain": "Show > Sockets is Alt + S. Alt + V shows vertices, Alt + N normals, and Alt + P the pivot."
+   }
+  ]
+ },
+ "TAQ39": {
+  "brief": "Models are usually made in another 3D program and saved as an FBX file, a common file format for 3D models. When you import the file into Unreal, the import options decide things like the scale, the normals (which control how light shades the surface) and the collision. Current versions of Unreal show these options in the Interchange import window, and older versions show a window named FBX Import Options. In this quest you import the same mesh two times with different options and compare the results.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Get an FBX file of a simple prop. If you have no modeling program, export one from Unreal: right-click a Static Mesh, for example SM_ChamferCube from the folder LevelPrototyping/Meshes, choose Asset Actions, then Export, and save it as FBX.",
+   "In the Content Browser, click Add/Import, then Import, and pick the FBX file. The import window opens. In current versions it is named Interchange Pipeline Configuration, and older versions show FBX Import Options. Do not press Import yet. Take a screenshot of the window.",
+   "In the window, find the options that do these five jobs, and write one line for each that says what it does: combining all meshes of the file into one (Combine Static Meshes, or Combine Meshes in the old window), Generate Lightmap UVs, the collision options, the option that recomputes or imports the normals (Recompute Normals, or Normal Import Method in the old window), and Convert Scene Unit.",
+   "Keep the normals from the file (leave Recompute Normals off, or set Normal Import Method to Import Normals in the old window) and turn Generate Lightmap UVs on. Then import the mesh with the name SM_ImportTest.",
+   "Open SM_ImportTest in the Static Mesh Editor. Check the triangle count, the number of UV channels and the material slots. Turn on the collision display.",
+   "Import the same FBX file a second time with the name SM_ImportTest_Combine. This time turn the combine option on and let Unreal compute the normals (turn Recompute Normals on, or set Normal Import Method to Compute Normals in the old window). Compare the two results."
+  ],
+  "done_when": "Send a screenshot of the import window and a screenshot of SM_ImportTest in the Static Mesh Editor with collision shown. Add one or two lines that say what changed between your two imports.",
+  "quiz": [
+   {
+    "q": "You export three separate meshes into one FBX file and import it with default settings. What do you get?",
+    "choices": [
+     "One static mesh asset with three sections",
+     "Three separate static mesh assets",
+     "One skeletal mesh",
+     "An error, because one FBX can hold only one mesh"
+    ],
+    "explain": "The importer separates multiple meshes into multiple assets. It only combines them if you turn on the combine option at import time, which is named Combine Static Meshes in the current import window and Combine Meshes in the older one."
+   },
+   {
+    "q": "You tell the importer to compute the normals itself (Recompute Normals in the current import window, Normal Import Method set to Compute Normals in the older one). What happens to the normals and smoothing groups stored in the FBX file?",
+    "choices": [
+     "They are converted to vertex colors",
+     "They are kept, and the tangents are imported too",
+     "They are discarded, and the engine computes normals and tangents itself",
+     "They are used only for LOD1 and above"
+    ],
+    "explain": "When the engine computes the normals and tangents, the smoothing group and normal information from the FBX file is thrown away. Leave the option off, or use Import Normals in the older window, to keep the normals of the 3D program."
+   },
+   {
+    "q": "What does 'Convert Scene Unit' do?",
+    "choices": [
+     "It changes the FBX units to Unreal's unit, which is centimeters",
+     "It doubles the mesh size",
+     "It rotates the mesh so Z is up",
+     "It converts inches to meters"
+    ],
+    "explain": "The page says Convert Scene Unit converts the scene from the FBX units of measure to UE's unit of measure, centimeters."
+   },
+   {
+    "q": "Where should the pivot of a mesh be when you export it from a modeling program?",
+    "choices": [
+     "At the center of the mesh, always",
+     "Anywhere, Unreal recenters it on import",
+     "At the top of the mesh",
+     "At the world origin (0,0,0), usually at one corner of the mesh, so it snaps to the grid well"
+    ],
+    "explain": "The pivot is always at the origin on export. Epic says to build the mesh at the origin, usually with the origin at one corner, for good grid snapping in the editor."
+   },
+   {
+    "q": "Your FBX contains a collision mesh named UCX_Crate_01 next to a render mesh named Crate_01. What happens on import?",
+    "choices": [
+     "Both are imported as visible meshes",
+     "The importer removes UCX_Crate_01 from the render mesh and turns it into the collision of Crate_01",
+     "The importer ignores it because collision must be made in the editor",
+     "The importer renames it to SM_Crate_01"
+    ],
+    "explain": "Collision meshes are found by name. UCX_ plus the exact render mesh name marks a convex collision shape, and the importer converts it into the collision model."
+   },
+   {
+    "q": "After importing a mesh with its textures, which texture inputs are connected automatically in the new material?",
+    "choices": [
+     "All of them, including Ambient Occlusion",
+     "Only Specular",
+     "Only Color and Normal",
+     "None; you always connect them by hand"
+    ],
+    "explain": "Only Color and Normal get connected. Specular maps are imported but not connected, and some other maps are not imported at all, so check the material after import."
+   }
+  ]
+ },
+ "TAQ40": {
+  "brief": "Collision is the invisible shape that the game uses to decide what an object blocks. Simple collision is made of a few basic shapes such as boxes, and it is fast. Complex collision uses the real triangles of the mesh, so it is exact but more expensive. With the wrong collision, players walk through walls or get stuck on invisible boxes. In this quest you try several collision shapes on an open crate and test how objects land on them.",
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make a prop with a hollow shape: in Modeling Mode, create a Box as a Static Mesh, create a second, smaller Box that sticks into its top, and cut it out with the Boolean tool so that you get an open crate. Name the asset SM_Crate_Col and open it in the Static Mesh Editor. Open the Collision menu and choose Remove Collision.",
+   "In the Collision menu, try Add Box Simplified Collision, and then Add 26DOP Simplified Collision. Look at how each one covers the opening of the crate. Then remove them again.",
+   "Choose Collision > Auto Convex Collision. Raise Hull Count and Hull Precision, click Apply, and compare the result with what the default values give.",
+   "Make a second copy of the crate named SM_Crate_Complex. In the Details panel, in the Collision section, set Collision Complexity to Use Complex Collision As Simple.",
+   "Place both crates in a level. Drop a physics cube (a cube with Simulate Physics turned on) into each crate and press Play. Note where the cube lands.",
+   "Select one crate actor in the level and open Collision Presets in the Details panel. Switch it to Custom and set Pawn to Overlap. Press Play and walk into the crate."
+  ],
+  "done_when": "Send two screenshots: one of the Static Mesh Editor that shows your Auto Convex collision on SM_Crate_Col, and one of the level with both crates and where the cube landed on each. Add one line on the difference."
+ },
+ "TAQ41": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Duplicate a prop mesh, for example SM_ChamferCube from the folder LevelPrototyping/Meshes, name the copy SM_Prop_LM, and open it in the Static Mesh Editor. Turn on the UV display and look at UV channel 0 and UV channel 1, if the mesh has one.",
+   "In the Details panel, open LOD0 and then Build Settings. Enable Generate Lightmap UVs. Set Min Lightmap Resolution to 32, Source Lightmap Index to 0 and Destination Lightmap Index to 1. Click Apply Changes.",
+   "Look at UV channel 1 again. Take a screenshot of the packed lightmap UV.",
+   "In General Settings, set Lightmap Resolution to 64 and Lightmap Coordinate Index to 1.",
+   "Change Min Lightmap Resolution to 128 and click Apply Changes again. Compare the padding between the UV charts (the separate pieces of the layout) with your first screenshot.",
+   "Write two lines: one that says why the padding changed, and one that says why a texture UV may overlap but a lightmap UV may not."
+  ]
+ },
+ "TAQ42": {
+  "brief": "The pivot is the point of a mesh that it moves, rotates and scales around. Unreal measures distance in centimeters, and Z is the up direction. These basics decide if a prop snaps to the grid, turns around the right point and collides correctly. In this quest you practice with the transform tools, move the pivot of a mesh to its bottom, and bake a scale into a mesh.",
+  "done_when": "Send a screenshot of SM_Prop_Pivot with the pivot at the bottom, with the gizmo visible on the floor. Also send a screenshot of the Transform panel after Bake Transform, and add your two lines.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a prop whose pivot is at its center: in Modeling Mode, create a Cylinder as a Static Mesh, then choose XForm, then Edit Pivot, click the Center preset and click Accept. Name the asset SM_Prop. Place it in a level. Press W, E and R to switch between the move, rotate and scale gizmos (the colored handles), and press Space to cycle through them. In the Details panel under Transform, type the Location 0, 0, 100 and note that Z is up.",
+   "Set Scale to 1, 1, 2 and rotate the prop 45 degrees on Z. Switch between the World and Local transform modes and drag the Z arrow in each mode. Note the difference.",
+   "Click the Lock Scale button and drag one scale handle. Then hold Alt and middle-click a translation handle to move the pivot for a short time, and rotate the prop around the new pivot.",
+   "Duplicate the asset and name the copy SM_Prop_Pivot. Open Modeling Mode (Shift+5), choose XForm, then Edit Pivot, click the Bottom preset, and click Accept. Place the mesh in the level and see that it now sits on the floor at Z = 0.",
+   "Scale an actor in the level to 2, 2, 2. Then use XForm > Bake Transform on it, and check the Transform values after baking.",
+   "Write two lines that say why a mesh built with a Scale that is not 1 causes problems. Think of collision shapes and of units in cm."
+  ]
+ },
+ "TAQ43": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Switch to Modeling Mode with Shift+5. If the mode is missing, enable the Modeling Tools Editor Mode plugin first. Find the four panels: Tool Category, Tool Palette, Tool Properties and Quick Settings.",
+   "Choose Create, then Box. Set Output Type to Static Mesh and click in the level to place the box. Name the asset SM_ModelTest.",
+   "Choose Model, then PolyGroup Edit. Select one face and Extrude it, which pushes the face outward. Then Bevel one edge, which cuts the sharp edge into a small slope. Click Accept. Press Ctrl+Z once and see what is undone.",
+   "Place a prop with some detail in the level and select it, for example SM_ChamferCube from the folder LevelPrototyping/Meshes. Choose XForm, then Duplicate, and click Accept. This makes a new mesh asset that is a copy, so the original prop stays as it is. With the copy selected, choose Mesh, then Simplify, reduce it to about half the triangles, and click Accept.",
+   "In the viewport, turn on Show > Advanced > Mesh Edges. Use Attribs > Inspect on the simplified copy and look at the result. Then use Attribs > Inspect Collision.",
+   "Open Quick Settings and turn off Combined Gizmo. Note how the gizmo changes."
+  ]
+ },
+ "TAQ44": {
+  "brief": "Nanite is a system in Unreal Engine 5 that can draw meshes with a very high number of triangles. It adjusts the detail by itself, so you do not have to make LODs by hand for those meshes. It only works with some kinds of meshes and materials, so you turn it on for each mesh. In this quest you enable Nanite on a dense mesh and use a view mode to check which meshes use it.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a dense mesh that stands in for a rock: in Modeling Mode, create a Sphere with a high subdivision level as a Static Mesh and name it SM_Rock. Duplicate it and name the copy SM_Rock_Nanite. Open the copy, and in the Details panel under Nanite Settings, check Enable Nanite Support. Then click Apply.",
+   "Place 30 copies of SM_Rock_Nanite and 30 copies of the original SM_Rock in a level.",
+   "In the viewport, open View Modes, then Nanite Visualization, and choose Mask. Note which rocks are green and which are red.",
+   "Try the Triangles visualization and the Clusters visualization. Take a screenshot of one of them.",
+   "Select three other meshes in the Content Browser. Right-click them and use Nanite > Enable to turn on Nanite for all of them at once.",
+   "Open the Output Log and search for 'Nanite'. Write one line about any warning you see, or note that there is none."
+  ]
+ },
+ "TAQ45": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Build a small group of props close together from the meshes in the folder LevelPrototyping/Meshes: 4 SM_ChamferCube, 2 SM_Cylinder and 3 SM_Ramp. Give the cylinders a different material than the other meshes, so that the group uses at least two materials.",
+   "Select all of them. Open Actor > Merge Actors > Merge Actor Settings. Turn off Replace Source Actors and turn on Pivot Point at Zero. Run Merge and save the result as SM_Cluster_Merge.",
+   "Open SM_Cluster_Merge. Count its material slots and its triangles, and compare them with the source actors.",
+   "Select the same actors again. Run Simplify (Proxy) and save the result as SM_Cluster_Simplify. Open it and count its materials and triangles.",
+   "Select only the 4 chamfer cubes and run Batch. Look in the Outliner to see what was created and which component type it uses.",
+   "Write three lines, one each for Merge, Simplify and Batch. Each line should say how many draw calls the method gives and whether the UVs are kept."
+  ]
+ },
+ "TAQ46": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level that has a Landscape or a large floor mesh. Switch to Foliage Mode with Shift+3.",
+   "Pick a small mesh that stands in for a rock, for example SM_ChamferCube from the folder LevelPrototyping/Meshes, or a rock mesh of your own. Drag it into the Mesh List of the Foliage panel. Select it, and in the Painting section set Density to 100 and Radius to 50.",
+   "Under Placement, set Scale X Min to 0.3 and Max to 1.2, and turn on Align to Normal so the rocks follow the slope of the surface. Set Brush Size to 512 and paint a patch of rocks.",
+   "Hold Shift and paint to erase part of the patch. Then try the Single tool and the Fill tool once each.",
+   "Set End Cull Distance to 3000 and move the camera away until the rocks disappear. Then set Start Cull Distance to 2000, and note what the material would need so that the rocks fade out.",
+   "Open the Outliner and find the actor that holds your foliage instances. Note its component type. If you like, run stat unit and compare the Draw time with 200 rocks that are placed as separate actors."
+  ]
+ },
+ "TAQ47": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open the material of the mannequin, M_Mannequin, in the folder Characters/Mannequins/Materials. Find the packed mask texture that it uses, such as T_Manny_01_MRA, and see how each channel (R, G, B) drives a different input of the material.",
+   "In an image tool, paint four black-and-white masks for a mesh of your choice, for example a cube. Put one mask in each channel and export them as one file named T_MyProp_Masks.",
+   "Import T_MyProp_Masks. Open it in the Texture Editor, uncheck sRGB, and set Compression Settings to Masks.",
+   "Create a material named M_MyProp. Add a Texture Sample node for the mask texture and check that its Sampler Type is Masks. This matches the Masks compression setting of the texture, and the editor usually sets it for you. With any other Sampler Type the material shows an error.",
+   "Use the R channel as a metal mask and the G channel as an emissive (glow) mask. Use the B channel as the Alpha of a Lerp node that blends between two Vector Parameters for the color.",
+   "Make a Material Instance named MI_MyProp_Red and change only the color parameters in it. Apply it to the mesh."
+  ]
+ },
+ "TAQ48": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_Flow. Drag a tiling texture into the graph, for example T_GridChecker_A from the folder LevelPrototyping/Textures, or a tiling texture of your own.",
+   "Hold P and left-click in the graph to add a Panner node, which slides UVs over time. Connect its output to the UVs input of the Texture Sample. Set Speed X to 0.1 and watch the preview move.",
+   "Add three Scalar Parameters named Tiling, SpeedX and SpeedY. Multiply a TextureCoordinate node by Tiling and connect the result to the Coordinate input of the Panner. Use the two speed parameters for the pan speed.",
+   "Select all the nodes and press Ctrl+D to duplicate them. Give the copy a different speed and scale, and connect it to Emissive Color.",
+   "Add a Rotator node to a second Texture Sample. Set CenterX and CenterY to 0.5 so it turns around the middle, and give it a small Speed.",
+   "Make a Material Instance named MI_Flow_Fast from M_Flow and change only the speed parameters. Apply it to a plane in the level."
+  ]
+ }
+}
