@@ -5,6 +5,8 @@ import { rich } from "@/lib/i18n-config";
 import { useT } from "./I18n";
 import Ico from "./Ico";
 
+const MAX_IMAGE = 8 * 1024 * 1024, MAX_CLIP = 50 * 1024 * 1024;       // the API checks the same limits
+
 type Result = { status: "accepted" | "pending" | "practice"; message: string; xp?: number; loot?: { name: string; tier: string; flavour?: string; color: string } | null; route?: string };
 type Prev = { id: number; status: string; route: string; notes: string | null; created_at: string; decided_at: string | null; payload: Record<string, unknown> };
 
@@ -21,7 +23,10 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5, 
 
   async function send(e: React.FormEvent) {
     e.preventDefault();
-    setBusy(true); setErr(null);
+    setErr(null);
+    const big = files.find((f) => f.size > (f.type.startsWith("video/") ? MAX_CLIP : MAX_IMAGE));
+    if (big) { setErr(t("{name} is too large.", { name: big.name })); return; }
+    setBusy(true);
     const fd = new FormData();
     fd.set("text", text); fd.set("ue_version", ue);
     files.forEach((f) => fd.append("files", f));
@@ -61,8 +66,8 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5, 
       {!isO5 && (
         <div className="row" style={{ marginTop: 10 }}>
           <div className="upload" style={{ flex: 1, minWidth: 200 }}>
-            <label className="small eyebrow" htmlFor="chest-files">{verifyType === "screenshot" ? t("Screenshots (required)") : t("Screenshots (optional)")}</label>
-            <input id="chest-files" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple onChange={(e) => setFiles(Array.from(e.target.files ?? []).slice(0, 4))} />
+            <label className="small eyebrow" htmlFor="chest-files">{verifyType === "screenshot" ? t("Screenshots or a short clip (required)") : t("Screenshots or a short clip (optional)")}</label>
+            <input id="chest-files" type="file" accept="image/png,image/jpeg,image/webp,image/gif,video/mp4,video/webm,video/quicktime" multiple onChange={(e) => setFiles(Array.from(e.target.files ?? []).slice(0, 4))} />
             {files.length > 0 && <div className="small muted">{files.map((f) => f.name).join(", ")}</div>}
           </div>
           <div style={{ width: 140 }}>
@@ -74,7 +79,7 @@ export default function Chest({ questId, verifyType, ueVersion, previous, isO5, 
       {err && <div className="note small" style={{ marginTop: 10, borderColor: "var(--bad)" }}>{err}</div>}
       <div className="row" style={{ marginTop: 12 }}>
         <button type="submit" className="primary" disabled={busy}>{busy ? t("Sending…") : t("Open the chest")}</button>
-        <span className="small muted">{t("Up to 4 images, 8 MB each.")}</span>
+        <span className="small muted">{t("Up to 4 files. Images up to 8 MB, video clips up to 50 MB (about 30 seconds).")}</span>
       </div>
     </form>
   );

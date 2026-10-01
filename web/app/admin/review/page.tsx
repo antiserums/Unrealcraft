@@ -63,7 +63,7 @@ function Row({ s }: { s: ReviewItem }) {
         <div className="row small" style={{ gap: 8, marginTop: 4 }}>
           <span className="route">{ROUTE[s.route] ?? s.route}</span>
           <span className="muted">{age < 1 ? "just now" : age < 48 ? `${age} h ago` : `${Math.round(age / 24)} d ago`}</span>
-          {s.payload.attachments?.length ? <span className="muted">· {s.payload.attachments.length} image{s.payload.attachments.length === 1 ? "" : "s"}</span> : null}
+          {s.payload.attachments?.length ? <span className="muted">· {s.payload.attachments.length} file{s.payload.attachments.length === 1 ? "" : "s"}</span> : null}
         </div>
       </div>
       <span className={`status ${s.status === "pass" ? "done" : s.status === "pending" ? "now" : "skipped"}`} style={{ textAlign: "right" }}>{status}</span>

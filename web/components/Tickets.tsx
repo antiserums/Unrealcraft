@@ -158,7 +158,7 @@ function Who({ a }: { a: Author }) {
   );
 }
 
-/** Up to four screenshots (PNG, JPG, WEBP or GIF, 8 MB each), the same limits as the chest. */
+/** Up to four screenshots (PNG, JPG, WEBP or GIF, 8 MB each). The chest also takes video clips; tickets do not. */
 function ScreenshotPicker({ files, onChange, id }: { files: File[]; onChange: (f: File[]) => void; id: string }) {
   const t = useT();
   return (

@@ -28,7 +28,9 @@ export default async function ReviewDetail({ params }: PageProps<"/admin/review/
             <div className="eyebrow" style={{ marginTop: 14 }}>What they sent</div>
             <pre className="rv-text" style={{ marginTop: 6 }}>{s.payload.text || "(no text)"}</pre>
             {s.payload.attachments?.length ? (
-              <div className="rv-shots">{s.payload.attachments.map((u) => <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" /></a>)}</div>
+              <div className="rv-shots">{s.payload.attachments.map((u) => /\.(mp4|webm|mov)$/i.test(u)
+                ? <video key={u} src={u} controls preload="metadata" />
+                : <a key={u} href={u} target="_blank" rel="noreferrer"><img src={u} alt="" /></a>)}</div>
             ) : null}
           </div>
 

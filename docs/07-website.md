@@ -45,7 +45,7 @@ the server, then sets a signed cookie. No Discord tokens are stored.
   (`GET /me/achievements`, defined in `api/app/rpg.py` `ACHIEVEMENTS`). Stats are no longer shown anywhere;
   the fight still uses the hidden values for crit chance and damage. Outfits are cosmetic only: whole sets
   unlocked by capstones, ranks and achievements, worn one at a time and switchable.
-- **Phase 2 (done):** the chest. `POST /me/quests/{id}/submit` (multipart: text, ue_version, up to 4 images) with the
+- **Phase 2 (done):** the chest. `POST /me/quests/{id}/submit` (multipart: text, ue_version, up to 4 files: images up to 8 MB, and up to 2 video clips of 50 MB) with the
   bot's routing rules (auto/honor accept at once and complete the quest; peer/mentor/human wait for a review). The chest
   only shows once the boss is beaten. Images live in `api/data/uploads/<member>/` and are served to logged-in members
   at `/api/uploads/...`. The bot mirrors website turn-ins (forum post, review or spot-check card) from `events`.

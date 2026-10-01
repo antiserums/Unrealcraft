@@ -19,6 +19,19 @@ from .rpg import complete_quest
 router = APIRouter(tags=["submit"])
 MAX_FILES, MAX_BYTES = 4, 8 * 1024 * 1024
 IMAGE_TYPES = {"image/png": ".png", "image/jpeg": ".jpg", "image/webp": ".webp", "image/gif": ".gif"}
+# short clips, for proof that only shows in motion (a platform moving, an animation playing)
+VIDEO_TYPES = {"video/mp4": ".mp4", "video/webm": ".webm", "video/quicktime": ".mov"}
+MAX_VIDEOS, MAX_VIDEO_BYTES = 2, 50 * 1024 * 1024
+MEDIA_TYPES = {".png": "image/png", ".jpg": "image/jpeg", ".webp": "image/webp", ".gif": "image/gif",
+               ".mp4": "video/mp4", ".webm": "video/webm", ".mov": "video/quicktime"}
+
+
+def looks_like_video(data: bytes, ext: str) -> bool:
+    """The file starts the way its type says: MP4 and MOV carry "ftyp" (or an older QuickTime atom) at byte 4, WebM
+    starts with the EBML mark. Keeps a renamed file of another kind out of the uploads folder."""
+    if ext == ".webm":
+        return data[:4] == b"\x1a\x45\xdf\xa3"
+    return data[4:8] in (b"ftyp", b"moov", b"mdat", b"free", b"wide")
 DISCORD_LINK = re.compile(r"https://(?:ptb\.|canary\.)?discord(?:app)?\.com/channels/\d+/\d+/\d+")
 
 
@@ -41,9 +54,9 @@ def problems_for(q, facts: set[str], text: str, files: list[UploadFile]) -> list
         cks = [checks.SUBMIT_DEFAULTS[q.raw["verify_type"]]]
     for c in cks:
         if "attachment" in c and c["attachment"] == "image" and not files:
-            out.append("Attach at least one screenshot.")
-        if "attachment" in c and c["attachment"] == "video":
-            out.append("This quest wants a video: paste a link to it in the text (YouTube or similar).") if "http" not in text else None
+            out.append("Attach at least one screenshot or a short clip.")
+        if "attachment" in c and c["attachment"] == "video" and "http" not in text and not any(f.content_type in VIDEO_TYPES for f in files):
+            out.append("This quest wants a video: attach a short clip, or paste a link to it in the text.")
         if "min_length" in c and len(text.strip()) < c["min_length"]:
             out.append(f"Write at least {c['min_length']} characters (you wrote {len(text.strip())}).")
         if "link" in c and not DISCORD_LINK.search(text):
@@ -85,23 +98,33 @@ async def submit(qid: str, request: Request, member=Depends(current_member), tex
         raise HTTPException(409, "You already sent this one. A reviewer is looking at it.")
     files = [f for f in files if f and f.filename]
     if len(files) > MAX_FILES:
-        raise HTTPException(400, f"At most {MAX_FILES} images.")
+        raise HTTPException(400, f"At most {MAX_FILES} files.")
     for f in files:
-        if f.content_type not in IMAGE_TYPES:
-            raise HTTPException(400, f"{f.filename}: only PNG, JPG, WEBP or GIF.")
+        if f.content_type not in IMAGE_TYPES and f.content_type not in VIDEO_TYPES:
+            raise HTTPException(400, f"{f.filename}: only images (PNG, JPG, WEBP, GIF) or video clips (MP4, WEBM, MOV).")
+    if sum(f.content_type in VIDEO_TYPES for f in files) > MAX_VIDEOS:
+        raise HTTPException(400, f"At most {MAX_VIDEOS} video clips.")
     problems = problems_for(q, await db.facts(uid), text, files)
     if problems:
         raise HTTPException(422, "; ".join(problems))
 
-    # store images: data/uploads/<uid>/<random>.<ext>, served at /uploads/<uid>/<name> (members only)
+    # store the files: data/uploads/<uid>/<random>.<ext>, served at /uploads/<uid>/<name> (members only).
+    # Every file is checked before the first one is written, so a refused upload leaves nothing behind.
     folder = settings.uploads_dir / str(uid)
     folder.mkdir(parents=True, exist_ok=True)
-    urls = []
+    ready: list[tuple[str, bytes]] = []
     for f in files:
-        data = await f.read()
-        if len(data) > MAX_BYTES:
-            raise HTTPException(400, f"{f.filename} is larger than 8 MB.")
-        name = secrets.token_urlsafe(12) + IMAGE_TYPES[f.content_type]
+        video = f.content_type in VIDEO_TYPES
+        ext = VIDEO_TYPES[f.content_type] if video else IMAGE_TYPES[f.content_type]
+        limit = MAX_VIDEO_BYTES if video else MAX_BYTES
+        data = await f.read(limit + 1)
+        if len(data) > limit:
+            raise HTTPException(400, f"{f.filename} is larger than {limit // (1024 * 1024)} MB." + (" Keep clips to about 30 seconds." if video else ""))
+        if video and not looks_like_video(data, ext):
+            raise HTTPException(400, f"{f.filename} does not look like a video file.")
+        ready.append((secrets.token_urlsafe(12) + ext, data))
+    urls = []
+    for name, data in ready:
         (folder / name).write_bytes(data)
         urls.append(f"{settings.web_origin}/api/uploads/{uid}/{name}")
     if ue_version.strip():
@@ -129,9 +152,10 @@ async def submit(qid: str, request: Request, member=Depends(current_member), tex
 
 @router.get("/uploads/{uid}/{name}")
 async def upload(uid: int, name: str, _=Depends(current_member)):
-    if not re.fullmatch(r"[A-Za-z0-9_-]+\.(png|jpg|webp|gif)", name):
+    if not re.fullmatch(r"[A-Za-z0-9_-]+\.(png|jpg|webp|gif|mp4|webm|mov)", name):
         raise HTTPException(404, "Not found.")
     p: Path = settings.uploads_dir / str(uid) / name
     if not p.is_file():
         raise HTTPException(404, "Not found.")
-    return FileResponse(p)
+    # the type comes from our own extension, never from the file: the browser must not guess
+    return FileResponse(p, media_type=MEDIA_TYPES[p.suffix], headers={"X-Content-Type-Options": "nosniff"})
