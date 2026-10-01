@@ -6,6 +6,7 @@ Run it with the API's Python, which has PyYAML:
   api/.venv/Scripts/python.exe tools/quest_wording.py status        how many quests have new wording, per file
   api/.venv/Scripts/python.exe tools/quest_wording.py next 15       the next 15 quests still to do, as JSON
   api/.venv/Scripts/python.exe tools/quest_wording.py show SQ1 SQ2  everything the curriculum holds for these quests
+  api/.venv/Scripts/python.exe tools/quest_wording.py refs          quests whose text leans on another quest
   api/.venv/Scripts/python.exe tools/quest_wording.py apply         put every file in tools/quest_wording/ into the curriculum
 
 Wording files are read in name order and a later file wins, so a correction goes in a file that sorts last
@@ -16,9 +17,11 @@ A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Eve
   { "SQ1": { "brief": "Two to four sentences that explain the topic before the steps.",
              "checklist": ["Step one, reworded.", "Step two, reworded."],
              "done_when": "What the member sends as proof, reworded.",
+             "title": "A new title", "official_url": "https://...",   (only for a quest rewritten around another topic)
              "quiz": [ {"q": "...", "choices": ["...", "..."], "explain": "..."} ] } }
 
-Only text changes. A checklist written on one line (`checklist: ["a", "b"]`) is handled too. The steps keep their number and order (and any `check:` they carry), the quiz keeps its answers
+Only text changes. A checklist written on one line (`checklist: ["a", "b"]`) is handled too. Steps that carry a `check:` keep their number and order (a checklist of plain text lines may get a different
+number of steps, 1 to 12), the quiz keeps its answers
 and the order of its choices. `apply` parses the result and compares it with the original: if anything other than
 that text differs, or a list has a different length, the quest is left as it was and reported.
 """
@@ -79,7 +82,7 @@ def index(lines: list[str]) -> dict[str, dict]:
             continue
         if (m := KEY_RE.match(line)):
             key = m.group(1)
-            if key in ("title", "brief", "done_when"):
+            if key in ("title", "brief", "done_when", "official_url"):
                 cur[key] = n
             elif key == "checklist" and line.rstrip().endswith("]"):
                 cur["inline"] = n                                 # the whole list on one line: checklist: ["a", "b"]
@@ -102,8 +105,13 @@ def reword_item(line: str, text: str) -> str | None:
 
 def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict[int, str]] | None:
     """(replacements by line, insertions after a line) for one quest, or None when the wording does not fit."""
-    repl: dict[int, str] = {}
+    repl: dict[int, str | None] = {}                      # None removes the line
     ins: dict[int, str] = {}
+    for key in ("title", "official_url"):                     # a quest rewritten around another topic or docs page
+        if isinstance(w.get(key), str) and w[key].strip():
+            if key not in at:
+                return None
+            repl[at[key]] = f"    {key}: {s(w[key].strip())}"
     if isinstance(w.get("brief"), str) and w["brief"].strip():
         if "brief" in at:
             repl[at["brief"]] = f"    brief: {s(w['brief'].strip())}"
@@ -120,12 +128,20 @@ def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict
             old = yaml.safe_load(lines[at["inline"]])["checklist"]
         except (yaml.YAMLError, TypeError, KeyError):
             return None
-        if len(old) != len(w["checklist"]) or not all(isinstance(it, str) for it in old):
+        if not all(isinstance(it, str) for it in old) or not 1 <= len(w["checklist"]) <= 12:
             return None
         repl[at["inline"]] = f"    checklist: [{', '.join(s(str(t).strip()) for t in w['checklist'])}]"
-    elif w.get("checklist") is not None:
-        if len(w["checklist"]) != len(at["items"]):
+    elif w.get("checklist") is not None and len(w["checklist"]) != len(at["items"]):
+        # a different number of steps: only when every step is a plain line of text (none carries a `check:`)
+        plain = all(re.match(rf'^      - ({STR})\s*$', lines[n]) for n in at["items"])
+        last = at["items"][-1] if at["items"] else -1
+        solid = at["items"] == list(range(at["items"][0], last + 1)) if at["items"] else False
+        if not (plain and solid and 1 <= len(w["checklist"]) <= 12):
             return None
+        for n in at["items"]:
+            repl[n] = None
+        repl[at["items"][0]] = "\n".join(f"      - {s(str(t).strip())}" for t in w["checklist"])
+    elif w.get("checklist") is not None:
         for n, text in zip(at["items"], w["checklist"]):
             new = reword_item(lines[n], str(text).strip())
             if new is None:
@@ -148,9 +164,12 @@ def skeleton(q: dict) -> dict:
     """A quest with its rewordable text blanked, to prove that nothing else changed."""
     q = copy.deepcopy(q)
     q.pop("brief", None)
-    if "done_when" in q:
-        q["done_when"] = ""
-    q["checklist"] = [dict(it, text="") if isinstance(it, dict) else "" for it in q.get("checklist") or []]
+    for key in ("done_when", "title", "official_url"):
+        if key in q:
+            q[key] = ""
+    items = q.get("checklist") or []
+    # plain steps may change in number; steps that carry a check keep their place and their check
+    q["checklist"] = "plain steps" if all(isinstance(it, str) for it in items) else [dict(it, text="") if isinstance(it, dict) else "" for it in items]
     for x in q.get("quiz") or []:
         x["q"], x["explain"], x["choices"] = "", "", len(x.get("choices") or [])
     return q
@@ -168,9 +187,13 @@ def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
             skipped.append(qid)
             continue
         repl, ins = e
-        trial = [repl.get(n, line) for n, line in enumerate(lines)]
-        for n in sorted(ins, reverse=True):
-            trial.insert(n + 1, ins[n])
+        trial: list[str] = []
+        for n, line in enumerate(lines):
+            new = repl.get(n, line)
+            if new is not None:
+                trial.extend(new.split("\n"))
+            if n in ins:
+                trial.append(ins[n])
         if trial == lines:
             continue                                          # already has this wording
         try:
@@ -253,6 +276,33 @@ def show(ids: list[str]) -> None:
     print(json.dumps(out, ensure_ascii=False, indent=1))
 
 
+OTHER_ID = re.compile(r"\b(?:SQ|LDQ|GDQ|EAQ|TAQ|AQ|CQ|PQ|O)\d+[A-Z]?\b")
+LEAN_ON = re.compile(r"(?i)\b(earlier quests?|previous quests?|last quest|another quest|from (?:the|a|an|your) (?:earlier|previous|last)|you (?:made|built|created|set up) (?:in|earlier|before)|built earlier|made earlier|sandbox project|same project)\b")
+
+
+def refs() -> None:
+    """Quests whose page or quiz text leans on another quest: it names another quest id, or says "earlier quest" and
+    the like. A quest should be doable on its own."""
+    n = 0
+    for fname, q in all_quests():
+        texts = [("brief", q.get("brief") or ""), ("done_when", q.get("done_when") or "")]
+        texts += [(f"step {i + 1}", item_text(it)) for i, it in enumerate(q.get("checklist") or [])]
+        for i, x in enumerate(q.get("quiz") or []):
+            texts.append((f"quiz {i + 1}", " | ".join([x.get("q", ""), *x.get("choices", []), x.get("explain") or ""])))
+        for fl in (q.get("flavors") or {}).values():
+            texts.append(("flavor (not editable here)", " | ".join(str(v) for v in fl.values()) if isinstance(fl, dict) else str(fl)))
+        hits = []
+        for where, t in texts:
+            found = sorted({m.group(0) for m in OTHER_ID.finditer(t) if m.group(0) != q["id"]} | {m.group(0) for m in LEAN_ON.finditer(t)})
+            if found:
+                hits.append(f"   {where}: {', '.join(found)}")
+        if hits:
+            n += 1
+            print(f"{q['id']}  ({fname})")
+            print("\n".join(hits))
+    print(f"{n} quests lean on another quest")
+
+
 def main() -> None:
     sys.stdout.reconfigure(encoding="utf-8")
     cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
@@ -260,6 +310,8 @@ def main() -> None:
         apply()
     elif cmd == "show":
         show(sys.argv[2:])
+    elif cmd == "refs":
+        refs()
     elif cmd == "next":
         next_batch(int(sys.argv[2]) if len(sys.argv) > 2 else 15)
     else:
