@@ -24,7 +24,7 @@ from .admin import admin_only
 router = APIRouter(prefix="/admin", tags=["admin"])
 
 QUEST_KEYS = ["id", "rank", "difficulty", "specializations", "subjects", "required_spine", "first_steps", "required", "taster", "taster_for",
-              "capstone", "title", "time_min", "needs_others", "official_url", "backup_url",
+              "capstone", "title", "brief", "time_min", "needs_others", "official_url", "backup_url",
               "extra_urls", "community_urls", "checklist", "done_when", "xp", "verify_type", "action_key", "next_hint", "quiz", "flavors"]
 FILE_RE = re.compile(r"^[a-z0-9_]+\.yaml$")
 ID_RE = re.compile(r"^[A-Z]{1,4}\d{1,4}[A-Z]?$")

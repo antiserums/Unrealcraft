@@ -28,7 +28,7 @@ export type SpecializationOption = { key: string; title: string; blurb: string }
 export type Reading = { label: string; url: string; kind: string };
 export type ChecklistItem = { text: string; state: "done" | "todo" | "on_submit" | "honor" | "optional" };
 export type QuestFull = QuestSummary & {
-  why: string | null; do: string | null; reading: Reading[]; checklist: ChecklistItem[]; done_when: string | null;
+  why: string | null; do: string | null; brief: string | null; reading: Reading[]; checklist: ChecklistItem[]; done_when: string | null;
   step: string | null; quiz: { q: string; choices: string[] }[]; file: string;
 };
 export type Progress = {

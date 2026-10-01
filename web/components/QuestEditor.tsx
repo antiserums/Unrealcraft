@@ -7,7 +7,7 @@ type Quiz = { q: string; choices: string[]; answer_index: number; explain: strin
 type Form = {
   id: string; title: string; rank: string; difficulty: string; specializations: string[]; subjects: string; taster: boolean; taster_for: string;
   required_spine: boolean; first_steps: boolean; required: boolean; capstone: boolean; needs_others: boolean; time_min: string; xp: string; verify_type: string;
-  official_url: string; backup_url: string; extra_urls: string; community_urls: string; checklist: string; done_when: string; action_key: string; next_hint: string;
+  official_url: string; backup_url: string; extra_urls: string; community_urls: string; brief: string; checklist: string; done_when: string; action_key: string; next_hint: string;
   quiz: Quiz[]; flavors: string;
 };
 
@@ -58,7 +58,7 @@ function fromRaw(raw: Record<string, unknown> | null, cur: Curriculum): Form {
     required_spine: !!r.required_spine, first_steps: !!r.first_steps, required: raw ? !!r.required : false, capstone: !!r.capstone, needs_others: !!r.needs_others,
     time_min: str(r.time_min ?? 30), xp: str(r.xp ?? 40), verify_type: str(r.verify_type ?? "screenshot"),
     official_url: str(r.official_url), backup_url: str(r.backup_url), extra_urls: lines(r.extra_urls), community_urls: lines(r.community_urls),
-    checklist: lines(r.checklist), done_when: str(r.done_when), action_key: str(r.action_key), next_hint: str(r.next_hint),
+    brief: str(r.brief), checklist: lines(r.checklist), done_when: str(r.done_when), action_key: str(r.action_key), next_hint: str(r.next_hint),
     quiz: ((r.quiz as Quiz[] | undefined) ?? []).map((x) => ({ q: x.q ?? "", choices: [...(x.choices ?? [])], answer_index: Number(x.answer_index ?? 0), explain: x.explain ?? "" })),
     flavors: toYamlish(r.flavors as Record<string, unknown> | undefined),
   };
@@ -72,7 +72,7 @@ function toRaw(f: Form): Record<string, unknown> {
     required_spine: f.required_spine, ...(f.first_steps ? { first_steps: true } : {}), required: f.required, ...(f.taster ? { taster: true } : {}), ...(list(f.taster_for).length ? { taster_for: list(f.taster_for) } : {}),
     capstone: f.capstone, ...(f.needs_others ? { needs_others: true } : {}),
     title: f.title.trim(), time_min: f.time_min ? Number(f.time_min) : null, official_url: f.official_url.trim() || "TODO_URL", backup_url: f.backup_url.trim() || null,
-    extra_urls: nl(f.extra_urls), community_urls: nl(f.community_urls), checklist: nl(f.checklist), done_when: f.done_when.trim(), xp: Number(f.xp),
+    extra_urls: nl(f.extra_urls), community_urls: nl(f.community_urls), brief: f.brief.trim() || null, checklist: nl(f.checklist), done_when: f.done_when.trim(), xp: Number(f.xp),
     verify_type: f.verify_type, action_key: f.action_key.trim() || null, next_hint: f.next_hint.trim() || null,
     quiz: f.quiz.map((x) => ({ q: x.q, choices: x.choices, answer_index: Number(x.answer_index), explain: x.explain })), flavors: f.flavors,
   };
@@ -173,6 +173,7 @@ export default function QuestEditor({ cur, initial, file: file0, yamlText }: { c
             <div><label>Community URLs (one per line)</label><textarea value={f.community_urls} onChange={(e) => set("community_urls", e.target.value)} rows={3} /></div>
           </div>
           <div className="adm-field"><label>Checklist (one step per line)</label><textarea value={f.checklist} onChange={(e) => set("checklist", e.target.value)} rows={6} /></div>
+          <div className="adm-field"><label>Before you start (two to four plain sentences that explain the topic)</label><textarea value={f.brief} onChange={(e) => set("brief", e.target.value)} rows={4} /></div>
           <div className="adm-field"><label>Done when (what the turn-in must show)</label><textarea value={f.done_when} onChange={(e) => set("done_when", e.target.value)} rows={3} /></div>
           <div className="adm-field"><label>Next hint (optional)</label><input value={f.next_hint} onChange={(e) => set("next_hint", e.target.value)} /></div>
           <div className="adm-field"><label>Flavors, one line per specialization: <code>level_design: {"{"}why: &quot;…&quot;, do: &quot;…&quot;{"}"}</code> (<code>_default</code> is the fallback)</label><textarea value={f.flavors} onChange={(e) => set("flavors", e.target.value)} rows={4} /></div>

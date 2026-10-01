@@ -102,7 +102,7 @@ def quest_full(cat: Catalog, q: Quest, who: UserState | str | None, facts: set[s
     major, _ = _who(who)
     fl = q.flavor(major or "undecided")
     d.update({
-        "why": fl.get("why"), "do": fl.get("do"),
+        "why": fl.get("why"), "do": fl.get("do"), "brief": r.get("brief"),       # brief: what the topic is, in plain words
         "reading": reading_links(q),
         "checklist": checklist(q, facts, cat.community_ready),
         "done_when": r.get("done_when_solo") if (not cat.community_ready and r.get("done_when_solo")) else r.get("done_when"),

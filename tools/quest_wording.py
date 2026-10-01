@@ -1,0 +1,246 @@
+"""Reword what a quest page says (the intro, the steps, the "done when" line, the quiz text) without touching
+anything else in the curriculum.
+
+Run it with the API's Python, which has PyYAML:
+
+  api/.venv/Scripts/python.exe tools/quest_wording.py status        how many quests have new wording, per file
+  api/.venv/Scripts/python.exe tools/quest_wording.py next 15       the next 15 quests still to do, as JSON
+  api/.venv/Scripts/python.exe tools/quest_wording.py apply         put every file in tools/quest_wording/ into the curriculum
+
+A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Every key is optional:
+
+  { "SQ1": { "brief": "Two to four sentences that explain the topic before the steps.",
+             "checklist": ["Step one, reworded.", "Step two, reworded."],
+             "done_when": "What the member sends as proof, reworded.",
+             "quiz": [ {"q": "...", "choices": ["...", "..."], "explain": "..."} ] } }
+
+Only text changes. The steps keep their number and order (and any `check:` they carry), the quiz keeps its answers
+and the order of its choices. `apply` parses the result and compares it with the original: if anything other than
+that text differs, or a list has a different length, the quest is left as it was and reported.
+"""
+from __future__ import annotations
+
+import copy
+import json
+import re
+import sys
+from pathlib import Path
+
+import yaml
+
+ROOT = Path(__file__).resolve().parent.parent
+CURRICULUM = ROOT / "curriculum"
+WORDING = ROOT / "tools" / "quest_wording"
+META = {"specializations.yaml", "majors.yaml"}
+
+ID_RE = re.compile(r"^  - id:\s*[\"']?([A-Za-z0-9_]+)")
+KEY_RE = re.compile(r"^    ([a-z_]+):")
+ITEM_RE = re.compile(r"^      - ")
+Q_RE = re.compile(r"^(\s+)- q: ")
+FIELD_RE = re.compile(r"^(\s+)(choices|answer_index|explain): ")
+STR = r'"(?:[^"\\]|\\.)*"|\'(?:[^\']|\'\')*\''
+
+
+def s(text: str) -> str:
+    return json.dumps(text, ensure_ascii=False)          # a JSON string is a valid YAML double-quoted string
+
+
+def files() -> list[Path]:
+    return [f for f in sorted(CURRICULUM.glob("*.yaml")) if f.name not in META]
+
+
+def load_wording() -> dict[str, dict]:
+    out: dict[str, dict] = {}
+    for f in sorted(WORDING.glob("*.json")):
+        for qid, w in json.loads(f.read_text(encoding="utf-8")).items():
+            out.setdefault(qid, {}).update({"quiz": w} if isinstance(w, list) else w)
+    return out
+
+
+def item_text(raw) -> str:
+    return raw.get("text", "") if isinstance(raw, dict) else str(raw)
+
+
+# ---------------------------------------------------------------- apply
+def index(lines: list[str]) -> dict[str, dict]:
+    """Where each quest's rewordable lines are."""
+    quests: dict[str, dict] = {}
+    cur, key = None, None
+    for n, line in enumerate(lines):
+        if (m := ID_RE.match(line)):
+            cur = quests.setdefault(m.group(1), {"id_line": n, "items": [], "quiz": []})
+            key = None
+            continue
+        if cur is None:
+            continue
+        if (m := KEY_RE.match(line)):
+            key = m.group(1)
+            if key in ("title", "brief", "done_when"):
+                cur[key] = n
+        elif key == "checklist" and ITEM_RE.match(line):
+            cur["items"].append(n)
+        elif key == "quiz" and Q_RE.match(line):
+            cur["quiz"].append({"q": n})
+        elif key == "quiz" and cur["quiz"] and (m := FIELD_RE.match(line)) and m.group(2) not in cur["quiz"][-1]:
+            cur["quiz"][-1][m.group(2)] = n
+    return quests
+
+
+def reword_item(line: str, text: str) -> str | None:
+    """A checklist line with its text swapped: `- "text"`, `- text: "text"` or `- {text: "text", ...}`."""
+    for pat in (rf'^(      - )({STR})(\s*)$', rf'^(      - text: )({STR})(\s*)$', rf'^(      - \{{\s*text: )({STR})(.*)$'):
+        if (m := re.match(pat, line)):
+            return m.group(1) + s(text) + m.group(3)
+    return None
+
+
+def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict[int, str]] | None:
+    """(replacements by line, insertions after a line) for one quest, or None when the wording does not fit."""
+    repl: dict[int, str] = {}
+    ins: dict[int, str] = {}
+    if isinstance(w.get("brief"), str) and w["brief"].strip():
+        if "brief" in at:
+            repl[at["brief"]] = f"    brief: {s(w['brief'].strip())}"
+        elif "title" in at:
+            ins[at["title"]] = f"    brief: {s(w['brief'].strip())}"
+        else:
+            return None
+    if isinstance(w.get("done_when"), str) and w["done_when"].strip():
+        if "done_when" not in at:
+            return None
+        repl[at["done_when"]] = f"    done_when: {s(w['done_when'].strip())}"
+    if w.get("checklist") is not None:
+        if len(w["checklist"]) != len(at["items"]):
+            return None
+        for n, text in zip(at["items"], w["checklist"]):
+            new = reword_item(lines[n], str(text).strip())
+            if new is None:
+                return None
+            repl[n] = new
+    if w.get("quiz") is not None:
+        if len(w["quiz"]) != len(at["quiz"]):
+            return None
+        for x, q in zip(w["quiz"], at["quiz"]):
+            if not {"choices", "explain"} <= q.keys():
+                return None
+            ind = Q_RE.match(lines[q["q"]]).group(1)
+            repl[q["q"]] = f"{ind}- q: {s(x['q'])}"
+            repl[q["choices"]] = f"{ind}  choices: [{', '.join(s(c) for c in x['choices'])}]"
+            repl[q["explain"]] = f"{ind}  explain: {s(x['explain'])}"
+    return repl, ins
+
+
+def skeleton(q: dict) -> dict:
+    """A quest with its rewordable text blanked, to prove that nothing else changed."""
+    q = copy.deepcopy(q)
+    q.pop("brief", None)
+    if "done_when" in q:
+        q["done_when"] = ""
+    q["checklist"] = [dict(it, text="") if isinstance(it, dict) else "" for it in q.get("checklist") or []]
+    for x in q.get("quiz") or []:
+        x["q"], x["explain"], x["choices"] = "", "", len(x.get("choices") or [])
+    return q
+
+
+def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
+    text = path.read_text(encoding="utf-8")
+    lines = text.split("\n")
+    quests = index(lines)
+    before = {q["id"]: q for q in (yaml.safe_load(text) or {}).get("quests") or []}
+    done, skipped = 0, []
+    for qid in [q for q in quests if q in wording]:
+        e = edits_for(lines, quests[qid], wording[qid])
+        if e is None:
+            skipped.append(qid)
+            continue
+        repl, ins = e
+        trial = [repl.get(n, line) for n, line in enumerate(lines)]
+        for n in sorted(ins, reverse=True):
+            trial.insert(n + 1, ins[n])
+        try:
+            after = {q["id"]: q for q in (yaml.safe_load("\n".join(trial)) or {}).get("quests") or []}
+        except yaml.YAMLError:
+            skipped.append(qid)
+            continue
+        if after.keys() != before.keys() or any(skeleton(after[k]) != skeleton(before[k]) for k in before):
+            skipped.append(qid)
+            continue
+        if trial != lines:
+            lines, done = trial, done + 1
+            quests = index(lines)                             # an inserted line moves everything after it
+    if done:
+        path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
+    return done, skipped
+
+
+def apply() -> None:
+    wording = load_wording()
+    total, skipped = 0, []
+    for path in files():
+        n, sk = apply_file(path, wording)
+        total, skipped = total + n, skipped + sk
+        if n:
+            print(f"{path.name}: {n} quests changed")
+    print(f"{total} quests changed in all")
+    if skipped:
+        print("NOT applied (the wording does not fit the quest, fix the JSON):", ", ".join(skipped))
+
+
+# ---------------------------------------------------------------- next / status
+def all_quests() -> list[tuple[str, dict]]:
+    out = []
+    for f in files():
+        for q in (yaml.safe_load(f.read_text(encoding="utf-8")) or {}).get("quests") or []:
+            out.append((f.name, q))
+    return out
+
+
+def page_done(w: dict | None) -> bool:
+    return bool(w and w.get("brief"))
+
+
+def status() -> None:
+    wording = load_wording()
+    per: dict[str, list[int]] = {}
+    for fname, q in all_quests():
+        c = per.setdefault(fname, [0, 0])
+        c[0] += page_done(wording.get(q["id"]))
+        c[1] += 1
+    for fname, (d, n) in per.items():
+        print(f"{fname:36} {d:4}/{n}")
+    print(f"{'total':36} {sum(d for d, _ in per.values()):4}/{sum(n for _, n in per.values())}")
+
+
+def next_batch(count: int) -> None:
+    wording = load_wording()
+    out = []
+    for fname, q in all_quests():
+        if page_done(wording.get(q["id"])):
+            continue
+        fl = (q.get("flavors") or {}).get("_default") or {}
+        out.append({
+            "id": q["id"], "file": fname, "title": q.get("title"), "difficulty": q.get("difficulty"), "subjects": q.get("subjects"),
+            "why": fl.get("why"), "verify_type": q.get("verify_type"),
+            "checklist": [item_text(it) for it in q.get("checklist") or []],
+            "done_when": q.get("done_when"),
+            # what the quiz teaches, as background for the intro (the quiz itself is not reworded)
+            "quiz_facts": [x.get("explain") for x in q.get("quiz") or [] if x.get("explain")],
+        })
+        if len(out) >= count:
+            break
+    print(json.dumps(out, ensure_ascii=False, indent=1))
+
+
+def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")
+    cmd = sys.argv[1] if len(sys.argv) > 1 else "status"
+    if cmd == "apply":
+        apply()
+    elif cmd == "next":
+        next_batch(int(sys.argv[2]) if len(sys.argv) > 2 else 15)
+    else:
+        status()
+
+
+if __name__ == "__main__":
+    main()

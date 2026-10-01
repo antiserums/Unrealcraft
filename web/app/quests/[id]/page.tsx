@@ -139,6 +139,15 @@ export default async function Quest({ params }: PageProps<"/quests/[id]">) {
 
       <div className="quest-body">
         <ol className="qsteps">
+          {q.brief && (
+            <li className="qstep open qbrief">
+              <span className="qstep-mark">{ico("utility/help", "💡")}</span>
+              <section className="card">
+                <h3>{t("Before you start")}</h3>
+                {q.brief.split(/\n{2,}/).map((para, i) => <p key={i}>{para}</p>)}
+              </section>
+            </li>
+          )}
           {q.reading.length > 0 && (
             <Step state={readDone ? "done" : "open"} mark={stepMark(readDone ? "done" : "open", "quest-steps/read", "📖")} title={t("Step {n}: Read this first", { n: readN })}>
               <ReadingList questId={q.id} reading={q.reading} loggedIn={!!me} opened={p?.read_links ?? []} />
