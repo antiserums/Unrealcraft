@@ -26,7 +26,7 @@ C = discord.Color.from_str
 P = discord.PermissionOverwrite
 
 RANK_ROLES = [(6, "Lead", "#D4AF37", True), (5, "Senior", "#8E6CCF", True), (4, "Master", "#8A9BA8", True),
-              (3, "Expert", "#D9824A", False), (2, "Adept", "#3D7DD8", False), (1, "Apprentice", "#B5714B", False),
+              (3, "Expert", "#D9824A", False), (2, "Adept", "#3D7DD8", False), (1, "Apprentice", "#4FA36C", False),
               (0, "Novice", "#7A8C7E", False)]
 MOD_PERMS = discord.Permissions(kick_members=True, moderate_members=True, manage_messages=True,
                                 manage_threads=True, view_audit_log=True, manage_nicknames=True)

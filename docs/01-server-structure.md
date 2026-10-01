@@ -53,7 +53,7 @@ Welcome Screen, AutoMod (mention spam, flagged words, spam → #mod-log), Server
 | 9 | Master | `#8A9BA8` steel | ✔ | ✔ | R4 |
 | 10 | Expert | `#D9824A` | ✖ | ✔ | R3 |
 | 11 | Adept | `#3D7DD8` blueprint blue | ✖ | ✖ | R2 |
-| 15 | Apprentice | `#B5714B` clay | ✖ | ✖ | R1 |
+| 15 | Apprentice | `#4FA36C` green | ✖ | ✖ | R1 |
 | 16 | Novice | `#7A8C7E` gray-green | ✖ | ✖ | R0 |
 | 17 | Oriented / Recruit | no color | ✖ | ✖ | Legacy, removed by the bot. Everyone starts as Novice now. |
 | 19 | Major · Level Design … Major · Undecided (8) | no color | ✖ | ✖ | Used for filtering and pings only. |
