@@ -173,6 +173,19 @@ How to read the source of a fix:
 - TAQ63: the category now comes from a Niagara Asset Tag Definitions asset and Manage Tags, which is what its own quiz says. docs (through the quiz facts from the Niagara Overview page).
 - TAQ12, TAQ15, TAQ16, TAQ17, TAQ20, TAQ63, TAQ64, TAQ65, TAQ66, TAQ67, TAQ68, TAQ69: Niagara systems renamed from NS_ to FXS_, and the emitter asset in TAQ63 from NE_ to FXE_. docs: Recommended Asset Naming Conventions.
 
+### Done by hand after the second pass
+- SQ16, SQ17: the step check is now a text length check (`min_length: 120`), not a Discord link. text.
+- Ten flavor lines no longer name another quest (AQ2, GDQ8, EAQ34, PQ93, PQ94, PQ25, PQ27, PQ28, SQ1, TAQ15). text.
+- AQ12, AQ79, EAQ44, TAQ39: Epic's "Importing Assets Using Interchange" page added as extra reading. docs.
+- Docs pages chosen for the 32 quests that had `discord://` or `TODO_URL` as their link (`update-0201.json`). Each page
+  was fetched and exists. For quests about people skills (critique, review, help posts, playtests) no Epic page covers
+  the topic, so the nearest useful page was chosen: Taking Screenshots, Playing and Simulating, Unreal Editor Interface.
+  O1 to O5 are about this site and have no docs page on purpose. docs.
+
+### Decided by the owner
+- Similar quests in two specializations (LDQ115 and TAQ80, and the pairs noted above) are fine as they are.
+- Stand-ins for Starter Content stay as basic shapes and engine or template textures. No site asset pack.
+
 ## Checked, no change needed
 
 - First pass only: the quest ids named on pages were checked and fitted. The second pass removed all quest ids from page and quiz text (see "Self-contained quests").
@@ -197,11 +210,7 @@ How to read the source of a fix:
 
 ## Still open
 
-- SQ16, SQ17: the page text no longer asks for a Discord link, but each quest still has a step check `link: showcase` (on: others / on: own), and `api/app/routers/submit.py` only accepts a Discord link for it. The wording tool cannot change checks. The check should become a `min_length` text check.
-- Docs links that are not web pages: SQ15 (`discord://#help-desk`), SQ16, SQ17, GDQ7, LDQ40 (`discord://#showcase`), and the quests with `TODO_URL` (SQ14 and others). They were left, because a new link has to be a fetched Epic page that fits the quest.
-- Flavor lines that name another quest (the tool cannot edit flavors): AQ2 (AQ7), GDQ8 (GDQ6), EAQ34 (EAQ11), PQ93 (PQ61), PQ94 (PQ25), PQ25 (PQ13), PQ27 (PQ30), PQ28 (PQ12), SQ1 (SQ11), TAQ15 (TAQ14). These are the 10 hits that `quest_wording.py refs` still prints.
 - PQ19: proof type is still "package". The text now asks for screenshots and a short clip; the type itself cannot be changed with the tool.
-- Extra links that should be added by hand: the Interchange pages on AQ12, AQ79, EAQ44 and TAQ39; PQ102 still lists the old Network Profiler page as an extra link.
 - Quests that still need something from outside a template, with the source named in the step: AQ4, AQ33, AQ36, AQ38, AQ68, CQ50, CQ51 (a free character from Fab, because the template has only one skeleton), AQ32 (Game Animation Sample), AQ77, CQ52, TAQ101, TAQ102 (a groom, from a MetaHuman or Fab), CQ49 (MetaHuman), CQ30, CQ44, CQ46, CQ77 (a phone or tablet), AQ54, TAQ98, TAQ100 (a 3D modeling program), TAQ103 (RenderDoc).
 - GDQ37: the projectile Blueprint of the Arena Shooter variant (BP_ShooterProjectileBase) exists in 5.8, but its graph was not opened, so the step says to find its hit event or add Event Hit.
 - TAQ17: the Niagara "new system" window differs between versions; the step still names New system from selected emitters.
@@ -219,9 +228,7 @@ How to read the source of a fix:
 
 ## Needs an owner decision
 
-- LDQ115 and TAQ80: both are the Property Matrix quest, with almost the same steps and quiz, in two specializations (level design and tech art). Keep both because each specialization stands alone, or change one?
 - TAQ55 to TAQ60: emitter and system names (FX_Smoke, SmokeSystem, BeamSystem and so on) follow Epic's tutorial pages word for word and not the FXS_ / FXE_ convention. Rename them, or keep them the same as the tutorials?
-- Stand-in assets: where a quest used a Starter Content rock, bush, chair or brick texture, it now uses a template or engine asset (a grid texture, a chamfered cube, a mannequin texture) and says that a free Fab asset gives a better result. If the site should ship its own small asset pack, these steps could point to it.
 
 ## Self-contained quests
 
