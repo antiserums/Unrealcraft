@@ -456,7 +456,31 @@ quests:
     done_when: "Send screenshots of the room in Lit and in Shader Complexity, one screenshot with stat unit visible, a screenshot of the Content Browser folder, and your 5-line writeup. A mentor reviews it."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a test bed for a technical artist?"
+        choices: ["A small level built only for testing", "A tool that renames assets by a rule", "A list of all the stat commands", "A material with many parameters"]
+        answer_index: 0
+        explain: "A test bed is one known place where you check things under the same light every time. That makes problems easy to spot."
+      - q: "In the Construction Script of BP_FenceRow, why do you call Clear Instances before the loop?"
+        choices: ["So the mesh gets a new material", "So the loop starts at index 1", "So old instances do not pile up each time the script runs again", "So the actor is deleted from the level"]
+        answer_index: 2
+        explain: "The Construction Script runs again when you change a setting of the actor in the editor. Clearing first removes the old instances before the loop adds the new ones."
+      - q: "In the loop, X is set to the loop index times Spacing. What does this do?"
+        choices: ["It makes each instance larger than the last", "It places each instance one Spacing further along a row", "It rotates each instance around the first", "It gives each instance a random position"]
+        answer_index: 1
+        explain: "Index 0 gives X 0, index 1 gives one Spacing, index 2 gives two, and so on. The instances form an even row."
+      - q: "How do you make the Niagara system for the room?"
+        choices: ["Open Landscape Mode and choose New", "Add a Timeline to the Level Blueprint", "Enable the Water plugin and restart", "In the Content Browser, choose FX, then Niagara System"]
+        answer_index: 3
+        explain: "Niagara System is in the FX group of the Content Browser menu. The Fountain template gives you a working effect, and its name should start with FXS_."
+      - q: "What does the Shader Complexity view mode show?"
+        choices: ["How many lights touch each mesh", "How many triangles each mesh has", "How costly the materials are to draw on each pixel", "How much memory each texture uses"]
+        answer_index: 2
+        explain: "Shader Complexity colors the picture by the cost of the materials on each pixel. Cheap areas are green and costly areas go toward red and white."
+      - q: "Which prefixes do the assets in the TechArt folder get?"
+        choices: ["BP_ for Blueprints, FXS_ for Niagara systems, M_ for materials and L_ for levels", "A_ for all assets, in the order they were made", "TA_ for every asset in the folder", "No prefixes, because the folder name is enough"]
+        answer_index: 0
+        explain: "A prefix tells the kind of asset from the name alone. With correct prefixes, anyone can search and sort the folder."
     flavors:
       _default: {why: "A test room brings your tools together in one place you can reuse."}
       tech_art: {why: "Tech artists keep a test bed to check new assets, effects and tools under the same light and budget.", do: "Save the room as a template level so you can reuse it for later quests."}
@@ -802,7 +826,39 @@ quests:
     done_when: "Send the scene with the 3 or more instances, the effect before and after the Blueprint change, the parameter list in M_Master_Prop, and your usage note for artists. A mentor reviews it."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a master material?"
+        choices: ["A material that only one prop may use", "One material with many parameters, from which artists make Material Instances", "A material that is made by the engine for each level", "A folder that holds all the materials of a project"]
+        answer_index: 1
+        explain: "A master material leaves values open as parameters. Artists get different looks from instances and do not have to build new materials."
+      - q: "What does MPC stand for?"
+        choices: ["Material Parameter Collection", "Mesh Preview Camera", "Master Prop Class", "Material Property Copy"]
+        answer_index: 0
+        explain: "MPC is short for Material Parameter Collection. It is an asset that stores parameters which many materials can read."
+      - q: "What is a User parameter on a Niagara system, such as SpawnRate or TintColor?"
+        choices: ["A note for the artist that has no effect", "A setting that only works in the editor preview", "A password that locks the system", "A value of the system that can be set from outside, for example by a Blueprint"]
+        answer_index: 3
+        explain: "A User parameter is exposed on the system. A Blueprint can change it during play, and the effect reacts."
+      - q: "With which prefixes do the names of the Material Instances and of the Niagara system start?"
+        choices: ["M_ and BP_", "T_ and SM_", "MI_ and FXS_", "MPC_ and L_"]
+        answer_index: 2
+        explain: "Material Instances start with MI_ and the Niagara system starts with FXS_. The prefix tells the kind of asset from the name alone."
+      - q: "What must the Blueprint with the BP_ prefix do?"
+        choices: ["Change the value of the effect during play", "Create the master material when the game starts", "Rename the instances in the Content Browser", "Delete the effect after one second"]
+        answer_index: 0
+        explain: "The Blueprint changes the value while the game runs, started by a key press, a trigger or a timer. This shows that gameplay can control the effect."
+      - q: "If you drive the effect from an MPC value, what else should that same value change?"
+        choices: ["The size of the level", "The names of the Material Instances", "The frame rate of the game", "M_Master_Prop, so that the props and the effect react together"]
+        answer_index: 3
+        explain: "Materials can read a Material Parameter Collection too. One value then changes the props and the effect at the same moment."
+      - q: "What does your usage note for artists list?"
+        choices: ["The time you spent on each asset", "Each parameter, its safe range, and which Blueprint call drives the effect", "The engine version and the installed plugins", "The meshes of the scene and their triangle counts"]
+        answer_index: 1
+        explain: "The note tells artists what they can change, how far they can go, and how the effect is driven. They can then use your work without asking you."
+      - q: "Why do you give the parameters groups and names that artists will understand?"
+        choices: ["So the material compiles faster", "So the Niagara system can read them", "So artists can find and use them in an instance without opening the graph", "So the parameters cannot be changed by mistake"]
+        answer_index: 2
+        explain: "Artists work in the Material Instance, where they only see the parameter list. Clear names and groups make that list easy to use."
     flavors:
       _default: {why: "This is a real tech art handoff: reusable materials plus an effect that gameplay can drive."}
       tech_art: {why: "Master materials and driven FX are two of the most common things a tech artist delivers.", do: "Add one validator or naming check to your MI_ and FXS_ assets and show it passes."}
@@ -1326,7 +1382,47 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) or screenshots of the tool in use, the one-page usage document, the before and after example with times, and the feedback from the test together with the fix you made. A mentor reviews it."
     xp: 300
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "When is a tool finished?"
+        choices: ["When it compiles without errors", "When it has more than ten settings", "When another person can use it without you in the room", "When you have used it once yourself"]
+        answer_index: 2
+        explain: "A tool that only its maker can use is not done. The test is that someone else gets the job done with the tool and its guide alone."
+      - q: "Which three things must a finished tool do?"
+        choices: ["Solve a real problem, handle wrong input, and come with a short guide", "Run on every platform, use C++, and have a logo", "Replace the editor, hide its settings, and run on Tick", "Work only for its maker, need no input, and have no text"]
+        answer_index: 0
+        explain: "These three points make a tool usable by others. Without them it either solves nothing, breaks on the first mistake, or cannot be understood."
+      - q: "How do you find the task that your tool should do?"
+        choices: ["You pick the most complex feature of the engine", "You copy a tool from the documentation", "You wait until a mentor gives you a task", "You ask another person which slow and repeated task annoys them"]
+        answer_index: 3
+        explain: "A real problem comes from a real user. If you have nobody to ask, you take a slow, repeated task from your own work."
+      - q: "Which three forms can you choose from for your tool?"
+        choices: ["A Level Blueprint, a GameMode, or a HUD", "An Editor Utility Widget, a Scriptable Tool, or a Python script", "A Material Function, a Niagara system, or a Data Table", "A Behavior Tree, a State Tree, or a Blackboard"]
+        answer_index: 1
+        explain: "All three run in the editor and can automate editor work. You pick one and explain your choice in two lines."
+      - q: "What is an Editor Utility Widget?"
+        choices: ["A widget that is shown to the player during the game", "A material that is used on editor icons", "A panel that runs in the editor and is built like a Widget Blueprint", "A plugin that must be bought on Fab"]
+        answer_index: 2
+        explain: "An Editor Utility Widget gives your tool a user interface inside the editor. You build it with the same designer you know from Widget Blueprints."
+      - q: "What must the tool do when its input is wrong?"
+        choices: ["Show a clear message that says what is wrong", "Stop without any message", "Carry on and guess the missing values", "Close the editor"]
+        answer_index: 0
+        explain: "The tool checks its input first. A clear message lets the user fix the problem, while a silent failure leaves them guessing."
+      - q: "What does the one-page usage document say?"
+        choices: ["How you learned to build tools", "Which nodes the graph of the tool contains", "What the next version of the tool will do", "What the tool does, how to open it, its settings, and one known limit"]
+        answer_index: 3
+        explain: "These four points are what a new user needs. The known limit saves them from trying something the tool cannot do."
+      - q: "What does your before and after example show?"
+        choices: ["The tool with a light theme and a dark theme", "The same task done by hand and done with the tool, with the time each one took", "The first and the last version of the code", "The Content Browser before and after you renamed the tool"]
+        answer_index: 1
+        explain: "The two times prove what the tool saves. Without the comparison, nobody knows if the tool is worth using."
+      - q: "How do you test the tool if you work alone?"
+        choices: ["You read the code one more time", "You use the tool right away while you still remember everything", "You wait a day and then use the tool by following only the document", "You skip the test"]
+        answer_index: 2
+        explain: "After a day you have forgotten small details, so you are closer to a new user. Following only the document shows where it is unclear."
+      - q: "What do you do with what you learn from the test?"
+        choices: ["You write down what was confusing and fix one of those things", "You delete the usage document", "You tell the tester to try harder", "You add as many new features as possible"]
+        answer_index: 0
+        explain: "Confusion in the test points at a weak spot in the tool or the document. Fixing one of these things closes the loop from feedback to improvement."
     flavors:
       _default: {why: "A tool is only finished when someone else can use it without you in the room."}
       tech_art: {why: "This is the core tech art job: find a pain, build the fix, and make it usable by others.", do: "Put the tool in its own folder with the doc next to it, so it can be copied into another project."}
@@ -1758,7 +1854,55 @@ quests:
     done_when_solo: "Writeup with: a link to the tool or library and its docs, a test project that proves it on 20 or more assets (screenshots of the results and any errors it caught), and the Low vs Epic screenshots with 2–3 lines on the result. Approved by a mentor."
     xp: 400
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is often the most useful work of a technical artist?"
+        choices: ["A single beautiful screenshot", "A tool or a library that other people use every day", "The largest texture in the project", "A level with the most lights"]
+        answer_index: 1
+        explain: "A technical artist makes the work of others faster and safer. The best pieces are used daily without anyone thinking about them."
+      - q: "What is Path A of this capstone?"
+        choices: ["An import or naming tool", "A library of material functions", "A lit test room", "A character rig"]
+        answer_index: 0
+        explain: "Path A is a tool that controls how assets come in or how they are named. It can be an Interchange pipeline, an Editor Utility Widget or a validator."
+      - q: "What is Path B of this capstone?"
+        choices: ["A Python script that renames levels", "A set of 3 Niagara systems", "A validator based on EditorValidatorBase", "A library of at least 6 material functions"]
+        answer_index: 3
+        explain: "Path B is a library that material artists build on. The MF_ prefix marks each asset as a material function."
+      - q: "What does a validator based on EditorValidatorBase do?"
+        choices: ["It renders a scene at two quality levels", "It writes the documentation for you", "It checks assets against your rules and reports the ones that break them", "It imports meshes from other programs"]
+        answer_index: 2
+        explain: "A validator is part of the Data Validation system. It looks at an asset, decides if it follows the rule, and reports an error if it does not."
+      - q: "What does the short documentation of your piece say?"
+        choices: ["What it does, how to install it, its rules or inputs, and one limit", "How many hours you worked on it, day by day", "Which other tools you looked at before", "Why the other tools are worse than yours"]
+        answer_index: 0
+        explain: "These points let a new user install the piece and use it correctly. The known limit tells them where it stops being useful."
+      - q: "Where does a Path A tool report its errors?"
+        choices: ["In a text file on the desktop", "In the Message Log, as clear errors", "In the name of the asset", "In the README only"]
+        answer_index: 1
+        explain: "The Message Log is where the editor shows errors to the user. Clear errors there tell an artist which asset is wrong and why."
+      - q: "What do you do with the library on Path B?"
+        choices: ["You run it on a full folder of meshes", "You pack it into one large function", "You hide the inputs of each function", "You build 3 materials from it and document the inputs"]
+        answer_index: 3
+        explain: "The three materials prove that the functions work together. The documented inputs tell other artists how to use each function."
+      - q: "Who tests your piece?"
+        choices: ["Nobody, because you built it yourself", "Only the mentor, after the quest is approved", "At least one other person, who uses it on their own assets", "A person who has never opened Unreal Engine"]
+        answer_index: 2
+        explain: "Other assets bring cases you did not think of. The tester tells you what worked and what did not."
+      - q: "Nobody can test your piece. What do you do?"
+        choices: ["Migrate it into a new empty project and use it from your documentation", "Skip the test and write that it works", "Test it in the project where you built it", "Ask the mentor to approve it without a test"]
+        answer_index: 0
+        explain: "An empty project has none of your helpers or settings. If the piece installs and works there from the documentation alone, others can use it too."
+      - q: "What do you do after the test found problems?"
+        choices: ["You remove the feature that caused them and say nothing", "You fix at least one problem and write the change down in a change log", "You start again from zero", "You ask the tester to fix them"]
+        answer_index: 1
+        explain: "A change log records what was changed and why. Users of the piece can see that feedback leads to fixes."
+      - q: "How do you do the scalability check?"
+        choices: ["You run the tool two times in a row", "You open the scene on two monitors", "You render the scene with Movie Render Queue", "You capture one scene on Low and on Epic with stat unit visible"]
+        answer_index: 3
+        explain: "Low and Epic are quality levels of the engine. The two captures with stat unit show how a scene that uses your work holds up on each, and you note the biggest difference."
+      - q: "Why do you take the Low and the Epic capture from the same camera bookmark?"
+        choices: ["The bookmark sets the quality level", "The bookmark turns on stat unit", "The view is then the same, so only the quality level differs", "The bookmark saves the screenshots"]
+        answer_index: 2
+        explain: "The numbers of stat unit depend on what the camera sees. With one fixed view, the two captures can be compared fairly."
     flavors:
       _default: {why: "A tech artist's best work is the tool other people use every day without thinking about it."}
       tech_art: {why: "This is your portfolio proof: a pipeline piece that others used, with docs, tested at more than one quality level.", do: "Add a command line run with -run=DataValidation, or a one-click install, so a new team member can start in 5 minutes."}

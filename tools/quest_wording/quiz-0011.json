@@ -1,0 +1,370 @@
+{
+  "AQ23": {
+    "new_quiz": [
+      {
+        "q": "What is a notify in an animation?",
+        "choices": [
+          "A marker on the animation timeline that sends an event when the animation reaches it",
+          "A message in the Output Log that reports an animation error",
+          "A setting that makes an animation loop without end",
+          "A bone that other bones are attached to on the skeleton"
+        ],
+        "answer_index": 0,
+        "explain": "A notify sits at one moment on the timeline. When playback reaches it, it sends an event, so something in the world can happen at exactly that moment."
+      },
+      {
+        "q": "Which node plays AM_Interact on the character in this quest?",
+        "choices": [
+          "Play Sound at Location",
+          "Set Actor Transform",
+          "Play Montage",
+          "Add to Viewport"
+        ],
+        "answer_index": 2,
+        "explain": "Play Montage starts the montage and has outputs such as On Completed, On Interrupted and On Notify Begin that tell you what happened."
+      },
+      {
+        "q": "The Play Montage node runs, but the character does not play the animation. What do you check first?",
+        "choices": [
+          "That the lever has a Niagara effect",
+          "That the Slot of the montage exists in the AnimGraph of the character",
+          "That the montage has more than two sections",
+          "That the trigger volume is larger than the lever"
+        ],
+        "answer_index": 1,
+        "explain": "A montage plays through a named Slot, such as FullBody or UpperBody. If the AnimGraph has no node for that Slot, the montage has no way into the final pose."
+      },
+      {
+        "q": "What do you use the On Completed output of Play Montage for?",
+        "choices": [
+          "To spawn the effect on the hand",
+          "To start the montage again",
+          "To show the prompt on the screen",
+          "To unlock the player"
+        ],
+        "answer_index": 3,
+        "explain": "On Completed fires when the montage has played to its end. That is the moment to give control back to the player."
+      },
+      {
+        "q": "What should happen when a hit or a jump interrupts the montage?",
+        "choices": [
+          "The lever stays half pulled for the rest of the game",
+          "The montage stops and the actor goes back to its starting state",
+          "The montage plays again from the Reach section",
+          "The character is destroyed and spawned again"
+        ],
+        "answer_index": 1,
+        "explain": "On Interrupted is where you cancel the interaction cleanly. The lever or chest returns to its starting state, so the player can try again."
+      },
+      {
+        "q": "At which moment of the montage do you place the notify for the effect?",
+        "choices": [
+          "At the moment when the hand touches the object",
+          "At the first frame of the montage",
+          "At the last frame of the montage",
+          "At the moment when the player presses the key"
+        ],
+        "answer_index": 0,
+        "explain": "The effect must match what the viewer sees. Placed on the contact frame, the sound or the Niagara effect appears exactly when the hand reaches the object."
+      },
+      {
+        "q": "Where is the Niagara effect or the sound spawned when the contact notify fires?",
+        "choices": [
+          "At the Player Start of the level",
+          "At the center of the trigger volume",
+          "At a socket on the hand",
+          "At the position of the camera"
+        ],
+        "answer_index": 2,
+        "explain": "A socket is a named point on the skeleton. Spawning at a socket on the hand puts the effect where the contact happens."
+      },
+      {
+        "q": "What do you use the On Notify Begin output of Play Montage for in this quest?",
+        "choices": [
+          "To unlock the player after the montage",
+          "To cancel the interaction",
+          "To create the montage sections",
+          "To change the state of the lever or chest"
+        ],
+        "answer_index": 3,
+        "explain": "The second notify fires On Notify Begin in the Play Montage node. Your graph uses it to change the state of the actor at the right moment of the animation."
+      }
+    ]
+  },
+  "CQ15": {
+    "new_quiz": [
+      {
+        "q": "What does the master sequence LS_First need on its Shots track?",
+        "choices": [
+          "One shot that is 15 seconds long, with no camera",
+          "At least 2 shots, each with its own Cine Camera",
+          "At least 5 shots that share one camera",
+          "Only audio clips and no shots"
+        ],
+        "answer_index": 1,
+        "explain": "A master sequence is built from shots. Here it has at least 2 shots, and each shot has its own Cine Camera."
+      },
+      {
+        "q": "What is the Camera Cuts track for?",
+        "choices": [
+          "It makes the master sequence cut between the cameras",
+          "It trims the animation clip of the character",
+          "It deletes cameras that are not used",
+          "It renders the sequence to image files"
+        ],
+        "answer_index": 0,
+        "explain": "The Camera Cuts track decides which camera the viewer looks through at each moment. You place the cut at a clear moment in the action."
+      },
+      {
+        "q": "The walk animation of the character is longer than the shot. What do you do with the clip?",
+        "choices": [
+          "Delete the character from the shot",
+          "Make the master sequence longer than 15 seconds",
+          "Blend or trim the clip so that it fits the shot",
+          "Move the clip to the Camera Cuts track"
+        ],
+        "answer_index": 2,
+        "explain": "An Animation clip on the track can be trimmed and blended. You fit the clip to the shot, and the length of the sequence stays as planned."
+      },
+      {
+        "q": "In the Level Blueprint, what do you call when the player enters the Box Trigger?",
+        "choices": [
+          "Go to End and then Stop",
+          "Create Widget and then Add to Viewport",
+          "Open Level and then Play",
+          "Set Playback Position with the value 0 and then Play"
+        ],
+        "answer_index": 3,
+        "explain": "Set Playback Position with 0 moves the sequence to its first frame. Play then starts it, so it always runs from the beginning."
+      },
+      {
+        "q": "How does the F key skip the sequence?",
+        "choices": [
+          "It calls Go to End and Stop",
+          "It calls Set Playback Position with the value 0",
+          "It closes the Level Blueprint",
+          "It removes the Camera Cuts track"
+        ],
+        "answer_index": 0,
+        "explain": "Go to End jumps to the last frame, and Stop ends the playback. The level is then in the state it has after the cinematic."
+      },
+      {
+        "q": "Where do you open Movie Render Queue?",
+        "choices": [
+          "In Edit, then Editor Preferences, then Keyboard Shortcuts",
+          "In the Show menu of the viewport",
+          "In Window, then Cinematics, then Movie Render Queue",
+          "In the Place Actors panel, under Cinematic"
+        ],
+        "answer_index": 2,
+        "explain": "Movie Render Queue is in the Cinematics group of the Window menu. It needs the Movie Render Pipeline plugin to be enabled."
+      },
+      {
+        "q": "Movie Render Queue is missing from the menu. What do you check first?",
+        "choices": [
+          "That the sequence has a Camera Cuts track",
+          "That the Movie Render Pipeline plugin is enabled",
+          "That the level has a Box Trigger",
+          "That the project was packaged"
+        ],
+        "answer_index": 1,
+        "explain": "Movie Render Queue comes from the Movie Render Pipeline plugin. Without the plugin, the menu entry does not exist."
+      },
+      {
+        "q": "You render with a .png Sequence [8bit] export. What do you get in the output folder?",
+        "choices": [
+          "One video file for the whole sequence",
+          "One PNG file for each shot",
+          "One text file with the camera settings",
+          "One PNG file for each frame of the sequence"
+        ],
+        "answer_index": 3,
+        "explain": "An image sequence saves every frame as its own file. The folder with the numbered PNG files is part of your proof."
+      }
+    ]
+  },
+  "GDQ25": {
+    "new_quiz": [
+      {
+        "q": "What is a core loop?",
+        "choices": [
+          "A Timeline that plays without end",
+          "The first level of a game",
+          "The short cycle of actions that the player repeats",
+          "The event that runs on every frame"
+        ],
+        "answer_index": 2,
+        "explain": "The core loop is what the player does again and again: reach a goal, face a threat, get a reward, and win or lose."
+      },
+      {
+        "q": "Which five things do you write down for your loop?",
+        "choices": [
+          "The goal, the threat, the reward, the fail state and the win state",
+          "The level, the light, the sound, the camera and the menu",
+          "The mesh, the material, the texture, the rig and the animation",
+          "The title, the genre, the price, the platform and the date"
+        ],
+        "answer_index": 0,
+        "explain": "These five lines describe the whole loop. If one of them is missing, the game has no tension or no end."
+      },
+      {
+        "q": "How does damage lower health in this quest?",
+        "choices": [
+          "The Data Table lowers the health on every frame",
+          "The widget lowers the health when it is drawn",
+          "The Game Mode lowers the health of all actors each second",
+          "Apply Damage sends the damage, and Event AnyDamage on the hit actor lowers its health"
+        ],
+        "answer_index": 3,
+        "explain": "Apply Damage only sends an amount of damage to an actor. That actor reacts in Event AnyDamage, where both the player and the enemy lower their Health."
+      },
+      {
+        "q": "How do the Blueprints get their tuning numbers?",
+        "choices": [
+          "They read the numbers from the HUD",
+          "They read the rows of DT_Tuning with Get Data Table Row on Begin Play",
+          "They ask the player to type the numbers",
+          "They copy the numbers from the Output Log"
+        ],
+        "answer_index": 1,
+        "explain": "DT_Tuning holds values such as player Health and enemy Speed. Get Data Table Row reads a row, and the Blueprint stores the values when the game starts."
+      },
+      {
+        "q": "Why do you not type tuning numbers directly into the graphs?",
+        "choices": [
+          "Numbers in a graph are not saved",
+          "Numbers in a graph slow down the game",
+          "You can then tune the game from one table",
+          "Graphs can only hold whole numbers"
+        ],
+        "answer_index": 2,
+        "explain": "With all numbers in one table, tuning is fast and safe. You change a row, play again, and compare how the game feels."
+      },
+      {
+        "q": "How do you mark the enemies so that your logic can recognize them?",
+        "choices": [
+          "Give them Gameplay Tags that start with Character.Enemy and check with a Has Tag node",
+          "Give them a red material and check the color",
+          "Place them in a folder named Enemy in the Outliner",
+          "Make their names longer than the name of the player"
+        ],
+        "answer_index": 0,
+        "explain": "A Gameplay Tag is a label with levels, such as Character.Enemy. A Has Tag node tests for the label, so the logic does not depend on a class or a name."
+      },
+      {
+        "q": "When does BP_CoreGameMode show WIN?",
+        "choices": [
+          "When the player Health <= 0",
+          "When the score reaches the target",
+          "When the first enemy is spawned",
+          "When the restart input is pressed"
+        ],
+        "answer_index": 1,
+        "explain": "The Game Mode keeps track of the score and the lives. It shows WIN when the score reaches the target, and LOSE when the player Health <= 0."
+      },
+      {
+        "q": "What does WBP_HUD show, and where is it added to the viewport?",
+        "choices": [
+          "The frame rate and the memory, added from the Game Mode",
+          "The enemy Speed and enemy Damage, added from the Data Table",
+          "The names of all actors, added from the Level Blueprint",
+          "Health, Score and the score needed to win, added from the Player Controller"
+        ],
+        "answer_index": 3,
+        "explain": "The HUD shows the numbers the player needs to follow the loop. The Player Controller creates the widget and adds it to the viewport."
+      }
+    ]
+  },
+  "TAQ15": {
+    "new_quiz": [
+      {
+        "q": "What is a master material?",
+        "choices": [
+          "A material that only one prop may use",
+          "One material with many parameters, from which artists make Material Instances",
+          "A material that is made by the engine for each level",
+          "A folder that holds all the materials of a project"
+        ],
+        "answer_index": 1,
+        "explain": "A master material leaves values open as parameters. Artists get different looks from instances and do not have to build new materials."
+      },
+      {
+        "q": "What does MPC stand for?",
+        "choices": [
+          "Material Parameter Collection",
+          "Mesh Preview Camera",
+          "Master Prop Class",
+          "Material Property Copy"
+        ],
+        "answer_index": 0,
+        "explain": "MPC is short for Material Parameter Collection. It is an asset that stores parameters which many materials can read."
+      },
+      {
+        "q": "What is a User parameter on a Niagara system, such as SpawnRate or TintColor?",
+        "choices": [
+          "A note for the artist that has no effect",
+          "A setting that only works in the editor preview",
+          "A password that locks the system",
+          "A value of the system that can be set from outside, for example by a Blueprint"
+        ],
+        "answer_index": 3,
+        "explain": "A User parameter is exposed on the system. A Blueprint can change it during play, and the effect reacts."
+      },
+      {
+        "q": "With which prefixes do the names of the Material Instances and of the Niagara system start?",
+        "choices": [
+          "M_ and BP_",
+          "T_ and SM_",
+          "MI_ and FXS_",
+          "MPC_ and L_"
+        ],
+        "answer_index": 2,
+        "explain": "Material Instances start with MI_ and the Niagara system starts with FXS_. The prefix tells the kind of asset from the name alone."
+      },
+      {
+        "q": "What must the Blueprint with the BP_ prefix do?",
+        "choices": [
+          "Change the value of the effect during play",
+          "Create the master material when the game starts",
+          "Rename the instances in the Content Browser",
+          "Delete the effect after one second"
+        ],
+        "answer_index": 0,
+        "explain": "The Blueprint changes the value while the game runs, started by a key press, a trigger or a timer. This shows that gameplay can control the effect."
+      },
+      {
+        "q": "If you drive the effect from an MPC value, what else should that same value change?",
+        "choices": [
+          "The size of the level",
+          "The names of the Material Instances",
+          "The frame rate of the game",
+          "M_Master_Prop, so that the props and the effect react together"
+        ],
+        "answer_index": 3,
+        "explain": "Materials can read a Material Parameter Collection too. One value then changes the props and the effect at the same moment."
+      },
+      {
+        "q": "What does your usage note for artists list?",
+        "choices": [
+          "The time you spent on each asset",
+          "Each parameter, its safe range, and which Blueprint call drives the effect",
+          "The engine version and the installed plugins",
+          "The meshes of the scene and their triangle counts"
+        ],
+        "answer_index": 1,
+        "explain": "The note tells artists what they can change, how far they can go, and how the effect is driven. They can then use your work without asking you."
+      },
+      {
+        "q": "Why do you give the parameters groups and names that artists will understand?",
+        "choices": [
+          "So the material compiles faster",
+          "So the Niagara system can read them",
+          "So artists can find and use them in an instance without opening the graph",
+          "So the parameters cannot be changed by mistake"
+        ],
+        "answer_index": 2,
+        "explain": "Artists work in the Material Instance, where they only see the parameter list. Clear names and groups make that list easy to use."
+      }
+    ]
+  }
+}

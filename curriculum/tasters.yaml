@@ -240,7 +240,39 @@ quests:
     done_when: "Send a screenshot of the master material graph, and a screenshot of the 3 instances applied in your level."
     xp: 60
     verify_type: screenshot
-    quiz: []   # stub: quiz to be written
+    quiz:
+      - q: "What is a master material?"
+        choices: ["A material that can only be used on one mesh", "A material that is locked and cannot be opened", "A material that the engine creates for every project", "One material built with parameters, from which you make instances"]
+        answer_index: 3
+        explain: "A master material leaves some values open as parameters. Many instances can then reuse the same graph with different values."
+      - q: "What is a parameter in a material?"
+        choices: ["A value, such as a color, that you leave open to change", "A texture that is imported from a file", "A comment that explains the graph", "A mesh that the material is applied to"]
+        answer_index: 0
+        explain: "A parameter is a named value in the graph. Instances of the material can set it to their own value."
+      - q: "What is a Material Instance?"
+        choices: ["A full copy of the material graph that you edit node by node", "A light copy of a material that only changes its parameters", "A screenshot of a material", "A material that has no parent"]
+        answer_index: 1
+        explain: "A Material Instance has no graph of its own. It uses the graph of its parent and only sets the parameters."
+      - q: "Which kind of parameter do you use for BaseColor?"
+        choices: ["A Scalar parameter", "A Texture parameter", "A Vector parameter", "A Boolean parameter"]
+        answer_index: 2
+        explain: "A color has several channels, so it needs a Vector parameter. Roughness, Metallic and EmissiveStrength are single numbers, so they are Scalar parameters."
+      - q: "How do you build the glow of the master material?"
+        choices: ["Connect Roughness to the Emissive input", "Multiply EmissiveStrength by the color and connect the result to the Emissive input", "Add Metallic to the color and connect the result to Base Color", "Connect EmissiveStrength to the Roughness input"]
+        answer_index: 1
+        explain: "The color gives the glow its tint and EmissiveStrength sets how strong it is. With the value at 0, the material does not glow."
+      - q: "Why do you give every parameter a Group?"
+        choices: ["Groups keep the parameter list tidy when you open an instance", "Groups make the material render faster", "Groups are needed before the material can be saved", "Groups lock the parameters against changes"]
+        answer_index: 0
+        explain: "In a Material Instance, the parameters are listed by group. Good groups make the right value easy to find."
+      - q: "What should the three instances tell the player?"
+        choices: ["How many materials the level uses", "Which object was placed first", "How large each object is", "The role of each object, by its color"]
+        answer_index: 3
+        explain: "One instance marks things the player can use, one marks hazards, and one marks scenery. The player learns the rule from the colors."
+      - q: "You need a fourth look, for example blue for a goal object. What is the right way to add it?"
+        choices: ["Copy the whole master material and change its nodes", "Paint the mesh blue in another program", "Make another Material Instance from the master and change its parameters", "Add a second Emissive input to the master material"]
+        answer_index: 2
+        explain: "That is what the master material is for. A new instance only needs new parameter values, and the graph is not touched."
     flavors:
       _default: {why: "One master material with parameters can color-code a whole game."}
       gameplay_design: {why: "Your opposite taster. Color-coded interactables are how players learn your rules at a glance.", do: "Make the hazard instance instantly distinct from the interact one."}

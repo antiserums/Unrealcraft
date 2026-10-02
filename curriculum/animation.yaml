@@ -464,7 +464,31 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) of the stage with the looping mannequin, two screenshots (one of the marks with their labels, one of the lighting from the front), and your 5 lines. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a test stage for animation?"
+        choices: ["A large level with finished art", "A small, simple level with objects of known sizes", "A window that lists all animations", "A camera that records the viewport"]
+        answer_index: 1
+        explain: "A test stage is a small level with things such as a step, a ledge and a gap of known sizes. It is a fixed place to judge motion."
+      - q: "Why do the objects on the stage have known sizes with labels?"
+        choices: ["So the level loads faster", "So the lights can be placed by size", "So the mannequin gets collision", "So you can check that a character moves at the right scale"]
+        answer_index: 3
+        explain: "A step of about 20 cm or a gap of about 2 m is a ruler for the character. Next to them you see at once if the mesh or the motion has the wrong scale."
+      - q: "How do you make a Skeletal Mesh Actor play one run or walk sequence?"
+        choices: ["Set Animation Mode to Use Animation Asset and choose the sequence", "Set Mobility to Static and press Play", "Add a Timeline to the Level Blueprint", "Drag the sequence onto the Directional Light"]
+        answer_index: 0
+        explain: "With Animation Mode set to Use Animation Asset, the actor plays the single animation you choose. No Animation Blueprint is needed."
+      - q: "The mannequin plays its run one time and then stands still. What did you forget?"
+        choices: ["To add a Sky Light", "To set Anim Class to ABP_Unarmed", "To enable Looping", "To place a Camera Actor"]
+        answer_index: 2
+        explain: "Without Looping the animation asset plays once and stops. With Looping enabled it starts again each time it ends."
+      - q: "Why do you place a second mannequin with its Anim Class set to ABP_Unarmed?"
+        choices: ["So the stage has two Player Starts", "So you can compare an animation asset with an Animation Blueprint", "So the first mannequin runs faster", "So the clip is twice as long"]
+        answer_index: 1
+        explain: "One mannequin plays a single looping asset, and the other is driven by the Animation Blueprint of the template. Side by side, the difference is easy to see."
+      - q: "What is the extra light on the stage for?"
+        choices: ["It makes the mannequin easy to see from the front", "It replaces the Directional Light", "It shows the size of the gap", "It lights the stage from below"]
+        answer_index: 0
+        explain: "The Directional Light and the Sky Light give the base lighting. The extra light makes sure the front of the mannequin is clear, so the motion is easy to read."
     flavors:
       _default: {why: "A test stage with known sizes is the tool every animator uses to judge motion at real scale."}
       animation: {why: "You will test every locomotion set, jump and vault on this stage. Build it once, use it forever.", do: "Save the level as a reusable asset in your own folder so later quests can open it."}
@@ -813,7 +837,39 @@ quests:
     done_when: "Send the clip described in the last step, a screenshot of the montage timeline with the sections and notifies visible, and a screenshot of the Blueprint graph with Play Montage, On Completed, On Interrupted and On Notify Begin connected. Add a short note that explains which Slot you used and why. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a notify in an animation?"
+        choices: ["A marker on the animation timeline that sends an event when the animation reaches it", "A message in the Output Log that reports an animation error", "A setting that makes an animation loop without end", "A bone that other bones are attached to on the skeleton"]
+        answer_index: 0
+        explain: "A notify sits at one moment on the timeline. When playback reaches it, it sends an event, so something in the world can happen at exactly that moment."
+      - q: "Which node plays AM_Interact on the character in this quest?"
+        choices: ["Play Sound at Location", "Set Actor Transform", "Play Montage", "Add to Viewport"]
+        answer_index: 2
+        explain: "Play Montage starts the montage and has outputs such as On Completed, On Interrupted and On Notify Begin that tell you what happened."
+      - q: "The Play Montage node runs, but the character does not play the animation. What do you check first?"
+        choices: ["That the lever has a Niagara effect", "That the Slot of the montage exists in the AnimGraph of the character", "That the montage has more than two sections", "That the trigger volume is larger than the lever"]
+        answer_index: 1
+        explain: "A montage plays through a named Slot, such as FullBody or UpperBody. If the AnimGraph has no node for that Slot, the montage has no way into the final pose."
+      - q: "What do you use the On Completed output of Play Montage for?"
+        choices: ["To spawn the effect on the hand", "To start the montage again", "To show the prompt on the screen", "To unlock the player"]
+        answer_index: 3
+        explain: "On Completed fires when the montage has played to its end. That is the moment to give control back to the player."
+      - q: "What should happen when a hit or a jump interrupts the montage?"
+        choices: ["The lever stays half pulled for the rest of the game", "The montage stops and the actor goes back to its starting state", "The montage plays again from the Reach section", "The character is destroyed and spawned again"]
+        answer_index: 1
+        explain: "On Interrupted is where you cancel the interaction cleanly. The lever or chest returns to its starting state, so the player can try again."
+      - q: "At which moment of the montage do you place the notify for the effect?"
+        choices: ["At the moment when the hand touches the object", "At the first frame of the montage", "At the last frame of the montage", "At the moment when the player presses the key"]
+        answer_index: 0
+        explain: "The effect must match what the viewer sees. Placed on the contact frame, the sound or the Niagara effect appears exactly when the hand reaches the object."
+      - q: "Where is the Niagara effect or the sound spawned when the contact notify fires?"
+        choices: ["At the Player Start of the level", "At the center of the trigger volume", "At a socket on the hand", "At the position of the camera"]
+        answer_index: 2
+        explain: "A socket is a named point on the skeleton. Spawning at a socket on the hand puts the effect where the contact happens."
+      - q: "What do you use the On Notify Begin output of Play Montage for in this quest?"
+        choices: ["To unlock the player after the montage", "To cancel the interaction", "To create the montage sections", "To change the state of the lever or chest"]
+        answer_index: 3
+        explain: "The second notify fires On Notify Begin in the Play Montage node. Your graph uses it to change the state of the actor at the right moment of the animation."
     flavors:
       _default: {why: "This is the smallest full loop of gameplay animation: trigger, montage, event, effect, recovery."}
       animation: {why: "It proves you can sync animation timing with gameplay events.", do: "Put the effect notify on the exact contact frame and show a frame-by-frame view in your clip."}
@@ -1187,7 +1243,47 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) that shows idle to walk to run, a jump from a run with the landing, and the upper body layer active while the character moves. Also send screenshots of the state machine and of the layer graph, and your short written text. A mentor reviews your work."
     xp: 300
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What does locomotion mean for a character?"
+        choices: ["The way the character is lit in a level", "All the ways the character moves around, such as walking and jumping", "The list of bones in the skeleton of the character", "The speed at which animations are imported"]
+        answer_index: 1
+        explain: "Locomotion covers the basic movement of a character. A locomotion set joins these animations so the character changes smoothly from one to the next."
+      - q: "What does the blend space BS_Locomotion blend, and based on what?"
+        choices: ["Idle, walk and run animations, based on Speed", "Jump and land animations, based on IsFalling", "Upper body and lower body, based on the spine", "Two cameras, based on Direction"]
+        answer_index: 0
+        explain: "The blend space mixes idle, walk and run as Speed changes. If you have strafe animations, it can also use Direction."
+      - q: "When does the blend space also need a Direction axis?"
+        choices: ["When the character can jump", "When the character has an upper body layer", "When the level has stairs", "When you have strafe animations, which move the character sideways"]
+        answer_index: 3
+        explain: "Speed alone cannot tell forward from sideways. With strafe animations, Direction picks the animation that fits the way the character moves."
+      - q: "Which four states does the state machine of ABP_Locomotion have?"
+        choices: ["Idle, Walk, Run and Sprint", "Start, Update, Finish and Reset", "Locomotion, JumpStart, JumpLoop and JumpEnd", "Ground, Air, Water and Ladder"]
+        answer_index: 2
+        explain: "Locomotion plays BS_Locomotion, so idle, walk and run share one state. The three jump states cover the take-off, the time in the air and the landing."
+      - q: "Which values from the character do the transition rules read?"
+        choices: ["IsFalling and Speed", "Health and Score", "Pitch and Yaw", "Count and Spacing"]
+        answer_index: 0
+        explain: "IsFalling tells the state machine that the character is in the air. Speed tells it how fast the character moves on the ground."
+      - q: "The character is running and leaves the ground. Which value makes the state machine leave the Locomotion state?"
+        choices: ["Speed becomes 0", "IsFalling becomes true", "Direction becomes negative", "The UpperBody layer is linked"]
+        answer_index: 1
+        explain: "A character in the air is falling in the sense of the movement system. IsFalling becoming true is the signal to go to JumpStart."
+      - q: "What do you add to ABP_Locomotion so that another Animation Blueprint can supply the upper body?"
+        choices: ["A second state machine with four more states", "A Timeline with a float track", "A Data Table with one row for each bone", "An Animation Layer Interface with a layer named UpperBody"]
+        answer_index: 3
+        explain: "The interface defines the layer. The layer node sits after the state machine in the AnimGraph and passes the pose to whatever Animation Blueprint is linked."
+      - q: "What does the Layered Blend per Bone node in ABP_Locomotion_Upper do?"
+        choices: ["It blends the walk into the run by Speed", "It removes the legs from the pose", "It blends an upper body animation over the input pose", "It plays the jump animations in order"]
+        answer_index: 2
+        explain: "The node blends a second animation in only from a chosen bone upward. Starting from the spine, the legs keep the locomotion and the upper body shows the new animation."
+      - q: "How is the upper body Animation Blueprint activated in the game?"
+        choices: ["With Link Anim Class Layers when a key is pressed", "With Play Montage on BeginPlay", "With Set Actor Transform on Tick", "With Get Data Table Row in the AnimGraph"]
+        answer_index: 0
+        explain: "Link Anim Class Layers connects ABP_Locomotion_Upper to the UpperBody layer of the running Animation Blueprint. The layer then uses the linked graph."
+      - q: "Your new state machine never plays on the character. What do you check first in BP_ThirdPersonCharacter?"
+        choices: ["That the camera boom is long enough", "That the Anim Class of the Mesh is set to ABP_Locomotion", "That the capsule has collision", "That the character has a Health variable"]
+        answer_index: 1
+        explain: "The Mesh plays the Animation Blueprint named in Anim Class. Until you set it to ABP_Locomotion, the character keeps using the old one."
     flavors:
       _default: {why: "A complete locomotion set is the core portfolio piece for any game animator."}
       animation: {why: "This is the AnimBP you will be asked to build in a studio test.", do: "Add a Stop state with a foot-plant animation chosen by which foot is forward."}
@@ -1688,7 +1784,55 @@ quests:
     done_when: "Send the text of README_Kit.md, a screenshot of the kit folder in the Content Browser, the short video clip, the before and after screenshots of the three fixes, and your written notes from the test. A mentor reviews your work."
     xp: 400
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a kit in this quest?"
+        choices: ["A plugin that adds new bones to the Mannequin", "A folder that holds everything another person needs to animate a character", "A level with lights and a camera for testing animations", "A list of the animations that a game needs"]
+        answer_index: 1
+        explain: "The kit holds the mesh, the skeleton, the rig, the retargeter and a set of animations, with a short guide. Someone else can take the folder and start animating."
+      - q: "What is the real test of a kit?"
+        choices: ["It has more than 100 animations", "It opens faster than the Mannequin", "It uses the newest engine version", "Someone can use it with only the guide"]
+        answer_index: 3
+        explain: "A kit is made for other people. If a person needs you to explain it, the kit or its guide is not finished."
+      - q: "Which kind of rig is CR_Kit_Character, and what does it need?"
+        choices: ["A Modular Control Rig, which needs the Control Rig Modules plugin", "An IK Retargeter, which needs the Water plugin", "A blend space, which needs a Speed axis", "A Level Sequence, which needs a Camera Cuts track"]
+        answer_index: 0
+        explain: "A Modular Control Rig is built from ready-made parts called modules. You enable the Control Rig Modules plugin to build one."
+      - q: "What must the Modular Control Rig contain besides the standard modules?"
+        choices: ["A copy of the Mannequin mesh", "A Data Table with bone names", "At least one custom module you made yourself", "A second skeleton"]
+        answer_index: 2
+        explain: "Using ready-made modules shows that you can assemble a rig. Your own module shows that you can also extend the system."
+      - q: "What is RTG_MannequinToKit used for?"
+        choices: ["It renders the kit character to image files", "It retargets Mannequin animations to the kit character", "It turns the kit character into a Static Mesh", "It records new animations from the keyboard"]
+        answer_index: 1
+        explain: "RTG_MannequinToKit is the retargeter of the kit. Together with the IK Rig IKR_Kit_Character, it copies Mannequin animations to your character."
+      - q: "How many Mannequin animations do you retarget in one batch, and what do they include?"
+        choices: ["Exactly 2: one idle and one walk", "Exactly 5: all of them jump animations", "At least 100: every animation of the engine", "At least 12, including idle, walk, run, jump and two montages"]
+        answer_index: 3
+        explain: "The set must be large enough to be useful. The new files get a clear suffix, so nobody mixes them up with the Mannequin originals."
+      - q: "How do you fix the three worst retarget problems?"
+        choices: ["With ops, such as the retarget pose, Pin Bones or the FK Chains modes", "By deleting the animations that look wrong", "By scaling the character in the level", "By renaming the bones of the Mannequin"]
+        answer_index: 0
+        explain: "These are the tools of the retargeter for correcting the result. You take a screenshot before and after each fix to show what changed."
+      - q: "Which rule applies to the folder Content/Kits/<CharacterName>?"
+        choices: ["It may only contain animations and no meshes", "It must be renamed after every test", "Nothing in it may use assets from outside the folder, except engine assets", "It must contain a copy of the whole project"]
+        answer_index: 2
+        explain: "A kit that depends on files outside its folder breaks when it is copied. Engine assets are fine, because every project has them."
+      - q: "What does README_Kit.md explain?"
+        choices: ["How you learned to rig and which tutorials you watched", "How to open the rig, how to retarget more animations, and the known limits", "How to install Unreal Engine", "How to model a character in another program"]
+        answer_index: 1
+        explain: "The README covers the tasks a user will have. One screenshot for each step makes it possible to follow without help."
+      - q: "How do you copy the kit into a new empty project for the test?"
+        choices: ["Drag the folder onto the desktop", "Package the project and unpack it again", "Export each asset as an FBX file", "Right-click the folder and choose Migrate"]
+        answer_index: 3
+        explain: "Migrate copies the folder into another project. In an empty project, anything the kit still needs from outside shows up as missing."
+      - q: "What does the tester do with the kit, using only your README?"
+        choices: ["They play one retargeted animation and key one pose on the rig", "They build a new rig from an empty asset", "They rewrite the README in their own words", "They retarget all animations of the engine"]
+        answer_index: 0
+        explain: "The two tasks cover both halves of the kit: the animations and the rig. If the tester manages both with only the README, the kit works."
+      - q: "What do you write down after the test?"
+        choices: ["The number of bones in the skeleton", "The time the migration took", "What was unclear or missing", "The names of all files in the folder"]
+        answer_index: 2
+        explain: "The test is there to find gaps. Your notes on what was unclear or missing are part of the proof and the base for the next fix."
     flavors:
       _default: {why: "A rig and an animation set that another person can use without you is the proof of a master animator."}
       animation: {why: "This is your portfolio piece. It shows rigging, retargeting and communication in one folder.", do: "Include one Override Set in the retargeter and document when the user should turn it on."}

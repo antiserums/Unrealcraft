@@ -1,0 +1,370 @@
+{
+  "EAQ19": {
+    "new_quiz": [
+      {
+        "q": "A material uses a normal Texture Sample node. What happens to the pattern when you scale the mesh up?",
+        "choices": [
+          "The pattern keeps its size",
+          "The pattern stretches with the mesh",
+          "The pattern disappears",
+          "The pattern turns gray"
+        ],
+        "answer_index": 1,
+        "explain": "A normal Texture Sample follows the UVs of the mesh. When the mesh is scaled, the UVs are scaled too, so the pattern stretches."
+      },
+      {
+        "q": "How does world-aligned texturing place a texture?",
+        "choices": [
+          "It paints the texture by hand on each mesh",
+          "It copies the UVs from another mesh",
+          "It projects the texture from the world, not from the UVs of the mesh",
+          "It bakes the texture into the lighting"
+        ],
+        "answer_index": 2,
+        "explain": "The texture is projected using positions in the world. The UVs of the mesh play no part, so their quality does not matter."
+      },
+      {
+        "q": "You apply a world-aligned material to three cubes of different sizes. What do you see?",
+        "choices": [
+          "The pattern keeps the same size on all of them",
+          "The pattern is largest on the smallest cube",
+          "The pattern shows only on the largest cube",
+          "The pattern has a different color on each cube"
+        ],
+        "answer_index": 0,
+        "explain": "Because the texture is measured in world space, one tile has the same size everywhere. Scaling a mesh does not change it."
+      },
+      {
+        "q": "Which node projects a texture from the world in this quest?",
+        "choices": [
+          "Texture Sample",
+          "Landscape Layer Blend",
+          "Constant3Vector",
+          "WorldAlignedTexture"
+        ],
+        "answer_index": 3,
+        "explain": "WorldAlignedTexture is the node that does the world projection. A normal Texture Sample node follows the UVs."
+      },
+      {
+        "q": "How do you give your texture to the WorldAlignedTexture node?",
+        "choices": [
+          "Connect a Texture Object node to its TextureObject input",
+          "Connect a Constant node to its Base Color input",
+          "Type the name of the texture in its title",
+          "Drag the texture onto the mesh in the level"
+        ],
+        "answer_index": 0,
+        "explain": "The node needs the texture itself, not a sampled color. A Texture Object node holds the texture and connects to the TextureObject input."
+      },
+      {
+        "q": "Which output of the WorldAlignedTexture node do you connect to Base Color?",
+        "choices": [
+          "TextureObject",
+          "Roughness",
+          "XYZ Texture",
+          "Emissive Color"
+        ],
+        "answer_index": 2,
+        "explain": "XYZ Texture is the result of the projection from all three axes. It covers every side of the mesh."
+      },
+      {
+        "q": "When is world-aligned texturing most useful?",
+        "choices": [
+          "On characters that are animated",
+          "On blockout meshes whose UVs are not good enough yet",
+          "On meshes that never get a texture",
+          "On the sky of a level"
+        ],
+        "answer_index": 1,
+        "explain": "Blockout meshes are simple shapes for planning a level, and you scale them all the time. World-aligned texturing gives them a clean pattern with no UV work."
+      },
+      {
+        "q": "What happens to a world-aligned pattern when you move the mesh through the level?",
+        "choices": [
+          "The pattern is deleted",
+          "The pattern moves with the mesh",
+          "The pattern becomes larger",
+          "The pattern stays fixed in the world, so it slides over the mesh"
+        ],
+        "answer_index": 3,
+        "explain": "The pattern belongs to the world and not to the mesh. That is fine for static blockout meshes, but it looks wrong on things that move."
+      }
+    ]
+  },
+  "EAQ20": {
+    "new_quiz": [
+      {
+        "q": "What can a landscape material do with grass?",
+        "choices": [
+          "Place grass meshes on every spot where one paint layer is painted",
+          "Draw grass as a flat color on the ground",
+          "Turn every mesh in the level into grass",
+          "Import grass meshes from Fab by itself"
+        ],
+        "answer_index": 0,
+        "explain": "The material can output grass for a paint layer. Wherever that layer is painted, the landscape places grass meshes."
+      },
+      {
+        "q": "Why let the landscape material place the grass?",
+        "choices": [
+          "Grass placed by hand cannot be seen in the game",
+          "Grass placed by hand has no collision",
+          "Placing grass by hand over a large landscape takes a long time",
+          "Placing grass by hand needs a plugin"
+        ],
+        "answer_index": 2,
+        "explain": "A landscape can be very large. Grass that follows a painted layer saves the work of placing it by hand."
+      },
+      {
+        "q": "How do you create a Landscape Grass Type asset?",
+        "choices": [
+          "Open Landscape Mode and choose New on the Manage tab",
+          "Right-click in the Content Browser, open Foliage and choose Landscape Grass Type",
+          "Open Edit, then Plugins, and enable Landscape Grass Type",
+          "Right-click in the Content Browser, open Miscellaneous and choose Data Asset"
+        ],
+        "answer_index": 1,
+        "explain": "Landscape Grass Type is in the Foliage group of the Content Browser menu. You then add a small mesh to the asset."
+      },
+      {
+        "q": "Which node in the landscape material sends grass to the landscape?",
+        "choices": [
+          "Landscape Layer Blend",
+          "WorldAlignedTexture",
+          "Texture Sample",
+          "Landscape Grass Output"
+        ],
+        "answer_index": 3,
+        "explain": "The Landscape Grass Output node is where the material tells the landscape which grass to place and where."
+      },
+      {
+        "q": "Where do you pick your Landscape Grass Type asset on the Landscape Grass Output node?",
+        "choices": [
+          "In the title of the node",
+          "In the Parameter Name of the node",
+          "Under Grass Types in the Details panel of the node",
+          "In the Stats panel of the Material Editor"
+        ],
+        "answer_index": 2,
+        "explain": "You select the node, add one element under Grass Types, and pick the asset there. The node then gets an input for that grass type."
+      },
+      {
+        "q": "What does the Landscape Layer Sample node give to the grass type input?",
+        "choices": [
+          "The painted amount of one paint layer",
+          "The height of the landscape",
+          "The color of the grass mesh",
+          "The number of grass meshes"
+        ],
+        "answer_index": 0,
+        "explain": "The node reads how much of the named layer is painted at each spot. Connected to the grass type, it makes that layer control where the grass appears."
+      },
+      {
+        "q": "You painted the layer, but no grass appears. What do you check first on the Landscape Layer Sample node?",
+        "choices": [
+          "That it is connected to Base Color",
+          "That its Parameter Name is the name of the paint layer",
+          "That it has a texture assigned",
+          "That it is placed left of all other nodes"
+        ],
+        "answer_index": 1,
+        "explain": "The node finds the layer by its name. If Parameter Name does not match the layer you paint, it reads nothing and no grass is placed."
+      },
+      {
+        "q": "How do you confirm that the setup works?",
+        "choices": [
+          "Grass appears on the whole landscape",
+          "Grass appears only in the Material Editor preview",
+          "Grass appears only after you press Play",
+          "Grass appears only in the places where you painted the layer"
+        ],
+        "answer_index": 3,
+        "explain": "The grass must follow your painting. If it shows only where the layer is painted, the layer is driving the grass."
+      }
+    ]
+  },
+  "EAQ21": {
+    "new_quiz": [
+      {
+        "q": "What is an emissive material?",
+        "choices": [
+          "A material that is transparent",
+          "A material that reflects like a mirror",
+          "A material that glows",
+          "A material that is projected onto surfaces"
+        ],
+        "answer_index": 2,
+        "explain": "An emissive material gives off light of its own, like a screen, a sign or a lamp."
+      },
+      {
+        "q": "What is Lumen?",
+        "choices": [
+          "The lighting system in Unreal Engine 5 that calculates bounced light",
+          "The unit in which Unreal measures color temperature",
+          "The editor where you build materials",
+          "A plugin that adds lakes and rivers"
+        ],
+        "answer_index": 0,
+        "explain": "Lumen calculates how light bounces between surfaces. This is what lets a glowing surface add light to the scene."
+      },
+      {
+        "q": "What can a glowing surface do when Lumen is on?",
+        "choices": [
+          "It can replace the Post Process Volume",
+          "It can cast sharp shadows like the sun",
+          "It can turn off the other lights",
+          "It can light the things near it"
+        ],
+        "answer_index": 3,
+        "explain": "Lumen treats the glow as light that bounces into the scene. Surfaces near the screen pick up its color."
+      },
+      {
+        "q": "How do you build the glow in the material?",
+        "choices": [
+          "Connect a color to Roughness",
+          "Multiply a color or a texture by the Scalar Parameter Intensity and connect the result to Emissive Color",
+          "Set the Material Domain to Deferred Decal",
+          "Connect the Scalar Parameter Intensity to Metallic"
+        ],
+        "answer_index": 1,
+        "explain": "The color or texture decides what glows, and Intensity decides how strong the glow is. Their product goes into Emissive Color."
+      },
+      {
+        "q": "Why do you make a Material Instance of the emissive material?",
+        "choices": [
+          "So you can change how strong the glow is",
+          "So Lumen is turned on",
+          "So the material becomes a light actor",
+          "So the screen gets collision"
+        ],
+        "answer_index": 0,
+        "explain": "Intensity is a parameter, so an instance can change it quickly. You try the values 1, 10 and 50 and compare the results."
+      },
+      {
+        "q": "Why do you test the glow in a dark place, such as a closed room?",
+        "choices": [
+          "Emissive materials do not work outdoors",
+          "Lumen is turned off in bright levels",
+          "The glow is easy to see there",
+          "Dark rooms need no material"
+        ],
+        "answer_index": 2,
+        "explain": "In a bright level the sun hides the small amount of light from the screen. In a dark room you see clearly what the glow adds."
+      },
+      {
+        "q": "What happens when you raise Intensity from 1 to 50?",
+        "choices": [
+          "The glow changes its color to white only on the edges",
+          "The surface becomes transparent",
+          "The glow stays the same, but the room gets darker",
+          "The glow becomes much stronger and lights the nearby surfaces more"
+        ],
+        "answer_index": 3,
+        "explain": "Intensity multiplies the emissive color. A higher value sends more light into the scene."
+      },
+      {
+        "q": "When do you still need a real light next to an emissive surface?",
+        "choices": [
+          "When the material has a parameter",
+          "When the glow does not give enough light for the scene",
+          "When the room has more than four walls",
+          "When Lumen is turned on"
+        ],
+        "answer_index": 1,
+        "explain": "A glowing surface does not always light its surroundings well enough. A real light then gives the light that the glow alone cannot."
+      }
+    ]
+  },
+  "EAQ24": {
+    "new_quiz": [
+      {
+        "q": "Why do you walk through the scene at eye level?",
+        "choices": [
+          "It makes the scene render faster",
+          "It shows problems that a still render hides",
+          "It creates the Material Instances",
+          "It paints the landscape layers"
+        ],
+        "answer_index": 1,
+        "explain": "Walking shows gaps, stretched textures and places where you get stuck. A single still picture can hide all of these."
+      },
+      {
+        "q": "Which three things make the scene walkable?",
+        "choices": [
+          "A Sky Light, a Directional Light and Height Fog",
+          "A Cine Camera, a bookmark and a screenshot",
+          "A Player Start, collision on the meshes and no dead ends",
+          "A master material, an instance and a decal"
+        ],
+        "answer_index": 2,
+        "explain": "The Player Start puts the player in the scene. Collision keeps the player from walking through meshes, and a scene without dead ends can be walked all the way."
+      },
+      {
+        "q": "In Play In Editor you walk straight through a rock. What do you check first?",
+        "choices": [
+          "That the rock mesh has collision",
+          "That the rock uses a Material Instance",
+          "That the rock has a decal",
+          "That the rock is on the landscape"
+        ],
+        "answer_index": 0,
+        "explain": "Without collision, a mesh is only a picture and nothing stops the player. The mesh needs collision to be solid."
+      },
+      {
+        "q": "Which parameters does M_Master_Surface have?",
+        "choices": [
+          "Sun angle, fog color and exposure",
+          "Width, height and depth",
+          "Speed, health and score",
+          "Color, roughness, a texture and tiling"
+        ],
+        "answer_index": 3,
+        "explain": "These four parameters are enough to make many different surfaces from one graph. Each instance sets its own values."
+      },
+      {
+        "q": "How do at least 5 surfaces in the scene get their different looks?",
+        "choices": [
+          "Each surface uses its own new material graph",
+          "Each surface uses an instance of the one master material",
+          "Each surface is painted in another program",
+          "Each surface uses a different landscape"
+        ],
+        "answer_index": 1,
+        "explain": "The instances share one graph and differ only in their parameter values. The scene stays easy to manage, because there is only one material to maintain."
+      },
+      {
+        "q": "What does the landscape material of the scene need?",
+        "choices": [
+          "3 layers and a Landscape Layer Blend node",
+          "3 lights and a Sky Atmosphere",
+          "1 layer and a WorldAlignedTexture node",
+          "5 instances and a decal"
+        ],
+        "answer_index": 0,
+        "explain": "The Landscape Layer Blend node mixes the 3 layers based on where you paint. You then paint the layers on the landscape."
+      },
+      {
+        "q": "What must each of the 3 decals in the scene have?",
+        "choices": [
+          "A light of its own",
+          "A collision box",
+          "A name that starts with MI_",
+          "A purpose, such as a stain under a pipe or an arrow toward the path"
+        ],
+        "answer_index": 3,
+        "explain": "A decal should tell something about the place or guide the player. Decals placed without a reason only add noise."
+      },
+      {
+        "q": "What does your short note about the master material say?",
+        "choices": [
+          "How long the scene took to build",
+          "Which plugins the project uses",
+          "Which parameters it has and what each one is for",
+          "Where the textures were downloaded"
+        ],
+        "answer_index": 2,
+        "explain": "The note lists the parameters and explains each one. Someone else can then make new instances without reading the graph."
+      }
+    ]
+  }
+}

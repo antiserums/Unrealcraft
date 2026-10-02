@@ -463,7 +463,31 @@ quests:
     done_when: "Send these four things: the short video clip, a photo of your paper node map, a screenshot of the tuning variable in the Details panel, and your 5-line note. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a toy space?"
+        choices: ["A level full of finished art and no gameplay", "A folder for unused Blueprints", "A menu where the player picks a level", "The smallest thing that is still a game"]
+        answer_index: 3
+        explain: "A toy space has one action for the player, one room, and one number on screen. It is small enough to finish and still a real game."
+      - q: "What is a player verb?"
+        choices: ["One action the player does, such as jump or collect", "The name of the player character", "A text shown on the screen", "A variable that stores the score"]
+        answer_index: 0
+        explain: "A verb is an action such as jump, dash, collect or push. You pick one, and every space in the room must use it."
+      - q: "What does it mean to graybox a room?"
+        choices: ["To light it with gray lights only", "To hide it from the player", "To build it with basic shapes only and no art", "To copy it from another project"]
+        answer_index: 2
+        explain: "A graybox uses simple shapes. You can test and change the room quickly, because no art has to be redone."
+      - q: "How do you make the Float variable of your BP_Toy_ actor Instance Editable?"
+        choices: ["Rename it so that it starts with BP_", "Click the eye icon next to the variable", "Set its Category to Tuning", "Add a Tooltip to it"]
+        answer_index: 1
+        explain: "The eye icon next to a variable turns on Instance Editable. The value can then be tuned on each placed copy in the Details panel."
+      - q: "Which of these is a flow control node?"
+        choices: ["Branch", "Print String", "Add to Viewport", "Get Actor Location"]
+        answer_index: 0
+        explain: "Flow control nodes decide which path the execution takes. Branch, Gate, DoOnce and FlipFlop are flow control nodes."
+      - q: "Where do you tune the speed or the jump of the character for your room?"
+        choices: ["In the World Settings of the level", "In the Widget Blueprint of the score", "In the Play options of the main toolbar", "On the Character Movement component of BP_ThirdPersonCharacter"]
+        answer_index: 3
+        explain: "The Character Movement component holds the movement values of the character. Changing them there fits the character to the size of your room."
     flavors:
       _default: {why: "One verb, one room, one number: the smallest thing that is still a game."}
       gameplay_design: {why: "This is the loop you will repeat for every mechanic in your career.", do: "Bring two tuning values you tried and rejected, and say why."}
@@ -812,7 +836,39 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) that shows a win or a loss with the HUD updating, a screenshot of the other result, and a screenshot of DT_Tuning open. Add your 5-line loop note and your 1-line tuning note. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a core loop?"
+        choices: ["A Timeline that plays without end", "The first level of a game", "The short cycle of actions that the player repeats", "The event that runs on every frame"]
+        answer_index: 2
+        explain: "The core loop is what the player does again and again: reach a goal, face a threat, get a reward, and win or lose."
+      - q: "Which five things do you write down for your loop?"
+        choices: ["The goal, the threat, the reward, the fail state and the win state", "The level, the light, the sound, the camera and the menu", "The mesh, the material, the texture, the rig and the animation", "The title, the genre, the price, the platform and the date"]
+        answer_index: 0
+        explain: "These five lines describe the whole loop. If one of them is missing, the game has no tension or no end."
+      - q: "How does damage lower health in this quest?"
+        choices: ["The Data Table lowers the health on every frame", "The widget lowers the health when it is drawn", "The Game Mode lowers the health of all actors each second", "Apply Damage sends the damage, and Event AnyDamage on the hit actor lowers its health"]
+        answer_index: 3
+        explain: "Apply Damage only sends an amount of damage to an actor. That actor reacts in Event AnyDamage, where both the player and the enemy lower their Health."
+      - q: "How do the Blueprints get their tuning numbers?"
+        choices: ["They read the numbers from the HUD", "They read the rows of DT_Tuning with Get Data Table Row on Begin Play", "They ask the player to type the numbers", "They copy the numbers from the Output Log"]
+        answer_index: 1
+        explain: "DT_Tuning holds values such as player Health and enemy Speed. Get Data Table Row reads a row, and the Blueprint stores the values when the game starts."
+      - q: "Why do you not type tuning numbers directly into the graphs?"
+        choices: ["Numbers in a graph are not saved", "Numbers in a graph slow down the game", "You can then tune the game from one table", "Graphs can only hold whole numbers"]
+        answer_index: 2
+        explain: "With all numbers in one table, tuning is fast and safe. You change a row, play again, and compare how the game feels."
+      - q: "How do you mark the enemies so that your logic can recognize them?"
+        choices: ["Give them Gameplay Tags that start with Character.Enemy and check with a Has Tag node", "Give them a red material and check the color", "Place them in a folder named Enemy in the Outliner", "Make their names longer than the name of the player"]
+        answer_index: 0
+        explain: "A Gameplay Tag is a label with levels, such as Character.Enemy. A Has Tag node tests for the label, so the logic does not depend on a class or a name."
+      - q: "When does BP_CoreGameMode show WIN?"
+        choices: ["When the player Health <= 0", "When the score reaches the target", "When the first enemy is spawned", "When the restart input is pressed"]
+        answer_index: 1
+        explain: "The Game Mode keeps track of the score and the lives. It shows WIN when the score reaches the target, and LOSE when the player Health <= 0."
+      - q: "What does WBP_HUD show, and where is it added to the viewport?"
+        choices: ["The frame rate and the memory, added from the Game Mode", "The enemy Speed and enemy Damage, added from the Data Table", "The names of all actors, added from the Level Blueprint", "Health, Score and the score needed to win, added from the Player Controller"]
+        answer_index: 3
+        explain: "The HUD shows the numbers the player needs to follow the loop. The Player Controller creates the widget and adds it to the viewport."
     flavors:
       _default: {why: "A loop with win, lose and numbers you can tune is the smallest real game."}
       gameplay_design: {why: "This is the portfolio piece: a loop you can hand to anyone and tune from a table.", do: "Add a second DT_Tuning row set (Easy and Hard) and pick one in the Game Mode."}
@@ -1263,7 +1319,47 @@ quests:
     done_when: "Send the design document (as text or as an image), a screenshot of DT_MechanicTuning with its 3 rows, the playtest note, and the short video clip or the screenshots. A mentor will check that switching rows changes the feel and that the document matches what is built."
     xp: 300
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a GDD?"
+        choices: ["A debug window for AI characters", "A short written description of a mechanic", "A Data Table with difficulty rows", "A graph that runs the enemy"]
+        answer_index: 1
+        explain: "A game design document describes the goal of a mechanic, its rules, its numbers and how it should feel."
+      - q: "Why do designers hand over a tuned system together with a document?"
+        choices: ["The engine needs the document to compile", "The document replaces the playtest", "The document is shown to the player", "So other people can understand and check the work"]
+        answer_index: 3
+        explain: "A graph shows how something works, but not what it is meant to do. The document gives the intent, so others can check the result against it."
+      - q: "From which systems must your mechanic use at least one?"
+        choices: ["A Behavior Tree enemy, EQS spot picking, a State Tree object, or AI Perception", "Niagara, Chaos, Water, or Landscape", "Sequencer, Movie Render Queue, Control Rig, or Take Recorder", "Lumen, Nanite, Virtual Shadow Maps, or Path Tracing"]
+        answer_index: 0
+        explain: "The quest is about an AI mechanic, for example a guard that hears you, searches for you, and then gives up. Each of the four systems is a way to build AI behavior."
+      - q: "How do you build the enemy for the mechanic?"
+        choices: ["From a Static Mesh with a Timeline", "From a Widget Blueprint with a button", "From a copy of BP_ThirdPersonCharacter with its own AIController Blueprint", "From the Level Blueprint with a Delay node"]
+        answer_index: 2
+        explain: "The copy gives you a working character with mesh and movement. The AIController Blueprint is what controls it in place of a player."
+      - q: "What does the struct S_MechanicTuning hold?"
+        choices: ["The meshes and materials of the enemy", "3 to 5 numbers that change the feel of the mechanic", "The text of the design document", "The names of the playtesters"]
+        answer_index: 1
+        explain: "The struct defines the tuning values of the mechanic. Each row of the Data Table then gives these values for one variant."
+      - q: "Which rows does the Data Table DT_MechanicTuning have?"
+        choices: ["One row for each enemy in the level", "One row for each playtest", "Five rows: Goal, Verb, Rules, Numbers and Feel", "Exactly 3 rows: Easy, Normal and Hard"]
+        answer_index: 3
+        explain: "Each row is one difficulty variant with its own values. Three real variants make you feel what the numbers do."
+      - q: "How do you know that the mechanic is really driven by the Data Table?"
+        choices: ["When you switch the row name, the behavior changes without opening a graph", "The Data Table is the largest asset in the folder", "The graph has no nodes left", "The enemy stops moving when the table is open"]
+        answer_index: 0
+        explain: "The row is read at Begin Play with Get Data Table Row, and its values are passed on. If a new row name gives new behavior with no graph edit, the data is in control."
+      - q: "Where does the mechanic sit in the graybox test space?"
+        choices: ["Behind the player start, out of sight", "Outside the test space", "Between the player and the goal", "On top of the goal, with no way around"]
+        answer_index: 2
+        explain: "The space has one goal, such as reaching a door. With the mechanic between the player and that goal, every run tests it."
+      - q: "What must the one-page design document cover?"
+        choices: ["The full graph, node by node", "The goal, the core verb, the 3 variants, their feel, and how you tested it", "The history of the project and the tools you installed", "Only the values of the Hard variant"]
+        answer_index: 1
+        explain: "The page lets a reader understand the mechanic and compare it with what is built. A mentor checks that the document matches the result."
+      - q: "You work alone and have nobody to playtest. What does the quest ask you to do?"
+        choices: ["Skip the playtest and write the note anyway", "Play only the Easy variant once", "Ask the mentor to play it for you", "Play each variant 3 times and record your time and result"]
+        answer_index: 3
+        explain: "Several recorded runs per variant give you real numbers to compare. You then write what surprised you and what you changed afterwards."
     flavors:
       _default: {why: "A designer ships tuned systems with a doc, not a graph. This is the portfolio piece for this rank."}
       gameplay_design: {why: "Three real variants force you to feel the numbers and to explain your choices.", do: "Add a fourth row you think is bad on purpose and explain why in the doc."}
@@ -1687,7 +1783,55 @@ quests:
     done_when: "Send your work for a mentor review: the text of DESIGNER_GUIDE.md, the short video clip, the screenshots, and your notes on what was unclear when the third variant was added from the guide. The mentor checks that a new variant can be added by following your guide, without touching a Blueprint graph."
     xp: 400
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a data-driven system?"
+        choices: ["A system that downloads its content from the internet", "A system that stores content and numbers in data that the logic only reads", "A system that writes its numbers into the graph", "A system that needs no Blueprint at all"]
+        answer_index: 1
+        explain: "The data lives in Data Assets and Data Tables. The logic stays the same and behaves differently because the data changes."
+      - q: "What can another designer do with a data-driven system?"
+        choices: ["Change the engine source code", "Skip the validation", "Add content and tune the game without opening a graph", "Play the game without a character"]
+        answer_index: 2
+        explain: "New content is a new asset or a new row. The designer never has to read or change the Blueprint logic."
+      - q: "Which systems can you choose from for this quest?"
+        choices: ["A wave spawner, a shop economy, or an ability set", "A lighting setup, a sky, or a fog volume", "A main menu, a pause menu, or a loading screen", "A landscape, a river, or a forest"]
+        answer_index: 0
+        explain: "All three are systems with many entries of the same kind: waves, items or abilities. That makes them a good fit for data."
+      - q: "What does the data layer of the system consist of?"
+        choices: ["A Level Blueprint and a Timeline node", "A Widget Blueprint and a font asset", "A GameMode and a GameState", "A Primary Data Asset class and a Data Table"]
+        answer_index: 3
+        explain: "The Primary Data Asset class describes one piece of content, such as a wave or an item. The Data Table holds the numbers that vary."
+      - q: "What do you give every field of the data?"
+        choices: ["A color and an icon", "A tooltip and a sensible range", "A password and a lock", "A random default value"]
+        answer_index: 1
+        explain: "The tooltip tells a designer what the field does. The range keeps them from entering values that break the system."
+      - q: "Which rule applies to the runtime Blueprint, such as BP_WaveDirector or BP_Shop?"
+        choices: ["It reads only from the data and never from numbers typed into the graph", "It stores a copy of every number in its own variables by hand", "It may only run in the editor", "It must be rebuilt for each new item"]
+        answer_index: 0
+        explain: "One number typed into the graph is one thing a designer cannot tune. With every value read from data, the graph never needs to change."
+      - q: "How does the runtime find and load your data assets?"
+        choices: ["Through the Content Browser, by file name", "Through the Output Log, by line number", "Through the Asset Manager, by Primary Asset Id", "Through the level, by actor label"]
+        answer_index: 2
+        explain: "The Asset Manager knows every asset of a registered type. A new asset of that type is found by its Primary Asset Id, with no new reference in the graph."
+      - q: "What does the validation do on Begin Play?"
+        choices: ["It deletes every asset that has a mistake", "It saves all assets again", "It restarts the level", "It checks every asset and every row for mistakes"]
+        answer_index: 3
+        explain: "Data made by hand has mistakes. The check finds them at the start, before they show up as strange behavior in the game."
+      - q: "What must a validation warning contain to be useful?"
+        choices: ["A clear text that names the asset with the problem", "Only the word Warning", "The full list of all assets", "The time since the game started"]
+        answer_index: 0
+        explain: "The designer must know which asset to open. A warning that names the asset turns a search into a quick fix."
+      - q: "What is not allowed in DESIGNER_GUIDE.md?"
+        choices: ["A list of every field", "Screenshots of graphs", "The safe range of each field", "The exact steps to add new content"]
+        answer_index: 1
+        explain: "The guide is for people who should never need the graph. It lists the fields, what they do, their safe ranges, and the steps to add a new wave, item or ability."
+      - q: "How do you test the guide?"
+        choices: ["You check it for spelling mistakes", "You compare it with the guide of another learner", "A person adds a third variant using only the guide, and you record what was unclear", "You read it once before sending it"]
+        answer_index: 2
+        explain: "Another person does the test, or you follow the guide yourself after one day. Whatever was unclear is fixed in the guide."
+      - q: "What does the mentor check in the end?"
+        choices: ["That the graph has fewer than ten nodes", "That the system has more than ten variants", "That the guide is longer than one page", "That a new variant can be added from your guide without touching a graph"]
+        answer_index: 3
+        explain: "This is the whole promise of a data-driven system. If new content needs a graph change, the system is not data-driven yet."
     flavors:
       _default: {why: "A system that anyone can tune from data is the mark of a senior designer; this is your portfolio proof."}
       gameplay_design: {why: "This is the capstone: data, runtime, validation and a doc that lets others work without you.", do: "Add one hidden field the guide does not mention and see if your tester finds it; then document it."}

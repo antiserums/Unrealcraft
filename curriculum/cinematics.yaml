@@ -443,7 +443,31 @@ quests:
     done_when: "Send one board image with the three stills in order, each with a one-line description, its focal length and its f-stop. Also send one screenshot of the level that shows the three named cameras and your lights. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a shot board?"
+        choices: ["A list of the cameras in a level", "A panel where you edit a sequence", "One page of still images in order that tell a small story", "A light setup with three lamps"]
+        answer_index: 2
+        explain: "A shot board puts a few stills on one page in order. It shows that you can frame, light and focus a shot before anything is animated."
+      - q: "Which three shots do you plan for the board?"
+        choices: ["A wide establishing shot, a medium shot and a close-up", "A top shot, a side shot and a front shot", "A day shot, a night shot and a fog shot", "A fast shot, a slow shot and a still shot"]
+        answer_index: 0
+        explain: "The three shots go from far to near. Together they lead the viewer from the whole place to one detail."
+      - q: "What does the wide establishing shot show?"
+        choices: ["Only the face of the subject", "Only the key light", "The cameras and the lights", "The whole place"]
+        answer_index: 3
+        explain: "An establishing shot tells the viewer where they are. It shows the whole place before the closer shots pick out parts of it."
+      - q: "What is the key light in your lighting pass?"
+        choices: ["The light that fills the shadows", "The main light", "The light from the sky", "The light behind the camera"]
+        answer_index: 1
+        explain: "The key light is the main light of the shot. A fill light or a sky light then softens the shadows it makes."
+      - q: "How do you check the framing of each camera?"
+        choices: ["Switch the view mode to Shader Complexity", "Run stat unit in the console", "Turn on the Cinematic Viewport and use the Grid (3x3) overlay", "Open the Output Log and filter for cameras"]
+        answer_index: 2
+        explain: "The Cinematic Viewport shows the picture the way the camera frames it. The Grid (3x3) overlay draws guide lines that help you place the subject."
+      - q: "What does each still on the board show next to it?"
+        choices: ["Its file size and date", "Its one-line description, focal length and aperture", "Its light count and frame rate", "Its level name and folder"]
+        answer_index: 1
+        explain: "The line says what the viewer should notice. The focal length and the aperture record how the camera was set for that shot."
     flavors:
       _default: {why: "Three stills that tell a small story prove you can frame, light and focus. That is the whole apprentice rank in one piece."}
       cinematics: {why: "Every sequence starts as a board. Learn to sell a shot in a still before you animate it.", do: "Add a fourth still that breaks the 180-degree line on purpose, and explain in one line why it feels wrong."}
@@ -790,7 +814,39 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) of the sequence playing in Play In Editor after you enter the trigger, a screenshot of the Level Blueprint, a screenshot of the Shots track, and a screenshot of the folder that lists the rendered PNG files, together with your 5-line note. A mentor reviews your work."
     xp: 250
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What does the master sequence LS_First need on its Shots track?"
+        choices: ["One shot that is 15 seconds long, with no camera", "At least 2 shots, each with its own Cine Camera", "At least 5 shots that share one camera", "Only audio clips and no shots"]
+        answer_index: 1
+        explain: "A master sequence is built from shots. Here it has at least 2 shots, and each shot has its own Cine Camera."
+      - q: "What is the Camera Cuts track for?"
+        choices: ["It makes the master sequence cut between the cameras", "It trims the animation clip of the character", "It deletes cameras that are not used", "It renders the sequence to image files"]
+        answer_index: 0
+        explain: "The Camera Cuts track decides which camera the viewer looks through at each moment. You place the cut at a clear moment in the action."
+      - q: "The walk animation of the character is longer than the shot. What do you do with the clip?"
+        choices: ["Delete the character from the shot", "Make the master sequence longer than 15 seconds", "Blend or trim the clip so that it fits the shot", "Move the clip to the Camera Cuts track"]
+        answer_index: 2
+        explain: "An Animation clip on the track can be trimmed and blended. You fit the clip to the shot, and the length of the sequence stays as planned."
+      - q: "In the Level Blueprint, what do you call when the player enters the Box Trigger?"
+        choices: ["Go to End and then Stop", "Create Widget and then Add to Viewport", "Open Level and then Play", "Set Playback Position with the value 0 and then Play"]
+        answer_index: 3
+        explain: "Set Playback Position with 0 moves the sequence to its first frame. Play then starts it, so it always runs from the beginning."
+      - q: "How does the F key skip the sequence?"
+        choices: ["It calls Go to End and Stop", "It calls Set Playback Position with the value 0", "It closes the Level Blueprint", "It removes the Camera Cuts track"]
+        answer_index: 0
+        explain: "Go to End jumps to the last frame, and Stop ends the playback. The level is then in the state it has after the cinematic."
+      - q: "Where do you open Movie Render Queue?"
+        choices: ["In Edit, then Editor Preferences, then Keyboard Shortcuts", "In the Show menu of the viewport", "In Window, then Cinematics, then Movie Render Queue", "In the Place Actors panel, under Cinematic"]
+        answer_index: 2
+        explain: "Movie Render Queue is in the Cinematics group of the Window menu. It needs the Movie Render Pipeline plugin to be enabled."
+      - q: "Movie Render Queue is missing from the menu. What do you check first?"
+        choices: ["That the sequence has a Camera Cuts track", "That the Movie Render Pipeline plugin is enabled", "That the level has a Box Trigger", "That the project was packaged"]
+        answer_index: 1
+        explain: "Movie Render Queue comes from the Movie Render Pipeline plugin. Without the plugin, the menu entry does not exist."
+      - q: "You render with a .png Sequence [8bit] export. What do you get in the output folder?"
+        choices: ["One video file for the whole sequence", "One PNG file for each shot", "One text file with the camera settings", "One PNG file for each frame of the sequence"]
+        answer_index: 3
+        explain: "An image sequence saves every frame as its own file. The folder with the numbered PNG files is part of your proof."
     flavors:
       _default: {why: "This is your first complete cinematic pipeline: build, trigger in-game, and render."}
       cinematics: {why: "Every later quest builds on this loop: shots, gameplay hook, render.", do: "Give each shot a Color Tint and meta-data note so a mentor can read the structure quickly."}
@@ -1318,7 +1374,47 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) cut from the scene, a screenshot of the master sequence in Sequencer with the shots expanded, a screenshot of the MRQ settings, and your written breakdown. You can add a link to the full video. A mentor reviews your work."
     xp: 300
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "How is the master sequence LS_Scene_Master built?"
+        choices: ["As one long shot with one camera and no cuts", "As a list of screenshots in a folder", "From at least 3 shots in a Shots track, each its own Level Sequence", "From one Level Sequence for each actor"]
+        answer_index: 2
+        explain: "The master sequence holds the Shots track. Each shot is a separate Level Sequence, so you can work on one shot without touching the others."
+      - q: "What is a Spawnable?"
+        choices: ["An actor that the sequence creates when it plays", "An actor that is placed in the level by hand and never moves", "A camera that follows the player", "A render setting in Movie Render Queue"]
+        answer_index: 0
+        explain: "A Spawnable exists only while its sequence needs it. The level stays clean, and each shot brings its own actors."
+      - q: "Which actors must be Spawnables in this scene?"
+        choices: ["Only the floor and the walls", "Only the Post Process Volume", "Only the sky and the fog", "Characters, cameras and shot lights"]
+        answer_index: 3
+        explain: "These actors belong to the shots and not to the level. As Spawnables, they appear with the shot and are gone when it ends."
+      - q: "Which cameras does the scene need at least?"
+        choices: ["Three static cameras", "One following camera and one static camera", "Two cameras on cranes", "One camera on the character"]
+        answer_index: 1
+        explain: "A following camera uses Look at Tracking, a rail or a crane. A static camera does not move, and the scene needs at least one of each kind."
+      - q: "Where do you place your cuts?"
+        choices: ["On an action", "At random moments", "Every five seconds", "Only at the end of the scene"]
+        answer_index: 0
+        explain: "A cut on an action is hidden by the movement, so the edit feels natural. Cuts at random moments pull the viewer out of the scene."
+      - q: "Why do you use a lighting channel for the hero in at least one shot?"
+        choices: ["So the hero is rendered in a separate file", "So the hero casts no shadows", "So a light can affect the hero without changing the rest of the set", "So the hero is hidden from the camera"]
+        answer_index: 2
+        explain: "Lighting channels decide which lights affect which objects. A light on the channel of the hero shapes the hero and leaves the set as it is."
+      - q: "How do you keep the brightness of the picture from changing by itself between shots?"
+        choices: ["Add more lights to each shot", "Use a longer master sequence", "Disable the Camera Cuts track", "Lock the exposure with Manual metering"]
+        answer_index: 3
+        explain: "With Manual metering the camera does not adapt to bright or dark views. Your lighting decides the brightness of every shot."
+      - q: "How do you grade one single shot differently from the base look of the project?"
+        choices: ["Change the base Post Process Volume during the render", "Add a grade for that shot with a different Priority than the base Post Process Volume", "Paint the colors into the textures", "Render that shot in another project"]
+        answer_index: 1
+        explain: "The base volume holds the look of the whole project. A second grade with a different Priority can take over for one shot."
+      - q: "Which settings does the Movie Render Queue render of this scene use?"
+        choices: ["A PNG sequence and EXR files, a Temporal Sample Count of at least 4, and TAA disabled", "One MP4 file, a Temporal Sample Count of 1, and TAA enabled", "A JPG sequence only, with no anti-aliasing at all", "One screenshot per shot, taken from the viewport"]
+        answer_index: 0
+        explain: "The temporal samples do the smoothing, so TAA is turned off. You save these settings as a preset named MRQ_Scene."
+      - q: "What does your half-page breakdown contain?"
+        choices: ["The names of all assets in the Content Browser", "The full text of the documentation pages you read", "The shot list, what each camera does, what the grade does, and your render settings", "The time each render took, frame by frame"]
+        answer_index: 2
+        explain: "The breakdown explains your choices. A reviewer can read from it why each shot, camera move and grade is there."
     flavors:
       _default: {why: "This is the piece that shows you can take a scene from empty level to graded final frames."}
       cinematics: {why: "A finished scene with picture, light, grade and render is your first reel piece.", do: "Add a one-line director's note per shot in the breakdown."}
@@ -1750,7 +1846,55 @@ quests:
     done_when: "Send a screenshot of the ShotKit folder tree, the text of the README, a short video clip (30 seconds or less) of the rendered demo with the preview and one final shot, and your notes from the README test. A mentor reviews your work."
     xp: 400
     verify_type: mentor
-    quiz: []
+    quiz:
+      - q: "What is a shot kit?"
+        choices: ["A folder of ready-made cameras, rigs and render presets", "A list of the shots in one sequence", "A plugin that renders a sequence faster", "A level that contains one finished cinematic"]
+        answer_index: 0
+        explain: "A shot kit is a reusable toolbox. People take cameras, rigs and presets from it and do not build them again for each project."
+      - q: "Which subfolders does Content/ShotKit have?"
+        choices: ["Meshes, Materials, Textures and Maps", "Shots, Takes, Edits and Renders", "Cameras, Rigs, Presets and Docs", "Blueprints, Widgets, Data and Audio"]
+        answer_index: 2
+        explain: "Each kind of kit item has its own folder. A clear folder tree is the first thing a new user sees."
+      - q: "What is a Camera Animation Sequence?"
+        choices: ["A Level Sequence that contains a whole scene", "A reusable camera move", "A render preset for cameras", "A camera that follows a character by itself"]
+        answer_index: 1
+        explain: "A Camera Animation Sequence stores one camera move as an asset. The same move can then be used on cameras in many shots."
+      - q: "How do you create a Camera Animation Sequence?"
+        choices: ["In the Place Actors panel, under Cinematic", "In Movie Render Queue, under Settings", "In the Details panel of a Cine Camera", "In the Content Browser, with Animation, then Camera Animation Sequence"]
+        answer_index: 3
+        explain: "The asset is in the Animation group of the Content Browser menu. You make three: CAS_PushIn, CAS_Handheld and CAS_Orbit."
+      - q: "Why do you set the Blend Type of CAS_Handheld to Additive?"
+        choices: ["So that it can be layered on any camera, on top of another move", "So that it replaces every other camera move", "So that it renders with more samples", "So that it is saved in the Rigs folder"]
+        answer_index: 0
+        explain: "An additive move is added to what the camera already does. The handheld shake can then sit on a rail move, for example."
+      - q: "What are BP_RigRail and BP_RigCrane?"
+        choices: ["Two render presets for Movie Render Queue", "Two Camera Animation Sequences", "Two reusable rig Blueprints, each with a Cine Camera", "Two Level Sequences with three shots each"]
+        answer_index: 2
+        explain: "Each Blueprint packs a rig and its Cine Camera into one asset. A user drops it into a level and has a working rail or crane shot."
+      - q: "Why do you expose the useful values of the rig Blueprints as variables?"
+        choices: ["So the rigs render faster", "So other people can adjust the rig without its graph", "So the rigs cannot be changed", "So the rigs are saved as presets"]
+        answer_index: 1
+        explain: "Exposed variables appear in the Details panel. That makes the rig safe and quick to adjust for people who did not build it."
+      - q: "Which settings does the preset MPC_Preview use?"
+        choices: ["EXR, Temporal 8 and Burn In", "EXR, 16 spatial samples and double resolution", "A video file with sound", "PNG, 1 and 1 samples, and half resolution"]
+        answer_index: 3
+        explain: "The preview preset is made to be fast. MPC_Final is the slow, clean one, with EXR, tone curve off, Spatial 1, Temporal 8, AA None and Burn In."
+      - q: "What is the Shot config MPS_HeroDoF for?"
+        choices: ["For a shot that needs more spatial samples", "For a shot that needs no camera", "For a shot that is rendered at half resolution", "For a shot that is left out of the render"]
+        answer_index: 0
+        explain: "A Shot config changes the render settings for single shots. A hero shot with strong depth of field gets more spatial samples, and the other shots stay fast."
+      - q: "Through which track do you use a Camera Animation Sequence in a shot of SEQ_KitDemo?"
+        choices: ["The Camera Cuts track", "The Audio track", "The Template Sequence track", "The Fade track"]
+        answer_index: 2
+        explain: "A Camera Animation Sequence is a kind of template sequence. The Template Sequence track applies its move to the camera of the shot."
+      - q: "Which of these does the README of the kit have to give for each render preset?"
+        choices: ["The name of the person who made it", "When to use it, and the expected seconds per frame on your machine", "The full list of engine render settings", "The date of the last render"]
+        answer_index: 1
+        explain: "A user must know which preset fits which job and how long it will take. The README also explains each asset, how to add it to a shot, and the naming rule for shots and takes."
+      - q: "How do you test the README?"
+        choices: ["You count its words and its headings", "You render the demo a second time", "You read it aloud once to yourself", "Someone follows it and builds one new shot without your help"]
+        answer_index: 3
+        explain: "The README passes when a shot gets built from it alone. You write down what was unclear and fix the README."
     flavors:
       _default: {why: "A kit that others can use without you is the real proof of mastery."}
       cinematics: {why: "Studios run on templates and presets. This kit is your reusable toolbox for every future project.", do: "Add a fourth Camera Animation Sequence for a whip pan and document its Property Multipliers."}

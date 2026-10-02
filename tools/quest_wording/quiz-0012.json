@@ -1,0 +1,572 @@
+{
+  "AQ4": {
+    "new_quiz": [
+      {
+        "q": "What does retargeting an animation mean?",
+        "choices": [
+          "Changing the speed at which an animation plays",
+          "Copying an animation to another character that has a different skeleton",
+          "Recording an animation to a video file",
+          "Moving an animation asset to another folder"
+        ],
+        "answer_index": 1,
+        "explain": "Retargeting copies the motion from one skeleton to a different one. It lets you reuse animations and saves a lot of work."
+      },
+      {
+        "q": "What is a skeleton in this context?",
+        "choices": [
+          "The set of bones of a character",
+          "The collision shape of a character",
+          "The list of animations of a character",
+          "The material of a character"
+        ],
+        "answer_index": 0,
+        "explain": "A skeleton is the set of bones that an animation moves. Two characters with different bones need retargeting to share an animation."
+      },
+      {
+        "q": "What is the job of an IK Rig asset in retargeting?",
+        "choices": [
+          "It stores the new animation",
+          "It renders the two characters side by side",
+          "It imports a character from Fab",
+          "It describes one skeleton"
+        ],
+        "answer_index": 3,
+        "explain": "Each character gets an IK Rig asset that describes its skeleton. The retarget needs one for the source and one for the target."
+      },
+      {
+        "q": "What is the job of the IK Retargeter asset?",
+        "choices": [
+          "It deletes bones that are not used",
+          "It adds controls to the hands and feet",
+          "It maps one skeleton to the other",
+          "It turns a Skeletal Mesh into a Static Mesh"
+        ],
+        "answer_index": 2,
+        "explain": "The IK Retargeter connects the IK Rig of the source to the IK Rig of the target. With that mapping, motion can be copied from one to the other."
+      },
+      {
+        "q": "Why do you add a free character from Fab for this quest?",
+        "choices": [
+          "The template has only one skeleton, and you need a second, different one",
+          "The template character has no animations",
+          "Fab characters are the only ones that can be animated",
+          "The template character cannot be opened in the editor"
+        ],
+        "answer_index": 0,
+        "explain": "Retargeting needs two different skeletons. The mannequins of the template share one skeleton, so the second character must come from somewhere else."
+      },
+      {
+        "q": "How do you open the Retarget Animations window?",
+        "choices": [
+          "Open Window, then Output Log",
+          "Right-click the source animation in the Content Browser and choose Retarget Animations",
+          "Drag the animation into the level",
+          "Open Edit, then Plugins, and search for Retarget"
+        ],
+        "answer_index": 1,
+        "explain": "The command is in the right-click menu of the animation asset. The window that opens holds all settings for the retarget."
+      },
+      {
+        "q": "What do you set Target Preview Mesh to?",
+        "choices": [
+          "The Skeletal Mesh of the template character",
+          "The source animation",
+          "The folder for the new animation",
+          "The Skeletal Mesh of the second character"
+        ],
+        "answer_index": 3,
+        "explain": "The target is the character that should receive the animation. Its Skeletal Mesh tells Unreal which skeleton to retarget to."
+      },
+      {
+        "q": "What happens when you leave Auto Generate Retargeter turned on?",
+        "choices": [
+          "Unreal deletes the source animation after the export",
+          "Unreal exports every animation of the project",
+          "Unreal sets up the retarget for you",
+          "Unreal locks the target character"
+        ],
+        "answer_index": 2,
+        "explain": "With this option on, Unreal creates the needed rigs and the retargeter by itself. You do not have to build them by hand first."
+      },
+      {
+        "q": "What does Export Animations do in the Retarget Animations window?",
+        "choices": [
+          "It saves the retargeted animation as a new asset in the folder you pick",
+          "It sends the animation to Fab",
+          "It saves the IK Rig assets and the IK Retargeter asset",
+          "It records the preview as a video"
+        ],
+        "answer_index": 0,
+        "explain": "You select your animation in the list and click Export Animations. A new animation for the target character is saved in the folder you choose."
+      },
+      {
+        "q": "You want to fix the feet in the result by editing the retarget setup. What do you click first?",
+        "choices": [
+          "Export Animations, to save the animation again",
+          "Export Retarget Assets, to save the generated IK Rig assets and IK Retargeter asset",
+          "Auto Generate Retargeter, to turn it off",
+          "Target Preview Mesh, to pick another mesh"
+        ],
+        "answer_index": 1,
+        "explain": "The generated assets only exist inside the window until you export them. After Export Retarget Assets you can open them and fix problems in the feet, the hands or the root."
+      }
+    ]
+  },
+  "AQ5": {
+    "new_quiz": [
+      {
+        "q": "What is a Control Rig?",
+        "choices": [
+          "An asset that stores the textures of a character",
+          "A camera that follows a character",
+          "An asset that lets you move the bones of a character with controls, inside Unreal",
+          "A plugin that imports characters from other programs"
+        ],
+        "answer_index": 2,
+        "explain": "A Control Rig gives a character handles called controls. Animators pose and animate with them directly in Unreal, without another 3D program."
+      },
+      {
+        "q": "How do you create a Control Rig for the template character?",
+        "choices": [
+          "Right-click its Skeletal Mesh and choose Create, then Control Rig",
+          "Drag its Skeletal Mesh into the level and press F9",
+          "Open its Animation Blueprint and add a Slot node",
+          "Click Add, then Animation, then Blend Space"
+        ],
+        "answer_index": 0,
+        "explain": "The Skeletal Mesh of the template has a name that starts with SKM_. Its right-click menu has Create, then Control Rig."
+      },
+      {
+        "q": "How do you add a control for the upper arm bone?",
+        "choices": [
+          "In the Rig Graph, press the E key on the bone",
+          "In the Content Browser, duplicate the bone",
+          "In the viewport, hold Alt and drag the bone",
+          "In the Rig Hierarchy tab, right-click the bone and choose New Element, then New Control"
+        ],
+        "answer_index": 3,
+        "explain": "The Rig Hierarchy tab lists the bones. New Element, then New Control creates a control at the selected bone."
+      },
+      {
+        "q": "What does pressing Shift+P on a selected control do?",
+        "choices": [
+          "It deletes the control",
+          "It unparents the control from the bones",
+          "It makes a copy of the control",
+          "It compiles the Control Rig"
+        ],
+        "answer_index": 1,
+        "explain": "A new control is created under the bone you clicked. Shift+P unparents it, so the control is no longer a child of the bones it should drive."
+      },
+      {
+        "q": "Which two nodes do you create in the Rig Graph for each control and its bone?",
+        "choices": [
+          "Play Montage and On Completed",
+          "Create Widget and Add to Viewport",
+          "Get Control and Set Bone",
+          "Get Actor Location and Set Actor Transform"
+        ],
+        "answer_index": 2,
+        "explain": "Dragging the control into the graph gives Get Control. Dragging the bone gives Set Bone. Together they copy the control to the bone."
+      },
+      {
+        "q": "How do you connect the Get Control node to the Set Bone node?",
+        "choices": [
+          "The Transform pin of the Get node goes to the Value pin of the Set node",
+          "The Value pin of the Set node goes to the Forwards Solve node",
+          "The Name pin of the Get node goes to the Name pin of the Set node",
+          "The two nodes are not connected"
+        ],
+        "answer_index": 0,
+        "explain": "Get Control gives the transform of the control. Fed into the Value pin of Set Bone, it places the bone where the control is."
+      },
+      {
+        "q": "What is the Forwards Solve node connected to?",
+        "choices": [
+          "To the Get Control nodes only",
+          "To the Rig Hierarchy tab",
+          "To the Skeletal Mesh in the Content Browser",
+          "To the Set Bone nodes, one after the other"
+        ],
+        "answer_index": 3,
+        "explain": "Forwards Solve is the event that runs the graph. Its execution line must pass through each Set Bone node for the bones to follow."
+      },
+      {
+        "q": "You move a control in the viewport, but its bone does not follow. What do you check first?",
+        "choices": [
+          "That the control has a red color",
+          "That the Forwards Solve node is connected to the Set Bone node of that bone",
+          "That the Skeletal Mesh has a material",
+          "That the level has a Player Start"
+        ],
+        "answer_index": 1,
+        "explain": "A Set Bone node that is not on the execution line of Forwards Solve never runs. The bone then keeps its old place."
+      },
+      {
+        "q": "Why should you take the screenshot of the posed arm before you click Compile again?",
+        "choices": [
+          "Compile closes the Control Rig Editor",
+          "Compile deletes the controls",
+          "Compile puts the controls back in their starting position",
+          "Compile hides the Skeletal Mesh"
+        ],
+        "answer_index": 2,
+        "explain": "Compiling resets the controls, and the pose is lost. The pose you set in the editor viewport is only a test of the rig."
+      },
+      {
+        "q": "What do animators gain from a Control Rig?",
+        "choices": [
+          "They can pose and animate a character without another 3D program",
+          "They can paint textures on the character",
+          "They can package the game faster",
+          "They can replace the skeleton with a static mesh"
+        ],
+        "answer_index": 0,
+        "explain": "The controls make posing possible directly inside Unreal. Changes are seen at once in the engine where the character is used."
+      }
+    ]
+  },
+  "AQ6": {
+    "new_quiz": [
+      {
+        "q": "What is an anim notify?",
+        "choices": [
+          "A curve that changes the speed of an animation",
+          "A second animation that plays on top of the first",
+          "A warning that an animation has an error",
+          "A marker on one frame of an animation that tells the game to do something"
+        ],
+        "answer_index": 3,
+        "explain": "When the animation reaches the frame of the notify, the game reacts, for example with a sound or an effect. Events then match the exact moment in the movement."
+      },
+      {
+        "q": "How do you create the montage AM_Action from an animation sequence?",
+        "choices": [
+          "Right-click the sequence and choose Create, then Create AnimMontage",
+          "Drag the sequence into the level",
+          "Open the sequence and press Shift+P",
+          "Click Add, then Animation, then Aim Offset"
+        ],
+        "answer_index": 0,
+        "explain": "The right-click menu of an animation sequence has Create, then Create AnimMontage. The new montage holds that sequence."
+      },
+      {
+        "q": "Where in the montage do you add a notify?",
+        "choices": [
+          "In the Rig Hierarchy tab",
+          "In the Notifies track, with a right-click at the frame you want",
+          "In the Class Defaults of the character",
+          "In the Stats panel"
+        ],
+        "answer_index": 1,
+        "explain": "The Notifies track runs along the timeline. A right-click at a frame opens Add Notify for exactly that frame."
+      },
+      {
+        "q": "Which kind of notify is sent to the Play Montage node?",
+        "choices": [
+          "Play Sound",
+          "Any notify with the name Hit",
+          "Montage Notify",
+          "Every notify on the Notifies track"
+        ],
+        "answer_index": 2,
+        "explain": "Only a Montage Notify reaches the On Notify Begin pin of Play Montage. Other kinds, such as Play Sound, do their own job and are not sent to that node."
+      },
+      {
+        "q": "What must the AnimGraph of the character have so that the montage can play?",
+        "choices": [
+          "A Print String node after the Output Pose node",
+          "A Timeline node with Loop turned on",
+          "A Blend Space Player node with a Speed axis",
+          "A Slot 'DefaultSlot' node before the Output Pose node"
+        ],
+        "answer_index": 3,
+        "explain": "A montage plays through a slot. The Slot 'DefaultSlot' node lets the montage take over the pose before it reaches Output Pose."
+      },
+      {
+        "q": "Which pin of the Play Montage node do you use to react to the notify named Hit?",
+        "choices": [
+          "On Notify Begin",
+          "On Completed",
+          "On Interrupted",
+          "On Blend Out"
+        ],
+        "answer_index": 0,
+        "explain": "On Notify Begin fires when a Montage Notify is reached. You connect it to the Print String with the text Hit."
+      },
+      {
+        "q": "When does the text Done appear in your test?",
+        "choices": [
+          "Before the key is pressed",
+          "At the end of the montage, from On Completed",
+          "In the middle of the montage, from On Notify Begin",
+          "On every frame of the montage"
+        ],
+        "answer_index": 1,
+        "explain": "On Completed fires when the montage has finished. Hit appears in the middle, at the frame of the notify, and Done at the end."
+      },
+      {
+        "q": "Done is printed at the end, but Hit never appears. What do you check first?",
+        "choices": [
+          "That the montage is named AM_Action",
+          "That the E key is the right key",
+          "That the notify in the montage is a Montage Notify",
+          "That the character has a camera boom"
+        ],
+        "answer_index": 2,
+        "explain": "Done shows that the montage plays. If Hit is missing, the notify is probably another kind, and only a Montage Notify is sent to the Play Montage node."
+      },
+      {
+        "q": "How do you add a sound notify to the walk animation?",
+        "choices": [
+          "Add a Play Sound at Location node to the Level Blueprint",
+          "Drag a sound from the Content Browser into the level",
+          "Add an Audio Volume around the character",
+          "Right-click the Notifies track and choose Add Notify, then Play Sound"
+        ],
+        "answer_index": 3,
+        "explain": "Play Sound is a ready-made notify. It plays the sound you pick each time the animation passes that frame, with no Blueprint logic."
+      },
+      {
+        "q": "At which frame of the walk cycle do you place the sound notify for a footstep?",
+        "choices": [
+          "At a frame where a foot touches the ground",
+          "At the first frame of the animation",
+          "At a frame where both feet are in the air",
+          "At the last frame of the animation"
+        ],
+        "answer_index": 0,
+        "explain": "The sound must match what the viewer sees. A footstep belongs to the frame where the foot lands."
+      }
+    ]
+  },
+  "AQ7": {
+    "new_quiz": [
+      {
+        "q": "What is a blend space?",
+        "choices": [
+          "A level used to test animations",
+          "A node that plays one animation in a loop",
+          "An asset that mixes several animations based on a value",
+          "A folder that holds the animations of one character"
+        ],
+        "answer_index": 2,
+        "explain": "A blend space blends between animations as a value changes. The character moves smoothly from idle to walk to run, with no sudden switch."
+      },
+      {
+        "q": "Which value most often drives a locomotion blend space?",
+        "choices": [
+          "The health of the character",
+          "The speed of the character",
+          "The height of the camera",
+          "The frame rate of the game"
+        ],
+        "answer_index": 1,
+        "explain": "Idle, walk and run differ by speed. The speed of the character decides how much of each animation is used."
+      },
+      {
+        "q": "How do you create a blend space in the Content Browser?",
+        "choices": [
+          "Click Add, then Animation, then Blend Space, and pick the Skeleton",
+          "Click Add, then User Interface, then Widget Blueprint",
+          "Right-click a Skeletal Mesh and choose Create, then Control Rig",
+          "Right-click an animation and choose Retarget Animations"
+        ],
+        "answer_index": 0,
+        "explain": "Blend Space is in the Animation group of the Add menu. It must know the Skeleton, because it can only blend animations of that Skeleton."
+      },
+      {
+        "q": "What do you set Maximum Axis Value of the Speed axis to?",
+        "choices": [
+          "The number of animations in the blend space",
+          "The length of the run animation in seconds",
+          "The height of the character in centimeters",
+          "The Max Walk Speed of your character"
+        ],
+        "answer_index": 3,
+        "explain": "The axis should cover every speed the character can reach. Max Walk Speed is the top speed, so it is the right end of the axis."
+      },
+      {
+        "q": "Where do you find Max Walk Speed?",
+        "choices": [
+          "In the Asset Details of the blend space",
+          "In the World Settings of the level",
+          "On the Character Movement component in the Blueprint of the character",
+          "On the Blend Space Player node"
+        ],
+        "answer_index": 2,
+        "explain": "The Character Movement component holds the movement values of the character, and Max Walk Speed is one of them."
+      },
+      {
+        "q": "What does it mean that an animation was authored for a speed?",
+        "choices": [
+          "It can only be played at that frame rate",
+          "It is the speed the animation was made to move at",
+          "It is the time the animator needed to make it",
+          "It is the speed at which the file is loaded"
+        ],
+        "answer_index": 1,
+        "explain": "The steps in a walk or run animation fit one movement speed. At that speed, the feet match the ground."
+      },
+      {
+        "q": "Where on the Speed axis do you put the idle animation?",
+        "choices": [
+          "At 0",
+          "At the Max Walk Speed",
+          "In the middle of the axis",
+          "Outside the grid"
+        ],
+        "answer_index": 0,
+        "explain": "An idle character does not move, so idle belongs at speed 0. Walk and run go at the speeds they were authored for."
+      },
+      {
+        "q": "In Play in Editor, the feet of the character slide over the ground. What is the likely cause?",
+        "choices": [
+          "The blend space has no name",
+          "The level has no Directional Light",
+          "The Skeleton has too many bones",
+          "The animations sit at the wrong speeds in the blend space"
+        ],
+        "answer_index": 3,
+        "explain": "If an animation plays at a speed it was not made for, the steps do not match the distance the character travels. The feet then seem to slide."
+      },
+      {
+        "q": "How do you preview the blend inside the blend space asset?",
+        "choices": [
+          "Press F9 on the grid",
+          "Hold Ctrl and move the mouse over the grid",
+          "Double-click the Speed axis",
+          "Drag the asset into the level"
+        ],
+        "answer_index": 1,
+        "explain": "With Ctrl held, the preview point follows the mouse. The preview character shows the blend at that point of the grid."
+      },
+      {
+        "q": "How do you make the copy of the AnimBP use your blend space?",
+        "choices": [
+          "Rename the blend space to the name of the old one",
+          "Drag the blend space onto the character in the level",
+          "Select the Blend Space Player node and pick your blend space in its Details panel",
+          "Set Maximum Axis Value to 0"
+        ],
+        "answer_index": 2,
+        "explain": "The Blend Space Player node plays one blend space. After you pick yours, you set Anim Class on the Mesh of the character to the copied AnimBP."
+      }
+    ]
+  },
+  "AQ8": {
+    "new_quiz": [
+      {
+        "q": "What is an aim offset?",
+        "choices": [
+          "An asset that bends the upper body of a character toward the direction the player is looking",
+          "A setting that moves the camera to the side of the character",
+          "A node that fires a weapon at a target",
+          "A marker on an animation that plays a sound"
+        ],
+        "answer_index": 0,
+        "explain": "An aim offset blends aim poses so that the upper body follows the look direction. The character can walk and aim at the same time."
+      },
+      {
+        "q": "What are additive poses?",
+        "choices": [
+          "Poses that replace the animation below them",
+          "Poses that only work on the legs",
+          "Poses that are saved in a Data Table",
+          "Poses that are added on top of another animation"
+        ],
+        "answer_index": 3,
+        "explain": "An additive pose stores only a difference. It is added on top of another animation, such as walking, and does not replace it."
+      },
+      {
+        "q": "How do you save a rotated spine pose as a new animation such as Aim_Up?",
+        "choices": [
+          "Press Shift+P in the Skeleton Tree",
+          "Click Create Asset, choose Create Animation, then Current Pose",
+          "Right-click the animation and choose Retarget Animations",
+          "Click Add, then Animation, then Blend Space"
+        ],
+        "answer_index": 1,
+        "explain": "Create Asset, then Create Animation, then Current Pose saves the pose you see as an animation asset. You do this for each aim direction."
+      },
+      {
+        "q": "Which Additive Anim Type do you set on each aim pose animation?",
+        "choices": [
+          "No additive",
+          "Local Space",
+          "Mesh Space",
+          "World Space"
+        ],
+        "answer_index": 2,
+        "explain": "Aim poses for an aim offset use Mesh Space. You find the setting in the Asset Details of each aim pose animation."
+      },
+      {
+        "q": "Which pose do you choose as the base pose of the additive aim poses?",
+        "choices": [
+          "Aim_Center",
+          "Aim_Up",
+          "The run animation",
+          "The jump animation"
+        ],
+        "answer_index": 0,
+        "explain": "Aim_Center is the pose with no rotation. Each aim pose is stored as the difference from it."
+      },
+      {
+        "q": "How do you set the two axes of the aim offset asset?",
+        "choices": [
+          "Horizontal is Speed and vertical is Direction, both from 0 to 600",
+          "Horizontal is Pitch and vertical is Yaw, both from 0 to 360",
+          "Horizontal is Roll and vertical is Pitch, both from -180 to 180",
+          "Horizontal is Yaw and vertical is Pitch, both from -90 to 90"
+        ],
+        "answer_index": 3,
+        "explain": "Yaw is looking left and right, so it is the horizontal axis. Pitch is looking up and down, so it is the vertical axis."
+      },
+      {
+        "q": "What is the control rotation?",
+        "choices": [
+          "The rotation of the spine bone",
+          "The direction the player is looking",
+          "The rotation of the floor under the character",
+          "The speed at which the character turns"
+        ],
+        "answer_index": 1,
+        "explain": "The control rotation follows the mouse or stick of the player. It can differ from the rotation of the Actor, and that difference is what the aim offset shows."
+      },
+      {
+        "q": "How does the AnimBP get the Pitch and Yaw values?",
+        "choices": [
+          "It reads Max Walk Speed from the Character Movement component",
+          "It reads the position of the Aim Offset Player node",
+          "It takes the difference between the control rotation and the rotation of the Actor",
+          "It counts the aim poses on the grid"
+        ],
+        "answer_index": 2,
+        "explain": "Get Control Rotation on the owning Pawn gives the look direction. The Delta Rotator node gives its difference to the Actor rotation, and you store the result in Pitch and Yaw."
+      },
+      {
+        "q": "What do you connect to the Base Pose pin of the Aim Offset Player node?",
+        "choices": [
+          "The locomotion pose of the character",
+          "The Aim_Up pose",
+          "The Pitch variable",
+          "The Output Pose node"
+        ],
+        "answer_index": 0,
+        "explain": "The aim offset is added on top of its base pose. With the locomotion pose as the base, the character keeps walking while the upper body aims."
+      },
+      {
+        "q": "The character aims correctly, but it no longer walks or runs. What do you check first?",
+        "choices": [
+          "That the axes go from -90 to 90",
+          "That the locomotion pose is connected to the Base Pose pin",
+          "That Aim_Center has no rotation",
+          "That the Pitch variable is a Float"
+        ],
+        "answer_index": 1,
+        "explain": "Without a base pose the node has nothing to add the aim onto. The walking and running animation must enter through the Base Pose pin."
+      }
+    ]
+  }
+}

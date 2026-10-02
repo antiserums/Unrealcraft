@@ -1,0 +1,462 @@
+{
+  "PQ14": {
+    "new_quiz": [
+      {
+        "q": "What is coupling between two actors?",
+        "choices": [
+          "How far apart the two actors are in the level",
+          "How much one actor depends on the other",
+          "How many components the two actors share",
+          "How often the two actors are saved"
+        ],
+        "answer_index": 1,
+        "explain": "Coupling is how much one actor must know about the other. The more it must know, the harder both are to change later."
+      },
+      {
+        "q": "What is a direct reference?",
+        "choices": [
+          "A variable that points to one known actor, so you can call it",
+          "A signal that any actor can listen to",
+          "A list of functions without any logic",
+          "A copy of another Blueprint"
+        ],
+        "answer_index": 0,
+        "explain": "A direct reference is a variable of a known type, here BP_Lamp. The button picks one lamp in the level and calls a function on it."
+      },
+      {
+        "q": "What is a Blueprint Interface?",
+        "choices": [
+          "A widget that is drawn on the screen",
+          "A variable that stores a location",
+          "A window where you edit keyboard shortcuts",
+          "A shared list of functions that any actor can answer"
+        ],
+        "answer_index": 3,
+        "explain": "An interface only names functions, such as Activate. Any Blueprint that implements it decides for itself what the function does."
+      },
+      {
+        "q": "What is an Event Dispatcher?",
+        "choices": [
+          "A node that waits for some time",
+          "A function that returns a value",
+          "A signal that other actors can listen to",
+          "A volume that fires overlap events"
+        ],
+        "answer_index": 2,
+        "explain": "An Event Dispatcher sends out a signal when you call it. Every actor that is bound to it reacts."
+      },
+      {
+        "q": "In the direct reference version, what must the button know about its target?",
+        "choices": [
+          "Nothing at all",
+          "Its exact class, BP_Lamp",
+          "Only that it is an Actor",
+          "Only its position in the level"
+        ],
+        "answer_index": 1,
+        "explain": "The variable on the button is of the type BP_Lamp. The button only works with lamps, which is the strongest coupling of the three ways."
+      },
+      {
+        "q": "In the interface version, on which kind of reference does the button call Activate (Message)?",
+        "choices": [
+          "On a plain Actor reference",
+          "On a BP_Lamp reference",
+          "On a Point Light reference",
+          "On a GameMode reference"
+        ],
+        "answer_index": 0,
+        "explain": "The message can be sent to any Actor. The button does not need to know the class, and any actor that implements the interface answers."
+      },
+      {
+        "q": "In the Event Dispatcher version, how does the lamp react to the button?",
+        "choices": [
+          "It reads the button on every frame",
+          "It calls Activate (Message) on the button",
+          "It casts the player to BP_Button",
+          "It uses Bind Event to OnPressed"
+        ],
+        "answer_index": 3,
+        "explain": "The lamp binds one of its events to OnPressed. When the button calls the dispatcher, the bound event runs."
+      },
+      {
+        "q": "In the Event Dispatcher version, what does the button know about the lamp?",
+        "choices": [
+          "It knows the class of the lamp",
+          "It knows the light color of the lamp",
+          "It knows nothing about who listens",
+          "It knows every function of the lamp"
+        ],
+        "answer_index": 2,
+        "explain": "The button only calls OnPressed. The listeners bind themselves, so you can add or remove lamps and never change the button."
+      }
+    ]
+  },
+  "PQ15": {
+    "new_quiz": [
+      {
+        "q": "What is a HUD?",
+        "choices": [
+          "A level that is used only for menus",
+          "A camera that follows the player",
+          "The information drawn on top of the game, such as the score",
+          "The list of actors in the Outliner"
+        ],
+        "answer_index": 2,
+        "explain": "HUD is the name for the information shown over the game picture. A score counter is a typical part of it."
+      },
+      {
+        "q": "What is a Widget Blueprint?",
+        "choices": [
+          "An asset that holds text, images and other interface parts",
+          "An actor that you place in the level",
+          "A file that stores a set of values",
+          "A node that prints text to the log"
+        ],
+        "answer_index": 0,
+        "explain": "A Widget Blueprint is where you build interface elements. WBP_Score holds a Text widget for the score."
+      },
+      {
+        "q": "Which two nodes put WBP_Score on the screen?",
+        "choices": [
+          "Spawn Actor from Class, then Possess",
+          "Create Widget, then Add to Viewport",
+          "Get Game State, then Print String",
+          "Bind Event, then Remove from Parent"
+        ],
+        "answer_index": 1,
+        "explain": "Create Widget makes the widget from the class WBP_Score. Add to Viewport shows it on the screen."
+      },
+      {
+        "q": "On which event of the character do you create the score widget?",
+        "choices": [
+          "Event Tick",
+          "Event AnyDamage",
+          "Event End Overlap",
+          "Event BeginPlay"
+        ],
+        "answer_index": 3,
+        "explain": "BeginPlay runs once when the game starts. That is the right moment to create the widget one time."
+      },
+      {
+        "q": "Why should you not update the score text on Tick?",
+        "choices": [
+          "Tick does not run while the game is playing",
+          "Tick cannot read variables",
+          "Tick runs every frame, so the work is done again and again for no reason",
+          "Tick only works in the Level Blueprint"
+        ],
+        "answer_index": 2,
+        "explain": "The score changes only now and then. Setting the text every frame repeats the same work with the same result."
+      },
+      {
+        "q": "What is the Event Dispatcher OnScoreChanged in the GameState for?",
+        "choices": [
+          "It tells listeners that the score has changed",
+          "It adds 1 to the score every second",
+          "It saves the score to disk",
+          "It resets the score when the level starts"
+        ],
+        "answer_index": 0,
+        "explain": "The GameState calls OnScoreChanged every time the score changes. The widget listens and updates its text only then."
+      },
+      {
+        "q": "Where does WBP_Score start to listen to OnScoreChanged?",
+        "choices": [
+          "On Event Tick of the character",
+          "On Event Construct, with Bind Event on the GameState",
+          "In the Class Defaults of the GameMode",
+          "In the World Settings of the level"
+        ],
+        "answer_index": 1,
+        "explain": "Event Construct runs when the widget is created. There the widget gets the GameState, casts it to your class and binds to the dispatcher."
+      },
+      {
+        "q": "You press the test key and the score variable goes up, but the text on the screen stays the same. What do you check first?",
+        "choices": [
+          "That the Text widget uses a large font",
+          "That the level has a Player Start",
+          "That the widget was added to the viewport two times",
+          "That the GameState calls OnScoreChanged after it changes the score"
+        ],
+        "answer_index": 3,
+        "explain": "The widget only updates when the dispatcher is called. If the GameState changes the score and does not call OnScoreChanged, the widget never hears about it."
+      }
+    ]
+  },
+  "PQ16": {
+    "new_quiz": [
+      {
+        "q": "What is a kill volume?",
+        "choices": [
+          "An invisible area that ends the try of the player when they touch it",
+          "A volume that makes sounds louder",
+          "A visible wall that blocks the player",
+          "A place where the game remembers progress"
+        ],
+        "answer_index": 0,
+        "explain": "A kill volume marks a place where the player fails, for example a pit under the level. Touching it ends the try."
+      },
+      {
+        "q": "What does respawn logic do?",
+        "choices": [
+          "It removes the player from the game for ever",
+          "It loads the main menu",
+          "It puts the player back in the level after they fail",
+          "It saves the level to disk"
+        ],
+        "answer_index": 2,
+        "explain": "To respawn means to appear again. The logic decides where and how the player comes back after a failure."
+      },
+      {
+        "q": "Where do you place the kill volume in this quest?",
+        "choices": [
+          "Above the level, in the sky",
+          "Below the floor, as a large Box Collision",
+          "Around the Player Start",
+          "Inside the checkpoint"
+        ],
+        "answer_index": 1,
+        "explain": "The volume lies under the level. A player who falls off the floor overlaps the large box and is sent back."
+      },
+      {
+        "q": "Where do you store the last checkpoint?",
+        "choices": [
+          "In a text file in the project folder",
+          "In the name of the checkpoint actor",
+          "In the material of the floor",
+          "In a Transform variable that the GameMode can read"
+        ],
+        "answer_index": 3,
+        "explain": "A Transform variable such as LastCheckpoint in the GameMode or the GameState holds the respawn place. The GameMode reads it when it moves the player back."
+      },
+      {
+        "q": "What does the checkpoint Blueprint do when the player overlaps it?",
+        "choices": [
+          "It destroys the player",
+          "It writes its own transform into the LastCheckpoint variable",
+          "It moves itself to the player",
+          "It restarts the level"
+        ],
+        "answer_index": 1,
+        "explain": "The checkpoint saves where it stands. From then on, a respawn brings the player to this place."
+      },
+      {
+        "q": "Which node moves the player back to the checkpoint?",
+        "choices": [
+          "Set Actor Transform",
+          "Destroy Actor",
+          "Add to Viewport",
+          "Play Sound at Location"
+        ],
+        "answer_index": 0,
+        "explain": "An event on the GameMode calls Set Actor Transform on the player with the stored transform. The player is moved, not destroyed."
+      },
+      {
+        "q": "How do you make a level use your new GameMode Blueprint?",
+        "choices": [
+          "Drag the GameMode into the viewport",
+          "Add the GameMode to the kill volume",
+          "Set it as the GameMode Override in World Settings",
+          "Name the level after the GameMode"
+        ],
+        "answer_index": 2,
+        "explain": "GameMode Override in World Settings chooses the GameMode for that level. Your respawn event only exists when the level runs your GameMode."
+      },
+      {
+        "q": "Why do you make your GameMode a child of the GameMode of the template?",
+        "choices": [
+          "A child Blueprint cannot be changed by mistake",
+          "A child Blueprint runs faster than its parent",
+          "A child Blueprint needs no World Settings",
+          "A child Blueprint keeps the settings of the template, such as the character"
+        ],
+        "answer_index": 3,
+        "explain": "A child Blueprint inherits everything from its parent. You still play as the template character and only add the new event and variable."
+      }
+    ]
+  },
+  "PQ19": {
+    "new_quiz": [
+      {
+        "q": "What is a game loop in this quest?",
+        "choices": [
+          "A Timeline that plays without end",
+          "The event that runs on every frame",
+          "The full circle of play, from the action of the player to the win",
+          "A level that loads itself again and again"
+        ],
+        "answer_index": 2,
+        "explain": "The loop joins action, counting and winning. Building all of it proves that the separate pieces work together."
+      },
+      {
+        "q": "What is a Blueprint Interface?",
+        "choices": [
+          "A widget that shows the score",
+          "A list of functions that different Blueprints can share",
+          "A file that stores the values of a pickup",
+          "A window where you package the game"
+        ],
+        "answer_index": 1,
+        "explain": "The interface names functions such as Interact. The character calls the function on the pickup and does not need to know the class of the pickup."
+      },
+      {
+        "q": "Where does the pickup Blueprint get its name and point value from?",
+        "choices": [
+          "From a Data Asset",
+          "From values typed into the graph",
+          "From the Output Log",
+          "From the World Settings"
+        ],
+        "answer_index": 0,
+        "explain": "The values are stored in Data Asset instances made from a Primary Data Asset class. You can change them without editing the graph."
+      },
+      {
+        "q": "Which two Blueprints share the work of score and win?",
+        "choices": [
+          "The pickup keeps the score, and the character declares the win",
+          "The Level Blueprint keeps the score, and the widget declares the win",
+          "The character keeps the score, and the pickup declares the win",
+          "The GameState keeps the score, and the GameMode declares the win"
+        ],
+        "answer_index": 3,
+        "explain": "Shared information such as the score belongs in the GameState. The rule that decides the win belongs in the GameMode."
+      },
+      {
+        "q": "How does the player interact with at least one pickup type?",
+        "choices": [
+          "Through a console command",
+          "Through an Enhanced Input action named IA_Interact",
+          "Through a click on the Outliner",
+          "Through a show flag of the viewport"
+        ],
+        "answer_index": 1,
+        "explain": "You create the Input Action IA_Interact, add it to the Input Mapping Context of the template with a key, and handle it on the character."
+      },
+      {
+        "q": "What do you add for every actor reference that you use?",
+        "choices": [
+          "A Delay node and a Timeline",
+          "A second copy of the reference",
+          "An Is Valid check and a log warning",
+          "A Text Render actor"
+        ],
+        "answer_index": 2,
+        "explain": "The Is Valid check stops the graph from using an empty reference. The warning in the log tells you where the problem is."
+      },
+      {
+        "q": "What does it mean to package the project?",
+        "choices": [
+          "To build a version of the game that runs outside the editor",
+          "To compress the Content folder into a ZIP file",
+          "To save all levels at the same time",
+          "To send the project to another learner"
+        ],
+        "answer_index": 0,
+        "explain": "Packaging builds a version of the game that runs without the editor. A development build is such a version made for testing."
+      },
+      {
+        "q": "Where do you start packaging in the editor?",
+        "choices": [
+          "In the Trace menu at the bottom of the editor window",
+          "In the three dots menu next to the Play button",
+          "In Edit, then Editor Preferences",
+          "In the Platforms button in the main toolbar, then your platform, then Package Project"
+        ],
+        "answer_index": 3,
+        "explain": "The Platforms button lists the platforms you can build for. You choose your platform and then Package Project."
+      }
+    ]
+  },
+  "EAQ23": {
+    "new_quiz": [
+      {
+        "q": "What is a master material?",
+        "choices": [
+          "A material that can only be used on one mesh",
+          "A material that is locked and cannot be opened",
+          "A material that the engine creates for every project",
+          "One material built with parameters, from which you make instances"
+        ],
+        "answer_index": 3,
+        "explain": "A master material leaves some values open as parameters. Many instances can then reuse the same graph with different values."
+      },
+      {
+        "q": "What is a parameter in a material?",
+        "choices": [
+          "A value, such as a color, that you leave open to change",
+          "A texture that is imported from a file",
+          "A comment that explains the graph",
+          "A mesh that the material is applied to"
+        ],
+        "answer_index": 0,
+        "explain": "A parameter is a named value in the graph. Instances of the material can set it to their own value."
+      },
+      {
+        "q": "What is a Material Instance?",
+        "choices": [
+          "A full copy of the material graph that you edit node by node",
+          "A light copy of a material that only changes its parameters",
+          "A screenshot of a material",
+          "A material that has no parent"
+        ],
+        "answer_index": 1,
+        "explain": "A Material Instance has no graph of its own. It uses the graph of its parent and only sets the parameters."
+      },
+      {
+        "q": "Which kind of parameter do you use for BaseColor?",
+        "choices": [
+          "A Scalar parameter",
+          "A Texture parameter",
+          "A Vector parameter",
+          "A Boolean parameter"
+        ],
+        "answer_index": 2,
+        "explain": "A color has several channels, so it needs a Vector parameter. Roughness, Metallic and EmissiveStrength are single numbers, so they are Scalar parameters."
+      },
+      {
+        "q": "How do you build the glow of the master material?",
+        "choices": [
+          "Connect Roughness to the Emissive input",
+          "Multiply EmissiveStrength by the color and connect the result to the Emissive input",
+          "Add Metallic to the color and connect the result to Base Color",
+          "Connect EmissiveStrength to the Roughness input"
+        ],
+        "answer_index": 1,
+        "explain": "The color gives the glow its tint and EmissiveStrength sets how strong it is. With the value at 0, the material does not glow."
+      },
+      {
+        "q": "Why do you give every parameter a Group?",
+        "choices": [
+          "Groups keep the parameter list tidy when you open an instance",
+          "Groups make the material render faster",
+          "Groups are needed before the material can be saved",
+          "Groups lock the parameters against changes"
+        ],
+        "answer_index": 0,
+        "explain": "In a Material Instance, the parameters are listed by group. Good groups make the right value easy to find."
+      },
+      {
+        "q": "What should the three instances tell the player?",
+        "choices": [
+          "How many materials the level uses",
+          "Which object was placed first",
+          "How large each object is",
+          "The role of each object, by its color"
+        ],
+        "answer_index": 3,
+        "explain": "One instance marks things the player can use, one marks hazards, and one marks scenery. The player learns the rule from the colors."
+      },
+      {
+        "q": "You need a fourth look, for example blue for a goal object. What is the right way to add it?",
+        "choices": [
+          "Copy the whole master material and change its nodes",
+          "Paint the mesh blue in another program",
+          "Make another Material Instance from the master and change its parameters",
+          "Add a second Emissive input to the master material"
+        ],
+        "answer_index": 2,
+        "explain": "That is what the master material is for. A new instance only needs new parameter values, and the graph is not touched."
+      }
+    ]
+  }
+}

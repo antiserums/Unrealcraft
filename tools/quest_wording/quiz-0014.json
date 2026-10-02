@@ -1,0 +1,572 @@
+{
+  "EAQ25": {
+    "new_quiz": [
+      {
+        "q": "What is a Static Switch Parameter?",
+        "choices": [
+          "A number in a material that an instance can set to any value",
+          "An on or off switch in a material that turns a part of the graph on or off for each instance",
+          "A setting that makes a mesh static in the level",
+          "A node that switches between two levels"
+        ],
+        "answer_index": 1,
+        "explain": "Each Material Instance sets the switch to on or off. The part of the graph behind the switch is then used or left out for that instance."
+      },
+      {
+        "q": "What is a shader permutation?",
+        "choices": [
+          "A copy of a texture at a lower resolution",
+          "A list of the parameters of a material",
+          "A shader version compiled for one combination of switches",
+          "A light that changes its color over time"
+        ],
+        "answer_index": 2,
+        "explain": "Every different combination of switch settings needs its own compiled version of the shader. Each of these versions is a shader permutation."
+      },
+      {
+        "q": "Why is a switch cheap for one single instance?",
+        "choices": [
+          "The part that is switched off is left out of its shader",
+          "The switch is checked again on every frame",
+          "The switch lowers the resolution of the textures",
+          "The switch moves the work to the Game thread"
+        ],
+        "answer_index": 0,
+        "explain": "A static switch is decided when the shader is compiled. An instance with the switch off does not pay for the nodes behind it."
+      },
+      {
+        "q": "What grows when a master material has too many permutations?",
+        "choices": [
+          "The size of the meshes in the level",
+          "The number of lights in the scene",
+          "The length of the parameter names",
+          "Compile times and memory use"
+        ],
+        "answer_index": 3,
+        "explain": "Each permutation must be compiled and kept in memory. Many switches can create many versions of one material."
+      },
+      {
+        "q": "A master material has 3 Static Switch Parameters. How many different combinations of on and off are possible?",
+        "choices": [
+          "3",
+          "6",
+          "8",
+          "9"
+        ],
+        "answer_index": 2,
+        "explain": "Each switch has two states, so 3 switches give 2 times 2 times 2, which is 8 combinations. That is the most permutations these switches can create."
+      },
+      {
+        "q": "What happens to the number of possible combinations when you add one more switch?",
+        "choices": [
+          "It grows by one",
+          "It doubles",
+          "It stays the same",
+          "It is cut in half"
+        ],
+        "answer_index": 1,
+        "explain": "The new switch can be on or off for every combination that already exists. That is why you count before you add more switches."
+      },
+      {
+        "q": "Two instances use exactly the same combination of switches. What does this mean for the permutations?",
+        "choices": [
+          "They need two permutations each",
+          "They cannot be used in the same level",
+          "They turn all switches off",
+          "They share one permutation"
+        ],
+        "answer_index": 3,
+        "explain": "Unreal compiles another version only for each different combination. Instances that only differ in colors or numbers share one version."
+      },
+      {
+        "q": "Can a Static Switch Parameter be changed while the game runs?",
+        "choices": [
+          "No, it is fixed when the shader is compiled",
+          "Yes, on every frame, like a scalar parameter",
+          "Yes, but only from the Level Blueprint",
+          "Yes, but only once per level"
+        ],
+        "answer_index": 0,
+        "explain": "The word static means the choice is made at compile time. Values that must change during play need normal parameters."
+      },
+      {
+        "q": "Which switches do you add to the master material in this quest?",
+        "choices": [
+          "One for collision, one for shadows and one for physics",
+          "One for the sun, one for the sky and one for the fog",
+          "One for a detail normal, one for emissive and one more of your choice",
+          "One for each texture channel"
+        ],
+        "answer_index": 2,
+        "explain": "The detail normal and the emissive are parts that not every surface needs. A switch lets each instance decide."
+      },
+      {
+        "q": "Which switch is the best one to remove?",
+        "choices": [
+          "The one that most instances turn on and off in different ways",
+          "The one that is not worth its cost, for example because nobody uses it",
+          "The one with the shortest name",
+          "The one that was added first"
+        ],
+        "answer_index": 1,
+        "explain": "Every switch adds possible permutations. A switch that people do not use adds cost and gives nothing back, so it should go."
+      }
+    ]
+  },
+  "EAQ26": {
+    "new_quiz": [
+      {
+        "q": "What is a Material Function?",
+        "choices": [
+          "A Blueprint node that changes a material during play",
+          "A setting that turns a material into a decal",
+          "A copy of a material that only changes parameters",
+          "A small piece of material graph saved as its own asset that many materials can use"
+        ],
+        "answer_index": 3,
+        "explain": "A Material Function holds a group of nodes as an asset. You place it in a material like one node."
+      },
+      {
+        "q": "What happens when you fix a mistake inside a Material Function?",
+        "choices": [
+          "Every material that uses the function is fixed too",
+          "Only the first material that used it is fixed",
+          "The materials that use it must be built again by hand",
+          "The function is removed from all materials"
+        ],
+        "answer_index": 0,
+        "explain": "The materials do not hold a copy of the nodes. They all point to the same function, so one fix reaches all of them."
+      },
+      {
+        "q": "Which kind of node group is a good choice to move into a Material Function?",
+        "choices": [
+          "A group that is used in only one material",
+          "A single Constant node",
+          "A group of nodes that you would repeat in many materials",
+          "The output node of the material"
+        ],
+        "answer_index": 2,
+        "explain": "A function saves work when the same nodes are needed again and again. Detail normal blending is such a group."
+      },
+      {
+        "q": "What is detail normal blending in this quest?",
+        "choices": [
+          "Two color textures are mixed by a vertex color",
+          "A second normal texture with a higher tiling is combined with the first",
+          "A normal texture is turned into a height texture",
+          "A normal texture is removed to save memory"
+        ],
+        "answer_index": 1,
+        "explain": "The first normal texture gives the large shapes. The second one repeats more often and adds small detail that shows up close."
+      },
+      {
+        "q": "Which node combines the two normal textures?",
+        "choices": [
+          "Lerp",
+          "Landscape Layer Blend",
+          "WorldAlignedTexture",
+          "BlendAngleCorrectedNormals"
+        ],
+        "answer_index": 3,
+        "explain": "BlendAngleCorrectedNormals is made for combining a base normal with a detail normal. It keeps the result a correct normal."
+      },
+      {
+        "q": "Why does the detail normal texture use a higher tiling than the first one?",
+        "choices": [
+          "So it repeats more often and adds small detail",
+          "So it covers the mesh only once",
+          "So it uses less memory",
+          "So it changes the Base Color"
+        ],
+        "answer_index": 0,
+        "explain": "A higher tiling makes the texture smaller on the surface. Its bumps then read as fine detail on top of the larger shapes."
+      },
+      {
+        "q": "What do you give each input of MF_DetailNormal?",
+        "choices": [
+          "A random value and a color",
+          "A lock and a password",
+          "A clear name and a default value",
+          "A shortcut key and an icon"
+        ],
+        "answer_index": 2,
+        "explain": "A clear name tells the user what to connect. A default value lets the function give a useful result even when that input is left empty."
+      },
+      {
+        "q": "Why do you write a description for the function?",
+        "choices": [
+          "The function cannot be saved without one",
+          "So other people know what the function does without opening it",
+          "The description makes the function faster",
+          "So the function gets the prefix MF_"
+        ],
+        "answer_index": 1,
+        "explain": "A function is made to be shared. The description tells the next person what it is for, so they can use it with confidence."
+      },
+      {
+        "q": "Why do you use the function in 2 different materials?",
+        "choices": [
+          "A function only compiles when two materials use it",
+          "The two materials must look the same",
+          "One material holds the inputs and the other the outputs",
+          "It shows that the same nodes are now reused and not built twice"
+        ],
+        "answer_index": 3,
+        "explain": "Reuse is the point of a function. Two materials that share MF_DetailNormal prove that the group of nodes exists only once."
+      },
+      {
+        "q": "A material shows the detail normal too strongly, and it uses MF_DetailNormal. Where can you fix this for all materials at once?",
+        "choices": [
+          "Inside the Material Function",
+          "In the Details panel of each mesh",
+          "In the World Settings of the level",
+          "In the texture file of the first normal"
+        ],
+        "answer_index": 0,
+        "explain": "The blend is built in the function, so that is where a general fix belongs. Every material that uses the function gets the change."
+      }
+    ]
+  },
+  "EAQ27": {
+    "new_quiz": [
+      {
+        "q": "What is a vertex of a mesh?",
+        "choices": [
+          "A texture that covers the mesh",
+          "A corner point of the mesh",
+          "A material slot of the mesh",
+          "A copy of the mesh in the level"
+        ],
+        "answer_index": 1,
+        "explain": "A mesh is made of triangles, and their corner points are the vertices. Each vertex can store a color."
+      },
+      {
+        "q": "What can you do with the colors stored on the vertices?",
+        "choices": [
+          "Change the collision of the mesh",
+          "Make the mesh cast no shadow",
+          "Let a material read them and use them to blend two surfaces",
+          "Move the mesh while the game runs"
+        ],
+        "answer_index": 2,
+        "explain": "A material can read the vertex color. Where you paint, the material shows more of the second surface, such as moss over stone."
+      },
+      {
+        "q": "Which node reads the painted color in the material?",
+        "choices": [
+          "Texture Sample",
+          "TexCoord",
+          "Constant3Vector",
+          "Vertex Color"
+        ],
+        "answer_index": 3,
+        "explain": "The Vertex Color node gives the color stored on the vertices of the mesh. Each of its channels can be used as a mask."
+      },
+      {
+        "q": "How do you use the red channel of the Vertex Color node in this quest?",
+        "choices": [
+          "As the Alpha of a Lerp node between the two surfaces",
+          "As the Base Color of the material",
+          "As the Roughness of the material",
+          "As the tiling of the textures"
+        ],
+        "answer_index": 0,
+        "explain": "A Lerp node blends from one input to the other by its Alpha. With red as the Alpha, the amount of red paint decides how much of the second surface shows."
+      },
+      {
+        "q": "What does red paint do on a mesh with this material?",
+        "choices": [
+          "It makes the mesh red",
+          "It removes the base surface from the material",
+          "It puts the second surface over the base surface",
+          "It deletes the painted vertices"
+        ],
+        "answer_index": 2,
+        "explain": "You do not see the red itself. The material uses it as a mask, so painted areas show the second surface."
+      },
+      {
+        "q": "Why is a sphere a better test mesh than a simple cube?",
+        "choices": [
+          "A sphere has no UVs",
+          "The paint is stored on the vertices, and a simple cube has too few",
+          "A cube cannot have a material",
+          "A sphere is always larger than a cube"
+        ],
+        "answer_index": 1,
+        "explain": "You can only paint where there are vertices. A simple cube has just its corners, so there is nothing to paint on its faces."
+      },
+      {
+        "q": "Which editor mode do you use to paint on the mesh?",
+        "choices": [
+          "Landscape Mode",
+          "Foliage Mode",
+          "Modeling Mode",
+          "Mesh Paint mode"
+        ],
+        "answer_index": 3,
+        "explain": "Mesh Paint mode paints vertex colors onto meshes in the level. The paint belongs to that one placed mesh."
+      },
+      {
+        "q": "What does a height-based blend use to decide where the second surface appears first?",
+        "choices": [
+          "A height texture",
+          "The height of the camera",
+          "The Z position of the mesh in the level",
+          "The scale of the mesh"
+        ],
+        "answer_index": 0,
+        "explain": "The height texture says which parts of the surface are high and which are low. The second surface then appears in some parts before others, for example in the cracks first."
+      },
+      {
+        "q": "What does the height-based blend improve?",
+        "choices": [
+          "The frame rate of the level",
+          "The number of vertices of the mesh",
+          "The edge of the blend, which looks sharp and natural",
+          "The size of the texture files"
+        ],
+        "answer_index": 2,
+        "explain": "A plain vertex blend fades softly between the painted vertices. The height texture breaks that fade into a detailed edge."
+      },
+      {
+        "q": "Why is vertex paint a cheap way to add variety to a level?",
+        "choices": [
+          "It lowers the triangle count of each mesh",
+          "Copies of one mesh can look different with the same material",
+          "It removes the need for textures",
+          "It turns off the lighting on painted meshes"
+        ],
+        "answer_index": 1,
+        "explain": "The mesh and the material stay the same. Only the paint differs from copy to copy, which breaks up repetition at a low cost."
+      }
+    ]
+  },
+  "EAQ28": {
+    "new_quiz": [
+      {
+        "q": "What is Nanite?",
+        "choices": [
+          "The lighting system that calculates bounced light",
+          "The tool that paints vertex colors",
+          "The editor for building materials",
+          "The system in Unreal Engine 5 that lets you use meshes with millions of triangles"
+        ],
+        "answer_index": 3,
+        "explain": "Nanite is the geometry system of Unreal Engine 5. It makes very detailed meshes usable in real time."
+      },
+      {
+        "q": "Why can Nanite handle meshes with millions of triangles?",
+        "choices": [
+          "It only draws the detail that the screen can show",
+          "It turns every mesh into a flat image",
+          "It removes the materials from the mesh",
+          "It draws each mesh only on every second frame"
+        ],
+        "answer_index": 0,
+        "explain": "Far away, a mesh covers few pixels and needs few triangles. Nanite picks the detail that fits the screen, so the full triangle count is never drawn at once."
+      },
+      {
+        "q": "What is a high-poly mesh?",
+        "choices": [
+          "A mesh that is placed high above the level",
+          "A mesh with many material slots",
+          "A mesh with a very large number of triangles",
+          "A mesh with a very large texture"
+        ],
+        "answer_index": 2,
+        "explain": "High-poly means many polygons, which are the triangles of the mesh. Such meshes show the gain of Nanite most clearly."
+      },
+      {
+        "q": "How do you enable Nanite on a mesh in this quest?",
+        "choices": [
+          "Open Edit, then Plugins, and enable Nanite",
+          "Open the mesh and tick Enable Nanite Support in its Nanite Settings",
+          "Set the Mobility of the mesh to Movable",
+          "Add a Nanite component to the level"
+        ],
+        "answer_index": 1,
+        "explain": "Nanite is a setting of the mesh asset. You open the mesh and tick Enable Nanite Support in its Nanite Settings."
+      },
+      {
+        "q": "Which Nanite visualization modes do you use to inspect the mesh in the level?",
+        "choices": [
+          "Lit, Unlit and Wireframe",
+          "Game, Draw and GPU",
+          "Key, Fill and Rim",
+          "Triangles, Clusters and Overdraw"
+        ],
+        "answer_index": 3,
+        "explain": "These three modes show how Nanite draws the mesh: its triangles, the clusters they are grouped in, and how much is drawn over other geometry."
+      },
+      {
+        "q": "In the Triangles visualization mode, what do you see when you move the camera away from a Nanite mesh?",
+        "choices": [
+          "The mesh is drawn with fewer and larger triangles",
+          "The mesh is drawn with more and smaller triangles",
+          "The mesh turns into a cube",
+          "The mesh keeps exactly the same triangles"
+        ],
+        "answer_index": 0,
+        "explain": "Nanite draws only the detail the screen can show. From far away the mesh covers fewer pixels, so fewer triangles are enough."
+      },
+      {
+        "q": "Which kind of material does the quest name as one that Nanite does not support?",
+        "choices": [
+          "Opaque materials",
+          "Materials with a normal map",
+          "Translucent materials",
+          "Materials with parameters"
+        ],
+        "answer_index": 2,
+        "explain": "Nanite does not support every kind of material, and translucent ones are an example. You check the list on the documentation page to see which materials of a project are affected."
+      },
+      {
+        "q": "What does displacement do?",
+        "choices": [
+          "It moves the whole mesh to another place in the level",
+          "A texture moves the surface of the mesh in and out to add real detail",
+          "It replaces the mesh with a simpler one",
+          "It swaps the material of the mesh during play"
+        ],
+        "answer_index": 1,
+        "explain": "Displacement changes the shape of the surface itself. A normal map only fakes bumps in the lighting."
+      },
+      {
+        "q": "Nanite displacement does not work in your project. What does the quest ask you to do then?",
+        "choices": [
+          "Remove Nanite from all meshes",
+          "Install an older engine version",
+          "Skip the quest",
+          "Write what you would need to enable"
+        ],
+        "answer_index": 3,
+        "explain": "Displacement depends on the engine version and the project settings. If it is not available, you find out what is missing and write it down."
+      },
+      {
+        "q": "What do the 3 lines of your writeup say?",
+        "choices": [
+          "Which mesh, which material and which level you used",
+          "How many triangles, vertices and textures the mesh has",
+          "When you would use Nanite, when you would not, and one cost to watch",
+          "Which three visualization modes exist"
+        ],
+        "answer_index": 2,
+        "explain": "Nanite changes how many polygons are too many, but it has limits. The writeup shows that you can decide when it fits."
+      }
+    ]
+  },
+  "EAQ29": {
+    "new_quiz": [
+      {
+        "q": "Where does the eye of a viewer go first in a picture?",
+        "choices": [
+          "To the darkest corner",
+          "To the brightest spot with the most contrast",
+          "To the center of the frame",
+          "To the largest object"
+        ],
+        "answer_index": 1,
+        "explain": "Brightness and contrast pull the eye. Lighting artists use this to lead the viewer to the important place."
+      },
+      {
+        "q": "What is a hero area?",
+        "choices": [
+          "The most important place in a scene, where you want people to look",
+          "The place where the player character starts",
+          "The area with the most triangles",
+          "The area that is lit by the sun"
+        ],
+        "answer_index": 0,
+        "explain": "A hero area can be an entrance, a landmark or a focal prop. You light it so that the viewer notices it first."
+      },
+      {
+        "q": "What is the key light?",
+        "choices": [
+          "The light that softens the shadows",
+          "The light that comes from behind the subject",
+          "The light from the sky",
+          "The main light"
+        ],
+        "answer_index": 3,
+        "explain": "The key light is the main light on the subject. Its direction sets where the shadows fall."
+      },
+      {
+        "q": "What does the fill light do?",
+        "choices": [
+          "It casts the strongest shadows",
+          "It lights the background only",
+          "It softens the shadows",
+          "It replaces the key light"
+        ],
+        "answer_index": 2,
+        "explain": "The fill light adds a little light to the shadow side. The shadows stay, but they are less dark."
+      },
+      {
+        "q": "What does the rim light do?",
+        "choices": [
+          "It comes from behind and separates the subject from the background",
+          "It lights the floor in front of the subject",
+          "It makes the whole scene brighter",
+          "It removes the reflections from the subject"
+        ],
+        "answer_index": 0,
+        "explain": "A rim light draws a bright edge around the subject. That edge lifts the subject off the background."
+      },
+      {
+        "q": "What does GI mean?",
+        "choices": [
+          "General intensity, which is the brightness of a light",
+          "Global illumination, which is bounced light",
+          "Grid index, which is the position of a light",
+          "Glow input, which is the emissive of a material"
+        ],
+        "answer_index": 1,
+        "explain": "GI is global illumination, the light that bounces from surface to surface. You check it and the reflections with the Lumen visualization modes."
+      },
+      {
+        "q": "Why do you run stat unit before and after you add your lights?",
+        "choices": [
+          "To save the lights to the level",
+          "To turn on the Lumen reflections",
+          "To switch the lights to physical units",
+          "To see how much frame time the extra lights cost"
+        ],
+        "answer_index": 3,
+        "explain": "The command stat unit shows how long each frame takes. The difference between the two readings is the cost of your lights."
+      },
+      {
+        "q": "Why do you take the before and after stills through the same Cine Camera Actor?",
+        "choices": [
+          "A Cine Camera makes lights cheaper",
+          "The Cine Camera adds the rim light",
+          "Both stills then show the same view, so only the lighting differs",
+          "The stills are then saved in the level"
+        ],
+        "answer_index": 2,
+        "explain": "A fixed camera makes the comparison fair. Any difference you see comes from your lighting and not from a new angle."
+      },
+      {
+        "q": "Why do you ask another person where their eye goes first?",
+        "choices": [
+          "They do not know where they are meant to look, so their answer is an honest test",
+          "They must approve the lights before you can save",
+          "They can see the stat numbers better",
+          "They choose the hero area for you"
+        ],
+        "answer_index": 0,
+        "explain": "You already know where the hero area is, so you cannot test it yourself. A fresh viewer shows if the lighting really leads the eye."
+      },
+      {
+        "q": "The person you asked looks at a bright lamp in the corner first, and not at your hero area. What does this tell you?",
+        "choices": [
+          "The camera has the wrong focal length",
+          "The corner is brighter or has more contrast than the hero area",
+          "The hero area has too many lights",
+          "The person did not look long enough"
+        ],
+        "answer_index": 1,
+        "explain": "The eye goes to the brightest spot with the most contrast. You dim the corner or strengthen the hero area until the hero area wins."
+      }
+    ]
+  }
+}

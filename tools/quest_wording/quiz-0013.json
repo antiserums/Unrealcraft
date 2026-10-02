@@ -1,0 +1,572 @@
+{
+  "GDQ9": {
+    "new_quiz": [
+      {
+        "q": "What is a Smart Object?",
+        "choices": [
+          "A place in the level that tells AI characters what they can do there",
+          "A mesh that changes its shape when the player comes near",
+          "A Blueprint that spawns enemies in waves",
+          "A light that turns on when an AI character walks by"
+        ],
+        "answer_index": 0,
+        "explain": "A Smart Object holds the information needed for an interaction, for example a spot to take cover or a place to stand and wait. AI characters find it and use it."
+      },
+      {
+        "q": "What do Smart Objects let a designer do?",
+        "choices": [
+          "Draw the NavMesh by hand",
+          "Write the animation of each AI character",
+          "Put activities into the world, where the AI finds and uses them",
+          "Replace the Behavior Tree of the AI"
+        ],
+        "answer_index": 2,
+        "explain": "The activity lives in the object in the level, not in each AI character. You add a new activity by placing one more Smart Object."
+      },
+      {
+        "q": "Which plugins does the quick start guide have you enable?",
+        "choices": [
+          "Water, Landmass and Modeling Tools Editor Mode",
+          "Smart Objects, AI Behaviors and Gameplay Behavior Smart Objects",
+          "Movie Render Pipeline, Sequencer and Take Recorder",
+          "Niagara, Chaos and Procedural Content Generation Framework"
+        ],
+        "answer_index": 1,
+        "explain": "These three plugins bring the Smart Object system and the gameplay behaviors that agents run at a Smart Object. The editor must restart after you enable them."
+      },
+      {
+        "q": "What does the Smart Object Definition asset hold?",
+        "choices": [
+          "The mesh and the material of the object",
+          "The walking speed of the AI character",
+          "The camera that watches the object",
+          "The slots where agents can perform a behavior"
+        ],
+        "answer_index": 3,
+        "explain": "The Smart Object Definition is a Data Asset. It describes the slots of the Smart Object and which behavior an agent runs there."
+      },
+      {
+        "q": "Which component do you add to the actor that should be a Smart Object?",
+        "choices": [
+          "A Smart Object component, which holds the definition asset",
+          "A Character Movement component, which holds the speed",
+          "An Audio Component, which holds a sound",
+          "A Decal component, which holds a material"
+        ],
+        "answer_index": 0,
+        "explain": "The Smart Object component makes the actor known to the Smart Object system. You set the definition asset on this component."
+      },
+      {
+        "q": "What happens when an AI agent claims a Smart Object?",
+        "choices": [
+          "The Smart Object is deleted from the level",
+          "The Smart Object moves to the agent",
+          "The Smart Object is reserved, so other agents cannot use it",
+          "The Smart Object is copied for each agent"
+        ],
+        "answer_index": 2,
+        "explain": "A claim is a reservation. It stops two agents from using the same slot at the same time."
+      },
+      {
+        "q": "In which order does the agent of the quick start work with a Smart Object?",
+        "choices": [
+          "It uses one, then claims it, then finds it",
+          "It finds one, claims it, and then uses it",
+          "It claims one, then deletes it, then finds another",
+          "It uses one and never claims it"
+        ],
+        "answer_index": 1,
+        "explain": "One Behavior Tree task finds Smart Objects and claims one of them. A second task then uses the claimed Smart Object."
+      },
+      {
+        "q": "What does the Gameplay Behavior of the quick start make the agent do at the Smart Object?",
+        "choices": [
+          "Spawn a wave of enemies",
+          "Open the main menu",
+          "Destroy the Smart Object",
+          "Play an animation montage"
+        ],
+        "answer_index": 3,
+        "explain": "The behavior Blueprint of the guide plays a montage on the agent. It is a simple way to see that the agent really uses the object."
+      },
+      {
+        "q": "You press Play, but the AI character does not walk to your new Smart Object. What do you check first?",
+        "choices": [
+          "That the level has a Sky Light",
+          "That the Smart Object has a red material",
+          "That the NavMeshBoundsVolume covers the place of the Smart Object",
+          "That the Smart Object is larger than the agent"
+        ],
+        "answer_index": 2,
+        "explain": "The agent walks on the navigation mesh. If the Smart Object stands outside the NavMeshBoundsVolume, the agent has no path to it."
+      },
+      {
+        "q": "What must your clip or screenshots show?",
+        "choices": [
+          "An AI character walking to your Smart Object and using it",
+          "The player picking up the Smart Object",
+          "The Smart Object Definition open in the editor",
+          "Two AI characters using one slot at the same time"
+        ],
+        "answer_index": 0,
+        "explain": "The proof is the working result: the agent of the guide finds the Smart Object you placed yourself, walks there and uses it."
+      }
+    ]
+  },
+  "GDQ10": {
+    "new_quiz": [
+      {
+        "q": "What is a spawner?",
+        "choices": [
+          "A volume that damages the player",
+          "An actor that creates enemies while the game runs",
+          "A widget that shows the number of enemies",
+          "A table that stores tuning numbers"
+        ],
+        "answer_index": 1,
+        "explain": "A spawner creates actors during play. The enemies do not have to be placed in the level by hand."
+      },
+      {
+        "q": "What is a wave?",
+        "choices": [
+          "A group of enemies that appears together",
+          "A single enemy with a lot of health",
+          "A sound that warns the player",
+          "A path that enemies walk along"
+        ],
+        "answer_index": 0,
+        "explain": "A wave is one group of enemies that appears together. A fight is made of several waves in a row."
+      },
+      {
+        "q": "When does the spawner start the next wave?",
+        "choices": [
+          "As soon as the first enemy of the wave appears",
+          "When the player presses the E key",
+          "At a random time",
+          "When all enemies of the current wave are destroyed, after the delay"
+        ],
+        "answer_index": 3,
+        "explain": "The next wave waits until the current one is beaten. The delay then gives the player a short pause before more enemies appear."
+      },
+      {
+        "q": "What does Initial Life Span set to 5 do on BP_WaveEnemy?",
+        "choices": [
+          "Each enemy gets 5 health points",
+          "Each enemy waits 5 seconds before it appears",
+          "Each enemy destroys itself after 5 seconds",
+          "Each wave has 5 enemies"
+        ],
+        "answer_index": 2,
+        "explain": "Initial Life Span is how long an actor lives. With 5, each enemy removes itself after 5 seconds, so you can test waves without building combat."
+      },
+      {
+        "q": "Where do you set Initial Life Span?",
+        "choices": [
+          "In the World Settings of the level",
+          "In the Class Defaults of BP_WaveEnemy",
+          "In the Details panel of the spawner",
+          "In the Event Graph of the Level Blueprint"
+        ],
+        "answer_index": 1,
+        "explain": "Initial Life Span is a property of the actor class. You set it in the Class Defaults of the enemy Blueprint, and every spawned enemy gets it."
+      },
+      {
+        "q": "Which three Instance Editable variables does BP_WaveSpawner have?",
+        "choices": [
+          "The wave count, the enemies per wave and the delay",
+          "The player health, the score and the lives",
+          "The mesh, the material and the sound",
+          "The level name, the GameMode and the Kill Z"
+        ],
+        "answer_index": 0,
+        "explain": "These three numbers describe the fight: how many waves, how many enemies in each, and how long the pause between them is."
+      },
+      {
+        "q": "What does Instance Editable mean for these variables?",
+        "choices": [
+          "They change by themselves during play",
+          "They are saved in a Data Table",
+          "They can only be changed in the graph",
+          "They can be changed in the Details panel of the placed spawner"
+        ],
+        "answer_index": 3,
+        "explain": "Each placed spawner can have its own values. You change the size and the timing of a fight by changing a few numbers, with no graph edits."
+      },
+      {
+        "q": "How does the spawner know that a wave is beaten?",
+        "choices": [
+          "It waits a fixed time and then assumes the wave is over",
+          "It checks the health of the player",
+          "It counts the living enemies and lowers the count when an enemy is destroyed",
+          "It reads the frame rate of the game"
+        ],
+        "answer_index": 2,
+        "explain": "The spawner binds an event to On Destroyed of each spawned enemy, and that event lowers the count. When the count reaches 0, the wave is beaten."
+      },
+      {
+        "q": "The first wave is destroyed, but the second wave never starts. What do you check first?",
+        "choices": [
+          "That the enemies have a visible mesh",
+          "That the event bound to On Destroyed of each enemy lowers the count",
+          "That the spawner is placed at the center of the level",
+          "That the delay is longer than 5 seconds"
+        ],
+        "answer_index": 1,
+        "explain": "The next wave only starts when the count of living enemies reaches 0. If the count is never lowered, the spawner waits for ever."
+      },
+      {
+        "q": "Where do you put the spawn points?",
+        "choices": [
+          "Where the player cannot see them, for example behind cover",
+          "Directly in front of the player",
+          "Above the level, in the sky",
+          "Outside the Nav Mesh Bounds Volume"
+        ],
+        "answer_index": 0,
+        "explain": "Enemies that appear out of nothing in plain view break the illusion. Target Points behind cover let them appear unseen and then walk in."
+      }
+    ]
+  },
+  "LDQ37": {
+    "new_quiz": [
+      {
+        "q": "What does the player try to do in a stealth encounter?",
+        "choices": [
+          "Beat all enemies as fast as possible",
+          "Collect every pickup in the arena",
+          "Get past the enemies without being seen",
+          "Stay in one place until a timer ends"
+        ],
+        "answer_index": 2,
+        "explain": "In stealth the goal is to stay unseen. This is why the level must work in a different way from a fight."
+      },
+      {
+        "q": "What must cover do in a stealth level?",
+        "choices": [
+          "Give the player more health",
+          "Block what the enemies see",
+          "Slow the enemies down",
+          "Mark the exit of the arena"
+        ],
+        "answer_index": 1,
+        "explain": "Cover in a stealth level is about sight. A piece of cover works when it breaks the line between an enemy and the player."
+      },
+      {
+        "q": "What is a patrol?",
+        "choices": [
+          "A group of enemies that appears together",
+          "A place where the player is safe",
+          "A volume that covers the floor",
+          "The route that an enemy walks"
+        ],
+        "answer_index": 3,
+        "explain": "A patrol is the route an enemy walks. In a stealth level the patrols must leave a path open for the player."
+      },
+      {
+        "q": "How do you build a simple patrolling enemy?",
+        "choices": [
+          "A Character Blueprint that walks between two Target Points with AI MoveTo",
+          "A Static Mesh that moves on a Timeline",
+          "A Pain Causing Volume that follows the player",
+          "A Widget Blueprint that shows a warning"
+        ],
+        "answer_index": 0,
+        "explain": "The enemy uses AI MoveTo to walk to one Target Point and then to the other, again and again. That gives a patrol the player can learn."
+      },
+      {
+        "q": "What does setting Auto Possess AI to Placed in World or Spawned do for the enemy?",
+        "choices": [
+          "The enemy is hidden until the player comes near",
+          "The enemy is controlled by the keyboard of the player",
+          "An AI controller takes control of the enemy, whether it is placed or spawned",
+          "The enemy is deleted when the level starts"
+        ],
+        "answer_index": 2,
+        "explain": "A Character needs a controller to move by itself. With this setting an AI controller possesses the enemy, so AI MoveTo can work."
+      },
+      {
+        "q": "Why does the arena need a Nav Mesh Bounds Volume that covers the floor?",
+        "choices": [
+          "It lights the floor for the enemies",
+          "It stops the player from leaving the arena",
+          "It hides the cover from the enemies",
+          "It creates the navigation mesh that AI MoveTo needs to find a path"
+        ],
+        "answer_index": 3,
+        "explain": "AI MoveTo plans its path on the navigation mesh. The volume marks the area where that mesh is built."
+      },
+      {
+        "q": "When does an enemy see the player in this quest?",
+        "choices": [
+          "When the player is anywhere inside the arena",
+          "When the enemy faces the player and nothing blocks the line between them",
+          "When the player stands still for too long",
+          "When the player is closer than the nearest cover"
+        ],
+        "answer_index": 1,
+        "explain": "All three conditions must be true. Cover breaks the line, and the direction the enemy faces changes as it walks its patrol."
+      },
+      {
+        "q": "The player is seen every time at one spot of the crossing. What can you change?",
+        "choices": [
+          "The cover or the patrol near that spot",
+          "The color of the floor",
+          "The name of the level",
+          "The size of the Player Start"
+        ],
+        "answer_index": 0,
+        "explain": "The quest has you change the cover and the patrols until a crossing is possible. More cover breaks the line of sight, and a different patrol opens a gap in time."
+      },
+      {
+        "q": "What do you mark on the screenshot taken from above?",
+        "choices": [
+          "The lights and their colors",
+          "The names of the Blueprints",
+          "The patrol routes and the safe path",
+          "The frame rate at each spot"
+        ],
+        "answer_index": 2,
+        "explain": "The marked picture shows your plan: where the enemies walk and where the player can cross unseen."
+      },
+      {
+        "q": "What must the clip or the screenshots from Play in Editor show?",
+        "choices": [
+          "The player beating all the enemies",
+          "The enemies standing still",
+          "The arena without any cover",
+          "A crossing in which the player is not seen"
+        ],
+        "answer_index": 3,
+        "explain": "A plan on a picture is not enough. The crossing in the running game proves that the safe path really works."
+      }
+    ]
+  },
+  "LDQ38": {
+    "new_quiz": [
+      {
+        "q": "What is a vertical arena?",
+        "choices": [
+          "An arena that is taller than it is wide and has one floor",
+          "An arena with several floors at different heights",
+          "An arena where the camera looks straight down",
+          "An arena with walls but no floor"
+        ],
+        "answer_index": 1,
+        "explain": "In a vertical arena the fight also moves up and down. Stairs, ledges and drops connect the floors."
+      },
+      {
+        "q": "Where do you find Max Step Height?",
+        "choices": [
+          "In the World Settings of the level",
+          "In the settings of the CubeGrid tool",
+          "On the Character Movement component of BP_ThirdPersonCharacter",
+          "On the Nav Mesh Bounds Volume"
+        ],
+        "answer_index": 2,
+        "explain": "The Character Movement component holds the movement numbers of the character. Max Step Height is one of them."
+      },
+      {
+        "q": "What does Max Step Height tell you?",
+        "choices": [
+          "How high a step the character can walk up without jumping",
+          "How high the character can jump",
+          "How tall the character is",
+          "How far the character can fall without damage"
+        ],
+        "answer_index": 0,
+        "explain": "A step that is not higher than this value can be walked up. Anything higher blocks the character until it jumps."
+      },
+      {
+        "q": "How do you get your jump metric?",
+        "choices": [
+          "You read it on the Nav Mesh Bounds Volume",
+          "You copy it from the size of the CubeGrid",
+          "You measure the height of the character mesh",
+          "You test in Play in Editor how high a ledge the character can jump onto"
+        ],
+        "answer_index": 3,
+        "explain": "The test in the running game gives you the real number. You write it down next to Max Step Height."
+      },
+      {
+        "q": "What is CubeGrid?",
+        "choices": [
+          "A view mode that shows the collision of meshes",
+          "A modeling tool for building simple block shapes on a grid",
+          "A plugin that creates the NavMesh",
+          "A material with a checker pattern"
+        ],
+        "answer_index": 1,
+        "explain": "CubeGrid lets you push and pull blocks on a grid. It is a fast way to graybox floors, stairs and ledges."
+      },
+      {
+        "q": "Where do you find the CubeGrid tool?",
+        "choices": [
+          "In Landscape Mode",
+          "In Foliage Mode",
+          "In Modeling Mode",
+          "In the Place Actors panel, under Volumes"
+        ],
+        "answer_index": 2,
+        "explain": "CubeGrid is one of the tools of Modeling Mode. You switch to that mode with the mode dropdown of the editor."
+      },
+      {
+        "q": "What do you check every change of height against?",
+        "choices": [
+          "Your step and jump metrics",
+          "The size of the Sky Light",
+          "The number of enemies",
+          "The length of the level name"
+        ],
+        "answer_index": 0,
+        "explain": "A stair must fit the step metric and a ledge must fit the jump metric. If not, the player cannot move between the floors as you planned."
+      },
+      {
+        "q": "A ledge that the player should jump onto is higher than your jump metric. What happens?",
+        "choices": [
+          "The character climbs it more slowly",
+          "The NavMesh lifts the character onto it",
+          "The ledge is removed when the game starts",
+          "The character cannot get onto the ledge"
+        ],
+        "answer_index": 3,
+        "explain": "The jump metric is the highest ledge the character reaches. A higher ledge is a wall to the player, so you lower it or add a step."
+      },
+      {
+        "q": "What is the NavMesh?",
+        "choices": [
+          "The mesh of the floor that the player sees",
+          "The map of where the AI can walk",
+          "The grid of the CubeGrid tool",
+          "The collision of the character"
+        ],
+        "answer_index": 1,
+        "explain": "The NavMesh marks the walkable area for the AI. You add a Nav Mesh Bounds Volume around the arena and press P to show it."
+      },
+      {
+        "q": "The NavMesh covers each floor but does not join the floors. What does this mean for the fight?",
+        "choices": [
+          "The player cannot jump any more",
+          "The AI walks faster on each floor",
+          "The AI cannot follow the player from one floor to another",
+          "The floors lose their collision"
+        ],
+        "answer_index": 2,
+        "explain": "The AI only walks where the NavMesh is connected. It must join the floors in the places where the AI should be able to follow the player."
+      }
+    ]
+  },
+  "LDQ39": {
+    "new_quiz": [
+      {
+        "q": "What is pacing in a game?",
+        "choices": [
+          "How fast the character runs",
+          "How long the game takes to load",
+          "How many levels the game has",
+          "How the intensity of the game rises and falls over time"
+        ],
+        "answer_index": 3,
+        "explain": "Pacing is the change of intensity over time. Good pacing has both strong moments and quiet moments."
+      },
+      {
+        "q": "What happens when every fight in a row is equally hard?",
+        "choices": [
+          "Players get tired or bored",
+          "Players learn the verb faster",
+          "Players find the exit sooner",
+          "Players notice the lighting more"
+        ],
+        "answer_index": 0,
+        "explain": "Without change, intensity stops feeling like anything. Players either wear out or lose interest."
+      },
+      {
+        "q": "What is a rest beat?",
+        "choices": [
+          "The hardest fight of the level",
+          "A quiet moment between encounters",
+          "The sound that plays when an enemy dies",
+          "A checkpoint that saves the game"
+        ],
+        "answer_index": 1,
+        "explain": "A rest beat is a quiet moment. It lets the player breathe, and it makes the next peak feel stronger."
+      },
+      {
+        "q": "What is an intensity curve?",
+        "choices": [
+          "A graph of the frame rate over time",
+          "A spline that the enemies walk along",
+          "A simple line drawing of how the intensity is planned to rise and fall",
+          "A setting on the Character Movement component"
+        ],
+        "answer_index": 2,
+        "explain": "The curve is a sketch of your pacing plan. High points are intense moments and low points are quiet ones."
+      },
+      {
+        "q": "What does a peak on your intensity curve stand for?",
+        "choices": [
+          "A moment of high intensity, such as an encounter",
+          "A place where the level is highest",
+          "A moment when the game is paused",
+          "A point where the player has the most health"
+        ],
+        "answer_index": 0,
+        "explain": "The curve shows intensity, not height in the level. Each of the three encounters is a peak on it."
+      },
+      {
+        "q": "Where do the rest beats go on your curve?",
+        "choices": [
+          "Only before the first encounter",
+          "Only after the last encounter",
+          "On top of each peak",
+          "Between the encounters"
+        ],
+        "answer_index": 3,
+        "explain": "You draw three encounters in a row with quiet moments between them. The curve goes up for a fight and down for a rest."
+      },
+      {
+        "q": "What do you note for each encounter?",
+        "choices": [
+          "Which textures the arena uses",
+          "What changes compared to the one before",
+          "How long it took to build",
+          "Which Blueprint nodes it uses"
+        ],
+        "answer_index": 1,
+        "explain": "Each encounter should differ from the last one. The note says what you change, so the three fights do not feel the same."
+      },
+      {
+        "q": "Which three things can change from one encounter to the next in this quest?",
+        "choices": [
+          "The sky, the fog or the music",
+          "The menu, the font or the language",
+          "The enemy count, the space or the verb",
+          "The camera, the lens or the exposure"
+        ],
+        "answer_index": 2,
+        "explain": "More or fewer enemies, a different space, or a different main action each change how intense a fight feels."
+      },
+      {
+        "q": "What is the verb of an encounter?",
+        "choices": [
+          "The main action the player uses",
+          "The name of the encounter",
+          "The first word of the level description",
+          "The sound the enemies make"
+        ],
+        "answer_index": 0,
+        "explain": "The verb is the main action of the player, such as shoot or sneak. Changing the verb changes how the encounter plays."
+      },
+      {
+        "q": "What do the 3 lines that you send with the curve explain?",
+        "choices": [
+          "Each enemy and its health",
+          "Each tool you used for the drawing",
+          "Each Blueprint in the level",
+          "Each peak and each rest"
+        ],
+        "answer_index": 3,
+        "explain": "The lines give the reason for the shape of the curve: why each peak is there and what each rest is for."
+      }
+    ]
+  }
+}

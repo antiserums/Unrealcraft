@@ -1,0 +1,686 @@
+{
+  "EAQ30": {
+    "new_quiz": [
+      {
+        "q": "What is color grading?",
+        "choices": [
+          "Changing the colors and contrast of the final image",
+          "Painting colors on the vertices of a mesh",
+          "Choosing the Base Color of a material",
+          "Sorting textures by their color"
+        ],
+        "answer_index": 0,
+        "explain": "Color grading works on the finished picture, like editing a photo. It changes the mood without touching the scene itself."
+      },
+      {
+        "q": "Where do you grade a scene in Unreal Engine?",
+        "choices": [
+          "In the Material Editor",
+          "In the World Settings",
+          "In a Post Process Volume",
+          "In the Content Browser"
+        ],
+        "answer_index": 2,
+        "explain": "The Post Process Volume holds the Color Grading settings. With Infinite Extent (Unbound) turned on, the grade applies to the whole level."
+      },
+      {
+        "q": "What is a LUT?",
+        "choices": [
+          "A light that only affects reflections",
+          "A lookup table: a small texture that stores a color grade",
+          "A list of the lights in the level",
+          "A tool that measures the exposure"
+        ],
+        "answer_index": 1,
+        "explain": "LUT means lookup table. It stores a color grade made in an image editor, so that the same grade can be applied in the engine."
+      },
+      {
+        "q": "What can color grading not do?",
+        "choices": [
+          "Change the contrast of the image",
+          "Make the image warmer or cooler",
+          "Darken the shadows",
+          "Fix bad lighting"
+        ],
+        "answer_index": 3,
+        "explain": "Grading finishes an image. If the lighting is wrong, the grade only changes the colors of a badly lit picture, so you grade last, after lighting."
+      },
+      {
+        "q": "In which order do you grade by hand in this quest?",
+        "choices": [
+          "Highlights first, then the white balance, then the global settings",
+          "Shadows first, then the LUT, then the white balance",
+          "The white balance first, then the global settings, then shadows, midtones and highlights",
+          "The global settings first, then the LUT, then the midtones"
+        ],
+        "answer_index": 2,
+        "explain": "You go from the broad to the fine. White balance sets the base, the global settings shape the whole image, and the three ranges are adjusted last."
+      },
+      {
+        "q": "What is the neutral LUT image that you download from the Epic documentation?",
+        "choices": [
+          "A LUT that changes nothing yet",
+          "A LUT that turns the image gray",
+          "A screenshot of an empty level",
+          "A texture with a single color"
+        ],
+        "answer_index": 0,
+        "explain": "The neutral LUT is the starting point, 256 x 16 pixels in size. It only becomes a grade after you apply your adjustments to it."
+      },
+      {
+        "q": "Why do you apply the same color adjustments to the screenshot and to the LUT image in the image editor?",
+        "choices": [
+          "So both files get the same size",
+          "So the screenshot can be imported as a LUT",
+          "So the LUT image is deleted afterwards",
+          "The screenshot shows the result, and the LUT image records the adjustments"
+        ],
+        "answer_index": 3,
+        "explain": "You judge the grade on the screenshot. The same adjustments on the LUT image store that grade in a form Unreal can apply."
+      },
+      {
+        "q": "Which settings do you change on the imported LUT texture?",
+        "choices": [
+          "Texture Group to World and Mip Gen Settings to Sharpen0",
+          "Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps",
+          "Texture Group to UI and sRGB turned off",
+          "Texture Group to Lightmap and Mip Gen Settings to Blur1"
+        ],
+        "answer_index": 1,
+        "explain": "A LUT is data and not a normal picture. These two settings keep Unreal from shrinking or filtering it in a way that would change the colors."
+      },
+      {
+        "q": "Where do you assign the LUT texture?",
+        "choices": [
+          "In the Light Color of the Directional Light",
+          "In the Emissive Color of a material",
+          "In the Post Process Volume, as the Color Grading LUT",
+          "In the World Settings, under Lightmass"
+        ],
+        "answer_index": 2,
+        "explain": "The Color Grading LUT slot is in the Misc part of the Color Grading settings of the Post Process Volume."
+      },
+      {
+        "q": "Why do you keep one screenshot without any grade?",
+        "choices": [
+          "As a reference to compare the graded stills with",
+          "Because the LUT needs it during play",
+          "Because Unreal deletes ungraded levels",
+          "As the icon of the level"
+        ],
+        "answer_index": 0,
+        "explain": "After some time with a grade, the eye gets used to it. The ungraded still shows what the grade really changed."
+      }
+    ]
+  },
+  "EAQ31": {
+    "new_quiz": [
+      {
+        "q": "What is Movie Render Queue?",
+        "choices": [
+          "The list of levels that are loaded at start",
+          "The tool in Unreal for rendering final images and videos",
+          "A panel that plays videos inside the editor",
+          "A plugin that records the screen during play"
+        ],
+        "answer_index": 1,
+        "explain": "Movie Render Queue, often shortened to MRQ, renders final frames. It is what you use when a normal screenshot is not clean enough."
+      },
+      {
+        "q": "Why is a Movie Render Queue image cleaner than a normal screenshot?",
+        "choices": [
+          "It uses a different level",
+          "It removes the lights before rendering",
+          "It always renders in black and white",
+          "It can spend more time on each frame than the viewport does"
+        ],
+        "answer_index": 3,
+        "explain": "The viewport must draw many frames each second. Movie Render Queue has no such limit, so it can render one frame with much more care."
+      },
+      {
+        "q": "What does Movie Render Queue render from?",
+        "choices": [
+          "A Level Sequence",
+          "A camera bookmark",
+          "A Widget Blueprint",
+          "A Material Instance"
+        ],
+        "answer_index": 0,
+        "explain": "A Level Sequence is the asset Unreal uses for cinematics. Movie Render Queue renders its frames."
+      },
+      {
+        "q": "How long is the Level Sequence you create for a still image?",
+        "choices": [
+          "One second",
+          "Ten frames",
+          "One frame",
+          "One minute"
+        ],
+        "answer_index": 2,
+        "explain": "A still is a single picture, so the sequence only needs one frame."
+      },
+      {
+        "q": "Why must the Level Sequence have a Camera Cut track?",
+        "choices": [
+          "So the sequence loops",
+          "So the render uses your Cine Camera",
+          "So the camera moves during the frame",
+          "So the frame is saved as a video"
+        ],
+        "answer_index": 1,
+        "explain": "The Camera Cut track tells the sequence which camera to look through. Without it, the render does not use the view you framed."
+      },
+      {
+        "q": "What do anti-aliasing samples do in Movie Render Queue?",
+        "choices": [
+          "They add more lights to the scene",
+          "They make the image file smaller",
+          "They raise the frame rate of the viewport",
+          "They smooth jagged edges by rendering the frame several times"
+        ],
+        "answer_index": 3,
+        "explain": "Each sample is one more render of the same frame. Combined, they give smooth edges and less noise."
+      },
+      {
+        "q": "Why do you save the render settings as a preset?",
+        "choices": [
+          "So you can use them again later",
+          "So the render runs in the background",
+          "So the Level Sequence gets longer",
+          "So the camera is locked"
+        ],
+        "answer_index": 0,
+        "explain": "A preset stores your settings. The next render starts from it, and all your stills get the same quality."
+      },
+      {
+        "q": "What do you compare the Movie Render Queue still with?",
+        "choices": [
+          "A photo of your monitor",
+          "A render of a different level",
+          "A High Resolution Screenshot of the same frame",
+          "A still from another camera"
+        ],
+        "answer_index": 2,
+        "explain": "The same frame taken both ways shows exactly what Movie Render Queue adds. Look at the edges and at fine detail."
+      },
+      {
+        "q": "The rendered still shows a different view from the one you framed. What do you check first?",
+        "choices": [
+          "That the level has a Sky Light",
+          "That the Level Sequence has a Camera Cut track with your Cine Camera",
+          "That the preset has a name",
+          "That the resolution is high"
+        ],
+        "answer_index": 1,
+        "explain": "The render looks through the camera of the Camera Cut track. If the track is missing or uses another camera, you get another view."
+      },
+      {
+        "q": "Which two choices in the render settings raise the quality of the still in this quest?",
+        "choices": [
+          "A lower frame rate and a shorter sequence",
+          "A second Level Sequence and a second camera",
+          "A smaller file type and fewer lights",
+          "Anti-aliasing samples and a high resolution"
+        ],
+        "answer_index": 3,
+        "explain": "The samples smooth the edges and the high resolution keeps fine detail. Together they are the main reasons the still beats a screenshot."
+      }
+    ]
+  },
+  "EAQ35": {
+    "new_quiz": [
+      {
+        "q": "What is a reference scene?",
+        "choices": [
+          "A neutral level with known lighting that people use to check their assets",
+          "The first level of a finished game",
+          "A folder with reference images",
+          "A level that shows every material of a project"
+        ],
+        "answer_index": 0,
+        "explain": "A reference scene is a known, neutral place. People put an asset into it to see how the asset looks under fixed conditions."
+      },
+      {
+        "q": "Why should everyone on a team check assets in the same reference scene?",
+        "choices": [
+          "The scene makes all assets look the same",
+          "The scene fixes mistakes in the assets",
+          "Everyone judges under the same light, so the results can be compared",
+          "Only one person can then open the assets"
+        ],
+        "answer_index": 2,
+        "explain": "An asset looks different under every light. With one shared scene, a difference between two assets comes from the assets and not from the lighting."
+      },
+      {
+        "q": "What is a Macbeth-style swatch board?",
+        "choices": [
+          "A board that lists the names of the cameras",
+          "A board of standard color patches",
+          "A board with the README text",
+          "A board that blocks the key light"
+        ],
+        "answer_index": 1,
+        "explain": "The patches have known colors. If they look wrong in the picture, the lighting or the exposure is off."
+      },
+      {
+        "q": "Which pair of balls belongs in the scene?",
+        "choices": [
+          "One red and one blue",
+          "One large and one small",
+          "One lit and one unlit",
+          "One gray and one chrome"
+        ],
+        "answer_index": 3,
+        "explain": "The gray ball shows how the light falls on a plain surface. The chrome ball mirrors the surroundings, so you see where the light comes from."
+      },
+      {
+        "q": "How do you give the reference scene a fixed exposure?",
+        "choices": [
+          "Add a Post Process Volume and set Metering Mode to Manual",
+          "Set the Directional Light to Movable",
+          "Turn off Lumen in the Project Settings",
+          "Save a camera bookmark at each camera"
+        ],
+        "answer_index": 0,
+        "explain": "With Manual metering the camera does not adjust the brightness by itself. Every asset is then judged at the same exposure."
+      },
+      {
+        "q": "What is the hero area of the reference scene?",
+        "choices": [
+          "The place where the cameras stand",
+          "The place where the README is shown",
+          "The place where the asset stands",
+          "The place with the swatch board"
+        ],
+        "answer_index": 2,
+        "explain": "The hero area is where people put their asset. The three lights show its shape from the front, in the shadows and along its edge."
+      },
+      {
+        "q": "How are the surfaces of the scene built?",
+        "choices": [
+          "From a new material for every surface",
+          "From one master material with instances",
+          "From vertex colors only",
+          "From decals on a single mesh"
+        ],
+        "answer_index": 1,
+        "explain": "One master material with instances keeps the scene easy to maintain. It also uses at least one Material Function, and one prop has a vertex-painted blend."
+      },
+      {
+        "q": "What do you provide so that people can take the same pictures of every asset?",
+        "choices": [
+          "A list of console commands",
+          "A second copy of the level",
+          "A folder of screenshots",
+          "3 Cine Cameras with bookmarks, and a Movie Render Queue preset"
+        ],
+        "answer_index": 3,
+        "explain": "Fixed cameras give the same views each time. The preset gives the same render settings, so stills of different assets can be compared."
+      },
+      {
+        "q": "What must the one-page README say?",
+        "choices": [
+          "How to use the scene, what the exposure is, and what people should not change",
+          "How long the scene took to build and which tools you used",
+          "Which assets were tested in the scene so far",
+          "Which engine versions you tried"
+        ],
+        "answer_index": 0,
+        "explain": "The README is the manual for other people. It protects the fixed parts of the scene, such as the exposure, from changes by mistake."
+      },
+      {
+        "q": "What does the mentor check about your README?",
+        "choices": [
+          "That it is longer than one page",
+          "That it lists every node of the master material",
+          "That the scene could be used with only your README",
+          "That it is written before the scene is built"
+        ],
+        "answer_index": 2,
+        "explain": "The scene is built for other people. If someone can use it with nothing but the README, the guide does its job."
+      }
+    ]
+  },
+  "EAQ32": {
+    "new_quiz": [
+      {
+        "q": "What is set dressing?",
+        "choices": [
+          "Choosing clothes for a character",
+          "Filling a scene with small objects such as rocks and debris",
+          "Setting the lights of a scene",
+          "Naming the assets of a project"
+        ],
+        "answer_index": 1,
+        "explain": "Set dressing adds the many small objects that make a place look real. Placing each one by hand takes a long time."
+      },
+      {
+        "q": "How does PCG help with set dressing?",
+        "choices": [
+          "It lowers the triangle count of each rock",
+          "It paints textures on the landscape",
+          "It imports rock meshes from Fab",
+          "You build a graph of rules, and the graph places many objects for you"
+        ],
+        "answer_index": 3,
+        "explain": "PCG means Procedural Content Generation. The rules place the objects, so you change a rule and not a thousand rocks."
+      },
+      {
+        "q": "PCG is missing from the right-click menu of the Content Browser. What do you check first?",
+        "choices": [
+          "That the Procedural Content Generation Framework (PCG) plugin is enabled",
+          "That the level has a Landscape",
+          "That the project has a rock mesh",
+          "That the Place Actors panel is open"
+        ],
+        "answer_index": 0,
+        "explain": "PCG comes from a plugin. You enable it in Edit, then Plugins, and the PCG entries appear in the editor."
+      },
+      {
+        "q": "In which order do you connect the three nodes of the scatter graph?",
+        "choices": [
+          "Surface Sampler, Static Mesh Spawner, Get Landscape Data",
+          "Static Mesh Spawner, Get Landscape Data, Surface Sampler",
+          "Get Landscape Data, Surface Sampler, Static Mesh Spawner",
+          "Surface Sampler, Get Landscape Data, Static Mesh Spawner"
+        ],
+        "answer_index": 2,
+        "explain": "The graph first reads the landscape, then makes points on its surface, and last puts a mesh on each point."
+      },
+      {
+        "q": "What does the Surface Sampler node do in this graph?",
+        "choices": [
+          "It reads the height of the camera",
+          "It makes points on the surface of the landscape",
+          "It picks the mesh that is spawned",
+          "It deletes the landscape under the rocks"
+        ],
+        "answer_index": 1,
+        "explain": "The sampler turns the landscape surface into many points. Each point can later become one object."
+      },
+      {
+        "q": "How do you run the graph in the level?",
+        "choices": [
+          "Drag the graph asset onto the landscape",
+          "Press Play and wait",
+          "Open the graph and press F9",
+          "Place a PCG Volume, set Graph on its PCG component, and click Generate"
+        ],
+        "answer_index": 3,
+        "explain": "The PCG Volume marks where the graph works. Its PCG component needs to know the graph, and Generate runs it."
+      },
+      {
+        "q": "What does a density rule control?",
+        "choices": [
+          "How many objects appear",
+          "How heavy each object is",
+          "How bright each object is",
+          "How large the PCG Volume is"
+        ],
+        "answer_index": 0,
+        "explain": "A density rule thins out or keeps points. A Density Filter node after the Surface Sampler is one way to build it."
+      },
+      {
+        "q": "What does an exclusion rule do?",
+        "choices": [
+          "It adds objects to an area",
+          "It changes the mesh of the objects",
+          "It removes objects from an area",
+          "It hides the PCG Volume"
+        ],
+        "answer_index": 2,
+        "explain": "An exclusion rule takes points away where you do not want objects. That is how a path stays free."
+      },
+      {
+        "q": "Which node can subtract the points near a spline along the path?",
+        "choices": [
+          "A Static Mesh Spawner node",
+          "A Difference node",
+          "A Get Landscape Data node",
+          "A Surface Sampler node"
+        ],
+        "answer_index": 1,
+        "explain": "A Difference node removes one set of points from another. With the points near the path spline as the second set, the path is kept clear."
+      },
+      {
+        "q": "Why do you add a rule that keeps the paths clear?",
+        "choices": [
+          "So the graph has more nodes",
+          "So the rocks are larger near the path",
+          "So the PCG Volume can be deleted",
+          "So the scattered objects do not block where the player walks"
+        ],
+        "answer_index": 3,
+        "explain": "A scatter that covers everything also covers the route. The rule keeps the dressing where it helps the scene and away from the path."
+      }
+    ]
+  },
+  "EAQ33": {
+    "new_quiz": [
+      {
+        "q": "What is the Water system in Unreal Engine?",
+        "choices": [
+          "A material that makes any mesh look wet",
+          "A weather tool that makes rain",
+          "A plugin that gives you ready-made lakes, rivers and oceans",
+          "A view mode that shows reflections"
+        ],
+        "answer_index": 2,
+        "explain": "The Water system comes as the Water plugin. It adds water bodies that you place in a level."
+      },
+      {
+        "q": "Why does water have a strong effect on the mood of a scene?",
+        "choices": [
+          "It reflects everything around it",
+          "It makes the level load more slowly",
+          "It turns off the other lights",
+          "It hides the landscape under it"
+        ],
+        "answer_index": 0,
+        "explain": "Water mirrors the sky and the surroundings. Clear, bright water and dark, murky water give the same place two very different moods."
+      },
+      {
+        "q": "What do you do right after you enable the Water plugin in Edit, then Plugins?",
+        "choices": [
+          "Delete the Landscape",
+          "Restart the editor",
+          "Create a new project",
+          "Open the Material Editor"
+        ],
+        "answer_index": 1,
+        "explain": "A plugin only loads when the editor starts. After the restart, the water bodies are available."
+      },
+      {
+        "q": "How do you add a lake or a river to the level?",
+        "choices": [
+          "Sculpt a hole and fill it with a blue material",
+          "Right-click in the Content Browser and choose Water",
+          "Open Landscape Mode and choose New",
+          "Search for Water Body in the Place Actors panel and drag one into the level"
+        ],
+        "answer_index": 3,
+        "explain": "The Place Actors panel lists Water Body Lake and Water Body River after the plugin is enabled. You drag one into the level."
+      },
+      {
+        "q": "Where do you find the material of a water body?",
+        "choices": [
+          "In Water Material in the Details panel of the water body",
+          "In the World Settings of the level",
+          "In the Landscape Material of the Landscape",
+          "In the Post Process Volume"
+        ],
+        "answer_index": 0,
+        "explain": "You select the water body and look for Water Material in its Details panel. It points to a Material Instance."
+      },
+      {
+        "q": "Why do you make a copy of the water Material Instance before you change it?",
+        "choices": [
+          "A copy renders faster than the original",
+          "The original cannot be opened",
+          "So the original of the plugin stays as it is",
+          "So the water body gets collision"
+        ],
+        "answer_index": 2,
+        "explain": "The original instance belongs to the plugin and can be used by other water bodies. Changing a copy keeps your tuning in your own asset."
+      },
+      {
+        "q": "Which two values of the copied Material Instance do you change to tune the water?",
+        "choices": [
+          "Roughness and Metallic",
+          "Absorption and Scattering",
+          "Intensity and Source Angle",
+          "Inner Radius and Falloff Distance"
+        ],
+        "answer_index": 1,
+        "explain": "Absorption and Scattering describe what happens to light inside the water. Together they set its color and how far you can see into it."
+      },
+      {
+        "q": "What does Scattering control?",
+        "choices": [
+          "How fast the water flows",
+          "How high the waves are",
+          "How large the lake is",
+          "How light spreads inside the water"
+        ],
+        "answer_index": 3,
+        "explain": "Scattering is how light spreads inside the water. It changes how clear or murky the water looks."
+      },
+      {
+        "q": "Why do you write one line about the mood before you tune the water?",
+        "choices": [
+          "It gives you a target to tune toward and to judge the result against",
+          "The plugin reads the line and sets the values",
+          "The line is used as the name of the water body",
+          "It replaces the screenshot as proof"
+        ],
+        "answer_index": 0,
+        "explain": "Clear and tropical needs different values from dark and murky. With the mood written down, you know when the water is right."
+      },
+      {
+        "q": "The water values look right, but the water still feels wrong for the mood. What else should you look at?",
+        "choices": [
+          "The name of the level",
+          "The size of the Content Browser",
+          "The sky and the lighting around the water",
+          "The number of camera bookmarks"
+        ],
+        "answer_index": 2,
+        "explain": "Water reflects everything around it. If the sky does not fit the mood, the water will not fit it either."
+      }
+    ]
+  },
+  "EAQ34": {
+    "new_quiz": [
+      {
+        "q": "What is a Procedural Foliage Volume?",
+        "choices": [
+          "A brush that paints single plants by hand",
+          "A box that fills an area with plants by simulating how they spread",
+          "A volume that hides plants from the camera",
+          "A folder that stores tree meshes"
+        ],
+        "answer_index": 1,
+        "explain": "The volume simulates how plants spread and places them inside its box. You do not place each tree yourself."
+      },
+      {
+        "q": "What do foliage types act like in this system?",
+        "choices": [
+          "Like materials on a mesh",
+          "Like lights in a room",
+          "Like cameras in a shot",
+          "Like species with their own spacing rules"
+        ],
+        "answer_index": 3,
+        "explain": "Each foliage type is one kind of plant. Its settings say how it spreads and how much room it needs."
+      },
+      {
+        "q": "Why do the spacing settings matter so much?",
+        "choices": [
+          "Plants with the same distance between them look artificial",
+          "Plants that are too close cannot be saved",
+          "Plants only cast shadows at one distance",
+          "Plants need spacing to get collision"
+        ],
+        "answer_index": 0,
+        "explain": "Real forests are uneven. Even spacing looks like a plantation, so you tune the rules until the result is not uniform."
+      },
+      {
+        "q": "The Procedural Foliage Spawner is missing from the Foliage menu of the Content Browser. What do you check first?",
+        "choices": [
+          "That the Water plugin is enabled",
+          "That the level is saved",
+          "That Procedural Foliage is enabled in the Editor Preferences",
+          "That Nanite is enabled on the tree meshes"
+        ],
+        "answer_index": 2,
+        "explain": "Procedural Foliage is an experimental feature. You turn it on in Edit, then Editor Preferences, in the Experimental section."
+      },
+      {
+        "q": "Which assets do you create for a volume with 2 species?",
+        "choices": [
+          "Two Landscape Grass Type assets and one PCG Graph",
+          "Two Static Mesh Foliage assets and one Procedural Foliage Spawner",
+          "Two Material Instances and one master material",
+          "Two Level Instances and one Data Asset"
+        ],
+        "answer_index": 1,
+        "explain": "Each species is one Static Mesh Foliage asset with its own mesh and rules. The spawner holds the list of species."
+      },
+      {
+        "q": "Where do you add the two species in the spawner?",
+        "choices": [
+          "Under Mesh Entries",
+          "Under Grass Types",
+          "Under Parameter Name",
+          "Under Foliage Types"
+        ],
+        "answer_index": 3,
+        "explain": "The spawner has a list named Foliage Types. Every Static Mesh Foliage asset in that list takes part in the simulation."
+      },
+      {
+        "q": "How do you make the spawner fill the forest edge?",
+        "choices": [
+          "Drag it into the level, scale it over the area, and click Resimulate",
+          "Open it and click Generate",
+          "Paint it on the landscape in Foliage Mode",
+          "Add it to the Landscape Material"
+        ],
+        "answer_index": 0,
+        "explain": "The spawner in the level becomes the volume. Resimulate in its Details panel runs the simulation inside the scaled box."
+      },
+      {
+        "q": "Which of these are spacing settings of a Static Mesh Foliage asset?",
+        "choices": [
+          "Inner Radius, Falloff Distance and Apply Reverb",
+          "Source Angle, Intensity and Light Color",
+          "Shade Radius, Initial Seed Density and Average Spread Distance",
+          "Absorption, Scattering and Roughness"
+        ],
+        "answer_index": 2,
+        "explain": "These settings control how many plants start, how far they spread, and how much room each one takes. You tune them in both species."
+      },
+      {
+        "q": "You changed Average Spread Distance, but the forest in the level looks the same. What do you do?",
+        "choices": [
+          "Restart the editor",
+          "Click Resimulate in the Details panel of the volume",
+          "Delete the Landscape",
+          "Enable Procedural Foliage again"
+        ],
+        "answer_index": 1,
+        "explain": "The plants in the level are the result of the last simulation. A changed setting only shows after you click Resimulate."
+      },
+      {
+        "q": "When is the tuning of the forest edge finished?",
+        "choices": [
+          "When both species have the same settings",
+          "When every tree has the same distance to the next",
+          "When the volume holds no plants",
+          "When the edge of the forest looks natural and not uniform"
+        ],
+        "answer_index": 3,
+        "explain": "The goal is a result that looks grown and not placed. You keep tuning both species together until the edge reads as natural."
+      }
+    ]
+  }
+}

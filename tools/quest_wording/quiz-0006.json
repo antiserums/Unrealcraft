@@ -1,0 +1,462 @@
+{
+  "PQ9": {
+    "new_quiz": [
+      {
+        "q": "What is the job of the GameMode?",
+        "choices": [
+          "It holds the rules of the game, such as how a player wins",
+          "It draws the score on the screen",
+          "It stores the meshes of the level",
+          "It reads the keys the player presses"
+        ],
+        "answer_index": 0,
+        "explain": "The GameMode is the Blueprint for the rules. In this quest it decides when the count is high enough for a win."
+      },
+      {
+        "q": "What kind of information belongs in the GameState?",
+        "choices": [
+          "The rules that decide who wins",
+          "The settings of the editor",
+          "Shared information about the match, such as the score",
+          "The input keys of one player"
+        ],
+        "answer_index": 2,
+        "explain": "The GameState holds shared information about the match. The count of collected items is such a value, so it is stored there."
+      },
+      {
+        "q": "Where do you tell BP_UUGameMode to use BP_UUGameState?",
+        "choices": [
+          "In the World Settings, under Kill Z",
+          "In the Class Defaults of BP_UUGameMode, in Game State Class",
+          "In the Event Graph of BP_UUGameState",
+          "In the Details panel of the Player Start"
+        ],
+        "answer_index": 1,
+        "explain": "Game State Class is a setting in the Class Defaults of the GameMode. It decides which GameState is created when the game starts."
+      },
+      {
+        "q": "How do you make a test level use BP_UUGameMode?",
+        "choices": [
+          "Drag BP_UUGameMode into the level",
+          "Rename the level to BP_UUGameMode",
+          "Add BP_UUGameMode to the character as a component",
+          "Set GameMode Override in the World Settings of the level"
+        ],
+        "answer_index": 3,
+        "explain": "GameMode Override in the World Settings chooses the GameMode for that level. Without it, the level uses the default of the project."
+      },
+      {
+        "q": "Why do you set Default Pawn Class to the character of the template?",
+        "choices": [
+          "So the score is saved between levels",
+          "So the GameState is created",
+          "So you can still walk around as that character",
+          "So the win message is printed once"
+        ],
+        "answer_index": 2,
+        "explain": "Default Pawn Class decides which pawn the player gets. A new GameMode does not know the template character until you set it."
+      },
+      {
+        "q": "How does CheckWin in the GameMode read the count?",
+        "choices": [
+          "It uses Get Game State, casts it to BP_UUGameState and reads Collected",
+          "It counts the pickups that are left in the level",
+          "It reads the Target variable of the GameState",
+          "It asks the character for its location"
+        ],
+        "answer_index": 0,
+        "explain": "Get Game State returns the general GameState. The cast to BP_UUGameState gives access to your own variable Collected."
+      },
+      {
+        "q": "The win message appears again and again after the win. What do you add?",
+        "choices": [
+          "A second Print String node",
+          "A Do Once node in front of the Print String",
+          "A Delay node after the Print String",
+          "A larger Target value"
+        ],
+        "answer_index": 1,
+        "explain": "Do Once lets the execution pass only one time. A Boolean variable named HasWon that you check first does the same job."
+      },
+      {
+        "q": "In a network game, why is the score stored in the GameState and not in the GameMode?",
+        "choices": [
+          "The GameMode cannot hold Integer variables",
+          "The GameState is deleted when a player wins",
+          "The GameMode is created again on every frame",
+          "The GameMode exists only on the server, while the GameState is shared with all players"
+        ],
+        "answer_index": 3,
+        "explain": "The GameMode holds the rules and lives only on the server. The GameState is copied to every player, so everyone can read the score from it."
+      }
+    ]
+  },
+  "PQ10": {
+    "new_quiz": [
+      {
+        "q": "What is Enhanced Input?",
+        "choices": [
+          "A plugin that records the screen",
+          "A tool that draws the HUD",
+          "The system that Unreal Engine 5 uses to read player input",
+          "A window that lists the keyboard shortcuts of the editor"
+        ],
+        "answer_index": 2,
+        "explain": "Enhanced Input is the input system of Unreal Engine 5. It turns key presses and stick movement into actions your game reacts to."
+      },
+      {
+        "q": "What is an Input Action?",
+        "choices": [
+          "An asset that stands for one thing the player can do, such as interact",
+          "A key on the keyboard that the player presses",
+          "A node that moves the character forward",
+          "A list of all the keys that the game uses"
+        ],
+        "answer_index": 0,
+        "explain": "An Input Action describes an action, not a key. Which key starts it is decided somewhere else."
+      },
+      {
+        "q": "What is an Input Mapping Context?",
+        "choices": [
+          "A Blueprint that holds the rules of the game",
+          "A widget that shows the controls on the screen",
+          "A variable on the character",
+          "An asset that says which keys start which actions"
+        ],
+        "answer_index": 3,
+        "explain": "The Input Mapping Context connects keys to Input Actions. You add IA_Interact to it and give it a key."
+      },
+      {
+        "q": "You mapped IA_Interact to a key, but pressing the key does nothing. What do you check first?",
+        "choices": [
+          "That the level has a Sky Light",
+          "That the mapping context is added to the player on BeginPlay",
+          "That the Input Action is named in capital letters",
+          "That the character has a camera boom"
+        ],
+        "answer_index": 1,
+        "explain": "A mapping context only works after it is added to the player. Without this step the keys of the player do nothing."
+      },
+      {
+        "q": "Which event of IA_Interact do you handle on the character?",
+        "choices": [
+          "Triggered",
+          "BeginPlay",
+          "Begin Overlap",
+          "AnyDamage"
+        ],
+        "answer_index": 0,
+        "explain": "The Triggered event fires when the action is triggered by its key. Your logic that writes to the log starts from there."
+      },
+      {
+        "q": "What changes when you add a Hold trigger to the mapping?",
+        "choices": [
+          "The action fires twice for each press",
+          "The action fires when the key is released",
+          "The action fires only after the key is held down for a moment",
+          "The action fires on every key of the keyboard"
+        ],
+        "answer_index": 2,
+        "explain": "A trigger decides when an input counts. With Hold, a short tap is not enough and the key must stay down for a moment."
+      },
+      {
+        "q": "Where can you look at a working example of Enhanced Input assets?",
+        "choices": [
+          "In the Output Log of the editor",
+          "In the Input folder of the Third Person template",
+          "In the World Settings of an empty level",
+          "In the Place Actors panel, under Volumes"
+        ],
+        "answer_index": 1,
+        "explain": "The template already uses Enhanced Input. Its Input folder holds Input Actions and an Input Mapping Context that you can open and study."
+      },
+      {
+        "q": "What does your graph write to the log when IA_Interact fires?",
+        "choices": [
+          "The frame rate of the game",
+          "The name of the key that was pressed",
+          "The number of Input Actions in the project",
+          "Which actor the character is facing"
+        ],
+        "answer_index": 3,
+        "explain": "The log line names the actor in front of the character. It proves that the action runs from the key press to your own logic."
+      }
+    ]
+  },
+  "PQ11": {
+    "new_quiz": [
+      {
+        "q": "Which three ways do Blueprints give you to pack nodes into something you can use again?",
+        "choices": [
+          "A variable, a component and a comment",
+          "A function, a macro and a custom event",
+          "A struct, an enum and a Data Asset",
+          "A level, a widget and a material"
+        ],
+        "answer_index": 1,
+        "explain": "A function, a macro and a custom event all hold a group of nodes under one name. They look similar but follow different rules."
+      },
+      {
+        "q": "What does a Delay node do?",
+        "choices": [
+          "It makes the graph wait for some time",
+          "It makes the graph run faster",
+          "It stops the game for ever",
+          "It repeats the node before it"
+        ],
+        "answer_index": 0,
+        "explain": "A Delay node pauses that path of the graph for the time you set, and then the path continues."
+      },
+      {
+        "q": "In which of the three does the editor not allow a Delay node?",
+        "choices": [
+          "In a macro",
+          "In a custom event",
+          "In the Event Graph",
+          "In a function"
+        ],
+        "answer_index": 3,
+        "explain": "A function must run from start to end without waiting. A macro and a custom event can contain a Delay node."
+      },
+      {
+        "q": "You need to call a behavior from another Blueprint. Which of the three can you not reach from there?",
+        "choices": [
+          "The function",
+          "The custom event",
+          "The macro",
+          "All three can be reached"
+        ],
+        "answer_index": 2,
+        "explain": "A macro that you make inside a Blueprint only exists in that Blueprint. Functions and custom events can be called from other Blueprints."
+      },
+      {
+        "q": "You need a behavior that gives a value back to the node that called it. Which one do you pick?",
+        "choices": [
+          "A function",
+          "A custom event",
+          "A Delay node",
+          "A comment box"
+        ],
+        "answer_index": 0,
+        "explain": "A function can have return values that the caller uses right away. A custom event has no return value."
+      },
+      {
+        "q": "You need a behavior that waits two seconds and that another Blueprint can start. Which one do you pick?",
+        "choices": [
+          "A function",
+          "A custom event",
+          "A macro",
+          "An enum"
+        ],
+        "answer_index": 1,
+        "explain": "A custom event can contain a Delay node and can be called from another Blueprint. A function cannot wait, and a macro cannot be reached from outside."
+      },
+      {
+        "q": "Which of the three can have several execution output pins?",
+        "choices": [
+          "A function",
+          "A custom event",
+          "A variable",
+          "A macro"
+        ],
+        "answer_index": 3,
+        "explain": "A macro can have more than one execution input and output. This is why flow control nodes that split the path are built as macros."
+      },
+      {
+        "q": "Why do you build the same behavior three times in this quest?",
+        "choices": [
+          "Because the editor needs all three to compile",
+          "Because one of the three will be deleted by the engine",
+          "So you can compare their rules and pick the right one later",
+          "So the behavior runs three times as fast"
+        ],
+        "answer_index": 2,
+        "explain": "Seeing the three side by side shows where each one is allowed and where it is not. Picking the right one keeps your graphs easy to read."
+      }
+    ]
+  },
+  "PQ12": {
+    "new_quiz": [
+      {
+        "q": "What is an enum?",
+        "choices": [
+          "A node that waits for some time",
+          "A group of values kept together",
+          "A fixed list of named choices",
+          "A file that stores a set of values"
+        ],
+        "answer_index": 2,
+        "explain": "An enum is a fixed list of named choices. E_PickupType with 3 values is an enum."
+      },
+      {
+        "q": "What is a struct?",
+        "choices": [
+          "A group of values kept together",
+          "A fixed list of named choices",
+          "A Blueprint that is placed in a level",
+          "A graph that does the work"
+        ],
+        "answer_index": 0,
+        "explain": "A struct packs several values into one unit. S_PickupInfo holds a name, a value and a type together."
+      },
+      {
+        "q": "What is a Data Asset?",
+        "choices": [
+          "A mesh with a collision",
+          "A node in the Event Graph",
+          "A folder in the Content Browser",
+          "A file that stores a set of values"
+        ],
+        "answer_index": 3,
+        "explain": "A Data Asset is an asset that only holds data. Here each one stores the S_PickupInfo of one pickup."
+      },
+      {
+        "q": "Why do good projects keep data apart from logic?",
+        "choices": [
+          "Because Blueprints cannot store numbers",
+          "So other people can change the values without touching your graphs",
+          "Because data is not saved with the project",
+          "So the game needs fewer levels"
+        ],
+        "answer_index": 1,
+        "explain": "When the values are in data files, a designer can tune them safely. The graph that does the work stays as it is."
+      },
+      {
+        "q": "Which parent class do you choose for the Blueprint Class DA_PickupBase?",
+        "choices": [
+          "Actor",
+          "Primary Data Asset",
+          "Game Mode Base",
+          "User Widget"
+        ],
+        "answer_index": 1,
+        "explain": "A Blueprint Class with Primary Data Asset as its parent defines which variables your Data Assets have. You then add the S_PickupInfo variable to it."
+      },
+      {
+        "q": "How do you create a Data Asset instance from your class?",
+        "choices": [
+          "Drag DA_PickupBase into the level",
+          "Click Add, then User Interface, then Widget Blueprint",
+          "Right-click in the Content Browser, open Miscellaneous and choose Data Asset",
+          "Open the World Settings and set GameMode Override"
+        ],
+        "answer_index": 2,
+        "explain": "Data Asset is in the Miscellaneous group of the Content Browser menu. After you choose it, you pick your class."
+      },
+      {
+        "q": "What are hardcoded variables?",
+        "choices": [
+          "Values typed directly into the Blueprint",
+          "Values read from a Data Asset",
+          "Values that the player types during the game",
+          "Values that the engine protects from changes"
+        ],
+        "answer_index": 0,
+        "explain": "A hardcoded value is fixed inside the Blueprint. To change it, someone must open and edit the Blueprint, which is what this quest avoids."
+      },
+      {
+        "q": "How do you make a placed pickup describe a different item?",
+        "choices": [
+          "Rewrite the overlap graph of the pickup",
+          "Create a new pickup Blueprint for the item",
+          "Rename the pickup in the Outliner",
+          "Change which Data Asset its Instance Editable variable uses"
+        ],
+        "answer_index": 3,
+        "explain": "The pickup reads its name and value from the Data Asset it points to. Picking another Data Asset in the Details panel changes the pickup, and the graph stays the same."
+      }
+    ]
+  },
+  "PQ13": {
+    "new_quiz": [
+      {
+        "q": "What is a log message?",
+        "choices": [
+          "A text that the player types in the game",
+          "A line of text that your game writes to the Output Log window",
+          "A comment box in a Blueprint graph",
+          "A file that stores a saved game"
+        ],
+        "answer_index": 1,
+        "explain": "A log message is text written to the Output Log. It stays there, so you can read it after the moment has passed."
+      },
+      {
+        "q": "How do you make a Print String node write only to the log?",
+        "choices": [
+          "Set its duration to 0",
+          "Delete its Key",
+          "Connect it to BeginPlay",
+          "Turn off its Print to Screen option"
+        ],
+        "answer_index": 3,
+        "explain": "Print String can write to the screen and to the log. With Print to Screen turned off, the message appears only in the Output Log."
+      },
+      {
+        "q": "What does an Is Valid check test?",
+        "choices": [
+          "That a reference really points to an object",
+          "That a number is larger than zero",
+          "That a Blueprint was saved",
+          "That a text has no spelling mistakes"
+        ],
+        "answer_index": 0,
+        "explain": "A reference can be empty. Is Valid tests that it points to a real object before you use it."
+      },
+      {
+        "q": "What is an actor reference?",
+        "choices": [
+          "A copy of an actor in another level",
+          "A screenshot of an actor",
+          "A variable that points to an actor in the level",
+          "A note about an actor in the Outliner"
+        ],
+        "answer_index": 2,
+        "explain": "An actor reference does not hold the actor itself. It points to an actor in the level, like the Target variable of BP_Button."
+      },
+      {
+        "q": "Where do you add an Is Valid check?",
+        "choices": [
+          "Only at the start of the game",
+          "Before every place where the reference is used",
+          "Only after the reference was destroyed",
+          "In the Class Defaults of the Blueprint"
+        ],
+        "answer_index": 1,
+        "explain": "A reference can become empty at any time, for example when the actor is destroyed. So you check it each time before you use it."
+      },
+      {
+        "q": "What does a good warning say?",
+        "choices": [
+          "Only the word Error",
+          "The time when the game started",
+          "The name of the person who made the Blueprint",
+          "What went wrong and which actor it happened on"
+        ],
+        "answer_index": 3,
+        "explain": "With both facts in the message, you know the problem and the place. That turns a long search into a short one."
+      },
+      {
+        "q": "Why do you include the name of the owning actor in the warning?",
+        "choices": [
+          "Many copies can exist, and the name tells you which one has the problem",
+          "The Output Log does not accept messages without a name",
+          "The name makes the warning appear in red",
+          "The name stops the warning from being logged twice"
+        ],
+        "answer_index": 0,
+        "explain": "Ten buttons in a level all write the same text. The actor name tells you which of them has the empty reference."
+      },
+      {
+        "q": "Why do you break one reference on purpose?",
+        "choices": [
+          "To make the game crash",
+          "To delete the Target actor",
+          "To confirm that the warning tells you where to look",
+          "To turn off the Is Valid check"
+        ],
+        "answer_index": 2,
+        "explain": "A check that was never seen failing may not work. Leaving a reference empty on purpose proves that the warning appears and is clear."
+      }
+    ]
+  }
+}

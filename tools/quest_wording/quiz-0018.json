@@ -1,0 +1,458 @@
+{
+  "AQ29": {
+    "new_quiz": [
+      {
+        "q": "What does locomotion mean for a character?",
+        "choices": [
+          "The way the character is lit in a level",
+          "All the ways the character moves around, such as walking and jumping",
+          "The list of bones in the skeleton of the character",
+          "The speed at which animations are imported"
+        ],
+        "answer_index": 1,
+        "explain": "Locomotion covers the basic movement of a character. A locomotion set joins these animations so the character changes smoothly from one to the next."
+      },
+      {
+        "q": "What does the blend space BS_Locomotion blend, and based on what?",
+        "choices": [
+          "Idle, walk and run animations, based on Speed",
+          "Jump and land animations, based on IsFalling",
+          "Upper body and lower body, based on the spine",
+          "Two cameras, based on Direction"
+        ],
+        "answer_index": 0,
+        "explain": "The blend space mixes idle, walk and run as Speed changes. If you have strafe animations, it can also use Direction."
+      },
+      {
+        "q": "When does the blend space also need a Direction axis?",
+        "choices": [
+          "When the character can jump",
+          "When the character has an upper body layer",
+          "When the level has stairs",
+          "When you have strafe animations, which move the character sideways"
+        ],
+        "answer_index": 3,
+        "explain": "Speed alone cannot tell forward from sideways. With strafe animations, Direction picks the animation that fits the way the character moves."
+      },
+      {
+        "q": "Which four states does the state machine of ABP_Locomotion have?",
+        "choices": [
+          "Idle, Walk, Run and Sprint",
+          "Start, Update, Finish and Reset",
+          "Locomotion, JumpStart, JumpLoop and JumpEnd",
+          "Ground, Air, Water and Ladder"
+        ],
+        "answer_index": 2,
+        "explain": "Locomotion plays BS_Locomotion, so idle, walk and run share one state. The three jump states cover the take-off, the time in the air and the landing."
+      },
+      {
+        "q": "Which values from the character do the transition rules read?",
+        "choices": [
+          "IsFalling and Speed",
+          "Health and Score",
+          "Pitch and Yaw",
+          "Count and Spacing"
+        ],
+        "answer_index": 0,
+        "explain": "IsFalling tells the state machine that the character is in the air. Speed tells it how fast the character moves on the ground."
+      },
+      {
+        "q": "The character is running and leaves the ground. Which value makes the state machine leave the Locomotion state?",
+        "choices": [
+          "Speed becomes 0",
+          "IsFalling becomes true",
+          "Direction becomes negative",
+          "The UpperBody layer is linked"
+        ],
+        "answer_index": 1,
+        "explain": "A character in the air is falling in the sense of the movement system. IsFalling becoming true is the signal to go to JumpStart."
+      },
+      {
+        "q": "What do you add to ABP_Locomotion so that another Animation Blueprint can supply the upper body?",
+        "choices": [
+          "A second state machine with four more states",
+          "A Timeline with a float track",
+          "A Data Table with one row for each bone",
+          "An Animation Layer Interface with a layer named UpperBody"
+        ],
+        "answer_index": 3,
+        "explain": "The interface defines the layer. The layer node sits after the state machine in the AnimGraph and passes the pose to whatever Animation Blueprint is linked."
+      },
+      {
+        "q": "What does the Layered Blend per Bone node in ABP_Locomotion_Upper do?",
+        "choices": [
+          "It blends the walk into the run by Speed",
+          "It removes the legs from the pose",
+          "It blends an upper body animation over the input pose",
+          "It plays the jump animations in order"
+        ],
+        "answer_index": 2,
+        "explain": "The node blends a second animation in only from a chosen bone upward. Starting from the spine, the legs keep the locomotion and the upper body shows the new animation."
+      },
+      {
+        "q": "How is the upper body Animation Blueprint activated in the game?",
+        "choices": [
+          "With Link Anim Class Layers when a key is pressed",
+          "With Play Montage on BeginPlay",
+          "With Set Actor Transform on Tick",
+          "With Get Data Table Row in the AnimGraph"
+        ],
+        "answer_index": 0,
+        "explain": "Link Anim Class Layers connects ABP_Locomotion_Upper to the UpperBody layer of the running Animation Blueprint. The layer then uses the linked graph."
+      },
+      {
+        "q": "Your new state machine never plays on the character. What do you check first in BP_ThirdPersonCharacter?",
+        "choices": [
+          "That the camera boom is long enough",
+          "That the Anim Class of the Mesh is set to ABP_Locomotion",
+          "That the capsule has collision",
+          "That the character has a Health variable"
+        ],
+        "answer_index": 1,
+        "explain": "The Mesh plays the Animation Blueprint named in Anim Class. Until you set it to ABP_Locomotion, the character keeps using the old one."
+      }
+    ]
+  },
+  "CQ23": {
+    "new_quiz": [
+      {
+        "q": "How is the master sequence LS_Scene_Master built?",
+        "choices": [
+          "As one long shot with one camera and no cuts",
+          "As a list of screenshots in a folder",
+          "From at least 3 shots in a Shots track, each its own Level Sequence",
+          "From one Level Sequence for each actor"
+        ],
+        "answer_index": 2,
+        "explain": "The master sequence holds the Shots track. Each shot is a separate Level Sequence, so you can work on one shot without touching the others."
+      },
+      {
+        "q": "What is a Spawnable?",
+        "choices": [
+          "An actor that the sequence creates when it plays",
+          "An actor that is placed in the level by hand and never moves",
+          "A camera that follows the player",
+          "A render setting in Movie Render Queue"
+        ],
+        "answer_index": 0,
+        "explain": "A Spawnable exists only while its sequence needs it. The level stays clean, and each shot brings its own actors."
+      },
+      {
+        "q": "Which actors must be Spawnables in this scene?",
+        "choices": [
+          "Only the floor and the walls",
+          "Only the Post Process Volume",
+          "Only the sky and the fog",
+          "Characters, cameras and shot lights"
+        ],
+        "answer_index": 3,
+        "explain": "These actors belong to the shots and not to the level. As Spawnables, they appear with the shot and are gone when it ends."
+      },
+      {
+        "q": "Which cameras does the scene need at least?",
+        "choices": [
+          "Three static cameras",
+          "One following camera and one static camera",
+          "Two cameras on cranes",
+          "One camera on the character"
+        ],
+        "answer_index": 1,
+        "explain": "A following camera uses Look at Tracking, a rail or a crane. A static camera does not move, and the scene needs at least one of each kind."
+      },
+      {
+        "q": "Where do you place your cuts?",
+        "choices": [
+          "On an action",
+          "At random moments",
+          "Every five seconds",
+          "Only at the end of the scene"
+        ],
+        "answer_index": 0,
+        "explain": "A cut on an action is hidden by the movement, so the edit feels natural. Cuts at random moments pull the viewer out of the scene."
+      },
+      {
+        "q": "Why do you use a lighting channel for the hero in at least one shot?",
+        "choices": [
+          "So the hero is rendered in a separate file",
+          "So the hero casts no shadows",
+          "So a light can affect the hero without changing the rest of the set",
+          "So the hero is hidden from the camera"
+        ],
+        "answer_index": 2,
+        "explain": "Lighting channels decide which lights affect which objects. A light on the channel of the hero shapes the hero and leaves the set as it is."
+      },
+      {
+        "q": "How do you keep the brightness of the picture from changing by itself between shots?",
+        "choices": [
+          "Add more lights to each shot",
+          "Use a longer master sequence",
+          "Disable the Camera Cuts track",
+          "Lock the exposure with Manual metering"
+        ],
+        "answer_index": 3,
+        "explain": "With Manual metering the camera does not adapt to bright or dark views. Your lighting decides the brightness of every shot."
+      },
+      {
+        "q": "How do you grade one single shot differently from the base look of the project?",
+        "choices": [
+          "Change the base Post Process Volume during the render",
+          "Add a grade for that shot with a different Priority than the base Post Process Volume",
+          "Paint the colors into the textures",
+          "Render that shot in another project"
+        ],
+        "answer_index": 1,
+        "explain": "The base volume holds the look of the whole project. A second grade with a different Priority can take over for one shot."
+      },
+      {
+        "q": "Which settings does the Movie Render Queue render of this scene use?",
+        "choices": [
+          "A PNG sequence and EXR files, a Temporal Sample Count of at least 4, and TAA disabled",
+          "One MP4 file, a Temporal Sample Count of 1, and TAA enabled",
+          "A JPG sequence only, with no anti-aliasing at all",
+          "One screenshot per shot, taken from the viewport"
+        ],
+        "answer_index": 0,
+        "explain": "The temporal samples do the smoothing, so TAA is turned off. You save these settings as a preset named MRQ_Scene."
+      },
+      {
+        "q": "What does your half-page breakdown contain?",
+        "choices": [
+          "The names of all assets in the Content Browser",
+          "The full text of the documentation pages you read",
+          "The shot list, what each camera does, what the grade does, and your render settings",
+          "The time each render took, frame by frame"
+        ],
+        "answer_index": 2,
+        "explain": "The breakdown explains your choices. A reviewer can read from it why each shot, camera move and grade is there."
+      }
+    ]
+  },
+  "GDQ32": {
+    "new_quiz": [
+      {
+        "q": "What is a GDD?",
+        "choices": [
+          "A debug window for AI characters",
+          "A short written description of a mechanic",
+          "A Data Table with difficulty rows",
+          "A graph that runs the enemy"
+        ],
+        "answer_index": 1,
+        "explain": "A game design document describes the goal of a mechanic, its rules, its numbers and how it should feel."
+      },
+      {
+        "q": "Why do designers hand over a tuned system together with a document?",
+        "choices": [
+          "The engine needs the document to compile",
+          "The document replaces the playtest",
+          "The document is shown to the player",
+          "So other people can understand and check the work"
+        ],
+        "answer_index": 3,
+        "explain": "A graph shows how something works, but not what it is meant to do. The document gives the intent, so others can check the result against it."
+      },
+      {
+        "q": "From which systems must your mechanic use at least one?",
+        "choices": [
+          "A Behavior Tree enemy, EQS spot picking, a State Tree object, or AI Perception",
+          "Niagara, Chaos, Water, or Landscape",
+          "Sequencer, Movie Render Queue, Control Rig, or Take Recorder",
+          "Lumen, Nanite, Virtual Shadow Maps, or Path Tracing"
+        ],
+        "answer_index": 0,
+        "explain": "The quest is about an AI mechanic, for example a guard that hears you, searches for you, and then gives up. Each of the four systems is a way to build AI behavior."
+      },
+      {
+        "q": "How do you build the enemy for the mechanic?",
+        "choices": [
+          "From a Static Mesh with a Timeline",
+          "From a Widget Blueprint with a button",
+          "From a copy of BP_ThirdPersonCharacter with its own AIController Blueprint",
+          "From the Level Blueprint with a Delay node"
+        ],
+        "answer_index": 2,
+        "explain": "The copy gives you a working character with mesh and movement. The AIController Blueprint is what controls it in place of a player."
+      },
+      {
+        "q": "What does the struct S_MechanicTuning hold?",
+        "choices": [
+          "The meshes and materials of the enemy",
+          "3 to 5 numbers that change the feel of the mechanic",
+          "The text of the design document",
+          "The names of the playtesters"
+        ],
+        "answer_index": 1,
+        "explain": "The struct defines the tuning values of the mechanic. Each row of the Data Table then gives these values for one variant."
+      },
+      {
+        "q": "Which rows does the Data Table DT_MechanicTuning have?",
+        "choices": [
+          "One row for each enemy in the level",
+          "One row for each playtest",
+          "Five rows: Goal, Verb, Rules, Numbers and Feel",
+          "Exactly 3 rows: Easy, Normal and Hard"
+        ],
+        "answer_index": 3,
+        "explain": "Each row is one difficulty variant with its own values. Three real variants make you feel what the numbers do."
+      },
+      {
+        "q": "How do you know that the mechanic is really driven by the Data Table?",
+        "choices": [
+          "When you switch the row name, the behavior changes without opening a graph",
+          "The Data Table is the largest asset in the folder",
+          "The graph has no nodes left",
+          "The enemy stops moving when the table is open"
+        ],
+        "answer_index": 0,
+        "explain": "The row is read at Begin Play with Get Data Table Row, and its values are passed on. If a new row name gives new behavior with no graph edit, the data is in control."
+      },
+      {
+        "q": "Where does the mechanic sit in the graybox test space?",
+        "choices": [
+          "Behind the player start, out of sight",
+          "Outside the test space",
+          "Between the player and the goal",
+          "On top of the goal, with no way around"
+        ],
+        "answer_index": 2,
+        "explain": "The space has one goal, such as reaching a door. With the mechanic between the player and that goal, every run tests it."
+      },
+      {
+        "q": "What must the one-page design document cover?",
+        "choices": [
+          "The full graph, node by node",
+          "The goal, the core verb, the 3 variants, their feel, and how you tested it",
+          "The history of the project and the tools you installed",
+          "Only the values of the Hard variant"
+        ],
+        "answer_index": 1,
+        "explain": "The page lets a reader understand the mechanic and compare it with what is built. A mentor checks that the document matches the result."
+      },
+      {
+        "q": "You work alone and have nobody to playtest. What does the quest ask you to do?",
+        "choices": [
+          "Skip the playtest and write the note anyway",
+          "Play only the Easy variant once",
+          "Ask the mentor to play it for you",
+          "Play each variant 3 times and record your time and result"
+        ],
+        "answer_index": 3,
+        "explain": "Several recorded runs per variant give you real numbers to compare. You then write what surprised you and what you changed afterwards."
+      }
+    ]
+  },
+  "TAQ23": {
+    "new_quiz": [
+      {
+        "q": "When is a tool finished?",
+        "choices": [
+          "When it compiles without errors",
+          "When it has more than ten settings",
+          "When another person can use it without you in the room",
+          "When you have used it once yourself"
+        ],
+        "answer_index": 2,
+        "explain": "A tool that only its maker can use is not done. The test is that someone else gets the job done with the tool and its guide alone."
+      },
+      {
+        "q": "Which three things must a finished tool do?",
+        "choices": [
+          "Solve a real problem, handle wrong input, and come with a short guide",
+          "Run on every platform, use C++, and have a logo",
+          "Replace the editor, hide its settings, and run on Tick",
+          "Work only for its maker, need no input, and have no text"
+        ],
+        "answer_index": 0,
+        "explain": "These three points make a tool usable by others. Without them it either solves nothing, breaks on the first mistake, or cannot be understood."
+      },
+      {
+        "q": "How do you find the task that your tool should do?",
+        "choices": [
+          "You pick the most complex feature of the engine",
+          "You copy a tool from the documentation",
+          "You wait until a mentor gives you a task",
+          "You ask another person which slow and repeated task annoys them"
+        ],
+        "answer_index": 3,
+        "explain": "A real problem comes from a real user. If you have nobody to ask, you take a slow, repeated task from your own work."
+      },
+      {
+        "q": "Which three forms can you choose from for your tool?",
+        "choices": [
+          "A Level Blueprint, a GameMode, or a HUD",
+          "An Editor Utility Widget, a Scriptable Tool, or a Python script",
+          "A Material Function, a Niagara system, or a Data Table",
+          "A Behavior Tree, a State Tree, or a Blackboard"
+        ],
+        "answer_index": 1,
+        "explain": "All three run in the editor and can automate editor work. You pick one and explain your choice in two lines."
+      },
+      {
+        "q": "What is an Editor Utility Widget?",
+        "choices": [
+          "A widget that is shown to the player during the game",
+          "A material that is used on editor icons",
+          "A panel that runs in the editor and is built like a Widget Blueprint",
+          "A plugin that must be bought on Fab"
+        ],
+        "answer_index": 2,
+        "explain": "An Editor Utility Widget gives your tool a user interface inside the editor. You build it with the same designer you know from Widget Blueprints."
+      },
+      {
+        "q": "What must the tool do when its input is wrong?",
+        "choices": [
+          "Show a clear message that says what is wrong",
+          "Stop without any message",
+          "Carry on and guess the missing values",
+          "Close the editor"
+        ],
+        "answer_index": 0,
+        "explain": "The tool checks its input first. A clear message lets the user fix the problem, while a silent failure leaves them guessing."
+      },
+      {
+        "q": "What does the one-page usage document say?",
+        "choices": [
+          "How you learned to build tools",
+          "Which nodes the graph of the tool contains",
+          "What the next version of the tool will do",
+          "What the tool does, how to open it, its settings, and one known limit"
+        ],
+        "answer_index": 3,
+        "explain": "These four points are what a new user needs. The known limit saves them from trying something the tool cannot do."
+      },
+      {
+        "q": "What does your before and after example show?",
+        "choices": [
+          "The tool with a light theme and a dark theme",
+          "The same task done by hand and done with the tool, with the time each one took",
+          "The first and the last version of the code",
+          "The Content Browser before and after you renamed the tool"
+        ],
+        "answer_index": 1,
+        "explain": "The two times prove what the tool saves. Without the comparison, nobody knows if the tool is worth using."
+      },
+      {
+        "q": "How do you test the tool if you work alone?",
+        "choices": [
+          "You read the code one more time",
+          "You use the tool right away while you still remember everything",
+          "You wait a day and then use the tool by following only the document",
+          "You skip the test"
+        ],
+        "answer_index": 2,
+        "explain": "After a day you have forgotten small details, so you are closer to a new user. Following only the document shows where it is unclear."
+      },
+      {
+        "q": "What do you do with what you learn from the test?",
+        "choices": [
+          "You write down what was confusing and fix one of those things",
+          "You delete the usage document",
+          "You tell the tester to try harder",
+          "You add as many new features as possible"
+        ],
+        "answer_index": 0,
+        "explain": "Confusion in the test points at a weak spot in the tool or the document. Fixing one of these things closes the loop from feedback to improvement."
+      }
+    ]
+  }
+}

@@ -1,0 +1,686 @@
+{
+  "PQ25": {
+    "new_quiz": [
+      {
+        "q": "What is UE_LOG?",
+        "choices": [
+          "The C++ macro that writes a message to the Output Log",
+          "The file where the editor saves its settings",
+          "The window that shows compile errors",
+          "The console command that clears the screen"
+        ],
+        "answer_index": 0,
+        "explain": "UE_LOG is how C++ code writes a line to the Output Log. Each call names a category, a verbosity and a text."
+      },
+      {
+        "q": "What is a log category?",
+        "choices": [
+          "The color of a message",
+          "The time at which a message was written",
+          "A name shown in front of the message, which messages belong to",
+          "The folder where log files are stored"
+        ],
+        "answer_index": 2,
+        "explain": "Every message belongs to a category, and its name appears in front of the text. LogUU in front of a line tells you the message is yours."
+      },
+      {
+        "q": "What does the verbosity of a log message say?",
+        "choices": [
+          "How long the message is",
+          "How serious the message is",
+          "Which actor wrote the message",
+          "How often the message repeats"
+        ],
+        "answer_index": 1,
+        "explain": "Verbosity is the level of a message. Log is normal information, Warning points at a possible problem, and Error reports a real one."
+      },
+      {
+        "q": "Which macro declares the category LogUU in a header file?",
+        "choices": [
+          "DEFINE_LOG_CATEGORY",
+          "UE_LOG",
+          "UPROPERTY",
+          "DECLARE_LOG_CATEGORY_EXTERN"
+        ],
+        "answer_index": 3,
+        "explain": "DECLARE_LOG_CATEGORY_EXTERN in a header tells other files that the category exists. Every file that includes the header can then log to it."
+      },
+      {
+        "q": "Which macro defines the category in a .cpp file?",
+        "choices": [
+          "DEFINE_LOG_CATEGORY",
+          "DECLARE_LOG_CATEGORY_EXTERN",
+          "UFUNCTION",
+          "TRACE_CPUPROFILER_EVENT_SCOPE"
+        ],
+        "answer_index": 0,
+        "explain": "The category is declared in the header and defined once in a .cpp file with DEFINE_LOG_CATEGORY. Both parts are needed."
+      },
+      {
+        "q": "Why do you create your own log category?",
+        "choices": [
+          "So your messages are written faster",
+          "So your messages are hidden from other people",
+          "So you can filter the log to see only your messages",
+          "So your messages are saved in the project folder"
+        ],
+        "answer_index": 2,
+        "explain": "The engine writes a lot of text to the Output Log. With your own category, one filter shows only the lines from your code."
+      },
+      {
+        "q": "With which three verbosity levels do you write messages in this quest?",
+        "choices": [
+          "Low, Medium and High",
+          "Log, Warning and Error",
+          "Debug, Release and Shipping",
+          "Start, Update and End"
+        ],
+        "answer_index": 1,
+        "explain": "You write one message each with Log, Warning and Error. In the Output Log you can then see how the levels differ."
+      },
+      {
+        "q": "Which of the three verbosity levels you use is the most serious?",
+        "choices": [
+          "Log",
+          "Warning",
+          "They are all equal",
+          "Error"
+        ],
+        "answer_index": 3,
+        "explain": "Error is the most serious of the three, Warning is in the middle, and Log is plain information."
+      },
+      {
+        "q": "How do you see only your own messages in the Output Log?",
+        "choices": [
+          "Set the filter so that it shows only the LogUU category",
+          "Close and open the Output Log again",
+          "Rename the actor to LogUU",
+          "Press F9 in the Output Log"
+        ],
+        "answer_index": 0,
+        "explain": "The filter of the Output Log can show single categories. With only LogUU selected, every other line is hidden."
+      },
+      {
+        "q": "With the log command in the console you set LogUU to the verbosity Warning. Which of your three messages no longer appears?",
+        "choices": [
+          "The one with the verbosity Error",
+          "The one with the verbosity Log",
+          "The one with the verbosity Warning",
+          "All three still appear"
+        ],
+        "answer_index": 1,
+        "explain": "The command sets the lowest level that the category still shows. With Warning, messages of the lower level Log are dropped, while Warning and Error still appear."
+      }
+    ]
+  },
+  "PQ26": {
+    "new_quiz": [
+      {
+        "q": "Which pattern do most Unreal projects use to combine C++ and Blueprint?",
+        "choices": [
+          "All logic in the Level Blueprint and all data in C++",
+          "One C++ class for each Blueprint node",
+          "A C++ base class with the core logic, and a Blueprint child where designers set values",
+          "Blueprints for the editor and C++ for the packaged game"
+        ],
+        "answer_index": 2,
+        "explain": "The base class in C++ holds the logic that should not break. The Blueprint child is where designers set values and add small changes."
+      },
+      {
+        "q": "What does the way you split the work between C++ and Blueprint decide?",
+        "choices": [
+          "Who can change what without asking a programmer",
+          "How many levels the game can have",
+          "Which engine version the project uses",
+          "How large the textures may be"
+        ],
+        "answer_index": 0,
+        "explain": "Everything exposed to Blueprint can be changed by designers themselves. Everything kept in C++ needs a programmer."
+      },
+      {
+        "q": "Which kind of work does the Epic page name as a strength of Blueprint?",
+        "choices": [
+          "Tight loops over large sets of data",
+          "Low-level access to external libraries",
+          "Merging changes from many programmers",
+          "Scripting behaviors and prototyping with fast iteration"
+        ],
+        "answer_index": 3,
+        "explain": "Blueprint is quick to change and easy to read as a visual flow. That makes it good for defining behavior and for trying ideas."
+      },
+      {
+        "q": "Which kind of work does the Epic page name as better done in C++?",
+        "choices": [
+          "Setting the color of a single prop",
+          "Core systems and code where performance matters, such as tight loops",
+          "Trying out a new idea in ten minutes",
+          "Choosing which mesh a pickup shows"
+        ],
+        "answer_index": 1,
+        "explain": "C++ is the foundation for systems. The cost of Blueprint shows most in core code, tight loops, large data sets and many ticking instances."
+      },
+      {
+        "q": "Why does C++ code run faster than Blueprint logic?",
+        "choices": [
+          "C++ compiles to machine code, while Blueprint runs in a virtual machine",
+          "C++ code is shorter than a Blueprint graph",
+          "Blueprint only runs on every second frame",
+          "C++ skips the collision checks"
+        ],
+        "answer_index": 0,
+        "explain": "Machine code runs directly on the processor. Blueprint bytecode is run by a virtual machine, which adds a small cost to every node."
+      },
+      {
+        "q": "Why is C++ easier to work on in a team with version control?",
+        "choices": [
+          "C++ files cannot be edited by two people",
+          "C++ files are saved more often",
+          "C++ is text, so changes are easy to compare and merge",
+          "C++ files are smaller than textures"
+        ],
+        "answer_index": 2,
+        "explain": "Text files can be compared line by line and merged. A Blueprint is a binary asset, where two edits cannot be combined that way."
+      },
+      {
+        "q": "What is a specifier in the UPROPERTY macro?",
+        "choices": [
+          "A comment for other programmers",
+          "The type of the variable",
+          "The default value of the variable",
+          "A word that controls what the editor and Blueprints can do"
+        ],
+        "answer_index": 3,
+        "explain": "Specifiers such as EditDefaultsOnly or BlueprintReadOnly set the access to a value. Choosing them is how you decide what designers may touch."
+      },
+      {
+        "q": "What does the specifier EditDefaultsOnly allow?",
+        "choices": [
+          "The value can be edited on every placed copy in the level",
+          "The value can be edited in the class defaults, but not on placed copies",
+          "The value can be edited only in C++",
+          "The value can be edited only while the game runs"
+        ],
+        "answer_index": 1,
+        "explain": "EditDefaultsOnly shows the value in the class defaults. A designer sets it once per Blueprint child, and single copies in the level cannot differ."
+      },
+      {
+        "q": "What does the specifier BlueprintReadOnly allow?",
+        "choices": [
+          "Blueprint graphs can read the value but not change it",
+          "Blueprint graphs can change the value but not read it",
+          "Blueprint graphs cannot see the value",
+          "Blueprint graphs can delete the value"
+        ],
+        "answer_index": 0,
+        "explain": "BlueprintReadOnly gives graphs a get node only. The value stays under the control of the C++ code."
+      },
+      {
+        "q": "What is a delegate?",
+        "choices": [
+          "A copy of a class in another module",
+          "A variable that stores a number",
+          "A signal that other code can listen to",
+          "A person who reviews your code"
+        ],
+        "answer_index": 2,
+        "explain": "A delegate announces that something happened. When Blueprints can assign to it, designers can react to that event without any change to the C++ code."
+      }
+    ]
+  },
+  "PQ30": {
+    "new_quiz": [
+      {
+        "q": "How do programmers and other team members often share the work on an actor?",
+        "choices": [
+          "Programmers write a base class in C++, and other people build on it with Blueprint children",
+          "Programmers write Blueprints, and other people rewrite them in C++",
+          "Everyone edits the same Blueprint at the same time",
+          "Programmers place the actors, and other people compile them"
+        ],
+        "answer_index": 0,
+        "explain": "The C++ base class holds the logic. Blueprint children made from it let other people create variants without writing code."
+      },
+      {
+        "q": "Which three things must a good base class offer to the people who build on it?",
+        "choices": [
+          "It must be short, private and final",
+          "It must be easy to tune, warn clearly when it is set up wrong, and be explained in writing",
+          "It must have many components, many functions and many files",
+          "It must run every frame, save itself and load itself"
+        ],
+        "answer_index": 1,
+        "explain": "Other people use your class without reading its code. They need values to tune, warnings that explain mistakes, and a text that says how it works."
+      },
+      {
+        "q": "Where do you build the components of the base actor?",
+        "choices": [
+          "In BeginPlay",
+          "In the Tick function",
+          "In the README",
+          "In the constructor"
+        ],
+        "answer_index": 3,
+        "explain": "The constructor is the function that runs when the object is created. Components created there are part of the actor from the start, and every Blueprint child gets them."
+      },
+      {
+        "q": "How do you make values tunable for the people who use your class?",
+        "choices": [
+          "You write them into the README",
+          "You type them into the function bodies",
+          "You expose them with UPROPERTY",
+          "You store them in the log category"
+        ],
+        "answer_index": 2,
+        "explain": "A variable marked with UPROPERTY and the right specifiers appears in the editor. A Blueprint child can then set it with no code change."
+      },
+      {
+        "q": "What does the BlueprintNativeEvent in your base class give to the Blueprint children?",
+        "choices": [
+          "A function that they cannot change",
+          "A default version in C++ that a child may override",
+          "A function that only runs in the editor",
+          "A component that is added at BeginPlay"
+        ],
+        "answer_index": 1,
+        "explain": "The default behavior works without any Blueprint work. A child that needs something else overrides the event."
+      },
+      {
+        "q": "How do you declare and define your own log category, for example LogUU?",
+        "choices": [
+          "With DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY",
+          "With UCLASS and UPROPERTY",
+          "With CreateDefaultSubobject and SetupAttachment",
+          "With UE_LOG and UFUNCTION"
+        ],
+        "answer_index": 0,
+        "explain": "The first macro declares the category in a header and the second defines it in a .cpp file. Your messages then appear under your own category name."
+      },
+      {
+        "q": "For which cases do you add clear warnings to the actor?",
+        "choices": [
+          "For every frame in which the actor ticks",
+          "For every time the actor is placed in a level",
+          "For every value that a designer changes",
+          "For the cases where the actor is set up badly"
+        ],
+        "answer_index": 3,
+        "explain": "A designer may forget a mesh or leave a reference empty. A clear warning in the log tells them what is wrong, so they can fix it without you."
+      },
+      {
+        "q": "In what may the 2 Blueprint children differ?",
+        "choices": [
+          "In their C++ parent class",
+          "In their whole logic",
+          "Only in their data and in one override",
+          "Only in their names"
+        ],
+        "answer_index": 2,
+        "explain": "If two variants need nothing more than other values and one override, the base class does its job. All shared logic stays in C++."
+      },
+      {
+        "q": "What must your README say?",
+        "choices": [
+          "How long you worked on the class and which IDE you used",
+          "What is in C++, what is in Blueprint, and how a designer would add a third child",
+          "Which engine source files you read",
+          "Every line of the header file, copied as text"
+        ],
+        "answer_index": 1,
+        "explain": "The README is the manual for the next person. With it, a designer can make a third child without asking you."
+      },
+      {
+        "q": "What does the short video clip have to show?",
+        "choices": [
+          "Both Blueprint children working in Play in Editor",
+          "The build output of the IDE",
+          "The README opened in a text editor",
+          "The constructor running in the debugger"
+        ],
+        "answer_index": 0,
+        "explain": "The clip proves that the base class works through its children. Both children must be seen working in the test level."
+      }
+    ]
+  },
+  "PQ27": {
+    "new_quiz": [
+      {
+        "q": "Through which part does the Character class in Unreal move?",
+        "choices": [
+          "The Static Mesh component",
+          "The Sky Light",
+          "The Character Movement component",
+          "The Output Log"
+        ],
+        "answer_index": 2,
+        "explain": "The Character Movement component does the moving for a Character. It has values such as walk speed and jump height."
+      },
+      {
+        "q": "Why do movement values such as walk speed and jump height matter so much?",
+        "choices": [
+          "They decide how the game feels to play",
+          "They decide how large the level is",
+          "They decide which engine version is needed",
+          "They decide how many players can join"
+        ],
+        "answer_index": 0,
+        "explain": "A small change in speed or jump height changes the feel of every moment of play. This is why they must be easy to tune."
+      },
+      {
+        "q": "What is the gain of setting movement values up in C++ and exposing them?",
+        "choices": [
+          "The values can never be changed again",
+          "The character moves without any input",
+          "The values are hidden from the editor",
+          "A Blueprint child can tune them without changing any code"
+        ],
+        "answer_index": 3,
+        "explain": "The logic stays in C++. Designers open the Blueprint child and change the numbers there."
+      },
+      {
+        "q": "From which class does the character class of the tutorial page, AAdventureCharacter, inherit?",
+        "choices": [
+          "AActor",
+          "ACharacter",
+          "UActorComponent",
+          "UDataAsset"
+        ],
+        "answer_index": 1,
+        "explain": "ACharacter already has a Character Movement component and functions such as Jump. Your class builds on it."
+      },
+      {
+        "q": "Which inherited function applies movement in a direction when the player uses the move input?",
+        "choices": [
+          "CreateDefaultSubobject",
+          "SetupAttachment",
+          "AddMovementInput",
+          "DEFINE_LOG_CATEGORY"
+        ],
+        "answer_index": 2,
+        "explain": "AddMovementInput tells the character to move along a direction. The Character Movement component then turns this into real movement."
+      },
+      {
+        "q": "How is the jump connected to the input on the tutorial page?",
+        "choices": [
+          "The Started event calls Jump, and the Completed event calls StopJumping",
+          "The Completed event calls Jump, and the Started event calls StopJumping",
+          "Both events call AddMovementInput",
+          "The jump is called on every Tick"
+        ],
+        "answer_index": 0,
+        "explain": "Pressing the key starts the jump and releasing it stops the jump. Jump and StopJumping are functions that the Character class already has."
+      },
+      {
+        "q": "In which function are the input actions bound to your movement functions?",
+        "choices": [
+          "In the constructor",
+          "In Tick",
+          "In the README",
+          "In SetupPlayerInputComponent"
+        ],
+        "answer_index": 3,
+        "explain": "SetupPlayerInputComponent is where the character connects input to code. BindAction links each Input Action to one of your functions."
+      },
+      {
+        "q": "What does the Blueprint child of the character assign on the tutorial page?",
+        "choices": [
+          "The C++ source files of the class",
+          "The input assets, such as the mapping context and the move and jump actions",
+          "The log category of the project",
+          "The build configuration"
+        ],
+        "answer_index": 1,
+        "explain": "The C++ class has properties for the input assets. In the Blueprint child you pick the real assets, so code and content stay apart."
+      },
+      {
+        "q": "How do you expose a movement value so that a Blueprint child can tune it?",
+        "choices": [
+          "Write the value into a comment",
+          "Make the variable private with no macro",
+          "Mark a variable with UPROPERTY and a specifier such as EditAnywhere",
+          "Print the value with UE_LOG"
+        ],
+        "answer_index": 2,
+        "explain": "UPROPERTY makes the variable known to the editor, and the specifier allows editing. The value then appears in the Details panel of the Blueprint child."
+      },
+      {
+        "q": "What does your screenshot have to show?",
+        "choices": [
+          "The tuned values in a Blueprint child",
+          "The build output of the IDE",
+          "The character in a packaged game",
+          "The tutorial page in a browser"
+        ],
+        "answer_index": 0,
+        "explain": "The two values you exposed must be visible and changed in a Blueprint child. That proves a designer could tune them without code."
+      }
+    ]
+  },
+  "PQ28": {
+    "new_quiz": [
+      {
+        "q": "What is a Data Asset?",
+        "choices": [
+          "A node that reads a file from disk",
+          "A file in the Content Browser that stores a set of values",
+          "A mesh with data painted on its vertices",
+          "A log category for item messages"
+        ],
+        "answer_index": 1,
+        "explain": "A Data Asset only holds values, such as the name and price of an item. It has no logic of its own."
+      },
+      {
+        "q": "What do designers gain when a programmer defines the Data Asset class in C++?",
+        "choices": [
+          "They can change the C++ code in the editor",
+          "They no longer need the Content Browser",
+          "They get one item that cannot be changed",
+          "They can create as many item files as they need without touching code"
+        ],
+        "answer_index": 3,
+        "explain": "The class defines which fields an item has. Each new item is then only a new asset that a designer fills in."
+      },
+      {
+        "q": "From which class does the item class of the tutorial page, UItemDefinition, inherit?",
+        "choices": [
+          "UDataAsset",
+          "AActor",
+          "ACharacter",
+          "UActorComponent"
+        ],
+        "answer_index": 0,
+        "explain": "A class that inherits from UDataAsset can be chosen when you create a Data Asset in the editor."
+      },
+      {
+        "q": "How do you create an item asset from your class in the editor?",
+        "choices": [
+          "Drag the header file into the level",
+          "Click Add, then User Interface, then Widget Blueprint",
+          "In the Content Browser, open Miscellaneous, choose Data Asset and select your class",
+          "Open Tools, then New C++ Class"
+        ],
+        "answer_index": 2,
+        "explain": "Data Asset is in the Miscellaneous group of the Content Browser menu. A window then asks which class the new asset should use."
+      },
+      {
+        "q": "What does the idea of data-driven gameplay on the tutorial page mean?",
+        "choices": [
+          "The game downloads its data from a server",
+          "Values are kept as data in a central place and are not hardcoded in the logic",
+          "The player types data during the game",
+          "Every value is written into the function bodies"
+        ],
+        "answer_index": 1,
+        "explain": "Data and logic are kept apart. Items can be added or changed in data, and the code that uses them stays the same."
+      },
+      {
+        "q": "On the tutorial page the struct FItemData inherits from FTableRowBase. What does this make possible?",
+        "choices": [
+          "The struct can tick every frame",
+          "The struct can be placed in a level",
+          "The struct can be compiled without a header",
+          "The struct can be used as a row of a Data Table"
+        ],
+        "answer_index": 3,
+        "explain": "A Data Table is like a spreadsheet whose rows all have the same struct. That struct must be based on FTableRowBase."
+      },
+      {
+        "q": "The tutorial page defines the enum EItemType with UENUM(BlueprintType). What is this enum for?",
+        "choices": [
+          "It gives each item a type from a fixed list",
+          "It stores the price of each item",
+          "It holds the mesh of each item",
+          "It counts how many items exist"
+        ],
+        "answer_index": 0,
+        "explain": "An enum is a fixed list of named choices. BlueprintType makes it usable in Blueprints and in the editor."
+      },
+      {
+        "q": "The item class holds its mesh as a TSoftObjectPtr. What is special about this kind of reference?",
+        "choices": [
+          "It copies the mesh into the Data Asset",
+          "It can only point to textures",
+          "It points to an asset without loading it until it is needed",
+          "It deletes the mesh when the item is used"
+        ],
+        "answer_index": 2,
+        "explain": "A soft reference stores where the asset is. The mesh is only loaded when the game asks for it, so a list of many items stays light."
+      },
+      {
+        "q": "You created an item asset, but the fields of your class do not show in the editor. What do you check first in the C++ class?",
+        "choices": [
+          "That the class has a Tick function",
+          "That each field is marked with UPROPERTY and a specifier such as EditAnywhere",
+          "That the class name starts with A",
+          "That the class has a log category"
+        ],
+        "answer_index": 1,
+        "explain": "The editor only shows fields that reflection knows. UPROPERTY with EditAnywhere makes a field visible and editable in the asset."
+      },
+      {
+        "q": "What does your screenshot have to show?",
+        "choices": [
+          "The header file in the IDE",
+          "A pickup in a packaged game",
+          "The tutorial page in a browser",
+          "2 Data Assets made from your C++ class"
+        ],
+        "answer_index": 3,
+        "explain": "Two item assets from one class prove the point of the quest: the class is written once, and items are made as data."
+      }
+    ]
+  },
+  "PQ29": {
+    "new_quiz": [
+      {
+        "q": "Why should you measure code before you try to make it faster?",
+        "choices": [
+          "Measuring makes the code faster by itself",
+          "The compiler refuses to build code that was not measured",
+          "The slow part is often not where you expect",
+          "Measuring removes the need for testing"
+        ],
+        "answer_index": 2,
+        "explain": "Guessing often leads you to change code that was never the problem. A measurement shows where the time really goes."
+      },
+      {
+        "q": "What is Unreal Insights?",
+        "choices": [
+          "The tool that records where the engine spends its time",
+          "The window that lists compile errors",
+          "The page that documents the C++ classes",
+          "The plugin that writes log files"
+        ],
+        "answer_index": 0,
+        "explain": "Unreal Insights is the profiling tool of the engine. It shows the work of each frame on a timeline."
+      },
+      {
+        "q": "What is a trace?",
+        "choices": [
+          "A line that connects two nodes",
+          "A recording that Unreal Insights can open",
+          "A breakpoint in the IDE",
+          "A warning in the Output Log"
+        ],
+        "answer_index": 1,
+        "explain": "A trace is the recording of what the engine did over a period of time. You capture it while the game runs and study it afterwards."
+      },
+      {
+        "q": "What is a named CPU scope?",
+        "choices": [
+          "A limit on how much CPU time the game may use",
+          "A list of all functions of a class",
+          "A setting that makes code run on another thread",
+          "A mark around your own code that gives it its own name in the trace"
+        ],
+        "answer_index": 3,
+        "explain": "The scope measures the time spent in the marked code. In the trace, that time is shown as a block with the name you gave it."
+      },
+      {
+        "q": "Which macro adds a named CPU scope?",
+        "choices": [
+          "TRACE_CPUPROFILER_EVENT_SCOPE",
+          "DECLARE_LOG_CATEGORY_EXTERN",
+          "UE_LOG",
+          "UFUNCTION"
+        ],
+        "answer_index": 0,
+        "explain": "TRACE_CPUPROFILER_EVENT_SCOPE marks the code that follows it inside the function. The time until the function ends is recorded under the given name."
+      },
+      {
+        "q": "Why is a Tick function with some work in it a good place for your first scope?",
+        "choices": [
+          "Tick runs only once, so the trace stays small",
+          "Tick cannot be measured in another way",
+          "Tick runs every frame, so the scope appears in the trace again and again",
+          "Tick is the only function that may contain macros"
+        ],
+        "answer_index": 2,
+        "explain": "A function that runs every frame is easy to find in a trace of 10 seconds. The work inside gives the scope a visible length."
+      },
+      {
+        "q": "How do you capture a trace from the editor?",
+        "choices": [
+          "Open Window, then Output Log, and type trace",
+          "Click Trace at the bottom of the editor, choose Start Trace, play, then Stop Trace",
+          "Press F9 on the actor in the level",
+          "Build the project with the configuration Development Editor"
+        ],
+        "answer_index": 1,
+        "explain": "Start Trace begins the recording and Stop Trace ends it. In between, you play for about 10 seconds so that the trace has frames to show."
+      },
+      {
+        "q": "Where in Unreal Insights do you find your scope?",
+        "choices": [
+          "In the Content Browser",
+          "In the Details panel",
+          "In the World Settings",
+          "In the timing view"
+        ],
+        "answer_index": 3,
+        "explain": "The timing view shows each frame as blocks of work on the threads. Your scope is one of these blocks, with the name you gave it."
+      },
+      {
+        "q": "You open the trace, but your named scope is nowhere to be found. What do you check first?",
+        "choices": [
+          "That the actor was placed in the level, so its function ran during the trace",
+          "That the scope name is written in capital letters",
+          "That the level has a Directional Light",
+          "That the Output Log was open during play"
+        ],
+        "answer_index": 0,
+        "explain": "A scope is only recorded when its code runs. If the actor is not in the level, its function is never called and nothing is recorded."
+      },
+      {
+        "q": "Why should you give your scopes clear names?",
+        "choices": [
+          "Short names make the code run faster",
+          "Unnamed scopes stop the build",
+          "So that you and other people can find them in a trace",
+          "So that the scope is saved in the Blueprint"
+        ],
+        "answer_index": 2,
+        "explain": "A trace has thousands of blocks. A clear name is what lets someone search for your code and understand what the block measures."
+      }
+    ]
+  }
+}

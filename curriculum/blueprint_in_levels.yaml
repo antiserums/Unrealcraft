@@ -540,7 +540,39 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) that shows you riding the platform, or two screenshots from PIE that show you on the platform at two different positions. Also send a screenshot of the graph."
     xp: 25
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "What does a Timeline node do in a Blueprint?"
+        choices: ["It waits a fixed time and then fires once", "It changes a value smoothly over time", "It records the game to a video file", "It lists the events of the level in order"]
+        answer_index: 1
+        explain: "A Timeline plays a curve and gives out its value on every frame. That smooth value is what moves the platform."
+      - q: "Why do you turn on Instance Editable for PointA and PointB?"
+        choices: ["So the platform can move while the game is paused", "So the variables are saved in the Timeline", "So the player can change them during the game", "So you can set them on each copy in the level"]
+        answer_index: 3
+        explain: "Instance Editable shows a variable in the Details panel of each placed copy. Every platform in the level can then have its own two points."
+      - q: "The float track of the Timeline goes from 0 to 1 and back to 0. Why does it go back to 0?"
+        choices: ["So the platform returns to PointA before the loop starts again", "So the platform stops at PointB", "So the Timeline can be compiled", "So the platform moves twice as fast"]
+        answer_index: 0
+        explain: "The track value is the Alpha between the two points. Going back to 0 brings the platform back to PointA, so the loop repeats without a jump."
+      - q: "Your platform moves from PointA to PointB and back once, and then stops. What did you forget?"
+        choices: ["To add a Static Mesh", "To connect BeginPlay to Play", "To turn on Loop in the Timeline", "To make PointB a Vector"]
+        answer_index: 2
+        explain: "Without Loop the Timeline plays one time and ends. With Loop on, it starts again each time it reaches the end, so the platform never stops."
+      - q: "Which output pin of the Timeline runs the movement on every frame while it plays?"
+        choices: ["Finished", "Update", "Play", "Stop"]
+        answer_index: 1
+        explain: "Update fires on every frame while the Timeline plays. Finished fires only once at the end, and Play and Stop are inputs."
+      - q: "The Lerp (Vector) node goes from PointA to PointB. What does it return when Alpha is 0.5?"
+        choices: ["PointA", "PointB", "The sum of PointA and PointB", "The point halfway between PointA and PointB"]
+        answer_index: 3
+        explain: "Lerp blends between two values. Alpha 0 gives PointA, Alpha 1 gives PointB, and 0.5 gives the point in the middle."
+      - q: "Where do you connect the result of the Lerp (Vector) node?"
+        choices: ["To Set Relative Location on the mesh", "To the Play pin of the Timeline", "To the PointA variable", "To Event BeginPlay"]
+        answer_index: 0
+        explain: "Set Relative Location moves the mesh to the blended position. Because it runs on every Update, the floor piece travels smoothly."
+      - q: "What do you check when you ride the platform in Play in Editor?"
+        choices: ["That the platform is hidden in the game", "That the Timeline has two float tracks", "That you do not slide off the platform", "That the platform falls when you step on it"]
+        answer_index: 2
+        explain: "A moving platform only works if the player travels with it. The test is to stand on it and see that the character stays on."
 
   - id: LDQ22
     rank: 2
@@ -560,7 +592,39 @@ quests:
     done_when: "Send a screenshot of the trap, and add one line that says how the player is warned."
     xp: 25
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "What is a Pain Causing Volume?"
+        choices: ["A volume that plays a sound when you enter it", "A volume that blocks the player like a wall", "A ready-made volume that damages anything inside it", "A volume that changes the lighting inside it"]
+        answer_index: 2
+        explain: "A Pain Causing Volume is the quick way to make a trap. Any actor inside it receives damage over time."
+      - q: "Where do you find the Pain Causing Volume?"
+        choices: ["In the Place Actors panel, under Volumes", "In the Content Browser, under Add", "In the World Settings, under Kill Z", "In the Details panel of the character"]
+        answer_index: 0
+        explain: "The volume is in the Volumes group of the Place Actors panel. You drag it into the level and scale it over the trap."
+      - q: "Which property of the Pain Causing Volume sets how much it hurts?"
+        choices: ["Mobility", "Intensity", "Falloff Distance", "Damage Per Sec"]
+        answer_index: 3
+        explain: "Damage Per Sec in the Details panel is the amount of damage the volume deals each second."
+      - q: "What does the Apply Damage node do?"
+        choices: ["It removes an actor from the level", "It sends damage to an actor", "It lowers the health variable of every actor", "It plays a hit animation"]
+        answer_index: 1
+        explain: "Apply Damage sends an amount of damage to one actor. That actor then decides what to do with it, for example lower its health."
+      - q: "In the Blueprint version of the trap, which actor do you send the damage to?"
+        choices: ["The Other Actor of the overlap event", "The trap Blueprint itself", "The Box Collision component", "The first actor in the Outliner"]
+        answer_index: 0
+        explain: "The overlap event of the Box Collision gives you Other Actor, which is the actor that entered the box. You call Apply Damage on it."
+      - q: "Your character stands in the trap but loses no health. What do you check first?"
+        choices: ["That the trap has a visible mesh", "That the level has a Directional Light", "That the character Blueprint handles Event AnyDamage", "That the trap is named BP_Trap"]
+        answer_index: 2
+        explain: "Damage is only a message. The character loses health only if its Blueprint reacts to it in Event AnyDamage."
+      - q: "What makes a trap fair?"
+        choices: ["It deals very little damage", "It can be seen before it hurts", "It is hidden until the player steps on it", "It is placed far from the route"]
+        answer_index: 1
+        explain: "A fair trap gives the player a chance to notice it and react. If it hurts without any warning, the player feels cheated."
+      - q: "Which of these is a good warning for a fire trap?"
+        choices: ["A sound that plays after the player is hurt", "A text that appears after the player dies", "A trap that is the same colour as the floor", "Flames and scorch marks the player sees while walking toward it"]
+        answer_index: 3
+        explain: "A warning must come before the damage. Something the player can see on the way to the trap lets them choose to avoid it."
 
   - id: LDQ23
     rank: 2
@@ -578,7 +642,39 @@ quests:
     done_when: "Send a short video clip (30 seconds or less) that shows you reaching the checkpoint, falling, and appearing at the checkpoint again. Three screenshots from PIE of these three moments also work."
     xp: 30
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "What is a checkpoint in a level?"
+        choices: ["A place that ends the level", "A place where the player gets more health", "A place where the game is paused", "A place the game remembers, so the player returns there after a fall"]
+        answer_index: 3
+        explain: "A checkpoint saves progress inside a level. After dying or falling, the player continues from there and not from the start."
+      - q: "What does it mean to respawn?"
+        choices: ["To appear again in the level", "To leave the level for the main menu", "To load a different level", "To save the game to a file"]
+        answer_index: 0
+        explain: "To respawn is to appear again in the level. In this quest the player appears again at the last checkpoint."
+      - q: "What does the RespawnTransform variable on the character store?"
+        choices: ["The health of the character", "The location and rotation where the player will appear again", "The number of checkpoints in the level", "The speed of the character"]
+        answer_index: 1
+        explain: "A transform holds a location and a rotation. The checkpoint writes its own transform into this variable when the player touches it."
+      - q: "What is Kill Z?"
+        choices: ["A Blueprint node that restarts the level", "A volume that you drag from the Place Actors panel", "The height in the World Settings below which actors are destroyed", "A key that removes the selected actor"]
+        answer_index: 2
+        explain: "Kill Z is a height value in the World Settings. Any actor that falls below it is destroyed."
+      - q: "Why can you not use Kill Z alone to send the player back to a checkpoint?"
+        choices: ["It removes the character and does not bring it back", "It only works on static meshes", "It only works in the editor, not in the game", "It moves the character to the start of the level"]
+        answer_index: 0
+        explain: "Kill Z destroys the character. To move the player back, you need your own logic that runs before the character reaches that height."
+      - q: "Where do you place the large Box Collision of BP_KillZone?"
+        choices: ["Around the checkpoint", "Above the level, in the sky", "Below the Kill Z height", "Under the level, above the Kill Z height"]
+        answer_index: 3
+        explain: "A falling player must touch your kill zone before reaching Kill Z. So the box sits under the level but above that height."
+      - q: "Which node moves the player back to the last checkpoint?"
+        choices: ["Destroy Actor", "Set Actor Transform with RespawnTransform", "Apply Damage", "Add to Viewport"]
+        answer_index: 1
+        explain: "Set Actor Transform places the character at the stored transform. Because the checkpoint saved it, the player lands at the last checkpoint."
+      - q: "You touch a checkpoint, fall, and appear at the wrong place. What do you check first?"
+        choices: ["That the level has a Sky Light", "That the kill zone has a visible mesh", "That the checkpoint stores its transform in RespawnTransform on overlap", "That Kill Z is set to 0 in the World Settings"]
+        answer_index: 2
+        explain: "The kill zone only moves the player to whatever RespawnTransform holds. If the checkpoint never wrote its transform into the variable, the old value is used."
 
   - id: LDQ24
     rank: 2
@@ -598,7 +694,39 @@ quests:
     done_when: "Send a screenshot of the prompt showing in PIE."
     xp: 25
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "What is a HUD prompt?"
+        choices: ["A sound that plays when the player is near an object", "A short text on the screen that tells the player what they can do", "A menu that pauses the game", "A light that marks an object in the level"]
+        answer_index: 1
+        explain: "A HUD prompt is a short on-screen text such as Press E to open. It tells the player that an action is possible right now."
+      - q: "As which kind of asset do you build screen elements in Unreal Engine?"
+        choices: ["Level Instances", "Material Instances", "Widget Blueprints", "Data Assets"]
+        answer_index: 2
+        explain: "Screen elements are built as Widget Blueprints. Their names often start with WBP_, as in WBP_Prompt."
+      - q: "How do you create a new Widget Blueprint in the Content Browser?"
+        choices: ["Click Add, then User Interface, then Widget Blueprint", "Click Add, then Blueprint Class, then Actor", "Click Add, then Material", "Click Add, then Level"]
+        answer_index: 0
+        explain: "Widget Blueprints are in the User Interface group of the Add menu. You then choose User Widget as the parent."
+      - q: "Inside the Widget Blueprint, where do you take the Text widget from?"
+        choices: ["From the Outliner", "From the Place Actors panel", "From the Details panel", "From the Palette"]
+        answer_index: 3
+        explain: "The Palette lists the widgets you can use. You drag a Text widget from it into the designer and type your line."
+      - q: "Which two nodes show the prompt on the screen when the player comes near?"
+        choices: ["Create Widget, then Add to Viewport", "Spawn Actor from Class, then Play", "Remove from Parent, then Create Widget", "Print String, then Add to Viewport"]
+        answer_index: 0
+        explain: "Create Widget makes a widget from the class WBP_Prompt. Add to Viewport then puts that widget on the screen."
+      - q: "Which node hides the prompt when the player walks away?"
+        choices: ["Destroy Actor", "Remove from Parent", "Add to Viewport", "Set Actor Transform"]
+        answer_index: 1
+        explain: "Remove from Parent takes the widget off the screen. You call it on End Overlap."
+      - q: "Why do you store the result of Create Widget in a variable?"
+        choices: ["So the text can be translated", "So the widget is saved to disk", "So the widget is created on every frame", "So you can remove the same widget later on End Overlap"]
+        answer_index: 3
+        explain: "End Overlap needs to know which widget to remove. The variable keeps a reference to the widget that Begin Overlap created."
+      - q: "Why is the Box Collision of BP_Interactable larger than the cube?"
+        choices: ["So the cube can be pushed by the player", "So the cube is easier to see", "So the prompt shows while the player is near the cube", "So the cube blocks the camera"]
+        answer_index: 2
+        explain: "The overlap must start before the player touches the cube. A larger box gives a zone around the object where the prompt is shown."
 
   - id: LDQ25
     rank: 2
@@ -616,7 +744,39 @@ quests:
     done_when: "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the puzzle before and after it is solved. Add one line that says what the plate reacts to and why."
     xp: 30
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "What is a pressure plate?"
+        choices: ["A switch on the floor that is active only while something stands on it", "A switch on the wall that stays on after one press", "A floor piece that moves between two points", "A volume that damages anything inside it"]
+        answer_index: 0
+        explain: "A pressure plate works only while it is pressed. When the object leaves, the plate turns off again."
+      - q: "What does the Open event of BP_Gate do?"
+        choices: ["It destroys the gate actor", "It moves the gate to another level", "It hides the mesh and turns off its collision", "It plays a sound at the gate"]
+        answer_index: 2
+        explain: "With the mesh hidden and its collision off, the player can walk through. Close shows the mesh and turns the collision on again."
+      - q: "How does a placed pressure plate know which gate to open?"
+        choices: ["It always opens the nearest gate", "It opens every gate in the level", "It reads the name of the gate from the Outliner", "You pick the gate in its Instance Editable variable named Gate"]
+        answer_index: 3
+        explain: "The variable Gate is of type BP_Gate and is Instance Editable. In the Details panel of the placed plate you pick the gate with the eyedropper."
+      - q: "The plate calls Open on Begin Overlap and Close on End Overlap. What happens when the cube is pushed off the plate?"
+        choices: ["The gate stays open", "The gate closes", "The cube is destroyed", "The plate is hidden"]
+        answer_index: 1
+        explain: "Leaving the Box Collision fires End Overlap, which calls Close. The gate is open only while something sits on the plate."
+      - q: "Which settings make the cube a physics cube that the player can push?"
+        choices: ["Mobility set to Static and Cast Shadow turned on", "Mobility set to Stationary and Hidden in Game turned on", "Mobility set to Movable and Simulate Physics turned on", "Mobility set to Static and Simulate Physics turned off"]
+        answer_index: 2
+        explain: "Only a Movable mesh can simulate physics. With Simulate Physics on, the cube reacts when the character pushes it."
+      - q: "The cube sits on the plate, but the gate does not open. What do you check first on the cube?"
+        choices: ["That Generate Overlap Events is turned on", "That its material is set", "That it is named Cube in the Outliner", "That its scale is 1"]
+        answer_index: 0
+        explain: "Without Generate Overlap Events the cube does not fire overlap events. The plate then does not notice the cube at all."
+      - q: "How can the plate react only to the cube and not to the player?"
+        choices: ["Make the Box Collision of the plate smaller", "Turn off the collision of the player", "Place the plate far from the start of the level", "Give the cube an Actor Tag and check Actor Has Tag on Other Actor"]
+        answer_index: 3
+        explain: "The tag marks the cube. The plate checks Other Actor with Actor Has Tag and only calls Open when the tag is there."
+      - q: "If only the cube counts, what must the player do to pass the gate?"
+        choices: ["Stand on the plate and wait", "Push the cube onto the plate and leave it there", "Jump over the plate", "Touch the gate two times"]
+        answer_index: 1
+        explain: "The gate is open only while the cube sits on the plate. The player solves the puzzle by moving the cube there and then walking through."
 
   - id: LDQ26
     rank: 2
@@ -634,4 +794,36 @@ quests:
     done_when: "Send a screenshot of the graph that shows both sound nodes. A screenshot has no audio, so if you can, also send a short video clip (30 seconds or less) with sound."
     xp: 15
     verify_type: screenshot
-    quiz: []
+    quiz:
+      - q: "Why do you add sound to an interaction such as opening a door?"
+        choices: ["It makes the door open faster", "It replaces the need for a door mesh", "It tells the player that their action worked, or that it did not", "It stops other sounds in the level"]
+        answer_index: 2
+        explain: "Sound is feedback. One sound for opening and a different sound for locked lets the player understand the result at once."
+      - q: "Which node plays a sound at a place in the level?"
+        choices: ["Add to Viewport", "Play Sound at Location", "Set Relative Location", "Apply Damage"]
+        answer_index: 1
+        explain: "Play Sound at Location plays the sound you pick in its Sound pin at the position given in its Location pin."
+      - q: "What do you connect to the Location pin so that the sound comes from the door?"
+        choices: ["Get Actor Location", "Get Player Controller", "Event BeginPlay", "The IsLocked variable"]
+        answer_index: 0
+        explain: "Get Actor Location returns the position of the door actor. The sound then plays from the door and not from somewhere else."
+      - q: "What does the Branch on IsLocked do in the door graph?"
+        choices: ["It plays both sounds at the same time", "It locks the door for ever", "It repeats the sound until the player leaves", "It chooses one of two paths, each with its own sound"]
+        answer_index: 3
+        explain: "A Branch runs its True output or its False output. One output plays the locked sound and the other plays the open sound."
+      - q: "Why is the IsLocked variable Instance Editable?"
+        choices: ["So the sound can be changed during the game", "So one copy in the level can be locked and another one not", "So the door is saved as a Level Instance", "So the Branch node can be compiled"]
+        answer_index: 1
+        explain: "Instance Editable lets you set the variable on each placed copy. You place two doors, one locked and one not, and test both sounds."
+      - q: "The engine sounds CompileSuccess and CompileFailed do not show in the sound list. What do you do?"
+        choices: ["Restart the editor", "Import them from the Epic website", "Click the settings icon of the list and turn on Show Engine Content", "Enable the Water plugin"]
+        answer_index: 2
+        explain: "These sounds are part of the engine content, which is hidden by default. Show Engine Content makes them appear in the list."
+      - q: "What is another way to play a sound from the door Blueprint?"
+        choices: ["Add an Audio Component and call Play on it", "Add a Box Collision and call Open on it", "Add a Timeline and turn on Loop", "Add a Text widget and call Add to Viewport"]
+        answer_index: 0
+        explain: "An Audio Component is a sound source that is part of the actor. Calling Play on it starts its sound."
+      - q: "Why should you also send a short video clip with sound, if you can?"
+        choices: ["A clip shows the nodes more clearly", "A clip is smaller than a screenshot", "A clip proves that the project was saved", "A screenshot has no audio"]
+        answer_index: 3
+        explain: "The graph screenshot shows that both sound nodes exist, but nobody can hear a picture. A clip with sound proves that the two sounds play."

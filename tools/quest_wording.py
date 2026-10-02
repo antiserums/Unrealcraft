@@ -237,7 +237,7 @@ def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
         if after.keys() != before.keys() or any(skeleton(after[k], fresh and k == qid) != skeleton(before[k], fresh and k == qid) for k in before):
             skipped.append(qid)
             continue
-        lines, done = trial, done + 1
+        lines, done, before = trial, done + 1, after          # the next quest is compared with this result
         quests = index(lines)                                 # an inserted line moves everything after it
     if done:
         path.write_text("\n".join(lines), encoding="utf-8", newline="\n")
