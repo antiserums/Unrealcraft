@@ -1,13 +1,13 @@
-import QuestCard from "@/components/QuestCard";
+import QuestCard, { cardCtx } from "@/components/QuestCard";
 import type { PathData } from "@/lib/api";
-import { loadManifest, siteArt } from "@/lib/art";
-import { getT } from "@/lib/i18n";
+import { siteArt } from "@/lib/art";
 import { rich } from "@/lib/i18n-config";
 
 /** The member's own road through the curriculum: what is next, what is done, what the next rank opens. */
 export default async function PathView({ p }: { p: PathData }) {
-  const t = await getT();
-  const gate = siteArt(await loadManifest(), "locked-gate");
+  const ctx = await cardCtx();
+  const t = ctx.t;
+  const gate = siteArt(ctx.m, "locked-gate");
   const extras = p.specializations.filter((s) => !s.primary).map((s) => t(s.title)).join(", ");
   const specTitle = t(p.specialization_title);
   const locked = p.locked;
@@ -35,7 +35,7 @@ export default async function PathView({ p }: { p: PathData }) {
               {s.tier.emoji} {rich(t("{tier} quests: {count} done. Any {tier} quest in {spec} counts; {available} exist so far.", { tier: t(s.tier.name), spec: specTitle, available: s.tier.available }), { count: <b>{s.tier.done}/{s.tier.need}</b> })}
             </div>
           )}
-          <div className="grid">{s.quests.map((q) => <QuestCard key={q.id} q={q} showStatus />)}</div>
+          <div className="grid">{s.quests.map((q) => <QuestCard key={q.id} q={q} ctx={ctx} showStatus />)}</div>
         </section>
       ))}
       {locked && (
@@ -47,7 +47,7 @@ export default async function PathView({ p }: { p: PathData }) {
               {needs}
             </span>
           </div>
-          <div className="grid">{locked.quests.slice(0, 6).map((q) => <QuestCard key={q.id} q={q} />)}</div>
+          <div className="grid">{locked.quests.slice(0, 6).map((q) => <QuestCard key={q.id} q={q} ctx={ctx} />)}</div>
           {locked.tasters.length > 0 && (
             <p className="small muted" style={{ marginTop: 10 }}>
               {t("Tasters: {list}", { list: locked.tasters.map((g) => g.map((x) => `${x.id} ${x.title}`).join(` ${t("or")} `)).join("; ") })}

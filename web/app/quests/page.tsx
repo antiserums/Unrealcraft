@@ -1,12 +1,15 @@
 import Link from "next/link";
 import PathView from "@/components/PathView";
-import QuestCard from "@/components/QuestCard";
+import QuestCard, { cardCtx } from "@/components/QuestCard";
 import { api, type Me, type PathData, type QuestSummary, type Specializations } from "@/lib/api";
 import Ico from "@/components/Ico";
 import { PageHeader, Spot } from "@/components/SiteArt";
 import { getT } from "@/lib/i18n";
 
 const TIERS = ["novice", "apprentice", "adept", "expert", "master"];
+// Hundreds of cards on one page are slow to build and to scroll: each tier shows a first few with a link to the rest,
+// and a single tier is shown one page at a time.
+const PREVIEW = 12, PER_PAGE = 48;
 
 export async function generateMetadata() {
   const t = await getT();
@@ -64,7 +67,17 @@ async function All({ sp }: { sp: Record<string, string | string[] | undefined> }
     api<{ subjects: [string, number][] }>("/catalog/subjects"),
   ]);
   const quests = data?.quests ?? [];
+  const ctx = await cardCtx();                      // one lookup of the words and the art for all the cards
   const byTier = TIERS.map((k) => ({ k, list: quests.filter((x) => x.difficulty === k) })).filter((g) => g.list.length);
+  const href = (extra: Record<string, string>) => {
+    const u = new URLSearchParams(qs);
+    u.set("view", "all");
+    for (const [k, v] of Object.entries(extra)) u.set(k, v);
+    return `/quests?${u}`;
+  };
+  const pages = Math.max(1, Math.ceil(quests.length / PER_PAGE));
+  const page = Math.min(pages, Math.max(1, parseInt(pick("page"), 10) || 1));
+  const preview = !tier && quests.length > PER_PAGE;      // a short list (a search, a small filter) is shown whole
   const specTitle = spec && specs ? specs.specializations[spec]?.title : null;
   return (
     <>
@@ -90,15 +103,28 @@ async function All({ sp }: { sp: Record<string, string | string[] | undefined> }
         <input name="q" placeholder={t("Search title or ID")} defaultValue={q} />
         <button type="submit" className="primary"><Ico group="utility" id="filter" />{t("Filter")}</button>
       </form>
-      {byTier.map(({ k, list }) => (
-        <section key={k}>
-          <div className="section-h">
-            <h2>{specs?.tiers[k].emoji} {specs ? t(specs.tiers[k].name) : ""}</h2>
-            <span className="muted small">{t("{n} quests", { n: list.length })}</span>
-          </div>
-          <div className="grid">{list.map((x) => <QuestCard key={x.id} q={x} />)}</div>
-        </section>
-      ))}
+      {byTier.map(({ k, list }) => {
+        const shown = tier ? list.slice((page - 1) * PER_PAGE, page * PER_PAGE) : preview ? list.slice(0, PREVIEW) : list;
+        return (
+          <section key={k}>
+            <div className="section-h">
+              <h2>{specs?.tiers[k].emoji} {specs ? t(specs.tiers[k].name) : ""}</h2>
+              <span className="muted small">{t("{n} quests", { n: list.length })}</span>
+            </div>
+            <div className="grid">{shown.map((x) => <QuestCard key={x.id} q={x} ctx={ctx} />)}</div>
+            {preview && list.length > PREVIEW && (
+              <p className="more"><Link className="btn" href={href({ tier: k })}>{t("Show all {n} {tier} quests", { n: list.length, tier: specs ? t(specs.tiers[k].name) : k })}</Link></p>
+            )}
+            {tier && pages > 1 && (
+              <nav className="pager" aria-label={t("Pages")}>
+                {page > 1 ? <Link className="btn" href={href({ page: String(page - 1) })}>← {t("Previous")}</Link> : <span />}
+                <span className="muted small">{t("Showing {from} to {to} of {total}", { from: (page - 1) * PER_PAGE + 1, to: Math.min(page * PER_PAGE, list.length), total: list.length })}</span>
+                {page < pages ? <Link className="btn" href={href({ page: String(page + 1) })}>{t("Next")} →</Link> : <span />}
+              </nav>
+            )}
+          </section>
+        );
+      })}
       {quests.length === 0 && <Spot art="empty-notice-board">{t("No quests match. Clear a filter.")}</Spot>}
     </>
   );
