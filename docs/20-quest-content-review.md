@@ -182,8 +182,18 @@ How to read the source of a fix:
   the topic, so the nearest useful page was chosen: Taking Screenshots, Playing and Simulating, Unreal Editor Interface.
   O1 to O5 are about this site and have no docs page on purpose. docs.
 
+### Third pass (small fixes)
+- 38 quests: steps over 100 words were split into shorter steps; nothing was removed. LDQ40 step 1 stays at 98 words
+  because two of its steps carry a check, so the count could not change. text.
+- LDQ20, LDQ28, LDQ30, LDQ32, LDQ40, SQ11, PQ17, GDQ6: quiz text no longer says "turn-in", uses rank numbers or names
+  Discord. No answer moved. text.
+- LDQ114, PQ52: now say Scripted Actor Actions, the name TAQ82 uses, with the older name mentioned once. text.
+- PQ19: proof type changed from "package" to "screenshot" to match what the text asks for. text.
+
 ### Decided by the owner
 - Similar quests in two specializations (LDQ115 and TAQ80, and the pairs noted above) are fine as they are.
+- TAQ55 to TAQ60 keep the asset names of Epic's Niagara tutorial pages (FX_Smoke, SmokeSystem and so on), so a learner
+  with the tutorial open sees the same names. Every other Niagara quest uses FXS_ and FXE_.
 - Stand-ins for Starter Content stay as basic shapes and engine or template textures. No site asset pack.
 
 ## Checked, no change needed
@@ -210,7 +220,6 @@ How to read the source of a fix:
 
 ## Still open
 
-- PQ19: proof type is still "package". The text now asks for screenshots and a short clip; the type itself cannot be changed with the tool.
 - Quests that still need something from outside a template, with the source named in the step: AQ4, AQ33, AQ36, AQ38, AQ68, CQ50, CQ51 (a free character from Fab, because the template has only one skeleton), AQ32 (Game Animation Sample), AQ77, CQ52, TAQ101, TAQ102 (a groom, from a MetaHuman or Fab), CQ49 (MetaHuman), CQ30, CQ44, CQ46, CQ77 (a phone or tablet), AQ54, TAQ98, TAQ100 (a 3D modeling program), TAQ103 (RenderDoc).
 - GDQ37: the projectile Blueprint of the Arena Shooter variant (BP_ShooterProjectileBase) exists in 5.8, but its graph was not opened, so the step says to find its hit event or add Event Hit.
 - TAQ17: the Niagara "new system" window differs between versions; the step still names New system from selected emitters.
@@ -223,12 +232,10 @@ How to read the source of a fix:
 - TAQ58: the steps follow the docs page value for value, but they are still dense. Needs a pass in the engine.
 - TAQ100: the steps are goals. The docs page (Panel Cloth Editor Overview) has no click paths or node names either.
 - LDQ114, PQ52: these still say "Scripted Actions" in titles and intros. Only the menu name in TAQ82 was aligned.
-- Quiz text that still uses ranks or "turn-in": LDQ20, LDQ28, LDQ30, LDQ32, LDQ40, SQ11, PQ17. Quiz wording was not restyled. LDQ20 quiz question 2 still has an arrow in it.
 - O1 (rules quiz) and one wrong choice in GDQ6 still name Discord channels. O1 is the quiz about the server rules, so this was left.
 
 ## Needs an owner decision
 
-- TAQ55 to TAQ60: emitter and system names (FX_Smoke, SmokeSystem, BeamSystem and so on) follow Epic's tutorial pages word for word and not the FXS_ / FXE_ convention. Rename them, or keep them the same as the tutorials?
 
 ## Self-contained quests
 
