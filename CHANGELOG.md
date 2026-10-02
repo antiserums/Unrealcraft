@@ -1,28 +1,46 @@
 # Changelog
 
-Newest first. A version is **released** when its tag (e.g. `v0.2.0`) is pushed to GitHub. The Quartermaster checks
+Newest first. A version is **released** when its tag (e.g. `v0.1.0.184`) is pushed to GitHub. The Quartermaster checks
 GitHub every minute and posts each newly released entry to #patch-notes, one message per version, so the channel
 keeps the full history. To fix a mistake in a released entry, edit it and push; the Quartermaster
 updates that version's existing message instead of posting a new one.
 
-Format: `## vMAJOR.MINOR.PATCH.BUILD · YYYY-MM-DD`, then a plain list of changes. No titles or summaries.
+Format: `## v0.1.0.REV · YYYY-MM-DD`, then a plain list of changes. No titles or summaries.
 
-A version has four numbers, the way an Unreal Engine build carries a changelist number (`py -3 tools/version.py next minor` prints the next one):
-- **MAJOR** (v1.0.0 → v2.0.0): breaking for members: progress reset, ranks or XP rebalanced, commands removed or renamed.
-- **MINOR** (v1.2.0 → v1.3.0): new things that don't break anything: quests, channels, commands, features.
-- **PATCH** (v1.2.3 → v1.2.4): fixes only: typos, links, bugs, wording.
-- **BUILD** (v1.2.3.**700**): the number of commits in the repo at that release. It only ever goes up.
-  The releases before v0.11 were first published with three numbers (v0.10.1); their build numbers were added on
-  2026-10-02, counted from the commit each one was tagged on.
-- While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
-  **v1.0.0** marks the official public launch.
+A version is three numbers and a **rev**, the way an Unreal Engine build carries a changelist number
+(`py -3 tools/version.py next` prints the next one):
+- **REV** (v0.1.0.**184**): the number of commits in the repo at that release. It only ever goes up, and it is what
+  tells one release from the next.
+- Unrealcraft is pre-release, so every release so far is **v0.1.0** with its own rev. The first three numbers only
+  move on a milestone the owner decides on: MAJOR for the public launch (**v1.0.0**) or a break for members
+  (progress reset, ranks or XP rebalanced), MINOR for a big new part of the game, PATCH for a round of fixes.
+- The first 15 releases were first published under other numbers (v0.2.0 … v0.10.1). They were renumbered on
+  2026-10-02; the rev is counted from the commit each one was tagged on.
 
-## v0.10.1.41 · 2026-09-29
+## v0.1.0.184 · 2026-10-02
+- **The website runs the game.** Quests, boss fights, proof and reviews all happen on the site. Discord is for talking and showing your progress.
+- **Everyone starts as Novice.** Orientation is now five first steps inside Novice. Rank colors match the quest tiers.
+- **Quest pages have a new look**: the dungeon and its boss at the top, the steps on a trail, your progress at the side.
+- **Every quest explains itself**: a "Before you start" intro, steps in full sentences, and a clear "done when".
+- **Every quest stands alone.** No quest needs something you built in another quest. Quests that used removed tools or Starter Content are rewritten for the current Unreal Engine.
+- **Every quest has a boss fight**, including the first steps on the site. Quiz answers no longer give themselves away by their length.
+- **Reading links** show the real page title and get a tick when you open them.
+- **Proof can be a short video clip**: MP4, WebM or MOV, up to 50 MB.
+- **Home page**: your next dungeon with its boss, and graphs of your statistics over time.
+- **Home banners**: four living scenes, unlocked by rank and chosen on your player card.
+- **Player card and wardrobe**: outfits, titles, borders and decorations, with a preview before you save.
+- **Inbox**: announcements, mail and support tickets in one place. Tickets can carry screenshots.
+- **Leaderboard, mission, FAQ, privacy and terms pages.**
+- **15 languages** for the site.
+- **The quest board loads fast**, with pages inside each tier.
+- **Versions are now v0.1.0 and a rev.** The rev is the last number and goes up with every release: this is rev 184. Older releases were renumbered the same way.
+
+## v0.1.0.41 · 2026-09-29
 - **Start quiz** now goes straight to question 1. No second Start quiz button.
 - **Open the guide** is on every quiz question, so the reading is always one tap away.
 - Quizzes are shown as colored cards: the question, ✅ Correct / ❌ Not quite, and your result.
 
-## v0.10.0.39 · 2026-09-29
+## v0.1.0.39 · 2026-09-29
 - New voice rooms: join **➕ Join to create** and the Quartermaster makes a room just for you and moves you in.
 - Rename your room or set a user limit with the buttons in its chat, or type `/room rename` / `/room limit`.
 - If you leave your room, it passes to someone still inside. A room is deleted after 5 minutes with nobody in it.
@@ -32,22 +50,22 @@ A version has four numbers, the way an Unreal Engine build carries a changelist 
 - WORKSHOP is now **QUEST BOARD**. #quest-board is now **#quest-log**.
 - The Workshop forums are now called your major forums.
 
-## v0.9.1.35 · 2026-09-29
+## v0.1.0.35 · 2026-09-29
 - The rules are rewritten in plain, friendly English. **Be kind** is now rule 1. Nothing new is required of you.
 
-## v0.9.0.33 · 2026-09-29
+## v0.1.0.33 · 2026-09-29
 - Quests can now link hand-picked free guides from the community, not only Epic's docs. They show after the Epic links.
 - Rule 7 is now **Good sources only**: Epic docs plus hand-picked free community guides. Still no pirated or re-hosted paid courses.
 - #quest-board and #epic-games-resources no longer say the reading is official Epic docs only.
 
-## v0.8.0.31 · 2026-09-29
+## v0.1.0.31 · 2026-09-29
 - Your public Turn-in post now shows the result: passed, changes requested or not passed.
 - Review results and mentor notes are posted in your turn-in thread (with a **Send my work again** button) as well as by DM.
 - Every 5th Rank 0–1 turn-in gets a quick spot check from a mentor. A flag only sends you a kind note; you keep your XP.
 - #mentor-queue cards close once they are reviewed, and a pinned guide explains how the queue works.
 - Pinned messages in #quest-board, #help-desk, #showcase, #mentor-queue, #epic-games-resources and every Workshop forum now use short colored cards, like #welcome.
 
-## v0.7.0.28 · 2026-09-29
+## v0.1.0.28 · 2026-09-29
 - Starter Quests are numbered **Q1–Q11** (were S1–S11). Your progress carried over.
 - Workshop forums are named for the majors: #level-design, #environment-art, #tech-art, #gameplay-design, #animation, #programming, #cinematics.
 - #foundations is now #starter-quests. The old #world-lighting, #materials, #blueprint and #characters-anim forums are gone.
@@ -58,17 +76,17 @@ A version has four numbers, the way an Unreal Engine build carries a changelist 
 - Removed the **I found it** button from #quest-board. Pressing **Continue your quest** there completes that Orientation step.
 - The #welcome button is now **Start Questing**.
 
-## v0.6.1.22 · 2026-09-29
+## v0.1.0.22 · 2026-09-29
 - Channel names in quests and quizzes (like #welcome) are now clickable links.
 - S1 question 5 points to the server rules in #welcome.
 
-## v0.6.0.20 · 2026-09-29
+## v0.1.0.20 · 2026-09-29
 - After Orientation, quests only work in #quest-board: `/quest`, `/quiz`, `/submit` and the quest buttons.
 - Using them anywhere else shows a **Go to #quest-board** button.
 - Orientation still happens in #welcome. `/rank`, `/path`, the help desk and Workshop posts work anywhere.
 - The Orientation done page, the #welcome button, the Greenlit message, #welcome and #quest-board all explain this.
 
-## v0.5.0.18 · 2026-09-29
+## v0.1.0.18 · 2026-09-29
 - Orientation is 6 steps. Removed **Ask a question** and **Cheer someone's work**.
 - Every step and screen has a button to the next thing, so you never need to type a command (typing still works).
 - The #welcome button is now **Start / continue your quest** and always takes you to your next step.
@@ -81,29 +99,29 @@ A version has four numbers, the way an Unreal Engine build carries a changelist 
 - Server admins can review turn-ins.
 - Patch notes are just the version, date and list of changes.
 
-## v0.4.0.14 · 2026-09-29
+## v0.1.0.14 · 2026-09-29
 - The Orientation page updates by itself when you finish a step (for 15 minutes after you open it).
 - Renamed **Lookdev / Env Art** to **Environment Art** (major and Rank 3 Specialty). Existing roles were renamed.
 - Fixed: finishing a quest stopped before checking for Orientation completion and promotions. XP was always saved.
 
-## v0.3.2.11 · 2026-09-29
+## v0.1.0.11 · 2026-09-29
 - #welcome has one green button that opens the rules quiz, your first quest.
 - After passing the quiz, a **See my next steps** button opens the rest of Orientation.
 - `/start` does the same as the button.
 
-## v0.3.1.9 · 2026-09-29
+## v0.1.0.9 · 2026-09-29
 - Orientation step 1 is only the rules quiz.
 - Replaced a confusing rules quiz question with a clearer one.
 - Quest cards say exactly how to finish: quiz only, automatic, or quiz then `/submit`.
 
-## v0.3.0.6 · 2026-09-29
+## v0.1.0.6 · 2026-09-29
 - Merged #how-this-place-works into #welcome: one page with what Unrealcraft is, how to start, the 5 commands, what opens at each rank, help and the rules.
 - Commands like `/start` and `/quiz` work in #welcome. It is commands-only; chat goes in #general.
 - New Orientation page: progress bar, a Next step, one short line per step, and buttons for the rules quiz and skipping voice.
 - Orientation steps and the rules quiz rewritten in plain English with simpler names.
 - #quest-board button renamed to **I found it**.
 
-## v0.2.0.3 · 2026-09-29
+## v0.1.0.3 · 2026-09-29
 - Join question **What do you want to learn in Unreal?** accepts several answers.
 - With several answers, the Quartermaster DMs buttons to choose your main path (major). The others count as interests.
 - Join question **What are your goals?** accepts several answers.

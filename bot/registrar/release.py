@@ -6,8 +6,9 @@ Versions are written vMAJOR.MINOR.PATCH.BUILD, the way Unreal Engine builds carr
   PATCH  fixes only: typos, broken links, bug fixes, wording
   BUILD  the number of commits in the repo at that release (`tools/version.py next` works it out). It only goes up,
          so two builds can always be told apart, even of the same release.
-While MAJOR is 0 the server is still pre-release; anything may change between MINOR versions.
-Releases from before v0.11 were first published without a build number (v0.10.1). That form is still read.
+Unrealcraft is pre-release: every release so far is v0.1.0 with its own build number (its "rev"), and the first three
+numbers only move on a milestone the owner decides on.
+The first 15 releases were first published under other numbers (v0.2.0 … v0.10.1), see FIRST_NAMES.
 """
 from __future__ import annotations
 
@@ -26,6 +27,11 @@ def version_key(v: str) -> tuple:
     m = re.fullmatch(SEMVER, v)
     major, minor, patch, build, pre = int(m[1]), int(m[2]), int(m[3]), int(m[4] or 0), m[5]
     return (major, minor, patch, 0 if pre else 1, pre or "", build)   # a pre-release sorts before its release
+
+
+# The first 15 releases, by build number: the version each one was first published (and tagged, and posted) under.
+FIRST_NAMES = {1: "v0.1.0", 3: "v0.2.0", 6: "v0.3.0", 9: "v0.3.1", 11: "v0.3.2", 14: "v0.4.0", 18: "v0.5.0", 20: "v0.6.0",
+               22: "v0.6.1", 28: "v0.7.0", 31: "v0.8.0", 33: "v0.9.0", 35: "v0.9.1", 39: "v0.10.0", 41: "v0.10.1"}
 
 
 def build_of(v: str) -> int | None:

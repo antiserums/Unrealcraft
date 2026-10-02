@@ -11,17 +11,17 @@ The bot is the **Quartermaster**.
 ## Releasing an update (patch notes)
 Patch notes are only posted for versions that have been **pushed to GitHub as a tag**.
 1. Make the change and test it.
-2. Get the next version (rules at the top of `CHANGELOG.md`): fixes → `patch`, new stuff → `minor`, breaking for members → `major`.
-   The fourth number is the build, counted from the commits, like the changelist on an Unreal Engine build:
+2. Get the next version (rules at the top of `CHANGELOG.md`). Every release is `v0.1.0` and a rev: the fourth number,
+   counted from the commits, like the changelist on an Unreal Engine build. The first three numbers only move on a milestone:
    ```bash
-   py -3 tools/version.py next minor      # prints for example v0.11.0.173
+   py -3 tools/version.py next            # prints for example v0.1.0.184
    ```
-3. Add an entry at the **top** of `CHANGELOG.md`, e.g. `## v0.11.0.173 · 2026-10-02`, then bullets for members.
+3. Add an entry at the **top** of `CHANGELOG.md`, e.g. `## v0.1.0.184 · 2026-10-02`, then bullets for members.
    Commit it as the very next commit, so the build number matches.
    `python bot/tools/validate_curriculum.py` checks the format and that the version went up.
 4. Commit, tag and push:
    ```bash
-   git add -A && git commit -m "v0.11.0.173: short title" && git tag -a v0.11.0.173 -m "v0.11.0.173" && git push --follow-tags
+   git add -A && git commit -m "v0.1.0.184: short title" && git tag -a v0.1.0.184 -m "v0.1.0.184" && git push --follow-tags
    ```
 5. Within a minute the Quartermaster sees the new tag on GitHub and posts the entry to **#patch-notes**
    (one message per version, never edited, so the channel is the full history). Restart the bot if the update changed its code.
