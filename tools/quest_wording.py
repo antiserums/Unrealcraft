@@ -322,11 +322,15 @@ def next_batch(count: int) -> None:
 
 
 def telling(x: dict) -> bool:
-    """The right answer gives itself away by its length: it is the longest choice, and clearly longer than the rest."""
+    """The right answer gives itself away by its length. Either it is the longest choice and clearly longer than the
+    rest, or the choices fall into a long pair and a short pair with the right answer in the long pair."""
     lens = [len(c) for c in x["choices"]]
     r = lens[x["answer_index"]]
-    others = [n for i, n in enumerate(lens) if i != x["answer_index"]]
-    return r > max(others) and r >= 1.2 * (sum(others) / len(others)) and r - max(others) >= 4
+    others = sorted((n for i, n in enumerate(lens) if i != x["answer_index"]), reverse=True)
+    if r > others[0] and r >= 1.2 * (sum(others) / len(others)) and r - others[0] >= 4:
+        return True
+    third = sorted(lens, reverse=True)[2]                     # the third longest of the four
+    return r > third and third < 0.7 * r and r - third >= 8
 
 
 def tell(ids: list[str]) -> None:
@@ -343,7 +347,7 @@ def tell(ids: list[str]) -> None:
                     for i, c in enumerate(x["choices"]):
                         print(f"     {'*' if i == x['answer_index'] else '-'} {c}")
         return
-    total = longest = flagged = 0
+    total = longest = top2 = flagged = 0
     todo = []
     for _, q in quests:
         nums = []
@@ -351,6 +355,7 @@ def tell(ids: list[str]) -> None:
             lens = [len(c) for c in x["choices"]]
             total += 1
             longest += lens[x["answer_index"]] > max(l for i, l in enumerate(lens) if i != x["answer_index"])
+            top2 += lens[x["answer_index"]] >= sorted(lens, reverse=True)[1]
             if telling(x):
                 flagged += 1
                 nums.append(n)
@@ -358,8 +363,8 @@ def tell(ids: list[str]) -> None:
             todo.append(f"{q['id']}: {','.join(map(str, nums))}")
     for line in todo:
         print(line)
-    print(f"{total} questions | right answer is the longest choice in {100 * longest / total:.0f}% (chance would be 25%) | "
-          f"{flagged} questions in {len(todo)} quests give the answer away by length")
+    print(f"{total} questions | right answer is the longest choice in {100 * longest / total:.0f}% (chance 25%), one of the two "
+          f"longest in {100 * top2 / total:.0f}% (chance 50%) | {flagged} questions in {len(todo)} quests give the answer away by length")
 
 
 QUIZ_LEN = {"novice": 5, "apprentice": 6, "adept": 8, "expert": 10, "master": 12}      # TIERS in bot/registrar/curriculum.py
