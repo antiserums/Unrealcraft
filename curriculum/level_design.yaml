@@ -3485,7 +3485,9 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-framework-data-types-reference-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/procedural-content-generation-overview"
     checklist:
-      - "Open a project made from the Third Person template, or create one. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. You need a landscape that has at least three painted layers: Grass, Rock and Path. If you have none, make a material with a Landscape Layer Blend node that has these three layers, each with its own color, create a Landscape with this material, and create a layer info object for each layer on the Paint tab. Paint the Path layer along a route across the landscape, and paint some Grass and some Rock areas."
+      - "Open a project made from the Third Person template, or create one. Open Edit, then Plugins, and enable the Procedural Content Generation Framework (PCG) plugin if it is off."
+      - "You need a landscape that has at least three painted layers: Grass, Rock and Path. If you have none, make a material with a Landscape Layer Blend node that has these three layers, each with its own color. Create a Landscape with this material, and create a layer info object for each layer on the Paint tab."
+      - "Paint the Path layer along a route across the landscape, and paint some Grass and some Rock areas."
       - "Create a PCG graph named PCG_Biome. Add a World Ray Hit Query node and enable Apply Metadata From Landscape, so that the points know which layers are painted under them. Connect it to a Surface Sampler."
       - "Add an Attribute Filter on the attribute of the Grass layer, and keep values above 0.5. Spawn bushes from its Inside pin."
       - "Add a second Attribute Filter on the attribute of the Rock layer. Spawn boulders from its Inside pin."
@@ -4343,8 +4345,8 @@ quests:
     subjects: [scripted-actions, editor-utility-blueprint, tags]
     required_spine: false
     required: false
-    title: Scripted Actions for tagging and renaming
-    brief: "A Scripted Action is a command that you write in Blueprint and that appears in the right-click menu of actors in the editor. It lets you do the same thing to many selected actors at once, for example give them all a tag or a clear name. Tags and good names make a big level easy to search and to review. In this quest you build two Scripted Actions, one that adds a tag and one that renames, and you limit them to Static Mesh Actors."
+    title: "Scripted Actor Actions for tagging and renaming"
+    brief: "A Scripted Actor Action is a command that you write in Blueprint and that appears in the right-click menu of actors in the editor, in the Scripted Actor Actions submenu. The documentation page still uses the older name, Scripted Actions. An action lets you do the same thing to many selected actors at once, for example give them all a tag or a clear name. Tags and good names make a big level easy to search and to review. In this quest you build two Scripted Actor Actions, one that adds a tag and one that renames, and you limit them to Static Mesh Actors."
     time_min: 60
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
     backup_url: null
@@ -4355,18 +4357,18 @@ quests:
       - "Add a function named Add Tag with one String input. It must loop over the result of Get Selection Set and add the tag to each actor."
       - "Add a second function named Rename With Prefix with one String input. It renames each selected actor to Prefix_Number, which means the prefix, an underscore and a number."
       - "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the actions only appear for static meshes."
-      - "Click Compile and Save. Select ten blockout meshes in the viewport, for example ten cubes that you place now or ten meshes of the template level, right-click, and run Add Tag with the value Cover."
+      - "Click Compile and Save. Select ten blockout meshes in the viewport, for example ten cubes that you place now or ten meshes of the template level, right-click, open Scripted Actor Actions, and run Add Tag with the value Cover."
       - "Run Rename With Prefix with the value Cover on the same selection. Check the new names in the Outliner."
-      - "Select one actor that is not a static mesh, such as a light, and confirm that the Scripted Actions menu does not show your actions."
-    done_when: "Send a screenshot of the right-click Scripted Actions submenu open on a selection of Static Mesh Actors. The Outliner must show the renamed Cover_ actors, and the Details panel must show the Cover tag on one of them."
+      - "Select one actor that is not a static mesh, such as a light, and confirm that the Scripted Actor Actions menu does not show your actions."
+    done_when: "Send a screenshot of the right-click Scripted Actor Actions submenu open on a selection of Static Mesh Actors. The Outliner must show the renamed Cover_ actors, and the Details panel must show the Cover tag on one of them."
     xp: 60
     verify_type: screenshot
     quiz:
-      - q: "Which parent class should you pick when a Scripted Action must work on actors selected in the level?"
+      - q: "Which parent class should you pick when a Scripted Actor Action must work on actors selected in the level?"
         choices: ["AssetActionUtility", "ActorActionUtility", "EditorUtilityWidget", "LevelScriptActor"]
         answer_index: 1
         explain: "ActorActionUtility is for actors selected in the Level Viewport or Outliner. AssetActionUtility is for assets in the Content Browser."
-      - q: "What must be true for a function or Custom Event in the class to show up as a Scripted Action?"
+      - q: "What must be true for a function or Custom Event in the class to show up as a Scripted Actor Action?"
         choices: ["It must return a Boolean", "It must be named Run", "Call In Editor must be checked on the node", "It must have no inputs"]
         answer_index: 2
         explain: "Call In Editor must be checked. New functions get it automatically; Custom Events need you to check it yourself."
@@ -4378,7 +4380,7 @@ quests:
         choices: ["Add the class to Supported Classes in Class Defaults", "Rename the Blueprint", "Add a Branch node at the start", "Move the Blueprint to another folder"]
         answer_index: 0
         explain: "In Class Defaults, add the wanted class (for example Static Mesh Actor) to Supported Classes. The action then appears only for that class."
-      - q: "What happens when a Scripted Action function has inputs?"
+      - q: "What happens when a Scripted Actor Action function has inputs?"
         choices: ["The action is hidden", "The editor pops up a small window asking for the values", "Inputs are ignored", "The Blueprint fails to compile"]
         answer_index: 1
         explain: "Inputs become Dynamic Inputs. The editor shows a small window where you type the values each time you run the action."
@@ -4386,11 +4388,11 @@ quests:
         choices: ["That the input has a value at all or makes sense", "That the type matches", "That the window opens", "That the action appears in the menu"]
         answer_index: 0
         explain: "The editor checks the type, but not that values are given or make sense. Your script must handle empty inputs."
-      - q: "How many Scripted Actions can one Editor Utility Blueprint class contain?"
+      - q: "How many Scripted Actor Actions can one Editor Utility Blueprint class contain?"
         choices: ["Exactly one", "At most three", "As many functions or Custom Events as you need", "One per supported class"]
         answer_index: 2
         explain: "Each function or Custom Event becomes a separate menu option. You can put many in one class or spread them across classes."
-      - q: "Where do you find the Blueprint class name when running its Scripted Actions?"
+      - q: "Where do you find the Blueprint class name when running its Scripted Actor Actions?"
         choices: ["In the submenu title", "In the Details panel", "In the Output Log", "You do not see it; the menu shows only function names"]
         answer_index: 3
         explain: "The class name is not shown when you run the actions. You only need it to find the class later in your project."

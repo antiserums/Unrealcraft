@@ -1189,8 +1189,8 @@ quests:
     subjects: [editor-utility, blueprint, tools, editor-scripting]
     required_spine: false
     required: false
-    title: Scripted Actions with Editor Utility Blueprints
-    brief: "An Editor Utility Blueprint is a Blueprint that runs inside the editor, not in the game. Its functions can appear in the right-click menu of Actors or assets, where they are called Scripted Actions. They are the fastest way to build a small tool that removes repeated work. In this quest you make two Scripted Actions that work on the Actors you have selected in the level."
+    title: "Scripted Actor Actions with Editor Utility Blueprints"
+    brief: "An Editor Utility Blueprint is a Blueprint that runs inside the editor, not in the game. Its functions can appear in the right-click menu of Actors, where they are called Scripted Actor Actions, or of assets, where they are called Scripted Asset Actions. The documentation page still uses the older name for both, Scripted Actions. They are the fastest way to build a small tool that removes repeated work. In this quest you make two Scripted Actor Actions that work on the Actors you have selected in the level."
     time_min: 50
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/scripted-actions-in-unreal-engine"
     backup_url: null
@@ -1210,23 +1210,23 @@ quests:
     xp: 60
     verify_type: screenshot
     quiz:
-      - q: "You want a Scripted Action that works on assets selected in the Content Browser. Which parent class?"
+      - q: "You want a Scripted Asset Action that works on assets selected in the Content Browser. Which parent class?"
         choices: ["ActorActionUtility", "AssetActionUtility", "EditorUtilityActor", "EditorUtilityWidget"]
         answer_index: 1
         explain: "AssetActionUtility is for Assets selected in the Content Browser. ActorActionUtility is for Actors selected in the Level Viewport or World Outliner."
-      - q: "A Custom Event in your Editor Utility Blueprint does not appear as a Scripted Action. What is the most likely cause?"
-        choices: ["The event has no inputs", "The Blueprint is not saved to the Plugins folder", "Call In Editor is not checked on the Custom Event node", "Custom Events are never allowed as Scripted Actions"]
+      - q: "A Custom Event in your Editor Utility Blueprint does not appear as a Scripted Actor Action. What is the most likely cause?"
+        choices: ["The event has no inputs", "The Blueprint is not saved to the Plugins folder", "Call In Editor is not checked on the Custom Event node", "Custom Events are never allowed as Scripted Actor Actions"]
         answer_index: 2
         explain: "Call In Editor must be checked. New functions get it automatically, but for a Custom Event you have to check it yourself."
       - q: "Which node returns the actors selected in the level at the moment the action runs?"
         choices: ["Get All Actors of Class", "Get Selected Assets", "Get Player Pawn", "Get Selection Set"]
         answer_index: 3
         explain: "Get Selection Set returns an array of the selected Actors. Get Selected Assets returns the Assets selected in the Content Browser. Both are under Development > Editor."
-      - q: "How do you stop a Scripted Action from showing on every actor type?"
+      - q: "How do you stop a Scripted Actor Action from showing on every actor type?"
         choices: ["Add classes to Supported Classes in Class Defaults", "Rename the function with the class name", "Use a Cast node inside the function", "Put the Blueprint in a folder named after the class"]
         answer_index: 0
         explain: "In Class Defaults, click plus on Supported Classes and add for example Static Mesh Actor. Then the action shows only for that class."
-      - q: "Your Scripted Action function has an input. What happens when you run it?"
+      - q: "Your Scripted Actor Action function has an input. What happens when you run it?"
         choices: ["The action is hidden", "The Editor opens a small window asking you to enter the input value", "The input uses its default value silently", "The function fails to compile"]
         answer_index: 1
         explain: "Inputs on the function or Custom Event make the editor pop up a window to enter the values each time you run the action."
@@ -2061,7 +2061,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/LoadAssetBlocking"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/BlueprintAPI/Utilities/IsValidSoftObjectReference"
     checklist:
-      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable. Place a copy in the level and assign a mesh to HeavyMesh on that copy. In a real game this would be a large mesh. For the test any mesh works, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template."
+      - "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable."
+      - "Place a copy in the level and assign a mesh to HeavyMesh on that copy. In a real game this would be a large mesh. For the test any mesh works, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template."
       - "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two."
       - "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded."
       - "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor."

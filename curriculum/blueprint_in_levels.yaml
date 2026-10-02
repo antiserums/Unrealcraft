@@ -127,7 +127,8 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/opening-doors-in-unreal-engine"
     checklist:
-      - "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Door. Add a Static Mesh component with a cube that you scale to the shape of a door, and a Box Collision component that is larger than the door, so that the player touches it before reaching the door. If you already have a door Blueprint of your own, you can use that instead. In the Event Graph, add a Timeline named TL_Open with one float track that goes from 0 to 1 over 1.0 s. Ease the curve: right-click the keys and choose Auto."
+      - "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Door. Add a Static Mesh component with a cube that you scale to the shape of a door. Add a Box Collision component that is larger than the door, so that the player touches it before reaching the door. If you already have a door Blueprint of your own, you can use that instead."
+      - "In the Event Graph, add a Timeline named TL_Open with one float track that goes from 0 to 1 over 1.0 s. Ease the curve: right-click the keys and choose Auto."
       - "Connect the output of the track to a Lerp (Rotator) or Lerp (Vector) node. Connect the result of the Lerp to Set Relative Rotation or Set Relative Location on the door mesh."
       - "Add the events On Component Begin Overlap and On Component End Overlap for the Box Collision. In each one, compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues. Connect Begin Overlap to the Play input of the Timeline, and End Overlap to the Reverse input."
       - "Make the variable OpenAngle (or OpenOffset) Instance Editable, so that each door can open in a different way."
@@ -292,7 +293,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Where do you read Max Walk Speed and Jump Z Velocity?"
-        choices: ["World Settings", "The Character Movement component on your character Blueprint", "Project Settings → Input", "The GameState"]
+        choices: ["World Settings", "The Character Movement component on your character Blueprint", "Project Settings, then Input", "The GameState"]
         answer_index: 1
         explain: "Character Movement holds walking, jumping and falling settings."
       - q: "The default Third Person capsule has a half-height of 96. How tall is the capsule?"
@@ -310,7 +311,7 @@ quests:
       - q: "Why make the sheet shareable?"
         choices: ["For XP only", "It must be in C++", "So you don't need to test", "So everyone building for the character uses the same numbers and kit pieces fit"]
         answer_index: 3
-        explain: "A metrics sheet is a team document. It becomes part of your Rank 4 kit handoff."
+        explain: "A metrics sheet is a team document. In later quests it becomes part of the kit you hand to others."
     flavors:
       _default: {why: "If you know the character's numbers, you build spaces that fit the first time."}
       level_design: {why: "Metrics are your contract with the character. Every gap and ledge depends on them.", do: "Put margins in the sheet (for example, gaps 50 cm under max jump), not just the limits."}
@@ -408,10 +409,10 @@ quests:
         choices: ["Nothing, the navmesh never changes", "Delete the navmesh", "A Level Blueprint", "Runtime Generation set to Dynamic so the navmesh rebuilds around moving obstacles"]
         answer_index: 3
         explain: "By default the navmesh is static and built in the editor."
-      - q: "Why does a level designer do this at Rank 2?"
-        choices: ["To learn C++", "To build a boss", "To check the route works for AI before Rank 3 encounters", "It's needed for lighting"]
+      - q: "Why does a level designer do this walk test early?"
+        choices: ["To learn C++", "To build a boss", "To check the route works for AI before building encounters in later quests", "It's needed for lighting"]
         answer_index: 2
-        explain: "Encounter spaces at Rank 3 need AI that can actually get to the player."
+        explain: "Encounter spaces in later quests need AI that can actually get to the player."
     flavors:
       _default: {why: "If AI can't walk your level, you find out now instead of during an encounter."}
       level_design: {why: "The navmesh shows you whether AI can actually use your layout.", do: "Keep P on while you adjust doorways and stairs."}
@@ -501,7 +502,7 @@ quests:
         choices: ["Two copies of the same door", "Two different interactions, like a key-locked door and a lever-driven gate", "Two Print Strings", "One door opened twice"]
         answer_index: 1
         explain: "They must be different mechanics, each doing a job in a beat."
-      - q: "Your playtester got lost in the tension beat. What does the turn-in need?"
+      - q: "Your playtester got lost in the tension beat. What does the work you send need?"
         choices: ["Nothing, playtests are optional", "A new level", "The notes, what you changed in response, and an updated beat chart", "A longer clip"]
         answer_index: 2
         explain: "The capstone is about iterating. Show the change and why you made it."
@@ -516,7 +517,7 @@ quests:
       - q: "Who approves this capstone?"
         choices: ["The Quartermaster automatically", "A peer or mentor, after the quiz", "Nobody", "Epic Games"]
         answer_index: 1
-        explain: "Rank 2 verification is quiz plus artifact, approved by a person."
+        explain: "This capstone is checked with the quiz plus the work you send, approved by a person."
     flavors:
       _default: {why: "Plan it, build it, test it with someone else, change it. That's how level design works."}
       level_design: {why: "The first time you plan, build, test and revise a whole level yourself.", do: "Keep the before/after of your playtest change. It's the best part of the turn-in."}
@@ -535,7 +536,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-06-puzzles-moving-platforms-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 moving platform blueprint timeline loop"
-    checklist: ["Open any project, or create one from the Third Person template, and work in any level. Build an Actor Blueprint named BP_Platform with a Static Mesh for the floor piece. Add two Vector variables named PointA and PointB and turn on Instance Editable for both, so that you can set them on each copy in the level. In the Event Graph, add a Timeline with one float track that goes from 0 to 1 and back to 0, and turn on Loop. Connect BeginPlay to Play. On Update, use a Lerp (Vector) node from PointA to PointB with the track as Alpha, and connect the result to Set Relative Location on the mesh.", "Ride the platform in PIE and check that you do not slide off."]
+    checklist: ["Open any project, or create one from the Third Person template, and work in any level. Build an Actor Blueprint named BP_Platform with a Static Mesh for the floor piece.", "Add two Vector variables named PointA and PointB and turn on Instance Editable for both, so that you can set them on each copy in the level.", "In the Event Graph, add a Timeline with one float track that goes from 0 to 1 and back to 0, and turn on Loop. Connect BeginPlay to Play. On Update, use a Lerp (Vector) node from PointA to PointB with the track as Alpha, and connect the result to Set Relative Location on the mesh.", "Ride the platform in PIE and check that you do not slide off."]
     done_when: "Send a short video clip (30 seconds or less) that shows you riding the platform, or two screenshots from PIE that show you on the platform at two different positions. Also send a screenshot of the graph."
     xp: 25
     verify_type: screenshot
@@ -611,7 +612,7 @@ quests:
     official_url: "https://dev.epicgames.com/documentation/en-us/unreal-engine/designer-05-puzzles-switches-and-cubes-in-unreal-engine"
     backup_url: TODO_URL
     backup_search: "unreal engine 5 pressure plate cube puzzle blueprint"
-    checklist: ["Open any project, or create one from the Third Person template. Make a gate: an Actor Blueprint named BP_Gate with a cube mesh and two custom events. Open hides the mesh and turns off its collision, and Close shows the mesh and turns its collision on again. Place it in the level.", "Build a pressure plate that opens the gate only while a physics cube sits on it. Make an Actor Blueprint named BP_PressurePlate with a flat mesh and a Box Collision just above it. Add an Instance Editable variable named Gate of type BP_Gate, place the plate, and pick the gate with the eyedropper in the Details panel. On Begin Overlap, call Open on the gate, and on End Overlap, call Close. For the cube, place a cube mesh, set its Mobility to Movable, and turn on Simulate Physics and Generate Overlap Events in its Details panel. Without Generate Overlap Events the plate does not notice the cube.", "Filter the plate so that only the cube counts, or only the player counts. One way is to give the cube an Actor Tag such as Cube, and check Actor Has Tag on Other Actor before you open the gate. Decide which one counts, and say why."]
+    checklist: ["Open any project, or create one from the Third Person template. Make a gate: an Actor Blueprint named BP_Gate with a cube mesh and two custom events. Open hides the mesh and turns off its collision, and Close shows the mesh and turns its collision on again. Place it in the level.", "Build a pressure plate that opens the gate only while a physics cube sits on it. Make an Actor Blueprint named BP_PressurePlate with a flat mesh and a Box Collision just above it. Add an Instance Editable variable named Gate of type BP_Gate. Place the plate, and pick the gate with the eyedropper in the Details panel.", "In BP_PressurePlate, on Begin Overlap, call Open on the gate, and on End Overlap, call Close.", "For the cube, place a cube mesh, set its Mobility to Movable, and turn on Simulate Physics and Generate Overlap Events in its Details panel. Without Generate Overlap Events the plate does not notice the cube.", "Filter the plate so that only the cube counts, or only the player counts. One way is to give the cube an Actor Tag such as Cube, and check Actor Has Tag on Other Actor before you open the gate. Decide which one counts, and say why."]
     done_when: "Send a short video clip (30 seconds or less), or two screenshots from PIE, that show the puzzle before and after it is solved. Add one line that says what the plate reacts to and why."
     xp: 30
     verify_type: screenshot

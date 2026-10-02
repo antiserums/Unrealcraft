@@ -427,7 +427,7 @@ quests:
       - "Package a development build, which is a version of the game that runs without the editor: use the Platforms button in the main toolbar, choose your platform and then Package Project. Play it outside the editor one time and record a short clip."
     done_when: "Send a short video clip (30 seconds or less) of the packaged build running, in which you win once. Add a short written description of how the pieces connect."
     xp: 200
-    verify_type: package
+    verify_type: screenshot
     quiz: []  # TODO Phase 4
     flavors:
       _default: {why: "A full loop proves the pieces work together.", do: "Wire collect, score, and win in one level."}
@@ -448,7 +448,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine blueprint communication direct cast interface event dispatcher"
     checklist:
-      - "Open any project, or create one from the Third Person template. Make two simple Actor Blueprints: BP_Button, with a mesh and a Box Collision that counts as pressed when the player overlaps it, and BP_Lamp, with a Point Light and a function that switches the light on and off. Connect two actors three times, for example a button and a lamp. First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it. Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference. Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react."
+      - "Open any project, or create one from the Third Person template. Make two simple Actor Blueprints: BP_Button, with a mesh and a Box Collision that counts as pressed when the player overlaps it, and BP_Lamp, with a Point Light and a function that switches the light on and off. In the next three steps you connect two actors three times, for example a button and a lamp."
+      - "First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it."
+      - "Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference."
+      - "Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react."
       - "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
     done_when: "Send your written lines, and a screenshot of the graph of the Event Dispatcher version."
     xp: 50
@@ -473,7 +476,9 @@ quests:
     backup_search: "unreal engine 5 umg score hud widget blueprint beginner"
     checklist:
       - "Open a project made from the Third Person template, or create one. Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of the character of the template, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen."
-      - "Update the widget from the GameState when the score changes. If your project has no GameState with a score, make one: a Blueprint with Game State Base as its parent and an Integer variable named Score, set as the Game State Class of a GameMode Blueprint that the level uses. Add a key event on the character that adds 1 to the score, so that you can test. In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text. Do not update it on Tick, the event that runs every frame, because that does the work again and again for no reason."
+      - "Update the widget from the GameState when the score changes. If your project has no GameState with a score, make one: a Blueprint with Game State Base as its parent and an Integer variable named Score, set as the Game State Class of a GameMode Blueprint that the level uses. Add a key event on the character that adds 1 to the score, so that you can test."
+      - "In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text."
+      - "Do not update the text on Tick, the event that runs every frame, because that does the work again and again for no reason."
     done_when: "Send a screenshot of the HUD updating in PIE."
     xp: 50
     verify_type: screenshot

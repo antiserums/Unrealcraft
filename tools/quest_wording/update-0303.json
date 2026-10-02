@@ -1,0 +1,164 @@
+{
+ "LDQ114": {
+  "title": "Scripted Actor Actions for tagging and renaming",
+  "brief": "A Scripted Actor Action is a command that you write in Blueprint and that appears in the right-click menu of actors in the editor, in the Scripted Actor Actions submenu. The documentation page still uses the older name, Scripted Actions. An action lets you do the same thing to many selected actors at once, for example give them all a tag or a clear name. Tags and good names make a big level easy to search and to review. In this quest you build two Scripted Actor Actions, one that adds a tag and one that renames, and you limit them to Static Mesh Actors.",
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Right-click in the Content Browser and choose Editor Utilities, then Editor Utility Blueprint. Pick ActorActionUtility as the parent class and name the asset EUB_LDActions.",
+   "Add a function named Add Tag with one String input. It must loop over the result of Get Selection Set and add the tag to each actor.",
+   "Add a second function named Rename With Prefix with one String input. It renames each selected actor to Prefix_Number, which means the prefix, an underscore and a number.",
+   "In Class Defaults, add Static Mesh Actor to Supported Classes, so that the actions only appear for static meshes.",
+   "Click Compile and Save. Select ten blockout meshes in the viewport, for example ten cubes that you place now or ten meshes of the template level, right-click, open Scripted Actor Actions, and run Add Tag with the value Cover.",
+   "Run Rename With Prefix with the value Cover on the same selection. Check the new names in the Outliner.",
+   "Select one actor that is not a static mesh, such as a light, and confirm that the Scripted Actor Actions menu does not show your actions."
+  ],
+  "done_when": "Send a screenshot of the right-click Scripted Actor Actions submenu open on a selection of Static Mesh Actors. The Outliner must show the renamed Cover_ actors, and the Details panel must show the Cover tag on one of them.",
+  "quiz": [
+   {
+    "q": "Which parent class should you pick when a Scripted Actor Action must work on actors selected in the level?",
+    "choices": [
+     "AssetActionUtility",
+     "ActorActionUtility",
+     "EditorUtilityWidget",
+     "LevelScriptActor"
+    ],
+    "explain": "ActorActionUtility is for actors selected in the Level Viewport or Outliner. AssetActionUtility is for assets in the Content Browser."
+   },
+   {
+    "q": "What must be true for a function or Custom Event in the class to show up as a Scripted Actor Action?",
+    "choices": [
+     "It must return a Boolean",
+     "It must be named Run",
+     "Call In Editor must be checked on the node",
+     "It must have no inputs"
+    ],
+    "explain": "Call In Editor must be checked. New functions get it automatically; Custom Events need you to check it yourself."
+   },
+   {
+    "q": "Which node returns the actors currently selected in the level when the action runs?",
+    "choices": [
+     "Get All Actors Of Class",
+     "Get Selected Assets",
+     "Get Player Pawn",
+     "Get Selection Set"
+    ],
+    "explain": "Get Selection Set returns an array of actors selected in the Level. Get Selected Assets is for Content Browser assets."
+   },
+   {
+    "q": "Your action shows up when you right-click any actor, even lights. How do you limit it?",
+    "choices": [
+     "Add the class to Supported Classes in Class Defaults",
+     "Rename the Blueprint",
+     "Add a Branch node at the start",
+     "Move the Blueprint to another folder"
+    ],
+    "explain": "In Class Defaults, add the wanted class (for example Static Mesh Actor) to Supported Classes. The action then appears only for that class."
+   },
+   {
+    "q": "What happens when a Scripted Actor Action function has inputs?",
+    "choices": [
+     "The action is hidden",
+     "The editor pops up a small window asking for the values",
+     "Inputs are ignored",
+     "The Blueprint fails to compile"
+    ],
+    "explain": "Inputs become Dynamic Inputs. The editor shows a small window where you type the values each time you run the action."
+   },
+   {
+    "q": "The editor validates dynamic input types. What does it NOT guarantee?",
+    "choices": [
+     "That the input has a value at all or makes sense",
+     "That the type matches",
+     "That the window opens",
+     "That the action appears in the menu"
+    ],
+    "explain": "The editor checks the type, but not that values are given or make sense. Your script must handle empty inputs."
+   },
+   {
+    "q": "How many Scripted Actor Actions can one Editor Utility Blueprint class contain?",
+    "choices": [
+     "Exactly one",
+     "At most three",
+     "As many functions or Custom Events as you need",
+     "One per supported class"
+    ],
+    "explain": "Each function or Custom Event becomes a separate menu option. You can put many in one class or spread them across classes."
+   },
+   {
+    "q": "Where do you find the Blueprint class name when running its Scripted Actor Actions?",
+    "choices": [
+     "In the submenu title",
+     "In the Details panel",
+     "In the Output Log",
+     "You do not see it; the menu shows only function names"
+    ],
+    "explain": "The class name is not shown when you run the actions. You only need it to find the class later in your project."
+   }
+  ]
+ },
+ "PQ52": {
+  "title": "Scripted Actor Actions with Editor Utility Blueprints",
+  "brief": "An Editor Utility Blueprint is a Blueprint that runs inside the editor, not in the game. Its functions can appear in the right-click menu of Actors, where they are called Scripted Actor Actions, or of assets, where they are called Scripted Asset Actions. The documentation page still uses the older name for both, Scripted Actions. They are the fastest way to build a small tool that removes repeated work. In this quest you make two Scripted Actor Actions that work on the Actors you have selected in the level.",
+  "quiz": [
+   {
+    "q": "You want a Scripted Asset Action that works on assets selected in the Content Browser. Which parent class?",
+    "choices": [
+     "ActorActionUtility",
+     "AssetActionUtility",
+     "EditorUtilityActor",
+     "EditorUtilityWidget"
+    ],
+    "explain": "AssetActionUtility is for Assets selected in the Content Browser. ActorActionUtility is for Actors selected in the Level Viewport or World Outliner."
+   },
+   {
+    "q": "A Custom Event in your Editor Utility Blueprint does not appear as a Scripted Actor Action. What is the most likely cause?",
+    "choices": [
+     "The event has no inputs",
+     "The Blueprint is not saved to the Plugins folder",
+     "Call In Editor is not checked on the Custom Event node",
+     "Custom Events are never allowed as Scripted Actor Actions"
+    ],
+    "explain": "Call In Editor must be checked. New functions get it automatically, but for a Custom Event you have to check it yourself."
+   },
+   {
+    "q": "Which node returns the actors selected in the level at the moment the action runs?",
+    "choices": [
+     "Get All Actors of Class",
+     "Get Selected Assets",
+     "Get Player Pawn",
+     "Get Selection Set"
+    ],
+    "explain": "Get Selection Set returns an array of the selected Actors. Get Selected Assets returns the Assets selected in the Content Browser. Both are under Development > Editor."
+   },
+   {
+    "q": "How do you stop a Scripted Actor Action from showing on every actor type?",
+    "choices": [
+     "Add classes to Supported Classes in Class Defaults",
+     "Rename the function with the class name",
+     "Use a Cast node inside the function",
+     "Put the Blueprint in a folder named after the class"
+    ],
+    "explain": "In Class Defaults, click plus on Supported Classes and add for example Static Mesh Actor. Then the action shows only for that class."
+   },
+   {
+    "q": "Your Scripted Actor Action function has an input. What happens when you run it?",
+    "choices": [
+     "The action is hidden",
+     "The Editor opens a small window asking you to enter the input value",
+     "The input uses its default value silently",
+     "The function fails to compile"
+    ],
+    "explain": "Inputs on the function or Custom Event make the editor pop up a window to enter the values each time you run the action."
+   },
+   {
+    "q": "Why can editor-only Blueprint classes use more Editor Scripting nodes than a normal Actor Blueprint?",
+    "choices": [
+     "They compile faster",
+     "They run on the render thread",
+     "Functions from Editor-type modules are only available to editor-only classes, because they cannot work at runtime",
+     "They have a larger memory budget"
+    ],
+    "explain": "Operations that change assets or the editor UI cannot run in a packaged game. So functions from Editor modules are only exposed to editor-only classes like Editor Utility Blueprints."
+   }
+  ]
+ }
+}

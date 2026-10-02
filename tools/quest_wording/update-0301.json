@@ -1,0 +1,409 @@
+{
+ "AQ27": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit, then Plugins, enable the Motion Warping plugin and restart the editor.",
+   "Pick an animation with root motion, such as a vault, a mantle or a punch. If you have none, make one: duplicate a jump animation of the mannequin, open the copy and select the root bone in the Skeleton Tree. Press Key in the toolbar at the first frame, then move the root bone about 200 units forward at the last frame and press Key again.",
+   "Open the animation and turn on Enable Root Motion in the Asset Details panel, where it is written as one word, EnableRootMotion.",
+   "Create a montage named AM_Vault from the animation: right-click the animation, choose Create, then Create AnimMontage.",
+   "In the montage, right-click the Notifies track, choose Add Notify State..., then Motion Warping. Stretch this window so that it covers the part of the move where the character reaches for the target.",
+   "Select the notify. In its Details panel, set Root Motion Modifier to Skew Warp and set Warp Target Name to VaultTarget.",
+   "Place a Target Point actor in the level. Then open BP_ThirdPersonCharacter and add a Motion Warping component to it. In the Animation Blueprint that the character uses, click Class Defaults and set Root Motion Mode to Root Motion from Montages Only, and make sure the AnimGraph has a Slot 'DefaultSlot' node before Output Pose.",
+   "On an input action, do three things in this order: get the location of the Target Point, call Add or Update Warp Target from Transform with the Name VaultTarget, and then use Play Montage to play AM_Vault.",
+   "Move the Target Point to a new place and test again. Then set Rotation Type to Facing and compare the result."
+  ]
+ },
+ "AQ40": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Prepare 9 aim poses: center, up, down, left, right and the 4 corners.",
+   "If you have no aim poses, make simple ones. Open the idle animation of the mannequin, pause it, and rotate a spine bone in the Skeleton Tree so that the upper body leans in one direction. Click Create Asset in the toolbar, choose Create Animation, then Current Pose, and save it with a clear name such as Aim_Up.",
+   "Do this for all 9 poses, with no rotation for the center pose. Then open the Animation Sequence of each pose.",
+   "In each sequence, set Additive Anim Type to Mesh Space and set Base Pose Type to Selected animation frame. Set Base Pose Animation to the center pose, which aims forward, and set Ref Frame Index to 0.",
+   "Create an Aim Offset named AO_Aim for the same skeleton. To do this, click Add, then Animation, then Aim Offset. Set Preview Base Pose to the center pose.",
+   "Set both Axis Functions to Orientation. For the horizontal axis choose Axis Yaw, and for the vertical axis choose Axis Pitch. Set Bone/Socket to the bone of the hand that holds the weapon, set Bone Facing Axis to +X and Bone Right Axis to +Y.",
+   "Drag the 9 poses into the graph and let the analysis place them. If needed, correct the axis ranges so that they go from -90 to 90.",
+   "Duplicate the Animation Blueprint that the character uses (ABP_Unarmed in the current template, ABP_Manny or ABP_Quinn in older versions) and open the copy. In its AnimGraph, add AO_Aim as a player node after the State Machine. Drive its Yaw and Pitch inputs with property access from the base aim rotation of the pawn.",
+   "Set LOD Threshold on the Aim Offset node to 2, so the node stops running on the simpler, far away versions of the mesh."
+  ]
+ },
+ "AQ57": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a Control Rig that drives the arms and the head of the mannequin with FK controls. If you have none, make one: right-click SKM_Manny_Simple, choose Create, then Control Rig, and name it CR_Manny_FK.",
+   "If you made a new rig, add its controls. In the Rig Hierarchy, select the upper arm, lower arm and hand bones of both arms and the head bone. Right-click and choose New, then Add Controls For Selected.",
+   "In the graph of the new rig, add a Set Transform node for each bone and connect a Get Transform node of its control to it. Connect the Set Transform nodes in a chain that starts at Forwards Solve.",
+   "Right-click the graph, open Events and add Backwards Solve. For each control, connect a Get Transform node of its bone to a Set Transform node of the control.",
+   "In the toolbar, switch Solve Direction to Backwards Solve. In Preview Scene Settings, set Preview Controller to Use Specified Animation and pick a walk animation.",
+   "Confirm that the border of the viewport is yellow and that the controls follow the animation. Then try the option Backwards and Forwards, and note the blue border.",
+   "Create a Level Sequence named LS_BakeTest. Drag SKM_Manny_Simple into the level, add this actor to the sequence, and add the same walk animation to its Animation track.",
+   "Right-click the character track, choose Bake To Control Rig, and pick your rig. Enable Reduce Keys with a Tolerance of 0.1, and click Create.",
+   "Move one baked key on an arm control to change the walk. Move the playhead through the sequence to see the change."
+  ]
+ },
+ "AQ70": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open an IK Retargeter between two characters. If you have none, make one: create an IK Rig for SKM_Manny_Simple and one for SKM_Quinn_Simple, and use Auto Create Retarget Chains in each. Then create an IK Retargeter with Manny as the source and Quinn as the target, and click Add Default Ops.",
+   "In the IK Rig of the target, give the LeftLeg and RightLeg chains an IK Goal, using Add Chain and Goal with Limb IK.",
+   "In the retargeter, select Run IK Rig. Confirm that Enable IK is on for both leg chains, and that the goals are drawn when Draw Final Goals is on.",
+   "Under Run IK Rig, add a Floor Constraint sub-op. On both leg chains, turn Enable Floor Constraint on and set Alpha to 1. Enable Use Foot, and adjust Heel Offset and Toe Offset until the feet stop sinking into the floor in a walk animation.",
+   "Add a Stride Warp IK Goals sub-op. Set Direction Source to Goals and Forward Direction to Y, and enable it on the leg chains. Set Warp Forwards to 0.7 and then to 1.3, and watch the length of the steps.",
+   "Add a Speed Plant IK Goals sub-op. Read its settings, and write down which animation curve it needs and which Blend Method you would pick for a run. Leave the op disabled if your animations have no speed curve.",
+   "Open Override Sets and create a set named OS_LongStride. Right-click the Stride Warp op and add Warp Forwards to the set with the value 1.3. Turn the set on and off in the editor.",
+   "Open Variables and add a Float variable named StrideScale. Bind it to Warp Forwards inside OS_LongStride.",
+   "Create an Animation Blueprint for the target character. In its AnimGraph, add a Retarget Pose From Mesh node and set the retargeter on it. Add OS_LongStride to Override Set to Apply, and connect a variable to the StrideScale pin. To test it, make a Character Blueprint in which the source mesh plays an animation and the target mesh is a child component of it with this Animation Blueprint. Press Play and change the value."
+  ]
+ },
+ "AQ71": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Enable the Animation Locomotion Library plugin: open Edit > Plugins, look in the Animation category, enable it and restart the editor.",
+   "You need a landing animation in which the root bone moves down to the ground. If you have none, make one: duplicate the land animation of the mannequin, open the copy and select the root bone in the Skeleton Tree. Move it about 100 units up at the first frame and press Key in the toolbar. Then go to the last frame and press Key with the root at its normal height.",
+   "Open the landing animation and turn on Enable Root Motion in Asset Details. Then open Window, then Animation Data Modifiers. Add a Distance Curve Modifier with Axis set to Z, Stop at End turned on, and Curve Name set to DistanceToGround. Click Apply All Modifiers.",
+   "Create a Curve Compression Settings asset named CCS_UniformIndexable: click Add, then Animation, then Advanced. Set its Codec to Uniform Indexable. Assign it to the landing animation under Compression in Asset Details.",
+   "Create an Animation Blueprint named ABP_DistanceLand. Add a Sequence Evaluator node with the landing animation and connect it to Output Pose. On Explicit Time, choose Dynamic Value. Turn off Should Loop and Teleport to Explicit Time. Set Start Position to 0 and Reinitialization Behavior to Explicit Time.",
+   "In the Details panel of the node, under Functions, find On Update, click +Create Binding and name the function DistanceMatching. Inside it, add a Distance Match to Target node and then Convert to Sequence Evaluator. Add a float variable named DistanceToGround, and set Distance Curve Name to DistanceToGround.",
+   "Compile. In the preview viewport, open Scene Setup and change Floor Height Offset. Watch the legs reach for the ground at different distances."
+  ]
+ },
+ "GDQ3": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Create an Actor Blueprint named BP_Door. Add a Static Mesh component with a cube that you scale to the shape of a door. Add a Box Collision component that is larger than the door, so that the player touches it before reaching the door. If you already have a door Blueprint of your own, you can use that instead.",
+   "In the Event Graph, add a Timeline named TL_Open with one float track that goes from 0 to 1 over 1.0 s. Ease the curve: right-click the keys and choose Auto.",
+   "Connect the output of the track to a Lerp (Rotator) or Lerp (Vector) node. Connect the result of the Lerp to Set Relative Rotation or Set Relative Location on the door mesh.",
+   "Add the events On Component Begin Overlap and On Component End Overlap for the Box Collision. In each one, compare Other Actor with Get Player Pawn and connect the result to a Branch node, so that only the player continues. Connect Begin Overlap to the Play input of the Timeline, and End Overlap to the Reverse input.",
+   "Make the variable OpenAngle (or OpenOffset) Instance Editable, so that each door can open in a different way.",
+   "Start PIE. Step into the trigger and out again when the door is halfway through its motion. The door should reverse from where it is and not snap."
+  ]
+ },
+ "LDQ21": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template, and work in any level. Build an Actor Blueprint named BP_Platform with a Static Mesh for the floor piece.",
+   "Add two Vector variables named PointA and PointB and turn on Instance Editable for both, so that you can set them on each copy in the level.",
+   "In the Event Graph, add a Timeline with one float track that goes from 0 to 1 and back to 0, and turn on Loop. Connect BeginPlay to Play. On Update, use a Lerp (Vector) node from PointA to PointB with the track as Alpha, and connect the result to Set Relative Location on the mesh.",
+   "Ride the platform in PIE and check that you do not slide off."
+  ]
+ },
+ "LDQ25": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make a gate: an Actor Blueprint named BP_Gate with a cube mesh and two custom events. Open hides the mesh and turns off its collision, and Close shows the mesh and turns its collision on again. Place it in the level.",
+   "Build a pressure plate that opens the gate only while a physics cube sits on it. Make an Actor Blueprint named BP_PressurePlate with a flat mesh and a Box Collision just above it. Add an Instance Editable variable named Gate of type BP_Gate. Place the plate, and pick the gate with the eyedropper in the Details panel.",
+   "In BP_PressurePlate, on Begin Overlap, call Open on the gate, and on End Overlap, call Close.",
+   "For the cube, place a cube mesh, set its Mobility to Movable, and turn on Simulate Physics and Generate Overlap Events in its Details panel. Without Generate Overlap Events the plate does not notice the cube.",
+   "Filter the plate so that only the cube counts, or only the player counts. One way is to give the cube an Actor Tag such as Cube, and check Actor Has Tag on Other Actor before you open the gate. Decide which one counts, and say why."
+  ]
+ },
+ "AQ5": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. In the Content Browser, find the Skeletal Mesh of the template character (its name starts with SKM_). Right-click it and choose Create, then Control Rig. Double-click the new asset to open the Control Rig Editor.",
+   "In the Rig Hierarchy tab, right-click the upper arm bone and choose New Element, then New Control. Select the new control and press Shift+P to unparent it from the bones. Do the same for the lower arm and the hand.",
+   "Drag each control into the Rig Graph and choose Get Control. Drag its bone into the graph and choose Set Bone. Connect the Transform pin of the Get node to the Value pin of the Set node. Then connect the Forwards Solve node to the Set nodes one after the other, so that the bones follow when you move a control.",
+   "Move and rotate the controls in the viewport to pose the arm. Clicking Compile puts the controls back in their starting position, so take your screenshot before you compile again."
+  ]
+ },
+ "GDQ8": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Spinner with a cube mesh and a Point Light. On Event Tick, add an Add Actor Local Rotation node and type 2 into the Yaw of its Delta Rotation.",
+   "On BeginPlay, call Set Intensity on the light with the value 5000, and Set Actor Scale 3D with the value 1.5. If you already have a Blueprint with numbers typed into its graph, you can use that instead.",
+   "Now turn the three hard-coded numbers, which are numbers typed directly into the graph, into variables, for example SpinSpeed, LightIntensity and MeshScale.",
+   "For each variable, tick Instance Editable, which is the eye icon. Also give each one a Category and a Description, which is the text shown as its tooltip.",
+   "On the number variables, set a Slider Range and a Value Range. These limits stop people from typing a value such as 99999.",
+   "Add a Vector variable named TargetPoint, make it Instance Editable, and give it the option Show 3D Widget. This shows a handle in the viewport, so the point can be dragged there.",
+   "Place two copies of the actor in the level and give them different values. Play in the editor (PIE) to see both behaviors, without opening the graph."
+  ]
+ },
+ "LDQ40": {
+  "checklist": [
+   "Open or create a Third Person template project. Build one encounter space in a new level, or finish an arena you have. It needs an entry, an exit, 6 to 10 cover pieces in two heights (low, to see over while standing, and full, to hide behind), a flank route on each side, high ground with a cost, a Nav Mesh Bounds Volume over the floor, and 3 or more enemies. A simple enemy is a Character Blueprint that walks to a Target Point with AI MoveTo, with Auto Possess AI set to Placed in World or Spawned.",
+   "Make the space readable. Choose a color key with one color for threats, one for cover and one for objectives, make one Material Instance for each, and apply them. Light the exit so that it is the brightest thing the player sees from the entry.",
+   "Write a one-page GDD (game design document) with the headings Goal, Player verbs, Beats, Fail state and Tuning knobs, or update the one you have, so that it matches what you built.",
+   "Show the space to at least one other person with a screenshot from above and one at eye level, and ask one specific question. Write down the feedback you get.",
+   "Make at least one change that comes from the feedback. Take a screenshot before and after from the same bookmark, and write the change in a short log.",
+   "Record a short video clip (30 seconds or less) of one run in PIE from the entry to the exit. Also take a screenshot from above in the Top view and mark the entry, the exit, the cover, the flanks, the high ground and the enemy start points on it."
+  ]
+ },
+ "CQ24": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a sequence that has a character and at least 2 shots. To make one, drag SKM_Manny_Simple from the folder Characters/Mannequins/Meshes into the level and click Cinematics in the main toolbar. Choose Add Level Sequence with Shots with 2 shots, add a camera to each shot, and add the mannequin from the level to the master sequence.",
+   "Add an Audio Track with Track (+) and drop a music Sound Wave at frame 0. To get one, drag a .wav file of your own into the Content Browser. For a first test any Sound Wave works, for example the engine sound WhiteNoise. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Add a second Audio Track for a footstep sound or a door sound. Trim its edges, and drag its end past the length of the clip so that it loops.",
+   "Drag the upper corners of the music section to make a fade in and a fade out. Then make two clips overlap and adjust the crossfade handles.",
+   "Expand the sound-effect track and set Attach to the character. Right-click the section, open Properties, and set an Attenuation Settings asset, which makes the sound quieter with distance. Move the camera away and listen to how the sound gets quieter.",
+   "Use Start Frame Offset (hold Shift and drag) to slide the sound inside its section, so that it lands exactly on the frame of the footstep.",
+   "Add the sequence to Movie Render Queue as a job (Window > Cinematics > Movie Render Queue). Add the WAV Audio export and a .png Sequence export to the job, and render 5 seconds."
+  ]
+ },
+ "CQ72": {
+  "checklist": [
+   "Create a project from the First Person template, or open one. Epic's guide uses sounds from the Starter Content, which current engine versions no longer include, so you use sounds of the engine. To see them, open the Settings menu of the Content Browser and turn on Show Engine Content. Click Add, then Audio, then MetaSound Source, and name the asset MSS_Bomb.",
+   "Click the Source button. In Attenuation Settings, create a new Sound Attenuation asset named SA_Bomb.",
+   "Build the graph. Drag from the On Play input and create a Wave Player (Mono) node. Set its Wave Asset to the engine sound WhiteNoise and turn on Loop. This is the sizzle. Connect its Out Mono pin to a Mono Mixer (2) node, and connect the Out pin of the mixer to the Out Mono output.",
+   "Add a second Wave Player (Mono) for the explosion. Connect its Out Mono pin to the second input of the mixer and its On Finished pin to the On Finished output.",
+   "Add a Random Get (WaveAsset:Array) node and connect its Value pin to the Wave Asset pin of the second Wave Player. Connect its On Next pin to the Play pin of the second Wave Player and to the Stop pin of the first one, so that the sizzle stops when the explosion starts.",
+   "Drag from the In Array pin of the Random Get node, choose Promote to Graph Variable, and add two short sounds to the array. Two explosion .wav files that you import are best. For a first test, the engine sounds CompileSuccess and CompileFailed work.",
+   "Drag from the Next pin of the Random Get node, choose Promote to Graph Input, and rename the new input Explode. Play the MetaSound and press the Execute arrow on the Explode node to hear the random explosion.",
+   "Make an Actor Blueprint named BP_Bomb with a Sphere component. From Event BeginPlay, call Set Life Span with 3 seconds, then call Spawn Sound Attached with MSS_Bomb, attach it to the Sphere, and promote its Return Value to a variable. From Event Destroyed, call Execute Trigger Parameter on that variable with In Name set to Explode.",
+   "Place BP_Bomb in the level and test it in Play In Editor: you hear the sizzle, and after 3 seconds the bomb disappears and you hear one of the two sounds. Epic's guide does the same in the projectile Blueprint of an older First Person template.",
+   "Create MSS_Wind. Remove the UE.Source.OneShot interface and set Output Format to Stereo. Build a graph that goes from Noise to a One-Pole Low Pass Filter to a Stereo Mixer. Put an LFO on the cutoff (0.1 Hz, range 20 to 80), and put a float input named PawnSpeed on the gain.",
+   "In the Level Blueprint, call Spawn Sound 2D with MSS_Wind on BeginPlay. On Tick, take the length of the pawn velocity, pass it through Map Range Clamped (200 to 1000 into 0 to 1), and send it to Set Float Parameter with the name PawnSpeed."
+  ]
+ },
+ "GDQ29": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. This quest follows the EQS Quick Start page that is linked on it, so keep that page open for the details. If the Environment Query asset type is missing from the Artificial Intelligence menu of the Content Browser, enable the Environment Query Editor plugin.",
+   "Create a Blackboard named BB_Enemy, a Behavior Tree named BT_Enemy, an Environment Query named EQS_FindPlayer, an AIController named AIC_Enemy that runs BT_Enemy when it possesses a pawn, and a Blueprint named EQC_PlayerContext with the parent class EnvQueryContext_BlueprintBase.",
+   "For the enemy, duplicate BP_ThirdPersonCharacter, delete its input logic, set its AI Controller Class to AIC_Enemy, and place it in a level that has a Nav Mesh Bounds Volume.",
+   "In EQC_PlayerContext, override the function Provide Single Actor and return Get Player Character. This tells the query who the player is.",
+   "In EQS_FindPlayer, add a Points: Grid generator with GridHalfSize 800 and Space Between 150. Add a Trace test set to Filter Only, with Context EQC_PlayerContext and Bool Match turned off. Add a Distance test set to Score Only, with Scoring Factor -1.0.",
+   "Build BT_Enemy with a selector named In Combat that has two sequences, Attack and Move into Position, and add a sequence named Patrolling. In Move into Position, use a Run EQSQuery node that writes its result to the key MoveToLocation, followed by Move To and Rotate to face BB entry.",
+   "In AIC_Enemy, add an AIPerception component with a Sight config that has Detect Neutrals turned on. From the On Target Perception Updated event, update the Blackboard keys HasLineOfSight and TargetActor.",
+   "Press Play. Press the apostrophe key and then Numpad 3 to open the EQS debug view. It shows the grid points, their scores and the point marked Winner.",
+   "Change the Scoring Factor of the Distance test to 1.0 and watch how the chosen spot changes. Then set it back to -1.0."
+  ]
+ },
+ "GDQ35": {
+  "checklist": [
+   "Open a C++ project, or create one from the Third Person template with C++ selected. You need an IDE such as Visual Studio to compile one small class. Enable the Gameplay Abilities plugin and restart the editor. Attribute Sets cannot be made in Blueprint, so add one small C++ class named UAS_Basic with the parent AttributeSet. Give it two FGameplayAttributeData properties, Health and Stamina. Copy the code from the Attributes page of the Gameplay Ability System documentation and compile.",
+   "Add an Ability System Component to BP_ThirdPersonCharacter. In its Default Starting Data, add AS_Basic and a Data Table named DT_AttributeInit with the row type AttributeMetaData. In the table, set AS_Basic.Health to 100 and AS_Basic.Stamina to 50.",
+   "Create three Gameplay Effect Blueprints. GE_Damage has Duration Policy Instant and a modifier that adds -25 to Health. GE_SprintCost is Instant and adds -10 to Stamina. GE_Regen uses Has Duration with 5 s, has a Period of 1 s, and adds +5 to Stamina.",
+   "Make an enemy to hit: a Character Blueprint named BP_SlamEnemy with its own Ability System Component and AS_Basic, placed near the player.",
+   "Create a Blueprint named GA_Slam with the parent GameplayAbility. In Activate Ability, call Commit Ability, then play a short montage or use a Delay. Then damage the enemy if it is close: make Target Data from the enemy with the node Ability Target Data from Actor, and give it to Apply Gameplay Effect to Target with GE_Damage. The effect changes the Health of the actor that receives it. Finish with End Ability.",
+   "In GA_Slam, add State.Stunned as an Activation Blocked Tag, so the ability cannot start while the character is stunned.",
+   "On Begin Play, on the server side, call Give Ability with GA_Slam. Bind a key to Try Activate Ability By Class. Add a second key that applies GE_Regen to the character itself.",
+   "Make a widget named WBP_Stats with a health bar. Update it from On Attribute Changed, or read Get Float Attribute on each tick. Press Play, use the ability, and watch Health and Stamina change."
+  ]
+ },
+ "GDQ39": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a persistent level named L_Hub with a Player Start and a corridor. Create two more levels, L_Arena and L_Reward, each with a few graybox props. In L_Hub, open Window > Levels and use Add Existing to add both levels as sublevels with the streaming type Blueprint.",
+   "Place a Level Streaming Volume in L_Hub that covers the corridor and the whole arena. In the Levels window, open the details of L_Arena and add the volume under Streaming Volumes. Uncheck Initially Loaded and Initially Visible. Then set the Streaming Usage of the volume to SVB Visibility Blocking on Load.",
+   "Make an Actor Blueprint named BP_LevelStreamer with a Box collision and an editable Name variable called LevelToStream. When the player begins to overlap the box, call Load Stream Level with Make Visible After Load turned on. On End Overlap, call Unload Stream Level. Place one in front of the door of L_Reward and set LevelToStream to L_Reward.",
+   "Now control the pacing. A level that has a streaming volume should not also be loaded from a Blueprint, so L_Reward gets no volume. In BP_LevelStreamer, add a Boolean variable named Locked that is Instance Editable, and only call Load Stream Level when Locked is false. Turn Locked on for the streamer in front of L_Reward.",
+   "Make a simple key pickup in the arena: an Actor Blueprint with a mesh, a Sphere Collision and an Instance Editable reference to the streamer. When the player overlaps it, it sets Locked to false on that streamer and destroys itself. This way the reward room only starts to load after the player has the key.",
+   "Test in Play In Editor, and then test again as Standalone Game. Note the difference in when the levels appear.",
+   "Write 3 sentences that say where a player could see a hitch, which is a short freeze, and how you would resize a volume to hide it."
+  ]
+ },
+ "GDQ76": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Import three short impact sounds as .wav files by dragging them into the Content Browser. You can record them with a phone or get free sounds from Fab. For a first test, three short engine sounds also work, such as CompileSuccess, CompileFailed and 1kSineTonePing. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Create a Sound Cue named SC_Hit. Add a Random node with the three waves as inputs. Set the Weights so that one wave is chosen twice as often as the others.",
+   "Add a Modulator node after the Random node. Set Pitch Min to 0.9, Pitch Max to 1.1, Volume Min to 0.8 and Volume Max to 1.0. Connect it to the Output node.",
+   "Add a Switch node before the Output node and set Int Parameter Name to Surface. Connect your SC_Hit chain to input 0 and a different wave for metal to input 1. In a Blueprint, play the cue with Spawn Sound at Location. Then call Set Integer Parameter with In Name Surface on the Audio Component that the node returns.",
+   "On the Output node, enable Override Concurrency and set Max Count to 3. Trigger the hit 10 times quickly, and compare what you hear with Max Count 1.",
+   "Make a MetaSound Source named MSS_Hit that plays a Wave Player when a Trigger Input named Impact fires. In a Blueprint, use Spawn Sound Attached and then Execute Trigger Parameter with In Name Impact.",
+   "Write 3 sentences that say what the Random node, the Modulator node and the Switch node each changed in how the hit sounds."
+  ]
+ },
+ "GDQ79": {
+  "checklist": [
+   "Create a material named M_PP_Damage. In the Details panel, set Material Domain to Post Process and set Blendable Location to After Tonemapping.",
+   "Build the graph. Add a SceneTexture node set to PostProcessInput0, which gives you the color of the scene. Make a round mask from Screen Position, using the distance from the point 0.5, 0.5. Use a Lerp node to blend from the scene color to a red color. For the blend amount, multiply the mask by a Scalar Parameter named Intensity with the default value 0. Connect the result to Emissive Color.",
+   "Make a Material Instance named MI_PP_Damage. Add an unbound Post Process Volume to the level, which is a volume that affects the whole level. Add MI_PP_Damage to its Blendables array, under Post Process Materials.",
+   "Open a project made from the Third Person template for this step, or create one. In BP_ThirdPersonCharacter, on Begin Play, call Create Dynamic Material Instance with MI_PP_Damage as the parent and store the result in a variable. A dynamic instance is a copy of the material that a Blueprint can change while the game runs.",
+   "Then call Add or Update Blendable on the Camera Component with this dynamic instance and a Weight of 1, so that the camera uses the copy you can change.",
+   "Add a key press event that stands in for taking damage. On it, call Set Scalar Parameter Value on the dynamic instance to set Intensity to 1.0, and then bring it back to 0 over 0.5 seconds with a Timeline.",
+   "Test it. With the default Intensity of 0, confirm that the screen looks unchanged. Then change the default of the parameter to 1 and confirm that the red vignette is always on. Set it back to 0.",
+   "Write 2 sentences: why the default parameter value must make the screen look as if nothing happened, and why you chose After Tonemapping."
+  ]
+ },
+ "GDQ87": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a small round loop with a score and a round timer. If you have none, build one. Start with a Game State Blueprint with a replicated Integer named Score and a replicated Float named TimeLeft, and a Game Mode Blueprint that uses it and lowers TimeLeft once per second with a looping timer.",
+   "To finish the loop, add a pickup that adds 1 to Score when a pawn overlaps it, and a widget that shows Score and TimeLeft.",
+   "Open the Play drop-down. Set Number of Players to 2 and Net Mode to Play As Listen Server. Play the loop. Note which window shows the round timer and the score correctly and which does not.",
+   "Switch Net Mode to Play As Client with Number of Players set to 1, and play again. Anything that only worked because the host was also the server will now fail. List what broke.",
+   "Open Editor Preferences, then Level Editor, then Play. These are the Play In settings. Enable Network Emulation, set Emulation Target to Everyone, and set Network Emulation Profile to Bad. Play with 2 players and watch the round timer and the score updates.",
+   "Change the profile to Custom. Set the incoming latency, which is the delay, to 200 to 400 ms, with 5 percent packet loss. Play one more time.",
+   "Open your Game Mode or Game State Blueprint. In the debug world drop-down, pick Client 1, and add a breakpoint on your score event. Confirm that the breakpoint only triggers for that world.",
+   "Write 5 sentences. Say which values must come from the Game State to look the same for both players, and what looked wrong under the Bad profile. Also write one design rule that you will follow, for example to show the timer from server time and not from a local countdown."
+  ]
+ },
+ "LDQ100": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open Edit, then Plugins, and enable the Procedural Content Generation Framework (PCG) plugin if it is off.",
+   "You need a landscape that has at least three painted layers: Grass, Rock and Path. If you have none, make a material with a Landscape Layer Blend node that has these three layers, each with its own color. Create a Landscape with this material, and create a layer info object for each layer on the Paint tab.",
+   "Paint the Path layer along a route across the landscape, and paint some Grass and some Rock areas.",
+   "Create a PCG graph named PCG_Biome. Add a World Ray Hit Query node and enable Apply Metadata From Landscape, so that the points know which layers are painted under them. Connect it to a Surface Sampler.",
+   "Add an Attribute Filter on the attribute of the Grass layer, and keep values above 0.5. Spawn bushes from its Inside pin.",
+   "Add a second Attribute Filter on the attribute of the Rock layer. Spawn boulders from its Inside pin.",
+   "Add a Normal To Density node before the boulders, so that steep slopes get fewer boulders.",
+   "Add a Spatial Noise node. Use its attribute with a Match And Set Attributes node to choose between two bush meshes.",
+   "Paint part of the Path layer again in a new place and click Generate again. Confirm that the route stays empty."
+  ]
+ },
+ "LDQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a start, a goal and more than one route between them. If you have none, block out a quick one in a new level: a start and a goal about 40 to 60 m apart, with two or three different routes made of cubes and walls, and at least one ledge to jump onto.",
+   "Pick one guidance color, for example yellow for everything that is climbable or usable. Make a Material Instance for it, with a name that starts with MI_, and use it only for that meaning.",
+   "Apply it to every ledge the player can jump onto and to every usable object in the level. Nothing else gets that color.",
+   "Light the entrance of each route so that it is slightly brighter than the walls around it.",
+   "Give one route a shape cue, which is a shape that points the way: an arch, a gap in a wall, or a line of pillars that points toward the route.",
+   "Start PIE and stop at each junction. Ask yourself what tells you to go this way. Fix every junction where you have no answer."
+  ]
+ },
+ "LDQ18": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a start, a goal and more than one route. If you have none, block out a quick one in a new level: a start and a goal about 40 to 60 m apart, with two or three routes made of cubes and walls.",
+   "Lock the exposure, so that the brightness does not change by itself. Add a Post Process Volume and tick Infinite Extent (Unbound). In its Exposure section, set Metering Mode to Manual and adjust Exposure Compensation until you can see the level clearly.",
+   "Switch the viewport to the Lighting Only view mode. Check that each route entrance is brighter than the walls around it.",
+   "Light the goal area so that it is the brightest point in the level.",
+   "Place a mannequin where an enemy might stand. Adjust the lights until its silhouette (outline) is easy to see against the background.",
+   "Remove or dim any light that pulls attention toward a dead end.",
+   "Save two camera bookmarks with Ctrl+1 and Ctrl+2, for example at the start and at a route entrance. Switch back to Lit mode and check the level again from these bookmarks."
+  ]
+ },
+ "LDQ2": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level of your own that has a goal, a landmark and at least one dead end. If you have none, block out a quick one in a new Basic level: two or three routes of cubes and walls from a start to a goal, a tall landmark near the goal, and one side path that ends at a wall.",
+   "Save a camera bookmark with Ctrl+1 and take a screenshot for the before picture.",
+   "Select the Exponential Height Fog actor in the Outliner. If the level has none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog.",
+   "In the Place Actors panel, search for Local Fog Volume and drag one over one dead end. Scale it so that it covers the dead end, and raise its two Extinction values in the Details panel, which make the fog thicker, until the dead end feels less inviting.",
+   "Check that you can still see the goal and the landmark clearly through the fog."
+  ]
+ },
+ "LDQ6": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level, open Landscape Mode and choose New on the Manage tab. Decide where a path runs across it.",
+   "Open Edit, then Plugins, enable the Procedural Content Generation Framework (PCG) plugin and restart the editor.",
+   "Right-click in the Content Browser, open PCG and choose PCG Graph. The graph holds the rules. Then drag a PCG Volume from the Place Actors panel onto the landscape, and set Graph on its PCG component in the Details panel. The volume is the box that marks where the graph works.",
+   "Open the graph. Add a Get Landscape Data node, a Surface Sampler node and a Static Mesh Spawner node, and connect them in that order. In the Static Mesh Spawner, add one entry under Mesh Entries and pick one rock mesh. If you have none, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in. Select the PCG Volume and click Generate in the Details panel. The rocks appear on the landscape inside the volume.",
+   "Move the volume away from the path, so that the scattered rocks do not block it."
+  ]
+ },
+ "LDQ8": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a goal and at least one room. If you have none, block out a quick one in a new level: a start, a goal about 40 m away, and one closed room on the way.",
+   "Drag a looping sound from the Content Browser into the level, near the goal. This creates an Ambient Sound actor. You can import a .wav file of your own, open it and turn on Looping. If you have none, use the engine sound WhiteNoise. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Select the Ambient Sound actor. In the Details panel, under Attenuation, turn on Override Attenuation. Set Inner Radius and Falloff Distance so that the player can hear the sound from the start, and so that it is louder near the goal.",
+   "In the Place Actors panel, open Volumes and drag an Audio Volume around one room. In its Details panel, under Reverb, turn on Apply Reverb and pick a Reverb Effect. Walk into the room in PIE and listen to the change."
+  ]
+ },
+ "EAQ65": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_DetailWall. You need a base color texture and a base normal map for the wall, and a second color texture and normal map for the fine detail. Free surfaces from Fab work well.",
+   "For a first test, use T_Quinn_01_D and T_Quinn_01_N from the folder Characters/Mannequins/Textures/Quinn of the template as the base, and T_GridChecker_A from LevelPrototyping/Textures and the engine texture T_Default_Material_Grid_N as the detail. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content. Drag all four textures into the graph.",
+   "Add the DetailTexturing material function, which is in the Misc category. Then right-click the two detail textures and choose Convert To Texture Object for each.",
+   "Connect the base textures to Diffuse and Normal. Connect the two Texture Objects to DetailDiffuse and DetailNormal. Then connect the outputs of the function to Base Color and Normal.",
+   "Add three Scalar Parameters named Scale, Diffuse Intensity and Normal Intensity, and set each one to 1. Connect them to the function.",
+   "Make a Material Instance named MI_DetailWall and apply it to a cube that you scale into a wall. Try Scale at 1, 5 and 10, and look at the wall from very close each time.",
+   "Add a TextureCoordinate node in front of the base textures. Set UTiling and VTiling to 2 so that the base textures repeat twice."
+  ]
+ },
+ "EAQ74": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a material named M_BrickBump. You need a color texture, a normal map and a height map of the same surface. A height map is a grayscale texture in which bright areas are high and dark areas are low. A free brick surface from Fab includes all three.",
+   "For a first test, the grid textures of the engine work: T_Default_Material_Grid_M for Base Color and as the height map, and T_Default_Material_Grid_N for Normal. To see engine content, open the Settings menu of the Content Browser and turn on Show Engine Content.",
+   "Connect the textures to Base Color and Normal, and connect a roughness texture or a Constant of 0.6 to Roughness.",
+   "Hold B and left-click in the graph to create a BumpOffset node. Connect its output to the UVs pin of every Texture Sample node that goes into Base Color, Roughness or Normal.",
+   "Add one more Texture Sample that holds your height map and connect one of its channels, for example R, to the Height input of BumpOffset. Do not connect BumpOffset to the UVs of this sample. The error on the node should disappear. In Epic's guide the height map is stored in the alpha channel of the color texture, so the guide duplicates that sample and uses its A output.",
+   "In the Details panel, change Height Ratio from 0.05 to 0.005 so the texture stops sliding too much. Click Apply and save.",
+   "Apply the material to a wall. Move the camera across the wall and compare it with a copy of the material that has no BumpOffset.",
+   "Look at the wall from a very low angle, almost along its surface, and note where the effect breaks."
+  ]
+ },
+ "EAQ78": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level with a Landscape that has a hill and uses edit layers, or create one: make a new level, add a Landscape with Enable Edit Layers turned on, and sculpt a hill.",
+   "For the paint step, the landscape needs a material with a paint layer named Dirt or Road. A simple material with a Landscape Layer Blend node and two layers with different colors is enough.",
+   "In Landscape Mode, open Manage and choose Spline. Hold Ctrl and left-click to place 6 to 8 control points for a road across the hill. To extend the road, hold Alt and drag with the left mouse button from an end point.",
+   "Select all control points with Ctrl+A. Set Half-Width to about 300 and Side Falloff to about 400. Press End to snap the points to the landscape.",
+   "Add a Spline Edit Layer in the edit layer stack. Watch the terrain rise or get cut to fit the road.",
+   "Select all segments of the spline. Set Layer Name to the Dirt (or Road) paint layer so that the road paints itself onto the terrain.",
+   "Under Landscape Spline Meshes, assign a road Static Mesh. If you have none, make one in Modeling Mode: a long, flat Box that you accept as a Static Mesh. Turn on Scale to Width and set the correct Forward Axis for the mesh.",
+   "On one segment that goes downhill, turn off Raise Terrain and keep Lower Terrain. The road then cuts into the slope and does not build a bank of earth under itself.",
+   "Select a segment and use the scale tool to drag a tangent, which is the handle that controls the curve. Use it to smooth one sharp bend."
+  ]
+ },
+ "EAQ5": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Open a level of your own that has a dark room with a window, or build one in a new Basic level from cubes: a floor, four walls and a ceiling, with a gap in one wall as the window.",
+   "Select the Exponential Height Fog actor in the level. If there is none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog.",
+   "Aim a Directional Light or a Spot Light through the window into the room, and adjust the scene until you can see light shafts coming through the window.",
+   "Select the light and change Volumetric Scattering Intensity in its Details panel, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
+  ]
+ },
+ "EAQ20": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. You need a Landscape with a landscape material that has at least two paint layers. If you have none, create a new level, make a Landscape in Landscape Mode, and build a material with a Landscape Layer Blend node that has two layers, such as Grass and Dirt.",
+   "You also need a Landscape Grass Type asset: right-click in the Content Browser, open Foliage, choose Landscape Grass Type, and add any small mesh to it, such as SM_Cylinder from the folder LevelPrototyping/Meshes of the template.",
+   "In the landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick your Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears.",
+   "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
+  ]
+ },
+ "EAQ30": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Work in any lit level: the level of the template works, and so does a scene of your own. Save a camera bookmark and take one screenshot without any grade. Then grade the scene in a Post Process Volume with Infinite Extent (Unbound) turned on. Start with the white balance, then change the global settings, and then the shadows, midtones and highlights.",
+   "Now grade with a LUT. Take a screenshot of the scene without a grade. Download the neutral LUT image, a LUT that changes nothing yet (256 x 16 pixels), from the Epic documentation page about color grading with Look-Up Tables. Open both in an image editor, apply the same color adjustments to the screenshot and to the LUT image, and save the LUT image.",
+   "Import the LUT image into Unreal, open the texture, and set Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps. In the Post Process Volume, open Color Grading, then Misc, and assign it as the Color Grading LUT.",
+   "Compare the manual grade with the LUT grade.",
+   "Keep one screenshot without any grade for reference."
+  ]
+ },
+ "EAQ32": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Decide where a path runs across it.",
+   "Make a PCG graph that scatters debris or rocks on the surface. Open Edit, then Plugins, and enable the Procedural Content Generation Framework (PCG) plugin if it is off. Then right-click in the Content Browser, open PCG and choose PCG Graph.",
+   "In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick a mesh under Mesh Entries. If you have no rock mesh, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in.",
+   "Place a PCG Volume in the level, set Graph on its PCG component, and click Generate.",
+   "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, for example a Density Filter node after the Surface Sampler. It can also be an exclusion rule, which removes objects from an area, for example a Difference node that subtracts the points near a spline along the path."
+  ]
+ },
+ "EAQ34": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode.",
+   "Set up a Procedural Foliage Volume with 2 species. First open Edit, then Editor Preferences, find the Experimental section and enable Procedural Foliage.",
+   "Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Give each Static Mesh Foliage asset a mesh, for example trees of your own, or SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template as stand-ins.",
+   "Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the area where the forest edge should be, and click Resimulate in its Details panel.",
+   "Tune the spacing settings in the two Static Mesh Foliage assets, such as Shade Radius, Initial Seed Density and Average Spread Distance, and click Resimulate after each change. Continue until the edge of the forest looks natural and not uniform."
+  ]
+ },
+ "PQ67": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Make an Actor Blueprint named BP_Showcase with a Static Mesh Component, and set Auto Receive Input to Player 0 in its Class Defaults so that it receives key presses. Add a variable named HeavyMesh with the type Static Mesh, choose Soft Object Reference, and make it Instance Editable.",
+   "Place a copy in the level and assign a mesh to HeavyMesh on that copy. In a real game this would be a large mesh. For the test any mesh works, for example SM_Ramp from the folder LevelPrototyping/Meshes of the template.",
+   "Right-click BP_Showcase in the Content Browser and open the Reference Viewer, which shows the assets it depends on. Take a screenshot. Then change HeavyMesh to a hard Object Reference, assign the mesh again, and take a second screenshot of the Reference Viewer. Compare the two.",
+   "Set the variable back to Soft Object Reference. Add an event for the L key: first check Is Valid Soft Object Reference, then call Async Load Asset. On its Completed pin, call Set Static Mesh with the loaded object and print Loaded.",
+   "Add a variable named SpawnClass with the type Actor and choose Soft Class Reference. Add an event for the K key that calls Async Load Class Asset and then uses Spawn Actor from Class with the result at the location of the actor.",
+   "Add an event for the B key that uses Load Asset Blocking instead. Open stat unit, and press B right after you start a fresh Play In Editor session. Then start again and press L. Write one line that says which one made the game hitch.",
+   "Add a second soft mesh variable and load both meshes one after the other. Write two lines: why the loaded mesh stays in memory after Set Static Mesh, and what would happen to a loaded object that nothing holds a hard reference to."
+  ]
+ },
+ "PQ14": {
+  "checklist": [
+   "Open any project, or create one from the Third Person template. Make two simple Actor Blueprints: BP_Button, with a mesh and a Box Collision that counts as pressed when the player overlaps it, and BP_Lamp, with a Point Light and a function that switches the light on and off. In the next three steps you connect two actors three times, for example a button and a lamp.",
+   "First use a direct reference: give the button an Instance Editable variable of the type BP_Lamp, pick the lamp in the level, and call a function on it.",
+   "Then use an interface: create a Blueprint Interface with a function named Activate, implement it on the lamp, and call Activate (Message) on a plain Actor reference.",
+   "Then use an Event Dispatcher: add an Event Dispatcher named OnPressed to the button and call it, and in the lamp use Bind Event to OnPressed to react.",
+   "For each of the three ways, write one line about the coupling it creates, which means how much one actor must know about the other."
+  ]
+ },
+ "PQ15": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Create a Widget Blueprint named WBP_Score: in the Content Browser click Add, then User Interface, then Widget Blueprint. Add a Text widget to it for the score. On the BeginPlay event of the character of the template, which runs when the game starts, call Create Widget with the class WBP_Score and then Add to Viewport, so it shows on the screen.",
+   "Update the widget from the GameState when the score changes. If your project has no GameState with a score, make one: a Blueprint with Game State Base as its parent and an Integer variable named Score, set as the Game State Class of a GameMode Blueprint that the level uses. Add a key event on the character that adds 1 to the score, so that you can test.",
+   "In the GameState, add an Event Dispatcher named OnScoreChanged and call it every time the score changes. In WBP_Score, on Event Construct, get the GameState, cast it to your GameState class, and use Bind Event to OnScoreChanged to set the text.",
+   "Do not update the text on Tick, the event that runs every frame, because that does the work again and again for no reason."
+  ]
+ },
+ "TAQ77": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one. Open a master material of your own, or make a small one named M_Master_Prop with a color parameter, a normal map, an emissive color and a packed mask texture, which is a texture that stores a different mask in each color channel. The texture T_Manny_01_MRA of the template mannequin is such a texture.",
+   "Add three StaticSwitchParameter nodes named UseDetailNormal, UseEmissive and UseWear, and let each one turn a part of the graph on or off. Add one StaticComponentMaskParameter that picks the channel of the packed mask texture. Give them all a Group.",
+   "Find any place where you multiplied a mask texture by a Vector Parameter to pick a channel, and replace it with the StaticComponentMaskParameter.",
+   "Create eight instances. Make half of them share the same switch values, and give the other half unique combinations. Also give each instance a different color.",
+   "Open Tools, then Audit, then Material Analyzer. Pick your master in Material to Analyze, and read the instance list and the Static Switch Parameters column.",
+   "Read the suggestion list below the hierarchy. Click Create Local Collection on one suggestion, and open the collection in the Content Browser.",
+   "Create one new intermediate instance that holds the shared switch values, and reparent the grouped instances to it. Then remove the static overrides from the children, and run the analyzer again.",
+   "Write two lines: how many permutations you had before and after. Count them by counting the unique switch combinations."
+  ]
+ },
+ "TAQ100": {
+  "checklist": [
+   "Open a project made from the Third Person template, or create one, and use the mannequin as the character. You need two static meshes for a simple cape or flag: a render mesh that the player sees, and a simulation mesh with fewer polygons that the physics uses.",
+   "Model them in a DCC (a 3D modeling program such as Blender, which is free) over the exported mannequin and export both as FBX files. For a first test you can also make them in Modeling Mode: a Rectangle with many subdivisions, placed behind the shoulders of the mannequin, and a copy of it with fewer subdivisions.",
+   "Import both static meshes into Unreal. Create a new Cloth Asset named CA_Cape from the meshes with a new Dataflow graph, and open it in the Chaos Cloth Panel node editor.",
+   "Build the node graph step by step, so that the asset is generated in a non-destructive way. Transfer the skin weights from the skeletal mesh of the character onto the cloth mesh, so the cloth follows the bones.",
+   "Configure the cloth settings. Add at least one weight map on the cloth mesh, which is a map you paint to give each area its own value. For example, paint a max-distance style map with 0 at the shoulders and a high value at the lower edge.",
+   "Set the Physics Asset of the character on the cloth asset, so that the cloth collides with the body.",
+   "Open the character Blueprint, add a Chaos Cloth Component and assign CA_Cape to it. Test the simulation in Play In Editor (PIE) with a run animation.",
+   "Write 3 short lines: what the panel workflow gives you that the legacy Clothing Tool does not, and what it costs at render time."
+  ]
+ }
+}

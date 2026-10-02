@@ -211,7 +211,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 volumetric fog light shafts god rays"
     checklist:
-      - "Open any project, or create one from the Third Person template. Open a level of your own that has a dark room with a window, or build one in a new Basic level from cubes: a floor, four walls and a ceiling, with a gap in one wall as the window. Select the Exponential Height Fog actor in the level. If there is none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog. Aim a Directional Light or a Spot Light through the window into the room, and adjust the scene until you can see light shafts coming through the window."
+      - "Open any project, or create one from the Third Person template. Open a level of your own that has a dark room with a window, or build one in a new Basic level from cubes: a floor, four walls and a ceiling, with a gap in one wall as the window."
+      - "Select the Exponential Height Fog actor in the level. If there is none, drag one in from the Place Actors panel, under Visual Effects. In the Details panel, turn on Volumetric Fog."
+      - "Aim a Directional Light or a Spot Light through the window into the room, and adjust the scene until you can see light shafts coming through the window."
       - "Select the light and change Volumetric Scattering Intensity in its Details panel, which controls how strongly that light shows in the fog. The shafts should support the image and not wash it out."
     done_when: "Send a screenshot that shows the light shafts."
     xp: 40
@@ -505,7 +507,9 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 landscape grass type output"
     checklist:
-      - "Open a project made from the Third Person template, or create one. You need a Landscape with a landscape material that has at least two paint layers. If you have none, create a new level, make a Landscape in Landscape Mode, and build a material with a Landscape Layer Blend node that has two layers, such as Grass and Dirt. You also need a Landscape Grass Type asset: right-click in the Content Browser, open Foliage, choose Landscape Grass Type, and add any small mesh to it, such as SM_Cylinder from the folder LevelPrototyping/Meshes of the template. In the landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick your Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears."
+      - "Open a project made from the Third Person template, or create one. You need a Landscape with a landscape material that has at least two paint layers. If you have none, create a new level, make a Landscape in Landscape Mode, and build a material with a Landscape Layer Blend node that has two layers, such as Grass and Dirt."
+      - "You also need a Landscape Grass Type asset: right-click in the Content Browser, open Foliage, choose Landscape Grass Type, and add any small mesh to it, such as SM_Cylinder from the folder LevelPrototyping/Meshes of the template."
+      - "In the landscape material, add a Landscape Grass Output node. Select it, add one element under Grass Types in the Details panel, and pick your Landscape Grass Type asset. Add a Landscape Layer Sample node, type the name of one paint layer in its Parameter Name, and connect it to the input of the grass type. Now that one paint layer controls where the grass appears."
       - "Paint that layer on the landscape. Confirm that grass appears only in the places you painted."
     done_when: "Send a screenshot that shows grass following a painted layer."
     xp: 50
@@ -693,7 +697,8 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/add-post-process-volumes"
     checklist:
       - "Open any project, or create one from the Third Person template. Work in any lit level: the level of the template works, and so does a scene of your own. Save a camera bookmark and take one screenshot without any grade. Then grade the scene in a Post Process Volume with Infinite Extent (Unbound) turned on. Start with the white balance, then change the global settings, and then the shadows, midtones and highlights."
-      - "Now grade with a LUT. Take a screenshot of the scene without a grade. Download the neutral LUT image, a LUT that changes nothing yet (256 x 16 pixels), from the Epic documentation page about color grading with Look-Up Tables. Open both in an image editor, apply the same color adjustments to the screenshot and to the LUT image, and save the LUT image. Import it into Unreal, open the texture, and set Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps. In the Post Process Volume, open Color Grading, then Misc, and assign it as the Color Grading LUT."
+      - "Now grade with a LUT. Take a screenshot of the scene without a grade. Download the neutral LUT image, a LUT that changes nothing yet (256 x 16 pixels), from the Epic documentation page about color grading with Look-Up Tables. Open both in an image editor, apply the same color adjustments to the screenshot and to the LUT image, and save the LUT image."
+      - "Import the LUT image into Unreal, open the texture, and set Texture Group to ColorLookupTable and Mip Gen Settings to NoMipmaps. In the Post Process Volume, open Color Grading, then Misc, and assign it as the Color Grading LUT."
       - "Compare the manual grade with the LUT grade."
       - "Keep one screenshot without any grade for reference."
     done_when: "Send three stills taken from the same camera: one without a grade, one with the manual grade, and one with the LUT grade."
@@ -776,7 +781,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 pcg scatter rocks debris beginner"
     checklist:
-      - "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Decide where a path runs across it. Make a PCG graph that scatters debris or rocks on the surface. Enable the Procedural Content Generation Framework (PCG) plugin in Edit > Plugins if it is off. Right-click in the Content Browser, open PCG and choose PCG Graph. In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick a mesh under Mesh Entries. If you have no rock mesh, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in. Place a PCG Volume in the level, set Graph on its PCG component, and click Generate."
+      - "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Decide where a path runs across it."
+      - "Make a PCG graph that scatters debris or rocks on the surface. Open Edit, then Plugins, and enable the Procedural Content Generation Framework (PCG) plugin if it is off. Then right-click in the Content Browser, open PCG and choose PCG Graph."
+      - "In the graph, connect a Get Landscape Data node to a Surface Sampler node and then to a Static Mesh Spawner node, and pick a mesh under Mesh Entries. If you have no rock mesh, SM_ChamferCube from the folder LevelPrototyping/Meshes of the template works as a stand-in."
+      - "Place a PCG Volume in the level, set Graph on its PCG component, and click Generate."
       - "Add one rule to the graph that keeps the paths clear. It can be a density rule, which controls how many objects appear, for example a Density Filter node after the Surface Sampler. It can also be an exclusion rule, which removes objects from an area, for example a Difference node that subtracts the points near a spline along the path."
     done_when: "Send a screenshot of the scattered objects, and also a screenshot of the graph."
     xp: 80
@@ -824,7 +832,10 @@ quests:
     backup_url: TODO_URL
     backup_search: "unreal engine 5 procedural foliage spawner volume"
     checklist:
-      - "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode. Set up a Procedural Foliage Volume with 2 species. First open Edit > Editor Preferences, find the Experimental section and enable Procedural Foliage. Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Give each Static Mesh Foliage asset a mesh, for example trees of your own, or SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template as stand-ins. Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the area where the forest edge should be, and click Resimulate in its Details panel."
+      - "Open a project made from the Third Person template, or create one. Open a level of your own that has a Landscape, or create a new level and make a Landscape in Landscape Mode."
+      - "Set up a Procedural Foliage Volume with 2 species. First open Edit, then Editor Preferences, find the Experimental section and enable Procedural Foliage."
+      - "Right-click in the Content Browser, open Foliage, and create two Static Mesh Foliage assets (one per species) and one Procedural Foliage Spawner. Give each Static Mesh Foliage asset a mesh, for example trees of your own, or SM_Cylinder and SM_ChamferCube from the folder LevelPrototyping/Meshes of the template as stand-ins."
+      - "Open the spawner and add both species under Foliage Types. Drag the spawner into the level, scale it over the area where the forest edge should be, and click Resimulate in its Details panel."
       - "Tune the spacing settings in the two Static Mesh Foliage assets, such as Shade Radius, Initial Seed Density and Average Spread Distance, and click Resimulate after each change. Continue until the edge of the forest looks natural and not uniform."
     done_when: "Send a screenshot of the forest edge."
     xp: 60

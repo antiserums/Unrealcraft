@@ -210,7 +210,8 @@ quests:
     backup_search: "unreal engine 5 control rig beginner create controls"
     checklist:
       - "Open a project made from the Third Person template, or create one. In the Content Browser, find the Skeletal Mesh of the template character (its name starts with SKM_). Right-click it and choose Create, then Control Rig. Double-click the new asset to open the Control Rig Editor."
-      - "In the Rig Hierarchy tab, right-click the upper arm bone and choose New Element, then New Control. Select the new control and press Shift+P to unparent it from the bones. Do the same for the lower arm and the hand. Then drag each control into the Rig Graph and choose Get Control, drag its bone into the graph and choose Set Bone, and connect the Transform pin of the Get node to the Value pin of the Set node. Connect the Forwards Solve node to the Set nodes one after the other, so that the bones follow when you move a control."
+      - "In the Rig Hierarchy tab, right-click the upper arm bone and choose New Element, then New Control. Select the new control and press Shift+P to unparent it from the bones. Do the same for the lower arm and the hand."
+      - "Drag each control into the Rig Graph and choose Get Control. Drag its bone into the graph and choose Set Bone. Connect the Transform pin of the Get node to the Value pin of the Set node. Then connect the Forwards Solve node to the Set nodes one after the other, so that the bones follow when you move a control."
       - "Move and rotate the controls in the viewport to pose the arm. Clicking Compile puts the controls back in their starting position, so take your screenshot before you compile again."
     done_when: "Send a screenshot of the rig graph and a screenshot of the posed arm."
     xp: 100
@@ -482,7 +483,7 @@ quests:
         answer_index: 1
         explain: "When a playtest goes badly, the knob list is where you look first."
       - q: "Why keep the GDD to one page?"
-        choices: ["Discord limits file size", "Longer docs are banned", "Nobody reads GDDs", "It forces you to choose what matters, and reviewers actually read it"]
+        choices: ["A second page costs extra", "Longer docs are banned", "Nobody reads GDDs", "It forces you to choose what matters, and reviewers actually read it"]
         answer_index: 3
         explain: "A short doc gets read. A long one gets skimmed."
       - q: "What is a fail state?"
@@ -610,7 +611,9 @@ quests:
     extra_urls:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/blueprint-class-assets-in-unreal-engine"
     checklist:
-      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Spinner with a cube mesh and a Point Light. On Event Tick, add an Add Actor Local Rotation node and type 2 into the Yaw of its Delta Rotation. On BeginPlay, call Set Intensity on the light with the value 5000, and Set Actor Scale 3D with the value 1.5. If you already have a Blueprint with numbers typed into its graph, you can use that instead. Now turn the three hard-coded numbers, which are numbers typed directly into the graph, into variables, for example SpinSpeed, LightIntensity and MeshScale."
+      - "Open any project, or create one from the Third Person template. Make an Actor Blueprint named BP_Spinner with a cube mesh and a Point Light. On Event Tick, add an Add Actor Local Rotation node and type 2 into the Yaw of its Delta Rotation."
+      - "On BeginPlay, call Set Intensity on the light with the value 5000, and Set Actor Scale 3D with the value 1.5. If you already have a Blueprint with numbers typed into its graph, you can use that instead."
+      - "Now turn the three hard-coded numbers, which are numbers typed directly into the graph, into variables, for example SpinSpeed, LightIntensity and MeshScale."
       - "For each variable, tick Instance Editable, which is the eye icon. Also give each one a Category and a Description, which is the text shown as its tooltip."
       - "On the number variables, set a Slider Range and a Value Range. These limits stop people from typing a value such as 99999."
       - "Add a Vector variable named TargetPoint, make it Instance Editable, and give it the option Show 3D Widget. This shows a handle in the viewport, so the point can be dragged there."
@@ -663,7 +666,7 @@ quests:
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/basic-navigation-in-unreal-engine"
       - "https://dev.epicgames.com/documentation/en-us/unreal-engine/world-bookmarks"
     checklist:
-      - "Open a project made from the Third Person template, or create one. Build one encounter space in a new level, or finish an arena you already have. It needs an entry, an exit, 6 to 10 cover pieces in two heights (low cover that the standing character can see over, and full cover that hides it), a flank route on each side, high ground with a cost, a Nav Mesh Bounds Volume that covers the floor, and 3 or more enemies. A simple enemy is a Character Blueprint with Auto Possess AI set to Placed in World or Spawned that walks to a Target Point with AI MoveTo."
+      - "Open or create a Third Person template project. Build one encounter space in a new level, or finish an arena you have. It needs an entry, an exit, 6 to 10 cover pieces in two heights (low, to see over while standing, and full, to hide behind), a flank route on each side, high ground with a cost, a Nav Mesh Bounds Volume over the floor, and 3 or more enemies. A simple enemy is a Character Blueprint that walks to a Target Point with AI MoveTo, with Auto Possess AI set to Placed in World or Spawned."
       - "Make the space readable. Choose a color key with one color for threats, one for cover and one for objectives, make one Material Instance for each, and apply them. Light the exit so that it is the brightest thing the player sees from the entry."
       - "Write a one-page GDD (game design document) with the headings Goal, Player verbs, Beats, Fail state and Tuning knobs, or update the one you have, so that it matches what you built."
       - text: "Show the space to at least one other person with a screenshot from above and one at eye level, and ask one specific question. Write down the feedback you get."
@@ -676,16 +679,16 @@ quests:
     xp: 200
     verify_type: mentor
     quiz:
-      - q: "Who approves a Rank 3 capstone?"
+      - q: "Who approves this capstone?"
         choices: ["The Quartermaster automatically", "Nobody", "Any one reaction", "A mentor, or two peer approves"]
         answer_index: 3
-        explain: "Rank 3+ capstones are reviewed by people, not by the quiz."
+        explain: "Capstones at this level are reviewed by people, not by the quiz."
       - q: "What must the before/after show?"
         choices: ["Two different arenas", "The same view before and after a change made from critique, with the feedback that led to it", "Two lighting presets", "The editor theme"]
         answer_index: 1
         explain: "Same bookmark, one real change, and the feedback that prompted it."
-      - q: "The GDD says 'three enemies flank' but your build has no flank route. What do you do before turn-in?"
-        choices: ["Fix the build or update the GDD so they match", "Submit anyway", "Remove the GDD link", "Add more enemies"]
+      - q: "The GDD says 'three enemies flank' but your build has no flank route. What do you do before you send your work?"
+        choices: ["Fix the build or update the GDD so they match", "Send it anyway", "Remove the GDD link", "Add more enemies"]
         answer_index: 0
         explain: "Reviewers check the build against the doc. They must agree."
       - q: "Does this capstone need any C++?"
