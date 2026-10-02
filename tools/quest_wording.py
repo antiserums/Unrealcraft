@@ -6,6 +6,8 @@ Run it with the API's Python, which has PyYAML:
   api/.venv/Scripts/python.exe tools/quest_wording.py status        how many quests have new wording, per file
   api/.venv/Scripts/python.exe tools/quest_wording.py next 15       the next 15 quests still to do, as JSON
   api/.venv/Scripts/python.exe tools/quest_wording.py show SQ1 SQ2  everything the curriculum holds for these quests
+  api/.venv/Scripts/python.exe tools/quest_wording.py tell          questions whose right answer stands out by its length
+  api/.venv/Scripts/python.exe tools/quest_wording.py tell SQ1 SQ2  those quests' quizzes, compact
   api/.venv/Scripts/python.exe tools/quest_wording.py noquiz        quests that have no quiz yet
   api/.venv/Scripts/python.exe tools/quest_wording.py refs          quests whose text leans on another quest
   api/.venv/Scripts/python.exe tools/quest_wording.py apply         put every file in tools/quest_wording/ into the curriculum
@@ -19,6 +21,7 @@ A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Eve
              "checklist": ["Step one, reworded.", "Step two, reworded."],
              "done_when": "What the member sends as proof, reworded.",
              "title": "A new title", "official_url": "https://...",   (only for a quest rewritten around another topic)
+             "quiz_choices": { "3": ["a", "b", "c", "d"] },          (new choices for question 3 only, same order)
              "new_quiz": [ {"q": "...", "choices": ["a", "b", "c", "d"], "answer_index": 2, "explain": "..."} ],
                                                                       (only for a quest that has no quiz yet)
              "quiz": [ {"q": "...", "choices": ["...", "..."], "explain": "..."} ] } }
@@ -186,6 +189,22 @@ def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict
             repl[q["q"]] = f"{ind}- q: {s(x['q'])}"
             repl[q["choices"]] = f"{ind}  choices: [{', '.join(s(c) for c in x['choices'])}]"
             repl[q["explain"]] = f"{ind}  explain: {s(x['explain'])}"
+    if w.get("quiz_choices") is not None:
+        # new choices for single questions, by question number (1 is the first): {"3": ["a", "b", "c", "d"]}.
+        # Done after "quiz", so these choices win over a full rewording of the same quiz.
+        for num, choices in w["quiz_choices"].items():
+            i = int(num) - 1
+            if not 0 <= i < len(at["quiz"]) or "choices" not in at["quiz"][i]:
+                return None
+            n = at["quiz"][i]["choices"]
+            try:
+                old = yaml.safe_load(lines[n])["choices"]
+            except (yaml.YAMLError, TypeError, KeyError):
+                return None
+            if not isinstance(choices, list) or len(choices) != len(old) or len(set(choices)) != len(choices) or not all(isinstance(c, str) and c.strip() for c in choices):
+                return None
+            ind = FIELD_RE.match(lines[n]).group(1)
+            repl[n] = f"{ind}choices: [{', '.join(s(c.strip()) for c in choices)}]"
     return repl, ins
 
 
@@ -302,6 +321,47 @@ def next_batch(count: int) -> None:
     print(json.dumps(out, ensure_ascii=False, indent=1))
 
 
+def telling(x: dict) -> bool:
+    """The right answer gives itself away by its length: it is the longest choice, and clearly longer than the rest."""
+    lens = [len(c) for c in x["choices"]]
+    r = lens[x["answer_index"]]
+    others = [n for i, n in enumerate(lens) if i != x["answer_index"]]
+    return r > max(others) and r >= 1.2 * (sum(others) / len(others)) and r - max(others) >= 4
+
+
+def tell(ids: list[str]) -> None:
+    """How often the right answer is the longest choice. With quest ids: the quizzes of those quests, compact, with
+    the right choice marked `*` and a `!` on questions where its length gives it away."""
+    quests = all_quests()
+    if ids:
+        want = set(ids)
+        for _, q in quests:
+            if q["id"] in want:
+                print(f"## {q['id']}  {q.get('title')}")
+                for n, x in enumerate(q.get("quiz") or [], 1):
+                    print(f"{'!' if telling(x) else ' '}{n}. {x['q']}")
+                    for i, c in enumerate(x["choices"]):
+                        print(f"     {'*' if i == x['answer_index'] else '-'} {c}")
+        return
+    total = longest = flagged = 0
+    todo = []
+    for _, q in quests:
+        nums = []
+        for n, x in enumerate(q.get("quiz") or [], 1):
+            lens = [len(c) for c in x["choices"]]
+            total += 1
+            longest += lens[x["answer_index"]] > max(l for i, l in enumerate(lens) if i != x["answer_index"])
+            if telling(x):
+                flagged += 1
+                nums.append(n)
+        if nums:
+            todo.append(f"{q['id']}: {','.join(map(str, nums))}")
+    for line in todo:
+        print(line)
+    print(f"{total} questions | right answer is the longest choice in {100 * longest / total:.0f}% (chance would be 25%) | "
+          f"{flagged} questions in {len(todo)} quests give the answer away by length")
+
+
 QUIZ_LEN = {"novice": 5, "apprentice": 6, "adept": 8, "expert": 10, "master": 12}      # TIERS in bot/registrar/curriculum.py
 
 
@@ -360,6 +420,8 @@ def main() -> None:
         refs()
     elif cmd == "noquiz":
         noquiz()
+    elif cmd == "tell":
+        tell(sys.argv[2:])
     elif cmd == "next":
         next_batch(int(sys.argv[2]) if len(sys.argv) > 2 else 15)
     else:
