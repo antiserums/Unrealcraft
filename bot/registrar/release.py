@@ -1,10 +1,13 @@
 """Reads CHANGELOG.md (repo root) so the bot knows its version and can post patch notes.
 
-Versions follow Semantic Versioning (https://semver.org): MAJOR.MINOR.PATCH, written with a leading "v".
+Versions are written vMAJOR.MINOR.PATCH.BUILD, the way Unreal Engine builds carry a changelist number:
   MAJOR  breaking change for members: progress reset, ranks/XP rebalanced, commands removed or renamed
   MINOR  new things, backwards compatible: new quests, channels, commands, features
   PATCH  fixes only: typos, broken links, bug fixes, wording
+  BUILD  the number of commits in the repo at that release (`tools/version.py next` works it out). It only goes up,
+         so two builds can always be told apart, even of the same release.
 While MAJOR is 0 the server is still pre-release; anything may change between MINOR versions.
+Releases from before v0.11 have no build number (v0.10.1); they are still read.
 """
 from __future__ import annotations
 
@@ -12,17 +15,23 @@ import asyncio
 import re
 from pathlib import Path
 
-# vMAJOR.MINOR.PATCH with an optional pre-release suffix (e.g. v1.2.0-beta.1), as in SemVer 2.0.0.
-SEMVER = r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z.-]+))?"
-# "## v1.2.3 · 2026-10-01" (an old-style " · Title" suffix is still accepted and ignored)
+# vMAJOR.MINOR.PATCH.BUILD; the build is missing on old releases. A pre-release suffix (v1.2.0.700-beta.1) is allowed.
+SEMVER = r"v(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:\.(0|[1-9]\d*))?(?:-([0-9A-Za-z.-]+))?"
+# "## v1.2.3.700 · 2026-10-01" (an old-style " · Title" suffix is still accepted and ignored)
 HEADER = re.compile(rf"^## ({SEMVER})\s*·\s*(\d{{4}}-\d{{2}}-\d{{2}})(?:\s*·\s*(.+))?$")
 LOOSE_HEADER = re.compile(r"^## ")
 
 
 def version_key(v: str) -> tuple:
     m = re.fullmatch(SEMVER, v)
-    major, minor, patch, pre = int(m[1]), int(m[2]), int(m[3]), m[4]
-    return (major, minor, patch, 0 if pre else 1, pre or "")      # a pre-release sorts before its release
+    major, minor, patch, build, pre = int(m[1]), int(m[2]), int(m[3]), int(m[4] or 0), m[5]
+    return (major, minor, patch, 0 if pre else 1, pre or "", build)   # a pre-release sorts before its release
+
+
+def build_of(v: str) -> int | None:
+    """The build number of a version, or None for a release from before builds were numbered."""
+    m = re.fullmatch(SEMVER, v)
+    return int(m[4]) if m and m[4] is not None else None
 
 
 def entries(changelog: Path) -> list[dict]:
@@ -33,7 +42,7 @@ def entries(changelog: Path) -> list[dict]:
     for line in changelog.read_text(encoding="utf-8").splitlines():
         m = HEADER.match(line.strip())
         if m:
-            out.append({"version": m.group(1), "date": m.group(6), "title": (m.group(7) or "").strip(), "lines": []})
+            out.append({"version": m.group(1), "date": m.group(7), "title": (m.group(8) or "").strip(), "lines": []})
         elif out:
             out[-1]["lines"].append(line)
     for e in out:
@@ -48,12 +57,15 @@ def validate(changelog: Path) -> list[str]:
         return ["CHANGELOG.md is missing"]
     for n, line in enumerate(changelog.read_text(encoding="utf-8").splitlines(), 1):
         if LOOSE_HEADER.match(line) and not HEADER.match(line.strip()):
-            errs.append(f"line {n}: header must look like '## v1.2.3 · 2026-10-01' (got {line.strip()!r})")
+            errs.append(f"line {n}: header must look like '## v1.2.3.700 · 2026-10-01' (got {line.strip()!r})")
     es = entries(changelog)
     seen = set()
     for newer, older in zip(es, es[1:]):
         if version_key(newer["version"]) <= version_key(older["version"]):
             errs.append(f"{newer['version']} is listed above {older['version']} but isn't a higher version")
+        nb, ob = build_of(newer["version"]), build_of(older["version"])
+        if ob is not None and (nb is None or nb <= ob):
+            errs.append(f"{newer['version']} must have a higher build number than {older['version']}")
     for e in es:
         if e["version"] in seen:
             errs.append(f"{e['version']} appears twice")

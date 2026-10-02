@@ -5,12 +5,14 @@ GitHub every minute and posts each newly released entry to #patch-notes, one mes
 keeps the full history. To fix a mistake in a released entry, edit it and push; the Quartermaster
 updates that version's existing message instead of posting a new one.
 
-Format: `## vMAJOR.MINOR.PATCH · YYYY-MM-DD`, then a plain list of changes. No titles or summaries.
+Format: `## vMAJOR.MINOR.PATCH.BUILD · YYYY-MM-DD`, then a plain list of changes. No titles or summaries.
 
-Versions follow [Semantic Versioning](https://semver.org):
+A version has four numbers, the way an Unreal Engine build carries a changelist number (`py -3 tools/version.py next minor` prints the next one):
 - **MAJOR** (v1.0.0 → v2.0.0): breaking for members: progress reset, ranks or XP rebalanced, commands removed or renamed.
 - **MINOR** (v1.2.0 → v1.3.0): new things that don't break anything: quests, channels, commands, features.
 - **PATCH** (v1.2.3 → v1.2.4): fixes only: typos, links, bugs, wording.
+- **BUILD** (v1.2.3.**700**): the number of commits in the repo at that release. It only ever goes up.
+  Releases before v0.11 have no build number.
 - While MAJOR is **0**, Unrealcraft is pre-release and anything may still change between MINOR versions.
   **v1.0.0** marks the official public launch.
 
