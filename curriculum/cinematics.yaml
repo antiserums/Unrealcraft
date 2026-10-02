@@ -1601,7 +1601,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Which plugin must be enabled to render the Object Ids pass?"
-        choices: ["Movie Render Graph", "OpenColorIO", "Movie Render Queue Additional Render Passes", "Composure"]
+        choices: ["Movie Render Graph Additional Render Passes", "OpenColorIO Additional Render Passes", "Movie Render Queue Additional Render Passes", "Composure Additional Layer Passes"]
         answer_index: 2
         explain: "Object Ids need the Movie Render Queue Additional Render Passes plugin (Rendering section). The editor must restart after enabling it."
       - q: "Why can MRQ not output common AOVs like Ambient Occlusion or Sub-surface Scattering as separate passes?"
@@ -2203,7 +2203,7 @@ quests:
         answer_index: 0
         explain: "The page says that if multiple Absolute sections animate the same value, the value blends equally between them."
       - q: "Which Blend Type makes the first key equal to the property value at that time, and animates relative to it?"
-        choices: ["Absolute", "Additive from Base", "Additive", "Relative"]
+        choices: ["Absolute from Start", "Additive from Base", "Additive from Zero", "Relative to Parent"]
         answer_index: 1
         explain: "Additive from Base sets the first keyframe equal to the current value and animates the following keys relative to that point."
       - q: "When several sections exist on one property, which one receives new keys when you press S or Enter?"
@@ -3285,7 +3285,7 @@ quests:
         answer_index: 0
         explain: "The green dot (LMB) is the start value, the red dot (Ctrl + LMB) is the end value, and Enter paints the gradient."
       - q: "Which mask target pulls the cloth toward its animated pose so animators can control it in cinematics?"
-        choices: ["Max Distance", "Backstop Radius", "Anim Drive Multiplier", "Backstop Distance"]
+        choices: ["Max Distance Multiplier", "Backstop Radius", "Anim Drive Multiplier", "Backstop Distance"]
         answer_index: 2
         explain: "Anim Drive Multiplier drives springs that pull clothing toward its animated position. It can also be driven at runtime from Blueprints."
       - q: "How many masks of the same target can be assigned at the same time?"
@@ -4668,7 +4668,7 @@ quests:
         answer_index: 1
         explain: "The Executable Path, codecs, extension and encode settings live in the Movie Pipeline CLI Encoder project settings under Plugins."
       - q: "Which console command lists valid codecs for your encoder?"
-        choices: ["MovieRenderPipeline.DumpCLIEncoderCodecs", "ffmpeg -codecs", "r.MovieCodecs 1", "MRQ.ListCodecs"]
+        choices: ["MovieRenderPipeline.DumpCLIEncoderCodecs", "MovieRenderPipeline.ListFFmpegCodecs", "r.MovieRenderQueue.ShowEncoderCodecs 1", "MovieRenderQueue.PrintEncoderCodecList"]
         answer_index: 0
         explain: "Running MovieRenderPipeline.DumpCLIEncoderCodecs in the Output Log queries the executable and prints the audio and video codecs. It needs Executable Path set first."
       - q: "How should the Output File Extension be written?"
@@ -4988,7 +4988,7 @@ quests:
         answer_index: 0
         explain: "Playback starts for every user with that sequence open, and only the user who began it can stop it. After it stops, anyone can restart it."
       - q: "Which console command makes the Sequencer UI open on every client when one user opens it?"
-        choices: ["Sequencer.SyncClients 1", "MultiUser.OpenSequencer", "Concert.SyncSequencerUI", "Concert.EnableOpenRemoteSequencer"]
+        choices: ["Sequencer.SyncOpenOnAllClients 1", "MultiUser.OpenSequencerOnClients", "Concert.SyncRemoteSequencerUI", "Concert.EnableOpenRemoteSequencer"]
         answer_index: 3
         explain: "The overview names Concert.EnableOpenRemoteSequencer for Sequencer UI sync. Playback sync happens anyway, but frame-accurate results between machines are not promised."
       - q: "How do you write the changes made in the session to your project files on disk?"

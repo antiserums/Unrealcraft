@@ -1,0 +1,314 @@
+{
+ "TAQ105": {
+  "quiz_choices": {
+   "1": [
+    "Green is culled geometry, red is visible geometry",
+    "Green is static geometry, red is movable geometry",
+    "Green is opaque material, red is masked material",
+    "Green is Nanite geometry, red is non-Nanite geometry"
+   ],
+   "2": [
+    "Masked-out pixels are not counted, and only opaque Nanite meshes in the primary view add to the overdraw",
+    "All evaluated pixels count, including masked-out ones, and small closely stacked objects create more overdraw",
+    "Large objects always create more overdraw than small ones, and masked-out pixels are never counted in the view",
+    "It only shows translucent overdraw, because Nanite meshes are opaque and can never draw over each other"
+   ],
+   "3": [
+    "Shows culling statistics for the primary view as an overlay in the top-right of the viewport",
+    "Lists all views by name in the Output Log, so that you can pick one of them as the argument",
+    "Prints a memory report for all Nanite meshes of the level to the Output Log and to a file",
+    "Opens the Nanite section of the Project Settings in a new tab next to the Level Viewport"
+   ],
+   "4": [
+    "The engine grows the pool automatically until all pages fit",
+    "Nanite switches every mesh in the view over to its fallback mesh",
+    "Cache thrashing: streaming never settles, even for a static view",
+    "The editor shows a warning and pauses streaming for the level"
+   ],
+   "5": [
+    "Nanite meshes disappear from the viewport until streaming has finished",
+    "Nanite meshes render only at the quality that is always resident in memory",
+    "All Nanite meshes use the fallback mesh until the option is turned on again",
+    "Streaming becomes faster, because the highest detail pages are skipped"
+   ],
+   "6": [
+    "To reduce shader compile time while you work",
+    "To turn on virtual shadow maps for a quick test",
+    "To bake lightmaps faster for the static meshes",
+    "To emulate platforms that do not support Nanite"
+   ],
+   "7": [
+    "To improve GPU frame rate",
+    "To fix overdraw",
+    "To reduce disk and download size",
+    "To increase the streaming pool"
+   ],
+   "8": [
+    "ClustersSW and ClustersHW in NaniteStats",
+    "Visible Static Mesh Elements in stat initviews",
+    "Streaming Pool in stat streaming",
+    "Draw time in stat unit"
+   ]
+  }
+ },
+ "TAQ106": {
+  "quiz_choices": {
+   "1": [
+    "Because each one uses 2 GB of memory and must be loaded piece by piece",
+    "Because generating a new PSO on demand can take 100 or more milliseconds",
+    "Because Direct3D 11 does not support them and needs a fallback path",
+    "Because they are stored in the Derived Data Cache and must be downloaded"
+   ],
+   "2": [
+    "Precaching needs you to play a build and record what is drawn; a bundled cache is collected automatically at load time",
+    "They are the same thing with two names; precaching is the newer name that the documentation uses for a bundled cache",
+    "Precaching collects and compiles PSOs automatically and asynchronously; a bundled cache is collected by playing a build",
+    "Precaching only works on mobile and compiles PSOs at install time; a bundled cache only works on PC and consoles"
+   ],
+   "3": [
+    "The draw blocks until compilation finishes",
+    "The component uses the default material",
+    "The component is deleted",
+    "The draw is skipped until the PSO is ready"
+   ],
+   "4": [
+    "r.PSOPrecache.Validation set to 1 or 2",
+    "r.PSOPrecache.GlobalShaders set to 1",
+    "Shipping build configuration",
+    "The RenderDoc plugin"
+   ],
+   "5": [
+    "The PSO was never requested by the precaching system, so no compile was started at all",
+    "The PSO was compiled twice, once by precaching and once more when it was first used",
+    "The PSO was queued for precaching but was not compiled in time for when it was needed",
+    "The driver cache was cleared after the PSO had been compiled, so it must compile again"
+   ],
+   "6": [
+    "It makes the game start faster, so each test run takes less time",
+    "Without it, the driver cache from earlier runs can hide hitches",
+    "It enables stat PSOPrecache, which is hidden in normal runs",
+    "It reduces memory use, so hitches from paging do not show up"
+   ],
+   "7": [
+    "20 ms",
+    "2 ms",
+    "100 ms",
+    "One full frame"
+   ],
+   "8": [
+    "All textures to reach their full mip level, checked with the Required Pool value of the stat streaming command",
+    "The first frame of the level to render, checked with the frame counter that the stat unit command displays",
+    "Garbage collection to complete, checked with the time since the last purge that the stat gc command shows",
+    "All outstanding PSO precache requests to finish, checked with FShaderPipelineCache::NumPrecompilesRemaining()"
+   ]
+  }
+ },
+ "TAQ107": {
+  "quiz_choices": {
+   "1": [
+    "The primary screen percentage, based on the previous frames' GPU workload",
+    "The secondary screen percentage, based on the CPU time of the last frames",
+    "The texture mip bias, based on the VRAM that the texture pool has left",
+    "The window resolution, based on the refresh rate of the monitor in use"
+   ],
+   "2": [
+    "25, 100, 16.6",
+    "50, 200, 16.6",
+    "70, 100, 33.3",
+    "50, 100, 33.3"
+   ],
+   "3": [
+    "Because the two axes can use different values, and the engine always scales the wider axis first",
+    "To remind you that pixels drawn are proportional to screen percentage times screen percentage",
+    "Because the secondary upscale is anisotropic and applies a different scale to each of the axes",
+    "Because VR renders two eyes, and each of the two values belongs to one of the eye views"
+   ],
+   "4": [
+    "Dynamic resolution is disabled, whatever the settings say",
+    "It follows the boolean that is stored in the Game User Settings",
+    "Dynamic resolution is enabled regardless of Game User Settings",
+    "It is paused until the next level has finished loading"
+   ],
+   "5": [
+    "A key that resets the resolution to 100 percent when the image gets much too blurry",
+    "A warning printed to the log when VRAM is full, plus a drop of the texture pool size",
+    "A switch that disables TSR after N slow frames and falls back to plain TAA upscaling",
+    "A quick resolution drop after N consecutive frames over budget, plus a history reset"
+   ],
+   "6": [
+    "Use the Screen Percentage slider in any editor viewport",
+    "Set r.SetRes to 720p and play in a Standalone window",
+    "Lower the resolution of the monitor in the system settings",
+    "Use Movie Render Queue to render the shot at half size"
+   ],
+   "7": [
+    "It runs before the UI and scales the HUD as well",
+    "It is controlled by the dynamic resolution heuristic",
+    "It is static and cannot change dynamically in game",
+    "It only applies to VR and is ignored on monitors"
+   ],
+   "8": [
+    "Multisample Anti-Aliasing (MSAA) at 4x",
+    "Temporal Anti-Aliasing Upsample (TAAU)",
+    "Fast Approximate Anti-Aliasing (FXAA)",
+    "Dynamic Resolution with a panic switch"
+   ]
+  }
+ },
+ "TAQ108": {
+  "quiz_choices": {
+   "1": [
+    "Every frame, while the window is open and in focus",
+    "When you save the level or any asset that is listed",
+    "Only when the window opens and when you press Refresh",
+    "Each time that a texture streams in or out of the pool"
+   ],
+   "2": [
+    "The resource owner is not tracked yet (tracked types are static meshes, skeletal meshes, textures and hair/groom)",
+    "The resource leaked: its owner was destroyed, but the memory of the resource was never returned to the GPU pool",
+    "The asset was deleted from the Content Browser, but the editor still holds the resource until the next restart",
+    "The resource is transient: it lives for one frame only and is shared by render passes, so it can have no owner"
+   ],
+   "3": [
+    "Resident: resources that the GPU can access right now, because all of their data is loaded into memory",
+    "Streaming: streamable textures and meshes whose mips or LODs are loaded and dropped as the camera moves",
+    "Render Target: buffers that the GPU writes to during a frame, such as the scene color and the shadow maps",
+    "Transient: resources allocated only during the passes where they are active, sharing memory with others"
+   ],
+   "4": [
+    "Open the Stats panel of the mesh editor and add up the listed sizes",
+    "Search for the owner path; the totals show only the filtered results",
+    "Sort by Type, then read the size on the first skeletal mesh row",
+    "Press Ctrl+B on the mesh, then read the size in the asset tooltip"
+   ],
+   "5": [
+    "Memory reserved for unexpected non-streaming allocations, set by MemoryMargin under [TextureStreaming]",
+    "Memory for textures that are forced in by gameplay code, set by the pool size under [TextureStreaming]",
+    "Memory used while resizing textures, when the old and the new copy of a texture exist at the same time",
+    "Mips that are no longer needed, but are kept in memory until other mips that are wanted need the space"
+   ],
+   "6": [
+    "The engine grows the pool until every texture fits into it",
+    "The game crashes as soon as the next texture is requested",
+    "Some textures will not be loaded to their required resolution",
+    "Cached mips are locked and can never be dropped again"
+   ],
+   "7": [
+    "Mips that are visible right now and were loaded during the last few frames",
+    "Mips that are no longer needed but kept until other wanted mips need the memory",
+    "Mips that are forced in by gameplay code and can never be dropped by the streamer",
+    "Mips still being loaded from disk, which do not count for the pool yet"
+   ],
+   "8": [
+    "Streaming is finished and all mips are in memory",
+    "The safety pool is too small for the textures of the level",
+    "The texture pool is full and no mip can be loaded",
+    "The streamer is not using all the available IO bandwidth"
+   ]
+  }
+ },
+ "TAQ109": {
+  "quiz_choices": {
+   "1": [
+    "Dynamic Occlusion, Precomputed Visibility, View Frustum, Distance",
+    "View Frustum, Distance, Dynamic Occlusion, Precomputed Visibility",
+    "Precomputed Visibility, Distance, Dynamic Occlusion, View Frustum",
+    "Distance, View Frustum, Precomputed Visibility, Dynamic Occlusion"
+   ],
+   "2": [
+    "Because the queries run on the CPU and take several frames",
+    "Because visibility results are read back one frame later",
+    "Because bounds are recomputed on every frame for each mesh",
+    "Because the depth buffer is cleared when the camera moves"
+   ],
+   "3": [
+    "Visible Static Mesh Elements, the biggest contributor to rendering thread time",
+    "Occlusion Queries, the number of queries the CPU has to wait for each frame",
+    "Frustum Culled Primitives, the largest contributor to GPU time in the base pass",
+    "Decompress Occlusion, the time spent on reading precomputed visibility"
+   ],
+   "4": [
+    "A red outline around visible actors",
+    "The view frustum",
+    "A green bounding box around any occluded actor",
+    "The cells that precomputed visibility has built"
+   ],
+   "5": [
+    "The mesh gets larger on screen, which can hurt performance and the quality of its shadows",
+    "The actor is culled later than it should be, which can hurt performance and shadow quality",
+    "Collision stops working at the edge of the mesh, because the collision is scaled as well",
+    "The actor becomes movable, so its baked lighting is lost and must be built once more"
+   ],
+   "6": [
+    "It culls more objects than queries do, but it costs more time on the rendering thread",
+    "It works only on mobile, where hardware queries are not supported by the GPU",
+    "It needs a lighting build first, because it reads the baked visibility cells",
+    "It is more conservative, so fewer objects are culled, using a mipmapped scene depth"
+   ],
+   "7": [
+    "Large open worlds with many movable actors, trading memory for a lower cost on the rendering thread",
+    "Any level with a lot of foliage, because foliage instances cannot be tested with occlusion queries",
+    "Small to medium levels on lower-end hardware and mobile, trading rendering thread cost for memory",
+    "VR only, because drawing two eyes makes occlusion queries on the GPU twice as expensive to run"
+   ],
+   "8": [
+    "In PIE or Standalone; occlusion culling is disabled in Wireframe view mode",
+    "In the editor viewport in Wireframe mode; occlusion is most exact in there",
+    "Only in a Shipping build; the stat commands are most exact when shipped",
+    "In the Static Mesh Editor; its preview viewport shows one mesh at a time"
+   ]
+  }
+ },
+ "TAQ110": {
+  "quiz_choices": {
+   "1": [
+    "SVT loads whole mip levels, and the CPU decides which ones by the visibility of meshes",
+    "SVT splits mips into small tiles and the GPU decides which visible tiles are needed",
+    "SVT never unloads data, so the whole texture stays in memory once it has been seen",
+    "SVT uses distance only, and loads the full texture when the camera gets close"
+   ],
+   "2": [
+    "They keep working, because the sampler type is updated when the texture is saved",
+    "They switch to the default material forever, even if you fix the sampler type later",
+    "They are invalidated until their Texture Sample nodes use a Virtual sampler type",
+    "They compile faster, because virtual textures need fewer shader permutations"
+   ],
+   "3": [
+    "Yes, instances convert the sampler type automatically on save",
+    "Yes, if the texture is a UDIM set with more than one tile",
+    "Only for base color, not for normal or packed mask textures",
+    "No, the base material's sampler type applies to all instances"
+   ],
+   "4": [
+    "Three: two lookups plus one shared stack",
+    "Two: one texture fetch for each sample",
+    "Four: two lookups plus two separate stacks",
+    "One: both samples share a single fetch"
+   ],
+   "5": [
+    "2",
+    "4",
+    "8",
+    "16"
+   ],
+   "6": [
+    "stat streaming and stat memory in a packaged build",
+    "stat virtualtexturing and stat virtualtexturememory",
+    "stat GPU and stat unit with the VT overlay enabled",
+    "stat scenerendering, stat RHI and NaniteStats on PC"
+   ],
+   "7": [
+    "Anisotropic filtering; raising it allows more but uses more memory",
+    "The number of UDIM tiles that one virtual texture asset can hold",
+    "The lowest mip level that the streamer is allowed to load in",
+    "The number of stacks that one material can sample at a time"
+   ],
+   "8": [
+    "Because tiles are compressed, and each tile has to be unpacked on the CPU before the GPU can sample it",
+    "Because it disables mipmaps, so each tile is loaded at full size and that takes far longer per tile",
+    "Because the GPU cannot read the depth buffer for virtual textures, so tiles behind other objects load first",
+    "Because VT streaming is reactive: the CPU learns a tile is needed only after a rendered frame required it"
+   ]
+  }
+ }
+}

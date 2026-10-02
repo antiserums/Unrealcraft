@@ -1348,7 +1348,7 @@ quests:
         answer_index: 2
         explain: "Pose Blender and Pose by Name blend pose assets using curves; Pose Driver uses bone motion (Source Bones) to drive the pose asset at runtime."
       - q: "In Pose Driver, which Tool option fills the Pose Targets from the assigned Pose Asset?"
-        choices: ["Auto Scale", "Copy All from PoseAsset", "Solo", "Eval from Ref Pose"]
+        choices: ["Auto Scale All Targets", "Copy All from PoseAsset", "Solo Selected Target", "Eval from Ref Pose"]
         answer_index: 1
         explain: "Copy All from PoseAsset creates Pose Targets from the poses in the set Pose Asset, overwriting existing targets."
       - q: "Pose Driver Solver Type: which statement matches the page?"
@@ -2044,7 +2044,7 @@ quests:
         answer_index: 2
         explain: "Weight Speed 2.0 means a sample can change its weight from 0 to 1 in half a second. Do not combine it with Smoothing Time."
       - q: "Which Notify Trigger Mode fires notifies only from the sample that has the most weight?"
-        choices: ["All Animations", "None", "First Sample", "Highest Weighted Animation"]
+        choices: ["All Animations in Blend Space", "None of the Animations", "First Sample Animation", "Highest Weighted Animation"]
         answer_index: 3
         explain: "Highest Weighted Animation only triggers the notifies of the strongest sample. All Animations fires them all; None fires nothing."
       - q: "A triangle in the Blend Graph turns red. What does this mean?"
@@ -2479,7 +2479,7 @@ quests:
         answer_index: 0
         explain: "Bind > Expose As Pin on the Sequence property, then Promote to Variable and make it public so the linking Blueprint can set it."
       - q: "Where in the AnimGraph context menu do you find both Linked Anim Graphs and templates?"
-        choices: ["Blend Spaces", "Misc", "Linked Anim Blueprints", "Variables"]
+        choices: ["Blend Spaces and Samples", "Misc and Utility Nodes", "Linked Anim Blueprints", "Variables and Functions"]
         answer_index: 2
         explain: "Both a Linked Anim Graph and a template are added from the Linked Anim Blueprints category of the right-click menu."
       - q: "What does double-clicking a Linked Anim Graph node do?"
@@ -2669,7 +2669,7 @@ quests:
         answer_index: 2
         explain: "Show Keys requires Show Trails to also be enabled."
       - q: "Which console command lets non-Control Rig actors use the new Motion Trails tool?"
-        choices: ["Sequencer.UseOldSequencerTrails 0", "Sequencer.MotionTrails 1", "r.MotionTrails 1", "Sequencer.ShowTrails 1"]
+        choices: ["Sequencer.UseOldSequencerTrails 0", "Sequencer.EnableNewMotionTrails 1", "r.Sequencer.MotionTrailsForAll 1", "Sequencer.ShowTrailsOnActors 1"]
         answer_index: 0
         explain: "Sequencer.UseOldSequencerTrails 0 disables the legacy trajectory display and enables the new Motion Trails for other actors."
     flavors:
@@ -3084,7 +3084,7 @@ quests:
         answer_index: 0
         explain: "Select the control and find the Control Shape properties in the Details panel. Shape is a drop-down and Color opens the Color Picker."
       - q: "Which Class Settings property points a Control Rig at its shape library?"
-        choices: ["Shape Source", "Shape Libraries (called Gizmo Library on the docs page)", "Mesh Library", "Control Style"]
+        choices: ["Shape Source (called Gizmo Source on the docs page)", "Shape Libraries (called Gizmo Library on the docs page)", "Mesh Library (called Control Meshes on the docs page)", "Control Style (called Gizmo Style on the docs page)"]
         answer_index: 1
         explain: "Class Settings in the Control Rig Editor shows the Shape Libraries property (Gizmo Library on the docs page), which references a Control Rig Shape Library asset."
       - q: "Why can you not see the default shape library in the Content Browser at first?"
@@ -3358,7 +3358,7 @@ quests:
         answer_index: 1
         explain: "Mapping is generally achieved by matching bone names between the Control Rig class and the Skeletal Mesh Component."
       - q: "Your rig skeleton uses different bone names than the mesh. Which node lets you map Source and Target names for individual bones?"
-        choices: ["Add Mapped Skeletal Mesh", "Add Mapped Components", "Add Mapped Skeletal Mesh Bone Array", "Add Mapped Elements"]
+        choices: ["Add Mapped Complete Skeletal Mesh", "Add Mapped Components by Bone Name", "Add Mapped Skeletal Mesh Bone Array", "Add Mapped Elements from Name Map"]
         answer_index: 2
         explain: "Add Mapped Skeletal Mesh Bone Array maps arrays of bones or curves and lets you give Source and Target names."
       - q: "What does Enable Lazy Evaluation do?"
@@ -4040,7 +4040,7 @@ quests:
         answer_index: 0
         explain: "Distance Matching selects poses by a distance value. The Animation Blueprint searches the distance curve and outputs the matching pose."
       - q: "Which plugin must be enabled before you can use the Distance Matching nodes?"
-        choices: ["Motion Warping", "Animation Locomotion Library", "Pose Search", "Control Rig Modules"]
+        choices: ["Motion Warping Library", "Animation Locomotion Library", "Pose Search Database Tools", "Control Rig Modules Library"]
         answer_index: 1
         explain: "The page lists the Animation Locomotion Library plugin as the first prerequisite. Enable it and restart the editor."
       - q: "Where do you generate the distance curve for a sequence?"
@@ -4118,7 +4118,7 @@ quests:
         answer_index: 3
         explain: "The page says the mirror axis runs across the front of the character and in most cases this should be X."
       - q: "Your bones are named like finger_left_index1. Which Find Replace Method handles a modifier in the middle of the name?"
-        choices: ["Prefix", "Regular Expression", "Suffix", "Any of them works the same"]
+        choices: ["Prefix Replacement", "Regular Expression", "Suffix Replacement", "Any of them works the same"]
         answer_index: 1
         explain: "Prefix and Suffix only search at the start or end. The page shows a Regular Expression for names with _left_ in the middle."
       - q: "You set Blend Time on Mirror State Change on the Mirror node. What else is required?"
@@ -4549,7 +4549,7 @@ quests:
         answer_index: 2
         explain: "When animation is imported together with a Skeletal Mesh, the sequence is named after the root bone by default. You can rename it later."
       - q: "Your exported time range is longer than the actual keyframes in the file. Which Animation Length option imports only the frames that have animation?"
-        choices: ["Source Timeline", "Set Range", "Animation Time (named Animated Time in the older FBX Import Options window)", "Frame Import Range"]
+        choices: ["Source Timeline (named Exported Time in the older FBX Import Options window)", "Set Range (the same name is used in the older FBX Import Options window)", "Animation Time (named Animated Time in the older FBX Import Options window)", "Frame Import Range (named Import Range in the older FBX Import Options window)"]
         answer_index: 2
         explain: "Animation Time imports the range of frames that contain animation. Source Timeline (Exported Time in the older window) uses the range defined in the file, and Set Range uses the frames you type into Frame Import Range."
       - q: "In the import window, Use 30Hz to Bake Bone Animation is turned on. What sample rate does the animation get?"

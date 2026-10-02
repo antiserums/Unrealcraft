@@ -1,0 +1,418 @@
+{
+ "TAQ87": {
+  "quiz_choices": {
+   "1": [
+    "GeneratedDynamicMeshActor",
+    "StaticMeshActor",
+    "ProceduralMeshActor",
+    "DynamicMeshVolumeActor"
+   ],
+   "2": [
+    "The project uses Nanite for meshes",
+    "The Geometry Script plugin is not enabled",
+    "The Content Browser filter hides actors",
+    "You need a C++ project for the class"
+   ],
+   "3": [
+    "Only once, when the level that holds the actor is loaded",
+    "Every frame during Play, on Event Tick of the actor",
+    "Every time you change the parameters of the Dynamic Mesh",
+    "Only when you click the Bake Static Mesh button"
+   ],
+   "4": [
+    "It is the only way to make a cylinder, because Append Cylinder needs a pooled mesh as its target",
+    "Pool meshes render faster with Nanite",
+    "Booleans only work on pooled meshes, so a permanent cylinder would be ignored",
+    "The pool gives a temporary mesh, so the editor keeps less unneeded geometry"
+   ],
+   "5": [
+    "The mesh that receives the result",
+    "The mesh pool itself",
+    "A collision-only mesh of the tool",
+    "The mesh you subtract or add with"
+   ],
+   "6": [
+    "The actor's scale changes, and the same box mesh is stretched to fit",
+    "Only the collision changes, and the visible mesh stays as it was",
+    "A new box mesh of that size is generated, not a scaled one",
+    "The widget only works in Play mode, not in the level editor"
+   ],
+   "7": [
+    "Pure function",
+    "Call in Editor",
+    "Replicated",
+    "Const function"
+   ],
+   "8": [
+    "So the code runs only if a static mesh is selected",
+    "To make the mesh a Nanite mesh after baking",
+    "To speed up baking of large meshes",
+    "To make the variable public and Instance Editable"
+   ]
+  }
+ },
+ "TAQ90": {
+  "quiz_choices": {
+   "1": [
+    "It converts every spawned mesh to Nanite, so the graph can place far more instances",
+    "It disables debug rendering for the component, so large graphs generate much faster",
+    "It bakes the result to one static mesh, so the whole graph only costs a single draw call",
+    "It generates results across a user-defined grid, so data is split per cell for streaming"
+   ],
+   "2": [
+    "After the Static Mesh Spawner",
+    "At the very end of the graph",
+    "Before any sampler nodes",
+    "Inside a subgraph only"
+   ],
+   "3": [
+    "Small and numerous meshes, like grass and pebbles",
+    "Large, less numerous meshes like trees and boulders",
+    "All meshes with collision, whatever their size is",
+    "Only Nanite meshes, since they have no LOD cost"
+   ],
+   "4": [
+    "Use the Unbounded grid size so it runs once, then apply Grid Size nodes after",
+    "Increase the Partition Grid Size until one single cell covers the whole level",
+    "Disable Hierarchical Generation and split the level into several PCG volumes",
+    "Add more PCG volumes, one per cell, so that each sampler runs only one time"
+   ],
+   "5": [
+    "Difference with the Actor Bounds",
+    "Density Filter with a low bound",
+    "Cull Points Outside Actor Bounds",
+    "Self Pruning with a large radius"
+   ],
+   "6": [
+    "When it leaves the generation radius scaled by the Cleanup Radius Multiplier",
+    "It is never cleaned up; it stays in memory until the level is unloaded",
+    "When the level is saved, or when the editor runs its next garbage collection",
+    "When the player has looked away from it for more than one second in a row"
+   ],
+   "7": [
+    "All radii must be equal, so that every grid loads at the same time",
+    "Small grids should have a larger radius than the large grids above them",
+    "Radii only apply to the Unbounded grid, and the other grids ignore them",
+    "Each radius should be larger than the previous smaller grid's radius"
+   ],
+   "8": [
+    "They define their own grid size, which replaces the one of the parent graph",
+    "Their grid sizes are disabled and they use the input data or parent graph grid",
+    "They always use Unbounded, whatever grid sizes are set in the parent graph",
+    "They double the parent grid, so each subgraph cell covers four parent cells"
+   ]
+  }
+ },
+ "TAQ91": {
+  "quiz_choices": {
+   "1": [
+    "Repack",
+    "Stack",
+    "Transform",
+    "Align"
+   ],
+   "2": [
+    "When the islands must never overlap at all",
+    "When you need lightmap UVs for baked lighting",
+    "When islands share the same texture design",
+    "When the mesh is Nanite and has no UVs"
+   ],
+   "3": [
+    "ExpMap projection",
+    "Conformal",
+    "Island Merging",
+    "SpectralConformal"
+   ],
+   "4": [
+    "Cuts the selected edge into a new seam, making two islands out of one",
+    "Connects the selected edge to its counterpart edge, making one island",
+    "Scales the selected islands so that each one fills a whole UDIM tile",
+    "Creates a new UV channel and copies the selected islands over to it"
+   ],
+   "5": [
+    "UV Atlas",
+    "Patch Builder",
+    "XAtlas",
+    "Lightmass Packer"
+   ],
+   "6": [
+    "Starting at 0001, going up by one for each new tile",
+    "By the UV channel index, so channel 0 is tile 1000",
+    "Starting at 1000, ten down a column, then the next one",
+    "Starting at 1001, ten across a row, then the next row"
+   ],
+   "7": [
+    "UDIMs must be set for those squares",
+    "A second UV channel on the same mesh",
+    "The Apply button must be clicked",
+    "A larger texture must be imported"
+   ],
+   "8": [
+    "A vertex on a seam that is shared by exactly two UV islands",
+    "A vertex that lies outside the 0-1 space of the UV channel in use",
+    "A vertex that joins triangles by one point instead of an edge",
+    "A vertex with two UV channels that hold different positions"
+   ]
+  }
+ },
+ "TAQ92": {
+  "quiz_choices": {
+   "1": [
+    "Approximate keeps all source materials and UVs, while Simplify bakes them into one material",
+    "Simplify is only for landscapes, while Approximate works on every kind of static mesh",
+    "Approximate handles much more complex sources such as Nanite meshes where Simplify would fail",
+    "Simplify produces instanced components, while Approximate always makes one static mesh"
+   ],
+   "2": [
+    "LOD0, the most detailed LOD of each mesh",
+    "The LOD matching the current screen size",
+    "A random LOD picked for each mesh",
+    "The lowest-detail LOD of each mesh"
+   ],
+   "3": [
+    "One for each source material",
+    "One, with one baked material",
+    "One per source actor",
+    "Two: mesh and shadow"
+   ],
+   "4": [
+    "Batch",
+    "Simplify",
+    "Merge",
+    "Approximate"
+   ],
+   "5": [
+    "Fixed Triangle Count",
+    "Triangles Per Area",
+    "Screen Size",
+    "Geometric Tolerance"
+   ],
+   "6": [
+    "For a mountain scan that is open at the bottom and needs no cap",
+    "For many kitbashed open parts where an open mesh causes problems",
+    "Never, because Convex Solid is deprecated and will be removed",
+    "Only for skeletal meshes, which always need a closed base cap"
+   ],
+   "7": [
+    "Bakes identical meshes once for speed, but can differ for materials using world position or per-instance data",
+    "Merges all materials of the identical meshes into one, but loses the UVs that the lightmaps of the proxy need",
+    "Removes triangles that are hidden inside other meshes before baking, but can break the collision of the result",
+    "Doubles the texture size for meshes that repeat, but can use up the texture memory budget on large levels"
+   ],
+   "8": [
+    "To make it cast shadows from the Directional Light only",
+    "To enable Nanite on the proxy mesh after it is built",
+    "To save memory when the mesh is only seen in the distance",
+    "To keep the UVs of the source meshes in the proxy"
+   ]
+  }
+ },
+ "TAQ93": {
+  "quiz_choices": {
+   "1": [
+    "About the same, near 64 bytes for each one",
+    "About ten times more, 672 bytes vs 64 bytes",
+    "About half, 32 bytes compared to 64 bytes",
+    "Instances use more, about 672 bytes for each"
+   ],
+   "2": [
+    "Only transform properties are available; other properties are shared",
+    "You can change its material, but not the mesh that it is based on",
+    "You can set a separate LOD for it, but the transform is locked",
+    "Nothing; it is the same panel that you get for a Static Mesh Actor"
+   ],
+   "3": [
+    "HISM supported Nanite meshes; ISM can now use Nanite meshes as well",
+    "HISM had collision per instance; ISM now has collision per instance too",
+    "HISM applied LODs per instance; ISM can now use per-instance LODs as well",
+    "HISM used vertex colors per instance; ISM still cannot use them"
+   ],
+   "4": [
+    "Storing a collision shape for each instance, without a separate component",
+    "Saving LOD screen sizes for each instance, so every one can switch on its own",
+    "Naming instances, so that you can find each one by name in the Outliner",
+    "Passing values to the material without a dynamic material instance per mesh"
+   ],
+   "5": [
+    "A second ISM component is added",
+    "The whole component switches mesh",
+    "The instance is deleted",
+    "The mesh becomes a static mesh actor"
+   ],
+   "6": [
+    "Pattern Instances",
+    "Merge Instances",
+    "Harvest Instances",
+    "Convert to Instances"
+   ],
+   "7": [
+    "The maximum instance count that one single instanced component is allowed to hold",
+    "The largest distance between two instances that are still merged into one component",
+    "The LOD to use for every instance when the batched component is first created",
+    "The minimum number of instances before a mesh is replaced with an instanced version"
+   ],
+   "8": [
+    "To speed up baking, because meshes with vertex colors take much longer to be processed",
+    "Because instanced static meshes do not support vertex colors per instance, so data would be lost",
+    "Because vertex colors break Nanite, and instanced static meshes are always built as Nanite meshes",
+    "To reduce draw calls, because each vertex color set adds one more draw call per instance"
+   ]
+  }
+ },
+ "TAQ94": {
+  "quiz_choices": {
+   "1": [
+    "They store collision, so each PolyGroup becomes one simple collision shape on the mesh",
+    "They are required for Nanite, which builds all of its clusters from the PolyGroups of each mesh",
+    "They replace materials, so each PolyGroup is drawn with its own color and shader",
+    "Unreal renders only triangles, so groups approximate quads and n-gons for a DCC-like workflow"
+   ],
+   "2": [
+    "They are deleted from the mesh when you accept the tool",
+    "They are grouped together automatically into one PolyGroup",
+    "They cannot be edited until you assign them to a group",
+    "They each become a PolyGroup of their own, one per triangle"
+   ],
+   "3": [
+    "Quad-like faces with exactly four corners",
+    "Any triangle that has three visible edges",
+    "Faces that share one material slot only",
+    "Faces that lie on the border of the mesh"
+   ],
+   "4": [
+    "The loop goes straight across, as it would on a single quad face",
+    "The tool refuses to run and shows a warning about the groups",
+    "The loop slants to the side; one group for both triangles fixes it",
+    "The loop is inserted twice, once for each of the two triangles"
+   ],
+   "5": [
+    "Retriangulate keeps the existing triangles and only adds new edges; Plane Cut deletes all triangles in the group and builds new ones",
+    "Retriangulate rebuilds groups with simple topology but breaks non-planar groups; Plane Cut keeps the shape but can fragment triangles",
+    "They are the same; Plane Cut is only the older name of Retriangulate, kept so that tools from earlier engine versions still work",
+    "Plane Cut only works on UVs and leaves the mesh as it is; Retriangulate only works on the mesh and leaves the UV islands as they are"
+   ],
+   "6": [
+    "Interior vertices are locked by the engine and can never be moved in any tool",
+    "They are part of the collision, so only the Physics tools can select them",
+    "They are hidden by wireframe; turn off the wireframe overlay to see them",
+    "Only bordering vertices are selectable; use Decompose to reach interior ones"
+   ],
+   "7": [
+    "On meshes with UVs, because the tool always removes every UV channel",
+    "On meshes with fewer than 100 triangles, which the tool cannot reduce further",
+    "On PolyGroup topologies with non-planar faces, which can lose their shape",
+    "On Nanite meshes, because their clusters cannot be simplified at all"
+   ],
+   "8": [
+    "Where three or more PolyGroup edges connect",
+    "Wherever two faces touch along one edge",
+    "At every mesh vertex inside a PolyGroup",
+    "Only where Add Extra Corners is turned on"
+   ]
+  }
+ },
+ "TAQ95": {
+  "quiz_choices": {
+   "1": [
+    "A full biped skeleton that fits a mannequin",
+    "One root bone at the origin of the static mesh",
+    "One bone for each material section of the mesh",
+    "No bones at all until you import an FBX file"
+   ],
+   "2": [
+    "The bone closest to the mouse when you release",
+    "The root bone is always the parent",
+    "You pick the parent in a dialog after Accept",
+    "The first selected bone becomes the parent"
+   ],
+   "3": [
+    "tail_002, tail_003",
+    "tail_##2, tail_##3",
+    "tail_1, tail_2 (the # signs are removed)",
+    "The rename fails because # is not allowed in names"
+   ],
+   "4": [
+    "The vertex now has a total weight of 0.9 and moves late",
+    "The extra 0.1 goes to the root bone",
+    "Unreal changes the upper arm to 0.4 so the total stays 1",
+    "The change is rejected until you add a third influence"
+   ],
+   "5": [
+    "The weight becomes 0.5 and the vertex lags behind the bone",
+    "The other half goes to the parent bone automatically",
+    "The vertex becomes unskinned",
+    "Normalization sets it back to 1.0"
+   ],
+   "6": [
+    "Volume brush, because it ignores how the vertices are connected",
+    "Surface brush, because it uses geodesic distance along the mesh",
+    "Relax brush with a smaller radius, so it reaches fewer vertices",
+    "The Vertices mode Flood operation, because it fills one lip only"
+   ],
+   "7": [
+    "More distant bones can contribute to the bind",
+    "The brush gets softer near its outer edge",
+    "Fewer bones can influence each of the vertices",
+    "The voxel grid gets finer around thin parts"
+   ],
+   "8": [
+    "It is deleted and the vertices stop moving",
+    "It goes to the nearest bone by distance",
+    "It is sent back to the root bone of the hierarchy",
+    "It is split evenly between all other bones"
+   ]
+  }
+ },
+ "TAQ96": {
+  "quiz_choices": {
+   "1": [
+    "Nothing, since modifiers only work when added to single sequences",
+    "It only runs on the preview animation that is set on the Skeleton",
+    "It is applied to every Animation Sequence based on that Skeleton",
+    "It is applied to the retarget pose of the Skeleton, not to sequences"
+   ],
+   "2": [
+    "OnApply and OnRevert",
+    "BeginPlay and EndPlay",
+    "Construction Script and Tick",
+    "OnImport and OnExport"
+   ],
+   "3": [
+    "Content Browser right-click > Asset Actions > Apply Modifier, then pick it from the list",
+    "Project Settings > Animation > Modifiers, Add Modifier, then click Apply to All Animations",
+    "The Details panel of the Animation Blueprint, in the Modifiers list, then compile it",
+    "Window > Animation Data Modifiers tab, Add Modifier, then right-click > Apply Modifier"
+   ],
+   "4": [
+    "The Blueprint failed to compile",
+    "It has not been applied yet",
+    "The engine version does not support it",
+    "The animation was re-imported"
+   ],
+   "5": [
+    "Local space (relative to the parent bone)",
+    "World space (relative to the level origin)",
+    "Component space (relative to the mesh root)",
+    "Mesh space of the Skeleton reference pose"
+   ],
+   "6": [
+    "Add it to the Details panel of the Skeleton, in a new category with the modifier name",
+    "Expose it as a pin on the OnApply event so that the editor asks for it on every apply",
+    "Make the variable Instance Editable so it appears in the Animation Data Modifiers tab",
+    "Put it in a Data Table and let the artist change the row in the Content Browser"
+   ],
+   "7": [
+    "Get Bone Poses for Time",
+    "Get Frame at Time",
+    "Add Animation Sync Markers",
+    "Find Bone Path to Root"
+   ],
+   "8": [
+    "Compressing animations for mobile by removing keys that change very little",
+    "Auto foot sync markers on frames where a foot bone is at its lowest point",
+    "Retargeting animations between two skeletons that have different bone names",
+    "Generating LODs for a skeletal mesh from the bones that an animation uses"
+   ]
+  }
+ }
+}
