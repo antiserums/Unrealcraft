@@ -6,6 +6,7 @@ Run it with the API's Python, which has PyYAML:
   api/.venv/Scripts/python.exe tools/quest_wording.py status        how many quests have new wording, per file
   api/.venv/Scripts/python.exe tools/quest_wording.py next 15       the next 15 quests still to do, as JSON
   api/.venv/Scripts/python.exe tools/quest_wording.py show SQ1 SQ2  everything the curriculum holds for these quests
+  api/.venv/Scripts/python.exe tools/quest_wording.py noquiz        quests that have no quiz yet
   api/.venv/Scripts/python.exe tools/quest_wording.py refs          quests whose text leans on another quest
   api/.venv/Scripts/python.exe tools/quest_wording.py apply         put every file in tools/quest_wording/ into the curriculum
 
@@ -18,6 +19,8 @@ A wording file (tools/quest_wording/*.json) maps a quest id to the new text. Eve
              "checklist": ["Step one, reworded.", "Step two, reworded."],
              "done_when": "What the member sends as proof, reworded.",
              "title": "A new title", "official_url": "https://...",   (only for a quest rewritten around another topic)
+             "new_quiz": [ {"q": "...", "choices": ["a", "b", "c", "d"], "answer_index": 2, "explain": "..."} ],
+                                                                      (only for a quest that has no quiz yet)
              "quiz": [ {"q": "...", "choices": ["...", "..."], "explain": "..."} ] } }
 
 Only text changes. A checklist written on one line (`checklist: ["a", "b"]`) is handled too. Steps that carry a `check:` keep their number and order (a checklist of plain text lines may get a different
@@ -84,6 +87,8 @@ def index(lines: list[str]) -> dict[str, dict]:
             key = m.group(1)
             if key in ("title", "brief", "done_when", "official_url"):
                 cur[key] = n
+            if key in ("quiz", "flavors", "verify_type"):
+                cur["k_" + key] = n                               # where a new quiz can go
             elif key == "checklist" and line.rstrip().endswith("]"):
                 cur["inline"] = n                                 # the whole list on one line: checklist: ["a", "b"]
         elif key == "checklist" and ITEM_RE.match(line):
@@ -147,6 +152,30 @@ def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict
             if new is None:
                 return None
             repl[n] = new
+    if w.get("new_quiz") is not None and not at["quiz"]:
+        # a quiz for a quest that has none: the whole block is written, answers included
+        items = w["new_quiz"]
+        ok = 1 <= len(items) <= 12 and all(
+            isinstance(x.get("q"), str) and x["q"].strip() and isinstance(x.get("explain"), str) and x["explain"].strip()
+            and isinstance(x.get("choices"), list) and len(x["choices"]) == 4 and len(set(x["choices"])) == 4
+            and all(isinstance(c, str) and c.strip() for c in x["choices"])
+            and isinstance(x.get("answer_index"), int) and 0 <= x["answer_index"] < 4 for x in items)
+        if not ok:
+            return None
+        block = ["    quiz:"]
+        for x in items:
+            block += [f"      - q: {s(x['q'].strip())}", f"        choices: [{', '.join(s(c.strip()) for c in x['choices'])}]",
+                      f"        answer_index: {x['answer_index']}", f"        explain: {s(x['explain'].strip())}"]
+        if "k_quiz" in at:                                        # `quiz: []` or an empty `quiz:`
+            repl[at["k_quiz"]] = "\n".join(block)
+        elif "k_flavors" in at and (at["k_flavors"] - 1) not in ins:
+            ins[at["k_flavors"] - 1] = "\n".join(block)           # just above the flavors
+        elif "k_verify_type" in at and at["k_verify_type"] not in ins:
+            ins[at["k_verify_type"]] = "\n".join(block)
+        else:
+            return None
+    elif w.get("new_quiz") is not None and len(w["new_quiz"]) != len(at["quiz"]):
+        return None                                               # the quest already has another quiz
     if w.get("quiz") is not None:
         if len(w["quiz"]) != len(at["quiz"]):
             return None
@@ -160,9 +189,12 @@ def edits_for(lines: list[str], at: dict, w: dict) -> tuple[dict[int, str], dict
     return repl, ins
 
 
-def skeleton(q: dict) -> dict:
-    """A quest with its rewordable text blanked, to prove that nothing else changed."""
+def skeleton(q: dict, new_quiz: bool = False) -> dict:
+    """A quest with its rewordable text blanked, to prove that nothing else changed. `new_quiz`: this quest had no
+    quiz and is getting one, so its quiz is left out of the comparison."""
     q = copy.deepcopy(q)
+    if new_quiz:
+        q.pop("quiz", None)
     q.pop("brief", None)
     for key in ("done_when", "title", "official_url"):
         if key in q:
@@ -201,7 +233,8 @@ def apply_file(path: Path, wording: dict[str, dict]) -> tuple[int, list[str]]:
         except yaml.YAMLError:
             skipped.append(qid)
             continue
-        if after.keys() != before.keys() or any(skeleton(after[k]) != skeleton(before[k]) for k in before):
+        fresh = wording[qid].get("new_quiz") is not None and not before[qid].get("quiz")
+        if after.keys() != before.keys() or any(skeleton(after[k], fresh and k == qid) != skeleton(before[k], fresh and k == qid) for k in before):
             skipped.append(qid)
             continue
         lines, done = trial, done + 1
@@ -269,6 +302,19 @@ def next_batch(count: int) -> None:
     print(json.dumps(out, ensure_ascii=False, indent=1))
 
 
+QUIZ_LEN = {"novice": 5, "apprentice": 6, "adept": 8, "expert": 10, "master": 12}      # TIERS in bot/registrar/curriculum.py
+
+
+def noquiz() -> None:
+    """Quests that have no quiz, with the number of questions their difficulty calls for."""
+    n = 0
+    for fname, q in all_quests():
+        if not q.get("quiz"):
+            n += 1
+            print(f"{q['id']:8} {QUIZ_LEN.get(q.get('difficulty'), 5):2} questions  {q.get('difficulty'):10} {q.get('verify_type'):10} {fname:32} {q.get('title')}")
+    print(f"{n} quests have no quiz")
+
+
 def show(ids: list[str]) -> None:
     """Everything the curriculum holds for these quests, as JSON (quiz answers included)."""
     want = set(ids)
@@ -312,6 +358,8 @@ def main() -> None:
         show(sys.argv[2:])
     elif cmd == "refs":
         refs()
+    elif cmd == "noquiz":
+        noquiz()
     elif cmd == "next":
         next_batch(int(sys.argv[2]) if len(sys.argv) > 2 else 15)
     else:

@@ -47,6 +47,8 @@ async def auto_complete(request: Request, uid: int) -> list[str]:
             continue
         if q.rank > max(state.rank, 0) or checks.facts_missing(q, facts):
             continue
+        if q.quiz and f"quiz.{q.id}" not in facts:           # every quest has a boss: the action alone does not finish it
+            continue
         await complete_quest(request, uid, q, u)
         done.append(q.id)
     return done

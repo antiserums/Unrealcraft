@@ -452,6 +452,12 @@ async def _finish(request: Request, uid: int, q: Quest, score: int, total: int, 
     if q.raw.get("verify_type") == "quiz" or test_out:
         xp, loot = await complete_quest(request, uid, q, u)
         completed = True
+    elif q.raw.get("verify_type") == "action":
+        # a quest finished by doing something on the site: if that was already done, the boss was the last thing missing
+        from .. import progress
+        if q.id in await progress.auto_complete(request, uid):
+            completed, xp = True, q.xp
+        loot = await new_outfits(request, uid)
     else:
         loot = await new_outfits(request, uid)
     await rdb.emit("quiz_passed", uid, {"quest": q.id, "score": score, "total": total, "first_try": first_try})
