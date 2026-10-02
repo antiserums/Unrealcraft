@@ -1,0 +1,374 @@
+{
+"EAQ92": {
+"quiz_choices": {
+"2": [
+"Only when the prop is far away from the camera and takes up less than one pixel of the screen for some frames",
+"Only in the Static Mesh Editor",
+"When Nanite is not supported, and for complex collision, baked lighting and hardware ray-traced reflections",
+"Never, it is only a preview"
+],
+"3": [
+"Keep Triangle Percent 0 and Trim Relative Error 1 in the settings",
+"Fallback Triangle Percent 100 and Fallback Relative Error 0",
+"Position Precision Auto",
+"Minimum Residency 0"
+],
+"4": [
+"To make the mesh render faster",
+"To turn on streaming",
+"To fix the small cracks that appear between modular pieces at far view distances",
+"To reduce disk and download size; by default Nanite stores all source triangles"
+],
+"5": [
+"Fallback Triangle Percent 0, import LOD1, set Minimum LOD to 1",
+"Disable Nanite and re-enable it",
+"Set Keep Triangle Percent to 100 and import all of the LODs again",
+"Set Max Edge Length Factor to 1"
+],
+"6": [
+"Deletes the Nanite data from all meshes in the project until the next import",
+"Shows the Overdraw visualization",
+"Turns Nanite rendering off globally, which emulates a platform without Nanite",
+"Sets the streaming pool to zero"
+]
+}
+},
+"EAQ93": {
+"quiz_choices": {
+"1": [
+"Exactly 0",
+"A good default is 0.04, and keep it above 0.02",
+"Any value above 1",
+"It must always match the Magnitude of the material"
+],
+"3": [
+"Mid gray in the map is no change, so the surface moves in and out equally",
+"The mesh is scaled by half",
+"Only half the triangles are displaced",
+"Displacement starts when the mesh covers half of the size of the screen"
+],
+"4": [
+"Large values break the normal map, because the normals are scaled by the Magnitude before the lighting is calculated",
+"It changes the UV channel",
+"Magnitude sets the bounds used for culling; a large value hurts performance, especially with Virtual Shadow Maps",
+"The value is limited to 1"
+],
+"5": [
+"Along world Z",
+"Along the vertex normal; there is no shader option to change the direction",
+"Towards the camera, so the surface always looks raised from where you stand",
+"Along the UV U axis"
+],
+"6": [
+"Yes, all the normals are recomputed, like in offline renderers",
+"Yes, but only with Lumen",
+"Only when Center is 0",
+"No; you need a normal map or derive one from the displacement"
+],
+"7": [
+"It scales with the mesh, because Magnitude is in local space before object scale",
+"It stays the same in world units",
+"It becomes zero",
+"It switches to world space automatically, so that the height in cm stays the same"
+],
+"8": [
+"Packing the height into the blue channel of a normal map",
+"Any HDR float format only",
+"Alpha (BC4), or the alpha of a Default/DXT5 texture",
+"Compression does not matter"
+]
+}
+},
+"EAQ94": {
+"quiz_choices": {
+"2": [
+"The material renders as usual",
+"A default material is assigned and a warning appears in the Output Log",
+"The mesh becomes invisible",
+"Nanite is disabled again automatically and the mesh is built without it"
+],
+"3": [
+"Yes, always",
+"Yes, if the decal is Opaque",
+"Only with Virtual Textures enabled, because the decal is then drawn into the mesh texture",
+"No; Mesh Decals need a Translucent blend mode, but projected decals still work on Nanite"
+],
+"4": [
+"They break fine-grained LOD simplification and occlusion culling, so more triangles are drawn per pixel",
+"They use too many materials, and Nanite has to draw the whole mesh one more time for each material slot",
+"Nanite cannot store green pixels",
+"They always need Explicit Tangents"
+],
+"5": [
+"It is perfect for Nanite",
+"The mesh has too few UVs, so the importer split every triangle to give each one a UV island of its own",
+"Every triangle has its own vertices, so the normals are fully faceted and the mesh is much more expensive",
+"It has no collision"
+],
+"7": [
+"Both are about the same size",
+"The Nanite mesh is twice as large",
+"The standard mesh is much smaller on disk because of its four LODs",
+"The Nanite mesh is about 7.6x smaller (19.64 MB versus 148.95 MB)"
+],
+"8": [
+"Turn off Generate Lightmap UVs to save import time and data",
+"Turn on Generate Lightmap UVs so that Nanite can use them",
+"Import at half resolution",
+"Disable Virtual Textures"
+]
+}
+},
+"EAQ95": {
+"quiz_choices": {
+"1": [
+"Nanite meshes have no UVs",
+"Nanite meshes do not support per-instance Vertex Color painting",
+"Vertex colors are always white on Nanite meshes after the build",
+"Nanite only supports Skeletal Meshes"
+],
+"2": [
+"The mesh has no collision for the brush to hit",
+"The mesh is too small",
+"Virtual Textures are not enabled for the project",
+"You are in Game View"
+],
+"3": [
+"On the mesh instance (component), as a virtual texture asset",
+"Inside the material",
+"In the level's World Settings",
+"On the Static Mesh asset, shared by all instances of the mesh"
+],
+"4": [
+"It swaps the texture resolution",
+"It resets the paint",
+"It converts the vertex colors of the mesh to a texture when Nanite is enabled, so old paint is kept",
+"It picks a Default path when the mesh has no valid mesh paint texture, so one material can be shared"
+],
+"5": [
+"The brush is too big",
+"The UVs overlap or tile; generate a UV with unique charts instead",
+"The texture is compressed",
+"Nanite mirrors the paint to save memory; turn mirroring off first"
+],
+"6": [
+"The Lightmap Resolution of the mesh and the size of the Mesh Paint Texture, which must be the very same power of two",
+"Material slot and UV count",
+"Mesh Paint Texture Coordinate Index on the mesh and the UVs input of the Texture Sample using MeshPaintTextureObject",
+"Brush size and texel count"
+],
+"7": [
+"A default heuristic based on the vertex count of the non-Nanite LOD0 mesh, rounded to a power of two",
+"Always 1024",
+"The size of the base color texture in the first material slot of the mesh, rounded down to a power of two",
+"No texture is created"
+],
+"8": [
+"Re-import the mesh",
+"Delete the texture and Add it again at the new resolution",
+"Restart the editor",
+"Use the Fix tool to resize the existing mesh paint texture"
+]
+}
+},
+"EAQ96": {
+"quiz_choices": {
+"1": [
+"They cannot use normal maps",
+"They only work on landscapes and on flat floors that are aligned with the world axes",
+"They rely on projection, so details shear and distort when not aligned with the surface",
+"They cannot be rotated"
+],
+"2": [
+"No EarlyZ cost and soft transitions, but no shadows and no proper occlusion",
+"Shadows for speed",
+"Fewer materials in exchange for more draw calls, and shadows on every decal mesh",
+"Nothing, they are the same"
+],
+"3": [
+"Exactly, vertex by vertex, because any gap between the two surfaces shows as a dark line",
+"It must be inside the base mesh",
+"It must be at least 10 units away",
+"It should hug the surface but need not match closely; a small depth bias is already applied"
+],
+"4": [
+"Increase the texture size",
+"Push the geometry out with a small World Position Offset in the material, or change the mesh",
+"Switch to a masked material, which has no depth problems at any distance from the camera at all",
+"Disable Lumen"
+],
+"5": [
+"It works the same",
+"The decal becomes opaque, because Nanite replaces its material with a default one",
+"Nanite meshes do not support Mesh Decals, because they need a Translucent blend mode",
+"The decal gets shadows"
+],
+"7": [
+"They use instancing",
+"They share one material",
+"They skip the GBuffer and are drawn in one pass together with the translucent meshes",
+"Large Deferred Decals often need front and back facing draw calls; mesh decals do not"
+],
+"8": [
+"Merge all of them into one single mesh",
+"Sort them by depth to avoid artifacts",
+"Use only one layer per prop",
+"Enable Parallel Rendering"
+]
+}
+},
+"EAQ97": {
+"quiz_choices": {
+"1": [
+"One",
+"One per material, because each material becomes one mesh section",
+"One per source actor, because each actor keeps its own section",
+"One per LOD"
+],
+"2": [
+"More sections but better lighting",
+"Smaller file but no collision",
+"Better occlusion culling, but far more draw calls than before",
+"A single section and draw call, but the UVs are not preserved"
+],
+"3": [
+"The lowest-detail LOD of each mesh",
+"LOD0 only",
+"The LOD that you select per mesh",
+"All LODs stacked"
+],
+"4": [
+"One proxy mesh",
+"A Packed Level Actor that holds the meshes as one Blueprint, with one new merged material",
+"Instanced Static Mesh components from identical meshes, keeping UVs and occlusion behavior",
+"A merged material atlas"
+],
+"5": [
+"When you want to keep every material and every UV channel of the source meshes as it is",
+"When the sources are very complex, for example Nanite meshes, where Simplify would fail",
+"When you need instancing",
+"When the pieces are all the same"
+],
+"6": [
+"At the level origin",
+"At the center of the bounds of all the selected actors",
+"At the lowest Z",
+"At the pivot of the first Static Mesh Actor you selected"
+],
+"7": [
+"LOD Selection Type is set to Use all LOD levels",
+"The meshes have no collision",
+"Nanite is enabled",
+"Too many actors are selected for a single merge"
+],
+"8": [
+"The border of the mesh collision",
+"The distance between actors",
+"Space in pixels between UV islands so colors do not bleed when mipmaps downsample",
+"The thickness in units of the walls of the proxy mesh, so that light does not leak"
+]
+}
+},
+"EAQ98": {
+"quiz_choices": {
+"2": [
+"Edit > Editor Preferences > Viewports, in the Snap category",
+"World Settings",
+"Edit > Project Settings > Rendering, in the Editor category",
+"The Static Mesh Editor"
+],
+"3": [
+"Rotation snaps in steps of 2, 4, 8, 16 and 32 degrees instead of 5 or 10",
+"Scaling becomes multiplicative",
+"Surface Offset doubles",
+"Grid sizes become 1, 2, 4, 8, 16 and so on instead of decimal sizes"
+],
+"4": [
+"One shared grid",
+"Three: Drag Grid, Rotation Grid and Scale Grid",
+"Two: one grid to move and one grid to rotate",
+"One per viewport"
+],
+"5": [
+"Hold V while dragging with the translate gizmo",
+"Press End",
+"Enable Surface Snapping",
+"Hold Ctrl and click the vertex on the other mesh"
+],
+"7": [
+"Saving the mesh",
+"Collision on the wall that the socket mesh is placed on",
+"A second socket",
+"Resetting the light's Location in its Transform to 0,0,0"
+],
+"8": [
+"In the Level Blueprint",
+"In the Static Mesh Editor, Window > Socket Manager",
+"In the Outliner",
+"In the Details panel of the placed actor, under Sockets"
+]
+}
+},
+"EAQ99": {
+"quiz_choices": {
+"1": [
+"Repack",
+"Stack, which packs islands individually with overlap for islands that share the same texturing",
+"Transform, which moves each island on top of all the other islands that have the same shape",
+"Unwrap"
+],
+"2": [
+"It repacks without overlap",
+"It only moves the islands you selected and leaves all the others in place",
+"It creates seams",
+"It scales and translates all UVs together, keeping the current layout"
+],
+"6": [
+"The Unwrap tool",
+"The Layout tool",
+"A second UV channel on the mesh",
+"The Sew tool in the UV Editor"
+]
+}
+},
+"EAQ100": {
+"quiz_choices": {
+"1": [
+"Content Browser right-click > Miscellaneous > OpenColorIO Configuration",
+"Project Settings > Rendering > Color",
+"Window > Color Management",
+"Edit > Plugins > OpenColorIO (OCIO) > New Configuration Asset, then restart"
+],
+"3": [
+"The file is too large for the importer",
+"Only .ocioz files are allowed",
+"Unreal does not recognize .ocio files as assets, so you copy them into the Content folder with the file explorer",
+"Import is blocked until the OpenColorIO plugin is restarted, which happens only when the editor is closed and opened"
+],
+"4": [
+"A LUT texture in a special format",
+"A Blueprint that stores the color spaces and their display names",
+"An old OCIO v1 config",
+"A compressed archive of a config file and its LUT texture folder"
+],
+"5": [
+"Extra entries cause a compile error",
+"The list is limited to two entries",
+"Unused entries slow down the tonemapper pass",
+"It keeps the configuration asset lightweight"
+],
+"6": [
+"Show > Visualize > OCIO",
+"Add an OCIO node to a Post Process Material and assign it to a volume",
+"View Mode > OCIO Display, choose the asset, then Enable Display",
+"Lit > Color Management > OCIO"
+],
+"7": [
+"Bloom and lens flares are turned off and the exposure is locked for the conversion",
+"Tone Curve is disabled and the color conversion is inserted right after the Tone Map",
+"The viewport switches to path tracing",
+"Auto exposure is locked to 1.0"
+]
+}
+}
+}

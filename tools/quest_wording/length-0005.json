@@ -1,0 +1,490 @@
+{
+"AQ59": {
+"quiz_choices": {
+"2": [
+"Yes, there must be exactly one control for each bone",
+"No, the point count and bone count are independent",
+"Yes, but only when the Spline Mode is set to BSpline",
+"No, but there must always be more controls than bones"
+],
+"4": [
+"It changes the color of the spline in the viewport, from the first point to the last point",
+"It must match the direction of the spline so bones map to the right points",
+"It sets the Samples Per Segment value of the spline",
+"It is not important, because the node sorts them by name"
+],
+"5": [
+"Smoother but higher performance cost",
+"Smaller file size but a rougher curve",
+"The spline becomes jagged between points",
+"Nothing, the extra samples are free"
+],
+"7": [
+"Bakes the spline into an Animation Sequence asset",
+"Creates the bones for the chain along the spline",
+"Displays the spline in the viewport for preview",
+"Exports the spline as a Static Mesh asset"
+]
+}
+},
+"AQ60": {
+"quiz_choices": {
+"6": [
+"Add Mapped Skeletal Mesh",
+"Add Mapped Components",
+"Add Mapped Skeletal Mesh Bone Array",
+"Add Mapped Elements"
+],
+"7": [
+"Runs the rig only in the editor, and never in a packaged game on any platform",
+"Makes the rig evaluate only when a mapped input changed beyond the thresholds",
+"Delays the rig by one frame so it runs after the animation",
+"Disables Forwards Solve while the actor is hidden"
+]
+}
+},
+"AQ61": {
+"quiz_choices": {
+"1": [
+"Event Graph > Animation > Control Rig",
+"Anim Graph > Misc > Control Rig",
+"Anim Graph > Blends > Control Rig",
+"The Class Defaults panel"
+],
+"2": [
+"Set the variable type to Transform and compile the Control Rig",
+"Make it Public in the Class Settings of the Control Rig asset",
+"Make it instance-editable with the Eye icon in My Blueprint",
+"Add it to the Forwards Solve graph"
+],
+"4": [
+"Whether animation curves from the Source pin are read by the rig",
+"Whether bone transforms from the Source pin are read by the rig",
+"Whether the rig also runs in the preview of the editor",
+"Whether the rig resets each frame"
+],
+"5": [
+"They are deleted from the rig hierarchy",
+"They are still transferred, but at half weight",
+"Only the listed bones are transferred",
+"The node fails to compile until all are listed"
+],
+"6": [
+"Always, for every Control Rig and every Skeletal Mesh that uses the node in a graph",
+"Only when the Control Rig skeleton hierarchy differs from the AnimBP skeleton",
+"Only for root motion that comes from a montage",
+"Never, the option is kept for old projects only"
+],
+"7": [
+"Reset Input Pose to Initial",
+"Transfer Input Curves",
+"Set Initial Transform From Mesh",
+"Control Rig Class"
+],
+"8": [
+"Importing FBX files into the project while the game is running on a device",
+"Procedural gameplay control such as ground alignment or contact points",
+"Building state machines for walking and jumping",
+"Compressing animations to save memory"
+]
+}
+},
+"AQ62": {
+"quiz_choices": {
+"2": [
+"Forwards Solve",
+"Backwards Solve",
+"Construction Event (called Setup Event on the docs page)",
+"Event Tick"
+],
+"4": [
+"Nothing at all",
+"Only the controls",
+"All items matching the Element Type",
+"Only the root bone and its first child"
+],
+"6": [
+"Set Space to Local on the Get Pose Cache node, so that only one side of the body is stored",
+"Use Draw Pose Cache and select the arm in the viewport",
+"Build the Items array with Get Children and feed it to Get Pose Cache",
+"Set Weight to 0.5 on the Apply Pose Cache node"
+],
+"7": [
+"Whether the pose is stored in Local or Global space",
+"Which skeleton the pose is stored for when two are loaded",
+"Whether the pose follows the viewport camera",
+"Whether curves are included in the pose"
+],
+"8": [
+"The full skeleton at all times, with every bone drawn as a line to its parent",
+"Axis debug information only for the elements saved in the pose",
+"The animation timeline with a marker at the saved frame",
+"The control shapes of the rig"
+]
+}
+},
+"AQ63": {
+"quiz_choices": {
+"2": [
+"Last, so it can undo what the other solvers did to the body",
+"Anywhere, because all solvers in the stack run in parallel",
+"First, so Limb IK or Full Body IK can compensate after the body moved",
+"Between the two Limb IK solvers, so each leg is solved on its own side"
+],
+"5": [
+"The chain converges faster, and the foot reaches the goal in fewer frames",
+"The chain stretches until the foot reaches the goal",
+"Nothing, these settings only matter for chains with more than 3 bones",
+"The solver turns off and the leg keeps its animated pose"
+],
+"6": [
+"On the end bone of the chain (the foot)",
+"On the root bone of the chain (the thigh)",
+"On the parent bone of the chain root (the pelvis bone)",
+"On the first child bone of the root (the middle joint)"
+],
+"7": [
+"Deletes the bone from the skeleton asset, so it is also gone from every animation",
+"The bone is ignored by all solvers, which can fix bad poses or simplify a chain",
+"Locks the bone in world space while the rest of the body moves",
+"Removes the bone only from the retarget chain"
+],
+"8": [
+"Drag them up and down in the Solver Stack",
+"Rename them with a number prefix, such as 01_ and 02_",
+"Set a Priority value in the Details panel",
+"The order cannot change after creation"
+]
+}
+},
+"AQ64": {
+"quiz_choices": {
+"1": [
+"FBIK works on a chain of two bones only, with one goal at the end, and it has no settings for limits or for stiffness",
+"FBIK accepts several goals that all influence the whole body, and supports bone limits, stiffness and preferred angles",
+"FBIK cannot have a root bone, so the whole body floats freely toward the goals",
+"FBIK is cheaper than Limb IK, so it is used for crowds of far characters"
+],
+"2": [
+"Select the solver, right-click the bone, Add Settings to Selected Bone",
+"Double-click the bone in the viewport and type the values in the box there",
+"Add a second FBIK solver that has this bone as its root bone",
+"Set the bone as an IK Goal"
+],
+"3": [
+"Makes the bone move freely with no resistance",
+"Doubles the rotation that the solver gives it",
+"Completely locks the bone from movement",
+"Turns on stretching for the bone and its children"
+],
+"4": [
+"Set the Z axis Limit to Limited with a Min and Max range",
+"Raise Mass Multiplier on the solver until the ankle stops",
+"Set Root Behavior to Free so the ankle can follow the hips",
+"Enable Allow Stretch on the foot"
+],
+"5": [
+"Lower Iterations to 1 so that each goal is reached in one single step of the solver",
+"Increase Mass Multiplier and also increase Iterations so the solve converges",
+"Remove the root bone from the solver",
+"Use Limb IK instead for every limb"
+],
+"7": [
+"Retarget chains only, one for each limb and one for the spine, taken from the bone names of the Skeleton",
+"A Control Rig asset with one control for each bone of the Skeleton",
+"A Two Bone IK node for each limb in the Animation Blueprint",
+"An FBIK solver with settings, goals and bone settings for preferred angles, from templates"
+]
+}
+},
+"AQ65": {
+"quiz_choices": {
+"2": [
+"A Control Rig node placed before the IK Rig node in the AnimGraph",
+"Root motion enabled on the animation that feeds the node",
+"A second IK Rig node that holds the goals for the other side of the body",
+"Expose Position or Expose Rotation on the goal in the IK Rig editor"
+],
+"3": [
+"Because it must be the first node that is evaluated",
+"Because it needs a cached pose of the whole state machine",
+"So IK adjustments happen in sequence after the other effects",
+"Because the editor does not compile it anywhere else"
+],
+"5": [
+"Snapping the goal to a bone in the same skeleton, useful for weapon or prop bones",
+"Deleting a bone from the skeleton at runtime, useful for removing weapon or prop bones",
+"Exposing the bone as a pin on the node",
+"Locking the goal to the root bone"
+],
+"6": [
+"Resets the goals to the origin on every frame",
+"Plays the reference pose only and runs no solver",
+"Disables the solver while the character stands still, and enables it when it moves",
+"Ignores the incoming pose and starts the solve from the reference pose"
+],
+"7": [
+"The runtime behavior in the game: Additive keeps IK relative to incoming animation, Absolute removes the animation on the whole body",
+"The editor-only preview: Additive keeps IK relative to incoming animation, Absolute overwrites the animation along the chain",
+"The size of the goal gizmo in the viewport: Additive draws it larger, Absolute draws it at its real size",
+"Which solver runs first in the Solver Stack"
+],
+"8": [
+"The rig renames all of its bones on its own to match the names used in the new mesh",
+"The IK Rig will not function, and the Output Log reports the incompatibility",
+"Nothing changes, because the IK Rig only reads the bone order",
+"The retarget chains are deleted from the asset"
+]
+}
+},
+"AQ66": {
+"quiz_choices": {
+"1": [
+"It uses foot_l as the root and its first child bone as the joint",
+"It takes the first parent as the joint and the second parent as the root",
+"It always uses the pelvis as the root, whatever the IK Bone is set to on the node",
+"You must set the root and the joint by hand"
+],
+"2": [
+"The end bone, so it controls where the hand or the foot goes in space",
+"The root bone, so it controls where the chain starts",
+"The middle joint, so it controls the bend direction of the chain",
+"The stretch limit of the chain"
+],
+"4": [
+"The limb can stretch up to 90% longer than its normal length",
+"The alpha of the node is 0.9",
+"The limb shortens by 10% before the solve starts",
+"Stretching starts once the chain reaches 90% of its full length"
+],
+"5": [
+"50% of its whole length",
+"150% of its whole length",
+"1.5 cm more than its length",
+"Any length, with no limit"
+],
+"6": [
+"Local, Global",
+"World, Actor, Level, Camera, Socket",
+"Component, Socket",
+"World, Component, Parent Bone, Bone"
+],
+"7": [
+"Only when Effector Location Space is World Space",
+"Only when Effector Location Space is Component Space or World Space",
+"When Effector Location Space is Parent Bone Space or Bone Space",
+"Always"
+],
+"8": [
+"The Twist Axis the bone is aligned to",
+"The Max Iterations of the IK solver",
+"The Effector Target bone",
+"The Alpha Scale Bias values"
+]
+}
+},
+"AQ67": {
+"quiz_choices": {
+"1": [
+"Stretching of a chain that has only two bones",
+"Effectors that can be set in world space",
+"A lower cost for chains that have a large number of bones in them",
+"Angular constraints to limit the rotation of affected bones"
+],
+"4": [
+"The joint next to the Root Bone",
+"The Root Bone itself, at the start of the chain",
+"The joint directly connected to the Tip Bone",
+"All joints of the chain at once"
+],
+"6": [
+"Outputs the fully solved pose",
+"Outputs the source pose with no IK",
+"Hides the debug lines of the solver",
+"Resets the limits to zero"
+],
+"7": [
+"Exactly 2 bones, and no more than that",
+"At least 2 bone links, any length above that",
+"At least 3 bone links, and an odd number of them",
+"At least 4 bones"
+],
+"8": [
+"The tip lands closer to the effector but the evaluation costs more",
+"The chain gets shorter, because each bone is scaled down by the value",
+"The solver runs fewer iterations",
+"The alpha is ignored"
+]
+}
+},
+"AQ68": {
+"quiz_choices": {
+"1": [
+"When both characters have the same bone names but the meshes have different heights",
+"When the target reference pose differs from the source, for example T-pose vs A-pose",
+"Every time you export an animation",
+"Only for characters with four legs"
+],
+"2": [
+"Editing the reference pose in the skeleton asset",
+"Re-importing the mesh in the pose of the source",
+"Changing the Preview Mesh of the IK Rig",
+"Creating a new retarget pose with Create (+) > Create"
+],
+"3": [
+"The bone is deleted from the pose",
+"The bone is locked and cannot be rotated",
+"The bone returns to its reference pose",
+"The bone matches the source character"
+],
+"4": [
+"The current retarget pose at full strength",
+"The skeletal mesh default reference pose",
+"The first frame of the source animation",
+"An empty viewport"
+],
+"6": [
+"Frame 0 of the sequence",
+"The last frame of it",
+"The average of all poses",
+"The frame you scrub to"
+],
+"7": [
+"Last, after all the other ops",
+"Anywhere, the order has no effect",
+"First, and only one copy is allowed",
+"Inside the Run IK Rig op"
+],
+"8": [
+"Replaces the whole retarget result with a pose from the source, blended by Alpha",
+"Adds a retarget pose on top of the retargeted result, blended by Alpha",
+"Imports a Pose Asset into the retargeter",
+"Aligns the source to the target"
+]
+}
+},
+"AQ69": {
+"quiz_choices": {
+"2": [
+"Bone counts usually match, and each source bone copies to the equivalent target bone in order",
+"Fingers have no rotation of their own, so the mode only has to copy the position of each bone",
+"It ignores the reference pose, so the fingers never need a retarget pose",
+"It is the only mode that works on small bones"
+],
+"5": [
+"Maps that chain to the closest name",
+"Maps that chain to the Root chain",
+"Does not change that chain's mapping",
+"Deletes that chain from the IK Rig"
+],
+"6": [
+"The position of the hand or foot, so that it reaches the same point in space as it does on the source character",
+"The length of the chain, so that the arm or leg of the target has the same reach as the source",
+"The height of the pelvis, so that the legs are never fully stretched",
+"The twist of the chain so the knee or elbow bends in the source direction, without moving the end effector"
+],
+"8": [
+"Not at all, it is copied exactly as it is on the source",
+"It is scaled according to the relative height difference",
+"It is generated from the motion of the target pelvis",
+"It is snapped to the ground only"
+]
+}
+},
+"AQ70": {
+"quiz_choices": {
+"1": [
+"Always, because every chain must have one or the retargeter does not copy any animation to it",
+"Only for extra IK adjustments such as Speed Planting, Stride Warping or Blend to Source",
+"Only for the pelvis chain, to keep the hips level",
+"Only when you export the animations"
+],
+"2": [
+"The IK is skipped completely, and the chain is left out of the solver for the whole animation",
+"The chain is deleted from the IK Rig when you save the retargeter",
+"The goal moves to the location of the source bone",
+"The IK still evaluates, but the goal is set to the input bone location from the FK pass"
+],
+"6": [
+"A speed curve named in Speed Curve Name, compared against Speed Threshold",
+"The root motion of the source animation, compared against the capsule velocity",
+"A line trace from the foot down to the floor",
+"The Floor Constraint op"
+],
+"8": [
+"Variables only work when they are set from Python",
+"The variable must be an array of op properties",
+"The override set is not active on the node",
+"The op needs Draw Final Goals turned on"
+]
+}
+},
+"AQ71": {
+"quiz_choices": {
+"1": [
+"A calculated distance variable read against an animation curve",
+"The play rate of the montage, read from the Animation Blueprint",
+"The radius of the character's capsule",
+"A random seed that changes per frame"
+],
+"2": [
+"Motion Warping",
+"Animation Locomotion Library",
+"Pose Search",
+"Control Rig Modules"
+],
+"3": [
+"Curve Editor > Add Curve > Distance, then key it by hand on each frame",
+"Asset Details > Root Motion > Bake Curve",
+"Window > Animation Data Modifiers > Add Modifier > Distance Curve Modifier",
+"Right-click the animation in the Content Browser > Create > Distance Curve"
+],
+"5": [
+"Stops the animation from looping when it reaches the end of the distance curve",
+"Removes the last keyframe of the distance curve",
+"Freezes the root bone on the last frame of the sequence",
+"Declares the character stopped only on the last frame of the sequence"
+],
+"6": [
+"A Bone Compression Settings asset with the Least Destructive codec",
+"No compression at all on the bones or the curves",
+"A Curve Compression Settings asset with the Uniform Indexable codec",
+"The default compression of the engine"
+],
+"7": [
+"Play Montage and Get Anim Instance of the owning component",
+"Distance Match to Target and Convert to Sequence Evaluator",
+"Blend Poses by Bool and Inertialization",
+"Set Play Rate and Sequence Player"
+],
+"8": [
+"Advance Time By Distance Matching",
+"Set Playrate to Match Speed",
+"Distance Match to Target",
+"Sequence Player"
+]
+}
+},
+"AQ72": {
+"quiz_choices": {
+"1": [
+"Only sockets and their offsets",
+"Curves, sync markers and notifies",
+"Materials and morph targets",
+"Only root motion"
+],
+"2": [
+"Right-click an Animation Sequence > Create > Mirror Data Table",
+"Project Settings > Engine > Animation > New Mirror Data Table, then restart",
+"Skeleton Editor > Tools > Mirror",
+"Add (+) > Animation > Mirror Data Table, then select the Skeleton"
+],
+"7": [
+"A Slot node before the Mirror node",
+"A second Mirror Data Table for the blend",
+"An Inertialization node after the Mirror node",
+"Root motion enabled on the sequence that is mirrored"
+]
+}
+}
+}

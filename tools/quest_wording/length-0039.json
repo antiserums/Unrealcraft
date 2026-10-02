@@ -1,0 +1,762 @@
+{
+"PQ78": {
+"quiz_choices": {
+"1": [
+"The one with the highest priority; the others are ignored",
+"The one added first",
+"Both actions fire",
+"The one whose asset name comes first in alphabetical order"
+],
+"2": [
+"Vehicles need a different input device",
+"Adding it when entering and removing when exiting prevents inappropriate actions and input collisions",
+"Contexts cannot hold more than 10 actions, so the vehicle actions do not fit into the character context",
+"The character context is read-only"
+],
+"4": [
+"The Game Instance",
+"The Enhanced Input Subsystem Interface (the local player's subsystem)",
+"The Pawn",
+"The Input Action asset that you want to map (one call for each action)"
+],
+"8": [
+"Modifiers change the raw value first, then Triggers decide if the Action activates",
+"Triggers decide first if the Action activates, then Modifiers change the raw value",
+"The Action reads the key directly",
+"Triggers run only in C++"
+]
+}
+},
+"PQ79": {
+"quiz_choices": {
+"1": [
+"As the first line of the struct definition",
+"As the last line, after all of the members",
+"Above the USTRUCT macro",
+"Anywhere, the order does not matter"
+],
+"2": [
+"Both work, as long as the struct has the BlueprintType specifier on it",
+"Neither works: UStructs are not managed by GC and cannot have UFunctions",
+"GC works but UFunctions do not",
+"UFunctions work but GC does not"
+],
+"3": [
+"A UStruct can be spawned in the world",
+"A UStruct replicates on its own",
+"A UStruct is faster to create than a UObject with the same data layout",
+"A UStruct can be used as the parent class of a Blueprint, a UObject not"
+],
+"5": [
+"Always, for every USTRUCT",
+"Only if at least one property is BlueprintReadOnly or BlueprintReadWrite",
+"Only if the struct has the Atomic specifier",
+"Only if you write the Break function yourself in a Blueprint function library"
+],
+"6": [
+"Put UMETA(...) after the value, before the comma",
+"Put meta=(...) inside the UENUM macro",
+"Put UPROPERTY(...) above the value",
+"Put UMETA(...) in front of the name of the value"
+],
+"8": [
+"The enum becomes replicated",
+"Integer UPROPERTY variables with the Bitmask metadata can use it as flags",
+"The enum values become hidden in the editor and can only be set from C++",
+"The enum gains a custom tooltip"
+]
+}
+},
+"PQ80": {
+"quiz_choices": {
+"1": [
+"Never, because Add is always faster than Emplace and also works for types that cannot be constructed",
+"For non-trivial types like FString, because Emplace builds the element in place and avoids a temporary",
+"Only when the array is empty",
+"Only for arrays of pointers"
+],
+"2": [
+"Sort is unstable (a quicksort); use StableSort to keep the relative order",
+"The predicate was wrong",
+"TArray cannot sort strings",
+"Sort always reverses elements that are equal; call it twice to restore them"
+],
+"4": [
+"It keeps the order of the remaining elements, but it is slower because it swaps each of them",
+"It is faster because it does not shuffle later elements down, but the order is not preserved",
+"It frees the memory of the array",
+"It removes all matching elements"
+],
+"7": [
+"It adds the key silently",
+"It asserts if the map does not contain the key",
+"It returns a null pointer for every missing key",
+"It reorders the map"
+]
+}
+},
+"PQ81": {
+"quiz_choices": {
+"2": [
+"The delegate unbinds itself",
+"Calling Execute or ExecuteIfBound is unsafe because raw pointers keep no reference",
+"ExecuteIfBound safely returns false, because the delegate checks the raw pointer",
+"Raw bindings are not allowed on single delegates"
+],
+"5": [
+"They cannot be copied",
+"They cannot be used with structs",
+"Their functions cannot use return values",
+"They cannot bind UObject member functions"
+]
+}
+},
+"PQ82": {
+"quiz_choices": {
+"1": [
+"Only on the Game Mode",
+"On the Game Instance and on each World",
+"Only on each Actor",
+"Only on the Player Controller of each player"
+],
+"2": [
+"The function is still called once",
+"The engine crashes",
+"The timer moves to the Game Instance and fires from there later on",
+"The timer is canceled automatically and the handle becomes invalid"
+],
+"4": [
+"Both timers run",
+"The call is ignored until the first timer has finished",
+"The old timer is cleared and replaced with the new one",
+"It asserts"
+],
+"7": [
+"The timer is paused",
+"The timer will repeat forever",
+"The timer handle is not valid",
+"The rate is one frame"
+],
+"8": [
+"The rate cannot be changed directly; call SetTimer again with the handle to replace it",
+"Call SetTimerRate",
+"Pause the timer first, then change the rate on the handle, then unpause the timer again",
+"Rates change automatically"
+]
+}
+},
+"PQ83": {
+"quiz_choices": {
+"2": [
+"The Blueprintable specifier, and every non-static function must be BlueprintNativeEvent or BlueprintImplementableEvent",
+"The BlueprintType specifier only; the functions of the interface can be plain virtual functions with no UFUNCTION macro",
+"All functions must be virtual",
+"The interface must inherit from AActor"
+],
+"3": [
+"In Blueprint and C++",
+"Only in Blueprint",
+"Nowhere; every function of an interface must be a UFUNCTION or the class does not compile",
+"Only in C++; it is not visible to Blueprint and cannot be in a Blueprintable interface"
+],
+"4": [
+"Override it with the same name and the virtual keyword in your class",
+"Mark it override in the UINTERFACE class",
+"Define a function with the same name plus an _Implementation suffix",
+"Implement it in the U-prefixed class"
+],
+"6": [
+"The Blueprint is not compiled",
+"Cast<> never works with interfaces, neither in C++ nor in Blueprint; you must always call the Execute_ wrapper on the object first",
+"The Actor must be an APawn",
+"Blueprint-implemented interfaces do not exist in the C++ version of the object, so Cast<> only works for C++ implementations"
+],
+"8": [
+"They all derive from AActor",
+"They share needed functionality but have no common parent other than UObject",
+"Interfaces make them faster",
+"Blueprint cannot use inheritance, so an interface is the only way to share code"
+]
+}
+},
+"PQ84": {
+"quiz_choices": {
+"3": [
+"Subsystems run faster",
+"Subsystems avoid overriding engine classes and avoid adding API to an already busy class",
+"UGameInstance cannot be subclassed in a project, so functions cannot be added to it at all",
+"Subsystems replicate automatically"
+],
+"4": [
+"Cast the Game Instance to the subsystem",
+"Only through a Blueprint Function Library that you write for each one",
+"They cannot; subsystems are C++ only",
+"Through auto-generated context-aware nodes that do not require casting"
+],
+"5": [
+"Before the module's Startup",
+"At the same time as Startup",
+"After the module's Startup function returns",
+"Only when GEngine is used for the first time"
+],
+"7": [
+"The plugin user does not need setup code; the subsystem is instanced and initialized at a known time",
+"Plugins cannot contain other classes",
+"Subsystems are the only way to load plugins, because a plugin with no subsystem is never initialized",
+"They avoid the need for a .uplugin file"
+],
+"8": [
+"It is kept alive until the editor closes, so that the next play session can reuse it",
+"It is saved to disk",
+"It is moved to the Engine subsystems",
+"Its reference is dropped and it is garbage collected if nothing else references it"
+]
+}
+},
+"PQ85": {
+"quiz_choices": {
+"1": [
+"The solution file of your IDE only",
+"The Target.cs and Build.cs files",
+"The .ini config files",
+"The Content folder"
+],
+"3": [
+"When you use the module's classes in a public .h file",
+"When the module is large",
+"When you only use the module inside your own .cpp files",
+"Always; Private is only for plugins"
+],
+"4": [
+"The C++ access specifiers of the classes that are inside them",
+"Whether the code is shipped",
+"Which headers other modules that depend on this one can see",
+"Nothing, they are just for organization"
+],
+"6": [
+"Nothing extra",
+"Regenerate the IDE project files",
+"Delete the Binaries folder first",
+"Restart the computer"
+],
+"8": [
+"Rely on alphabetical order",
+"List them in the right order in the Modules list of the .uproject",
+"Use LoadModule or LoadModuleChecked in C++ during StartupModule",
+"Give the first one a lower Type"
+]
+}
+},
+"PQ86": {
+"quiz_choices": {
+"2": [
+"Live Coding failed silently",
+"Constructor values in the .cpp do not update existing instances; changing them in the .h file does",
+"Defaults can never change with Live Coding; you must close the editor and build from the IDE each time",
+"You must restart PIE first"
+],
+"3": [
+"Deletes all placed actors of the changed class, so that you place them again by hand",
+"Replaces existing object instances so large structural code changes can take effect",
+"Restarts the editor",
+"Compiles Blueprints"
+],
+"4": [
+"Changing a variable value",
+"A minor edit inside an existing function body",
+"Adding new functions or new sets of variables",
+"Changing a log message"
+],
+"6": [
+"Faster iteration on those modules, but slower editor or game start",
+"Smaller build size",
+"No trade-off; preloading every module is always the better choice",
+"It disables reinstancing"
+],
+"7": [
+"In the editor",
+"During Play In Editor",
+"When it is attached to a packaged desktop build",
+"When launching on consoles and mobile devices"
+],
+"8": [
+"Raw pointers, because the engine updates every single raw pointer automatically after a reload",
+"ReloadReinstancingCompleteDelegate and ReloadCompleteDelegate to update or invalidate them",
+"Disable Live Coding",
+"TSubclassOf instead of pointers"
+]
+}
+},
+"PQ87": {
+"quiz_choices": {
+"1": [
+"WeaponDefinition, the name of the native class",
+"DataAsset",
+"The file name of the asset in the Content folder",
+"PrimaryDataAsset"
+],
+"3": [
+"It compiles faster",
+"It can hold arrays",
+"It implements GetPrimaryAssetId and supports asset bundles, so the Asset Manager can load and unload it",
+"It is replicated over the network, so the Asset Manager on each client can load and unload the same data"
+],
+"5": [
+"ParentBlueprintClass, the highest-level Blueprint class",
+"DataOnlyBlueprintClass",
+"PrimaryDataAsset",
+"There is none; Blueprints cannot be Primary Assets at all"
+],
+"6": [
+"All Data Assets",
+"Only UWorld assets (levels)",
+"All Blueprint classes of Actors",
+"All Static Meshes"
+],
+"7": [
+"Rename the asset in the Content Browser",
+"Set a flag in the Details panel of the Data Asset",
+"Override GetPrimaryAssetId in your native class",
+"Change the asset's folder"
+],
+"8": [
+"Hard pointers are not allowed in Data Assets, so the class would not compile with a UStaticMesh pointer",
+"Soft pointers are faster to dereference",
+"Soft pointers store the path only, so the mesh is not loaded just because the Data Asset is loaded",
+"TSoftObjectPtr is required for Blueprint children"
+]
+}
+},
+"PQ88": {
+"quiz_choices": {
+"1": [
+"From the asset names",
+"From Primary Asset Types to Scan in Project Settings, or from ScanPathsForPrimaryAssets in a custom Asset Manager",
+"From the filters of the Content Browser, which are saved in the project and read by the Asset Manager at startup",
+"From the level Blueprint"
+],
+"2": [
+"A zip file of assets that is downloaded when the game starts",
+"A Primary Asset Type",
+"A packaging chunk",
+"A named list of Secondary Assets linked to a Primary Asset"
+],
+"3": [
+"The asset is loaded synchronously",
+"The Secondary Assets referenced by that bundle are loaded too",
+"The asset is cooked",
+"Nothing; bundle names are only used for display in the editor"
+],
+"5": [
+"The Streamable Manager inside the Asset Manager",
+"The Content Browser",
+"The Asset Registry inside the Content Browser",
+"The Game Instance"
+],
+"6": [
+"In DefaultGame.ini, AssetManagerClassName under the [Core.System] section",
+"In the .uproject file",
+"In DefaultEngine.ini, AssetManagerClassName under [/Script/Engine.Engine]",
+"In the level Blueprint"
+],
+"8": [
+"They stay in memory forever",
+"They are unloaded immediately",
+"They are moved to the Asset Registry, which keeps them in memory until the level is unloaded or changed",
+"The Streamable Manager releases its hard references, so you must hold them somewhere else to keep them"
+]
+}
+},
+"PQ89": {
+"quiz_choices": {
+"3": [
+"CSV needs quotes on every text cell, and the importer rejects files that have a cell without them",
+"Without quotes the importer reads the text as the type Texture2d and the reference fails",
+"Quotes mark the cell as a comment",
+"Quotes make the asset load faster"
+],
+"4": [
+"FindRow returns a copy of the row, so the member would use the memory twice",
+"After a reimport the table data changes and the old pointer can become invalid",
+"Members cannot hold struct pointers",
+"Rows are garbage collected every frame"
+],
+"5": [
+"Nothing changes",
+"The CSV import fails",
+"All icons load whenever the Data Table loads",
+"Icons can no longer be edited in the table"
+],
+"7": [
+"Any UObject property in each cell, with one row for each object in the level",
+"Only floating point values, one curve per row, with X values as column headers",
+"Asset references",
+"Strings"
+]
+}
+},
+"PQ90": {
+"quiz_choices": {
+"1": [
+"[MyGameModule.AMyConfigActor]",
+"[/Script/MyGameModule.MyConfigActor]",
+"[Game.MyConfigActor]",
+"[/Script/GameEngine.AMyConfigActor]"
+],
+"2": [
+"The Game category: BaseGame.ini, DefaultGame.ini and the rest of that chain",
+"Only DefaultEngine.ini",
+"Only the .uproject file",
+"GameUserSettings.ini only, which is saved for each player on their machine"
+],
+"3": [
+"BaseEngine.ini, because engine files load last and so they override the files of the project",
+"Neither; it is an error",
+"The project's DefaultEngine.ini, because later files in the hierarchy override earlier ones",
+"The one with the shorter path"
+],
+"4": [
+"No, sections without a matching class are dropped",
+"Yes, with GConfig->GetInt and the GGameIni category",
+"Only from Blueprint",
+"Only after a rebuild"
+],
+"8": [
+"GetIni only works in packaged games, because the editor keeps its config in memory in another form",
+"The setting lives in a config file that is not loaded, because GetIni searches only loaded files",
+"The Platform@ part is not allowed",
+"Engine is not a valid category"
+]
+}
+},
+"PQ91": {
+"quiz_choices": {
+"1": [
+"BeginPlay and Tick",
+"IsDataValid_Implementation and PostLoad",
+"Construct and Destruct",
+"CanValidateAsset and ValidateLoadedAsset"
+],
+"2": [
+"Return a bool",
+"Print a string",
+"Call AssetPasses or AssetFails",
+"Save the asset to disk again"
+],
+"3": [
+"Override IsDataValid in that UObject-derived class",
+"A UEditorValidatorBase Blueprint for that class",
+"A Python validator",
+"A Scripted Action"
+],
+"4": [
+"Blueprints cannot be validators",
+"By default the Data Validation system runs only C++ rules from the command line; it must be extended for Blueprint and Python",
+"The commandlet needs -game",
+"Validators must be in a plugin to be found by the commandlet; validators in the project Content folder only run in the editor"
+],
+"5": [
+"It runs first",
+"It cannot fail an asset; it can only add warnings, because Python validators run after the C++ and Blueprint ones",
+"It only runs on save",
+"It must register itself with UEditorValidatorSubsystem using AddValidator; the others are discovered automatically"
+],
+"7": [
+"On editor startup, for every asset loaded",
+"On asset save, which is enabled by default",
+"On Play In Editor",
+"On level load"
+],
+"8": [
+"Rename it",
+"Move it to a Developers folder, where validators are skipped by the subsystem",
+"Override IsEnabled or change the bIsEnabled variable shown in the Details panel",
+"Set its parent class to Object"
+]
+}
+},
+"PQ92": {
+"quiz_choices": {
+"1": [
+"shutil.move on the .uasset file",
+"os.rename on the .uasset file",
+"The Unreal Python API such as unreal.EditorAssetLibrary or unreal.AssetTools",
+"Any of these, they are equivalent as long as the editor is open while you run it"
+],
+"2": [
+"Direct assignment is slower",
+"set_editor_property runs the pre- and post-edit code, the same as changing the value in the Details panel",
+"Direct assignment is read-only for every property that is exposed to Python, so the line raises an error",
+"set_editor_property works offline"
+],
+"3": [
+"One Undo / Redo entry for all operations inside the scope",
+"Faster script execution",
+"A progress bar",
+"A lock on the asset in source control for the whole scope"
+],
+"4": [
+"It runs the loop on another thread, so the editor stays responsive and the loop finishes sooner",
+"It makes the loop faster",
+"It is required for transactions",
+"The editor UI is blocked while Python runs, so the dialog shows progress and lets the user cancel"
+],
+"7": [
+"The script can run before the editor is ready, for example before the startup level is loaded",
+"It is not supported on Windows, where the command line cannot pass a script path to the editor",
+"It prints nothing to the log",
+"It cannot take arguments"
+],
+"8": [
+"In any Actor Blueprint",
+"In the Level Blueprint at runtime, and in any Actor Blueprint that is placed in a level of the game",
+"In Animation Blueprints",
+"Only in editor-only Blueprint classes such as Editor Utility Widgets and Editor Utility Blueprints"
+]
+}
+},
+"PQ93": {
+"quiz_choices": {
+"2": [
+"A comment in the report that describes the test above",
+"One individual test that can run and fail in isolation",
+"A latent command",
+"A Describe scope"
+],
+"3": [
+"Every frame",
+"Once per test run, again for each It() that is inside it",
+"Only once, when the Spec first defines its expectations",
+"Never"
+],
+"5": [
+"Only the It() calls in that same Describe, not the ones in nested Describes",
+"It() calls inside that Describe scope, including nested Describes",
+"Every It() in the whole Spec",
+"None; BeforeEach is global"
+],
+"6": [
+"LatentIt() with a Done delegate",
+"Sleep in the lambda for some frames",
+"xIt()",
+"Redefine()"
+],
+"7": [
+"The compiler rejects it",
+"It is a naming guideline to tell Specs apart from other test types, not a technical restriction",
+"Files with Test in the name are excluded from builds by Unreal Build Tool, so the Spec never runs",
+"The Automation UI hides them"
+]
+}
+},
+"PQ94": {
+"quiz_choices": {
+"2": [
+"Yes, always",
+"Yes, but in grey",
+"Only in shipping builds, where every category is Verbose",
+"No, only when Verbose logging is enabled for that category"
+],
+"4": [
+"-Verbosity=Category:Level",
+"-log=",
+"-LogCmds=\"Category Level\"",
+"-ini:Log"
+],
+"6": [
+"Error messages result in a commandlet failure; warnings are only collected and reported",
+"Errors print in yellow and warnings in red, but neither changes the result of the run",
+"Warnings are not logged",
+"There is no difference"
+],
+"7": [
+"Yes, with named parameters extra fields are permitted and order does not matter",
+"No, the fields must match the format string exactly, in the same order as in it",
+"Only if Flags is first",
+"Only with positional parameters"
+],
+"8": [
+"In the .uproject",
+"In DefaultEngine.ini with lines like LogTemp=warning",
+"In DefaultGame.ini under [/Script/Engine.Log] as lines",
+"In the Output Log filter"
+]
+}
+},
+"PQ95": {
+"quiz_choices": {
+"2": [
+"Marking the property BlueprintReadWrite in the UPROPERTY",
+"Making the property public",
+"Adding a Tick function",
+"Adding a DOREPLIFETIME line in GetLifetimeReplicatedProps"
+],
+"4": [
+"Every tick",
+"Only when its value has changed",
+"Only when the actor first spawns",
+"Every second"
+],
+"5": [
+"Turning off replication for a whole actor and all of its components",
+"Marking a member inside a replicated struct so that member is not sent",
+"Stopping RPCs on the actor",
+"Making a property client-only"
+],
+"6": [
+"The new value",
+"Always zero",
+"The tick count of the server at that moment",
+"The previous value of the replicated property"
+],
+"8": [
+"They cost more time and cannot change per connection",
+"Custom conditions do not work in packaged builds at all",
+"They only work in Blueprint",
+"They replicate every tick"
+]
+}
+},
+"PQ96": {
+"quiz_choices": {
+"1": [
+"Transient or cosmetic events like sounds, particles and animations",
+"Replacing all replicated properties with calls that send the values",
+"Saving the game",
+"Loading levels"
+],
+"4": [
+"Unreliable by default; Reliable needs more bandwidth and blocks later RPCs until acknowledged",
+"Reliable by default; Unreliable needs more bandwidth because lost calls are sent again later",
+"Both are equal",
+"Reliable by default; there is no cost"
+],
+"8": [
+"Property update first, then the RPC",
+"Random order",
+"Only the property arrives",
+"RPC first, then the property update"
+]
+}
+},
+"PQ97": {
+"quiz_choices": {
+"3": [
+"Change the true state and call remote functions on the server too",
+"Act as the server",
+"Nothing; it is not replicated",
+"Simulate the true state but not change it or call remote functions"
+],
+"5": [
+"Yes, they are synonyms",
+"Yes, but only for the pawns that are possessed by a Player Controller",
+"No, the page says they are not the same; ownership is a separate concept",
+"Only in Blueprint"
+],
+"6": [
+"Because the server only replicates the actor at that frequency, so time passes between updates",
+"Because the client renders at a low frame rate, so the pawn is drawn at fewer positions per second",
+"Because the actor is dormant",
+"Because RPCs are unreliable"
+],
+"8": [
+"The actor was destroyed on the server and stays on the clients only until its Life Span has run out",
+"The actor is no longer replicated to new clients and becomes ROLE_Authority on the clients that had it",
+"The actor lost its owner",
+"The actor is hidden"
+]
+}
+},
+"PQ98": {
+"quiz_choices": {
+"1": [
+"One standalone game with no networking and no server at all",
+"Two listen servers",
+"One client window plus a dedicated server with no display",
+"One listen server window"
+],
+"2": [
+"It runs faster than a listen server, so you can test with many more players",
+"It renders better graphics",
+"It removes the need for replication",
+"It catches bugs in code that wrongly relies on a local player on the server"
+],
+"3": [
+"Each window gets its own machine on the network, which is slower to start but more exact",
+"It turns off the server",
+"It sets the FPS to 60",
+"All windows run in one Unreal instance; faster to start but less like a real player setup"
+],
+"4": [
+"The window title shows NetMode Client 1",
+"It is always the window on the left side",
+"It has a red border",
+"It is the viewport window"
+],
+"5": [
+"They trigger in all worlds",
+"They only trigger on actors in Client 1's world",
+"They are disabled",
+"They trigger only on actors in the server world"
+],
+"6": [
+"Extra frame rate",
+"Latency and packet loss to incoming and outgoing traffic",
+"More players",
+"A second server that mirrors the traffic of the first one"
+],
+"7": [
+"To make the game slower for fun",
+"Because that is the default connection quality for all players in a packaged game",
+"Because many bugs only appear with poor connectivity and would otherwise be missed",
+"To reduce CPU usage"
+]
+}
+},
+"PQ99": {
+"quiz_choices": {
+"1": [
+"Character Movement Component on ACharacter",
+"Floating Pawn Movement on a Default Pawn",
+"Projectile Movement",
+"Rotating Movement"
+],
+"2": [
+"Because Pawns cannot have components that replicate, so a movement component on a plain Pawn only runs locally",
+"Because ACharacter is faster to render",
+"Because Pawns cannot be possessed",
+"Because ACharacter overrides replicated variables and functions the movement component needs for replication"
+],
+"3": [
+"It waits for the server before moving",
+"It records an FSavedMove_Character, queues it, and sends a condensed ServerMove RPC",
+"It sends the full transform of its mesh and capsule to all clients with a multicast RPC",
+"It calls a multicast RPC"
+],
+"4": [
+"A new pawn",
+"A ClientAdjustPosition correction",
+"Nothing; the client position wins",
+"A Destroy call"
+],
+"5": [
+"The server replicates the ReplicatedMovement structure and network smoothing cleans up the motion",
+"They receive every ServerMove RPC of the owning client and run the same moves on their own copy",
+"They run the same input locally",
+"They ask the owning client directly"
+],
+"6": [
+"Because movement is not important",
+"Because unreliable RPCs are faster to compile",
+"Because reliable calls that frequent could overflow the reliable buffer and disconnect the player; the saved-move buffer already resends lost data",
+"Because the server does not run movement at all; it only stores the position that each client reports, so a lost call is replaced by the next one"
+],
+"7": [
+"Client clocks are always wrong by several seconds on all platforms",
+"The client sends no timestamp",
+"To save bandwidth",
+"So a client cannot speed-hack by speeding up its local game clock"
+]
+}
+}
+}

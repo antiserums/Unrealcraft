@@ -1,0 +1,618 @@
+{
+"EAQ79": {
+"quiz_choices": {
+"2": [
+"Water bodies have a maximum extent; the Water Zone's Far Distance Mesh fills the gap",
+"The landscape is too small for the ocean; enlarge the landscape until it reaches the horizon",
+"The ocean spline is open; close it",
+"The wave asset is missing; assign one"
+],
+"4": [
+"Moves the whole water body up",
+"Adds a flat edge around the water body before the falloff starts, useful for flat shores",
+"Offsets the spline points of the water body sideways, away from the center of the body",
+"Sets the depth at the shoreline"
+],
+"5": [
+"Angle falloff extends at a set angle until it meets the terrain; Width falloff uses a fixed width regardless of intersection",
+"Angle falloff is used for oceans and always reaches the horizon; Width falloff is used for rivers and lakes and stops at the bank",
+"Angle affects paint layers; Width affects height",
+"There is no difference; they are aliases"
+],
+"6": [
+"With Gerstner waves, in the same way as the oceans do",
+"With the landscape slope",
+"With a Niagara system",
+"With velocity per spline point written to a flow map"
+],
+"7": [
+"Rendering a small lake with waves",
+"Making sure a piece of land stays above water; it only affects the landscape",
+"Creating a dry zone under the water surface, where the player can walk freely",
+"A water surface for a pool"
+],
+"8": [
+"The one created first",
+"The larger one",
+"The one with the higher Overlap Material Priority",
+"The river always wins over lakes and over oceans"
+]
+}
+},
+"EAQ80": {
+"quiz_choices": {
+"1": [
+"Landscapes have no UVs of their own, so an RVT is required before any landscape material can be painted at all",
+"Complex landscape shading is cached for a performance win, and other actors can blend into the same RVT asset",
+"They replace the landscape heightmap",
+"They remove the need for layer info objects"
+],
+"3": [
+"Before the Runtime Virtual Texture Output, so it is cached",
+"After the Runtime Virtual Texture Sample, so it runs per pixel",
+"In the Virtual Texture Feature Switch",
+"In the RVT Volume"
+],
+"4": [
+"The Virtual Texture Feature Switch is connected backwards, so the landscape samples a texture that nothing has drawn to yet",
+"Nanite is off",
+"Something in the RVT chain is not set up, for example the landscape is not in the volume or not drawing to the RVT asset",
+"The RVT tile size is too large"
+],
+"5": [
+"Hides the landscape",
+"Hides the bounds of the volume in the editor, so that the landscape under it can be selected again",
+"Disables RVT for foliage",
+"Hides actors that render into the RVT from the main pass, so they exist only in the virtual texture"
+],
+"6": [
+"Their shadow order",
+"The layer order in which they are rendered into the RVT; higher values stack on top",
+"Their collision priority",
+"The order in which the tiles of the texture are generated while the camera moves around"
+],
+"7": [
+"Shading seams at tile edges from bilinear sampling",
+"Black landscape",
+"Doubled texture memory",
+"Anisotropic filtering is forced on for all tiles"
+],
+"8": [
+"One volume can hold many RVT assets at once, and actors that sample them can be anywhere in the whole level",
+"Volumes are only needed for non-landscape actors",
+"Each volume is assigned a single RVT asset, and any actor sampling or writing must be inside its bounds",
+"The volume must be smaller than the landscape"
+]
+}
+},
+"EAQ81": {
+"quiz_choices": {
+"1": [
+"Hiding the landscape actor in game",
+"Controlling landscape LOD distance",
+"Fading the landscape out at the edge of the world, where it meets the sky",
+"Masking out parts of the landscape to make holes for tunnels or caves"
+],
+"2": [
+"A Landscape Layer Coords node connected to the UVs input",
+"A Landscape Visibility Mask node connected to Opacity Mask",
+"A Landscape Grass Output",
+"A Static Switch parameter"
+],
+"3": [
+"Left-click paints a hole; Shift + Left-click makes it visible again",
+"Right-click paints; Left-click erases",
+"Ctrl + click paints; Alt + click erases",
+"Left-click paints a hole; Ctrl + Shift + Left-click makes it visible"
+],
+"4": [
+"Yes, with brush falloff",
+"Yes, by lowering the Tool Strength until the edge looks soft",
+"No, the mask is only visible or invisible, with no gradient",
+"Only on Nanite landscapes"
+],
+"5": [
+"Masked mode is not allowed on landscape materials, and the editor resets the Blend Mode to Opaque when you save it",
+"The landscape overrides to a masked material only on components that have visibility data, so the cost stays local",
+"Opaque makes holes render faster on mobile",
+"The Opacity Mask pin does nothing on landscapes"
+],
+"6": [
+"It is the recommended method",
+"It only works with Nanite",
+"It is required for holes in the collision, and the Visibility Mask node only hides the surface",
+"It is a legacy feature, more costly, and Epic recommends switching to the Visibility Mask node"
+],
+"7": [
+"Rebuild lighting",
+"Delete the layer info objects and paint the hole one more time",
+"Change from Landscape mode to Place mode before testing in PIE",
+"Turn off Nanite"
+],
+"8": [
+"No extra cost in the material; the Nanite renderer keeps using the fast opaque path",
+"Double, because two meshes are rendered",
+"It forces the material to Masked on every component, whether it has a hole or not",
+"Nanite landscapes cannot have holes"
+]
+}
+},
+"EAQ82": {
+"quiz_choices": {
+"1": [
+"The triangles of the mesh at a lower resolution, stored in a volume texture around the mesh",
+"A shadow map per light",
+"The distance to the nearest surface in a volume texture, positive outside and negative inside",
+"A baked ambient occlusion texture"
+],
+"2": [
+"Project Settings > Rendering",
+"Distance Field Resolution Scale in the Static Mesh Editor Build Settings",
+"Occlusion Max Distance in the Details panel of the Sky Light of the level",
+"The Foliage type's Density"
+],
+"3": [
+"The mesh has no distance field",
+"The resolution is too high",
+"The mesh is fully lit by the sky there, so no ray steps were needed to find a surface that blocks it",
+"Many ray steps were needed to find the surface, for example at grazing angles or with two-sided fields"
+],
+"4": [
+"Masked leaf surfaces with many holes cannot be represented as a solid surface, and two-sided fields work better for them",
+"It halves the memory cost",
+"It makes the tree cast hard shadows from both sides of each leaf, which the default one-sided fields are not able to do",
+"It is required for Nanite foliage"
+],
+"5": [
+"It only works with Lightmass, and foliage instances are never part of a lighting build",
+"Thousands of grass instances would overflow the tile culling buffer and cause artifacts",
+"Foliage has no distance field",
+"It disables instancing"
+],
+"6": [
+"Add a Post Process Volume with Ambient Occlusion Intensity set to 1",
+"Set the Directional Light to Movable",
+"Enable Lumen",
+"Enable Generate Mesh Distance Fields and set a Sky Light to Movable"
+],
+"7": [
+"As a heightfield with approximate cone intersection, not as a mesh distance field",
+"They are ignored",
+"As one large mesh distance field",
+"As many small mesh distance fields, with one field for each landscape component"
+],
+"8": [
+"The tree loses its distance field entirely, because meshes with World Position Offset are skipped when the fields are built",
+"DFAO becomes twice as expensive",
+"Self-shadowing artifacts can appear because the distance field is generated offline and does not know about the deformation",
+"The Sky Light must be Static"
+]
+}
+},
+"EAQ83": {
+"quiz_choices": {
+"1": [
+"Each instance has its own random cull distance, and by chance a lot of instances get the very same value",
+"Instances render as clusters in one draw call, and a whole cluster is culled when it goes out of range",
+"The landscape LOD hides them",
+"Culling happens per material, not per instance"
+],
+"5": [
+"Affect Distance Field Lighting in the Instance Settings",
+"Place in Current Level",
+"Align to Normal",
+"Enable Density Scaling in the type's Scalability section"
+],
+"6": [
+"It has no collision",
+"Static Mesh Foliage batches instances with hardware instancing, so many instances cost one draw call, while Actor Foliage costs like normal actors",
+"It uses lower LODs",
+"It is not rendered in shadows and has no collision, so each instance costs almost nothing, while Actor Foliage always casts shadows and collides"
+],
+"7": [
+"Select them, move them above the target, and press End to snap them",
+"Repaint them",
+"Run the Reapply tool with Align to Normal turned on for the instances",
+"Use the Fill tool"
+]
+}
+},
+"EAQ84": {
+"quiz_choices": {
+"1": [
+"The mesh is outside the Lumen Scene distance, so it is lit only by the Sky Light and by screen traces",
+"The mesh has no Nanite and renders slowly",
+"The area has no Surface Cache coverage, so it will not bounce light and appears black in reflections",
+"The material uses World Position Offset"
+],
+"2": [
+"12 Cards, with Max Lumen Mesh Cards in the Static Mesh Editor Build Settings",
+"24 Cards, in the Post Process Volume",
+"1 Card per material slot, changed in the Details panel of the Material Editor",
+"6 Cards, in the Project Settings under Lumen"
+],
+"3": [
+"It works if you raise Max Lumen Mesh Cards to 100 in the Build Settings of the mesh",
+"It only works with Hardware Ray Tracing",
+"It works fine as long as Nanite is enabled",
+"It is not expected to work; walls, floors and ceilings should be separate meshes"
+],
+"4": [
+"Thinner walls cost more GPU time",
+"Distance fields cannot represent very thin features, so thin walls cause light leaking",
+"Nanite refuses to build meshes thinner than 10 cm and falls back to the original mesh",
+"Lightmaps need 10 cm of padding"
+],
+"5": [
+"The mesh's own distance field for the first two meters, then the merged Global Distance Field",
+"The triangle mesh for the first two meters, then the Surface Cache for the rest of the ray",
+"The Nanite Fallback Mesh only",
+"Only the Global Distance Field for the full ray"
+],
+"6": [
+"Distance Field Voxel Density, which is set for each light in its Details panel",
+"Final Gather Quality, which is capped at 1",
+"Lumen Scene View Distance, which covers 200 m by default and can go up to 800 m",
+"Max Lumen Mesh Cards, which is per level"
+],
+"7": [
+"The light stops casting shadows",
+"Global illumination becomes view-dependent, because Screen Traces cannot support it correctly",
+"The Surface Cache is rebuilt on every single frame for all of the meshes that the light can reach",
+"The light is removed from the Lumen Scene"
+],
+"8": [
+"Switch the mesh to Movable",
+"Raise Lumen Scene View Distance",
+"Turn off Screen Traces in the Post Process Volume, because screen traces use the imported scale of the prop instead of its scale in the level",
+"Set the Distance Field Resolution Scale in the Static Mesh Editor Build Settings, because resolution is assigned from the imported scale"
+]
+}
+},
+"EAQ85": {
+"quiz_choices": {
+"1": [
+"Green is low resolution, red is high resolution, blue is the coarse pages of far geometry",
+"Green is Nanite, red is non-Nanite, blue is foliage",
+"Green is cached, red is new or invalidated, blue is static cached but dynamic uncached",
+"Green is Directional Light, red is local lights, blue is Sky Light"
+],
+"2": [
+"All cached pages for that light are invalidated",
+"Nothing, because lights are always dynamic",
+"Only Nanite pages are refreshed",
+"Only the pages that are near the camera are refreshed"
+],
+"3": [
+"Because WPO disables Nanite",
+"Because the shadow map cannot store animated depth, so such meshes are always drawn into a separate dynamic map",
+"Because WPO forces the mesh to be Movable",
+"Because the actual displacement is not known until the object is rendered, so the cache must assume it changed"
+],
+"5": [
+"Find the actors that invalidate the static cache and switch them to Movable",
+"Disable caching with r.Shadow.Virtual.Cache 0 so the pages are never stored",
+"Set all lights to Stationary",
+"Lower the screen resolution"
+],
+"6": [
+"Only Nanite meshes receive resolution; the light type does not matter",
+"All three use one shared 16k shadow map",
+"Directional Lights use clipmaps of 16k VSMs, Spot Lights one 16k VSM with a mip chain, Point Lights a cube map of 16k VSMs",
+"Directional Lights use four cascades of 2k shadow maps, Spot Lights one 2k shadow map, Point Lights six 1k shadow map faces"
+],
+"7": [
+"Nanite meshes never cast shadows",
+"Non-Nanite geometry is much more expensive to render into VSMs, and invalidations fully in Nanite shadow can be skipped",
+"Nanite meshes are cached forever",
+"Nanite removes the need for a Directional Light, because Nanite meshes take their shadows from the Sky Light capture"
+],
+"8": [
+"It is now the main soft shadow control",
+"It replaces Source Angle",
+"It must be at least 0.1 on every light, or the virtual pages near the camera are not allocated and close shadows break up into very large blocks",
+"It is no longer necessary for sharp contact shadows and is less accurate than VSM; keep it only for objects that do not render into shadow maps"
+]
+}
+},
+"EAQ86": {
+"quiz_choices": {
+"1": [
+"In World Settings > Lightmass Settings; it prompts to enable Virtual Shadow Maps for the whole project",
+"In the Post Process Volume; it asks for Lumen",
+"In Project Settings > Rendering > Direct Lighting; it prompts to enable Support Hardware Ray Tracing",
+"On each light's Details panel; it asks for Nanite"
+],
+"2": [
+"MegaLights has a roughly constant cost but quality can drop where lighting is complex; Deferred Shading keeps quality but cost rises with light count",
+"MegaLights gets faster with more lights",
+"Deferred Shading has a roughly constant cost but quality can drop where lighting is complex; MegaLights keeps quality but cost rises with light count",
+"Both get slower at the same rate"
+],
+"3": [
+"Switch all lights to Static",
+"Disable screen space traces",
+"Raise the denoiser strength in the Post Process Volume until the ghosting is gone, and add more small lights to fill",
+"Merge clusters of small lights into one area light and narrow light bounds (attenuation, cone angles, barn doors)"
+],
+"4": [
+"Virtual Shadow Maps is default; Ray Tracing needs Lumen Hardware Ray Tracing and adds a large memory cost for every light",
+"Ray Tracing is default; Virtual Shadow Maps add a significant per-light memory, CPU and GPU cost to generate shadow depths",
+"Distance Field Shadows is default; the others are experimental",
+"Ray Tracing is default; Virtual Shadow Maps do not work with Nanite"
+],
+"5": [
+"The Ray Tracing Scene is built from simplified Nanite Fallback Meshes; set Fallback Target to Relative Error and lower Fallback Relative Error",
+"The light is set to Stationary and bakes its shadows into lightmaps; set it to Movable and rebuild the lighting so that MegaLights can trace it",
+"Screen traces are disabled; enable them",
+"The prop has no lightmap UVs; generate them"
+],
+"6": [
+"They are disabled unless the light is Static",
+"They are always handled by MegaLights; use one Directional Light for the sun and give it the largest share of the whole ray budget per pixel",
+"They are disabled in MegaLights by default; use Deferred Lighting with VSM for the sun and MegaLights only for dim lights like moonlight",
+"They are converted to Rect Lights"
+],
+"7": [
+"The shadow map resolution of each light that reaches the pixel, with the page size and the mip level in use",
+"Lines to the lights influencing that pixel and a list sorted by weight ratio, with visibility and light type",
+"The number of Nanite triangles per light",
+"The lightmap density"
+],
+"8": [
+"Only on Directional Lights",
+"Only when the shadow method of the light is set to Virtual Shadow Maps and the light is a Spot Light or Rect Light",
+"No, never",
+"Yes, if the material is compatible with the Light Function Atlas and the atlas is enabled in the project settings"
+]
+}
+},
+"EAQ87": {
+"quiz_choices": {
+"1": [
+"A mesh that blocks light",
+"A 2D texture that is projected from the light like a slide and multiplies its own color",
+"A 1D curve of intensity that sweeps around an axis and works as a brightness multiplier",
+"A cubemap of the fixture"
+],
+"2": [
+"It uses the brightness stored in the profile instead of the light's Intensity; IES Intensity Scale can only be set when it is enabled",
+"It converts the lumens of the profile to candelas for the light; IES Intensity Scale can only be set on Rect Lights, never on others",
+"It bakes the profile into the lightmap; the scale is read-only",
+"It doubles the light's Intensity; the scale is always editable"
+],
+"3": [
+"The light becomes white",
+"The editor refuses to save",
+"The light ignores the profile and uses its own Intensity value instead",
+"The profile is used for masking only and the light is completely masked"
+],
+"4": [
+"The Point Light ignores the profile, because profiles need a cone; the Spot Light shows all of it inside its cone angle",
+"The Spot Light's cone masks the profile, and data beyond its 179 degree arc is lost; the Point Light shows it unclipped",
+"The Spot Light doubles the brightness",
+"The Point Light becomes a Rect Light"
+],
+"5": [
+"They render very fast with no significant performance effect, unlike a Light Function",
+"They work on Directional Lights",
+"They can be edited node by node in the Material Editor, which a Light Function cannot",
+"They support animation"
+],
+"6": [
+"Convert the IES to a texture",
+"Use a Rect Light instead, because Rect Lights are the only lights that bake a profile cleanly",
+"Raise the lightmap resolution of the receiving surface or use a Stationary or Movable light",
+"Disable Inverse Squared Falloff"
+],
+"7": [
+"The number of candelas",
+"The multiplier that maps the texture value so it integrates over a sphere to 1.0",
+"The attenuation radius of the light, in the units that the profile was made in",
+"The cone angle in degrees"
+],
+"8": [
+"From the Engine Content folder, which ships with a full library; preview one in the Texture Editor window",
+"By exporting from a Spot Light; preview in Sequencer",
+"From the Marketplace only; preview in the Material Editor",
+"From lighting manufacturers' websites, free of charge; preview with a photometric viewer such as IESviewer"
+]
+}
+},
+"EAQ88": {
+"quiz_choices": {
+"1": [
+"A pre-rendered HDRI",
+"A static material on a sky dome mesh, with a panning cloud texture and a normal map on it",
+"A three-dimensional volume texture that is ray-marched, driven by a Volume-domain material",
+"Thousands of billboard particles"
+],
+"2": [
+"Beer Shadow Maps, because they are faster and reach far distances even though they lack colored self shadow",
+"Cascaded Shadow Maps on the Sky Light",
+"Distance Field Shadows",
+"Ray Marched, because it is cheaper per pixel and is the only mode that reaches far distances on consoles"
+],
+"3": [
+"Two octaves, the maximum, because a single octave looks flat and the second octave has almost no cost on current consoles",
+"Four octaves",
+"Zero, always",
+"A single octave, using high Contribution and low Occlusion on the Volumetric Advanced Material expression for a similar look"
+],
+"4": [
+"Shadows on the clouds from meshes below them; Dynamic Shadow Distance MovableLight",
+"Cloud shadows on the scene and sunlight shafts in the atmosphere; Cloud Shadow Extent",
+"Ambient occlusion on the clouds; Cubemap Resolution",
+"Colored clouds; Cloud Scattering Luminance Scale"
+],
+"5": [
+"Engine/EngineSky/VolumetricClouds in Engine Content, so editing it affects every project",
+"The Volumetric Cloud component itself",
+"Plugins/VolumetricClouds/Materials",
+"Content/Sky/Clouds in every project, so each project already has its own copy to edit"
+],
+"7": [
+"Fastest but blurriest, traced at quarter resolution",
+"Looks full resolution and is fast to trace, but clouds do not intersect opaque meshes",
+"Supports flight from the ground to space, but it is the most expensive of the modes",
+"It is the cinematic mode with per-pixel quality"
+],
+"8": [
+"To turn off cloud shadows",
+"To scale the Sky Light capture",
+"To change the color of the clouds at night, when the moon is the only atmosphere light in the scene",
+"To counterbalance energy lost by the octave approximation of multiple scattering, without extra cost"
+]
+}
+},
+"EAQ89": {
+"quiz_choices": {
+"1": [
+"Color and Alpha, any value",
+"Base Color, Roughness and Opacity, all in 0 to 1, as for any Surface-domain material",
+"Albedo in 0 to 1, plus Emissive and Extinction as world space densities greater than 0",
+"Only Extinction, from 0 to 1"
+],
+"2": [
+"Only on particles, with positions inside the particle radius valid, usually handled by a SphereMask",
+"Only on Landscape",
+"Only on Post Process Volumes",
+"On any static mesh, with positions inside the bounds of the mesh valid, with no particle system needed"
+],
+"3": [
+"It disables the regular shadows of the light on all opaque surfaces",
+"It doubles the fog resolution",
+"Nothing extra",
+"Roughly three times the cost of the same unshadowed light in the fog"
+],
+"4": [
+"The fog Albedo is too high; lower it",
+"Temporal reprojection smooths the low-resolution voxels, so fast-changing lights leave trails; set that light's Volumetric Scattering Intensity to 0",
+"The light casts no shadow, so its glow is added to every voxel it has reached and is never removed; enable Cast Volumetric Shadow on that one light",
+"The fog View Distance is too small"
+],
+"5": [
+"Keep global density low, raise the Directional Light's Volumetric Scattering Intensity and set Scattering Distribution near 0.9, or add density locally with Volume particles",
+"Enable Fog Max Opacity",
+"Increase Start Distance",
+"Raise the global Fog Density until the shafts appear, then lower Fog Max Opacity and raise Start Distance so that only the area near the camera stays clear of the thick fog"
+],
+"6": [
+"Lights stop contributing beyond the old distance, so the far fog is unlit; r.VolumetricFog.GridSizeZ can bring the light back",
+"The fog becomes sharper",
+"The fixed number of Z slices is stretched, causing under-sampling artifacts; r.VolumetricFog.GridSizeZ can add slices at a cost",
+"The fog turns off beyond 10 km"
+],
+"7": [
+"Shadowing of Stationary Sky Lights",
+"IES profiles and Light Functions on Point and Spot Lights",
+"A Directional Light that has a Light Function assigned to it",
+"Particle lights"
+],
+"8": [
+"The Fog Inscattering Color",
+"The Cubemap Resolution of the Sky Light, which is set from the Effects level of Engine Scalability",
+"The number of fog actors",
+"The volume texture resolution, which is set from the Shadow level of the Engine Scalability settings"
+]
+}
+},
+"EAQ90": {
+"quiz_choices": {
+"1": [
+"All lights of any mobility; it requires the CPU Lightmass Swarm Agent and Swarm Coordinator to run",
+"Movable lights; it requires Lumen",
+"Lights with Static or Stationary mobility; it requires DirectX 12 and Support Hardware Ray Tracing",
+"Only Directional Lights; it requires Vulkan"
+],
+"2": [
+"No, leave them disabled unless your project needs them for other reasons",
+"Only Ray Traced Shadows",
+"Only for Stationary lights, which bake their shadows with ray tracing on",
+"Yes, both"
+],
+"3": [
+"Support for Movable lights",
+"Faster CPU encoding",
+"Smaller lightmap files on disk, because only the tiles that the camera has seen in the editor are saved to the level",
+"Real-time updates in the viewport during the bake and editing while it builds; not required just to build lighting"
+],
+"4": [
+"Both in World Settings",
+"GPU Lightmass has its own panel under the Build dropdown; CPU Lightmass keeps most settings in World Settings",
+"Both in Project Settings",
+"GPU Lightmass settings live on each light in its Details panel; CPU Lightmass keeps them in Project Settings"
+],
+"5": [
+"Save encodes the lightmaps generated so far for what was on screen, but the bake keeps running; Cancel stops it",
+"Save exports an EXR; Cancel restarts",
+"Save and Cancel both end the bake",
+"Save finishes the bake for the whole scene, also for what was off screen; Cancel deletes all existing lightmaps"
+],
+"6": [
+"Raise the Non-Realtime Workload Factor to the maximum value that the panel allows",
+"Enable Realtime in the viewport",
+"Turn viewport Realtime mode off (Ctrl+R) so the GPU does not also render frames",
+"Set every mesh to Movable"
+],
+"7": [
+"It bakes using the lowest-detail LOD of each mesh to save GPU memory, and lightmaps are written to disk tile by tile while the bake runs, so that a crash loses almost nothing",
+"The whole scene must fit in GPU memory at its highest quality LOD, because GPULM does not consider LODs while baking; lightmaps are not saved to disk until the bake completes",
+"Lightmaps stream to disk every few seconds",
+"It needs less memory than DX11 rendering"
+],
+"8": [
+"It disables Virtual Textures on all GPUs but the first one, so the viewport cannot show any of the lightmaps while the bake is running",
+"It only supports one light",
+"It only works on AMD cards",
+"Volumetric Lightmap calculation is not supported, and the irradiance cache is built per GPU so tiles can shade slightly differently"
+]
+}
+},
+"EAQ91": {
+"quiz_choices": {
+"1": [
+"X is the screen position of a pixel, Y is the weight of that pixel in the metering mask",
+"X is time, Y is brightness",
+"X is the Average Scene EV100, Y is the resulting Exposure Compensation (Curve) value",
+"X is ISO, Y is shutter speed"
+],
+"2": [
+"Bright areas of the mask have high influence and dark areas low influence, so a center-weighted mask makes bright objects at the screen edge less disruptive",
+"It sets the minimum brightness",
+"It replaces the histogram with a single value",
+"Bright areas of the mask are excluded from metering and dark areas count fully, so a center-weighted mask makes the edges of the screen set the whole exposure"
+],
+"3": [
+"It enables Local Exposure",
+"It disables the tonemapper",
+"It doubles the maximum brightness that auto exposure can adapt to, so very bright lights no longer clamp the histogram at its upper end",
+"It changes Min/Max Brightness and the histogram limits to EV100 so physically correct light values are respected without blowing out"
+],
+"4": [
+"Highlight Threshold 100, Shadow Threshold 100, Detail Strength 5, Blurred Luminance Blend 0",
+"Highlight and Shadow Contrast 0.6 to 1, Detail Strength 1, Blurred Luminance Blend 0.4 to 0.6",
+"Highlight and Shadow Contrast 0, Detail Strength 5",
+"Middle Grey Bias 4, Detail Strength 0"
+],
+"5": [
+"When using Lumen Global Illumination",
+"When using Manual metering",
+"When using Static lighting",
+"When using the Mobile renderer only"
+],
+"6": [
+"Blue is the exposure of the last frame, purple is the exposure of this frame, white is the one of the next frame",
+"Blue is minimum, purple is maximum, white is average",
+"Blue is the target EV100, purple is the actual current exposure, white is the final exposure after compensation",
+"Blue is the sky, purple is shadows, white is highlights"
+],
+"8": [
+"Bilateral is manual; Fusion is automatic",
+"They are the same with different names",
+"Bilateral only works on mobile and uses a cheap blur of the base layer; Fusion only works on PC and consoles and needs hardware ray tracing support to run",
+"Bilateral splits the image into base and detail layers with a bilateral blur and reduces base contrast; Fusion fuses multiple exposures by quality measures"
+]
+}
+}
+}

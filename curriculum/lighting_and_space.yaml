@@ -37,7 +37,7 @@ quests:
         answer_index: 1
         explain: "Landscape Mode has its own Manage, Sculpt and Paint tabs. New lives under Manage."
       - q: "With the Sculpt tool active, what does holding Shift while painting do?"
-        choices: ["Lowers the terrain instead of raising it", "Doubles brush size", "Paints a material layer", "Undoes the last stroke"]
+        choices: ["Lowers the terrain instead of raising it", "Doubles brush size", "Paints a material layer instead of height", "Undoes the last stroke"]
         answer_index: 0
         explain: "Shift inverts the tool, so Sculpt digs down."
       - q: "You need an even slope between two points. Which tool?"
@@ -45,11 +45,11 @@ quests:
         answer_index: 2
         explain: "Ramp builds a straight, even slope between two points you place. Good for paths."
       - q: "The character slides back down a slope in PIE. What's the likely cause?"
-        choices: ["Lumen is off", "The slope is steeper than the CharacterMovement Walkable Floor Angle", "The landscape has no material", "Collision is on"]
+        choices: ["Lumen is off", "The slope is steeper than the CharacterMovement Walkable Floor Angle", "The landscape has no material, so the surface has no friction at all", "Collision is on"]
         answer_index: 1
         explain: "CharacterMovement treats anything steeper than Walkable Floor Angle (about 45° by default) as a wall."
       - q: "Why keep the first landscape small?"
-        choices: ["Big landscapes aren't allowed", "Lumen only works on small ones", "Small landscapes don't need collision", "Faster to sculpt, test and fix; most of a huge terrain would sit empty"]
+        choices: ["Big landscapes aren't allowed in new projects until you change a setting", "Lumen only works on small ones", "Small landscapes don't need collision", "Faster to sculpt, test and fix; most of a huge terrain would sit empty"]
         answer_index: 3
         explain: "You're learning the tools. Only build the area the player will actually walk."
     flavors:
@@ -84,7 +84,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What are the three light mobility settings?"
-        choices: ["Low, Medium, High", "Baked, Mixed, Realtime", "Static, Stationary, Movable", "Local, Global, Sky"]
+        choices: ["Low, Medium, High", "Baked, Mixed and Realtime", "Static, Stationary, Movable", "Local, Global, Sky"]
         answer_index: 2
         explain: "Mobility sets how much of the light can change at runtime and how it's lit."
       - q: "Which mobility lets a light move and change freely at runtime?"
@@ -92,7 +92,7 @@ quests:
         answer_index: 2
         explain: "Movable lights are fully dynamic. That's the safe default with Lumen."
       - q: "Do you need to build lighting for Lumen bounce light to appear?"
-        choices: ["No, Lumen calculates GI and reflections at runtime", "Yes, every time you move a light", "Only for Rect Lights", "Only in packaged builds"]
+        choices: ["No, Lumen calculates GI and reflections at runtime", "Yes, every single time you move or change a light", "Only for Rect Lights", "Only in packaged builds"]
         answer_index: 0
         explain: "Lumen is dynamic. There is no lightmap bake for its bounce light."
       - q: "You want soft light from a window-shaped area. Which light?"
@@ -100,7 +100,7 @@ quests:
         answer_index: 1
         explain: "A Rect Light emits from a rectangle, like a window or softbox."
       - q: "Where do you check that a project uses Lumen?"
-        choices: ["World Settings → Lighting", "Editor Preferences → Viewport", "The Sky Light's Details", "Project Settings → Rendering → Dynamic Global Illumination Method"]
+        choices: ["World Settings → Lightmass → Dynamic Global Illumination Method", "Editor Preferences → Viewport", "The Sky Light's Details", "Project Settings → Rendering → Dynamic Global Illumination Method"]
         answer_index: 3
         explain: "New UE5 projects default to Lumen. The setting lives in Project Settings → Rendering."
     flavors:
@@ -135,23 +135,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "How do you make one Post Process Volume affect the whole level?"
-        choices: ["Tick Infinite Extent (Unbound)", "Scale it to 10000", "Set Priority to 0", "Put it in World Settings"]
+        choices: ["Tick Infinite Extent (Unbound)", "Scale it to 10000", "Set Priority to 0", "Put it in the World Settings"]
         answer_index: 0
         explain: "Unbound makes the volume apply everywhere, no matter where the camera is."
       - q: "Why lock exposure before reviewing a level?"
-        choices: ["It improves performance", "Auto exposure brightens dark areas as you look at them, so you can't judge real brightness", "Lumen requires it", "It's needed to package"]
+        choices: ["It improves performance, because the engine no longer measures the brightness of each frame", "Auto exposure brightens dark areas as you look at them, so you can't judge real brightness", "Lumen requires it", "It's needed to package"]
         answer_index: 1
         explain: "With auto exposure on, a dark corner looks fine once your 'eyes' adapt. Locked exposure shows the real result."
       - q: "Which is a valid way to lock exposure?"
-        choices: ["Delete the Sky Light", "Turn off Lumen", "Set Min EV100 and Max EV100 to the same value", "Set Blend Radius to 0"]
+        choices: ["Delete the Sky Light", "Turn off Lumen", "Set Min EV100 and Max EV100 to the same value", "Set Blend Radius and Blend Weight both to 0"]
         answer_index: 2
         explain: "Equal min and max leaves auto exposure no range. Manual metering mode also works."
       - q: "Two bounded Post Process Volumes overlap. Which wins?"
-        choices: ["The bigger one", "The one placed first", "The one with higher Priority", "They cancel out"]
+        choices: ["The bigger one", "The one that was placed first", "The one with higher Priority", "They cancel out"]
         answer_index: 2
         explain: "Priority decides the order. Higher Priority is applied on top."
       - q: "What does Blend Radius do on a bounded volume?"
-        choices: ["Blurs the image", "Fades the volume's settings in over that distance as the camera approaches", "Sets the fog radius", "Limits light range"]
+        choices: ["Blurs the image", "Fades the volume's settings in over that distance as the camera approaches", "Sets the radius of the fog around the volume as the camera gets closer to it", "Limits light range"]
         answer_index: 1
         explain: "Blend Radius avoids a hard pop when the camera enters the volume."
     flavors:
@@ -188,19 +188,19 @@ quests:
         answer_index: 0
         explain: "Shift inverts the paint brush and removes instances under it."
       - q: "Where do you set how thickly a foliage type is painted?"
-        choices: ["World Settings", "The mesh's LOD settings", "The Post Process Volume", "The foliage type's Density setting"]
+        choices: ["World Settings", "The LOD settings of the mesh asset", "The Post Process Volume", "The foliage type's Density setting"]
         answer_index: 3
         explain: "Each foliage type has its own density and scale ranges."
       - q: "Grass on the path stops the player like a wall. The fix?"
-        choices: ["Delete the landscape", "Set the grass foliage type's Collision Preset to NoCollision", "Raise Max Step Height to 500", "Turn off Lumen"]
+        choices: ["Delete the landscape", "Set the grass foliage type's Collision Preset to NoCollision", "Raise Max Step Height to 500 so the player steps over the grass", "Turn off Lumen"]
         answer_index: 1
         explain: "Small ground cover rarely needs collision. Save collision for things that should block."
       - q: "Why is painted foliage cheaper than placing each bush as its own actor?"
-        choices: ["It has no materials", "It's drawn as instanced static meshes, so many copies render efficiently", "It's never shadowed", "It isn't saved"]
+        choices: ["It has no materials, so the engine skips the most costly part of drawing", "It's drawn as instanced static meshes, so many copies render efficiently", "It's never shadowed", "It isn't saved"]
         answer_index: 1
         explain: "Foliage instances are batched instead of costing one actor each."
       - q: "What's the level design risk of dense foliage?"
-        choices: ["None", "It breaks PIE", "It can hide route edges, landmarks and the ground the player needs to read", "It changes the capsule size"]
+        choices: ["None", "It breaks PIE", "It can hide route edges, landmarks and the ground the player needs to read", "It changes the capsule size of the player, so they get stuck between plants"]
         answer_index: 2
         explain: "Foliage should frame routes, not hide them."
     flavors:
@@ -238,23 +238,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where do you read the character's collision size?"
-        choices: ["Capsule Component → Capsule Radius and Capsule Half Height", "The mesh's bounds", "World Settings", "The Animation Blueprint"]
+        choices: ["Capsule Component → Capsule Radius and Capsule Half Height", "The Approx Size of the mesh, shown in the Static Mesh Editor", "World Settings", "The Animation Blueprint"]
         answer_index: 0
         explain: "The capsule is what actually collides. The visible mesh doesn't decide what fits."
       - q: "Which setting decides the tallest step the character walks up without jumping?"
-        choices: ["Jump Z Velocity", "Max Step Height on Character Movement", "Capsule Radius", "Walkable Floor Angle"]
+        choices: ["Jump Z Velocity", "Max Step Height on Character Movement", "Capsule Radius", "Walkable Floor Angle on the capsule"]
         answer_index: 1
         explain: "Max Step Height (45 cm by default) is the limit. Taller than that needs a jump."
       - q: "Which two Character Movement values mostly decide jump height?"
-        choices: ["Max Walk Speed and Braking", "Mass and Friction", "Jump Z Velocity and Gravity Scale", "Air Control and Step Height"]
+        choices: ["Max Walk Speed and Braking", "Mass and Friction", "Jump Z Velocity and Gravity Scale", "Air Control and Max Step Height"]
         answer_index: 2
         explain: "Launch speed up against gravity. Measure it in the gym anyway. Don't guess from the formula."
       - q: "Capsule Radius is 42. What's the narrowest gap the capsule can physically pass?"
-        choices: ["42 cm", "Just over 84 cm, though you'd build wider for comfort", "200 cm", "Any width"]
+        choices: ["42 cm", "Just over 84 cm, though you'd build wider for comfort", "200 cm, because the capsule needs room on both sides", "Any width"]
         answer_index: 1
         explain: "Width is the diameter, twice the radius. A door that just fits feels awful to walk through."
       - q: "What is the metrics gym for?"
-        choices: ["A portfolio piece", "Testing lighting", "Performance profiling", "Measuring the character once so every level uses tested numbers"]
+        choices: ["A portfolio piece", "Testing lighting", "Profiling performance so every level runs at the same frame rate", "Measuring the character once so every level uses tested numbers"]
         answer_index: 3
         explain: "Measure once, build to the numbers. Keep the gym and update it if movement changes."
     flavors:
@@ -292,23 +292,23 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What does a subtractive geometry brush do?"
-        choices: ["Deletes actors", "Lowers the landscape", "Removes materials", "Carves space out of additive brush geometry"]
+        choices: ["Deletes actors", "Lowers the landscape under the brush shape", "Removes materials", "Carves space out of additive brush geometry"]
         answer_index: 3
         explain: "Brushes are additive or subtractive. A subtractive box is a fast way to cut a doorway."
       - q: "CubeGrid is best at…"
-        choices: ["Organic sculpting", "Fast grid-aligned blocky shapes by pushing and pulling cells", "Painting foliage", "Lighting"]
+        choices: ["Organic sculpting of rocks and of terrain with soft brushes", "Fast grid-aligned blocky shapes by pushing and pulling cells", "Painting foliage", "Lighting"]
         answer_index: 1
         explain: "It builds on a grid, so blockout pieces stay on your metrics."
       - q: "What does Modeling Mode typically produce when you accept a new shape?"
-        choices: ["A Static Mesh asset you can reuse and place again", "A texture", "A Blueprint graph", "A landscape layer"]
+        choices: ["A Static Mesh asset you can reuse and place again", "A texture", "A Blueprint graph that builds the shape at runtime", "A landscape layer"]
         answer_index: 0
         explain: "Modeling Mode output is a real mesh. Reusable pieces are a good reason to use it."
       - q: "What's the weak point of scaled cubes for blockout?"
-        choices: ["They don't collide", "Scaling stretches materials and the numbers stop matching real sizes", "They can't be lit", "They crash Lumen"]
+        choices: ["They don't collide with the player until you add a collision volume", "Scaling stretches materials and the numbers stop matching real sizes", "They can't be lit", "They crash Lumen"]
         answer_index: 1
         explain: "A cube scaled to 3.7 is hard to measure. Snap to clean sizes if you use them."
       - q: "What matters most in a blockout tool?"
-        choices: ["Final-quality visuals", "Polygon count", "How fast you can change the space after a playtest", "Material quality"]
+        choices: ["How close the result gets to final-quality visuals", "Polygon count", "How fast you can change the space after a playtest", "Material quality"]
         answer_index: 2
         explain: "Blockouts exist to be changed. Pick whatever you can change fastest."
     flavors:
@@ -340,23 +340,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Why give the player three routes?"
-        choices: ["Choice, and if one route is unclear or blocked they still have somewhere to go", "More content to fill", "Epic requires it", "It improves performance"]
+        choices: ["Choice, and if one route is unclear or blocked they still have somewhere to go", "More content to fill the level with, so the playtime of the space gets longer", "Epic requires it", "It improves performance"]
         answer_index: 0
         explain: "Options mean the player doesn't feel stuck, and the routes can offer different play."
       - q: "Two routes are the same length with the same cover. What's wrong?"
-        choices: ["Nothing", "It's not a real choice. Routes should differ in risk, length, height or cover", "They need different materials", "They need more lights"]
+        choices: ["Nothing", "It's not a real choice. Routes should differ in risk, length, height or cover", "They need different materials, so players can tell them apart from a distance", "They need more lights"]
         answer_index: 1
         explain: "If the routes don't differ, the player has no reason to choose one over another."
       - q: "What's a loop in layout?"
-        choices: ["A Blueprint Timeline", "Routes that reconnect, so the player returns to known ground instead of a dead end", "A repeating sound", "A camera orbit"]
+        choices: ["A Blueprint Timeline that plays again from the start each time it reaches the end", "Routes that reconnect, so the player returns to known ground instead of a dead end", "A repeating sound", "A camera orbit"]
         answer_index: 1
         explain: "Loops keep players oriented and let them change their mind."
       - q: "How do you confirm a route actually works?"
-        choices: ["Fly it in the editor camera", "Look at it from above", "Check the Outliner", "Walk it in PIE as the character, start to goal"]
+        choices: ["Fly it with the editor camera, from start to goal", "Look at it from above", "Check the Outliner", "Walk it in PIE as the character, start to goal"]
         answer_index: 3
         explain: "The editor camera ignores collision and metrics. Only the character tells you the truth."
       - q: "A dead end with nothing in it tends to…"
-        choices: ["Reward exploration", "Improve pacing", "Frustrate players and waste their time", "Hide performance issues"]
+        choices: ["Reward exploration", "Improve pacing", "Frustrate players and waste their time", "Hide performance issues from players"]
         answer_index: 2
         explain: "If a dead end is there, give the player something for going in: a view, a pickup, a shortcut."
     flavors:
@@ -389,23 +389,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a landmark for?"
-        choices: ["Decoration only", "Hiding the skybox", "Improving frame rate", "Letting the player orient themselves and find the goal from a distance"]
+        choices: ["Decoration only", "Hiding the skybox", "Improving the frame rate by hiding far parts of the level behind it", "Letting the player orient themselves and find the goal from a distance"]
         answer_index: 3
         explain: "A good landmark answers 'where am I, where do I go?' without a map."
       - q: "What makes a landmark readable?"
-        choices: ["Lots of small detail", "A unique silhouette that's visible from several places", "A bright material only", "Being close to the player"]
+        choices: ["Lots of small details that reward a very close look", "A unique silhouette that's visible from several places", "A bright material only", "Being close to the player"]
         answer_index: 1
         explain: "Silhouette carries at distance. Fine detail disappears."
       - q: "Where should you check a sightline?"
-        choices: ["At the player's eye height in PIE", "Top-down view", "From the Sky Light", "In the Content Drawer"]
+        choices: ["At the player's eye height in PIE", "From above, in the Top viewport", "From the Sky Light", "In the Content Drawer"]
         answer_index: 0
         explain: "The flying editor camera sees over walls the player never can."
       - q: "Why block a sightline on purpose?"
-        choices: ["To hide mistakes", "To set up a reveal or a choice when the view opens", "To save memory", "To make it harder to find the goal forever"]
+        choices: ["To hide mistakes", "To set up a reveal or a choice when the view opens", "To save memory", "To make the goal harder to find for the whole level"]
         answer_index: 1
         explain: "Hiding the goal for a moment, then showing it, makes a reveal feel earned."
       - q: "The landmark is visible from the start but not from any route. What's the result?"
-        choices: ["Fine, once is enough", "Lumen stops working", "Players lose their bearings mid-route", "The landmark gets culled"]
+        choices: ["It's fine, seeing it once is enough", "Lumen stops working", "Players lose their bearings mid-route", "The landmark gets culled"]
         answer_index: 2
         explain: "Players need to see it again along the way to stay oriented."
     flavors:
@@ -441,15 +441,15 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "You used yellow for climbable ledges. What breaks the rule?"
-        choices: ["Using yellow on a non-climbable crate too", "Using yellow on every climbable ledge", "Lighting the ledges", "Using a Material Instance"]
+        choices: ["Using yellow on a non-climbable crate too", "Using yellow on every single climbable ledge", "Lighting the ledges", "Using a Material Instance"]
         answer_index: 0
         explain: "A color only guides if it always means the same thing."
       - q: "At a dim junction, which route do players tend to take?"
-        choices: ["The darkest one", "Always the left", "The longest", "The brighter or higher-contrast one"]
+        choices: ["The darkest one, so they stay hidden", "Always the left", "The longest", "The brighter or higher-contrast one"]
         answer_index: 3
         explain: "Light and contrast pull attention. Use that to point at where they should go."
       - q: "What is an affordance?"
-        choices: ["A performance budget", "A shape or cue that suggests what the player can do with it", "A kind of light", "A material parameter"]
+        choices: ["A performance budget that says what the level can afford", "A shape or cue that suggests what the player can do with it", "A kind of light", "A material parameter"]
         answer_index: 1
         explain: "A waist-high ledge with a clean edge suggests 'climb me' before any tutorial does."
       - q: "Common shape-language convention for danger?"
@@ -457,7 +457,7 @@ quests:
         answer_index: 2
         explain: "Round reads as safe, sharp reads as danger. It's a convention, so be consistent in your level."
       - q: "Which is a breadcrumb?"
-        choices: ["A save file", "A trail of small cues (pickups, lights, marks) leading along a route", "A debug message", "A camera bookmark"]
+        choices: ["A save file", "A trail of small cues (pickups, lights, marks) leading along a route", "A debug message", "A camera bookmark that takes you back to an earlier point of the route"]
         answer_index: 1
         explain: "Breadcrumbs pull the player along a route one step at a time."
     flavors:
@@ -493,23 +493,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Your stair risers are 50 cm and Max Step Height is 45. What happens?"
-        choices: ["The character can't walk up without jumping", "Walks up fine", "The stairs disappear", "Lumen breaks"]
+        choices: ["The character can't walk up without jumping", "Walks up fine", "The stairs disappear when the game starts", "Lumen breaks"]
         answer_index: 0
         explain: "Each riser must be under Max Step Height. Invisible ramp collision is the other common fix."
       - q: "A ramp is steeper than Walkable Floor Angle. What happens?"
-        choices: ["Faster movement", "The character can't walk up it and slides off", "Nothing", "The ramp gets navmesh automatically"]
+        choices: ["Faster movement", "The character can't walk up it and slides off", "Nothing", "The ramp gets a navmesh on it automatically"]
         answer_index: 1
         explain: "Anything steeper than the walkable angle is treated as a wall."
       - q: "Your max jump clears 350 cm. How wide should a required gap be?"
-        choices: ["350 cm exactly", "400 cm for challenge", "Doesn't matter", "Clearly less, with margin, so an average jump makes it"]
+        choices: ["350 cm exactly", "400 cm, so that it is a challenge even for good players", "Doesn't matter", "Clearly less, with margin, so an average jump makes it"]
         answer_index: 3
         explain: "Required jumps sit well inside the limit. Max-distance jumps are for optional challenge."
       - q: "A ledge is just too high to jump onto but looks reachable. The problem?"
-        choices: ["None", "It reads as a route and then fails, which feels like a bug", "It saves performance", "It's good guidance"]
+        choices: ["None", "It reads as a route and then fails, which feels like a bug", "It saves performance", "It's good guidance, because it teaches the real jump height"]
         answer_index: 1
         explain: "Make heights clearly reachable or clearly not. Ambiguous heights frustrate players."
       - q: "Why add a way back down from a high area?"
-        choices: ["Required by Epic", "To double the XP", "So the player can't get stranded with no way out", "For lighting"]
+        choices: ["Because Epic requires one for every high area", "To double the XP", "So the player can't get stranded with no way out", "For lighting"]
         answer_index: 2
         explain: "One-way traps without a return path are a common blockout bug."
     flavors:
@@ -545,23 +545,23 @@ quests:
     verify_type: writeup
     quiz:
       - q: "How do you save and recall a camera bookmark?"
-        choices: ["Ctrl+number to save, number to recall", "F5 and F9", "Alt+B", "Right-click the viewport"]
+        choices: ["Ctrl+number to save, number to recall", "F5 and F9", "Alt+B", "Right-click the viewport, then Recall"]
         answer_index: 0
         explain: "Hold Ctrl and press a number key to save the camera position, and press the number key alone to return to it. Bookmarks are saved with the level."
       - q: "Why review from the same bookmarks every time?"
-        choices: ["It's faster to render", "Before/after comparisons are only fair from the same camera", "Bookmarks improve lighting", "Required for packaging"]
+        choices: ["It's faster to render", "Before/after comparisons are only fair from the same camera", "Bookmarks improve the lighting from the angles that you save", "Required for packaging"]
         answer_index: 1
         explain: "Same view, same framing, so what you compare is the change."
       - q: "What does G do in the level viewport?"
-        choices: ["Toggles Game View, hiding editor icons and gizmos", "Opens the grid settings", "Groups actors", "Starts PIE"]
+        choices: ["Toggles Game View, hiding editor icons and gizmos", "Opens the grid snap settings of the level viewport", "Groups actors", "Starts PIE"]
         answer_index: 0
         explain: "Game View shows roughly what the player would see, without editor clutter."
       - q: "During a self-playtest, what should you write down?"
-        choices: ["Only bugs", "Your frame rate", "Every place you hesitate, backtrack or look around unsure", "Nothing, just fix things as you go"]
+        choices: ["Only bugs", "Your frame rate", "Every place you hesitate, backtrack or look around unsure", "Nothing; you just fix things as you go through the level"]
         answer_index: 2
         explain: "Hesitation is the signal. Note it first, fix it after. Fixing as you go hides patterns."
       - q: "Why take a break before reviewing?"
-        choices: ["Shader compile", "Epic rule", "Lumen needs to settle", "You stop seeing problems in a space you just built. Time away brings back some fresh eyes"]
+        choices: ["Shader compile", "Epic rule", "Lumen needs time to settle. The lighting of a new space is not final until it has been open for a while", "You stop seeing problems in a space you just built. Time away brings back some fresh eyes"]
         answer_index: 3
         explain: "It's the closest you get to a new player without asking one."
     flavors:
@@ -598,23 +598,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Why check readability in the Lighting Only view mode?"
-        choices: ["It removes material color so you see only light and value contrast", "It's faster", "It's what players see", "It bakes lighting"]
+        choices: ["It removes material color so you see only light and value contrast", "It's faster", "It is the view that players see when they run the packaged game later", "It bakes lighting"]
         answer_index: 0
         explain: "If the route reads without textures, it will read with them."
       - q: "Which area should usually be the brightest?"
-        choices: ["A dead end", "The goal or the next place you want the player to go", "The ceiling", "Behind the player"]
+        choices: ["A dead end", "The goal or the next place you want the player to go", "The ceiling", "The area right behind the player, where they came from"]
         answer_index: 1
         explain: "Players move toward light. Put the brightest spot where you want them to go."
       - q: "An enemy blends into a dark wall. Which fix helps most?"
-        choices: ["More fog", "Lower all lights", "Turn off shadows", "Light the wall behind it or add rim light so its silhouette separates"]
+        choices: ["More fog", "Lower all lights in the room so that the enemy and the wall both go dark", "Turn off shadows", "Light the wall behind it or add rim light so its silhouette separates"]
         answer_index: 3
         explain: "Combat readability comes from silhouette against background, not overall brightness."
       - q: "Why keep exposure locked while doing this pass?"
-        choices: ["Lumen requires it", "Auto exposure would brighten dark routes and hide the problem", "It raises frame rate", "It enables shadows"]
+        choices: ["Lumen requires it", "Auto exposure would brighten dark routes and hide the problem", "It raises the frame rate, so the walk through the level is smooth", "It enables shadows"]
         answer_index: 1
         explain: "Locked exposure shows the real brightness difference between routes. With auto exposure the picture adapts, and a route that is too dark looks fine after a moment."
       - q: "Six colored lights in one room, none meaning anything. The issue?"
-        choices: ["Performance only", "They cancel out", "Visual noise that competes with your guidance cues", "No issue"]
+        choices: ["Only a cost in performance, nothing for the player", "They cancel out", "Visual noise that competes with your guidance cues", "No issue"]
         answer_index: 2
         explain: "If you use color to guide the player, light color should support that rule and not compete with it."
     flavors:
@@ -656,11 +656,11 @@ quests:
         answer_index: 2
         explain: "Packaging comes much later. This capstone asks for screenshots, a map and a writeup."
       - q: "How do you get a clean top-down map of the courtyard?"
-        choices: ["Fly high in Perspective", "Use the Content Drawer thumbnail", "Open World Settings, then Map", "Switch the viewport to Top (orthographic) and screenshot it"]
+        choices: ["Fly high above it in the Perspective view and take a screenshot", "Use the Content Drawer thumbnail", "Open World Settings, then Map", "Switch the viewport to Top (orthographic) and screenshot it"]
         answer_index: 3
         explain: "Orthographic Top has no perspective distortion, so routes and sizes read true."
       - q: "What makes the three routes count as three?"
-        choices: ["Three different floor materials", "They differ in a clear way, like length, risk, height or cover", "Three separate levels", "Three lights"]
+        choices: ["They have three different floor materials, one for each route", "They differ in a clear way, like length, risk, height or cover", "Three separate levels", "Three lights"]
         answer_index: 1
         explain: "A route only counts if choosing it changes something for the player."
       - q: "The goal is hard to find in the Lighting Only view. What do you redo?"
@@ -668,7 +668,7 @@ quests:
         answer_index: 1
         explain: "The goal should be the brightest point. Fix the lighting before adding detail."
       - q: "Which bookmarks does the capstone ask for?"
-        choices: ["Entrance, a mid-route point, and the goal", "Any 10 angles", "Only the goal", "None, video only"]
+        choices: ["Entrance, a mid-route point, and the goal", "Any 10 angles that show the courtyard well", "Only the goal", "None, video only"]
         answer_index: 0
         explain: "Three fixed views let a reviewer judge the space the way you did."
     flavors:
@@ -700,15 +700,15 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What's the most useful thing to note while walking a level?"
-        choices: ["Frame rate", "Material names", "Actor count", "Where you hesitated or got lost"]
+        choices: ["Frame rate", "The names of the materials used", "Actor count", "Where you hesitated or got lost"]
         answer_index: 3
         explain: "Hesitation shows where the space failed to guide you."
       - q: "What does F8 do in PIE?"
-        choices: ["Quits PIE", "Ejects from the pawn so you can fly around the running game", "Saves the level", "Takes a screenshot"]
+        choices: ["Quits PIE", "Ejects from the pawn so you can fly around the running game", "Saves the level", "Takes a screenshot of the game without the editor interface"]
         answer_index: 1
         explain: "Eject lets you leave the character while the game keeps running, so that you can frame the problem spot for your screenshot."
       - q: "A doorway feels too tight. What's it usually measured against?"
-        choices: ["The camera's field of view only", "The character capsule plus comfort margin", "The skybox", "The light radius"]
+        choices: ["The field of view of the player camera only", "The character capsule plus comfort margin", "The skybox", "The light radius"]
         answer_index: 1
         explain: "Level designers size spaces from character metrics, such as the width of the capsule and how high the character can jump."
     flavors:
@@ -739,7 +739,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What does the Water plugin add to Unreal Engine?"
-        choices: ["A tool that paints wet materials on meshes", "Ready-made lakes, rivers and oceans you can place in a level", "A weather system with rain and snow", "A sound library with water effects"]
+        choices: ["A tool that paints wet materials on the meshes of your level", "Ready-made lakes, rivers and oceans you can place in a level", "A weather system with rain and snow", "A sound library with water effects"]
         answer_index: 1
         explain: "The Water plugin gives you water bodies such as lakes, rivers and oceans. You place them in a level like other actors."
       - q: "Where do you enable the Water plugin?"
@@ -747,7 +747,7 @@ quests:
         answer_index: 3
         explain: "You open Edit, then Plugins, search for Water and enable the Water plugin. The editor must restart before the plugin works."
       - q: "You enabled the Water plugin, but you cannot find a Water Body in the Place Actors panel. What do you check first?"
-        choices: ["That you restarted the editor after enabling the plugin", "That the level has a Directional Light", "That the project uses the Third Person template", "That the Landscape has a material"]
+        choices: ["That you restarted the editor after enabling the plugin", "That the level has a Directional Light", "That the project was made from the Third Person template", "That the Landscape has a material"]
         answer_index: 0
         explain: "A newly enabled plugin only loads after the editor restarts. Until then its actors, such as Water Body Lake, are not available."
       - q: "What controls the outline of a Water Body Lake or a Water Body River?"
@@ -755,7 +755,7 @@ quests:
         answer_index: 2
         explain: "A water body is shaped by a spline, which is a line with points. You select the water, then click and move its points to change the outline."
       - q: "Why is water a useful edge in level design?"
-        choices: ["It makes the level load faster", "It shows the player where the route ends without a wall", "It stops the player from jumping", "It removes the need for lighting"]
+        choices: ["It makes the level load faster", "It shows the player where the route ends without a wall", "It stops the player from jumping near the edge of a level", "It removes the need for lighting"]
         answer_index: 1
         explain: "Players read a shore as a natural limit. The water marks the end of the route, so you do not need a wall there."
       - q: "How should the path relate to the water in your level?"
@@ -792,7 +792,7 @@ quests:
         answer_index: 0
         explain: "Volumetric Fog is calculated in 3D space, so lights can light it and cast shadows through it. That is why it gives more mood than simple distance fog."
       - q: "Where do you turn on Volumetric Fog?"
-        choices: ["In the Details panel of the Directional Light", "In the settings of the Place Actors panel", "In the Details panel of the Exponential Height Fog actor", "In the view mode menu of the viewport"]
+        choices: ["In the Details panel of the Directional Light, under Light", "In the settings of the Place Actors panel", "In the Details panel of the Exponential Height Fog actor", "In the view mode menu of the viewport"]
         answer_index: 2
         explain: "Volumetric Fog is an option of the Exponential Height Fog actor. You select that actor in the Outliner and turn the option on in the Details panel."
       - q: "What is a Local Fog Volume?"
@@ -800,7 +800,7 @@ quests:
         answer_index: 1
         explain: "A Local Fog Volume is a placeable actor that holds fog in one small area. It lets you add fog in one spot without changing the rest of the level."
       - q: "Why do you place thick fog over a dead end?"
-        choices: ["Fog blocks the player like a wall", "Fog makes the dead end load faster", "Fog hides mistakes in the blockout", "Foggy places feel less inviting, so players go toward the clear areas"]
+        choices: ["Fog blocks the player like a wall", "Fog makes the dead end load faster", "Fog hides mistakes in the blockout, so nobody sees an unfinished corner", "Foggy places feel less inviting, so players go toward the clear areas"]
         answer_index: 3
         explain: "Fog does not stop the player, but it changes how a place feels. Players tend to move toward clear areas, so the fog guides them away from the dead end."
       - q: "What happens when you raise the two Extinction values of a Local Fog Volume?"
@@ -844,11 +844,11 @@ quests:
         answer_index: 0
         explain: "You select the Decal Actor and set Decal Material in the Details panel. The surface below keeps its own material."
       - q: "You placed a Decal Actor but you cannot see the decal. What do you check first?"
-        choices: ["That the level has a Sky Light", "That the floor mesh has collision", "That the project was saved", "That the box of the decal touches a surface"]
+        choices: ["That the level has a Sky Light", "That the floor mesh has collision turned on", "That the project was saved", "That the box of the decal touches a surface"]
         answer_index: 3
         explain: "A decal only shows where its box touches a surface. Rotate and move the Decal Actor until the box reaches the floor or the wall."
       - q: "How can a few decals on the ground guide the player?"
-        choices: ["They push the character in one direction", "They form a line that leads the eye toward a route", "They light the route like lamps", "They block the other routes"]
+        choices: ["They push the character in one direction when stepped on", "They form a line that leads the eye toward a route", "They light the route like lamps", "They block the other routes"]
         answer_index: 1
         explain: "A trail of scuffs, arrows or stains leads the eye of the player toward a route entrance. It works without any text or sign."
       - q: "What is a fast way to copy a decal that is already in the level?"
@@ -877,11 +877,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a Level Instance?"
-        choices: ["A backup copy of the whole project", "A single mesh that replaces a room", "A camera bookmark saved in a level", "A group of actors saved as its own small level that you can place many times"]
+        choices: ["A backup copy of the whole project", "A single mesh that replaces a whole room and all of the actors that are in it", "A camera bookmark saved in a level", "A group of actors saved as its own small level that you can place many times"]
         answer_index: 3
         explain: "A Level Instance stores a group of actors as a small level. You can then place that level many times inside a bigger level."
       - q: "How do you turn a selected room into a Level Instance?"
-        choices: ["Right-click the selection, open Level and choose Create Level Instance", "Drag the selection into the Content Browser", "Press Ctrl+G to group the selection", "Open File and choose Save Current Level As"]
+        choices: ["Right-click the selection, open Level and choose Create Level Instance", "Drag the selection into the Content Browser", "Press Ctrl+G to group the selection", "Open the File menu and choose Save Current Level As with a new room name"]
         answer_index: 0
         explain: "You select all the actors of the room, right-click, open Level and choose Create Level Instance. A window opens and then you save the new level file."
       - q: "You have three copies of a Level Instance. What happens when you edit one copy and commit the change?"
@@ -893,11 +893,11 @@ quests:
         answer_index: 2
         explain: "You select one copy and click Edit in the Details panel. The actors inside can then be moved and changed."
       - q: "You moved a wall while editing a Level Instance. How do you finish the edit so that the change is saved to all copies?"
-        choices: ["Press Play and stop again", "Select the Level Instance in the Outliner and click Commit Changes", "Hold Alt and drag the instance", "Right-click the wall and choose Create Level Instance"]
+        choices: ["Press Play and stop again", "Select the Level Instance in the Outliner and click Commit Changes", "Hold Alt and drag the instance", "Right-click the wall and choose Create Level Instance one more time"]
         answer_index: 1
         explain: "Commit Changes in the Details panel ends the edit and saves the level file of the instance. After that, every copy shows the moved wall."
       - q: "When does a Level Instance save the most work?"
-        choices: ["When a level uses the same room or building several times", "When a level has only one room", "When every room in a level must look different", "When a level has no actors yet"]
+        choices: ["When a level uses the same room or building several times", "When a level has only one room", "When every room in a level must look different from the rest", "When a level has no actors yet"]
         answer_index: 0
         explain: "With a Level Instance you build and fix the room once. Every place that uses it gets the same change, so you do not repeat the work."
 
@@ -922,7 +922,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a landscape spline?"
-        choices: ["A brush that paints grass on a landscape", "A curved line that you draw on a landscape with control points", "A wall that marks the edge of a landscape", "A copy of a landscape at a lower resolution"]
+        choices: ["A brush that paints grass on a landscape", "A curved line that you draw on a landscape with control points", "A wall that marks the edge of a landscape", "A copy of a landscape at a lower resolution, used at far distances"]
         answer_index: 1
         explain: "A landscape spline is a curved line made of control points. Unreal can shape the ground to follow it, which is a fast way to make roads and paths."
       - q: "Where do you find the Splines tool?"
@@ -930,7 +930,7 @@ quests:
         answer_index: 3
         explain: "You switch to Landscape Mode, open the Manage tab and select the Splines tool there."
       - q: "How do you place the control points of a landscape spline?"
-        choices: ["Hold Ctrl and click on the landscape", "Hold Alt and press G", "Double-click on the Outliner", "Press F on each spot"]
+        choices: ["Hold Ctrl and click on the landscape", "Hold Alt and press G", "Double-click a row in the Outliner", "Press F on each spot"]
         answer_index: 0
         explain: "With the Splines tool active, you hold Ctrl and click on the landscape. Each new click adds a control point that is joined to the last one."
       - q: "What happens when you deform the landscape to the spline?"
@@ -938,7 +938,7 @@ quests:
         answer_index: 2
         explain: "Unreal raises or lowers the ground along the spline. The path then sits flat on the hill and is easy to walk."
       - q: "After the deform, the path up the hill is too narrow to walk on. What do you do?"
-        choices: ["Delete the hill and sculpt a new one", "Scale the whole Landscape actor up", "Add a second spline next to the first", "Make the control points wider in the Details panel, then deform again"]
+        choices: ["Delete the hill and sculpt a new one", "Scale the whole Landscape actor up", "Add a second spline next to the first one and deform both of them again", "Make the control points wider in the Details panel, then deform again"]
         answer_index: 3
         explain: "The width of the path comes from the control points. You select them, raise their width in the Details panel, and run the deform again."
       - q: "Why do you also send a Play in Editor screenshot of you walking on the path?"
@@ -975,11 +975,11 @@ quests:
         answer_index: 2
         explain: "PCG means Procedural Content Generation. You build a graph of rules, and the graph places many objects for you."
       - q: "What does a PCG Graph asset hold?"
-        choices: ["The rules that decide where objects are placed", "The textures of the landscape", "The collision of the rock mesh", "The camera bookmarks of the level"]
+        choices: ["The rules that decide where objects are placed", "The textures of the landscape", "The collision of the rock mesh", "The camera bookmarks of the level you work in"]
         answer_index: 0
         explain: "The graph holds the rules. In this quest the rules read the landscape, pick points on its surface and spawn a mesh on each point."
       - q: "What is the PCG Volume for?"
-        choices: ["It sets how loud the level is", "It stores the rock mesh", "It blocks the player from the path", "It is the box that marks where the graph works"]
+        choices: ["It sets how loud the level is", "It stores the rock mesh", "It blocks the player from walking on the path", "It is the box that marks where the graph works"]
         answer_index: 3
         explain: "The PCG Volume marks the area in which the graph places objects. You set Graph on its PCG component so it knows which rules to run."
       - q: "In which order do you connect the three nodes of the scatter graph?"
@@ -987,11 +987,11 @@ quests:
         answer_index: 1
         explain: "First the graph reads the landscape, then it samples points on that surface, and last it spawns a mesh on each point."
       - q: "Where do you choose which rock mesh the graph places?"
-        choices: ["Under Mesh Entries in the Static Mesh Spawner node", "Under Graph on the PCG component", "Under Plugins in the Edit menu", "Under Manage in Landscape Mode"]
+        choices: ["Under Mesh Entries in the Static Mesh Spawner node", "Under Graph on the PCG component of the PCG Volume", "Under Plugins in the Edit menu", "Under Manage in Landscape Mode"]
         answer_index: 0
         explain: "The Static Mesh Spawner node has a list named Mesh Entries. You add one entry and pick the rock mesh there."
       - q: "The scattered rocks block the path. How do you fix this in this quest?"
-        choices: ["Delete each rock by hand", "Turn off the PCG plugin", "Move the PCG Volume away from the path", "Make the rock mesh smaller"]
+        choices: ["Delete each rock by hand", "Turn off the PCG plugin", "Move the PCG Volume away from the path", "Make the rock mesh smaller in the graph"]
         answer_index: 2
         explain: "Rocks only appear inside the volume. If the volume does not cover the path, no rocks are placed on it."
 
@@ -1020,23 +1020,23 @@ quests:
         answer_index: 3
         explain: "The Directional Light lights the whole level from one direction, like the sun. For the night copy you turn it into moonlight."
       - q: "How do you make the Directional Light read as moonlight?"
-        choices: ["Raise its Intensity and set a warm orange Light Color", "Rotate it low, lower its Intensity and set a cool blue Light Color", "Delete it and add many Spot Lights", "Move it far away from the level"]
+        choices: ["Raise its Intensity, point it straight down and set a warm orange Light Color", "Rotate it low, lower its Intensity and set a cool blue Light Color", "Delete it and add many Spot Lights", "Move it far away from the level"]
         answer_index: 1
         explain: "A low angle, a dim Intensity and a cool blue Light Color together read as moonlight. Moving a Directional Light does not change its light, only rotating it does."
       - q: "Why do you lock the exposure in the night level?"
-        choices: ["So the picture does not brighten by itself", "So the lights cast no shadows", "So the level loads faster", "So the sun cannot be rotated"]
+        choices: ["So the picture does not brighten by itself", "So the lights cast no shadows", "So the level loads faster", "So the sun cannot be rotated by accident"]
         answer_index: 0
         explain: "With automatic exposure the camera brightens a dark picture, and the night looks like a grey day. Locking the exposure keeps the level as dim as you set it."
       - q: "How do you lock the exposure for the whole level?"
-        choices: ["Set Intensity to 0 on the Directional Light", "Turn on Volumetric Fog on the Exponential Height Fog", "Add a Post Process Volume, tick Infinite Extent (Unbound) and set Metering Mode to Manual", "Switch the view mode of the viewport to Unlit"]
+        choices: ["Set Intensity to 0 on the Directional Light", "Turn on Volumetric Fog on the Exponential Height Fog and set Fog Density to 0 for the whole level", "Add a Post Process Volume, tick Infinite Extent (Unbound) and set Metering Mode to Manual", "Switch the view mode of the viewport to Unlit"]
         answer_index: 2
         explain: "Metering Mode is in the Exposure section of the Post Process Volume. Infinite Extent (Unbound) makes the volume affect the whole level, not only the inside of its box."
       - q: "What must the player still be able to see in the night level?"
-        choices: ["Every route entrance and the goal", "Every wall and every cube", "The Directional Light actor", "The sky and the horizon"]
+        choices: ["Every route entrance and the goal", "Every wall and every cube in the level", "The Directional Light actor", "The sky and the horizon"]
         answer_index: 0
         explain: "The same rules apply at night as in daylight. The player must see where the routes begin and where the goal is."
       - q: "Which lights do you add to keep the night level readable?"
-        choices: ["A second Directional Light", "A brighter Sky Light", "A larger Post Process Volume", "Local lights such as Point Lights and Spot Lights"]
+        choices: ["A second Directional Light", "A brighter Sky Light", "A larger Post Process Volume with a brighter exposure", "Local lights such as Point Lights and Spot Lights"]
         answer_index: 3
         explain: "Local lights light only a small area. Placed at the route entrances and the goal, they mark these spots while the rest of the level stays dark."
 
@@ -1062,11 +1062,11 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What does attenuation control for a sound?"
-        choices: ["How fast the sound plays", "How the sound gets quieter with distance", "How many times the sound repeats", "How the sound echoes in a room"]
+        choices: ["How fast the sound plays", "How the sound gets quieter with distance", "How many times the sound repeats in a loop", "How the sound echoes in a room"]
         answer_index: 1
         explain: "Attenuation sets how the volume of a sound falls as the listener moves away. It decides how far the sound reaches."
       - q: "What is created when you drag a sound from the Content Browser into the level?"
-        choices: ["An Audio Volume", "A Reverb Effect", "An Ambient Sound actor", "A Sound Cue asset"]
+        choices: ["An Audio Volume", "A Reverb Effect", "An Ambient Sound actor", "A Sound Attenuation asset"]
         answer_index: 2
         explain: "Dragging a sound into the level creates an Ambient Sound actor at that spot. The actor plays the sound from its position in the level."
       - q: "How does a sound near the goal pull the player toward it?"
@@ -1074,7 +1074,7 @@ quests:
         answer_index: 0
         explain: "A sound that grows louder tells the player they are moving toward its source. This guides the player without anything on screen."
       - q: "Where do you set how far the sound of an Ambient Sound actor reaches?"
-        choices: ["In the Place Actors panel, under Volumes", "In the Settings menu of the Content Browser", "In the Reverb section of an Audio Volume", "In the Details panel, under Attenuation, after you turn on Override Attenuation"]
+        choices: ["In the Place Actors panel, under Volumes", "In the Settings menu of the Content Browser, after you turn on Show Engine Content", "In the Reverb section of an Audio Volume", "In the Details panel, under Attenuation, after you turn on Override Attenuation"]
         answer_index: 3
         explain: "Override Attenuation lets you set the values on the actor itself. Inner Radius and Falloff Distance then decide where the sound is loud and how far it fades out."
       - q: "Which actor do you place around a room to change its reverb?"
@@ -1082,7 +1082,7 @@ quests:
         answer_index: 1
         explain: "An Audio Volume changes how sound behaves inside it. Under Reverb you turn on Apply Reverb and pick a Reverb Effect."
       - q: "You want to use the engine sound WhiteNoise, but you cannot find it in the Content Browser. What do you turn on?"
-        choices: ["Override Attenuation in the Details panel", "Apply Reverb in the Audio Volume", "Show Engine Content in the Settings menu of the Content Browser", "Looping in the sound asset"]
+        choices: ["Override Attenuation in the Details panel of the Ambient Sound actor", "Apply Reverb in the Audio Volume", "Show Engine Content in the Settings menu of the Content Browser", "Looping in the sound asset"]
         answer_index: 2
         explain: "Engine content is hidden by default. Show Engine Content makes the engine folders visible, and WhiteNoise is one of the engine sounds."
 
@@ -1106,7 +1106,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a Landscape Grass Type?"
-        choices: ["A brush that sculpts hills on a landscape", "A texture that colours the ground green", "A volume that marks where the player can walk", "An asset that lets the landscape material place grass by itself"]
+        choices: ["A brush that sculpts hills on a landscape", "A texture that colours the ground green", "A volume that marks where the player can walk on the landscape", "An asset that lets the landscape material place grass by itself"]
         answer_index: 3
         explain: "A Landscape Grass Type holds the grass mesh and its settings. The landscape material uses it to place grass on the layers you choose."
       - q: "Which node connects the Landscape Grass Type to the Landscape Material?"
@@ -1122,7 +1122,7 @@ quests:
         answer_index: 2
         explain: "The grass is tied to a layer of the landscape material. It only grows where that layer is painted."
       - q: "How do you keep the path free of grass?"
-        choices: ["Paint another layer, such as dirt, along the route", "Delete the grass meshes one by one", "Lower the landscape under the route", "Hide the Landscape Grass Type asset"]
+        choices: ["Paint another layer, such as dirt, along the route", "Delete the grass meshes one by one", "Lower the landscape under the route with the Sculpt tool", "Hide the Landscape Grass Type asset"]
         answer_index: 0
         explain: "Painting another layer along the route replaces the grass layer there. With no grass layer, no grass is placed on the path."
       - q: "Why is a clear path through the grass useful for the player?"
@@ -1151,11 +1151,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a silhouette?"
-        choices: ["The colour of an object in bright light", "The shadow an object casts on the floor", "The outline of an object seen as one dark shape", "The number of triangles in a mesh"]
+        choices: ["The colour of an object in bright light", "The shadow that an object casts on the floor", "The outline of an object seen as one dark shape", "The number of triangles in a mesh"]
         answer_index: 2
         explain: "A silhouette is the outline you see when the object is one dark shape, for example against the sky."
       - q: "Why does a good landmark need a silhouette that is easy to recognize?"
-        choices: ["From far away, fine detail disappears and only the outline is left", "From far away, colours become stronger", "Landmarks are not allowed to have materials", "A simple outline makes the mesh load faster"]
+        choices: ["From far away, fine detail disappears and only the outline is left", "From far away, colours become stronger", "Landmarks are not allowed to have materials", "A simple outline makes the mesh load faster when it is far from the camera"]
         answer_index: 0
         explain: "At a distance the player cannot see small details. The outline is what they recognize, so it must be clear."
       - q: "Why do you switch the viewport from Lit to Unlit or Lighting Only for this study?"
@@ -1163,11 +1163,11 @@ quests:
         answer_index: 1
         explain: "These view modes remove the effect of materials or of lighting. Nothing then distracts you from the shape of each landmark."
       - q: "Where do you change the view mode?"
-        choices: ["In the Details panel of the landmark", "In the mode dropdown in the main toolbar", "In the Place Actors panel", "In the view mode menu of the viewport, which shows Lit by default"]
+        choices: ["In the Details panel of the landmark", "In the mode dropdown in the main toolbar, which shows Selection first", "In the Place Actors panel", "In the view mode menu of the viewport, which shows Lit by default"]
         answer_index: 3
         explain: "The view mode menu is in the viewport and shows the name of the current mode, which is Lit by default."
       - q: "Modeling is not in the mode dropdown of the main toolbar. What do you do?"
-        choices: ["Create a new project from another template", "Enable the Modeling Tools Editor Mode plugin in Edit, then Plugins", "Switch the viewport to Lighting Only", "Open Landscape Mode and choose New"]
+        choices: ["Create a new project from another template that has Modeling turned on", "Enable the Modeling Tools Editor Mode plugin in Edit, then Plugins", "Switch the viewport to Lighting Only", "Open Landscape Mode and choose New"]
         answer_index: 1
         explain: "Modeling Mode comes from a plugin. When the plugin is enabled, Modeling appears in the mode dropdown."
       - q: "Which of your three landmark options do you keep?"

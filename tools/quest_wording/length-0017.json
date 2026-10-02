@@ -1,0 +1,508 @@
+{
+"GDQ35": {
+"quiz_choices": {
+"1": [
+"Yes, one per Attribute Set",
+"Yes, but only on the server",
+"No; several Actors may share one ASC, but one Actor cannot own several",
+"No; Ability System Components are only allowed on Player States, never on Actors"
+],
+"2": [
+"So that points, money or long cooldowns survive when the Pawn is destroyed and respawned",
+"Because Characters cannot have components",
+"To make abilities run faster",
+"Because Blueprints cannot access the Ability System Component of a Character, only of a Player State"
+],
+"3": [
+"Yes, with a Blueprint Struct",
+"No; they must be created in native C++ code",
+"Yes, but only inside a Gameplay Effect asset",
+"Yes, using a Data Table"
+],
+"6": [
+"Nothing; those columns have no effect in the default plugin",
+"Health on the server only",
+"Health on clients only",
+"Health during Gameplay Effects only, not when it is set by hand"
+],
+"7": [
+"Instant, Infinite, Has Duration; Instant never enters it",
+"Short, Medium, Long; Short never enters the container",
+"Instant, Periodic; Periodic never enters it",
+"Has Duration only; nothing enters it"
+],
+"9": [
+"Nothing; abilities end on their own after a few seconds, and everything they block is released",
+"The system still thinks the character is drinking, so anything the ability blocks stays blocked",
+"The potion is applied twice",
+"The ability is removed from the ASC"
+],
+"11": [
+"Grants the State.Stunned tag to the owner while the ability runs",
+"Cancels any ability tagged State.Stunned",
+"Requires the target to have State.Stunned",
+"Prevents activation while the owner has the State.Stunned tag"
+]
+}
+},
+"GDQ36": {
+"quiz_choices": {
+"1": [
+"On each client, then averaged",
+"On the server, which holds the one authoritative game state",
+"On the client with the best connection",
+"On whichever machine spawned the actor that is being simulated"
+],
+"3": [
+"Replicated variables stop working",
+"Server RPCs are dropped",
+"It works with no extra work because Standalone is both server and client",
+"You must remove all Switch Has Authority nodes, or the Remote branch never runs"
+],
+"4": [
+"Spawning and destroying the actor",
+"Location and rotation of the actor when Replicate Movement is on",
+"A normal Blueprint variable you did not mark as Replicated",
+"Creation of proxies on connected clients"
+],
+"5": [
+"Replicated integer variables that are set only on the server",
+"Skeletal Mesh Components, Materials and Animation Blueprints",
+"The actor's owner",
+"Server RPC calls"
+],
+"6": [
+"Only on the server, every tick",
+"Never in Blueprint; only C++ supports RepNotify, so the function must be written in a C++ class",
+"When the property is replicated to a client, and also when a Set node writes it in Blueprint",
+"Only when the value goes to zero"
+],
+"9": [
+"Players can spam the key and overflow the reliable RPC queue",
+"Reliable RPCs cannot carry parameters",
+"Input cannot be read on the server",
+"Reliable RPCs only work on dedicated servers, not on listen servers"
+],
+"10": [
+"Saving the game; it cannot run on clients",
+"Transient or cosmetic events like sounds and particles; it cannot return a value",
+"Loading levels; it cannot carry a float",
+"Replacing replicated variables for all persistent state; it cannot be unreliable"
+],
+"11": [
+"This client controls the pawn and the server has authority over it",
+"The client has full authority, and the server is only watching it",
+"The pawn is not replicated",
+"The pawn belongs to another player"
+]
+}
+},
+"GDQ37": {
+"quiz_choices": {
+"1": [
+"A Static Mesh with LODs",
+"The base asset that holds the geometry and simulation properties for Chaos destruction",
+"A Blueprint that spawns debris meshes and adds an impulse to each one when it is hit",
+"A Niagara emitter for dust"
+],
+"2": [
+"Pieces separate at random after a fixed time",
+"Pieces separate when the actor is destroyed",
+"Pieces separate when the camera is close enough; each connection stores a view distance at which it breaks apart",
+"Each connection has a strain value; it breaks when an impulse from a collision or field exceeds that limit"
+],
+"4": [
+"The Fab marketplace only; they must be downloaded and added to the project by hand",
+"Project Settings > Physics",
+"Engine > Content > EditorResources > FieldNodes, after enabling Show Engine Content",
+"The Fracture Mode toolbar"
+],
+"5": [
+"Trigger makes the field activate only when a Blueprint tells it to, and CE Trigger fires it at once",
+"Trigger makes the field activate on every tick, and CE Trigger sets how strong the field is each time",
+"Trigger delays activation by one second",
+"CE Trigger destroys the field"
+],
+"7": [
+"Adds velocity to the pieces",
+"Lowers the Damage Threshold of bones inside the volume by the Decay Amount, weakening them over time",
+"Freezes the pieces in place",
+"Removes the pieces inside the volume from the simulation once they are smaller than the Decay Amount"
+],
+"8": [
+"It adds gravity; drag it onto the mesh",
+"It sets bones inside its volume to Static; add it to the Geometry Collection's Initialization Fields array",
+"It plays a sound when a bone breaks; assign it in Project Settings under the Physics section of the project",
+"It hides pieces; set it in the material"
+],
+"9": [
+"They are the same thing with different colors",
+"Sleep stops pieces forever; Disable only slows them; Kill respawns them",
+"Sleeping pieces can wake when hit; disabled pieces are removed and cannot wake; Kill ignores the threshold and removes bodies at once",
+"Sleep works on Static Meshes only; Disable works on Skeletal Meshes only; Kill works on both and can be undone by another field at any time"
+],
+"10": [
+"Bodies are put to rest more aggressively",
+"Bodies never rest",
+"The field becomes an anchor",
+"Only the larger pieces are affected by it"
+],
+"11": [
+"Each piece is its own simulated object, so the solver pushes overlapping pieces apart and gives erratic results",
+"The editor refuses to create the collection and shows an error that lists every single pair of meshes that overlap",
+"The collection gets no materials",
+"Overlap doubles the Damage Threshold"
+],
+"12": [
+"Debug bone colors",
+"LOD materials",
+"The internal surfaces created by the fracture",
+"The volume of the anchor field in the viewport"
+]
+}
+},
+"GDQ38": {
+"quiz_choices": {
+"1": [
+"A system that downloads its content and numbers from the internet at startup",
+"A system that stores content and numbers in data that the logic only reads",
+"A system that writes its numbers into the graph",
+"A system that needs no Blueprint at all"
+],
+"2": [
+"Change the engine source code without using a compiler",
+"Skip the validation",
+"Add content and tune the game without opening a graph",
+"Play the game without a character"
+],
+"4": [
+"A Level Blueprint and a Timeline node in it",
+"A Widget Blueprint and a font asset",
+"A GameMode and a GameState",
+"A Primary Data Asset class and a Data Table"
+],
+"5": [
+"A color and an icon",
+"A tooltip and a sensible range",
+"A password and a lock",
+"A random default value at start"
+],
+"6": [
+"It reads only from the data and never from numbers typed into the graph",
+"It stores a copy of every number in its own variables, typed in by hand",
+"It may only run in the editor",
+"It must be rebuilt for each new item"
+],
+"7": [
+"Through the Content Browser, by the file name",
+"Through the Output Log, by line number",
+"Through the Asset Manager, by Primary Asset Id",
+"Through the level, by actor label"
+],
+"8": [
+"It deletes every asset that has a mistake in it",
+"It saves all assets again",
+"It restarts the level",
+"It checks every asset and every row for mistakes"
+],
+"9": [
+"A clear text that names the asset with the problem",
+"Only the word Warning",
+"The full list of all assets",
+"The time since the game started, in seconds and frames"
+],
+"11": [
+"You check it for spelling mistakes",
+"You compare it with the guide of another learner and copy the parts that are better",
+"A person adds a third variant using only the guide, and you record what was unclear",
+"You read it once before sending it"
+],
+"12": [
+"That the graph has fewer than ten nodes",
+"That the system has more than ten variants, each with its own Blueprint",
+"That the guide is longer than one page",
+"That a new variant can be added from your guide without touching a graph"
+]
+}
+},
+"GDQ39": {
+"quiz_choices": {
+"1": [
+"They work as normal",
+"They are ignored; the level loads and shows together with the persistent level",
+"They only work in Standalone mode, and are ignored in Play In Editor sessions",
+"Only Unload requests work"
+],
+"4": [
+"Both work together, and the level loads when either one asks for it",
+"Blueprint wins",
+"Other streaming methods will not behave correctly for that level",
+"The volume is deleted"
+],
+"5": [
+"In PIE the levels are already in memory, so loading is just unhiding them instantly",
+"PIE does not support sublevels",
+"PIE always uses Always Loaded",
+"PIE runs at a lower frame rate than a packaged game, which hides every loading hitch"
+],
+"6": [
+"Grow the volume so the level loads sooner and unloads later",
+"Shrink the volume",
+"Set the level to Always Loaded and delete the streaming volume",
+"Add a second Player Start"
+],
+"7": [
+"Unloading is never automatic",
+"Unload requests have hysteresis, 2.0 seconds by default, set by Min Time Between Volume Unload Requests",
+"Loading has a delay of 2.0 seconds by default, and the level cannot unload while it is still being loaded",
+"The volume is disabled"
+],
+"8": [
+"To hide the door",
+"To remove the volume from the level for good once the door is unlocked, so that the level never unloads again",
+"To make the door always loaded",
+"To keep the level from streaming in until the door is unlocked, then toggle the volume on from Blueprint"
+],
+"10": [
+"Get Streaming Level with Create Instance",
+"Two Player Starts",
+"Always Loaded plus World Composition tiles",
+"Open Level called twice"
+],
+"11": [
+"It makes the volume load levels only in packaged builds, and never while you work in the editor",
+"It disables the volume in the editor",
+"It uses the volume only for editor preview while another streaming method is used in game",
+"It shows the volume in the game HUD"
+],
+"12": [
+"It is the recommended way to stream large worlds in 5.0 and later",
+"It is required for streaming volumes",
+"It is legacy; World Partition is recommended for 5.0 and later",
+"It replaced Level Streaming Volumes"
+]
+}
+},
+"GDQ40": {
+"quiz_choices": {
+"1": [
+"An atomic piece of data such as Transform, Velocity or LOD Index",
+"A Blueprint function",
+"A piece of broken geometry that comes from a Chaos Geometry Collection",
+"A Niagara particle"
+],
+"2": [
+"By subclassing an Actor; no",
+"By composing Fragments; yes, the composition can change at runtime",
+"By filling in a Data Table row; the row can change only in the editor",
+"By a Behavior Tree; no"
+],
+"3": [
+"Inside each Fragment, which has an update function that runs once per frame for its own Entity",
+"Inside each Entity",
+"In Processors, which are stateless classes that use EntityQuery to get batches of Fragments",
+"In the MassSpawner actor"
+],
+"4": [
+"A parent Blueprint class that all Entities inherit from, which lets the engine skip the cast for every single Entity",
+"The first Entity spawned",
+"A saved copy of the level",
+"A collection of Entities with identical Fragment composition, stored together in memory Chunks for fast access"
+],
+"5": [
+"A Gameplay Tag from the tag manager that is stored as a string on each Entity",
+"A string label on an Actor",
+"A trivial Fragment with no data, whose presence or absence is itself the data",
+"A name for a Chunk"
+],
+"6": [
+"Add it directly at once",
+"Destroy the Entity and spawn it again with the new Fragment, which the Processor can do safely in the middle of a batch",
+"Change the Archetype by hand",
+"Request the change through the MassCommandBuffer so it is batch-processed at the end of the current batch"
+],
+"7": [
+"A debug camera",
+"A safe, optimized way to access data of other Entities not currently being processed",
+"A widget for crowds",
+"A list of all Archetypes in the world, sorted by the number of Entities in each one"
+],
+"8": [
+"From MassEntityConfig assets made in the editor; yes, a config can have a parent asset and inherit its Traits",
+"From Behavior Trees that are assigned to the MassSpawner; no, each tree must list all of its own Traits in full",
+"From the Level Blueprint; no",
+"From C++ only; yes"
+],
+"9": [
+"A floating-point attribute on a Fragment, such as speed or health, that Processors read and write on every update of the Entity",
+"A collective name for the Fragments and Processors that supply one piece of functionality, such as Avoidance or Look-At",
+"A single Tag",
+"An animation notify"
+],
+"11": [
+"A screen size only",
+"A boolean visible flag for each entity, with one view distance that is shared by all levels",
+"Four values High, Medium, Low and Off, with distances and a maximum entity count per level",
+"A texture resolution"
+],
+"12": [
+"It works out of the box in Blueprint, in both directions, and custom values only need the Replicated flag",
+"Crowds cannot be replicated at all",
+"Use Gameplay Cues instead",
+"Mass Replication is experimental, one-way server to clients, and custom values need a C++ implementation"
+]
+}
+},
+"GDQ41": {
+"quiz_choices": {
+"1": [
+"Jump Max Hold Time to a non-zero value",
+"Gravity Scale to 0 while the key is down",
+"Air Control to 1",
+"Jump Max Count to 0"
+],
+"2": [
+"The character will not jump at all",
+"The character falls through the floor, because the capsule keeps its upward velocity forever",
+"The character keeps receiving jump velocity until JumpKeyHoldTime reaches JumpMaxHoldTime",
+"The Jump node gives a compile error"
+],
+"3": [
+"Every tick while airborne",
+"On Event BeginPlay",
+"Only when the character lands, from the Event On Landed",
+"From an input event such as a button up (released) event"
+],
+"5": [
+"The jump key is held and the held time is less than JumpMaxHoldTime",
+"The character is standing on the ground and the jump key is not pressed",
+"Gravity Scale is negative",
+"The character is crouched"
+],
+"6": [
+"Set Jump Z Velocity to 0 on every tick while stunned",
+"Delete the Character Movement component",
+"Set Jump Max Count to 1",
+"Implement the custom Can Jump event in the Blueprint"
+],
+"7": [
+"Camera, Spring Arm and Static Mesh",
+"Box Collision, Audio and Niagara",
+"CharacterMovementComponent, CapsuleComponent and SkeletalMeshComponent",
+"ProjectileMovementComponent, RotatingMovementComponent and TimelineComponent"
+],
+"8": [
+"Because it renders faster",
+"Because the CharacterMovementComponent assumes a vertically-oriented capsule for its movement calculations",
+"Because a box cannot overlap",
+"Because the Skeletal Mesh needs a capsule around it before any animation at all can be played on its bones"
+]
+}
+},
+"GDQ42": {
+"quiz_choices": {
+"1": [
+"Adds the launch velocity on top of the current XY velocity of the Character",
+"Replaces the XY part of the Character's velocity instead of adding to it",
+"Ignores the XY part of Launch Velocity",
+"Rotates the character to face XY"
+],
+"2": [
+"Instantly inside the node",
+"After the next frame of the animation has played",
+"When the character lands",
+"On the next CharacterMovementComponent tick"
+],
+"8": [
+"The event fires on every frame",
+"The timer loops forever",
+"The timer is cleared if it is set",
+"The editor crashes"
+]
+}
+},
+"GDQ43": {
+"quiz_choices": {
+"1": [
+"The character dies",
+"The flashlight turns off at once",
+"The character stops sprinting",
+"The level restarts"
+],
+"2": [
+"In the horror player character Blueprint in Content/Variant_Horror/Blueprints",
+"In the Game Mode",
+"In the Level Blueprint",
+"In the Player Controller only, in the Content/Variant_Horror/Blueprints folder"
+],
+"3": [
+"Hold is not supported for keyboards",
+"Down triggers immediately on press; Hold triggers only after some time has passed",
+"Down works with gamepads only",
+"Hold cannot be mapped in an Input Mapping Context, so only Down and Pressed exist"
+],
+"7": [
+"Test in Standalone mode or use a different key during development",
+"Reinstall the engine",
+"Use a Hold trigger instead",
+"Map the key in the Level Blueprint with a keyboard event for Left Shift"
+]
+}
+},
+"GDQ44": {
+"quiz_choices": {
+"1": [
+"Immediately inside the node",
+"When the current animation of the character finishes",
+"At the end of the level",
+"On the next update of the CharacterMovementComponent"
+],
+"6": [
+"Because the mesh has no size",
+"Because the mesh is only rendered in cinematics, not in gameplay",
+"Because the CapsuleComponent is used for movement collision",
+"Because tunnels ignore capsules"
+]
+}
+},
+"GDQ45": {
+"quiz_choices": {
+"1": [
+"A path to define and use positional data",
+"A mesh that bends",
+"A rail that only cameras can move along",
+"A navigation mesh"
+],
+"2": [
+"It has unlimited points",
+"It only works in C++",
+"It cannot be edited in Blueprints at all, and its points can only be moved in the Level Editor",
+"It deforms a single Static Mesh along a two-point spline and cannot get more Spline Points"
+],
+"3": [
+"Only in the Level Editor",
+"In the Blueprint Viewport, in the Level Editor, and through the Construction Script",
+"Only in the Blueprint Viewport, because spline points are locked once the actor is placed",
+"Only in Sequencer"
+],
+"4": [
+"Time and Play Rate",
+"Point Index only",
+"Distance and Coordinate Space",
+"Alpha and Length of the Spline"
+],
+"7": [
+"No, Finished is not triggered by Stop",
+"Yes, always",
+"Only if the Timeline is set to looping",
+"Only in Standalone"
+],
+"8": [
+"It performs collision testing on every frame, so the rotating component stops when it touches another object",
+"It only rotates Characters",
+"It rotates a component continuously at a rotation rate, and collision testing is not performed during movement",
+"It needs a Timeline to work"
+]
+}
+}
+}

@@ -1,0 +1,672 @@
+{
+"PQ100": {
+"quiz_choices": {
+"1": [
+"A GameMode",
+"A Player Controller associated with the connection",
+"A new level",
+"A Game Instance that belongs to that one connection"
+],
+"2": [
+"The first client that saw it",
+"The server's socket",
+"The connection associated with the actor's owning player controller",
+"The connection of the last client that touched the actor in the level"
+],
+"3": [
+"It stays with the old connection for as long as the pawn exists",
+"It moves to the server",
+"It moves to the next client",
+"The connection is no longer the owning connection for the pawn"
+],
+"4": [
+"It runs on the server",
+"It runs on all clients",
+"It runs on the owning client, which then forwards it to the server",
+"It is dropped because the actor has no valid owning connection"
+],
+"5": [
+"Because player controllers are not replicated to any of the clients at all",
+"Because of dormancy",
+"Because player controllers are only relevant to their owner by default",
+"Because of the GameMode"
+],
+"6": [
+"Walk the component's outer chain to its owning actor, then use that actor's owning connection",
+"Components cannot have one; only actors that are owned by a Player Controller have a connection",
+"Use the GameState",
+"Ask the client"
+],
+"8": [
+"No connection",
+"The same connection that owns the pawn",
+"The server connection only, not a client",
+"All connections"
+]
+}
+},
+"PQ101": {
+"quiz_choices": {
+"1": [
+"It is hidden but kept in memory",
+"It is destroyed on that client",
+"It is frozen",
+"It becomes dormant"
+],
+"3": [
+"It is not relevant for the connection",
+"It is always relevant",
+"It uses the relevancy of its owner instead",
+"It crashes"
+],
+"4": [
+"The maximum distance in meters at which the actor is still drawn in the client viewport",
+"The number of clients",
+"The square of the maximum distance from the client viewport where the actor is relevant",
+"The update rate"
+],
+"6": [
+"It reduces client render cost",
+"Dormant actors are skipped when the NetDriver gathers and compares replicated actors each update",
+"It compresses packets",
+"It removes dormant actors from memory on the server, so they cost nothing until a client needs them"
+],
+"7": [
+"Nothing; it replicates normally",
+"The client crashes",
+"The actor becomes always relevant until it is woken up again",
+"The change is not sent and may be lost when the actor wakes"
+],
+"8": [
+"Dormant actors still exist on server and client; non-relevant dynamic actors are destroyed on the client",
+"Both are destroyed on the client",
+"Dormant actors are destroyed on the client; non-relevant actors stay on the client and keep receiving updates",
+"There is no difference"
+]
+}
+},
+"PQ102": {
+"quiz_choices": {
+"1": [
+"-stats on its own",
+"-netprofile=true together with -log, or another value in lower case",
+"-log -verbose",
+"-trace=net together with -NetTrace=1, or another value above zero"
+],
+"2": [
+"-game, because the editor cannot record traces unless it is started as a game",
+"-nosound, to keep the trace small",
+"-windowed, so that Unreal Insights can attach",
+"-tracehost=localhost, because the editor runs its own data store for trace data"
+],
+"4": [
+"The frame rate of each client",
+"A list of all levels that were loaded during the session, with the time at which each one was opened",
+"What is inside the selected packets, such as replicated objects, properties and remote function calls",
+"The CPU time of the server"
+],
+"7": [
+"It is always exactly the same",
+"It counts every packet twice, once when sent and once when received",
+"It is the size before compression, so the real data may be smaller",
+"It only counts the packet headers"
+]
+}
+},
+"PQ103": {
+"quiz_choices": {
+"2": [
+"How many threads ran it",
+"How much time the thread spent on it",
+"How much memory the thread used for it",
+"Its call depth"
+],
+"3": [
+"Inclusive is per frame, Exclusive is per session",
+"Inclusive is for the Game thread, Exclusive is for the Render thread",
+"Inclusive includes time of called functions, Exclusive does not",
+"They are the same value in different units"
+],
+"5": [
+"Drag it onto the Frames panel",
+"Press CTRL+S",
+"Double-click the event in the list",
+"Enable it in the Modules panel first"
+],
+"8": [
+"Enable context switches in the Project Settings window",
+"It is always recorded",
+"Turn on stat unit",
+"Run with the ContextSwitch trace channel in -trace="
+]
+}
+},
+"PQ104": {
+"quiz_choices": {
+"3": [
+"Loaded and visible",
+"Loaded but not visible until a volume makes it visible",
+"Pre-loading",
+"Unloaded but still in memory until garbage collection"
+],
+"5": [
+"The trace is deleted",
+"Nothing, because a trace always stops together with the PIE session",
+"The trace keeps recording the editor and its file keeps growing",
+"The Editor crashes"
+],
+"8": [
+"Visible section count under stat InitViews",
+"Frame time under stat Unit",
+"Draw calls under stat RHI",
+"Triangle count under stat Engine and RHI"
+]
+}
+},
+"PQ105": {
+"quiz_choices": {
+"1": [
+"IVisualLoggerDebugSnapshotInterface",
+"IGameplayDebuggerSnapshotInterface",
+"IVisualLogSnapshot",
+"IDebugDrawInterface"
+],
+"3": [
+"Yes, always",
+"Yes, but only in Shipping",
+"No, the macro removes itself in builds without Visual Logging",
+"No, but the call will crash the game in all Shipping builds"
+],
+"7": [
+"Center, half-height, radius, rotation, then colour",
+"Start, end, radius, colour",
+"Origin, direction, length, angle in degrees, colour",
+"Tail, head, colour"
+]
+}
+},
+"PQ106": {
+"quiz_choices": {
+"6": [
+"Project Settings > Input",
+"In DefaultGame.ini under a [Debug] section, with one line per category that names the class and its shortcut key",
+"In code, with IGameplayDebugger::Get().RegisterCategory, best in the startup of the module that owns the category",
+"The GameMode class defaults"
+],
+"7": [
+"Prints the tag as normal text on screen",
+"Selects a category",
+"Adds a new line",
+"Changes the active colour from that point"
+]
+}
+},
+"PQ107": {
+"quiz_choices": {
+"1": [
+"Memory Insights only works when the game is run as a Shipping build",
+"The memory channel must be active from the start of the process",
+"You must use stat Memory first",
+"The trace file was too small"
+],
+"6": [
+"Detailed callstacks for each allocation, recorded for every frame",
+"The Session Frontend profiler",
+"Stat Memory output",
+"The Low-Level Memory tracking runtime with per-frame granularity"
+]
+}
+},
+"PQ108": {
+"quiz_choices": {
+"3": [
+"A graph of the stat unit data",
+"Memory per thread",
+"A list of the tick functions",
+"Network stats"
+],
+"6": [
+"A slow average framerate",
+"Any frame above 60 FPS",
+"A crash that happens when the game runs out of memory",
+"A sudden brief increase in CPU or GPU time in a frame"
+],
+"8": [
+"Hitting targets with the profiler on means you have spare resources without it",
+"It hides hitches",
+"It disables the GPU",
+"It is not a good thing; a profiler must never change the timing of the game at all"
+]
+}
+},
+"PQ109": {
+"quiz_choices": {
+"1": [
+"Blueprint has no loops",
+"C++ compiles to machine code; Blueprint runs bytecode on a virtual machine",
+"C++ runs on the GPU",
+"Blueprint is single threaded, and C++ always runs on all cores of the CPU"
+],
+"2": [
+"Huge in every project",
+"Zero",
+"Only visible on older mobile devices",
+"Insignificant and context dependent"
+],
+"4": [
+"Profile with Unreal Insights and fix the biggest bottlenecks",
+"Rewrite it in C++",
+"Disable Tick on every actor and every component in the project",
+"Turn on nativization"
+],
+"5": [
+"Multi-threading support",
+"Access to the lower-level engine functionality",
+"A safer memory model designed to avoid crashes",
+"Easier text diff and merge"
+],
+"6": [
+"It converts the whole Blueprint to C++ automatically, .h and .cpp files",
+"It generates a .h with declarations; you still write the .cpp by hand",
+"It compiles Blueprint to native code",
+"It exports the graph as an image"
+],
+"8": [
+"A setter that fires a callback only when the value changes",
+"A faster Tick group",
+"Checking every other frame with a bool",
+"Moving the check to the Construction Script of the actor"
+]
+}
+},
+"PQ110": {
+"quiz_choices": {
+"1": [
+"Reference counting on each pointer; an object is removed when its count is zero",
+"It searches the reference graph from the root set; unreached objects are removed",
+"Objects older than 60 seconds",
+"Only objects with Destroy called"
+],
+"2": [
+"It is set to null automatically by the garbage collector",
+"The compiler refuses raw pointers",
+"It keeps the object alive",
+"It is not nulled and it does not keep the object alive"
+],
+"4": [
+"Actors are never collected",
+"The Level references them, and the Level links back to the root set",
+"Actors are in the root set",
+"Their components hold them, and components are part of the root set"
+],
+"5": [
+"It disables clustering",
+"It skips reachability analysis on most frames, so less work is done in each pass",
+"GC runs on another thread",
+"Fewer unreachable objects pile up before each pass, so each cleanup is smaller"
+],
+"6": [
+"All items in the cluster are unhashed and deleted in the same frame, which can hitch",
+"Reachability is slower",
+"Clusters cannot contain actors, so every actor in a level has to be checked one by one",
+"They disable Blueprint clustering"
+],
+"7": [
+"On every frame in Tick, so that each pass has very little work to do and never hitches",
+"Never",
+"During a loading screen, or before a large allocation that would otherwise crash or hitch",
+"Only in Shipping"
+],
+"8": [
+"It removes the need for UPROPERTY",
+"It makes garbage collection fully thread safe, so that it can run next to the game thread",
+"It runs GC on the GPU",
+"It splits the reachability phase across several frames with a per-frame soft time limit"
+]
+}
+},
+"PQ1": {
+"quiz_choices": {
+"1": [
+"Press F9",
+"Press the backtick key, which on most keyboards is the key above Tab",
+"Press Ctrl+B",
+"Press the G key in the viewport, which is also the key for Game View"
+],
+"3": [
+"The names of the actors in the level",
+"The list of the assets that have not been saved to disk yet",
+"The errors in your Blueprints",
+"Performance numbers, such as the frame rate and frame times"
+],
+"4": [
+"A marker that you place in the level",
+"A node that writes one line of text on the screen during play",
+"A switch that turns one kind of visual information on or off",
+"A warning in the Output Log"
+],
+"6": [
+"Two lines, one under the other, on screen",
+"An error message in red",
+"The second message replaces the first one",
+"No message at all"
+]
+}
+},
+"PQ2": {
+"quiz_choices": {
+"1": [
+"A panel that lists the actors in the level",
+"A file that stores your saved games",
+"A window where the engine and your Blueprints write messages, warnings and errors",
+"A tool that records where the engine spends its time while the game is running"
+],
+"4": [
+"It stops Play in Editor and returns to the level editor",
+"It removes all breakpoints",
+"It restarts the level",
+"It steps over one node, so the nodes run one at a time"
+],
+"5": [
+"Double-click the pin",
+"Right-click the pin and choose Watch This Value",
+"Drag the pin from the node into the Output Log window",
+"Select the pin and press F9"
+]
+}
+},
+"PQ3": {
+"quiz_choices": {
+"1": [
+"It is the only project that can be opened in the editor without any extra download first",
+"It has no Blueprints, so it is simple",
+"It cannot be changed, so nothing can break",
+"It is a working game where you can see how input, movement and the camera are connected"
+],
+"2": [
+"It sets the rules of the game and decides which character the player uses",
+"It draws the level in the viewport",
+"It stores the meshes of the character",
+"It records the input of the player to a file that can be played back later"
+],
+"3": [
+"A node that runs one single time when the game starts in the level",
+"A node that fires when the player presses a key or moves a stick",
+"A node that plays an animation",
+"A node that changes the camera boom"
+],
+"4": [
+"In the Output Log",
+"In the World Settings",
+"In the Components panel of the Blueprint",
+"In the Place Actors panel of the editor"
+],
+"5": [
+"The sound the camera makes",
+"The arm that holds the camera behind the character",
+"The light that follows the character in the dark",
+"The mesh that shows the character"
+],
+"6": [
+"A written description of the chain from input to movement",
+"A video of the character jumping",
+"A copy of the Blueprint file of the character, as a zip",
+"A screenshot of the Content Browser"
+]
+}
+},
+"PQ4": {
+"quiz_choices": {
+"1": [
+"The first level of your finished game",
+"A level that holds every asset of the whole project",
+"A small, empty level that you build only for testing",
+"A level that Unreal creates when a test fails"
+],
+"2": [
+"Empty levels have no collision",
+"Empty levels cannot have bugs",
+"Empty levels are saved much more often by the editor itself",
+"Nothing else in the level can cause or hide the problem"
+],
+"3": [
+"A marked area on the floor for one system you plan to test",
+"A Blueprint that runs all the tests of a level in a row",
+"A window that shows test results",
+"A note that is saved with the level"
+],
+"4": [
+"Give each pad a different sound",
+"Add a Text Render actor next to it with the name of the pad",
+"Write the name of the pad in the World Settings of the level",
+"Place a Player Start on each pad"
+],
+"6": [
+"So the level loads faster",
+"So the level always starts with the same GameMode",
+"So the level cannot be edited by any other people",
+"So the level has no Player Start"
+]
+}
+},
+"PQ8": {
+"quiz_choices": {
+"1": [
+"A test level where each area shows one way to find problems",
+"A window that lists all errors of the project",
+"A folder where crash files are saved",
+"A level that players see for a moment when the game crashes"
+],
+"2": [
+"Set its duration to 0",
+"Give it an empty Key",
+"Set its Text Color to black on the node",
+"Turn off Print to Screen on the node"
+],
+"5": [
+"A mark that pauses the game on a node you choose",
+"A place where the level ends",
+"A message in the Output Log",
+"A pad that breaks when the player steps on it"
+]
+}
+},
+"PQ5": {
+"quiz_choices": {
+"1": [
+"In the Output Log, under Filters",
+"In the three dots menu next to the Play button in the main toolbar",
+"In the World Settings, under GameMode",
+"In the Content Browser, under Settings, in the Play section at the end"
+],
+"2": [
+"It records the viewport to a video",
+"It opens the game on a second computer screen",
+"It opens the game in a new window",
+"It runs the game inside the level viewport"
+],
+"3": [
+"In Edit, then Editor Preferences, under General, then Performance",
+"In Edit, then Plugins, under Performance, then Frame Rate and Memory",
+"In Window, then Output Log",
+"In the Show menu of the viewport"
+],
+"4": [
+"The game runs at a fixed frame rate",
+"The editor uses less memory",
+"The editor shows these numbers at all times",
+"The numbers are written to a file on disk"
+],
+"5": [
+"The folder on your disk where the Blueprints of a project are saved",
+"The language of the editor menus",
+"The font of the Blueprint graphs",
+"The program that Unreal opens when you read or write C++ code"
+],
+"6": [
+"Only if you use a different program for your code",
+"Every time that you create a new project in Unreal",
+"Before every Play In Editor session",
+"Only if the frame rate is low"
+]
+}
+},
+"PQ6": {
+"quiz_choices": {
+"1": [
+"A panel that lists the assets of the project",
+"A window that shows Blueprint errors",
+"A plugin that makes the game run much faster on slow computers",
+"A profiling tool that records where the engine spends its time"
+],
+"2": [
+"A line drawn in the viewport",
+"A recording made for Unreal Insights",
+"A list of all the keyboard shortcuts",
+"A copy of the level"
+],
+"3": [
+"Click Trace in the bar at the bottom of the editor window and choose Start Trace",
+"Open Edit, then Plugins, and choose Start Trace",
+"Right-click the level in the Content Browser and choose Start Trace in the menu",
+"Open the Show menu of the viewport and choose Start Trace"
+],
+"6": [
+"Which key the player pressed last time",
+"Which asset has the longest name",
+"Which level was saved last",
+"Which part of the work takes too long"
+]
+}
+},
+"PQ7": {
+"quiz_choices": {
+"1": [
+"In Window, then Output Log",
+"In Edit, then Plugins, by searching for the name of the command",
+"In Edit, then Editor Preferences, under Keyboard Shortcuts",
+"In the World Settings panel"
+],
+"3": [
+"Type the name of the key in the console",
+"Click the text field of the command and press the key combination",
+"Drag the command onto the main toolbar and press the key you want",
+"Right-click the command and choose Rename"
+],
+"4": [
+"The editor closes without saving",
+"Both commands are deleted",
+"The key is silently given to both commands, and both run when you press it",
+"A warning appears, and you can click Override to replace the old binding"
+],
+"5": [
+"Copy the project folder",
+"Use the Export button, which saves them as an .ini file",
+"Take a screenshot of the list and type them in again",
+"Restart the editor two times"
+],
+"6": [
+"Shortcuts make the game run faster",
+"Shortcuts are needed before a Blueprint can compile",
+"You run the same few commands many times, so each shortcut saves many clicks",
+"Commands without a shortcut stop working after a while and must be bound again"
+]
+}
+},
+"PQ9": {
+"quiz_choices": {
+"1": [
+"It holds the rules of the game, such as how a player wins",
+"It draws the score on the screen",
+"It stores the meshes of the level",
+"It reads the keys that the player presses during the game"
+],
+"2": [
+"The rules that decide who wins and when the game ends",
+"The settings of the editor",
+"Shared information about the match, such as the score",
+"The input keys of one player"
+],
+"3": [
+"In the World Settings, under Kill Z",
+"In the Class Defaults of BP_UUGameMode, in Game State Class",
+"In the Event Graph of BP_UUGameState",
+"In the Details panel of the Player Start, in Game State Class"
+],
+"4": [
+"Drag BP_UUGameMode into the level",
+"Rename the level to BP_UUGameMode",
+"Add BP_UUGameMode to the character as a new component",
+"Set GameMode Override in the World Settings of the level"
+],
+"5": [
+"So the score is saved between the two levels",
+"So the GameState is created",
+"So you can still walk around as that character",
+"So the win message is printed once"
+],
+"6": [
+"It uses Get Game State, casts it to BP_UUGameState and reads Collected",
+"It counts the pickups that are left in the level with Get All Actors Of Class",
+"It reads the Target variable of the GameState",
+"It asks the character for its location"
+],
+"7": [
+"A second Print String node",
+"A Do Once node in front of the Print String",
+"A Delay node right after the Print String",
+"A larger Target value"
+],
+"8": [
+"The GameMode cannot hold Integer variables",
+"The GameState is deleted when a player wins",
+"The GameMode is created again on every frame, so a score that is stored in it is lost",
+"The GameMode exists only on the server, while the GameState is shared with all players"
+]
+}
+},
+"PQ10": {
+"quiz_choices": {
+"2": [
+"An asset that stands for one thing the player can do, such as interact",
+"A key on the keyboard that the player presses to do one thing, such as E",
+"A node that moves the character forward",
+"A list of all the keys that the game uses"
+],
+"4": [
+"That the level has a Sky Light",
+"That the mapping context is added to the player on BeginPlay",
+"That the name of the Input Action is written in capital letters",
+"That the character has a camera boom"
+],
+"6": [
+"The action fires twice for each press",
+"The action fires when the key is released",
+"The action fires only after the key is held down for a moment",
+"The action fires on every key of the keyboard for a short moment"
+],
+"7": [
+"In the Output Log of the editor",
+"In the Input folder of the Third Person template",
+"In the World Settings of an empty level",
+"In the Place Actors panel, under Volumes, as Input"
+]
+}
+},
+"PQ11": {
+"quiz_choices": {
+"2": [
+"It makes the graph wait for some time",
+"It makes the graph run faster",
+"It stops the game for ever",
+"It repeats the node that is before it"
+],
+"8": [
+"Because the editor needs all three to compile",
+"Because one of the three will be deleted by the engine later",
+"So you can compare their rules and pick the right one later",
+"So the behavior runs three times as fast"
+]
+}
+}
+}

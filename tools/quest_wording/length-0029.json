@@ -1,0 +1,378 @@
+{
+"EAQ39": {
+"quiz_choices": {
+"1": [
+"World Settings > Lightmass > Lightmass Settings, Dynamic Global Illumination Method and Reflection Method",
+"Project Settings > Engine > Rendering, Dynamic Global Illumination Method and Reflection Method",
+"The Sky Light Details panel",
+"Each light's Mobility dropdown"
+],
+"2": [
+"It is required for Lumen's Software Ray Tracing mode",
+"Distance fields store the lightmaps",
+"It makes Nanite meshes render faster",
+"It is needed before you can place a Post Process Volume"
+],
+"3": [
+"It becomes fully dynamic",
+"It is disabled, because Static lights live in lightmaps which Lumen hides",
+"It only affects reflections",
+"It doubles in strength, because Lumen adds its bounces on top of the lightmap"
+],
+"5": [
+"Default 0; set it to 1",
+"Default 1; raise it to 2 or more (up to 8 in the PPV)",
+"Default 8; lower it",
+"Default 64; it is a fixed value and cannot be changed"
+],
+"6": [
+"Lumen caches lighting, so global changes take time to propagate; Lighting Update Speed controls it at GPU cost",
+"The Sky Light needs a recapture",
+"Lightmaps still hold the old lighting, and they fade out slowly after the sun is switched off in a Lumen scene",
+"Screen Traces are disabled"
+]
+}
+},
+"EAQ40": {
+"quiz_choices": {
+"1": [
+"World Settings > Lightmass > Lightmass Settings > Shadow Map Method",
+"On each light's Mobility dropdown",
+"Sky Light Details panel",
+"Project Settings > Engine > Rendering > Shadows > Shadow Map Method"
+],
+"2": [
+"Increasing the Attenuation Radius until the shadow edge fades out",
+"Setting Source Radius above 0; local lights have none by default",
+"Enabling Cast Translucent Shadows",
+"Lowering Shadow Bias to 0"
+],
+"3": [
+"Pages that are fully cached from the frame before this one",
+"Pages with the highest resolution",
+"Pages outside the camera view",
+"Pages that are new or invalidated and must be re-rendered"
+],
+"5": [
+"Yes, it is required for VSM to work",
+"No, VSM's high resolution makes it unnecessary and it can be less accurate",
+"Yes, but only on Point Lights",
+"No, because VSM disables all of the screen space effects in the whole project"
+],
+"6": [
+"16k x 16k virtual resolution, split into 128x128 pages that render only when needed",
+"2k x 2k for each light, split into cascades that all render again on every single frame",
+"4k x 4k, one texture per object",
+"Unlimited, streamed from disk"
+]
+}
+},
+"EAQ41": {
+"quiz_choices": {
+"1": [
+"Set Blend Mode to Additive",
+"Set Material Domain to Light Function and feed nodes into Emissive Color",
+"Enable Two Sided and feed nodes into Opacity instead of Emissive Color",
+"Set Shading Model to Unlit"
+],
+"2": [
+"Static only",
+"Any mobility; Static lights bake the function into the lightmaps",
+"Movable or Stationary only; they cannot be baked into lightmaps",
+"Movable only"
+],
+"3": [
+"Yes, always",
+"No, once assigned it shows without Cast Shadows",
+"Only for Directional Lights",
+"Only when Volumetric Fog is turned on in the level"
+],
+"5": [
+"Always 0",
+"Always 1",
+"The average brightness of the material's emissive input, between 0 and 1",
+"The Intensity of the light in candela, divided by its Attenuation Radius"
+]
+}
+},
+"EAQ42": {
+"quiz_choices": {
+"1": [
+"Same density everywhere",
+"More density in low places, less in high places, with a smooth transition",
+"Only inside a box volume",
+"Denser near the camera only, and thinner the further away you look from it"
+],
+"2": [
+"Camera height",
+"Time of day",
+"Whether the fog actor is rotated toward the dominant Directional Light or away from it in the level",
+"Whether you look at the hemisphere facing the dominant Directional Light or the opposite one"
+],
+"3": [
+"The transition from thick to thin fog becomes larger",
+"The fog becomes fully opaque at every height in the level",
+"The fog moves up in Z",
+"The fog is disabled"
+],
+"4": [
+"It reduces the resolution of the fog texture for far pixels, so the cost of the whole fog pass can drop to 50% or less",
+"Pixels in the fog-free area in front of the viewer can be culled by the Z-buffer, so the cost can drop to 50% or less",
+"It disables the second fog layer",
+"It turns off directional inscattering"
+],
+"5": [
+"Fog Max Opacity 1",
+"Directional Inscattering Exponent, so the far fog gets thinner",
+"Fog Cutoff Distance, so elements past that distance get no fog",
+"Emissive"
+],
+"6": [
+"Set Fog Inscattering Color and Directional Inscattering Color to black",
+"Set both colors to white",
+"Match both colors to the color of the sun, and set Fog Density to zero",
+"Delete the fog actor"
+]
+}
+},
+"EAQ43": {
+"quiz_choices": {
+"1": [
+"Every frame, always",
+"Once on load, and then only when Recapture is called or Real Time Capture is enabled",
+"Only when the lighting of the level is built, and then never again while the game runs",
+"Only when the level is saved"
+],
+"2": [
+"Updates automatically",
+"Rebuilds lighting by itself",
+"Switches to a specified cubemap until you save the level",
+"Nothing until you Recapture or use Real Time Capture"
+],
+"3": [
+"A Sky Atmosphere component in the scene",
+"A Static Sky Light",
+"Volumetric Fog enabled",
+"A Reflection Capture actor in the scene"
+],
+"4": [
+"Any integer",
+"Only 128",
+"Powers of two such as 64, 128, 256",
+"Multiples of 100 such as 100, 200"
+],
+"5": [
+"Unlit is faster to compile",
+"Only the emissive contribution of materials is captured, to avoid a feedback loop",
+"Lit materials cannot be seen by the Sky Light at all, so the sky would be black",
+"Static Sky Lights only capture cubemaps"
+],
+"6": [
+"RecaptureSky() gives lower quality",
+"RecaptureSky() only works in the editor; in a packaged game the node is ignored and does nothing",
+"Real Time Capture is free",
+"Real Time Capture stays on the GPU; RecaptureSky() costs at least 120 ms and can pause gameplay"
+]
+}
+},
+"EAQ44": {
+"quiz_choices": {
+"2": [
+"Let the importer triangulate it",
+"Let the FBX exporter triangulate it, with its default settings",
+"Triangulate it yourself in the 3D app, controlling the edges",
+"Do nothing, Unreal renders quads directly"
+],
+"6": [
+"It makes a set of unique, non-overlapping UVs for static lighting",
+"It deletes the texture UVs",
+"It makes the mesh use Nanite",
+"It bakes the lighting of the level into the vertex colors of the mesh"
+]
+}
+},
+"EAQ45": {
+"quiz_choices": {
+"1": [
+"The box replaces the sphere",
+"The box is added, and both collisions stay",
+"Unreal shows an error",
+"The sphere is converted to a box of that size"
+],
+"2": [
+"18 triangles in the hull",
+"18 convex hulls",
+"A box with all edges beveled, using 18 axis-aligned planes",
+"18 percent of the detail of the mesh is kept in the hull"
+],
+"5": [
+"The prop becomes impossible to move",
+"The prop stops moving",
+"The prop turns invisible",
+"The prop falls through the level"
+],
+"6": [
+"Make the hulls overlap a lot so that no hole is left between",
+"Leave a small gap between the hulls so they do not intersect",
+"Use only one hull always",
+"Use spheres, not convex hulls"
+]
+}
+},
+"EAQ46": {
+"quiz_choices": {
+"2": [
+"You used Union",
+"You used Intersection",
+"You selected the meshes in the wrong order for Difference",
+"You forgot to press Accept after you selected the meshes"
+],
+"5": [
+"The mesh has no PolyGroup information",
+"The mesh is too small",
+"The mesh uses Nanite",
+"The mesh has a material assigned to it"
+],
+"6": [
+"Undo each stroke one by one",
+"Undo only the combined result of all strokes",
+"Nothing, the change is permanent",
+"Undo all the strokes but keep the tool open"
+]
+}
+},
+"EAQ47": {
+"quiz_choices": {
+"1": [
+"Right-click the mesh in the Content Browser",
+"Window > Cinematics",
+"Edit > Project Settings",
+"Press F with the mouse in the Material Editor"
+],
+"2": [
+"It splits an island in two",
+"It connects two corresponding edges into one island",
+"It scales all UVs to 0-1",
+"It bakes the lighting of the level into the new UVs"
+],
+"5": [
+"On the most visible faces",
+"Where the audience will not see them",
+"Always on the top faces of the mesh",
+"Never, seams are not allowed"
+],
+"6": [
+"To restart the editor after the change",
+"To rebuild lighting",
+"To enable Nanite",
+"To click Apply in the UV Editor toolbar"
+]
+}
+},
+"EAQ48": {
+"quiz_choices": {
+"1": [
+"Always, for every mesh, whatever lighting the project uses",
+"Only when it will be lit with baked (precomputed) lighting",
+"Only when it uses Nanite",
+"Only when it has a normal map"
+],
+"2": [
+"It must be inside the bounds of the level it is used in",
+"Islands may overlap freely",
+"No overlapping faces and enough padding between islands",
+"It must use UDIMs"
+],
+"4": [
+"Add padding between charts",
+"Split UV chart edges into new islands",
+"Normalize chart scale",
+"Store the result in a new UV channel"
+],
+"5": [
+"Because DXT compression works on 4x4 texel blocks",
+"Because Lumen needs it",
+"Because the UV Editor does not accept less padding",
+"Because meshes have four sides"
+]
+}
+},
+"EAQ49": {
+"quiz_choices": {
+"1": [
+"It removes all of the paint from the mesh",
+"It is a second paint color you can swap to",
+"It resets the mesh to white",
+"It deletes the material"
+],
+"3": [
+"Creates new LODs",
+"Applies the vertex colors from LOD0 to all LOD levels",
+"Removes the vertex colors from all LOD levels but LOD0",
+"Sets the LOD screen size"
+],
+"6": [
+"A material set up to blend textures between layers",
+"A Nanite mesh",
+"A lightmap UV",
+"A Skeletal Mesh with a Physics Asset assigned to it"
+]
+}
+},
+"EAQ50": {
+"quiz_choices": {
+"1": [
+"It rotates the camera so that it faces the surface you click",
+"It rotates snapped actors to match the surface they snap to",
+"It flips the surface normals of the mesh",
+"It rotates the grid"
+],
+"3": [
+"Hold V while using the translation gizmo",
+"Press Ctrl + V",
+"Enable it in Project Settings > Viewports",
+"Hold Alt while rotating"
+],
+"5": [
+"Edit > Editor Preferences > Viewports, Snap category",
+"Window > Layers",
+"Edit > Project Settings > Physics, Simulation category",
+"The Static Mesh Editor"
+],
+"6": [
+"Only the selected actor in the open level",
+"The static mesh asset and all its instances",
+"Only the preview in Modeling Mode",
+"The world origin"
+]
+}
+},
+"EAQ51": {
+"quiz_choices": {
+"1": [
+"A single skeletal mesh",
+"A Landscape and its foliage",
+"A Blueprint with gameplay logic that spawns its Static Meshes when the level starts",
+"Static Mesh assets combined into one Blueprint actor optimized for rendering"
+],
+"3": [
+"Puts the pivot at the world origin",
+"Puts the pivot at the center of the instance at its lowest Z",
+"Puts the pivot on the actor that you selected first in the level",
+"Puts the pivot at the highest point"
+],
+"4": [
+"Press Esc twice",
+"Select the Level Instance Actor and click Commit Changes",
+"Rebuild lighting",
+"Restart the editor and open the level that holds the copies"
+],
+"6": [
+"They are deleted forever",
+"They stay as they were, plus a copy is made",
+"They are replaced by a Level Instance Actor and become its non-selectable children",
+"They are moved to a new level and removed from the Outliner, with no actor left behind"
+]
+}
+}
+}

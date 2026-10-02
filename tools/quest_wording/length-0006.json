@@ -1,0 +1,514 @@
+{
+"AQ73": {
+"quiz_choices": {
+"1": [
+"Switch the editor between Body, Constraint and Simulate modes",
+"Change the viewport camera to the front, side and top views",
+"Switch Swing1, Swing2 and Twist between Limited and Locked",
+"Cycle the Current Profile through the first three profiles"
+],
+"2": [
+"Constraints are only created when a body is generated, so you must remove and recreate the upper arm body, which also affects the elbow constraint",
+"Right-click the bone in the Skeleton Tree and choose Add Constraint, which restores the old limits of the shoulder from the last saved version of the asset",
+"Press Ctrl+Z at any time later, even after closing the editor, because deleted constraints are kept in the asset until the project is packaged",
+"Duplicate the other shoulder constraint and mirror it, which also copies the body of the upper arm to the other side"
+],
+"3": [
+"Drag the source constraint onto the others in the Skeleton Tree",
+"Assign them all to a constraint profile that has the name Copy",
+"Use the Tools tab > Regenerate Bodies with the source selected",
+"Select the source, Ctrl+C, select the targets, Ctrl+V"
+],
+"4": [
+"Constraint damping is always stronger than body damping, and it also applies to bodies that have no constraint",
+"Constraint damping works only on Limited motions and only when the motion goes past its limit",
+"Body damping only affects rotation, while constraint damping only affects movement",
+"There is no difference, both slow the body in the same way"
+],
+"5": [
+"50000 completely deflects the motion; 50 barely affects it",
+"50000 makes the joint break on the first hit; 50 never breaks",
+"50000 disables the limit; 50 keeps the limit active",
+"Both look the same in play; the value only matters at low frame rates"
+],
+"6": [
+"One body has too much mass; lower Mass in KG on it until the ragdoll stays together",
+"The constraint profile is missing; create one and assign every constraint to it",
+"Gravity is too strong for the ragdoll; lower the world gravity in the Project Settings",
+"Two colliding bodies interpenetrate; disable collision between them or move or scale them apart"
+],
+"8": [
+"Breaks the joint when a force threshold is passed, and sends the broken part away with the force of the hit; meant for destruction",
+"Adds bounce when a limit is violated, so the body springs back into its allowed range; meant for soft limits",
+"Increases the parent's mass for the last solver iteration to stiffen chains; meant for world constraints and ragdolls",
+"Disables collision between the two constrained bodies"
+]
+}
+},
+"AQ74": {
+"quiz_choices": {
+"1": [
+"It runs on the GPU, so it can simulate many more bones than Anim Dynamics can",
+"It replaces the movement component, so the whole character is moved by physics and no longer by player input",
+"It works without a Skeleton, so it can be used on Static Meshes in the level",
+"It uses the character's physics asset and can collide with the rest of the character and the level"
+],
+"2": [
+"Enabled on all bodies, so that every body collides with every other body",
+"Enabled only on the root body of the Physics Asset",
+"Disabled on all bodies until you enable it, for example with Collision > Enable Collision All",
+"Enabled only between bodies that share a constraint, such as the upper arm and the lower arm of a character"
+],
+"3": [
+"Give every body in the chain the same mass, so no body pulls on another",
+"Make the body closest to the parent the heaviest and halve the mass for each next body",
+"Make the tip of the chain the heaviest body and halve the mass for each body toward the parent",
+"Set all masses to 0"
+],
+"4": [
+"Component Space, so a space conversion is needed around it",
+"Local Space, so no space conversion is needed around it",
+"World Space only, so it must be the last node of the graph",
+"Bone Space of the root bone"
+],
+"5": [
+"Velocities are generated from the movement of the mesh",
+"Moving the whole mesh or the base bone has no effect on velocities",
+"The simulation resets each time the mesh moves more than one meter",
+"Gravity is disabled until the mesh stops"
+],
+"6": [
+"The simulation is fully local; world movement does not affect it",
+"The simulation runs fully in world space; local movement does not affect it",
+"The node is disabled and the input pose passes through",
+"Gravity is doubled for all simulated bodies"
+],
+"7": [
+"Cached Bounds Scale (values around 10 or less) and the Evaluation Reset Time",
+"Evaluation Reset Time",
+"Overlap Channel",
+"Max Angular Velocity (values around 10 or less) and Max Angular Acceleration"
+]
+}
+},
+"AQ75": {
+"quiz_choices": {
+"1": [
+"Physics Asset Editor > Window > Profiles > New under Physical Animation Profiles",
+"Project Settings > Physics > Profiles > New under Physical Animation Profiles",
+"In the Class Defaults of the Animation Blueprint",
+"By right-clicking a bone in the Skeleton Editor"
+],
+"4": [
+"To reduce the draw calls of the character when it is simulated",
+"To let projectiles pass through the mesh and hit the capsule instead",
+"So the mesh stops trying to eject itself from the collision capsule",
+"Because profiles do not compile without that setting"
+],
+"5": [
+"Set All Bodies Below Simulate Physics",
+"Apply Physical Animation Profile Below",
+"Set Skeletal Mesh Component on the Physical Animation Component",
+"Set Constraint Profile for All"
+],
+"8": [
+"Assigned nodes show their fill color; unassigned nodes are shaded",
+"Assigned nodes are drawn in red; unassigned nodes are drawn in green",
+"Assigned nodes are hidden; only unassigned nodes are shown",
+"There is no visual difference"
+]
+}
+},
+"AQ76": {
+"quiz_choices": {
+"2": [
+"Simulates only the named bone and leaves its child bones animated",
+"Applies a constraint profile to the named bone and to all of its child bones",
+"Turns simulation on or off from the named bone recursively down the chain",
+"Changes the collision preset of the mesh"
+],
+"3": [
+"Set the blend weight to 1 at once, then start simulating on the whole body, then get the hit bone and stop simulating above it",
+"Start simulating on every bone of the character, then trace for the hit bone, then set the blend weight to 0 on the bones that were not hit",
+"Stop simulating on all bones, animate the blend weight up to 1, then get the hit bone and keep it simulated",
+"Get the hit bone, start simulating below it, animate blend weight up to 1 and back to 0, then stop simulating"
+],
+"4": [
+"In the Animation Blueprint's Event Graph",
+"In the Level Blueprint of the persistent level",
+"In the Physics Asset of the Skeletal Mesh",
+"In a Material of the character"
+],
+"5": [
+"A Physics Asset set up and applied",
+"A Control Rig with a control per bone",
+"Root motion enabled on its animations",
+"A Nanite mesh"
+],
+"6": [
+"It is fully simulated and ignores the animation",
+"It ignores both animation and physics, and never moves from its start position",
+"It inherits its type from the owner component",
+"It is not affected by physics but can interact with simulated bodies"
+],
+"7": [
+"Root Motion Mode = Ignore Root Motion",
+"Enable Gravity turned off on all of the bodies",
+"Physics Update Mode = Component Transform is Kinematic",
+"Sleep Family = Sensitive"
+],
+"8": [
+"Sets the Physics Type for that bone only, not its children",
+"Sets the Physics Type for the bodies below that bone",
+"Deletes the body of that bone",
+"Creates a constraint profile for that bone"
+]
+}
+},
+"AQ77": {
+"quiz_choices": {
+"1": [
+"Project Settings > Physics > Hair",
+"Skeletal Mesh Editor > Clothing panel > Enable Simulation",
+"Groom Asset Editor > Physics panel > Enable Simulation",
+"The Niagara System editor"
+],
+"2": [
+"Chaos Cloth, Chaos Flesh, Custom Solver",
+"GPU Solver, CPU Solver, Hybrid Solver",
+"PBD, XPBD, Verlet",
+"Groom Rods, Groom Springs, Custom Solver"
+],
+"5": [
+"The component needs a Niagara system that you build by hand and assign in the Details panel of the level",
+"Enable Simulation is off in the groom asset; both the asset and the component must have it enabled",
+"Local Bone is not set on the component",
+"The LOD of the groom is set to Auto"
+],
+"7": [
+"Moves the groom to a bone when the distance is passed",
+"Limits how far the strands can stretch from the scalp",
+"Sets the distance threshold that resets the simulation",
+"Sets the collision radius of each strand"
+],
+"8": [
+"The UV at the root of each strand, as a color",
+"The clusters of strands that are used for culling at a distance",
+"The random seed of each strand, as a shade of grey",
+"The strands influenced by each guide, as colored simulation clumps"
+]
+}
+},
+"AQ78": {
+"quiz_choices": {
+"3": [
+"1.0; any codec above this error is used",
+"0; compression is skipped for all animations",
+"0.1; the best codec below this error is used",
+"10; the codecs are tried in order of their size"
+],
+"4": [
+"Deletes keys from the animation until the file is smaller than the threshold, even if the error gets higher",
+"Uses a codec with lower error, even if it increases file size, until the error falls below the threshold",
+"Locks the threshold at 0 so that no codec can be used",
+"Forces resampling of the animation to 30 fps"
+],
+"5": [
+"They recompress automatically right away, in the background",
+"They are marked as broken until you open and save each one of them in the editor",
+"Nothing until you press the Compress button in the settings asset toolbar",
+"They lose their compression and grow to full size"
+]
+}
+},
+"AQ79": {
+"quiz_choices": {
+"2": [
+"A Physics Asset must be created first",
+"An existing Skeleton must be specified",
+"A Skeletal Mesh must be in the same folder",
+"A Material must be assigned to the mesh"
+],
+"3": [
+"After the name of the FBX file",
+"After the name of the Skeletal Mesh",
+"After the root bone of the skeleton",
+"AnimSequence_0, then _1 and so on"
+],
+"4": [
+"Source Timeline",
+"Set Range",
+"Animation Time (named Animated Time in the older FBX Import Options window)",
+"Frame Import Range"
+],
+"6": [
+"Scale is never imported for animations, so the bones always keep the scale of the reference pose",
+"Scale imports without extra options, and the engine only saves scale that is not 1",
+"You must enable Import Scale Tracks first, or the scale keys are dropped",
+"Scale is baked into the vertices of the mesh instead"
+],
+"8": [
+"Blender",
+"Motion Builder",
+"Houdini",
+"ZBrush"
+]
+}
+},
+"AQ80": {
+"quiz_choices": {
+"1": [
+"A bone that follows the transform of another bone, but in a different bone space",
+"A bone that is only used in the editor preview, and is removed from the game at runtime",
+"A bone that is created by the physics asset for each body",
+"A bone that stores animation curves and no transform"
+],
+"3": [
+"IK-only setups do not work on the mannequin, because its hands have no IK bones and no sockets for a weapon",
+"Virtual Bones are cheaper to evaluate than IK, so the hands need no IK node in the AnimGraph at all",
+"An IK-only setup pins the hands in place, so you need extra logic to turn IK off during actions like reloading",
+"Virtual Bones replace the need for a Skeleton asset"
+],
+"4": [
+"In the Physics Asset Editor, by right-clicking a body in the tree and choosing Add Virtual Bone",
+"In the Class Settings of the Animation Blueprint, in the Interfaces section",
+"In the Skeletal Mesh Reduction settings of each LOD",
+"In the Animation Editor's Skeleton Tree, by right-clicking a bone and choosing Add Virtual Bone"
+],
+"5": [
+"To exclude the Virtual Bones from the additive layer so they keep the base pose",
+"To mask the legs from IK so that only the hands are moved by the Two Bone IK nodes",
+"To speed up the Apply Additive node on far LODs",
+"To hide the Virtual Bones in the viewport"
+],
+"8": [
+"The bone that receives the rotation of the hand",
+"The IK pole vector, a position behind the elbow",
+"The maximum stretch of the limb, as a position",
+"The socket that holds the weapon"
+]
+}
+},
+"AQ81": {
+"quiz_choices": {
+"3": [
+"1.0, so the animation must be fully blended in before the notify can fire",
+"0.00001, so the notify fires even when the animation is barely blended in",
+"0.5, so the animation must be at least at half weight",
+"0, so the notify never fires while blending"
+],
+"4": [
+"Yes, all animations in a group fire their notifies, whether they are the leader or a follower",
+"Yes, but only on dedicated servers, where every animation is treated as a leader",
+"No, only the Sync Group leader fires notifies unless Trigger on Follower is enabled",
+"No, notifies never fire inside Sync Groups"
+],
+"6": [
+"How much blend weight is needed to fire, from 0 (none) to 1 (full)",
+"The delay in seconds before the notify fires, from 0 to 1",
+"Which LOD levels can fire the notify, from LOD 0 to LOD 1",
+"The chance the notify executes, from 0 (never) to 1 (always)"
+],
+"8": [
+"The Compiler Results panel of the Animation Blueprint, after a full compile",
+"The Manage Notifies panel, right-click the notify and choose Find References",
+"The Reference Viewer of the Skeletal Mesh",
+"The Animation section of the Project Settings"
+]
+}
+},
+"AQ82": {
+"quiz_choices": {
+"1": [
+"Pose Driver drives poses from bone motion; Pose Blender blends poses using curve values",
+"Pose Driver works only on faces; Pose Blender works on the body and on the hands as well",
+"Pose Blender is the C++ version of Pose Driver; both give the same pose",
+"There is no difference, both drive poses from bones"
+],
+"2": [
+"The three targets are kept and the new ones are added after them",
+"Nothing, because the tool only works on an empty list of targets",
+"The existing targets are overwritten by the poses in the Pose Asset",
+"The Pose Asset is duplicated"
+],
+"3": [
+"Scales the mesh of the character so that it fits the poses of the Pose Asset",
+"Sets each target's Scale based on the distance to the nearest neighbor target",
+"Normalizes the weights of all targets so they add up to one",
+"Doubles the radius of every target"
+],
+"7": [
+"Both are combined, and the result is the average of the two",
+"Eval from Ref Pose is used and Eval Space Bone is ignored",
+"Eval Space Bone is used and Eval from Ref Pose is ignored",
+"The node shows a compile error"
+]
+}
+},
+"AQ83": {
+"quiz_choices": {
+"1": [
+"As the montage ends, using the Blend Out Time",
+"Halfway through the montage, at half weight",
+"Never, the montage does not blend out at all",
+"One second before the end"
+],
+"2": [
+"The montage restarts from its first section and plays again",
+"No blend happens and the final pose stays until something stops it",
+"The montage blends into the section that is named Default",
+"The AnimGraph resets to the reference pose for one frame"
+],
+"4": [
+"Each track must use a Slot from a different Slot Group",
+"Only DefaultGroup can be used for the tracks of a montage",
+"All sequence tracks must use Slots from the same Slot Group",
+"Slot Groups do not matter for montages"
+],
+"5": [
+"Because duplicated tracks lose their animations when the montage is saved",
+"Because two tracks cannot occupy the same Slot on the same Skeleton",
+"Because the montage would double in length",
+"Because sections only work on one track"
+],
+"6": [
+"Always, on every montage",
+"Only when the montage has a non-default play rate",
+"Only in the preview of the Montage Editor",
+"Only when Enable Auto Blend Out is turned off on it"
+],
+"7": [
+"Warn About Blueprint Usage",
+"Use Multi Threaded Animation Update",
+"Use Main Instance Montage Evaluation Data",
+"Root Motion Mode"
+]
+}
+},
+"AQ84": {
+"quiz_choices": {
+"2": [
+"In Project Settings, under Rendering, with the Enable Update Rate Optimizations option for all characters of the project",
+"On the Skeletal Mesh Component, in the Optimization section of its Details panel, with Enable Update Rate Optimizations",
+"In the Class Settings of the Animation Blueprint, in the Optimization section",
+"In the Skeleton asset, on the root bone"
+],
+"3": [
+"It locks the mesh to its most detailed LOD, so the bounds of the lower LODs are never loaded or calculated during the game",
+"It stops the animation when the character is hidden, so the bounds do not have to follow the bones",
+"It skips the Physics Asset and uses fixed bounds from the Skeletal Mesh, so the bounds are not recalculated every frame",
+"It makes the collision capsule static"
+],
+"4": [
+"Display Debug Update Rate Optimizations",
+"Warn About Blueprint Usage",
+"Enable Lazy Evaluation",
+"Component Use Fixed Skel Bounds"
+],
+"5": [
+"Pose Search",
+"Animation Budget Allocator",
+"Motion Warping",
+"Control Rig Modules"
+],
+"6": [
+"Use Blueprint notifies wherever you can, because they run on the worker threads",
+"Store every notify on the Skeleton, so it is shared",
+"Turn all notifies off at a distance, with a LOD setting",
+"Make them non-Blueprint based, to avoid calls into the Blueprint Virtual Machine"
+],
+"7": [
+"They are faster with root motion, because the capsule no longer has to be moved",
+"The parallel update cannot happen because character movement is not multi-threaded",
+"Root motion has no effect on threading",
+"Root motion forces the AnimGraph onto a worker thread"
+],
+"8": [
+"60Hz and under, with interpolation enabled",
+"30Hz and under, with interpolation enabled",
+"15Hz and under, with interpolation disabled",
+"1Hz for all characters, with interpolation disabled"
+]
+}
+},
+"AQ85": {
+"quiz_choices": {
+"1": [
+"Nanite must be enabled for skeletal meshes",
+"Skeletal Mesh Reduction Plugin must be set to SkeletalMeshReduction",
+"Skin Cache Usage must be set to Disabled for all Skeletal Meshes",
+"The default LOD group must be Character"
+],
+"3": [
+"Bones to Prioritize and a high Weight of Prioritization, such as 5000",
+"Bones to Remove and a high LOD Hysteresis value, such as 5000 or more",
+"Lock Mesh Edges and Skin Cache Usage",
+"Bake Pose and Volumetric Correction"
+],
+"4": [
+"Open the mesh twice, in two editor windows",
+"Enable Custom in the LOD Picker and toggle the LODs you want",
+"Set Number of LODs to 1, so all properties are merged into one list",
+"Use the LOD menu of the viewport"
+],
+"5": [
+"Triangles, because the memory cost follows the triangle count",
+"Vertices, because the memory cost is related to vertex count",
+"First Percent Simplified, because it is the default setting",
+"Max Triangles, because it is the fastest"
+],
+"6": [
+"The LOD keeps the exact volume of the source mesh",
+"The simplification flattens and deflates rounded surfaces",
+"The LOD becomes larger than the source mesh on round parts",
+"The setting is ignored"
+],
+"7": [
+"They disappear from the tree until you select LOD 0 again in the viewport",
+"They are shown in red, with a line through their names",
+"They are still listed but with a dot icon instead of a bone icon",
+"They are moved under the root bone"
+],
+"8": [
+"It delays the LOD switch to avoid flickering, and only applies when going from a complex to a simple LOD",
+"It blends two LODs together over a short time, and applies in both directions between any two LODs of a mesh",
+"It changes the screen size threshold of all LODs at once, and is used on low-end platforms",
+"It only applies when going from a simple to a complex LOD"
+]
+}
+},
+"AQ86": {
+"quiz_choices": {
+"2": [
+"Asset Actions > Validate Assets",
+"Asset Actions > Validate Assets and Dependencies",
+"Tools > Validate Data... > Include Dependencies",
+"Validate Assets in Folder"
+],
+"3": [
+"UnrealEditor-Cmd.exe <PROJECT>.uproject -run=DataValidation",
+"UnrealEditor.exe <PROJECT>.uproject -validate -nullrhi -unattended",
+"UnrealPak.exe <PROJECT>.uproject -check",
+"UnrealEditor-Cmd.exe -run=Cook -validate"
+],
+"4": [
+"Begin Play and Tick",
+"Is Data Valid and Post Load",
+"Can Validate Asset and Validate Loaded Asset",
+"Construct and Validate"
+],
+"5": [
+"Return a boolean value",
+"Call Asset Passes or Asset Fails",
+"Print a line to the Output Log",
+"Save the asset to disk"
+],
+"6": [
+"It must be compiled with C++ before the editor can load the Python file",
+"It must be placed in the Plugins folder of the engine, not in the project",
+"It must override IsDataValid instead of Validate Loaded Asset",
+"It must register itself with the Editor Validator Subsystem using AddValidator"
+]
+}
+}
+}

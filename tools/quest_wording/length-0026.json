@@ -1,0 +1,456 @@
+{
+"LDQ104": {
+"quiz_choices": {
+"1": [
+"A Spline Edit Layer in the edit layer stack",
+"A Static Mesh on each segment of the spline",
+"A NavMesh rebuild",
+"A Landscape Material"
+],
+"3": [
+"Add a decal",
+"Set the Layer Name on the segments to the painted blendmask layer; width and falloff shape the paint",
+"Enable Cast Shadow",
+"Set the Mesh Vertical Offset on the segments to the height of the road; the offset also paints the layer"
+],
+"4": [
+"Solid = collision of the spline meshes, dotted = navigation area bounds",
+"Solid = tangent, dotted = mesh bounds",
+"Solid = Half-Width, dotted = Side Falloff (the cosine-blended region)",
+"Solid = raise, dotted = lower"
+],
+"5": [
+"Scales the spline meshes",
+"Shows the tangents; dragging their ends changes how curved the segments are",
+"Scales the landscape component under the point and lifts the terrain with it",
+"Widens the road"
+],
+"7": [
+"Scales the mesh to fit the spline width instead of using it as-is",
+"Scales the landscape under the spline to fit the size of the mesh",
+"Doubles the Half-Width",
+"Sets the mesh forward axis"
+],
+"8": [
+"Yes, it works like the base layer, and hand sculpting is mixed with the spline data on the same layer",
+"Only with the Erase tool",
+"Only after Collapse",
+"No, the Spline edit layer only supports procedural data and cannot be sculpted or painted by hand"
+]
+}
+},
+"LDQ105": {
+"quiz_choices": {
+"1": [
+"Two NavMeshBoundsVolumes, one per agent",
+"Custom Area Classes on Nav Modifier Volumes plus a different Navigation Query Filter per agent",
+"Two Nav Link Proxies with opposite directions",
+"Two RecastNavMesh actors with a different Agent Radius, so each agent walks on its own NavMesh"
+],
+"3": [
+"Path Length and Path Time",
+"Default Cost multiplier and Fixed Area Entering Cost",
+"A Sight Cost multiplier and a Hearing Cost multiplier",
+"Tile Cost and Cell Cost"
+],
+"4": [
+"A random path",
+"The path with the fewest tiles",
+"The shortest path, usually a straight line",
+"The path that follows the NavMesh border"
+],
+"5": [
+"Delete them from the level",
+"Override their cost values for the agent that uses the filter",
+"Change their Draw Color at runtime for the agent that uses it",
+"Turn them into Nav Link Proxies"
+],
+"6": [
+"In Project Settings > Navigation Mesh, under the Query section",
+"In the Filter Class field on the NPC Blueprint's Details panel",
+"In the Nav Modifier Volume",
+"In the Blackboard asset"
+]
+}
+},
+"LDQ106": {
+"quiz_choices": {
+"2": [
+"Faster to generate and less memory, but less accurate",
+"More accurate around obstacles, but slower to generate",
+"Same accuracy, only a different color",
+"Agents move faster on it"
+],
+"3": [
+"High everywhere",
+"Low in the field, Default or High in the warehouse",
+"Low in the warehouse, Default or High in the field",
+"Default everywhere; resolution cannot vary"
+],
+"5": [
+"Low tiles block agents by design, so that crowds stay out of all narrow places",
+"Low resolution does not have enough polygons to build a path in the tight gap",
+"Default tiles have a lower cost",
+"Agents ignore Low tiles"
+],
+"6": [
+"On a NavModifier component, Nav Mesh Resolution dropdown",
+"On the Static Mesh component, in the Collision section",
+"On the Actor's Tags",
+"On the RecastNavMesh actor only"
+],
+"8": [
+"Tile Size UU must be equal to the largest Cell Size, and the other Cell Sizes must be half of it",
+"Tile Size UU should be divisible by all the Cell Sizes, and Cell Sizes multiples of each other",
+"Tile Size UU should be a prime number",
+"There is no relationship"
+]
+}
+},
+"LDQ107": {
+"quiz_choices": {
+"2": [
+"A NavMeshBoundsVolume",
+"A Nav Modifier component on the Blueprint",
+"A Nav Link Proxy",
+"A Rotating Movement component on the cube"
+],
+"3": [
+"Change polygon costs",
+"Block areas",
+"Generate new Navigation Mesh surfaces",
+"Apply Navigation Links during runtime"
+],
+"4": [
+"It runs on the GPU",
+"It caches collision data, which can make affected tiles up to 50% cheaper to process",
+"It uses fewer tiles",
+"It disables pathfinding while objects move, so no tile has to be rebuilt until they stop"
+],
+"7": [
+"They only work in packaged builds, because the editor does not rebuild the NavMesh during Play In Editor",
+"They force constant NavMesh regeneration, which has a high computational cost and is not best practice",
+"They break Nav Link Proxies",
+"They require C++"
+],
+"8": [
+"Project Settings > Navigation Mesh > Runtime",
+"The Details panel of the Nav Modifier Volume",
+"World Settings > Lightmass",
+"Editor Preferences > Level Editor"
+]
+}
+},
+"LDQ108": {
+"quiz_choices": {
+"1": [
+"Pathfinding is only for players",
+"Avoidance handles moving obstacles and other agents; pathfinding handles objects that do not move",
+"Avoidance replaces the NavMesh",
+"Pathfinding does not work with the Character class, so Characters need avoidance to move at all"
+],
+"2": [
+"In the Character Movement component of the Character class",
+"In the AI Controller",
+"In the RecastNavMesh actor that is placed in every level",
+"In the Blackboard"
+],
+"3": [
+"It needs a Behavior Tree",
+"It has a fixed maximum number of agents",
+"It does not use the NavMesh, so agents can go out of bounds",
+"It only works on Pawns that are not of the Character class"
+],
+"4": [
+"Enable Use RVOAvoidance",
+"Set AI Controller Class to DetourCrowdAIController",
+"Add a Nav Modifier component",
+"Increase the Avoidance Consideration Radius to 500"
+],
+"5": [
+"It only works with the Character class and its movement component",
+"It has a fixed maximum number of agents set in Project Settings",
+"It cannot avoid other agents",
+"It disables pathfinding"
+],
+"6": [
+"Yes, they combine for better results in big crowds",
+"Yes, but only in packaged builds",
+"No; the guide says they should be used exclusively",
+"Only if Max Agents is above 100"
+],
+"7": [
+"It uses adaptive RVO sampling biased toward the agent's direction, plus path corridor optimizations",
+"It runs at a higher tick rate than the Character Movement component and checks every agent each frame",
+"It uses the GPU",
+"It teleports blocked agents"
+]
+}
+},
+"LDQ109": {
+"quiz_choices": {
+"1": [
+"A Selector stops at the first child that succeeds; a Sequence keeps going until a child fails",
+"A Selector runs its children in parallel; a Sequence runs them one by one and waits for each",
+"A Selector is for Tasks only; a Sequence is for Decorators only",
+"There is no difference"
+],
+"2": [
+"Left branches run faster",
+"Trees execute left to right and top down, so the most important behavior goes left and fallbacks go right",
+"Only the leftmost branch of a Selector can have a Decorator, so the branch with the condition has to be first",
+"The Blackboard reads keys from left to right"
+],
+"5": [
+"Aborts only the Patrol branch",
+"Aborts nothing; it only logs",
+"When HasLineOfSight changes, aborts Chase Player itself and any lower priority tasks",
+"Aborts the whole tree and restarts it from the Root node, whatever branch was running"
+],
+"6": [
+"A Decorator is a condition that decides whether a branch can run; a Service runs at a set frequency while its branch is active",
+"A Decorator runs the tasks of its branch at a set frequency; a Service stores the keys that the branch reads from the Blackboard",
+"A Service is a composite; a Decorator is a task",
+"They are the same node with different colors"
+],
+"7": [
+"Tasks cannot access components at all, so the only way to reach Character Movement is through a function call",
+"Letting the tree change sub-objects directly is not a recommended practice; the character should own that change",
+"It is faster",
+"Character Movement is read-only"
+]
+}
+},
+"LDQ110": {
+"quiz_choices": {
+"1": [
+"To move the AI",
+"To produce the Items (locations or Actors) that Tests will filter and score",
+"To store the Blackboard keys that the query reads when it scores each item",
+"To draw debug lines"
+],
+"2": [
+"Distance then Trace, as added; tests always run in the order they have in the list, and each one sees the results of the one before",
+"Trace always runs first",
+"Both run at the same time",
+"Filters run first, and the cheaper filter (Distance) runs before the Line of Sight filter, regardless of the order you added them"
+],
+"5": [
+"Moves items onto the NavMesh; items just beyond the NavMesh edge can bunch up",
+"Scales the grid to the size of the NavMesh; it can make the query much slower",
+"Adds height; it can hide items",
+"Removes items inside walls; it needs C++"
+],
+"7": [
+"Use the Visual Logger only, with a recording from an old session",
+"Place an EQS Testing Pawn with the Query Template assigned",
+"Set Test Purpose to Debug",
+"Enable Draw Tile Labels"
+],
+"8": [
+"F1 then 3",
+"Tab then E",
+"The apostrophe key, then 3",
+"Ctrl+Shift+E, then Numpad 3"
+]
+}
+},
+"LDQ111": {
+"quiz_choices": {
+"1": [
+"A collision volume",
+"The reservation system: an agent claims the object and others cannot use it until it is free again",
+"The NavMesh cost",
+"A Blackboard bool on each agent that is set to true while any other agent in the level uses the slot"
+],
+"2": [
+"Smart Objects, AI Behaviors, Gameplay Behavior Smart Objects",
+"Smart Objects, Mass AI, State Tree",
+"Gameplay Abilities, Smart Objects, Environment Query Editor",
+"AI Behaviors, Niagara, Smart Objects"
+],
+"3": [
+"Play Anim Montage is deprecated",
+"Play Montage has On Completed and On Interrupted pins, so End Behavior fires only when the animation ends and the object stays occupied until then",
+"Play Montage is faster",
+"Play Anim Montage cannot target a Skeletal Mesh that is owned by an AI Controller, so the animation would never start and the object would stay claimed"
+],
+"4": [
+"In the AI Controller",
+"In the Root node of the agent's Behavior Tree",
+"In the Blackboard",
+"In the Smart Object Definition Data Asset"
+],
+"5": [
+"A Smart Object component with its Definition Asset set",
+"An Actor Tag",
+"A Nav Modifier component with its Area Class set to it",
+"A Data Layer"
+],
+"7": [
+"Setting the montage length",
+"Making the Query Box for Find Smart Objects, a 4000 x 4000 unit search area",
+"Scaling the Smart Object",
+"Setting the bounds of the NavMesh, so the agent can walk 2000 units each way"
+],
+"8": [
+"After every montage, before the agent looks for the next Smart Object to use",
+"Before possessing the pawn",
+"When the player is seen",
+"When the Sequence fails, for example when no Smart Object was found or claimed"
+]
+}
+},
+"LDQ112": {
+"quiz_choices": {
+"1": [
+"To the Blueprint of the player character",
+"To the Level Blueprint",
+"To the Behavior Tree",
+"To the Pawn's AIController Blueprint"
+],
+"3": [
+"An already seen target is still perceived, but a new target cannot be picked up",
+"A new target is seen for the first time, and an old target is lost right away",
+"Nothing is perceived",
+"Hearing takes over"
+],
+"4": [
+"Use C++ only",
+"Enable Detect Neutrals to detect all actors, then filter with Tags",
+"Set the Sight Radius to zero for every actor that is not the player",
+"Use the AI Team sense"
+],
+"6": [
+"Project Settings > Engine > AI System > Forget Stale Actors",
+"Starts Enabled on the sense, in the AI Perception Component",
+"Auto Register as Source",
+"Use Controller Rotation Yaw"
+]
+}
+},
+"LDQ113": {
+"quiz_choices": {
+"2": [
+"Drag it into the viewport",
+"Press Play",
+"Right-click the asset and choose Run Editor Utility Widget",
+"Open it from the Layers panel with a double-click on its name"
+],
+"3": [
+"In Project Settings > Plugins",
+"In the Level Editor's Tools menu, under Editor Utility Widgets",
+"In the Place Actors panel",
+"In the Filters menu of the Content Browser, under Editor Tools"
+],
+"6": [
+"Because it runs in Play In Editor",
+"Because it has more memory",
+"Because editor-only functions are only exposed to editor-only classes",
+"Because it uses C++ instead of Blueprint for all of its editor calls"
+],
+"7": [
+"Call in Editor on a Custom Event or function in a normal Actor Blueprint",
+"An Editor Utility Widget with a button that is docked in the Details panel",
+"A Startup Object",
+"A Scripted Action"
+],
+"8": [
+"A Blueprint derived from Actor",
+"A Blueprint derived from the Character class",
+"A Blueprint derived from Pawn",
+"An Editor Utility Blueprint derived from Actor"
+]
+}
+},
+"LDQ114": {
+"quiz_choices": {
+"2": [
+"It must return a Boolean value to the menu",
+"It must be named Run",
+"Call In Editor must be checked on the node",
+"It must have no inputs"
+],
+"4": [
+"Add the class to Supported Classes in Class Defaults",
+"Rename the Blueprint",
+"Add a Branch node at the start that checks the class",
+"Move the Blueprint to another folder"
+],
+"5": [
+"The action is hidden",
+"The editor pops up a small window asking for the values",
+"Inputs are ignored",
+"The Blueprint fails to compile until you remove them all"
+],
+"6": [
+"That the input has a value at all or makes sense",
+"That the type matches",
+"That the window opens",
+"That the action appears in the right-click menu"
+],
+"7": [
+"Exactly one",
+"At most three",
+"As many functions or Custom Events as you need",
+"One for each class listed in Supported Classes"
+],
+"8": [
+"In the title of the submenu, above the function names",
+"In the Details panel",
+"In the Output Log",
+"You do not see it; the menu shows only function names"
+]
+}
+},
+"LDQ115": {
+"quiz_choices": {
+"1": [
+"Editing materials",
+"Bulk editing and comparing properties of many objects in a table",
+"Baking lighting",
+"Building navigation data for many levels in one single batch pass"
+],
+"2": [
+"Double-click an actor",
+"Drag the selected actors from the Outliner into the Details panel header",
+"Press F2",
+"Right-click the selection and choose Edit Selection in Property Matrix"
+],
+"4": [
+"Sorts the table rows by that column",
+"Enters edit mode",
+"Removes the column from the table",
+"Copies the column"
+],
+"7": [
+"Right-click any cell in that column",
+"Open the Output Log",
+"Press Ctrl+A",
+"Hover the cursor over the header name"
+]
+}
+},
+"LDQ116": {
+"quiz_choices": {
+"1": [
+"Only the transforms of the actors that are in the Outliner",
+"Actors in the Outliner with their components and properties",
+"Material assets",
+"Console variables"
+],
+"2": [
+"<level_name>_<username>_<time>",
+"Snapshot_<number>",
+"<date>_<level_name>_<number>",
+"<username> only"
+],
+"5": [
+"The others are corrupt",
+"Only snapshots for the currently open level are shown",
+"They need to be re-imported",
+"The plugin limits you to five snapshots for each level"
+]
+}
+}
+}

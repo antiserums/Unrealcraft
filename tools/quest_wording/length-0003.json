@@ -1,0 +1,566 @@
+{
+"AQ33": {
+"quiz_choices": {
+"1": [
+"Extra joints are deleted during export, so both arms end up with the same bone count",
+"You define whole chains, not individual bones, so the chain adapts to any bone count",
+"The source skeleton is copied onto the target, so the target loses its extra joints",
+"Only the hand bone is retargeted, and the rest of the arm keeps its reference pose"
+],
+"2": [
+"Retargeting fails until the two names are made identical",
+"Only exact matches are allowed on limbs, so the chain is skipped",
+"The chain is mapped to Root, because no match was found",
+"They match, because chain matching uses a fuzzy string match"
+],
+"3": [
+"So root motion can be defined and transferred proportionally",
+"So the fingers can be retargeted in One to One mode on both hands",
+"So the IK Retargeter can open, which it cannot do without it",
+"So the preview mesh is set"
+],
+"4": [
+"Re-import the target mesh in an A-pose from the modeling program",
+"Increase Rotation Alpha on the FK Chains op until the arms of both line up",
+"Create a new retarget pose, then match it with Edit Mode or Auto Align",
+"Set Translation Mode to Absolute"
+],
+"5": [
+"0 shows the pose of the source character, 1 shows the pose of the target",
+"0 blends to the first animation frame, 1 blends to the last frame",
+"0 shows the mesh reference pose, 1 shows the current retarget pose",
+"0 disables the IK pass, 1 enables it"
+],
+"6": [
+"Pelvis Motion, FK Chains, Root Motion and Remap Curves",
+"Pin Bones, Filter Bones, Scale Source and Retarget Pose",
+"Only Run IK Rig, with one goal for each chain",
+"Stride Warp and Speed Plant for each leg"
+],
+"7": [
+"Interpolated, in all cases",
+"None, so the fingers stay still",
+"One to One, when the bone counts match",
+"One to One Reversed, for all of the chains"
+],
+"8": [
+"Pin Bones, to lock ik_hand_weapon to hand_r",
+"Filter Bones, to remove ik_hand_weapon from the pose",
+"Scale Source, to bring the hand closer",
+"Remap Curves, to copy the hand curve"
+],
+"9": [
+"It only works in Sequencer, on a retargeted track",
+"Retarget Pose must be the first op in the stack",
+"It needs an IK goal on the pelvis before it runs",
+"It is disabled on LOD 0 of the target mesh"
+],
+"10": [
+"It is off by default, so you must always pick an existing IK Retargeter yourself",
+"It only works for Mannequin to MetaHuman, and does nothing for other meshes",
+"It renames the exported assets so they match the target mesh",
+"It creates IK Rigs and an IK Retargeter for the two meshes automatically"
+],
+"12": [
+"Override Sets, applied on the Retarget Pose From Mesh node",
+"A second IK Retargeter per state, switched with a Blend Poses by bool node",
+"Anim Notifies, placed on each retargeted animation",
+"Bone Filters, set on each chain of the IK Rig"
+]
+}
+},
+"AQ34": {
+"quiz_choices": {
+"1": [
+"Stops ticking some components in favor of a Leader Pose Component, lowers update rate, and chooses whether to interpolate",
+"Reduces the LOD of each mesh, lowers the texture quality of its materials, and disables the notifies of its animations",
+"Disables root motion on the characters, turns off their physics simulation, and removes their morph targets",
+"Removes bones from the far characters, merges their meshes into one, and lowers the frame rate of the game"
+],
+"2": [
+"A Static Mesh Component with an animated Material",
+"A SkeletalMeshComponentBudgeted component class",
+"A Poseable Mesh Component that copies another mesh",
+"Any component with Tick disabled"
+],
+"3": [
+"It uses LOD 5 and is inactive until the camera comes closer",
+"It costs 5 ms of work and is idle during the other frames",
+"It has 5 bones and is invisible",
+"It ticks every 5 frames and is interpolating between frames"
+],
+"5": [
+"In the Class Settings of each Animation Blueprint, under the Optimization section of the Details panel",
+"In scalability settings, for example DefaultScalability.ini under [ViewDistanceQuality@N]",
+"In the LOD Info of each Skeletal Mesh asset",
+"Hard-coded on BeginPlay of the Game Mode"
+],
+"6": [
+"There is no trade-off, because it only affects the debug graph",
+"Interpolation is disabled for every component that is over the budget",
+"The system may go over its time budget to keep enough components ticking",
+"All meshes drop to LOD 1 for as long as the budget is exceeded"
+],
+"7": [
+"URO is disabled and the budgeter controls the tick rate",
+"URO runs at double speed while the budgeter is active",
+"URO must be enabled first, or the budgeter does nothing",
+"Nothing changes, the two systems work side by side"
+],
+"8": [
+"The Output Pose node, which copies every bone to the mesh on each frame",
+"Blend Space evaluation, which samples all animations at once",
+"Anim notify states, which fire on every frame",
+"The Event Graph logic, which runs each tick on the Game Thread"
+],
+"9": [
+"The Blend Space asset is corrupt, so the node can no longer read its samples and falls back to the first one",
+"Any Blueprint logic on the pin stops Fast Path, so the node now calls into the Blueprint VM",
+"Multiply is not thread safe, so the whole AnimGraph moves to the Game Thread",
+"The lightning icon only shows in Debug builds of the editor"
+],
+"10": [
+"Character movement is not multi-threaded, so the update must run on the game thread",
+"Root motion is always read on the render thread, so the worker threads cannot see it",
+"Root motion needs a Leader Pose Component, which blocks parallel updates",
+"Parallel updates only work when URO is on"
+],
+"11": [
+"Add the hand bones to Bones to Prioritize with a high Weight of Prioritization, then Regenerate LOD",
+"Enable Volumetric Correction on the LOD and lower the Percent of Triangles until the hands come back",
+"Import LOD 0 again from the FBX file, then let the generator build every other LOD from it",
+"Lower the Termination Criterion to 0 for the LOD, then apply the changes to the mesh"
+]
+}
+},
+"AQ35": {
+"quiz_choices": {
+"1": [
+"A Control Rig component for a body part, such as an Arm or Spine, that rigs that part and creates its controls",
+"A section of the Skeletal Mesh, such as the head or the torso, that has its own Material slot and LODs",
+"A Sequencer track for a body part, such as an Arm or Spine, that stores the keys of its controls",
+"A body in the Physics Asset, such as a capsule on the arm, that collides during a ragdoll"
+],
+"2": [
+"Yes, the ModularRig option does not appear in the editor without the plugin",
+"Yes, because the plugin contains the whole Control Rig editor",
+"No, it only adds new icons for the modules in the Module Hierarchy",
+"No, but it contains the pre-configured Modules used in the example workflow"
+],
+"3": [
+"Bones, Controls and Nulls",
+"Only Bones of the Skeleton",
+"Materials and Mesh Sockets",
+"Curves, Bones and Notifies"
+],
+"5": [
+"Drop the module on the Spine socket, which passes it on to every finger",
+"Select all finger sockets, then drop one Finger module on one of them",
+"Add one Finger module, then use Duplicate five times per hand",
+"Set Type to Finger in Class Settings"
+],
+"6": [
+"Mirroring only works on arm modules, never on legs",
+"The Mirror Axis must be Z for all leg modules",
+"The Control Rig Modules plugin is disabled",
+"The sockets for the left side do not exist on the mesh"
+],
+"7": [
+"Recompile the Skeletal Mesh, then save the rig and open it again so that every connector is checked once more by the editor",
+"Select the element in the viewport and press Use Selected, or pick it from the hierarchy dropdown, or run Auto Resolve",
+"Rename the module so that its name matches the name of a bone, then press Compile in the Toolbar",
+"Delete the Primary connector, then add a Secondary connector with the same name in its place"
+],
+"8": [
+"One, and it should resolve to a socket on the Skeletal Mesh",
+"As many as needed, and each should resolve to a Bone",
+"Two, one per side, and each should resolve to a Control",
+"None, because only Secondary connectors exist in a module"
+],
+"9": [
+"It resolves to a random bone when no match is found",
+"It is deleted when you save the rig without resolving it",
+"The module works even if the connector never resolves",
+"It only resolves when the rig is used in Sequencer"
+],
+"11": [
+"Alphabetically by module name, on one thread",
+"In parallel on several threads, with no fixed order between the modules of one rig",
+"In module tree order from root to leaf, such as Spine, Leg, Foot, on one thread",
+"In module tree order from leaf to root, such as Foot, Leg, Spine"
+],
+"12": [
+"Edit the Root module inside the Control Rig plugin folder of the engine, so every project on the machine gets the change",
+"Create a new Root module in your project and set it as Default Root Module in Project Settings > Control Rig",
+"Rename the Root module of the plugin and save it under the new name in the plugin folder",
+"Set the new root in the Preview Mesh setting of each rig by hand"
+]
+}
+},
+"AQ36": {
+"quiz_choices": {
+"1": [
+"A plugin that adds new bones to the Mannequin for other animators",
+"A folder that holds everything another person needs to animate a character",
+"A level with lights and a camera that is used for testing the animations of a character",
+"A list of the animations that a game needs"
+],
+"3": [
+"A Modular Control Rig, which needs the Control Rig Modules plugin",
+"An IK Retargeter, which needs the Water plugin",
+"A blend space, which needs a Speed axis and also a Direction axis",
+"A Level Sequence, which needs a Camera Cuts track"
+],
+"4": [
+"A copy of the Mannequin mesh with its Materials",
+"A Data Table with the bone names of the character",
+"At least one custom module you made yourself",
+"A second skeleton for the hands"
+],
+"5": [
+"It renders the kit character to image files",
+"It retargets Mannequin animations to the kit character",
+"It turns the kit character into a Static Mesh for the level",
+"It records new animations from the keyboard"
+],
+"6": [
+"Exactly 2: one idle and one walk, with no jump and no montage",
+"Exactly 5: all of them jump animations for the State Machine",
+"At least 100: every animation that comes with the engine",
+"At least 12, including idle, walk, run, jump and two montages"
+],
+"7": [
+"With ops, such as the retarget pose, Pin Bones or the FK Chains modes",
+"By deleting the animations that look wrong and keeping only the good ones",
+"By scaling the character in the level until the feet touch the floor",
+"By renaming the bones of the Mannequin"
+],
+"8": [
+"It may only contain animations and no meshes or rigs at all",
+"It must be renamed after every test by another person",
+"Nothing in it may use assets from outside the folder, except engine assets",
+"It must contain a copy of the whole project, including the maps and the engine assets"
+],
+"9": [
+"How you learned to rig, which tutorials you watched, and how long each one took",
+"How to open the rig, how to retarget more animations, and the known limits",
+"How to install Unreal Engine and create a new project",
+"How to model a character in another program"
+],
+"11": [
+"They play one retargeted animation and key one pose on the rig",
+"They build a new rig from an empty asset and compare it with yours",
+"They rewrite the README in their own words",
+"They retarget all animations of the engine"
+]
+}
+},
+"AQ37": {
+"quiz_choices": {
+"1": [
+"A Skeletal Mesh, an Animation Sequence of varied poses, and a Geometry Cache with the target deformations",
+"A Static Mesh, a Material with World Position Offset, and a Texture that stores the target deformations",
+"A Control Rig, a Physics Asset for the character, and a Blend Space of all the training poses",
+"Two Skeletal Meshes that share one Skeleton, and a Pose Asset with one pose per bone"
+],
+"2": [
+"A new Skeleton with extra helper bones that are skinned to the mesh again on every frame",
+"Morph Targets that approximate the high quality deformation on top of linear skinning",
+"A cloth simulation that runs on top of linear skinning on each frame",
+"A physics ragdoll that follows the animation"
+],
+"4": [
+"For production cloth, because it is the only model that supports cloth",
+"For mobile only, because it uses the least memory of all models",
+"When you have fewer than 1000 frames of training data",
+"Never in production; it is a GPU example model with no compression"
+],
+"5": [
+"Global needs the least training data and gives the sparsest morph targets; Local needs the most data and trains one large network",
+"Local trains one network per bone, needs less data, and gives sparser morph targets; Global considers all bones together and needs more data",
+"Local is slower on the GPU because it runs once per vertex; Global runs once per mesh and has no cost that you can measure",
+"Global is the default mode and is the only one that produces Morph Targets; Local produces a Geometry Cache instead"
+],
+"6": [
+"The editor fixes it automatically by stretching the shorter one of the two until it has the length of the longer one",
+"Only the first frame of each is used, so the model learns a single pose",
+"Training results will be wrong; both must match in frame rate, frame count, poses per frame and vertex count",
+"The Geometry Cache is ignored, and training uses the Animation Sequence alone"
+],
+"7": [
+"They crash the trainer, because it only accepts bones that are direct children of the root bone and nothing below them in the tree",
+"Only bone rotations are used, and fewer well-chosen bones give better results; helper bones do not add useful deformation signal",
+"They are not skinned to any vertex, so the trainer removes the whole mesh section that is near them",
+"The GPU cannot store them, because the model allows at most eight input bones for each character"
+],
+"8": [
+"Delta Zero Threshold",
+"Learning Rate Decay",
+"Label Height",
+"Mesh Spacing"
+],
+"9": [
+"About 100 frames, with 300 or more for good results",
+"At least 3000 frames, with 7500 or more for good results",
+"Exactly 10 poses, with one more pose for each bone you add",
+"One frame per bone in the Skeleton"
+],
+"10": [
+"Add a Physics Asset to the Skeletal Mesh and enable Simulate Physics on the Skeletal Mesh Component",
+"Enable root motion in the Animation Sequence that was used for training, then train the model again",
+"Add a second Skeletal Mesh Component with the same mesh and set it as the Leader Pose Component",
+"Set a Deformer Graph in the Skeletal Mesh Component's Mesh Deformer property, for example DefaultMLDeformerGraph"
+],
+"11": [
+"Ground Truth only, because activations are not stored in a play session",
+"Activations only, because there is no live ground truth in the game",
+"Both modes, because the editor loads the Geometry Cache into the game",
+"Neither, because heat maps only work during training"
+],
+"12": [
+"The Stat Unit display, in the Draw line, and the texture memory statistic that is shown in the Skeletal Mesh asset",
+"The Rewind Debugger, in the track of the Skeletal Mesh Component",
+"Unreal Insights, Morph Target item in the GPU section, and the GPU Memory (Morph Targets) statistic in the asset",
+"The Shader Complexity view mode, where costly deformers show in red"
+]
+}
+},
+"AQ38": {
+"quiz_choices": {
+"1": [
+"PhysX APEX; a legacy solver that needs a plugin in your DCC program",
+"Chaos Cloth; a low-level particle solver with direct access to the simulation data",
+"Niagara; a particle system that runs every cloth vertex on the GPU for free",
+"Havok Cloth; a solver that is precomputed and stored with the mesh"
+],
+"2": [
+"In the Content Browser, click Add > Physics > Cloth, name the new asset, then drag it onto the Skeletal Mesh in the Level Viewport",
+"In the Animation Blueprint, add a Cloth node to the AnimGraph, connect it before Output Pose, and select the material section there",
+"In Project Settings > Physics, enable cloth for the project, then restart the editor and open the Skeletal Mesh again",
+"In the Skeletal Mesh Editor, click Section Selection, select the material section, right-click and choose Create Cloth Asset from Selection"
+],
+"3": [
+"It deletes the Skeletal Mesh from the project after the cloth asset is made, so only the cloth asset is left on disk",
+"Use it when a separate low-poly section drives a high-poly render mesh, so the driver section is not rendered",
+"It removes the Physics Asset from the mesh, so the cloth cannot collide with the body",
+"It disables collision on the selected section"
+],
+"4": [
+"It provides collision for the cloth simulation",
+"It sets the Material that is used for the cloth",
+"It bakes the cloth simulation to bones",
+"It sets the wind direction for the cloth"
+],
+"5": [
+"Left mouse paints, Shift plus left mouse erases, H previews the cloth",
+"Right mouse paints, Ctrl plus right mouse erases, P previews the cloth",
+"Space paints, Backspace erases, Enter previews the cloth",
+"Left mouse paints, Delete erases, F previews"
+],
+"6": [
+"The vertex is locked to its animated position",
+"The vertex can move one meter from its animated position",
+"The vertex has 100 percent stiffness against bending and stretch",
+"The vertex is removed from the simulation"
+],
+"7": [
+"Paint with the Brush twice, once with the start value and once with the end value, then smooth it",
+"Use Fill with a Threshold that is equal to the height of the hem",
+"Left-click the start value (green), Ctrl plus left-click the end value (red), then press Enter",
+"Hold H and drag from the shoulders down to the hem"
+],
+"8": [
+"It sets the thickness of the cloth, so that two layers of cloth do not pass through each other",
+"It offsets from Max Distance to limit movement, so cloth cannot push inward past a point",
+"It is the strength of the spring that pulls the cloth to the animated pose",
+"It controls how much lift the wind gives the cloth"
+],
+"9": [
+"Max Distance, which is set to 0 on the whole cloth for the length of the cutscene by a notify in the Animation Sequence that plays in it",
+"Backstop Radius, which is set to a high value on every vertex so that the cloth cannot leave the surface of the body during the cutscene",
+"Self Collision Radius, which makes the cloth vertices hold each other in place and can be keyed on a Sequencer track of the Skeletal Mesh",
+"Anim Drive Multiplier, which drives springs toward the animated position and can be scaled at runtime through the interactor on the Skeletal Mesh Component"
+],
+"10": [
+"Yes, the values of the two masks are added together on each vertex",
+"No, you can keep several masks but only one per Target can be assigned at a time",
+"Yes, if the two masks have different names and their paint values do not overlap at all",
+"No, the second mask is deleted when you make it"
+],
+"12": [
+"The cloth asset is separate from the Skeletal Mesh, built with a Dataflow graph, used through a Chaos Cloth component, at a slightly higher rendering cost",
+"It uses a different physics solver from the legacy tool, which is not Chaos, and its cloth can therefore not collide with any Physics Asset in the level",
+"It cannot use a Physics Asset for collision, so every collision shape has to be painted by hand on the cloth panels in the editor",
+"It bakes the cloth into the draped pose when you save the asset, so nothing is simulated while the game is running"
+]
+}
+},
+"AQ39": {
+"quiz_choices": {
+"3": [
+"The blend becomes instant, with no smoothing at all",
+"The value overshoots the target, which can look more natural",
+"Smoothing is disabled until the ratio is set back to 1 or higher",
+"Only the vertical axis is smoothed"
+],
+"4": [
+"In 2 seconds",
+"In 1 second",
+"In half a second",
+"In 2 frames"
+],
+"5": [
+"All Animations",
+"None",
+"First Sample",
+"Highest Weighted Animation"
+],
+"6": [
+"The sample uses the wrong skeleton and cannot be blended with the others",
+"The triangulation is very thin and the samples should be moved",
+"Root motion is missing on one of the three samples",
+"The axis range is too large for the samples"
+],
+"7": [
+"On Aim Offset assets that have two axes",
+"On 1D Blend Spaces that only have a Speed axis",
+"On Blend Space nodes created inside an Animation Blueprint",
+"On Blend Spaces that use Wrap Input on the horizontal axis of the grid"
+]
+}
+},
+"AQ40": {
+"quiz_choices": {
+"2": [
+"Local Space is slower to evaluate, because each rotation is first converted to the space of the parent bone on every frame",
+"Mesh Space applies rotations in the space of the Skeletal Mesh Component, so aiming up still points up when the base pose leans",
+"Local Space cannot be previewed in the Aim Offset editor, so you would not see the poses while placing the samples",
+"Mesh Space uses fewer bones, so the aim poses only change the spine and leave the arms as they are"
+],
+"4": [
+"Pitch; disable smoothing on the vertical axis of the Aim Offset while the character is moving faster than a walk",
+"Roll; add more samples at the corners of the Aim Offset, so that the blend has more poses to pick from while running",
+"Pitch; use Local Space additive for the up and down poses, and keep Mesh Space for the poses to the sides",
+"Yaw; limit the side-to-side extremes to when the character is stationary, or let the character rotation handle yaw"
+]
+}
+},
+"AQ41": {
+"quiz_choices": {
+"2": [
+"Compile the graph twice so that a new pin is added",
+"Drag a second pose from the Asset Browser onto the node",
+"Change the Transition Type in the Details panel",
+"Right-click the node and select Add Blend Pin"
+],
+"3": [
+"How long the true pose plays before it stops",
+"How long it takes to blend into that pose",
+"How fast the animation of that pose plays",
+"How far away the LOD threshold of the node is"
+],
+"6": [
+"One node can handle many inertial blend requests, which can remove standard blends and improve performance",
+"It must be the last node before any IK node, because IK nodes cannot read a pose that is still in a blend",
+"Only one Inertialization node is allowed in each graph, and the compiler removes any others",
+"It stops notifies from firing twice during a blend"
+],
+"7": [
+"It fires as usual, at the same time as before",
+"It no longer triggers, because the source is not evaluated any more",
+"It fires twice, once from the source and once from the blend",
+"It fires on the target animation instead, at the same frame as in the source"
+],
+"8": [
+"Dead Blending is production ready and respects blend curves, but Inertialization is still experimental and ignores them",
+"Dead Blending works only on additive poses, but Inertialization works on full body poses and on additive poses",
+"Inertialization requires a Blend Profile on the Skeleton, but Dead Blending cannot use a Blend Profile at all",
+"Dead Blending predicts future poses of the outgoing animation and respects transition blend curves, but is experimental"
+]
+}
+},
+"AQ42": {
+"quiz_choices": {
+"2": [
+"The animation of the blend pose plays at full strength there",
+"No animation from the blend pose plays on that bone",
+"The bone is hidden in the viewport while the blend plays",
+"The bone blends at double speed"
+],
+"4": [
+"Type the value on each bone, one by one, in the Skeleton Tree",
+"Use the Anim Slot Manager to set it for a Slot Group",
+"Enable Snap to Grid and drag the value",
+"Right-click the bone and select Recursively Set Blend Scales"
+],
+"8": [
+"Recompile the Animation Blueprint that uses the mask",
+"Right-click the property header and enable Blend Profile",
+"Reimport the Skeletal Mesh with the Import Morph Targets option",
+"Switch to the Animation Sequence editor"
+]
+}
+},
+"AQ43": {
+"quiz_choices": {
+"2": [
+"The reference pose of the Skeleton",
+"Nothing, and the graph pauses at the node",
+"The incoming source pose, passed through",
+"The last frame of the last montage it played"
+],
+"3": [
+"The montage loops until you stop it from the Event Graph by hand",
+"The slot ignores its Slot Group and plays next to other montages",
+"The slot also works for animation sections in Sequencer",
+"The incoming pose keeps evaluating even while the slot is overriding it"
+],
+"4": [
+"Both play at once on the same bones",
+"The second one is ignored until the first one ends",
+"The first is stopped and the most recent one plays",
+"They blend half and half until one of them ends"
+],
+"7": [
+"Add a Slot track to the sequence and key it",
+"Right-click the section and set Properties > Slot Name",
+"Enable Always Update Source Pose on the Slot node of the graph",
+"Bake the animation to a montage first"
+],
+"8": [
+"Slots cannot play any montage without a Layered blend per bone node after them",
+"So the montage only affects chosen bones and works no matter the locomotion state",
+"It makes the montage loop for as long as the character keeps moving",
+"It changes the Slot Group of the montage"
+]
+}
+},
+"AQ44": {
+"quiz_choices": {
+"2": [
+"Window > Pose Watch Manager",
+"Edit > Project Settings > Debug",
+"Tools > Debug > Rewind Debugger",
+"Window > Anim Slot Manager"
+],
+"4": [
+"It tracks the selected object and looks at it from a fixed point in the level, turning as the object moves",
+"It replays the gameplay camera that was recorded, so you see what the player saw during the session",
+"It moves the camera along the same movement data as the selected object from a position you set",
+"It disables the camera until the recording ends"
+],
+"6": [
+"The recording continues in the background",
+"The recording is discarded and must be started again",
+"The recording stops automatically",
+"The recording restarts from the first frame"
+],
+"8": [
+"Selects which Skeletal Mesh is used as the preview mesh in the editor viewport of that Blueprint",
+"Records a trace file of the play session that can be opened later in Unreal Insights",
+"Opens the Pose Watch Manager for the selected node",
+"Links the editor viewport and graph to an active animation instance in a play session"
+]
+}
+}
+}

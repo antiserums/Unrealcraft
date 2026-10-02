@@ -34,23 +34,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "When does the Construction Script run?"
-        choices: ["Only every frame during play", "In the editor when the actor is placed, moved or edited, and again when it spawns", "Only when you compile C++", "Only on BeginPlay"]
+        choices: ["Only during play, once on every frame, and never while you are working in the editor", "In the editor when the actor is placed, moved or edited, and again when it spawns", "Only when you compile the C++ code of the project and restart the editor", "Only on BeginPlay, one time for each level"]
         answer_index: 1
         explain: "That's why it's good for previewing setup in the editor. Gameplay logic goes in the Event Graph."
       - q: "What does ticking Instance Editable on a variable do?"
-        choices: ["Makes it replicate", "Lets you set a different value on each placed copy in the Details panel", "Makes it read-only", "Saves it to disk"]
+        choices: ["Makes it replicate from the server to every client in a network game", "Lets you set a different value on each placed copy in the Details panel", "Makes it read-only, so that no Blueprint can change it during play", "Saves it to disk when the game is closed"]
         answer_index: 1
         explain: "Each instance in the level can then override the Blueprint's default."
       - q: "You want a door's open width to show in the editor before you press Play. Where does that logic go?"
-        choices: ["Event Tick", "A Level Blueprint", "The Construction Script", "Project Settings"]
+        choices: ["Event Tick of the door Blueprint", "The Level Blueprint of the map", "The Construction Script", "The Project Settings window"]
         answer_index: 2
         explain: "The Construction Script reruns on edit, so the preview updates as you change values."
       - q: "What is the root component?"
-        choices: ["The component at the top of the hierarchy; the other components are positioned relative to it", "Whatever component was added last", "The Event Graph", "A hidden debug mesh"]
+        choices: ["The component at the top of the hierarchy; the other components are positioned relative to it", "Whatever component was added last in the Components panel; it is drawn on top of the others", "The Event Graph of the Blueprint; all other graphs are called from it when the game starts", "A hidden debug mesh that the editor adds to every actor"]
         answer_index: 0
         explain: "Moving the root moves everything attached to it."
       - q: "You change a variable's default in the Blueprint. Which placed copies update?"
-        choices: ["None until you restart", "Only the first one", "All of them, including ones you already overrode", "The ones that haven't overridden that value in Details"]
+        choices: ["None of them, until you restart the editor and load the level again", "Only the first one that you placed in the level", "All of them, including the ones where you already overrode the value", "The ones that haven't overridden that value in Details"]
         answer_index: 3
         explain: "An overridden instance value wins over the class default. The reset arrow in Details clears the override."
     flavors:
@@ -86,11 +86,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Your trigger fires when a physics cube rolls in. How do you make it player-only?"
-        choices: ["Delete the cube", "Check that Other Actor equals Get Player Pawn (or Cast To your character) before continuing", "Turn off collision on the trigger", "Use Event Tick instead"]
+        choices: ["Delete the cube from the level, and every other physics object that could roll into the trigger", "Check that Other Actor equals Get Player Pawn (or Cast To your character) before continuing", "Turn off collision on the trigger, so only the player can enter it", "Use Event Tick instead and measure the distance to the cube"]
         answer_index: 1
         explain: "Filter on Other Actor. Anything can overlap a box."
       - q: "What has to be true for Begin Overlap to fire between the trigger and the player's capsule?"
-        choices: ["Both have Generate Overlap Events on, and the trigger is set to Overlap the player's object type (neither ignores the other)", "Both must Block each other", "The trigger must be visible in game", "The player must be jumping"]
+        choices: ["Both have Generate Overlap Events on, and the trigger is set to Overlap the player's object type (neither ignores the other)", "Both must be set to Block each other, and Simulation Generates Hit Events must be on for both the trigger and the capsule", "The trigger must be visible in game, with Hidden in Game turned off, and the capsule must be visible as well", "The player must be jumping or falling when the capsule first touches the trigger"]
         answer_index: 0
         explain: "If either side ignores the other's channel, or has overlap events off, no event fires. Both blocking gives a hit, not an overlap."
       - q: "Which event would you use to close a door after the player walks away?"
@@ -98,11 +98,11 @@ quests:
         answer_index: 2
         explain: "End Overlap fires when the overlapping actor leaves the collision."
       - q: "Why build the trigger into a Blueprint instead of using a Trigger Box plus the Level Blueprint?"
-        choices: ["Trigger Boxes don't work in UE5", "The Level Blueprint is C++ only", "It renders faster", "The logic travels with the actor, so every copy you place already works"]
+        choices: ["Trigger Boxes don't work in UE5, so a Blueprint is the only way left", "The Level Blueprint is C++ only, so you cannot add overlap events to it", "It renders faster, because the trigger is drawn together with the door", "The logic travels with the actor, so every copy you place already works"]
         answer_index: 3
         explain: "Level Blueprint logic is stuck in one level. A Blueprint actor is reusable."
       - q: "Where can you quickly handle a placed Trigger Box's overlap without making a new Blueprint?"
-        choices: ["The Level Blueprint, with the Trigger Box selected", "World Settings", "The Material Editor", "The Content Drawer"]
+        choices: ["The Level Blueprint, with the Trigger Box selected", "World Settings, under the Game Mode section", "The Material Editor, with the Trigger Box material open", "The Content Drawer"]
         answer_index: 0
         explain: "Select it in the level, open the Level Blueprint, right-click and add its overlap event. Fine for one-offs."
     flavors:
@@ -138,7 +138,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Why use a Timeline for a door instead of Event Tick?"
-        choices: ["Tick can't move actors", "A Timeline plays a curve over a set time, can reverse, and only runs while it's playing", "Timelines run on the GPU", "Tick is removed in UE5"]
+        choices: ["Tick can't move actors or components, so a Timeline is the only way to change a rotation during play", "A Timeline plays a curve over a set time, can reverse, and only runs while it's playing", "Timelines run on the GPU, so they cost nothing on the game thread", "Tick is removed in UE5 and replaced by Timelines"]
         answer_index: 1
         explain: "You get easing, Play/Reverse and no per-frame cost when the door is idle."
       - q: "The player steps out while the door is half open. Which input gives a smooth close?"
@@ -146,15 +146,15 @@ quests:
         answer_index: 3
         explain: "Reverse runs back from the current position. Play from Start or Set New Time would snap."
       - q: "Your float track goes 0 to 1. How do you turn that into door movement?"
-        choices: ["Use it as the Alpha of a Lerp between closed and open, then set the relative rotation or location", "Plug it straight into Destroy Actor", "Multiply it by Delta Seconds", "Connect it to Print String"]
+        choices: ["Use it as the Alpha of a Lerp between closed and open, then set the relative rotation or location", "Plug it straight into Destroy Actor, so the closed door is removed and an open one takes its place", "Multiply it by Delta Seconds and add the result to the door's scale on every frame", "Connect it to Print String and read the angle from the log"]
         answer_index: 0
         explain: "A 0–1 track as a Lerp alpha is the reusable pattern. Change the end values, keep the curve."
       - q: "You try to add a Timeline inside a Blueprint function and can't. Why?"
-        choices: ["A plugin is missing", "Functions are C++ only", "Timelines run over time, so they only live in the Event Graph", "You need a Level Blueprint"]
+        choices: ["A plugin is missing, and Timelines stay hidden until it is on", "Functions are C++ only, so no Blueprint node can be added there", "Timelines run over time, so they only live in the Event Graph", "You need a Level Blueprint for every Timeline"]
         answer_index: 2
         explain: "Functions must finish in one call. Put the Timeline in the Event Graph and call it with a custom event."
       - q: "Designers say the door is too slow. What's the cleanest fix?"
-        choices: ["Add a Delay", "Shorten the Timeline length, or use Set Play Rate from an exposed variable", "Scale the mesh", "Run it on Tick"]
+        choices: ["Add a Delay before the Timeline so the door starts later", "Shorten the Timeline length, or use Set Play Rate from an exposed variable", "Scale the door mesh down so it has less distance to travel each time it opens", "Run it on Tick and add a larger angle on every frame"]
         answer_index: 1
         explain: "Play Rate from an Instance Editable variable lets each door have its own speed."
     flavors:
@@ -189,19 +189,19 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "How does a lever with a direct reference know which gate to open?"
-        choices: ["It searches the whole level every frame", "An Instance Editable variable on the placed lever is set to that gate in Details", "Gates register themselves automatically", "Through Project Settings"]
+        choices: ["It searches the whole level on every frame until it finds the gate nearest to it", "An Instance Editable variable on the placed lever is set to that gate in Details", "Gates register themselves with every lever automatically on BeginPlay", "Through a list in the Project Settings"]
         answer_index: 1
         explain: "The eyedropper on an Instance Editable object reference links the two placed actors."
       - q: "What's the main benefit of a Blueprint Interface here?"
-        choices: ["It's faster to render", "It removes collision", "The lever can activate any actor that implements it without knowing its class", "It works only in C++"]
+        choices: ["It's faster to render, because the lever and the gate are drawn together in one pass", "It removes collision between the lever and anything it activates", "The lever can activate any actor that implements it without knowing its class", "It works only in C++, so designers can't break it"]
         answer_index: 2
         explain: "Gates, lamps and platforms can each respond to Activate in their own way."
       - q: "You send an interface message to an actor that doesn't implement the interface. What happens?"
-        choices: ["The editor crashes", "Nothing. The call is ignored without an error", "It fails to compile", "The actor is destroyed"]
+        choices: ["The editor crashes when the message is sent", "Nothing. The call is ignored without an error", "The Blueprint fails to compile until you fix it", "The actor is destroyed at the end of the frame"]
         answer_index: 1
         explain: "That's what makes messages safe for mixed targets. If nothing happens, check the target implements the interface."
       - q: "Your log says Accessed None trying to read Target. What's wrong?"
-        choices: ["The reference variable is empty on that placed lever", "The gate's material is missing", "Lumen is off", "The Timeline is too long"]
+        choices: ["The reference variable is empty on that placed lever", "The material of the gate is missing or has not compiled", "Lumen is off in the Project Settings", "The Timeline of the gate is too long"]
         answer_index: 0
         explain: "Set it in Details, and guard the call with Is Valid so a missing link fails quietly."
       - q: "A lever needs to announce \"pulled\" to any number of listeners that bind to it. Which tool fits?"
@@ -241,23 +241,23 @@ quests:
     verify_type: writeup
     quiz:
       - q: "In a beat chart, what is a beat?"
-        choices: ["A music track", "One section where the player's goal or feeling shifts", "A single mesh", "A frame of animation"]
+        choices: ["A music track that plays in one part of the level", "One section where the player's goal or feeling shifts", "A single mesh that is used many times in the level", "A frame of animation"]
         answer_index: 1
         explain: "Each beat has a job: teach, pressure, or reward."
       - q: "Why plan the beats on one page before building?"
-        choices: ["Epic requires it", "Changing a line of text is cheaper than rebuilding a blockout", "It improves frame rate", "It generates the level"]
+        choices: ["Epic requires a beat chart before you can make a level", "Changing a line of text is cheaper than rebuilding a blockout", "It improves the frame rate of the finished level on slow machines", "It generates the level for you"]
         answer_index: 1
         explain: "One page forces you to decide what each space is for."
       - q: "Which is a good payoff beat?"
-        choices: ["Another identical corridor", "A loading screen", "Opening the gate you've seen since the intro, onto a view or reward", "An unexplained dead end"]
+        choices: ["Another corridor that looks the same as the last three", "A loading screen that hides the next part of the level", "Opening the gate you've seen since the intro, onto a view or reward", "A dead end with no reward and nothing that explains why it is there"]
         answer_index: 2
         explain: "Payoff pays back the tension: something earned, seen or reached."
       - q: "Your intensity column reads 5, 5, 5. What's the problem?"
-        choices: ["No contrast. Tension only works if there's a lower beat before it", "Nothing, higher is better", "The level is too short", "The numbers must add up to 10"]
+        choices: ["No contrast. Tension only works if there's a lower beat before it", "Nothing. A higher number is always better, so three fives is a strong chart", "The level is too short. It needs at least five beats", "The numbers must add up to 10"]
         answer_index: 0
         explain: "Pacing needs rises and rests. Flat intensity feels like noise."
       - q: "What does NOT belong in a beat chart row?"
-        choices: ["The player's goal", "The mechanic used", "The intended feeling", "Texture resolutions and material names"]
+        choices: ["The goal of the player in that beat", "The mechanic that the beat uses", "The feeling that the beat is meant to give", "Texture resolutions and material names"]
         answer_index: 3
         explain: "Beat charts cover player experience. Asset details go elsewhere."
     flavors:
@@ -293,7 +293,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Where do you read Max Walk Speed and Jump Z Velocity?"
-        choices: ["World Settings", "The Character Movement component on your character Blueprint", "Project Settings, then Input", "The GameState"]
+        choices: ["World Settings, under the Game Mode section of the level you are testing", "The Character Movement component on your character Blueprint", "Project Settings, then Input, next to the jump key", "The GameState"]
         answer_index: 1
         explain: "Character Movement holds walking, jumping and falling settings."
       - q: "The default Third Person capsule has a half-height of 96. How tall is the capsule?"
@@ -301,15 +301,15 @@ quests:
         answer_index: 2
         explain: "Half-height is measured from the center, so double it. Check your own template's values."
       - q: "What does Max Step Height control?"
-        choices: ["The tallest ledge the character walks up without jumping", "Maximum jump height", "Camera height", "Stair mesh size"]
+        choices: ["The tallest ledge the character walks up without jumping", "The highest point the character can reach with one jump", "The height of the camera above the floor", "The size of each step on a stair mesh"]
         answer_index: 0
         explain: "Anything taller needs a jump. Size stairs and curbs with this in mind."
       - q: "Why measure jump distance in a metrics gym instead of calculating it?"
-        choices: ["Math is banned", "Air control, gravity and friction all affect it, so testing gives the number players actually get", "The gym is required to package", "It's faster to render"]
+        choices: ["Math is banned in level design, so every number in the sheet has to come from a test in the editor", "Air control, gravity and friction all affect it, so testing gives the number players actually get", "The gym is required before the project can be packaged", "It's faster to render than a full level"]
         answer_index: 1
         explain: "Test in PIE and record what works, then leave some margin."
       - q: "Why make the sheet shareable?"
-        choices: ["For XP only", "It must be in C++", "So you don't need to test", "So everyone building for the character uses the same numbers and kit pieces fit"]
+        choices: ["So the sheet earns you a better grade", "So the sheet can be turned into C++ code later", "So nobody on the team ever has to test the level again after the very first playtest", "So everyone building for the character uses the same numbers and kit pieces fit"]
         answer_index: 3
         explain: "A metrics sheet is a team document. In later quests it becomes part of the kit you hand to others."
     flavors:
@@ -344,23 +344,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Why should the player see the locked door before finding the key?"
-        choices: ["It loads faster", "The key then has a known purpose and the player knows where to go back to", "Keys can't spawn before doors", "It's required for NavMesh"]
+        choices: ["The level loads faster when the door comes first in the Outliner", "The key then has a known purpose and the player knows where to go back to", "Keys can't spawn before doors, because the door creates the key on BeginPlay", "It's required before the NavMesh can build"]
         answer_index: 1
         explain: "Show the lock first, then the key. Picking up the key then means something."
       - q: "The player walks into the locked door and nothing happens. What's missing?"
-        choices: ["Locked feedback, so the player knows it's a lock and not a bug", "A second key", "More lights everywhere", "A Level Streaming volume"]
+        choices: ["Locked feedback, so the player knows it's a lock and not a bug", "A second key, so the player has a spare one for this door and the next", "More lights in every room, so the door is brighter", "A Level Streaming volume around the door"]
         answer_index: 0
         explain: "A message, a sound or a red light tells them it's locked."
       - q: "What is a soft lock?"
-        choices: ["A door with no collision", "A save file", "A state where the player can't progress without restarting", "A key with a timer"]
+        choices: ["A door with no collision that the player can walk through", "A save file that can only be loaded one time", "A state where the player can't progress without restarting", "A key with a timer that runs out after a short while"]
         answer_index: 2
         explain: "A key stuck behind a closed door or knocked off a ledge are classic soft locks."
       - q: "Where should the door check for the key?"
-        choices: ["On Event Tick, every frame", "In the Construction Script", "In World Settings", "When the player overlaps the door, by reading the player's HasKey"]
+        choices: ["On Event Tick, every frame, by searching the whole level for the key", "In the Construction Script, before the game starts", "In World Settings, with a key list", "When the player overlaps the door, by reading the player's HasKey"]
         answer_index: 3
         explain: "Check on interaction. Nothing needs to run until the player arrives."
       - q: "The key is a pickup with a sphere trigger. Why do you compare Other Actor with the player pawn before you set HasKey?"
-        choices: ["Because overlap events only work with a Branch node", "Because anything can overlap the trigger, and only the player should be able to pick up the key", "Because the key would not be visible without it", "Because Destroy Actor needs it as an input"]
+        choices: ["Because overlap events only work when a Branch node comes right after them in the Event Graph", "Because anything can overlap the trigger, and only the player should be able to pick up the key", "Because the key would not be visible in the level without it", "Because Destroy Actor needs it as an input"]
         answer_index: 1
         explain: "A physics object or an AI character can also touch the trigger. The filter makes sure that only the player picks up the key."
     flavors:
@@ -398,19 +398,19 @@ quests:
         answer_index: 2
         explain: "P shows the NavMesh. Green means AI can walk there."
       - q: "Why is there a gap in the green along every wall?"
-        choices: ["The navmesh is pulled in by the agent radius so AI doesn't clip into walls", "A bug", "Lumen blocks it", "Walls are too dark"]
+        choices: ["The navmesh is pulled in by the agent radius so AI doesn't clip into walls", "It is a bug in the navmesh preview that goes away when you rebuild the level", "Lumen blocks the green color close to a wall", "The walls are too dark for the navmesh"]
         answer_index: 0
         explain: "Tight doorways can close up completely. That's a metrics issue."
       - q: "AI MoveTo goes straight to On Fail. What do you check first?"
-        choices: ["The material", "Whether the pawn and the destination are both on the green navmesh", "Post process settings", "The HUD"]
+        choices: ["Whether the material of the pawn has finished compiling", "Whether the pawn and the destination are both on the green navmesh", "Whether the post process settings of the level hide the pawn from view", "Whether the HUD is on screen"]
         answer_index: 1
         explain: "No path, no move. Also check the pawn is possessed by an AI Controller (placed Characters are by default)."
       - q: "A closed door should block AI, and opening it should let them through. What's needed?"
-        choices: ["Nothing, the navmesh never changes", "Delete the navmesh", "A Level Blueprint", "Runtime Generation set to Dynamic so the navmesh rebuilds around moving obstacles"]
+        choices: ["Nothing, because the navmesh never changes after the level has been built and saved", "Delete the navmesh and place a new one each time the door moves", "A Level Blueprint that moves the AI through the door by hand", "Runtime Generation set to Dynamic so the navmesh rebuilds around moving obstacles"]
         answer_index: 3
         explain: "By default the navmesh is static and built in the editor."
       - q: "Why does a level designer do this walk test early?"
-        choices: ["To learn C++", "To build a boss", "To check the route works for AI before building encounters in later quests", "It's needed for lighting"]
+        choices: ["To learn C++ before the AI is added", "To build a boss fight for the end of the level in the same step", "To check the route works for AI before building encounters later", "To make the lighting build work"]
         answer_index: 2
         explain: "Encounter spaces in later quests need AI that can actually get to the player."
     flavors:
@@ -445,23 +445,23 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Your tester stops and asks \"Where do I go?\" What do you say?"
-        choices: ["Point at the exit", "\"What would you try?\" Then write down where they got lost.", "Take their mouse", "End the test"]
+        choices: ["\"The exit is over there.\" Then point at it on the screen.", "\"What would you try?\" Then write down where they got lost.", "\"Let me show you.\" Then take their mouse for a moment.", "\"That's all for today.\" Then end the test."]
         answer_index: 1
         explain: "Every explanation you give is a problem you won't see. Record the question."
       - q: "What goes in playtest notes?"
-        choices: ["What the player did, where, and when, plus their exact words", "Your fixes only", "Your opinion of the tester", "Nothing, just remember it"]
+        choices: ["What the player did, where, and when, plus their exact words", "The fixes that you plan to make, and nothing about the player", "Your opinion of the tester and how well they play games", "Nothing. You just remember it"]
         answer_index: 0
         explain: "Record what you observed first. Decide fixes afterward."
       - q: "What do you tell the tester before they start?"
-        choices: ["The full route", "Where the key is", "Controls and the goal, like a real player would get", "Which parts are unfinished and why"]
+        choices: ["The full route through the level, from start to exit", "Where the key is and which door it opens", "Controls and the goal, like a real player would get", "Which parts are unfinished and why they are not done yet"]
         answer_index: 2
         explain: "Pre-explaining hides the problems you're testing for."
       - q: "Which follow-up question is best?"
-        choices: ["\"Did you like it?\"", "\"Wasn't the gate cool?\"", "\"Would you buy this?\"", "\"What were you trying to do when you turned back?\""]
+        choices: ["\"Did you like the level, or did you not like it?\"", "\"Wasn't the gate cool?\"", "\"Would you buy this?\"", "\"What were you trying to do when you turned back?\""]
         answer_index: 3
         explain: "Open, specific questions get you useful answers. Leading questions get polite ones."
       - q: "The tester misses the lever and you think it's obvious. Next step?"
-        choices: ["Assume they're wrong", "Treat it as a readability issue and try light, framing or a landmark", "Remove the lever", "Add a tutorial popup first"]
+        choices: ["Assume they're wrong and keep the lever as it is for the next tester", "Treat it as a readability issue and try light, framing or a landmark", "Remove the lever and open the gate for the player", "Add a tutorial popup first"]
         answer_index: 1
         explain: "Fix the space first. Text prompts are a last resort."
     flavors:
@@ -499,11 +499,11 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What counts as 2 Blueprint interacts for this capstone?"
-        choices: ["Two copies of the same door", "Two different interactions, like a key-locked door and a lever-driven gate", "Two Print Strings", "One door opened twice"]
+        choices: ["Two copies of the same door, placed in two different rooms of the level", "Two different interactions, like a key-locked door and a lever-driven gate", "Two Print String nodes that fire when the player is near", "One door that is opened twice"]
         answer_index: 1
         explain: "They must be different mechanics, each doing a job in a beat."
       - q: "Your playtester got lost in the tension beat. What does the work you send need?"
-        choices: ["Nothing, playtests are optional", "A new level", "The notes, what you changed in response, and an updated beat chart", "A longer clip"]
+        choices: ["Nothing, because playtests are optional for this capstone", "A new level that replaces the one the tester played", "The notes, what you changed in response, and an updated beat chart", "A longer clip that shows the whole level two times, from start to end"]
         answer_index: 2
         explain: "The capstone is about iterating. Show the change and why you made it."
       - q: "How long can the video clip that you send be?"
@@ -550,7 +550,7 @@ quests:
         answer_index: 3
         explain: "Instance Editable shows a variable in the Details panel of each placed copy. Every platform in the level can then have its own two points."
       - q: "The float track of the Timeline goes from 0 to 1 and back to 0. Why does it go back to 0?"
-        choices: ["So the platform returns to PointA before the loop starts again", "So the platform stops at PointB", "So the Timeline can be compiled", "So the platform moves twice as fast"]
+        choices: ["So the platform returns to PointA before the loop starts again", "So the platform stops at PointB and waits there for the player", "So the Timeline can be compiled", "So the platform moves twice as fast"]
         answer_index: 0
         explain: "The track value is the Alpha between the two points. Going back to 0 brings the platform back to PointA, so the loop repeats without a jump."
       - q: "Your platform moves from PointA to PointB and back once, and then stops. What did you forget?"
@@ -562,11 +562,11 @@ quests:
         answer_index: 1
         explain: "Update fires on every frame while the Timeline plays. Finished fires only once at the end, and Play and Stop are inputs."
       - q: "The Lerp (Vector) node goes from PointA to PointB. What does it return when Alpha is 0.5?"
-        choices: ["PointA", "PointB", "The sum of PointA and PointB", "The point halfway between PointA and PointB"]
+        choices: ["PointA, because Alpha is still below 1", "PointB, because Alpha is already above 0", "The sum of PointA and PointB, divided by Alpha", "The point halfway between PointA and PointB"]
         answer_index: 3
         explain: "Lerp blends between two values. Alpha 0 gives PointA, Alpha 1 gives PointB, and 0.5 gives the point in the middle."
       - q: "Where do you connect the result of the Lerp (Vector) node?"
-        choices: ["To Set Relative Location on the mesh", "To the Play pin of the Timeline", "To the PointA variable", "To Event BeginPlay"]
+        choices: ["To Set Relative Location on the mesh", "To the Play pin of the Timeline node", "To the Set node of the PointA variable", "To Event BeginPlay"]
         answer_index: 0
         explain: "Set Relative Location moves the mesh to the blended position. Because it runs on every Update, the floor piece travels smoothly."
       - q: "What do you check when you ride the platform in Play in Editor?"
@@ -610,11 +610,11 @@ quests:
         answer_index: 1
         explain: "Apply Damage sends an amount of damage to one actor. That actor then decides what to do with it, for example lower its health."
       - q: "In the Blueprint version of the trap, which actor do you send the damage to?"
-        choices: ["The Other Actor of the overlap event", "The trap Blueprint itself", "The Box Collision component", "The first actor in the Outliner"]
+        choices: ["The Other Actor of the overlap event", "The trap Blueprint itself, with a Self node", "The Box Collision component", "The first actor in the Outliner"]
         answer_index: 0
         explain: "The overlap event of the Box Collision gives you Other Actor, which is the actor that entered the box. You call Apply Damage on it."
       - q: "Your character stands in the trap but loses no health. What do you check first?"
-        choices: ["That the trap has a visible mesh", "That the level has a Directional Light", "That the character Blueprint handles Event AnyDamage", "That the trap is named BP_Trap"]
+        choices: ["That the trap has a visible mesh in the level", "That the level has a Directional Light that reaches the trap", "That the character Blueprint handles Event AnyDamage", "That the trap is named BP_Trap"]
         answer_index: 2
         explain: "Damage is only a message. The character loses health only if its Blueprint reacts to it in Event AnyDamage."
       - q: "What makes a trap fair?"
@@ -622,7 +622,7 @@ quests:
         answer_index: 1
         explain: "A fair trap gives the player a chance to notice it and react. If it hurts without any warning, the player feels cheated."
       - q: "Which of these is a good warning for a fire trap?"
-        choices: ["A sound that plays after the player is hurt", "A text that appears after the player dies", "A trap that is the same colour as the floor", "Flames and scorch marks the player sees while walking toward it"]
+        choices: ["A sound that plays only after the player has already been hurt by the fire", "A text that appears on the screen after the player dies", "A trap that is the same colour as the floor around it", "Flames and scorch marks the player sees while walking toward it"]
         answer_index: 3
         explain: "A warning must come before the damage. Something the player can see on the way to the trap lets them choose to avoid it."
 
@@ -644,7 +644,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a checkpoint in a level?"
-        choices: ["A place that ends the level", "A place where the player gets more health", "A place where the game is paused", "A place the game remembers, so the player returns there after a fall"]
+        choices: ["A place that ends the level and loads the next one when the player reaches it", "A place where the player gets more health and loses all enemies", "A place where the game is paused", "A place the game remembers, so the player returns there after a fall"]
         answer_index: 3
         explain: "A checkpoint saves progress inside a level. After dying or falling, the player continues from there and not from the start."
       - q: "What does it mean to respawn?"
@@ -652,11 +652,11 @@ quests:
         answer_index: 0
         explain: "To respawn is to appear again in the level. In this quest the player appears again at the last checkpoint."
       - q: "What does the RespawnTransform variable on the character store?"
-        choices: ["The health of the character", "The location and rotation where the player will appear again", "The number of checkpoints in the level", "The speed of the character"]
+        choices: ["The health that the character had at the last checkpoint", "The location and rotation where the player will appear again", "The number of checkpoints that the player has touched in the level", "The speed of the character"]
         answer_index: 1
         explain: "A transform holds a location and a rotation. The checkpoint writes its own transform into this variable when the player touches it."
       - q: "What is Kill Z?"
-        choices: ["A Blueprint node that restarts the level", "A volume that you drag from the Place Actors panel", "The height in the World Settings below which actors are destroyed", "A key that removes the selected actor"]
+        choices: ["A Blueprint node that restarts the level when the player falls out of it", "A volume that you drag from the Place Actors panel", "The height in the World Settings below which actors are destroyed", "A key that removes the selected actor"]
         answer_index: 2
         explain: "Kill Z is a height value in the World Settings. Any actor that falls below it is destroyed."
       - q: "Why can you not use Kill Z alone to send the player back to a checkpoint?"
@@ -664,15 +664,15 @@ quests:
         answer_index: 0
         explain: "Kill Z destroys the character. To move the player back, you need your own logic that runs before the character reaches that height."
       - q: "Where do you place the large Box Collision of BP_KillZone?"
-        choices: ["Around the checkpoint", "Above the level, in the sky", "Below the Kill Z height", "Under the level, above the Kill Z height"]
+        choices: ["Around the checkpoint, at the same height", "Above the level, in the sky, far over the Kill Z height", "Below the Kill Z height", "Under the level, above the Kill Z height"]
         answer_index: 3
         explain: "A falling player must touch your kill zone before reaching Kill Z. So the box sits under the level but above that height."
       - q: "Which node moves the player back to the last checkpoint?"
-        choices: ["Destroy Actor", "Set Actor Transform with RespawnTransform", "Apply Damage", "Add to Viewport"]
+        choices: ["Destroy Actor with the player as Target", "Set Actor Transform with RespawnTransform", "Apply Damage with the player as Damaged Actor", "Add to Viewport"]
         answer_index: 1
         explain: "Set Actor Transform places the character at the stored transform. Because the checkpoint saved it, the player lands at the last checkpoint."
       - q: "You touch a checkpoint, fall, and appear at the wrong place. What do you check first?"
-        choices: ["That the level has a Sky Light", "That the kill zone has a visible mesh", "That the checkpoint stores its transform in RespawnTransform on overlap", "That Kill Z is set to 0 in the World Settings"]
+        choices: ["That the level has a Sky Light", "That the kill zone has a mesh that is visible to the player during play", "That the checkpoint stores its transform in RespawnTransform on overlap", "That Kill Z is set to 0 in the World Settings"]
         answer_index: 2
         explain: "The kill zone only moves the player to whatever RespawnTransform holds. If the checkpoint never wrote its transform into the variable, the old value is used."
 
@@ -696,7 +696,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a HUD prompt?"
-        choices: ["A sound that plays when the player is near an object", "A short text on the screen that tells the player what they can do", "A menu that pauses the game", "A light that marks an object in the level"]
+        choices: ["A sound that plays when the player is near an object they can use", "A short text on the screen that tells the player what they can do", "A menu that pauses the game", "A light that marks an object in the level"]
         answer_index: 1
         explain: "A HUD prompt is a short on-screen text such as Press E to open. It tells the player that an action is possible right now."
       - q: "As which kind of asset do you build screen elements in Unreal Engine?"
@@ -704,7 +704,7 @@ quests:
         answer_index: 2
         explain: "Screen elements are built as Widget Blueprints. Their names often start with WBP_, as in WBP_Prompt."
       - q: "How do you create a new Widget Blueprint in the Content Browser?"
-        choices: ["Click Add, then User Interface, then Widget Blueprint", "Click Add, then Blueprint Class, then Actor", "Click Add, then Material", "Click Add, then Level"]
+        choices: ["Click Add, then User Interface, then Widget Blueprint", "Click Add, then Blueprint Class, then pick Actor as the parent class", "Click Add, then Material, then rename it", "Click Add, then Level"]
         answer_index: 0
         explain: "Widget Blueprints are in the User Interface group of the Add menu. You then choose User Widget as the parent."
       - q: "Inside the Widget Blueprint, where do you take the Text widget from?"
@@ -720,11 +720,11 @@ quests:
         answer_index: 1
         explain: "Remove from Parent takes the widget off the screen. You call it on End Overlap."
       - q: "Why do you store the result of Create Widget in a variable?"
-        choices: ["So the text can be translated", "So the widget is saved to disk", "So the widget is created on every frame", "So you can remove the same widget later on End Overlap"]
+        choices: ["So the text can be translated into other languages", "So the widget is saved to disk when the player leaves the level", "So the widget is created again on every frame", "So you can remove the same widget later on End Overlap"]
         answer_index: 3
         explain: "End Overlap needs to know which widget to remove. The variable keeps a reference to the widget that Begin Overlap created."
       - q: "Why is the Box Collision of BP_Interactable larger than the cube?"
-        choices: ["So the cube can be pushed by the player", "So the cube is easier to see", "So the prompt shows while the player is near the cube", "So the cube blocks the camera"]
+        choices: ["So the cube can be pushed around by the player", "So the cube is easier to see from far away in a dark level", "So the prompt shows while the player is near the cube", "So the cube blocks the camera"]
         answer_index: 2
         explain: "The overlap must start before the player touches the cube. A larger box gives a zone around the object where the prompt is shown."
 
@@ -746,15 +746,15 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a pressure plate?"
-        choices: ["A switch on the floor that is active only while something stands on it", "A switch on the wall that stays on after one press", "A floor piece that moves between two points", "A volume that damages anything inside it"]
+        choices: ["A switch on the floor that is active only while something stands on it", "A switch on the wall that stays on for the rest of the level after one press", "A floor piece that moves between two points in a loop", "A volume that damages anything inside it"]
         answer_index: 0
         explain: "A pressure plate works only while it is pressed. When the object leaves, the plate turns off again."
       - q: "What does the Open event of BP_Gate do?"
-        choices: ["It destroys the gate actor", "It moves the gate to another level", "It hides the mesh and turns off its collision", "It plays a sound at the gate"]
+        choices: ["It destroys the gate actor and spawns an open one", "It moves the gate to another level that is not loaded", "It hides the mesh and turns off its collision", "It plays a sound at the gate and nothing else"]
         answer_index: 2
         explain: "With the mesh hidden and its collision off, the player can walk through. Close shows the mesh and turns the collision on again."
       - q: "How does a placed pressure plate know which gate to open?"
-        choices: ["It always opens the nearest gate", "It opens every gate in the level", "It reads the name of the gate from the Outliner", "You pick the gate in its Instance Editable variable named Gate"]
+        choices: ["It always opens the gate that is nearest to it when the level starts", "It opens every gate in the level at the same time", "It reads the name of the gate from the Outliner", "You pick the gate in its Instance Editable variable named Gate"]
         answer_index: 3
         explain: "The variable Gate is of type BP_Gate and is Instance Editable. In the Details panel of the placed plate you pick the gate with the eyedropper."
       - q: "The plate calls Open on Begin Overlap and Close on End Overlap. What happens when the cube is pushed off the plate?"
@@ -766,15 +766,15 @@ quests:
         answer_index: 2
         explain: "Only a Movable mesh can simulate physics. With Simulate Physics on, the cube reacts when the character pushes it."
       - q: "The cube sits on the plate, but the gate does not open. What do you check first on the cube?"
-        choices: ["That Generate Overlap Events is turned on", "That its material is set", "That it is named Cube in the Outliner", "That its scale is 1"]
+        choices: ["That Generate Overlap Events is turned on", "That its material is set to a bright color", "That it is named Cube in the Outliner", "That its scale is 1 on all three axes"]
         answer_index: 0
         explain: "Without Generate Overlap Events the cube does not fire overlap events. The plate then does not notice the cube at all."
       - q: "How can the plate react only to the cube and not to the player?"
-        choices: ["Make the Box Collision of the plate smaller", "Turn off the collision of the player", "Place the plate far from the start of the level", "Give the cube an Actor Tag and check Actor Has Tag on Other Actor"]
+        choices: ["Make the Box Collision of the plate smaller than the capsule of the player", "Turn off the collision of the player for the whole level", "Place the plate far from the start of the level", "Give the cube an Actor Tag and check Actor Has Tag on Other Actor"]
         answer_index: 3
         explain: "The tag marks the cube. The plate checks Other Actor with Actor Has Tag and only calls Open when the tag is there."
       - q: "If only the cube counts, what must the player do to pass the gate?"
-        choices: ["Stand on the plate and wait", "Push the cube onto the plate and leave it there", "Jump over the plate", "Touch the gate two times"]
+        choices: ["Stand on the plate and wait until the gate opens", "Push the cube onto the plate and leave it there", "Jump over the plate and run to the gate at once", "Touch the gate two times"]
         answer_index: 1
         explain: "The gate is open only while the cube sits on the plate. The player solves the puzzle by moving the cube there and then walking through."
 
@@ -796,7 +796,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Why do you add sound to an interaction such as opening a door?"
-        choices: ["It makes the door open faster", "It replaces the need for a door mesh", "It tells the player that their action worked, or that it did not", "It stops other sounds in the level"]
+        choices: ["It makes the door open faster than a door without sound", "It replaces the need for a door mesh and an open animation in the level", "It tells the player that their action worked, or that it did not", "It stops other sounds in the level"]
         answer_index: 2
         explain: "Sound is feedback. One sound for opening and a different sound for locked lets the player understand the result at once."
       - q: "Which node plays a sound at a place in the level?"
@@ -808,15 +808,15 @@ quests:
         answer_index: 0
         explain: "Get Actor Location returns the position of the door actor. The sound then plays from the door and not from somewhere else."
       - q: "What does the Branch on IsLocked do in the door graph?"
-        choices: ["It plays both sounds at the same time", "It locks the door for ever", "It repeats the sound until the player leaves", "It chooses one of two paths, each with its own sound"]
+        choices: ["It plays both sounds at the same time", "It locks the door for the rest of the game", "It repeats the sound until the player leaves the trigger of the door", "It chooses one of two paths, each with its own sound"]
         answer_index: 3
         explain: "A Branch runs its True output or its False output. One output plays the locked sound and the other plays the open sound."
       - q: "Why is the IsLocked variable Instance Editable?"
-        choices: ["So the sound can be changed during the game", "So one copy in the level can be locked and another one not", "So the door is saved as a Level Instance", "So the Branch node can be compiled"]
+        choices: ["So the sound can be changed by the player during the game", "So one copy in the level can be locked and another one not", "So the door is saved as a Level Instance with its own sounds", "So the Branch node can be compiled"]
         answer_index: 1
         explain: "Instance Editable lets you set the variable on each placed copy. You place two doors, one locked and one not, and test both sounds."
       - q: "The engine sounds CompileSuccess and CompileFailed do not show in the sound list. What do you do?"
-        choices: ["Restart the editor", "Import them from the Epic website", "Click the settings icon of the list and turn on Show Engine Content", "Enable the Water plugin"]
+        choices: ["Restart the editor and open the sound list again after the project has loaded", "Import them from the Epic website into your Content folder", "Click the settings icon of the list and turn on Show Engine Content", "Enable the Water plugin"]
         answer_index: 2
         explain: "These sounds are part of the engine content, which is hidden by default. Show Engine Content makes them appear in the list."
       - q: "What is another way to play a sound from the door Blueprint?"

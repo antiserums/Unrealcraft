@@ -75,7 +75,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "How do you open the console while the game runs in the editor?"
-        choices: ["Press F9", "Press the backtick key, which on most keyboards is the key above Tab", "Press Ctrl+B", "Press the G key in the viewport"]
+        choices: ["Press F9", "Press the backtick key, which on most keyboards is the key above Tab", "Press Ctrl+B", "Press the G key in the viewport, which is also the key for Game View"]
         answer_index: 1
         explain: "The backtick key opens the console, where you type commands such as stat fps. On most keyboards it is the key above Tab."
       - q: "Which console command hides the stats that are shown on the screen?"
@@ -83,11 +83,11 @@ quests:
         answer_index: 0
         explain: "The command stat none hides the stats again. The commands stat fps and stat unit turn stats on."
       - q: "What kind of information do the commands stat fps and stat unit show?"
-        choices: ["The names of the actors in the level", "The list of assets that are not saved", "The errors in your Blueprints", "Performance numbers, such as the frame rate and frame times"]
+        choices: ["The names of the actors in the level", "The list of the assets that have not been saved to disk yet", "The errors in your Blueprints", "Performance numbers, such as the frame rate and frame times"]
         answer_index: 3
         explain: "These stat commands print performance numbers on the screen. They tell you how fast the game runs without any guessing."
       - q: "What is a show flag?"
-        choices: ["A marker that you place in the level", "A node that writes text on the screen", "A switch that turns one kind of visual information on or off", "A warning in the Output Log"]
+        choices: ["A marker that you place in the level", "A node that writes one line of text on the screen during play", "A switch that turns one kind of visual information on or off", "A warning in the Output Log"]
         answer_index: 2
         explain: "Show flags are in the Show menu of the viewport. Each one turns one kind of visual information on or off, for example Collision or Bounds."
       - q: "What does the Print String node do?"
@@ -95,7 +95,7 @@ quests:
         answer_index: 0
         explain: "Print String writes a text on the screen while the game runs. It is the simplest way to see that a part of a Blueprint was reached."
       - q: "You run the same Print String node twice with the same Key. What do you see?"
-        choices: ["Two lines, one under the other", "An error message in red", "The second message replaces the first one", "No message at all"]
+        choices: ["Two lines, one under the other, on screen", "An error message in red", "The second message replaces the first one", "No message at all"]
         answer_index: 2
         explain: "Messages with the same Key share one line on the screen. A new message replaces the old one, which keeps the screen clean when a value updates often."
     flavors:
@@ -126,7 +126,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is the Output Log?"
-        choices: ["A panel that lists the actors in the level", "A file that stores your saved games", "A window where the engine and your Blueprints write messages, warnings and errors", "A tool that records where the engine spends its time"]
+        choices: ["A panel that lists the actors in the level", "A file that stores your saved games", "A window where the engine and your Blueprints write messages, warnings and errors", "A tool that records where the engine spends its time while the game is running"]
         answer_index: 2
         explain: "The Output Log collects text from the engine and from your Blueprints. You open it with Window, then Output Log, and you can filter it to show only warnings and errors."
       - q: "What does a breakpoint on a Blueprint node do?"
@@ -138,11 +138,11 @@ quests:
         answer_index: 0
         explain: "You select a node and press F9 to set a breakpoint on it. The same key removes it again."
       - q: "The game is paused on a breakpoint. What does pressing F10 do?"
-        choices: ["It stops Play in Editor", "It removes all breakpoints", "It restarts the level", "It steps over one node, so the nodes run one at a time"]
+        choices: ["It stops Play in Editor and returns to the level editor", "It removes all breakpoints", "It restarts the level", "It steps over one node, so the nodes run one at a time"]
         answer_index: 3
         explain: "F10 runs the next node and pauses again. Stepping lets you follow the flow of the graph one node at a time."
       - q: "How do you keep an eye on the value of a pin in the Blueprint Debugger window?"
-        choices: ["Double-click the pin", "Right-click the pin and choose Watch This Value", "Drag the pin into the Output Log", "Select the pin and press F9"]
+        choices: ["Double-click the pin", "Right-click the pin and choose Watch This Value", "Drag the pin from the node into the Output Log window", "Select the pin and press F9"]
         answer_index: 1
         explain: "Watch This Value marks the pin as watched. The Blueprint Debugger window then shows its value while the game is paused."
       - q: "You set a breakpoint on the Jump node and press Play, but the game never pauses. What do you check first?"
@@ -176,27 +176,27 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Why is reading the Third Person template a fast way to learn?"
-        choices: ["It is the only project that can be opened in the editor", "It has no Blueprints, so it is simple", "It cannot be changed, so nothing can break", "It is a working game where you can see how input, movement and the camera are connected"]
+        choices: ["It is the only project that can be opened in the editor without any extra download first", "It has no Blueprints, so it is simple", "It cannot be changed, so nothing can break", "It is a working game where you can see how input, movement and the camera are connected"]
         answer_index: 3
         explain: "The template already works. Following its graphs shows you how the parts connect, which is faster than writing everything from nothing."
       - q: "What does the GameMode of the template do?"
-        choices: ["It sets the rules of the game and decides which character the player uses", "It draws the level in the viewport", "It stores the meshes of the character", "It records the input of the player to a file"]
+        choices: ["It sets the rules of the game and decides which character the player uses", "It draws the level in the viewport", "It stores the meshes of the character", "It records the input of the player to a file that can be played back later"]
         answer_index: 0
         explain: "The GameMode is the Blueprint that holds the rules of the game. One of its settings is which character the player gets."
       - q: "What is an Input Action event in the character Blueprint?"
-        choices: ["A node that runs once when the game starts", "A node that fires when the player presses a key or moves a stick", "A node that plays an animation", "A node that changes the camera boom"]
+        choices: ["A node that runs one single time when the game starts in the level", "A node that fires when the player presses a key or moves a stick", "A node that plays an animation", "A node that changes the camera boom"]
         answer_index: 1
         explain: "The Input Action event is where the input enters the graph. You follow the chain from this node to the node that moves the character."
       - q: "Where do you see the components that the character is made of?"
-        choices: ["In the Output Log", "In the World Settings", "In the Components panel of the Blueprint", "In the Place Actors panel"]
+        choices: ["In the Output Log", "In the World Settings", "In the Components panel of the Blueprint", "In the Place Actors panel of the editor"]
         answer_index: 2
         explain: "The Components panel lists the parts of the Blueprint, such as the mesh and the camera. Each one has its own job."
       - q: "What is the camera boom of the character?"
-        choices: ["The sound the camera makes", "The arm that holds the camera behind the character", "The light that follows the character", "The mesh that shows the character"]
+        choices: ["The sound the camera makes", "The arm that holds the camera behind the character", "The light that follows the character in the dark", "The mesh that shows the character"]
         answer_index: 1
         explain: "The camera boom is an arm between the character and the camera. Its length decides how far the camera sits behind the character."
       - q: "What do you send as proof for the input part of this quest?"
-        choices: ["A written description of the chain from input to movement", "A video of the character jumping", "A copy of the character Blueprint file", "A screenshot of the Content Browser"]
+        choices: ["A written description of the chain from input to movement", "A video of the character jumping", "A copy of the Blueprint file of the character, as a zip", "A screenshot of the Content Browser"]
         answer_index: 0
         explain: "You describe in 4 to 6 lines how one input travels from the key press to the movement. Writing it down shows that you understood each step."
     flavors:
@@ -226,19 +226,19 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a test harness level?"
-        choices: ["The first level of your finished game", "A level that holds every asset of the project", "A small, empty level that you build only for testing", "A level that Unreal creates when a test fails"]
+        choices: ["The first level of your finished game", "A level that holds every asset of the whole project", "A small, empty level that you build only for testing", "A level that Unreal creates when a test fails"]
         answer_index: 2
         explain: "A test harness has nothing in it except the things you want to test. It exists to make testing simple."
       - q: "Why is a bug easier to understand in a level that is almost empty?"
-        choices: ["Empty levels have no collision", "Empty levels cannot have bugs", "Empty levels are saved more often", "Nothing else in the level can cause or hide the problem"]
+        choices: ["Empty levels have no collision", "Empty levels cannot have bugs", "Empty levels are saved much more often by the editor itself", "Nothing else in the level can cause or hide the problem"]
         answer_index: 3
         explain: "With only the tested things in the level, there are few possible causes. The bug is easier to repeat and to understand."
       - q: "What is a pad in the test harness?"
-        choices: ["A marked area on the floor for one system you plan to test", "A Blueprint that runs all tests in a row", "A window that shows test results", "A note that is saved with the level"]
+        choices: ["A marked area on the floor for one system you plan to test", "A Blueprint that runs all the tests of a level in a row", "A window that shows test results", "A note that is saved with the level"]
         answer_index: 0
         explain: "Each pad is a marked area for one system, for example one for a pickup and one for a door. This keeps the tests apart."
       - q: "How do you show what each pad is for?"
-        choices: ["Give each pad a different sound", "Add a Text Render actor next to it with the name of the pad", "Write the name in the World Settings", "Place a Player Start on each pad"]
+        choices: ["Give each pad a different sound", "Add a Text Render actor next to it with the name of the pad", "Write the name of the pad in the World Settings of the level", "Place a Player Start on each pad"]
         answer_index: 1
         explain: "A Text Render actor shows text in the level. With the name of the pad as its text, anyone can read what the pad tests."
       - q: "Simulate runs the level without a player. How do you trigger the interactable on a pad in Simulate?"
@@ -246,7 +246,7 @@ quests:
         answer_index: 2
         explain: "There is no character in Simulate, so something else must overlap the pad. A physics cube that falls onto it does the job."
       - q: "Why do you set the GameMode Override of the level in the World Settings panel?"
-        choices: ["So the level loads faster", "So the level always starts with the same GameMode", "So the level cannot be edited by others", "So the level has no Player Start"]
+        choices: ["So the level loads faster", "So the level always starts with the same GameMode", "So the level cannot be edited by any other people", "So the level has no Player Start"]
         answer_index: 1
         explain: "With the override set, the level does not depend on the project default. It always starts the same way, which makes tests repeatable."
     flavors:
@@ -277,11 +277,11 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is a debug room?"
-        choices: ["A test level where each area shows one way to find problems", "A window that lists all errors of the project", "A folder where crash files are saved", "A level that players see when the game crashes"]
+        choices: ["A test level where each area shows one way to find problems", "A window that lists all errors of the project", "A folder where crash files are saved", "A level that players see for a moment when the game crashes"]
         answer_index: 0
         explain: "A debug room is a test level with several pads. Each pad shows one debug technique."
       - q: "How do you make a Print String node write to the Output Log only?"
-        choices: ["Set its duration to 0", "Give it an empty Key", "Set its color to black", "Turn off Print to Screen on the node"]
+        choices: ["Set its duration to 0", "Give it an empty Key", "Set its Text Color to black on the node", "Turn off Print to Screen on the node"]
         answer_index: 3
         explain: "Print String can write to the screen and to the log. With Print to Screen turned off, the message only appears in the Output Log."
       - q: "What does it mean to reproduce a test?"
@@ -293,7 +293,7 @@ quests:
         answer_index: 2
         explain: "The expected output tells the reader what a correct run looks like. Without it, nobody can tell if the test passed."
       - q: "One pad has a Blueprint that is ready for a breakpoint. What is a breakpoint?"
-        choices: ["A mark that pauses the game on a node you choose", "A place where the level ends", "A message in the Output Log", "A pad that breaks when you step on it"]
+        choices: ["A mark that pauses the game on a node you choose", "A place where the level ends", "A message in the Output Log", "A pad that breaks when the player steps on it"]
         answer_index: 0
         explain: "A breakpoint pauses the game when the marked node runs. You can then look at the values in the graph."
       - q: "Which console command do you run in the room to write down timing numbers?"
@@ -327,27 +327,27 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Where do you choose how Play In Editor (PIE) opens?"
-        choices: ["In the Output Log, under Filters", "In the three dots menu next to the Play button in the main toolbar", "In the World Settings, under GameMode", "In the Content Browser, under Settings"]
+        choices: ["In the Output Log, under Filters", "In the three dots menu next to the Play button in the main toolbar", "In the World Settings, under GameMode", "In the Content Browser, under Settings, in the Play section at the end"]
         answer_index: 1
         explain: "The three dots next to the Play button open the play options. There you pick New Editor Window (PIE) or Selected Viewport."
       - q: "What does the play option Selected Viewport do?"
-        choices: ["It records the viewport to a video", "It opens the game on a second computer", "It opens the game in a new window", "It runs the game inside the level viewport"]
+        choices: ["It records the viewport to a video", "It opens the game on a second computer screen", "It opens the game in a new window", "It runs the game inside the level viewport"]
         answer_index: 3
         explain: "Selected Viewport plays the game in the viewport you already have. New Editor Window (PIE) opens a separate window for the game."
       - q: "Where do you find the setting Show Frame Rate and Memory?"
-        choices: ["In Edit, then Editor Preferences, under General, then Performance", "In Edit, then Plugins, under Performance", "In Window, then Output Log", "In the Show menu of the viewport"]
+        choices: ["In Edit, then Editor Preferences, under General, then Performance", "In Edit, then Plugins, under Performance, then Frame Rate and Memory", "In Window, then Output Log", "In the Show menu of the viewport"]
         answer_index: 0
         explain: "The setting is an editor preference. You open Edit, then Editor Preferences, and go to General, then Performance."
       - q: "What changes when you turn on Show Frame Rate and Memory?"
-        choices: ["The game runs at a fixed frame rate", "The editor uses less memory", "The editor shows these numbers at all times", "The numbers are written to a file"]
+        choices: ["The game runs at a fixed frame rate", "The editor uses less memory", "The editor shows these numbers at all times", "The numbers are written to a file on disk"]
         answer_index: 2
         explain: "The frame rate and memory use stay visible in the editor. You notice at once when a change makes the editor slower."
       - q: "What is the Source Code Editor setting in the Editor Preferences?"
-        choices: ["The folder where Blueprints are saved", "The language of the editor menus", "The font of the Blueprint graphs", "The program that Unreal opens when you read or write C++ code"]
+        choices: ["The folder on your disk where the Blueprints of a project are saved", "The language of the editor menus", "The font of the Blueprint graphs", "The program that Unreal opens when you read or write C++ code"]
         answer_index: 3
         explain: "This setting names the program for C++ code. You find it under General, then Source Code."
       - q: "When should you change the Source Code Editor setting?"
-        choices: ["Only if you use a different program for your code", "Every time you create a new project", "Before every Play In Editor session", "Only if the frame rate is low"]
+        choices: ["Only if you use a different program for your code", "Every time that you create a new project in Unreal", "Before every Play In Editor session", "Only if the frame rate is low"]
         answer_index: 0
         explain: "The setting should match the program you really use. If it is already right, you only note what it is set to."
     flavors:
@@ -376,15 +376,15 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is Unreal Insights?"
-        choices: ["A panel that lists the assets of the project", "A window that shows Blueprint errors", "A plugin that makes the game run faster", "A profiling tool that records where the engine spends its time"]
+        choices: ["A panel that lists the assets of the project", "A window that shows Blueprint errors", "A plugin that makes the game run much faster on slow computers", "A profiling tool that records where the engine spends its time"]
         answer_index: 3
         explain: "Unreal Insights is a profiling tool. It records the work of the engine so that you can see which part takes long."
       - q: "What is a trace?"
-        choices: ["A line drawn in the viewport", "A recording made for Unreal Insights", "A list of keyboard shortcuts", "A copy of the level"]
+        choices: ["A line drawn in the viewport", "A recording made for Unreal Insights", "A list of all the keyboard shortcuts", "A copy of the level"]
         answer_index: 1
         explain: "A recording of what the engine did is called a trace. You open it in Unreal Insights to study it."
       - q: "How do you start a trace from the editor?"
-        choices: ["Click Trace in the bar at the bottom of the editor window and choose Start Trace", "Open Edit, then Plugins, and choose Start Trace", "Right-click the level in the Content Browser and choose Start Trace", "Open the Show menu of the viewport and choose Start Trace"]
+        choices: ["Click Trace in the bar at the bottom of the editor window and choose Start Trace", "Open Edit, then Plugins, and choose Start Trace", "Right-click the level in the Content Browser and choose Start Trace in the menu", "Open the Show menu of the viewport and choose Start Trace"]
         answer_index: 0
         explain: "The Trace menu is in the bar at the bottom of the editor window. The same menu has Stop Trace and the entry that opens Unreal Insights."
       - q: "What does the Game thread do?"
@@ -396,7 +396,7 @@ quests:
         answer_index: 1
         explain: "The Render thread prepares the things that are drawn on the screen. In a trace you find it next to the Game thread."
       - q: "A game runs slowly. What can a trace tell you?"
-        choices: ["Which key the player pressed last", "Which asset has the longest name", "Which level was saved last", "Which part of the work takes too long"]
+        choices: ["Which key the player pressed last time", "Which asset has the longest name", "Which level was saved last", "Which part of the work takes too long"]
         answer_index: 3
         explain: "The timing view shows how long each part of a frame takes. The part that takes too long is where you start to look for the cause."
     flavors:
@@ -424,7 +424,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Where do you look up and change the shortcuts of the editor?"
-        choices: ["In Window, then Output Log", "In Edit, then Plugins", "In Edit, then Editor Preferences, under Keyboard Shortcuts", "In the World Settings panel"]
+        choices: ["In Window, then Output Log", "In Edit, then Plugins, by searching for the name of the command", "In Edit, then Editor Preferences, under Keyboard Shortcuts", "In the World Settings panel"]
         answer_index: 2
         explain: "The Keyboard Shortcuts section of the Editor Preferences lists every command with its key. You can search it and change any shortcut."
       - q: "What does it mean to rebind a command?"
@@ -432,19 +432,19 @@ quests:
         answer_index: 0
         explain: "Rebinding gives a command a new key. The command itself stays the same."
       - q: "How do you set a new shortcut for a command in the Keyboard Shortcuts section?"
-        choices: ["Type the name of the key in the console", "Click the text field of the command and press the key combination", "Drag the command onto the main toolbar", "Right-click the command and choose Rename"]
+        choices: ["Type the name of the key in the console", "Click the text field of the command and press the key combination", "Drag the command onto the main toolbar and press the key you want", "Right-click the command and choose Rename"]
         answer_index: 1
         explain: "You click the text field next to the command and press the keys you want. The shortcut is saved when you click outside the field."
       - q: "You press a key combination that another command already uses. What happens?"
-        choices: ["The editor closes without saving", "Both commands are deleted", "The key is silently given to both commands", "A warning appears, and you can click Override to replace the old binding"]
+        choices: ["The editor closes without saving", "Both commands are deleted", "The key is silently given to both commands, and both run when you press it", "A warning appears, and you can click Override to replace the old binding"]
         answer_index: 3
         explain: "The editor warns you about the conflict. Override gives the key to the new command, and clicking outside the field keeps the old binding."
       - q: "How can you take your custom shortcuts to another installation of Unreal Engine?"
-        choices: ["Copy the project folder", "Use the Export button, which saves them as an .ini file", "Take a screenshot of the list", "Restart the editor two times"]
+        choices: ["Copy the project folder", "Use the Export button, which saves them as an .ini file", "Take a screenshot of the list and type them in again", "Restart the editor two times"]
         answer_index: 1
         explain: "The Export button saves your shortcuts as an .ini file. On the other installation, the Import button loads that file."
       - q: "Why is it worth binding shortcuts for the commands you use while testing?"
-        choices: ["Shortcuts make the game run faster", "Shortcuts are needed before a Blueprint can compile", "You run the same few commands many times, so each shortcut saves many clicks", "Commands without a shortcut stop working after a while"]
+        choices: ["Shortcuts make the game run faster", "Shortcuts are needed before a Blueprint can compile", "You run the same few commands many times, so each shortcut saves many clicks", "Commands without a shortcut stop working after a while and must be bound again"]
         answer_index: 2
         explain: "Testing repeats the same actions again and again. One key for each of them saves a little time on every run, and that adds up."
     flavors:
@@ -481,35 +481,35 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is the job of the GameMode?"
-        choices: ["It holds the rules of the game, such as how a player wins", "It draws the score on the screen", "It stores the meshes of the level", "It reads the keys the player presses"]
+        choices: ["It holds the rules of the game, such as how a player wins", "It draws the score on the screen", "It stores the meshes of the level", "It reads the keys that the player presses during the game"]
         answer_index: 0
         explain: "The GameMode is the Blueprint for the rules. In this quest it decides when the count is high enough for a win."
       - q: "What kind of information belongs in the GameState?"
-        choices: ["The rules that decide who wins", "The settings of the editor", "Shared information about the match, such as the score", "The input keys of one player"]
+        choices: ["The rules that decide who wins and when the game ends", "The settings of the editor", "Shared information about the match, such as the score", "The input keys of one player"]
         answer_index: 2
         explain: "The GameState holds shared information about the match. The count of collected items is such a value, so it is stored there."
       - q: "Where do you tell BP_UUGameMode to use BP_UUGameState?"
-        choices: ["In the World Settings, under Kill Z", "In the Class Defaults of BP_UUGameMode, in Game State Class", "In the Event Graph of BP_UUGameState", "In the Details panel of the Player Start"]
+        choices: ["In the World Settings, under Kill Z", "In the Class Defaults of BP_UUGameMode, in Game State Class", "In the Event Graph of BP_UUGameState", "In the Details panel of the Player Start, in Game State Class"]
         answer_index: 1
         explain: "Game State Class is a setting in the Class Defaults of the GameMode. It decides which GameState is created when the game starts."
       - q: "How do you make a test level use BP_UUGameMode?"
-        choices: ["Drag BP_UUGameMode into the level", "Rename the level to BP_UUGameMode", "Add BP_UUGameMode to the character as a component", "Set GameMode Override in the World Settings of the level"]
+        choices: ["Drag BP_UUGameMode into the level", "Rename the level to BP_UUGameMode", "Add BP_UUGameMode to the character as a new component", "Set GameMode Override in the World Settings of the level"]
         answer_index: 3
         explain: "GameMode Override in the World Settings chooses the GameMode for that level. Without it, the level uses the default of the project."
       - q: "Why do you set Default Pawn Class to the character of the template?"
-        choices: ["So the score is saved between levels", "So the GameState is created", "So you can still walk around as that character", "So the win message is printed once"]
+        choices: ["So the score is saved between the two levels", "So the GameState is created", "So you can still walk around as that character", "So the win message is printed once"]
         answer_index: 2
         explain: "Default Pawn Class decides which pawn the player gets. A new GameMode does not know the template character until you set it."
       - q: "How does CheckWin in the GameMode read the count?"
-        choices: ["It uses Get Game State, casts it to BP_UUGameState and reads Collected", "It counts the pickups that are left in the level", "It reads the Target variable of the GameState", "It asks the character for its location"]
+        choices: ["It uses Get Game State, casts it to BP_UUGameState and reads Collected", "It counts the pickups that are left in the level with Get All Actors Of Class", "It reads the Target variable of the GameState", "It asks the character for its location"]
         answer_index: 0
         explain: "Get Game State returns the general GameState. The cast to BP_UUGameState gives access to your own variable Collected."
       - q: "The win message appears again and again after the win. What do you add?"
-        choices: ["A second Print String node", "A Do Once node in front of the Print String", "A Delay node after the Print String", "A larger Target value"]
+        choices: ["A second Print String node", "A Do Once node in front of the Print String", "A Delay node right after the Print String", "A larger Target value"]
         answer_index: 1
         explain: "Do Once lets the execution pass only one time. A Boolean variable named HasWon that you check first does the same job."
       - q: "In a network game, why is the score stored in the GameState and not in the GameMode?"
-        choices: ["The GameMode cannot hold Integer variables", "The GameState is deleted when a player wins", "The GameMode is created again on every frame", "The GameMode exists only on the server, while the GameState is shared with all players"]
+        choices: ["The GameMode cannot hold Integer variables", "The GameState is deleted when a player wins", "The GameMode is created again on every frame, so a score that is stored in it is lost", "The GameMode exists only on the server, while the GameState is shared with all players"]
         answer_index: 3
         explain: "The GameMode holds the rules and lives only on the server. The GameState is copied to every player, so everyone can read the score from it."
     flavors:
@@ -545,7 +545,7 @@ quests:
         answer_index: 2
         explain: "Enhanced Input is the input system of Unreal Engine 5. It turns key presses and stick movement into actions your game reacts to."
       - q: "What is an Input Action?"
-        choices: ["An asset that stands for one thing the player can do, such as interact", "A key on the keyboard that the player presses", "A node that moves the character forward", "A list of all the keys that the game uses"]
+        choices: ["An asset that stands for one thing the player can do, such as interact", "A key on the keyboard that the player presses to do one thing, such as E", "A node that moves the character forward", "A list of all the keys that the game uses"]
         answer_index: 0
         explain: "An Input Action describes an action, not a key. Which key starts it is decided somewhere else."
       - q: "What is an Input Mapping Context?"
@@ -553,7 +553,7 @@ quests:
         answer_index: 3
         explain: "The Input Mapping Context connects keys to Input Actions. You add IA_Interact to it and give it a key."
       - q: "You mapped IA_Interact to a key, but pressing the key does nothing. What do you check first?"
-        choices: ["That the level has a Sky Light", "That the mapping context is added to the player on BeginPlay", "That the Input Action is named in capital letters", "That the character has a camera boom"]
+        choices: ["That the level has a Sky Light", "That the mapping context is added to the player on BeginPlay", "That the name of the Input Action is written in capital letters", "That the character has a camera boom"]
         answer_index: 1
         explain: "A mapping context only works after it is added to the player. Without this step the keys of the player do nothing."
       - q: "Which event of IA_Interact do you handle on the character?"
@@ -561,11 +561,11 @@ quests:
         answer_index: 0
         explain: "The Triggered event fires when the action is triggered by its key. Your logic that writes to the log starts from there."
       - q: "What changes when you add a Hold trigger to the mapping?"
-        choices: ["The action fires twice for each press", "The action fires when the key is released", "The action fires only after the key is held down for a moment", "The action fires on every key of the keyboard"]
+        choices: ["The action fires twice for each press", "The action fires when the key is released", "The action fires only after the key is held down for a moment", "The action fires on every key of the keyboard for a short moment"]
         answer_index: 2
         explain: "A trigger decides when an input counts. With Hold, a short tap is not enough and the key must stay down for a moment."
       - q: "Where can you look at a working example of Enhanced Input assets?"
-        choices: ["In the Output Log of the editor", "In the Input folder of the Third Person template", "In the World Settings of an empty level", "In the Place Actors panel, under Volumes"]
+        choices: ["In the Output Log of the editor", "In the Input folder of the Third Person template", "In the World Settings of an empty level", "In the Place Actors panel, under Volumes, as Input"]
         answer_index: 1
         explain: "The template already uses Enhanced Input. Its Input folder holds Input Actions and an Input Mapping Context that you can open and study."
       - q: "What does your graph write to the log when IA_Interact fires?"
@@ -605,7 +605,7 @@ quests:
         answer_index: 1
         explain: "A function, a macro and a custom event all hold a group of nodes under one name. They look similar but follow different rules."
       - q: "What does a Delay node do?"
-        choices: ["It makes the graph wait for some time", "It makes the graph run faster", "It stops the game for ever", "It repeats the node before it"]
+        choices: ["It makes the graph wait for some time", "It makes the graph run faster", "It stops the game for ever", "It repeats the node that is before it"]
         answer_index: 0
         explain: "A Delay node pauses that path of the graph for the time you set, and then the path continues."
       - q: "In which of the three does the editor not allow a Delay node?"
@@ -629,7 +629,7 @@ quests:
         answer_index: 3
         explain: "A macro can have more than one execution input and output. This is why flow control nodes that split the path are built as macros."
       - q: "Why do you build the same behavior three times in this quest?"
-        choices: ["Because the editor needs all three to compile", "Because one of the three will be deleted by the engine", "So you can compare their rules and pick the right one later", "So the behavior runs three times as fast"]
+        choices: ["Because the editor needs all three to compile", "Because one of the three will be deleted by the engine later", "So you can compare their rules and pick the right one later", "So the behavior runs three times as fast"]
         answer_index: 2
         explain: "Seeing the three side by side shows where each one is allowed and where it is not. Picking the right one keeps your graphs easy to read."
     flavors:
@@ -673,7 +673,7 @@ quests:
         answer_index: 3
         explain: "A Data Asset is an asset that only holds data. Here each one stores the S_PickupInfo of one pickup."
       - q: "Why do good projects keep data apart from logic?"
-        choices: ["Because Blueprints cannot store numbers", "So other people can change the values without touching your graphs", "Because data is not saved with the project", "So the game needs fewer levels"]
+        choices: ["Because Blueprints cannot store numbers", "So other people can change the values without touching your graphs", "Because data is not saved with the project unless it is kept apart", "So the game needs fewer levels"]
         answer_index: 1
         explain: "When the values are in data files, a designer can tune them safely. The graph that does the work stays as it is."
       - q: "Which parent class do you choose for the Blueprint Class DA_PickupBase?"
@@ -681,7 +681,7 @@ quests:
         answer_index: 1
         explain: "A Blueprint Class with Primary Data Asset as its parent defines which variables your Data Assets have. You then add the S_PickupInfo variable to it."
       - q: "How do you create a Data Asset instance from your class?"
-        choices: ["Drag DA_PickupBase into the level", "Click Add, then User Interface, then Widget Blueprint", "Right-click in the Content Browser, open Miscellaneous and choose Data Asset", "Open the World Settings and set GameMode Override"]
+        choices: ["Drag DA_PickupBase into the level", "Click Add, then User Interface, then Widget Blueprint, and pick DA_PickupBase", "Right-click in the Content Browser, open Miscellaneous and choose Data Asset", "Open the World Settings and set GameMode Override"]
         answer_index: 2
         explain: "Data Asset is in the Miscellaneous group of the Content Browser menu. After you choose it, you pick your class."
       - q: "What are hardcoded variables?"
@@ -689,7 +689,7 @@ quests:
         answer_index: 0
         explain: "A hardcoded value is fixed inside the Blueprint. To change it, someone must open and edit the Blueprint, which is what this quest avoids."
       - q: "How do you make a placed pickup describe a different item?"
-        choices: ["Rewrite the overlap graph of the pickup", "Create a new pickup Blueprint for the item", "Rename the pickup in the Outliner", "Change which Data Asset its Instance Editable variable uses"]
+        choices: ["Rewrite the overlap graph of the pickup", "Create a new pickup Blueprint for each item that you need", "Rename the pickup in the Outliner", "Change which Data Asset its Instance Editable variable uses"]
         answer_index: 3
         explain: "The pickup reads its name and value from the Data Asset it points to. Picking another Data Asset in the Details panel changes the pickup, and the graph stays the same."
     flavors:
@@ -719,23 +719,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a log message?"
-        choices: ["A text that the player types in the game", "A line of text that your game writes to the Output Log window", "A comment box in a Blueprint graph", "A file that stores a saved game"]
+        choices: ["A text that the player types into a chat box during the game", "A line of text that your game writes to the Output Log window", "A comment box in a Blueprint graph", "A file that stores a saved game"]
         answer_index: 1
         explain: "A log message is text written to the Output Log. It stays there, so you can read it after the moment has passed."
       - q: "How do you make a Print String node write only to the log?"
-        choices: ["Set its duration to 0", "Delete its Key", "Connect it to BeginPlay", "Turn off its Print to Screen option"]
+        choices: ["Set its duration to 0", "Delete its Key", "Connect it to the BeginPlay event", "Turn off its Print to Screen option"]
         answer_index: 3
         explain: "Print String can write to the screen and to the log. With Print to Screen turned off, the message appears only in the Output Log."
       - q: "What does an Is Valid check test?"
-        choices: ["That a reference really points to an object", "That a number is larger than zero", "That a Blueprint was saved", "That a text has no spelling mistakes"]
+        choices: ["That a reference really points to an object", "That a number is larger than zero", "That a Blueprint was saved", "That a text has no spelling mistakes in it"]
         answer_index: 0
         explain: "A reference can be empty. Is Valid tests that it points to a real object before you use it."
       - q: "What is an actor reference?"
-        choices: ["A copy of an actor in another level", "A screenshot of an actor", "A variable that points to an actor in the level", "A note about an actor in the Outliner"]
+        choices: ["A copy of an actor in another level", "A screenshot of an actor", "A variable that points to an actor in the level", "A note about an actor that you write in the Outliner"]
         answer_index: 2
         explain: "An actor reference does not hold the actor itself. It points to an actor in the level, like the Target variable of BP_Button."
       - q: "Where do you add an Is Valid check?"
-        choices: ["Only at the start of the game", "Before every place where the reference is used", "Only after the reference was destroyed", "In the Class Defaults of the Blueprint"]
+        choices: ["Only at the start of the game", "Before every place where the reference is used", "Only after the reference was destroyed in play", "In the Class Defaults of the Blueprint"]
         answer_index: 1
         explain: "A reference can become empty at any time, for example when the actor is destroyed. So you check it each time before you use it."
       - q: "What does a good warning say?"
@@ -743,11 +743,11 @@ quests:
         answer_index: 3
         explain: "With both facts in the message, you know the problem and the place. That turns a long search into a short one."
       - q: "Why do you include the name of the owning actor in the warning?"
-        choices: ["Many copies can exist, and the name tells you which one has the problem", "The Output Log does not accept messages without a name", "The name makes the warning appear in red", "The name stops the warning from being logged twice"]
+        choices: ["Many copies can exist, and the name tells you which one has the problem", "The Output Log does not accept messages that have no actor name in them", "The name makes the warning appear in red", "The name stops the warning from being logged twice"]
         answer_index: 0
         explain: "Ten buttons in a level all write the same text. The actor name tells you which of them has the empty reference."
       - q: "Why do you break one reference on purpose?"
-        choices: ["To make the game crash", "To delete the Target actor", "To confirm that the warning tells you where to look", "To turn off the Is Valid check"]
+        choices: ["To make the game crash", "To delete the Target actor", "To confirm that the warning tells you where to look", "To turn off the Is Valid check for the whole level"]
         answer_index: 2
         explain: "A check that was never seen failing may not work. Leaving a reference empty on purpose proves that the warning appears and is clear."
     flavors:
@@ -782,11 +782,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a game loop in this quest?"
-        choices: ["A Timeline that plays without end", "The event that runs on every frame", "The full circle of play, from the action of the player to the win", "A level that loads itself again and again"]
+        choices: ["A Timeline that plays without end", "The event that runs on every frame", "The full circle of play, from the action of the player to the win", "A level that loads itself again and again until the player wins it"]
         answer_index: 2
         explain: "The loop joins action, counting and winning. Building all of it proves that the separate pieces work together."
       - q: "What is a Blueprint Interface?"
-        choices: ["A widget that shows the score", "A list of functions that different Blueprints can share", "A file that stores the values of a pickup", "A window where you package the game"]
+        choices: ["A widget that shows the score", "A list of functions that different Blueprints can share", "A file that stores all the values of one kind of pickup", "A window where you package the game"]
         answer_index: 1
         explain: "The interface names functions such as Interact. The character calls the function on the pickup and does not need to know the class of the pickup."
       - q: "Where does the pickup Blueprint get its name and point value from?"
@@ -798,19 +798,19 @@ quests:
         answer_index: 3
         explain: "Shared information such as the score belongs in the GameState. The rule that decides the win belongs in the GameMode."
       - q: "How does the player interact with at least one pickup type?"
-        choices: ["Through a console command", "Through an Enhanced Input action named IA_Interact", "Through a click on the Outliner", "Through a show flag of the viewport"]
+        choices: ["Through a console command", "Through an Enhanced Input action named IA_Interact", "Through a click on the Outliner", "Through a show flag in the menu of the viewport"]
         answer_index: 1
         explain: "You create the Input Action IA_Interact, add it to the Input Mapping Context of the template with a key, and handle it on the character."
       - q: "What do you add for every actor reference that you use?"
-        choices: ["A Delay node and a Timeline", "A second copy of the reference", "An Is Valid check and a log warning", "A Text Render actor"]
+        choices: ["A Delay node and a Timeline", "A second copy of the same reference", "An Is Valid check and a log warning", "A Text Render actor"]
         answer_index: 2
         explain: "The Is Valid check stops the graph from using an empty reference. The warning in the log tells you where the problem is."
       - q: "What does it mean to package the project?"
-        choices: ["To build a version of the game that runs outside the editor", "To compress the Content folder into a ZIP file", "To save all levels at the same time", "To send the project to another learner"]
+        choices: ["To build a version of the game that runs outside the editor", "To compress the Content folder of the project into a ZIP file", "To save all levels at the same time", "To send the project to another learner"]
         answer_index: 0
         explain: "Packaging builds a version of the game that runs without the editor. A development build is such a version made for testing."
       - q: "Where do you start packaging in the editor?"
-        choices: ["In the Trace menu at the bottom of the editor window", "In the three dots menu next to the Play button", "In Edit, then Editor Preferences", "In the Platforms button in the main toolbar, then your platform, then Package Project"]
+        choices: ["In the Trace menu at the bottom of the editor window, then your platform, then Package", "In the three dots menu next to the Play button", "In Edit, then Editor Preferences", "In the Platforms button in the main toolbar, then your platform, then Package Project"]
         answer_index: 3
         explain: "The Platforms button lists the platforms you can build for. You choose your platform and then Package Project."
     flavors:
@@ -846,15 +846,15 @@ quests:
         answer_index: 1
         explain: "Coupling is how much one actor must know about the other. The more it must know, the harder both are to change later."
       - q: "What is a direct reference?"
-        choices: ["A variable that points to one known actor, so you can call it", "A signal that any actor can listen to", "A list of functions without any logic", "A copy of another Blueprint"]
+        choices: ["A variable that points to one known actor, so you can call it", "A signal that any actor in the level can listen to and answer", "A list of functions without any logic", "A copy of another Blueprint"]
         answer_index: 0
         explain: "A direct reference is a variable of a known type, here BP_Lamp. The button picks one lamp in the level and calls a function on it."
       - q: "What is a Blueprint Interface?"
-        choices: ["A widget that is drawn on the screen", "A variable that stores a location", "A window where you edit keyboard shortcuts", "A shared list of functions that any actor can answer"]
+        choices: ["A widget that is drawn on the screen", "A variable that stores a location", "A window where you edit the keyboard shortcuts of a game", "A shared list of functions that any actor can answer"]
         answer_index: 3
         explain: "An interface only names functions, such as Activate. Any Blueprint that implements it decides for itself what the function does."
       - q: "What is an Event Dispatcher?"
-        choices: ["A node that waits for some time", "A function that returns a value", "A signal that other actors can listen to", "A volume that fires overlap events"]
+        choices: ["A node that waits for some time", "A function that returns a value", "A signal that other actors can listen to", "A volume that fires overlap events at once"]
         answer_index: 2
         explain: "An Event Dispatcher sends out a signal when you call it. Every actor that is bound to it reacts."
       - q: "In the direct reference version, what must the button know about its target?"
@@ -900,11 +900,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a HUD?"
-        choices: ["A level that is used only for menus", "A camera that follows the player", "The information drawn on top of the game, such as the score", "The list of actors in the Outliner"]
+        choices: ["A level that is used only for menus", "A camera that follows the player", "The information drawn on top of the game, such as the score", "The list of the actors of the level, shown in the Outliner"]
         answer_index: 2
         explain: "HUD is the name for the information shown over the game picture. A score counter is a typical part of it."
       - q: "What is a Widget Blueprint?"
-        choices: ["An asset that holds text, images and other interface parts", "An actor that you place in the level", "A file that stores a set of values", "A node that prints text to the log"]
+        choices: ["An asset that holds text, images and other interface parts", "An actor that you place in the level to show a line of 3D text", "A file that stores a set of values", "A node that prints text to the log"]
         answer_index: 0
         explain: "A Widget Blueprint is where you build interface elements. WBP_Score holds a Text widget for the score."
       - q: "Which two nodes put WBP_Score on the screen?"
@@ -916,19 +916,19 @@ quests:
         answer_index: 3
         explain: "BeginPlay runs once when the game starts. That is the right moment to create the widget one time."
       - q: "Why should you not update the score text on Tick?"
-        choices: ["Tick does not run while the game is playing", "Tick cannot read variables", "Tick runs every frame, so the work is done again and again for no reason", "Tick only works in the Level Blueprint"]
+        choices: ["Tick does not run while the game is playing, so the text would never change", "Tick cannot read variables", "Tick runs every frame, so the work is done again and again for no reason", "Tick only works in the Level Blueprint"]
         answer_index: 2
         explain: "The score changes only now and then. Setting the text every frame repeats the same work with the same result."
       - q: "What is the Event Dispatcher OnScoreChanged in the GameState for?"
-        choices: ["It tells listeners that the score has changed", "It adds 1 to the score every second", "It saves the score to disk", "It resets the score when the level starts"]
+        choices: ["It tells listeners that the score has changed", "It adds 1 to the score every second", "It saves the score to disk", "It resets the score each time the level starts"]
         answer_index: 0
         explain: "The GameState calls OnScoreChanged every time the score changes. The widget listens and updates its text only then."
       - q: "Where does WBP_Score start to listen to OnScoreChanged?"
-        choices: ["On Event Tick of the character", "On Event Construct, with Bind Event on the GameState", "In the Class Defaults of the GameMode", "In the World Settings of the level"]
+        choices: ["On Event Tick of the character", "On Event Construct, with Bind Event on the GameState", "In the Class Defaults of the GameMode, under HUD Class", "In the World Settings of the level"]
         answer_index: 1
         explain: "Event Construct runs when the widget is created. There the widget gets the GameState, casts it to your class and binds to the dispatcher."
       - q: "You press the test key and the score variable goes up, but the text on the screen stays the same. What do you check first?"
-        choices: ["That the Text widget uses a large font", "That the level has a Player Start", "That the widget was added to the viewport two times", "That the GameState calls OnScoreChanged after it changes the score"]
+        choices: ["That the Text widget uses a large font", "That the level has a Player Start", "That the widget was added to the viewport two times in the same frame", "That the GameState calls OnScoreChanged after it changes the score"]
         answer_index: 3
         explain: "The widget only updates when the dispatcher is called. If the GameState changes the score and does not call OnScoreChanged, the widget never hears about it."
     flavors:
@@ -956,23 +956,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a kill volume?"
-        choices: ["An invisible area that ends the try of the player when they touch it", "A volume that makes sounds louder", "A visible wall that blocks the player", "A place where the game remembers progress"]
+        choices: ["An invisible area that ends the try of the player when they touch it", "A volume that makes sounds louder", "A visible wall that blocks the player", "A place where the game remembers the progress of the player for later"]
         answer_index: 0
         explain: "A kill volume marks a place where the player fails, for example a pit under the level. Touching it ends the try."
       - q: "What does respawn logic do?"
-        choices: ["It removes the player from the game for ever", "It loads the main menu", "It puts the player back in the level after they fail", "It saves the level to disk"]
+        choices: ["It removes the player from the game for the rest of it", "It loads the main menu", "It puts the player back in the level after they fail", "It saves the level to disk"]
         answer_index: 2
         explain: "To respawn means to appear again. The logic decides where and how the player comes back after a failure."
       - q: "Where do you place the kill volume in this quest?"
-        choices: ["Above the level, in the sky", "Below the floor, as a large Box Collision", "Around the Player Start", "Inside the checkpoint"]
+        choices: ["Above the level, in the sky, as a thin plane", "Below the floor, as a large Box Collision", "Around the Player Start", "Inside the checkpoint"]
         answer_index: 1
         explain: "The volume lies under the level. A player who falls off the floor overlaps the large box and is sent back."
       - q: "Where do you store the last checkpoint?"
-        choices: ["In a text file in the project folder", "In the name of the checkpoint actor", "In the material of the floor", "In a Transform variable that the GameMode can read"]
+        choices: ["In a text file in the Saved folder of the project", "In the name of the checkpoint actor", "In the material of the floor", "In a Transform variable that the GameMode can read"]
         answer_index: 3
         explain: "A Transform variable such as LastCheckpoint in the GameMode or the GameState holds the respawn place. The GameMode reads it when it moves the player back."
       - q: "What does the checkpoint Blueprint do when the player overlaps it?"
-        choices: ["It destroys the player", "It writes its own transform into the LastCheckpoint variable", "It moves itself to the player", "It restarts the level"]
+        choices: ["It destroys the player", "It writes its own transform into the LastCheckpoint variable", "It moves itself to the place where the player is standing", "It restarts the level"]
         answer_index: 1
         explain: "The checkpoint saves where it stands. From then on, a respawn brings the player to this place."
       - q: "Which node moves the player back to the checkpoint?"
@@ -980,11 +980,11 @@ quests:
         answer_index: 0
         explain: "An event on the GameMode calls Set Actor Transform on the player with the stored transform. The player is moved, not destroyed."
       - q: "How do you make a level use your new GameMode Blueprint?"
-        choices: ["Drag the GameMode into the viewport", "Add the GameMode to the kill volume", "Set it as the GameMode Override in World Settings", "Name the level after the GameMode"]
+        choices: ["Drag the GameMode into the viewport", "Add the GameMode as a component to the kill volume", "Set it as the GameMode Override in World Settings", "Name the level after the GameMode"]
         answer_index: 2
         explain: "GameMode Override in World Settings chooses the GameMode for that level. Your respawn event only exists when the level runs your GameMode."
       - q: "Why do you make your GameMode a child of the GameMode of the template?"
-        choices: ["A child Blueprint cannot be changed by mistake", "A child Blueprint runs faster than its parent", "A child Blueprint needs no World Settings", "A child Blueprint keeps the settings of the template, such as the character"]
+        choices: ["A child Blueprint cannot be changed by mistake, because it is always locked", "A child Blueprint runs faster than its parent", "A child Blueprint needs no World Settings", "A child Blueprint keeps the settings of the template, such as the character"]
         answer_index: 3
         explain: "A child Blueprint inherits everything from its parent. You still play as the template character and only add the new event and variable."
     flavors:
@@ -1027,11 +1027,11 @@ quests:
         answer_index: 0
         explain: "The computer cannot run C++ text directly. Compiling turns your code into a program, and nothing in C++ works until this step succeeds."
       - q: "What is a workload in the IDE?"
-        choices: ["The time a build takes", "The number of files in a project", "A list of bugs that must be fixed", "A set of extra tools that the IDE needs for a kind of work"]
+        choices: ["The time a build takes", "The number of files in a project", "A list of the bugs that must be fixed before the next build", "A set of extra tools that the IDE needs for a kind of work"]
         answer_index: 3
         explain: "The IDE installs tools in sets called workloads. The Epic setup page lists the workloads that Unreal Engine needs on your platform."
       - q: "How does a Blueprint project become a C++ project?"
-        choices: ["You rename the project folder", "You enable a plugin named C++", "You add a C++ class with Tools, then New C++ Class", "You open the project in a newer engine version"]
+        choices: ["You rename the project folder", "You enable a plugin named C++", "You add a C++ class with Tools, then New C++ Class", "You open the project in a newer version of the engine"]
         answer_index: 2
         explain: "Adding the first C++ class gives the project source code. From then on it is a C++ project and can be built in the IDE."
       - q: "Which configuration do you use when you build the Editor target?"
@@ -1039,19 +1039,19 @@ quests:
         answer_index: 0
         explain: "Development Editor builds your code for use inside the Unreal editor. It is the configuration for daily work."
       - q: "What is the debugger?"
-        choices: ["The window that lists the assets of the project", "The tool that lets you pause the program and look inside it", "The tool that installs the workloads", "The log that the editor writes to disk"]
+        choices: ["The window that lists all of the assets of the open project", "The tool that lets you pause the program and look inside it", "The tool that installs the workloads", "The log that the editor writes to disk"]
         answer_index: 1
         explain: "With the debugger you can stop the running program on a line and read the values of its variables."
       - q: "Why do you start the Unreal editor from the IDE in this quest?"
-        choices: ["The editor cannot be started in any other way", "The editor then opens without any levels", "The editor then skips compiling", "The debugger is then attached, so it can stop the editor on your breakpoint"]
+        choices: ["The editor cannot be started in any other way once a project has C++ code", "The editor then opens without any levels", "The editor then skips compiling", "The debugger is then attached, so it can stop the editor on your breakpoint"]
         answer_index: 3
         explain: "A breakpoint only works when the debugger watches the program. Starting the editor from the IDE attaches the debugger from the first moment."
       - q: "What is a breakpoint in the IDE?"
-        choices: ["A line that the compiler skips", "An error that stops the build", "A mark on a line where the program will pause", "A comment that explains a line"]
+        choices: ["A line of code that the compiler always skips", "An error that stops the build", "A mark on a line where the program will pause", "A comment that explains a line"]
         answer_index: 2
         explain: "When the program reaches the marked line, the debugger pauses it there. You then see that the line ran and what the values are."
       - q: "You set a breakpoint in your class, but the program never stops there. What do you check first?"
-        choices: ["That the line with the breakpoint is really run, for example by using your class in the level", "That the project has a Sky Light", "That the IDE window is maximized", "That the class name is written in capital letters"]
+        choices: ["That the line with the breakpoint is really run, for example by using your class in the level", "That the project has a Sky Light", "That the IDE window is maximized", "That the class name is written in capital letters and starts with the right prefix for its type"]
         answer_index: 0
         explain: "A breakpoint only triggers when its line runs. If nothing in the game uses your class, the line is never reached."
       - q: "In which order do you do the first build?"
@@ -1086,7 +1086,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is reflection in Unreal Engine?"
-        choices: ["The mirror image of a mesh on a shiny floor", "A tool that copies C++ code into Blueprints", "The system that lets the editor and Blueprints see C++ code that is marked with macros", "A log that lists every compiled class"]
+        choices: ["The mirror image of a mesh on a shiny floor", "A tool that copies your C++ code into Blueprint graphs each time that you compile it", "The system that lets the editor and Blueprints see C++ code that is marked with macros", "A log that lists every compiled class"]
         answer_index: 2
         explain: "Plain C++ is invisible to the editor. The macros give Unreal the information it needs to show your classes, variables and functions."
       - q: "Which macro marks a variable for reflection?"
@@ -1094,11 +1094,11 @@ quests:
         answer_index: 3
         explain: "UPROPERTY marks a variable. UCLASS marks a class and UFUNCTION marks a function."
       - q: "What are specifiers?"
-        choices: ["The words inside the macros that decide what the editor and Blueprints may see and change", "The names of the C++ files of a class", "The errors that the compiler prints", "The comments above a function"]
+        choices: ["The words inside the macros that decide what the editor and Blueprints may see and change", "The names of the C++ header and source files that belong to one class, in the order of the build", "The errors that the compiler prints", "The comments above a function"]
         answer_index: 0
         explain: "Specifiers such as EditAnywhere or BlueprintCallable are written inside the macro. Each one grants a certain kind of access."
       - q: "What does the specifier EditAnywhere do?"
-        choices: ["The property is hidden in the editor", "The property can be edited in the Details panel", "The property can only be changed in C++", "The property is saved to the log"]
+        choices: ["The property is hidden in the editor", "The property can be edited in the Details panel", "The property can only be changed in C++ code", "The property is saved to the log"]
         answer_index: 1
         explain: "EditAnywhere shows the property in the Details panel and lets you change its value there."
       - q: "A property uses VisibleAnywhere. What is different about it in the Details panel?"
@@ -1106,7 +1106,7 @@ quests:
         answer_index: 2
         explain: "VisibleAnywhere lets you see the value in the Details panel, but not change it. EditAnywhere is the specifier that allows editing."
       - q: "What does the specifier BlueprintReadWrite do?"
-        choices: ["It lets Blueprint graphs get and set the property", "It lets Blueprint graphs delete the property", "It writes the property to a file", "It makes the property read-only in C++"]
+        choices: ["It lets Blueprint graphs get and set the property", "It lets Blueprint graphs delete the property again", "It writes the property to a file", "It makes the property read-only in C++"]
         answer_index: 0
         explain: "With BlueprintReadWrite, a Blueprint graph can read the value and also change it."
       - q: "What does UFUNCTION(BlueprintCallable) do for a function?"
@@ -1122,7 +1122,7 @@ quests:
         answer_index: 2
         explain: "New C++ Class in the Tools menu creates the files of the class and adds them to the project."
       - q: "How do you test your BlueprintCallable function in this quest?"
-        choices: ["A Blueprint child of your class calls it on BeginPlay", "The Level Blueprint calls it on every frame", "The IDE calls it during the build", "A console command calls it from the Output Log"]
+        choices: ["A Blueprint child of your class calls it on BeginPlay", "The Level Blueprint calls it on every frame", "The IDE calls it during the build", "A console command calls it from the Output Log window"]
         answer_index: 0
         explain: "You make a Blueprint child of the class, call the function on BeginPlay, and place the Blueprint in a level. The log line shows that the call reached your C++ code."
     flavors:
@@ -1156,15 +1156,15 @@ quests:
         answer_index: 1
         explain: "C++ decides when the event is called. What happens then is written only in a Blueprint."
       - q: "What is a BlueprintNativeEvent?"
-        choices: ["A function that cannot be changed by Blueprints", "A function that only exists in the Level Blueprint", "A function that runs before the game starts", "A function with a default version written in C++ that a Blueprint may replace"]
+        choices: ["A function that cannot be changed by Blueprints", "A function that only exists in the Level Blueprint and is called from C++ code", "A function that runs before the game starts", "A function with a default version written in C++ that a Blueprint may replace"]
         answer_index: 3
         explain: "The C++ version gives a default behavior. A Blueprint child can override it when it needs something else."
       - q: "How do you name the C++ version of the BlueprintNativeEvent OnReset?"
-        choices: ["OnReset_Implementation", "OnReset_Native", "OnReset_Default", "OnReset_Blueprint"]
+        choices: ["OnReset_Implementation", "OnReset_Native", "OnReset_Default", "OnReset_BlueprintNative"]
         answer_index: 0
         explain: "The C++ body of a BlueprintNativeEvent is a function with _Implementation at the end of its name."
       - q: "For which of the two kinds of event do you write no body in C++?"
-        choices: ["For both of them", "For neither of them", "For the BlueprintImplementableEvent", "For the BlueprintNativeEvent"]
+        choices: ["For both of them", "For neither of them", "For the BlueprintImplementableEvent", "For the BlueprintNativeEvent only"]
         answer_index: 2
         explain: "A BlueprintImplementableEvent is only declared in C++. Its content comes from the Blueprint that implements it."
       - q: "A Blueprint child does not implement OnActivated. What happens when C++ calls it?"
@@ -1172,11 +1172,11 @@ quests:
         answer_index: 1
         explain: "A BlueprintImplementableEvent has no C++ version. With no Blueprint implementation, the call does nothing."
       - q: "A Blueprint child does not override OnReset. What happens when C++ calls it?"
-        choices: ["Nothing happens", "The call is skipped with a warning", "The game pauses", "The C++ version runs and writes its line to the log"]
+        choices: ["Nothing happens", "The call is skipped and a warning is written to the log", "The game pauses", "The C++ version runs and writes its line to the log"]
         answer_index: 3
         explain: "A BlueprintNativeEvent falls back to its C++ version. That is the default behavior you wrote in OnReset_Implementation."
       - q: "In the Blueprint override of OnReset you call the parent version one time. What does the log show?"
-        choices: ["That both the C++ code and the Blueprint code ran", "That only the Blueprint code ran", "That only the C++ code ran", "That neither of them ran"]
+        choices: ["That both the C++ code and the Blueprint code ran", "That only the Blueprint code ran, and it ran twice", "That only the C++ code ran", "That neither of them ran"]
         answer_index: 0
         explain: "The override runs the Blueprint nodes, and the call to the parent runs the C++ version. Both leave their mark in the log."
       - q: "You override OnReset in the Blueprint and do not call the parent version. What happens to the C++ version?"
@@ -1188,7 +1188,7 @@ quests:
         answer_index: 1
         explain: "The Blueprint child has your C++ class as its parent. It gets the events of the class and can implement or override them."
       - q: "When is a BlueprintNativeEvent the better choice?"
-        choices: ["When Blueprints must never change the behavior", "When the function has no use in the game", "When C++ has nothing to do at that moment", "When there is a sensible default behavior in C++ that designers may want to change"]
+        choices: ["When Blueprints must never change the behavior, and the C++ version is the only one", "When the function has no use in the game", "When C++ has nothing to do at that moment", "When there is a sensible default behavior in C++ that designers may want to change"]
         answer_index: 3
         explain: "The default lives in C++ and works without any Blueprint. Designers can still replace or extend it without asking a programmer."
     flavors:
@@ -1220,11 +1220,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a component?"
-        choices: ["A part that you add to an actor to give it a shape or a behavior", "A level that is loaded inside another level", "A file that stores the settings of the editor", "A node that connects two Blueprints"]
+        choices: ["A part that you add to an actor to give it a shape or a behavior", "A level that is loaded inside another level", "A file that stores the settings of the editor for one project", "A node that connects two Blueprints"]
         answer_index: 0
         explain: "A mesh, a collision box and a script that spins the actor are all components. An actor is built from such parts."
       - q: "What is the main gain of writing a behavior as a component?"
-        choices: ["The behavior runs without an actor", "The behavior needs no compiling", "You write it once and reuse it on many actors", "The behavior cannot be changed by others"]
+        choices: ["The behavior runs without an actor", "The behavior needs no compiling", "You write it once and reuse it on many actors", "The behavior cannot be changed by other people"]
         answer_index: 2
         explain: "A spin component can be added to any actor. The code exists once, and every actor that needs it gets the same behavior."
       - q: "What is the constructor of a class?"
@@ -1286,7 +1286,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is Live Coding?"
-        choices: ["A stream that shows your screen to other people", "A tool that writes C++ code for you", "A feature that compiles your C++ changes while the editor is still open", "A mode that runs the game without compiling"]
+        choices: ["A stream that shows your screen to other people while you write code", "A tool that writes C++ code for you", "A feature that compiles your C++ changes while the editor is still open", "A mode that runs the game without compiling"]
         answer_index: 2
         explain: "With Live Coding you change the code and apply it without closing the editor. It saves the time of a restart."
       - q: "Which shortcut applies a change with Live Coding?"
@@ -1306,23 +1306,23 @@ quests:
         answer_index: 2
         explain: "A new UPROPERTY changes the class itself and its reflection data. The open editor still holds the old form of the class, which can cause strange bugs."
       - q: "What are the steps of a full rebuild in this quest?"
-        choices: ["Close the editor, build the project from the IDE, and open the editor again", "Press Ctrl+Alt+F11 two times", "Delete the class and write it again", "Save all levels and press Play"]
+        choices: ["Close the editor, build the project from the IDE, and open the editor again", "Press Ctrl+Alt+F11 two times", "Delete the class in the IDE, write all of it again, and press Ctrl+Alt+F11", "Save all levels and press Play"]
         answer_index: 0
         explain: "With the editor closed, the IDE builds everything fresh. When the editor opens again, it loads the new version of every class."
       - q: "What can happen if you keep working after a change that needed a restart?"
-        choices: ["The IDE removes your code", "The project is deleted", "The editor refuses to open any level", "You can get bugs that are very hard to understand"]
+        choices: ["The IDE removes your code", "The project is deleted", "The editor refuses to open any level of the project", "You can get bugs that are very hard to understand"]
         answer_index: 3
         explain: "The editor and your code no longer agree about the class. The result can be wrong values or crashes that have no clear cause."
       - q: "What is the gain of Live Coding when the change is safe?"
-        choices: ["The game runs faster", "It is fast, because the editor does not have to restart", "The code needs no testing", "The project gets smaller"]
+        choices: ["The game runs faster", "It is fast, because the editor does not have to restart", "The code needs no testing after it is compiled this way", "The project gets smaller"]
         answer_index: 1
         explain: "A restart costs time on every change. For safe changes, Live Coding lets you test a few seconds after you edit."
       - q: "A property you just added with Live Coding shows strange values in the editor. What do you do first?"
-        choices: ["Add the property a second time", "Rename the project", "Close the editor, build from the IDE, and open the editor again", "Delete the Blueprint children of the class"]
+        choices: ["Add the property a second time", "Rename the project", "Close the editor, build from the IDE, and open the editor again", "Delete the Blueprint children of the class and make them again"]
         answer_index: 2
         explain: "The strange values are a sign that the editor holds old data for the class. A full rebuild with the editor closed brings both back in line."
       - q: "What does the rule that you write for this quest say?"
-        choices: ["Which changes are safe to apply with Live Coding and which need a restart", "How many classes a project may have", "Which IDE is the fastest", "How often the editor must be updated"]
+        choices: ["Which changes are safe to apply with Live Coding and which need a restart", "How many classes a project may have", "Which IDE is the fastest", "How often the editor must be updated and restarted during a working day"]
         answer_index: 0
         explain: "Your rule tells you when to trust Live Coding and when to restart. You give one example of each case."
     flavors:
@@ -1352,11 +1352,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is UE_LOG?"
-        choices: ["The C++ macro that writes a message to the Output Log", "The file where the editor saves its settings", "The window that shows compile errors", "The console command that clears the screen"]
+        choices: ["The C++ macro that writes a message to the Output Log", "The file where the editor saves its settings", "The window that shows compile errors", "The console command that clears the messages on screen"]
         answer_index: 0
         explain: "UE_LOG is how C++ code writes a line to the Output Log. Each call names a category, a verbosity and a text."
       - q: "What is a log category?"
-        choices: ["The color of a message", "The time at which a message was written", "A name shown in front of the message, which messages belong to", "The folder where log files are stored"]
+        choices: ["The color of a message", "The time at which a message was written, shown in front of it", "A name shown in front of the message, which messages belong to", "The folder where log files are stored"]
         answer_index: 2
         explain: "Every message belongs to a category, and its name appears in front of the text. LogUU in front of a line tells you the message is yours."
       - q: "What does the verbosity of a log message say?"
@@ -1384,7 +1384,7 @@ quests:
         answer_index: 3
         explain: "Error is the most serious of the three, Warning is in the middle, and Log is plain information."
       - q: "How do you see only your own messages in the Output Log?"
-        choices: ["Set the filter so that it shows only the LogUU category", "Close and open the Output Log again", "Rename the actor to LogUU", "Press F9 in the Output Log"]
+        choices: ["Set the filter so that it shows only the LogUU category", "Close the Output Log and open it again from the Window menu", "Rename the actor to LogUU", "Press F9 in the Output Log"]
         answer_index: 0
         explain: "The filter of the Output Log can show single categories. With only LogUU selected, every other line is hidden."
       - q: "With the log command in the console you set LogUU to the verbosity Warning. Which of your three messages no longer appears?"
@@ -1420,35 +1420,35 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Which pattern do most Unreal projects use to combine C++ and Blueprint?"
-        choices: ["All logic in the Level Blueprint and all data in C++", "One C++ class for each Blueprint node", "A C++ base class with the core logic, and a Blueprint child where designers set values", "Blueprints for the editor and C++ for the packaged game"]
+        choices: ["All of the logic in the Level Blueprint, and all of the data in C++ header files only", "One C++ class for each Blueprint node", "A C++ base class with the core logic, and a Blueprint child where designers set values", "Blueprints for the editor and C++ for the packaged game"]
         answer_index: 2
         explain: "The base class in C++ holds the logic that should not break. The Blueprint child is where designers set values and add small changes."
       - q: "What does the way you split the work between C++ and Blueprint decide?"
-        choices: ["Who can change what without asking a programmer", "How many levels the game can have", "Which engine version the project uses", "How large the textures may be"]
+        choices: ["Who can change what without asking a programmer", "How many levels the game can have", "Which version of the engine the project uses", "How large the textures may be"]
         answer_index: 0
         explain: "Everything exposed to Blueprint can be changed by designers themselves. Everything kept in C++ needs a programmer."
       - q: "Which kind of work does the Epic page name as a strength of Blueprint?"
-        choices: ["Tight loops over large sets of data", "Low-level access to external libraries", "Merging changes from many programmers", "Scripting behaviors and prototyping with fast iteration"]
+        choices: ["Tight loops over large sets of data", "Low-level access to external libraries and to the hardware", "Merging changes from many programmers", "Scripting behaviors and prototyping with fast iteration"]
         answer_index: 3
         explain: "Blueprint is quick to change and easy to read as a visual flow. That makes it good for defining behavior and for trying ideas."
       - q: "Which kind of work does the Epic page name as better done in C++?"
-        choices: ["Setting the color of a single prop", "Core systems and code where performance matters, such as tight loops", "Trying out a new idea in ten minutes", "Choosing which mesh a pickup shows"]
+        choices: ["Setting the color of a single prop", "Core systems and code where performance matters, such as tight loops", "Trying out a new idea in ten minutes to see if it is any fun to play", "Choosing which mesh a pickup shows"]
         answer_index: 1
         explain: "C++ is the foundation for systems. The cost of Blueprint shows most in core code, tight loops, large data sets and many ticking instances."
       - q: "Why does C++ code run faster than Blueprint logic?"
-        choices: ["C++ compiles to machine code, while Blueprint runs in a virtual machine", "C++ code is shorter than a Blueprint graph", "Blueprint only runs on every second frame", "C++ skips the collision checks"]
+        choices: ["C++ compiles to machine code, while Blueprint runs in a virtual machine", "C++ code is always shorter than a Blueprint graph that does the same work", "Blueprint only runs on every second frame", "C++ skips the collision checks"]
         answer_index: 0
         explain: "Machine code runs directly on the processor. Blueprint bytecode is run by a virtual machine, which adds a small cost to every node."
       - q: "Why is C++ easier to work on in a team with version control?"
-        choices: ["C++ files cannot be edited by two people", "C++ files are saved more often", "C++ is text, so changes are easy to compare and merge", "C++ files are smaller than textures"]
+        choices: ["C++ files cannot be edited by two people at one time", "C++ files are saved more often", "C++ is text, so changes are easy to compare and merge", "C++ files are smaller than textures"]
         answer_index: 2
         explain: "Text files can be compared line by line and merged. A Blueprint is a binary asset, where two edits cannot be combined that way."
       - q: "What is a specifier in the UPROPERTY macro?"
-        choices: ["A comment for other programmers", "The type of the variable", "The default value of the variable", "A word that controls what the editor and Blueprints can do"]
+        choices: ["A comment for other programmers", "The type of the variable", "The default value that the variable has when the game starts", "A word that controls what the editor and Blueprints can do"]
         answer_index: 3
         explain: "Specifiers such as EditDefaultsOnly or BlueprintReadOnly set the access to a value. Choosing them is how you decide what designers may touch."
       - q: "What does the specifier EditDefaultsOnly allow?"
-        choices: ["The value can be edited on every placed copy in the level", "The value can be edited in the class defaults, but not on placed copies", "The value can be edited only in C++", "The value can be edited only while the game runs"]
+        choices: ["The value can be edited on every placed copy in the level, but not in the class", "The value can be edited in the class defaults, but not on placed copies", "The value can be edited only in C++", "The value can be edited only while the game runs"]
         answer_index: 1
         explain: "EditDefaultsOnly shows the value in the class defaults. A designer sets it once per Blueprint child, and single copies in the level cannot differ."
       - q: "What does the specifier BlueprintReadOnly allow?"
@@ -1491,11 +1491,11 @@ quests:
     verify_type: mentor
     quiz:
       - q: "How do programmers and other team members often share the work on an actor?"
-        choices: ["Programmers write a base class in C++, and other people build on it with Blueprint children", "Programmers write Blueprints, and other people rewrite them in C++", "Everyone edits the same Blueprint at the same time", "Programmers place the actors, and other people compile them"]
+        choices: ["Programmers write a base class in C++, and other people build on it with Blueprint children", "Programmers write the first version as Blueprints, and other people rewrite it later in C++", "Everyone edits the same Blueprint at the same time", "Programmers place the actors, and other people compile them"]
         answer_index: 0
         explain: "The C++ base class holds the logic. Blueprint children made from it let other people create variants without writing code."
       - q: "Which three things must a good base class offer to the people who build on it?"
-        choices: ["It must be short, private and final", "It must be easy to tune, warn clearly when it is set up wrong, and be explained in writing", "It must have many components, many functions and many files", "It must run every frame, save itself and load itself"]
+        choices: ["It must be short, private and final", "It must be easy to tune, warn clearly when it is set up wrong, and be explained in writing", "It must have many components, many functions and many files, so that nothing is ever missing", "It must run every frame, save itself and load itself"]
         answer_index: 1
         explain: "Other people use your class without reading its code. They need values to tune, warnings that explain mistakes, and a text that says how it works."
       - q: "Where do you build the components of the base actor?"
@@ -1507,11 +1507,11 @@ quests:
         answer_index: 2
         explain: "A variable marked with UPROPERTY and the right specifiers appears in the editor. A Blueprint child can then set it with no code change."
       - q: "What does the BlueprintNativeEvent in your base class give to the Blueprint children?"
-        choices: ["A function that they cannot change", "A default version in C++ that a child may override", "A function that only runs in the editor", "A component that is added at BeginPlay"]
+        choices: ["A function that they cannot change", "A default version in C++ that a child may override", "A function that only runs in the editor, not in play", "A component that is added at BeginPlay"]
         answer_index: 1
         explain: "The default behavior works without any Blueprint work. A child that needs something else overrides the event."
       - q: "How do you declare and define your own log category, for example LogUU?"
-        choices: ["With DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY", "With UCLASS and UPROPERTY", "With CreateDefaultSubobject and SetupAttachment", "With UE_LOG and UFUNCTION"]
+        choices: ["With DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY", "With UCLASS and UPROPERTY", "With CreateDefaultSubobject and SetupAttachment in the .cpp", "With UE_LOG and UFUNCTION"]
         answer_index: 0
         explain: "The first macro declares the category in a header and the second defines it in a .cpp file. Your messages then appear under your own category name."
       - q: "For which cases do you add clear warnings to the actor?"
@@ -1519,15 +1519,15 @@ quests:
         answer_index: 3
         explain: "A designer may forget a mesh or leave a reference empty. A clear warning in the log tells them what is wrong, so they can fix it without you."
       - q: "In what may the 2 Blueprint children differ?"
-        choices: ["In their C++ parent class", "In their whole logic", "Only in their data and in one override", "Only in their names"]
+        choices: ["In the C++ parent class they are made from", "In their whole logic", "Only in their data and in one override", "Only in their names"]
         answer_index: 2
         explain: "If two variants need nothing more than other values and one override, the base class does its job. All shared logic stays in C++."
       - q: "What must your README say?"
-        choices: ["How long you worked on the class and which IDE you used", "What is in C++, what is in Blueprint, and how a designer would add a third child", "Which engine source files you read", "Every line of the header file, copied as text"]
+        choices: ["How long you worked on the class, which IDE you used and what you would change", "What is in C++, what is in Blueprint, and how a designer would add a third child", "Which engine source files you read", "Every line of the header file, copied as text"]
         answer_index: 1
         explain: "The README is the manual for the next person. With it, a designer can make a third child without asking you."
       - q: "What does the short video clip have to show?"
-        choices: ["Both Blueprint children working in Play in Editor", "The build output of the IDE", "The README opened in a text editor", "The constructor running in the debugger"]
+        choices: ["Both Blueprint children working in Play in Editor", "The build output of the IDE", "The README opened in a text editor", "The constructor of the class running in the debugger"]
         answer_index: 0
         explain: "The clip proves that the base class works through its children. Both children must be seen working in the test level."
     flavors:
@@ -1556,7 +1556,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Through which part does the Character class in Unreal move?"
-        choices: ["The Static Mesh component", "The Sky Light", "The Character Movement component", "The Output Log"]
+        choices: ["The Capsule Collision component", "The Sky Light", "The Character Movement component", "The Output Log"]
         answer_index: 2
         explain: "The Character Movement component does the moving for a Character. It has values such as walk speed and jump height."
       - q: "Why do movement values such as walk speed and jump height matter so much?"
@@ -1564,7 +1564,7 @@ quests:
         answer_index: 0
         explain: "A small change in speed or jump height changes the feel of every moment of play. This is why they must be easy to tune."
       - q: "What is the gain of setting movement values up in C++ and exposing them?"
-        choices: ["The values can never be changed again", "The character moves without any input", "The values are hidden from the editor", "A Blueprint child can tune them without changing any code"]
+        choices: ["The values can never be changed again", "The character moves without any input from the player at all", "The values are hidden from the editor", "A Blueprint child can tune them without changing any code"]
         answer_index: 3
         explain: "The logic stays in C++. Designers open the Blueprint child and change the numbers there."
       - q: "From which class does the character class of the tutorial page, AAdventureCharacter, inherit?"
@@ -1584,15 +1584,15 @@ quests:
         answer_index: 3
         explain: "SetupPlayerInputComponent is where the character connects input to code. BindAction links each Input Action to one of your functions."
       - q: "What does the Blueprint child of the character assign on the tutorial page?"
-        choices: ["The C++ source files of the class", "The input assets, such as the mapping context and the move and jump actions", "The log category of the project", "The build configuration"]
+        choices: ["The C++ source files of the class, such as the header file and the .cpp file", "The input assets, such as the mapping context and the move and jump actions", "The log category of the project", "The build configuration"]
         answer_index: 1
         explain: "The C++ class has properties for the input assets. In the Blueprint child you pick the real assets, so code and content stay apart."
       - q: "How do you expose a movement value so that a Blueprint child can tune it?"
-        choices: ["Write the value into a comment", "Make the variable private with no macro", "Mark a variable with UPROPERTY and a specifier such as EditAnywhere", "Print the value with UE_LOG"]
+        choices: ["Write the value into a comment", "Make the variable private, with no macro, and name it in the README", "Mark a variable with UPROPERTY and a specifier such as EditAnywhere", "Print the value with UE_LOG"]
         answer_index: 2
         explain: "UPROPERTY makes the variable known to the editor, and the specifier allows editing. The value then appears in the Details panel of the Blueprint child."
       - q: "What does your screenshot have to show?"
-        choices: ["The tuned values in a Blueprint child", "The build output of the IDE", "The character in a packaged game", "The tutorial page in a browser"]
+        choices: ["The tuned values in a Blueprint child", "The build output of the IDE", "The character in a packaged game build", "The tutorial page in a browser"]
         answer_index: 0
         explain: "The two values you exposed must be visible and changed in a Blueprint child. That proves a designer could tune them without code."
     flavors:
@@ -1620,11 +1620,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a Data Asset?"
-        choices: ["A node that reads a file from disk", "A file in the Content Browser that stores a set of values", "A mesh with data painted on its vertices", "A log category for item messages"]
+        choices: ["A node that reads a file from disk", "A file in the Content Browser that stores a set of values", "A mesh that has data painted on each one of its vertices", "A log category for item messages"]
         answer_index: 1
         explain: "A Data Asset only holds values, such as the name and price of an item. It has no logic of its own."
       - q: "What do designers gain when a programmer defines the Data Asset class in C++?"
-        choices: ["They can change the C++ code in the editor", "They no longer need the Content Browser", "They get one item that cannot be changed", "They can create as many item files as they need without touching code"]
+        choices: ["They can change the C++ code of the class in the editor without an IDE", "They no longer need the Content Browser", "They get one item that cannot be changed", "They can create as many item files as they need without touching code"]
         answer_index: 3
         explain: "The class defines which fields an item has. Each new item is then only a new asset that a designer fills in."
       - q: "From which class does the item class of the tutorial page, UItemDefinition, inherit?"
@@ -1632,31 +1632,31 @@ quests:
         answer_index: 0
         explain: "A class that inherits from UDataAsset can be chosen when you create a Data Asset in the editor."
       - q: "How do you create an item asset from your class in the editor?"
-        choices: ["Drag the header file into the level", "Click Add, then User Interface, then Widget Blueprint", "In the Content Browser, open Miscellaneous, choose Data Asset and select your class", "Open Tools, then New C++ Class"]
+        choices: ["Drag the header file into the level", "Click Add, then User Interface, then Widget Blueprint, and select your class as parent", "In the Content Browser, open Miscellaneous, choose Data Asset and select your class", "Open Tools, then New C++ Class"]
         answer_index: 2
         explain: "Data Asset is in the Miscellaneous group of the Content Browser menu. A window then asks which class the new asset should use."
       - q: "What does the idea of data-driven gameplay on the tutorial page mean?"
-        choices: ["The game downloads its data from a server", "Values are kept as data in a central place and are not hardcoded in the logic", "The player types data during the game", "Every value is written into the function bodies"]
+        choices: ["The game downloads its data from a server", "Values are kept as data in a central place and are not hardcoded in the logic", "The player types data during the game", "Every value is written into the function bodies, next to the code that uses it"]
         answer_index: 1
         explain: "Data and logic are kept apart. Items can be added or changed in data, and the code that uses them stays the same."
       - q: "On the tutorial page the struct FItemData inherits from FTableRowBase. What does this make possible?"
-        choices: ["The struct can tick every frame", "The struct can be placed in a level", "The struct can be compiled without a header", "The struct can be used as a row of a Data Table"]
+        choices: ["The struct can tick every frame", "The struct can be placed in a level", "The struct can be compiled without a header file", "The struct can be used as a row of a Data Table"]
         answer_index: 3
         explain: "A Data Table is like a spreadsheet whose rows all have the same struct. That struct must be based on FTableRowBase."
       - q: "The tutorial page defines the enum EItemType with UENUM(BlueprintType). What is this enum for?"
-        choices: ["It gives each item a type from a fixed list", "It stores the price of each item", "It holds the mesh of each item", "It counts how many items exist"]
+        choices: ["It gives each item a type from a fixed list", "It stores the price of each item in the game", "It holds the mesh of each item", "It counts how many items exist"]
         answer_index: 0
         explain: "An enum is a fixed list of named choices. BlueprintType makes it usable in Blueprints and in the editor."
       - q: "The item class holds its mesh as a TSoftObjectPtr. What is special about this kind of reference?"
-        choices: ["It copies the mesh into the Data Asset", "It can only point to textures", "It points to an asset without loading it until it is needed", "It deletes the mesh when the item is used"]
+        choices: ["It copies the mesh into the Data Asset", "It can only point to textures", "It points to an asset without loading it until it is needed", "It deletes the mesh from memory as soon as the item is used"]
         answer_index: 2
         explain: "A soft reference stores where the asset is. The mesh is only loaded when the game asks for it, so a list of many items stays light."
       - q: "You created an item asset, but the fields of your class do not show in the editor. What do you check first in the C++ class?"
-        choices: ["That the class has a Tick function", "That each field is marked with UPROPERTY and a specifier such as EditAnywhere", "That the class name starts with A", "That the class has a log category"]
+        choices: ["That the class has a Tick function, because fields are only read by the editor on tick", "That each field is marked with UPROPERTY and a specifier such as EditAnywhere", "That the class name starts with A", "That the class has a log category"]
         answer_index: 1
         explain: "The editor only shows fields that reflection knows. UPROPERTY with EditAnywhere makes a field visible and editable in the asset."
       - q: "What does your screenshot have to show?"
-        choices: ["The header file in the IDE", "A pickup in a packaged game", "The tutorial page in a browser", "2 Data Assets made from your C++ class"]
+        choices: ["The header file in the IDE", "A pickup in a packaged game", "The tutorial page open in a web browser", "2 Data Assets made from your C++ class"]
         answer_index: 3
         explain: "Two item assets from one class prove the point of the quest: the class is written once, and items are made as data."
     flavors:
@@ -1688,15 +1688,15 @@ quests:
         answer_index: 2
         explain: "Guessing often leads you to change code that was never the problem. A measurement shows where the time really goes."
       - q: "What is Unreal Insights?"
-        choices: ["The tool that records where the engine spends its time", "The window that lists compile errors", "The page that documents the C++ classes", "The plugin that writes log files"]
+        choices: ["The tool that records where the engine spends its time", "The window that lists compile errors", "The page that documents the C++ classes of the engine", "The plugin that writes log files"]
         answer_index: 0
         explain: "Unreal Insights is the profiling tool of the engine. It shows the work of each frame on a timeline."
       - q: "What is a trace?"
-        choices: ["A line that connects two nodes", "A recording that Unreal Insights can open", "A breakpoint in the IDE", "A warning in the Output Log"]
+        choices: ["A line that connects two nodes", "A recording that Unreal Insights can open", "A breakpoint in the IDE", "A warning that is written to the Output Log"]
         answer_index: 1
         explain: "A trace is the recording of what the engine did over a period of time. You capture it while the game runs and study it afterwards."
       - q: "What is a named CPU scope?"
-        choices: ["A limit on how much CPU time the game may use", "A list of all functions of a class", "A setting that makes code run on another thread", "A mark around your own code that gives it its own name in the trace"]
+        choices: ["A limit on how much CPU time the game may use", "A list of all functions of a class", "A setting that makes your own code run on another thread of the CPU", "A mark around your own code that gives it its own name in the trace"]
         answer_index: 3
         explain: "The scope measures the time spent in the marked code. In the trace, that time is shown as a block with the name you gave it."
       - q: "Which macro adds a named CPU scope?"
@@ -1704,11 +1704,11 @@ quests:
         answer_index: 0
         explain: "TRACE_CPUPROFILER_EVENT_SCOPE marks the code that follows it inside the function. The time until the function ends is recorded under the given name."
       - q: "Why is a Tick function with some work in it a good place for your first scope?"
-        choices: ["Tick runs only once, so the trace stays small", "Tick cannot be measured in another way", "Tick runs every frame, so the scope appears in the trace again and again", "Tick is the only function that may contain macros"]
+        choices: ["Tick runs only once, so the trace stays small", "Tick cannot be measured in another way", "Tick runs every frame, so the scope appears in the trace again and again", "Tick is the only function that may contain macros like the scope macro"]
         answer_index: 2
         explain: "A function that runs every frame is easy to find in a trace of 10 seconds. The work inside gives the scope a visible length."
       - q: "How do you capture a trace from the editor?"
-        choices: ["Open Window, then Output Log, and type trace", "Click Trace at the bottom of the editor, choose Start Trace, play, then Stop Trace", "Press F9 on the actor in the level", "Build the project with the configuration Development Editor"]
+        choices: ["Open Window, then Output Log, and type trace", "Click Trace at the bottom of the editor, choose Start Trace, play, then Stop Trace", "Press F9 on the actor in the level", "Build the project with the configuration Development Editor and press Play two times"]
         answer_index: 1
         explain: "Start Trace begins the recording and Stop Trace ends it. In between, you play for about 10 seconds so that the trace has frames to show."
       - q: "Where in Unreal Insights do you find your scope?"
@@ -1716,11 +1716,11 @@ quests:
         answer_index: 3
         explain: "The timing view shows each frame as blocks of work on the threads. Your scope is one of these blocks, with the name you gave it."
       - q: "You open the trace, but your named scope is nowhere to be found. What do you check first?"
-        choices: ["That the actor was placed in the level, so its function ran during the trace", "That the scope name is written in capital letters", "That the level has a Directional Light", "That the Output Log was open during play"]
+        choices: ["That the actor was placed in the level, so its function ran during the trace", "That the name of the scope is written in capital letters and has no spaces in it", "That the level has a Directional Light", "That the Output Log was open during play"]
         answer_index: 0
         explain: "A scope is only recorded when its code runs. If the actor is not in the level, its function is never called and nothing is recorded."
       - q: "Why should you give your scopes clear names?"
-        choices: ["Short names make the code run faster", "Unnamed scopes stop the build", "So that you and other people can find them in a trace", "So that the scope is saved in the Blueprint"]
+        choices: ["Short names make the code run faster", "Unnamed scopes stop the build", "So that you and other people can find them in a trace", "So that the scope is saved in the Blueprint of the actor"]
         answer_index: 2
         explain: "A trace has thousands of blocks. A clear name is what lets someone search for your code and understand what the block measures."
     flavors:
