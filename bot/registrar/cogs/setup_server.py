@@ -636,6 +636,11 @@ class SetupServer(commands.Cog):
             key = f"patchnotes:{rel['version']}"
             fp = hashlib.sha1((rel["title"] + rel["body"]).encode()).hexdigest()[:12]
             rec = await self.bot.db.kv_get(0, key)
+            if not rec and release.build_of(rel["version"]) is not None:
+                # posted before versions carried a build number (as v0.10.1): keep that message and give it its new title
+                old = await self.bot.db.kv_get(0, "patchnotes:" + rel["version"].rsplit(".", 1)[0])
+                if old:
+                    rec = old.partition(":")[0] + ":renumbered"
             mid, _, old_fp = (rec or "").partition(":")
             embed = self.patch_embed(rel)
             if mid and not (force_latest and rel is es[0]):

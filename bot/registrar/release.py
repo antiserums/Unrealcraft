@@ -7,7 +7,7 @@ Versions are written vMAJOR.MINOR.PATCH.BUILD, the way Unreal Engine builds carr
   BUILD  the number of commits in the repo at that release (`tools/version.py next` works it out). It only goes up,
          so two builds can always be told apart, even of the same release.
 While MAJOR is 0 the server is still pre-release; anything may change between MINOR versions.
-Releases from before v0.11 have no build number (v0.10.1); they are still read.
+Releases from before v0.11 were first published without a build number (v0.10.1). That form is still read.
 """
 from __future__ import annotations
 
