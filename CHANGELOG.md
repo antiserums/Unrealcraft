@@ -17,6 +17,9 @@ A version is three numbers and a **rev**, the way an Unreal Engine build carries
 - The first 15 releases were first published under other numbers (v0.2.0 … v0.10.1). They were renumbered on
   2026-10-02; the rev is counted from the commit each one was tagged on.
 
+## v0.1.0.186 · 2026-10-02
+- **Quiz answers**: the last 160 questions where the right answer stood out by its length are rebalanced. TAQ6 names the Python plugin correctly again.
+
 ## v0.1.0.184 · 2026-10-02
 - **The website runs the game.** Quests, boss fights, proof and reviews all happen on the site. Discord is for talking and showing your progress.
 - **Everyone starts as Novice.** Orientation is now five first steps inside Novice. Rank colors match the quest tiers.
