@@ -33,11 +33,11 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What does UPROPERTY(EditAnywhere) on a variable do?"
-        choices: ["Makes it save to a text file in the project folder each time the value changes during the game", "Shows it in the Details panel so it can be edited on the class defaults and on placed instances", "Makes it replicate", "Hides it from Blueprint"]
+        choices: ["Makes it save to a text file in the project folder each time the value changes during the game", "Shows it in the Details panel so it can be edited on the class defaults and on placed instances", "Makes it replicate from the server to every client, on each frame of the game", "Hides it from Blueprint graphs and from the Details panel of every instance"]
         answer_index: 1
         explain: "That's how a programmer gives designers a tuning knob."
       - q: "What is the .h file for, compared with the .cpp?"
-        choices: [".h declares the class and its members; .cpp holds the function bodies", "They're identical copies", ".h is the file for Mac builds; .cpp is the file for Windows builds only", ".cpp is only for comments"]
+        choices: [".h declares the class and its members; .cpp holds the function bodies", "They're identical copies of the same code, kept in two files as a backup for each other", ".h is the file for Mac builds; .cpp is the file for Windows builds only", ".cpp is only for comments about the class; .h holds the code that is compiled"]
         answer_index: 0
         explain: "Header declares, source implements. You'll mostly read headers to see what's exposed."
       - q: "Which macro lets a C++ function be called from Blueprint?"
@@ -45,11 +45,11 @@ quests:
         answer_index: 2
         explain: "BlueprintCallable makes the function show up as a node."
       - q: "A property is marked VisibleAnywhere. What do you see in Details?"
-        choices: ["Nothing", "An editable field with a slider next to it", "A Blueprint node", "The value, but you can't change it there"]
+        choices: ["Nothing at all in the panel", "An editable field with a slider next to it", "A Blueprint node for the value", "The value, but you can't change it there"]
         answer_index: 3
         explain: "Visible means read-only in Details. EditAnywhere means editable."
       - q: "Do you have to compile C++ to finish this taster?"
-        choices: ["Yes, or the quest fails", "No. Compiling is an optional bonus; reading and finding the property is the task", "Only on Linux", "Only if you want to become a programmer and plan to take the C++ quests later on"]
+        choices: ["Yes, or the task fails, because the property only exists after you have compiled the class", "No. Compiling is an optional bonus; reading and finding the property is the task", "Only on Linux, where the editor cannot open a C++ project that has not been compiled yet", "Only if you want to become a programmer and plan to take the C++ quests later on"]
         answer_index: 1
         explain: "This taster is about reading C++, not setting up a toolchain."
     flavors:
@@ -83,19 +83,19 @@ quests:
     verify_type: quiz
     quiz:
       - q: "In GAS, what is an Attribute?"
-        choices: ["A number on an actor, like Health or Stamina, stored in an AttributeSet", "An animation", "A level", "A parameter of a material, like Roughness, that an ability can change"]
+        choices: ["A number on an actor, like Health or Stamina, stored in an AttributeSet", "An animation that plays on an actor", "A level that an ability can load when it is activated by the player", "A parameter of a material, like Roughness, that an ability can change"]
         answer_index: 0
         explain: "Attributes are the numbers that abilities and effects read and change."
       - q: "What does a Gameplay Effect do?"
-        choices: ["Plays a sound only, at the place of the actor, each time an ability starts or ends", "Spawns a particle", "Changes attributes and/or applies tags, instantly, for a duration, or indefinitely", "Loads a level"]
+        choices: ["Plays a sound only, at the place of the actor, each time an ability starts or ends", "Spawns a particle at the place of the actor, and removes it again when the ability has ended", "Changes attributes and/or applies tags, instantly, for a duration, or indefinitely", "Loads a level in the background while an ability is active, and shows it when it is done"]
         answer_index: 2
         explain: "Damage, heals, buffs and debuffs are all Gameplay Effects."
       - q: "What is a Gameplay Ability?"
-        choices: ["A Blueprint Interface that actors add when they want to react to damage, with one function for each hit", "An action an actor can perform, like a dash or a fireball, with its own logic, cost and cooldown", "A navmesh setting", "A camera"]
+        choices: ["A Blueprint Interface that actors add when they want to react to damage, with one function for each hit", "An action an actor can perform, like a dash or a fireball, with its own logic, cost and cooldown", "A navmesh setting that tells AI characters which areas they can cross with a jump or with a dash move", "A camera that follows an actor while it performs an action"]
         answer_index: 1
         explain: "Abilities are what the actor does. Effects are what that does to attributes."
       - q: "What are Gameplay Tags used for?"
-        choices: ["Naming files", "Names that replace the materials of an actor while an effect is active, like Material.Burning or Frozen", "Rendering order", "Hierarchical labels, like State.Stunned, that abilities and effects check to block or allow things"]
+        choices: ["Naming files in the Content Browser, so that abilities and effects are easy to find", "Names that replace the materials of an actor while an effect is active, like Material.Burning or Frozen", "Rendering order, so that the effects of an ability are drawn on top of the actor that owns it and not behind", "Hierarchical labels, like State.Stunned, that abilities and effects check to block or allow things"]
         answer_index: 3
         explain: "Tags let systems ask questions like \"is this actor stunned?\" without hard references."
       - q: "Which component does an actor need to use GAS?"
@@ -136,23 +136,23 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What's the goal of this lighting pass?"
-        choices: ["Photorealism", "The player can spot the pickups and the route without being told", "Maximum brightness everywhere, so that no corner of the level is dark", "Testing Nanite"]
+        choices: ["Photorealism, as close to a photo as you can get in the time that you have", "The player can spot the pickups and the route without being told", "Maximum brightness everywhere, so that no corner of the level is dark", "Testing Nanite on the meshes of the level while the lights are moved around"]
         answer_index: 1
         explain: "Readable first. Contrast shows where to look."
       - q: "Every surface is lit evenly and nothing stands out. What's the fix?"
-        choices: ["Add contrast: brighter on pickups and the route, darker on dead ends", "Add more fog", "Turn off shadows", "Raise the intensity of every light until the whole level is bright"]
+        choices: ["Add contrast: brighter on pickups and the route, darker on dead ends", "Add more fog to the level, so that far walls fade out", "Turn off shadows on all lights, so nothing is hidden", "Raise the intensity of every light until the whole level is bright"]
         answer_index: 0
         explain: "Players look at the brightest, highest-contrast area first."
       - q: "With Lumen on (the UE5 default), do you need to build lighting to see changes?"
-        choices: ["Yes, always", "Only for the point lights and spot lights", "No. Movable lights with Lumen update live", "Only after packaging"]
+        choices: ["Yes, always, after each change to a light", "Only for the point lights and spot lights", "No. Movable lights with Lumen update live", "Only after packaging the project for a platform"]
         answer_index: 2
         explain: "Baking is an option, not a requirement, in a default UE5 project."
       - q: "Brightness keeps shifting as you walk between rooms. Where do you control that?"
-        choices: ["World Settings → Kill Z, in the World section of the panel", "Material Editor", "The GameMode", "A Post Process Volume's Exposure settings (min/max EV)"]
+        choices: ["World Settings → Kill Z, in the World section of the panel", "Material Editor → Details → Usage, on each material in the rooms", "The GameMode → Class Defaults → Exposure, set once for the level", "A Post Process Volume's Exposure settings (min/max EV)"]
         answer_index: 3
         explain: "Auto exposure adapts to the scene. Narrow its range so it stays steady."
       - q: "Which light is the quickest way to highlight one pickup?"
-        choices: ["A second Directional Light on top", "A small Point Light near the pickup", "A Sky Light", "Height Fog"]
+        choices: ["A second Directional Light on top", "A small Point Light near the pickup", "A Sky Light with a high intensity", "Height Fog"]
         answer_index: 1
         explain: "A local light draws the eye. Keep only one Directional Light as the sun."
     flavors:
@@ -188,19 +188,19 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where should the coin count live?"
-        choices: ["On each coin, in a variable that every coin keeps only for itself", "In the GameMode (or another single place every coin reports to)", "In the material", "In World Settings"]
+        choices: ["On each coin, in a variable that every coin keeps only for itself", "In the GameMode (or another single place every coin reports to)", "In the material of the coin, as a parameter that goes up on each pickup", "In World Settings, in a field that every level has for its coins"]
         answer_index: 1
         explain: "Coins get destroyed. The count needs to live somewhere that stays."
       - q: "Why Destroy Actor (or disable collision) right after pickup?"
-        choices: ["To save disk space", "It's required before lighting can update", "So the same coin can't be counted twice", "It resets the level"]
+        choices: ["To save disk space in the project folder", "It's required before lighting can update", "So the same coin can't be counted twice", "It resets the level for the next player"]
         answer_index: 2
         explain: "Overlaps can fire again. Removing the coin makes each pickup count once."
       - q: "How does a coin reach your GameMode's AddCoin function?"
-        choices: ["Get Game Mode, then Cast to BP_UUGameMode, then call AddCoin", "Print String", "Through the Construction Script of each coin in the level", "The Content Drawer"]
+        choices: ["Get Game Mode, then Cast to BP_UUGameMode, then call AddCoin", "Print String with the name AddCoin in its text", "Through the Construction Script of each coin in the level", "The Content Drawer, by dragging the coin"]
         answer_index: 0
         explain: "Get Game Mode returns the base class. The cast gives you your own functions."
       - q: "Why make Target a variable instead of typing 3 into the Branch?"
-        choices: ["Variables are faster", "A Branch node can't take numbers, only variables from the GameMode", "It's required to compile", "So you can change the goal per level without editing the graph"]
+        choices: ["Variables are faster than numbers in a graph", "A Branch node can't take numbers, only variables from the GameMode", "It's required to compile the GameMode", "So you can change the goal per level without editing the graph"]
         answer_index: 3
         explain: "Tuning values belong in variables."
       - q: "Where do you check for the win?"
@@ -246,11 +246,11 @@ quests:
         answer_index: 3
         explain: "A master material leaves some values open as parameters. Many instances can then reuse the same graph with different values."
       - q: "What is a parameter in a material?"
-        choices: ["A value, such as a color, that you leave open to change", "A texture that is imported from a file", "A comment that explains the graph", "A mesh that the material is applied to in the open level"]
+        choices: ["A value, such as a color, that you leave open to change", "A texture that is imported from a file", "A comment that explains the graph to other people who open the material", "A mesh that the material is applied to in the open level"]
         answer_index: 0
         explain: "A parameter is a named value in the graph. Instances of the material can set it to their own value."
       - q: "What is a Material Instance?"
-        choices: ["A full copy of the material graph that you edit node by node", "A light copy of a material that only changes its parameters", "A screenshot of a material", "A material that has no parent"]
+        choices: ["A full copy of the material graph that you edit node by node", "A light copy of a material that only changes its parameters", "A screenshot of a material that is saved as a texture", "A material that has no parent and no parameters"]
         answer_index: 1
         explain: "A Material Instance has no graph of its own. It uses the graph of its parent and only sets the parameters."
       - q: "Which kind of parameter do you use for BaseColor?"
@@ -258,11 +258,11 @@ quests:
         answer_index: 2
         explain: "A color has several channels, so it needs a Vector parameter. Roughness, Metallic and EmissiveStrength are single numbers, so they are Scalar parameters."
       - q: "How do you build the glow of the master material?"
-        choices: ["Connect Roughness to the Emissive input", "Multiply EmissiveStrength by the color and connect the result to the Emissive input", "Add Metallic to the color and connect the result to the Base Color input of the node", "Connect EmissiveStrength to the Roughness input"]
+        choices: ["Connect Roughness to the Emissive input and set the Metallic input to a value of 1 on the main node", "Multiply EmissiveStrength by the color and connect the result to the Emissive input", "Add Metallic to the color and connect the result to the Base Color input of the node", "Connect EmissiveStrength to the Roughness input and leave the Emissive input of the node empty"]
         answer_index: 1
         explain: "The color gives the glow its tint and EmissiveStrength sets how strong it is. With the value at 0, the material does not glow."
       - q: "Why do you give every parameter a Group?"
-        choices: ["Groups keep the parameter list tidy when you open an instance", "Groups make the material render faster", "Groups are needed before the material can be saved or compiled", "Groups lock the parameters against changes"]
+        choices: ["Groups keep the parameter list tidy when you open an instance", "Groups make the material render faster, because each group is one draw call", "Groups are needed before the material can be saved or compiled", "Groups lock the parameters against changes, so nobody edits them by mistake"]
         answer_index: 0
         explain: "In a Material Instance, the parameters are listed by group. Good groups make the right value easy to find."
       - q: "What should the three instances tell the player?"
@@ -270,7 +270,7 @@ quests:
         answer_index: 3
         explain: "One instance marks things the player can use, one marks hazards, and one marks scenery. The player learns the rule from the colors."
       - q: "You need a fourth look, for example blue for a goal object. What is the right way to add it?"
-        choices: ["Copy the whole master material and change the nodes inside the new copy", "Paint the mesh blue in another program", "Make another Material Instance from the master and change its parameters", "Add a second Emissive input to the master material"]
+        choices: ["Copy the whole master material and change the nodes inside the new copy", "Paint the mesh blue in another program and import it again", "Make another Material Instance from the master and change its parameters", "Add a second Emissive input to the master material node"]
         answer_index: 2
         explain: "That is what the master material is for. A new instance only needs new parameter values, and the graph is not touched."
     flavors:

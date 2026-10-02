@@ -1,0 +1,518 @@
+{
+ "EAQ90": {
+  "quiz_choices": {
+   "1": [
+    "All lights of any mobility; it requires the CPU Lightmass Swarm Agent and Swarm Coordinator to run",
+    "Movable lights only; it requires Lumen to be enabled in the Project Settings and a Sky Light with Real Time Capture",
+    "Lights with Static or Stationary mobility; it requires DirectX 12 and Support Hardware Ray Tracing",
+    "Only Directional Lights; it requires Vulkan and a Linux build of the editor"
+   ],
+   "2": [
+    "No, leave them disabled unless your project needs them for other reasons",
+    "Only Ray Traced Shadows, because they are used for the direct light of the bake",
+    "Only for Stationary lights, which bake their shadows with ray tracing on",
+    "Yes, both, or the bake stops with an error that names the missing project setting"
+   ],
+   "3": [
+    "Support for Movable lights in the bake, which are stored in a separate lightmap layer and can then be moved without a new lighting build",
+    "Faster CPU encoding of the lightmaps after the bake, because virtual textures are written in small tiles and need no compression at all",
+    "Smaller lightmap files on disk, because only the tiles that the camera has seen in the editor are saved to the level",
+    "Real-time updates in the viewport during the bake and editing while it builds; not required just to build lighting"
+   ],
+   "4": [
+    "Both in World Settings, under Lightmass, where the GPU option only adds one checkbox that switches the baker to the GPU",
+    "GPU Lightmass has its own panel under the Build dropdown; CPU Lightmass keeps most settings in World Settings",
+    "Both in Project Settings, under Rendering > Lightmass, in one shared section",
+    "GPU Lightmass settings live on each light in its Details panel; CPU Lightmass keeps them in Project Settings"
+   ],
+   "5": [
+    "Save encodes the lightmaps generated so far for what was on screen, but the bake keeps running; Cancel stops it",
+    "Save exports an EXR of the lightmaps that were generated so far, and the bake goes on; Cancel restarts the bake from the first sample",
+    "Save and Cancel both end the bake; the only difference is whether lightmaps are kept",
+    "Save finishes the bake for the whole scene, also for what was off screen; Cancel deletes all existing lightmaps"
+   ],
+   "6": [
+    "Raise the Non-Realtime Workload Factor to the maximum value that the panel allows",
+    "Enable Realtime in the viewport, so the GPU keeps the scene in memory and shares it with the bake",
+    "Turn viewport Realtime mode off (Ctrl+R) so the GPU does not also render frames",
+    "Set every mesh to Movable, so that fewer surfaces need a lightmap and the bake has less to do"
+   ],
+   "7": [
+    "It bakes using the lowest-detail LOD of each mesh to save GPU memory, and lightmaps are written to disk tile by tile while the bake runs, so that a crash loses almost nothing",
+    "The whole scene must fit in GPU memory at its highest quality LOD, because GPULM does not consider LODs while baking; lightmaps are not saved to disk until the bake completes",
+    "Lightmaps stream to disk every few seconds while the bake runs, and the scene is loaded tile by tile, so even a very large level fits on a small card with no trouble",
+    "It needs less memory than DX11 rendering, because the scene is kept in system memory and only the tile that is being baked at the moment is sent to the GPU"
+   ],
+   "8": [
+    "It disables Virtual Textures on all GPUs but the first one, so the viewport cannot show any of the lightmaps while the bake is running",
+    "It only supports one light per GPU, so a level with eight lights needs eight cards, and every light after that is skipped by the bake without any warning",
+    "It only works on AMD cards, and all the cards in the machine must be the same model with the same amount of memory, or the bake fails",
+    "Volumetric Lightmap calculation is not supported, and the irradiance cache is built per GPU so tiles can shade slightly differently"
+   ]
+  }
+ },
+ "EAQ91": {
+  "quiz_choices": {
+   "1": [
+    "X is the screen position of a pixel, Y is the weight of that pixel in the metering mask",
+    "X is time in seconds since the level started, Y is the brightness that the scene should have then",
+    "X is the Average Scene EV100, Y is the resulting Exposure Compensation (Curve) value",
+    "X is the ISO of the camera, Y is the shutter speed"
+   ],
+   "2": [
+    "Bright areas of the mask have high influence and dark areas low influence, so a center-weighted mask makes bright objects at the screen edge less disruptive",
+    "It sets the minimum brightness for each pixel, so that dark areas of the mask can never be darker on screen than the value painted there, whatever the exposure is",
+    "It replaces the histogram with a single value that is read from the center pixel of the mask",
+    "Bright areas of the mask are excluded from metering and dark areas count fully, so a center-weighted mask makes the edges of the screen set the whole exposure"
+   ],
+   "3": [
+    "It enables Local Exposure for every Post Process Volume in the project, and it sets the contrast values of the highlights and the shadows to the physical defaults",
+    "It disables the tonemapper, so that light values are shown without any curve",
+    "It doubles the maximum brightness that auto exposure can adapt to, so very bright lights no longer clamp the histogram at its upper end",
+    "It changes Min/Max Brightness and the histogram limits to EV100 so physically correct light values are respected without blowing out"
+   ],
+   "4": [
+    "Highlight Threshold 100, Shadow Threshold 100, Detail Strength 5, Blurred Luminance Blend 0",
+    "Highlight and Shadow Contrast 0.6 to 1, Detail Strength 1, Blurred Luminance Blend 0.4 to 0.6",
+    "Highlight and Shadow Contrast 0, Detail Strength 5, Blurred Luminance Blend 1",
+    "Middle Grey Bias 4, Detail Strength 0, Blurred Luminance Blend 0"
+   ],
+   "5": [
+    "When using Lumen Global Illumination",
+    "When using Manual metering",
+    "When using Static lighting",
+    "When using the Mobile renderer only"
+   ],
+   "6": [
+    "Blue is the exposure of the last frame, purple is the exposure of this frame, white is the one of the next frame",
+    "Blue is the minimum brightness, purple is the maximum brightness, white is the average of the two values of the frame",
+    "Blue is the target EV100, purple is the actual current exposure, white is the final exposure after compensation",
+    "Blue is the sky, purple is the shadows, white is the highlights"
+   ],
+   "8": [
+    "Bilateral is manual and needs a mask that you paint for each shot; Fusion is automatic and builds its mask from the histogram",
+    "They are the same method with different names; Bilateral is the name on PC and Fusion on consoles",
+    "Bilateral only works on mobile and uses a cheap blur of the base layer; Fusion only works on PC and consoles and needs hardware ray tracing support to run",
+    "Bilateral splits the image into base and detail layers with a bilateral blur and reduces base contrast; Fusion fuses multiple exposures by quality measures"
+   ]
+  }
+ },
+ "EAQ92": {
+  "quiz_choices": {
+   "2": [
+    "Only when the prop is far away from the camera and takes up less than one pixel of the screen for some frames",
+    "Only in the Static Mesh Editor, where it is shown in place of the Nanite mesh while you edit the asset",
+    "When Nanite is not supported, and for complex collision, baked lighting and hardware ray-traced reflections",
+    "Never, it is only a preview that the importer makes and then deletes after the first build of the mesh has finished"
+   ],
+   "3": [
+    "Keep Triangle Percent 0 and Trim Relative Error 1 in the settings",
+    "Fallback Triangle Percent 100 and Fallback Relative Error 0",
+    "Position Precision Auto and Keep Triangle Percent set to 100",
+    "Minimum Residency 0"
+   ],
+   "4": [
+    "To make the mesh render faster on screen, because Nanite draws every stored triangle in every frame",
+    "To turn on streaming for the mesh",
+    "To fix the small cracks that appear between modular pieces at far view distances",
+    "To reduce disk and download size; by default Nanite stores all source triangles"
+   ],
+   "5": [
+    "Fallback Triangle Percent 0, import LOD1, set Minimum LOD to 1",
+    "Disable Nanite and re-enable it, then import all the LODs",
+    "Set Keep Triangle Percent to 100 and import all of the LODs again",
+    "Set Max Edge Length Factor to 1"
+   ],
+   "6": [
+    "Deletes the Nanite data from all meshes in the project until the next import",
+    "Shows the Overdraw visualization in the level viewport",
+    "Turns Nanite rendering off globally, which emulates a platform without Nanite",
+    "Sets the streaming pool to zero, so Nanite data is loaded in full"
+   ]
+  }
+ },
+ "EAQ93": {
+  "quiz_choices": {
+   "1": [
+    "Exactly 0, so no triangle is lost",
+    "A good default is 0.04, and keep it above 0.02",
+    "Any value above 1, to save build time on dense meshes",
+    "It must always match the Magnitude of the material"
+   ],
+   "3": [
+    "Mid gray in the map is no change, so the surface moves in and out equally",
+    "The mesh is scaled by half before it is displaced",
+    "Only half the triangles are displaced",
+    "Displacement starts when the mesh covers half of the screen"
+   ],
+   "4": [
+    "Large values break the normal map, because the normals are scaled by the Magnitude before the lighting is calculated",
+    "It changes the UV channel that the displacement map is sampled with, so a large value reads the wrong part of the texture",
+    "Magnitude sets the bounds used for culling; a large value hurts performance, especially with Virtual Shadow Maps",
+    "The value is limited to 1, and a larger one is ignored"
+   ],
+   "5": [
+    "Along world Z; there is no option to use the normal",
+    "Along the vertex normal; there is no shader option to change the direction",
+    "Towards the camera, so the surface always looks raised from where you stand",
+    "Along the UV U axis of the first UV channel of the mesh, so it follows the texture"
+   ],
+   "6": [
+    "Yes, all the normals are recomputed, like in offline renderers",
+    "Yes, but only with Lumen, which reads the new surface",
+    "Only when Center is 0",
+    "No; you need a normal map or derive one from the displacement"
+   ],
+   "7": [
+    "It scales with the mesh, because Magnitude is in local space before object scale",
+    "It stays the same in world units, because Magnitude is always measured in world space",
+    "It becomes zero, because scaled meshes cannot be displaced by Nanite at all",
+    "It switches to world space automatically, so that the height in cm stays the same"
+   ],
+   "8": [
+    "Packing the height into the blue channel of a normal map",
+    "Any HDR float format only, because 8 bits give steps",
+    "Alpha (BC4), or the alpha of a Default/DXT5 texture",
+    "Compression does not matter"
+   ]
+  }
+ },
+ "EAQ94": {
+  "quiz_choices": {
+   "2": [
+    "The material renders as usual, with no warning",
+    "A default material is assigned and a warning appears in the Output Log",
+    "The mesh becomes invisible in the level, and an error is shown in the Message Log",
+    "Nanite is disabled again automatically and the mesh is built without it"
+   ],
+   "3": [
+    "Yes, always, because decals are drawn after Nanite and do not depend on the mesh below them",
+    "Yes, if the decal is Opaque and the decal mesh itself also has Nanite enabled on it",
+    "Only with Virtual Textures enabled, because the decal is then drawn into the mesh texture",
+    "No; Mesh Decals need a Translucent blend mode, but projected decals still work on Nanite"
+   ],
+   "4": [
+    "They break fine-grained LOD simplification and occlusion culling, so more triangles are drawn per pixel",
+    "They use too many materials, and Nanite has to draw the whole mesh one more time for each material slot",
+    "Nanite cannot store green pixels, so every leaf texture is converted when the mesh is built, which costs time",
+    "They always need Explicit Tangents, which doubles the size of each vertex and so the cost of each cluster"
+   ],
+   "5": [
+    "It is perfect for Nanite, because separate vertices are compressed better than shared ones",
+    "The mesh has too few UVs, so the importer split every triangle to give each one a UV island of its own",
+    "Every triangle has its own vertices, so the normals are fully faceted and the mesh is much more expensive",
+    "It has no collision, so the vertices are not welded"
+   ],
+   "7": [
+    "Both are about the same size, because the LODs are small",
+    "The Nanite mesh is twice as large, because it stores every source triangle",
+    "The standard mesh is much smaller on disk because of its four LODs",
+    "The Nanite mesh is about 7.6x smaller (19.64 MB versus 148.95 MB)"
+   ],
+   "8": [
+    "Turn off Generate Lightmap UVs to save import time and data",
+    "Turn on Generate Lightmap UVs so that Nanite can use them",
+    "Import at half resolution and build Nanite later",
+    "Disable Virtual Textures for the whole project"
+   ]
+  }
+ },
+ "EAQ95": {
+  "quiz_choices": {
+   "1": [
+    "Nanite meshes have no UVs, so paint needs a texture",
+    "Nanite meshes do not support per-instance Vertex Color painting",
+    "Vertex colors are always white on Nanite meshes after the build",
+    "Nanite only supports Skeletal Meshes for vertex paint, and props are Static Meshes"
+   ],
+   "2": [
+    "The mesh has no collision for the brush to hit",
+    "The mesh is too small for a paint texture",
+    "Virtual Textures are not enabled for the project",
+    "You are in Game View, which hides the tools"
+   ],
+   "3": [
+    "On the mesh instance (component), as a virtual texture asset",
+    "Inside the material that is on the mesh, as a texture parameter of it",
+    "In the level's World Settings, in a list with one entry per painted mesh",
+    "On the Static Mesh asset, shared by all instances of the mesh"
+   ],
+   "4": [
+    "It swaps the texture resolution of the paint, so far meshes use less memory",
+    "It resets the paint on every instance that shares the same material in the level",
+    "It converts the vertex colors of the mesh to a texture when Nanite is enabled, so old paint is kept",
+    "It picks a Default path when the mesh has no valid mesh paint texture, so one material can be shared"
+   ],
+   "5": [
+    "The brush is too big and reaches through the prop",
+    "The UVs overlap or tile; generate a UV with unique charts instead",
+    "The texture is compressed, and compression copies colors across the whole prop",
+    "Nanite mirrors the paint to save memory; turn mirroring off first"
+   ],
+   "6": [
+    "The Lightmap Resolution of the mesh and the size of the Mesh Paint Texture, which must be the very same power of two",
+    "Material slot and UV count of the mesh, which must be the same number, or the paint is put into the wrong slot",
+    "Mesh Paint Texture Coordinate Index on the mesh and the UVs input of the Texture Sample using MeshPaintTextureObject",
+    "Brush size and texel count of the texture, which must be equal, or each stroke only covers a part of one texel"
+   ],
+   "7": [
+    "A default heuristic based on the vertex count of the non-Nanite LOD0 mesh, rounded to a power of two",
+    "Always 1024, whatever the size of the mesh is, because that is the size of one page of a virtual texture",
+    "The size of the base color texture in the first material slot of the mesh, rounded down to a power of two",
+    "No texture is created until you type a size, and the Add tool stays grayed out until then for that component"
+   ],
+   "8": [
+    "Re-import the mesh with the new value",
+    "Delete the texture and Add it again at the new resolution",
+    "Restart the editor, which applies the new size",
+    "Use the Fix tool to resize the existing mesh paint texture"
+   ]
+  }
+ },
+ "EAQ96": {
+  "quiz_choices": {
+   "1": [
+    "They cannot use normal maps, so the bolts on a pipe would look flat in any kind of light",
+    "They only work on landscapes and on flat floors that are aligned with the world axes",
+    "They rely on projection, so details shear and distort when not aligned with the surface",
+    "They cannot be rotated to follow the pipe"
+   ],
+   "2": [
+    "No EarlyZ cost and soft transitions, but no shadows and no proper occlusion",
+    "Shadows for speed: they cast and receive shadows but cost a full extra pass",
+    "Fewer materials in exchange for more draw calls, and shadows on every decal mesh",
+    "Nothing, they are the same in cost and in looks"
+   ],
+   "3": [
+    "Exactly, vertex by vertex, because any gap between the two surfaces shows as a dark line",
+    "It must be inside the base mesh, by a few units, so that the depth test hides its edges",
+    "It must be at least 10 units away from the surface, or the two meshes flicker in the distance",
+    "It should hug the surface but need not match closely; a small depth bias is already applied"
+   ],
+   "4": [
+    "Increase the texture size of the decal, so that the edge is sharper far away from the camera",
+    "Push the geometry out with a small World Position Offset in the material, or change the mesh",
+    "Switch to a masked material, which has no depth problems at any distance from the camera at all",
+    "Disable Lumen for the decal mesh"
+   ],
+   "5": [
+    "It works the same as on a mesh without Nanite, with no change",
+    "The decal becomes opaque, because Nanite replaces its material with a default one",
+    "Nanite meshes do not support Mesh Decals, because they need a Translucent blend mode",
+    "The decal gets shadows, because Nanite meshes always cast them"
+   ],
+   "7": [
+    "They use instancing, so all decals of a level are drawn in one call",
+    "They share one material with the base mesh, so no extra call is needed",
+    "They skip the GBuffer and are drawn in one pass together with the translucent meshes",
+    "Large Deferred Decals often need front and back facing draw calls; mesh decals do not"
+   ],
+   "8": [
+    "Merge all of them into one single mesh",
+    "Sort them by depth to avoid artifacts",
+    "Use only one layer per prop",
+    "Enable Parallel Rendering"
+   ]
+  }
+ },
+ "EAQ97": {
+  "quiz_choices": {
+   "1": [
+    "One, whatever the number of materials is",
+    "One per material, because each material becomes one mesh section",
+    "One per source actor, because each actor keeps its own section",
+    "One per LOD of the merged mesh, for each material"
+   ],
+   "2": [
+    "More sections but better lighting on the merged mesh, and the UVs are kept",
+    "A smaller file on disk but no collision at all, and the UVs are kept",
+    "Better occlusion culling, but far more draw calls than before",
+    "A single section and draw call, but the UVs are not preserved"
+   ],
+   "3": [
+    "The lowest-detail LOD of each mesh",
+    "LOD0 only, of each mesh",
+    "The LOD that you select per mesh",
+    "All LODs stacked together"
+   ],
+   "4": [
+    "One proxy mesh with a single baked material, made from the simplified source meshes",
+    "A Packed Level Actor that holds the meshes as one Blueprint, with one new merged material",
+    "Instanced Static Mesh components from identical meshes, keeping UVs and occlusion behavior",
+    "A merged material atlas that all of the source actors then share, with no change to the meshes"
+   ],
+   "5": [
+    "When you want to keep every material and every UV channel of the source meshes as it is",
+    "When the sources are very complex, for example Nanite meshes, where Simplify would fail",
+    "When you need instancing of identical meshes, with the UVs of the sources kept as they are in the proxy",
+    "When the pieces are all the same"
+   ],
+   "6": [
+    "At the level origin, at 0,0,0",
+    "At the center of the bounds of all the selected actors",
+    "At the lowest Z of all of the selected actors, below the center",
+    "At the pivot of the first Static Mesh Actor you selected"
+   ],
+   "7": [
+    "LOD Selection Type is set to Use all LOD levels",
+    "The meshes have no collision set up",
+    "Nanite is enabled on one of the selected meshes",
+    "Too many actors are selected for a single merge"
+   ],
+   "8": [
+    "The border of the mesh collision, so that the player does not get stuck on the seams of the pieces",
+    "The distance between actors that are merged, below which two actors are welded into a single piece",
+    "Space in pixels between UV islands so colors do not bleed when mipmaps downsample",
+    "The thickness in units of the walls of the proxy mesh, so that light does not leak"
+   ]
+  }
+ },
+ "EAQ98": {
+  "quiz_choices": {
+   "2": [
+    "Edit > Editor Preferences > Viewports, in the Snap category",
+    "World Settings, in the World category",
+    "Edit > Project Settings > Rendering, in the Editor category",
+    "The Static Mesh Editor, in the viewport options under Grid Settings"
+   ],
+   "3": [
+    "Rotation snaps in steps of 2, 4, 8, 16 and 32 degrees instead of 5 or 10",
+    "Scaling becomes multiplicative, so each step doubles or halves the size of the actor",
+    "Surface Offset doubles each time you snap an actor to a surface in the level",
+    "Grid sizes become 1, 2, 4, 8, 16 and so on instead of decimal sizes"
+   ],
+   "4": [
+    "One shared grid for move, rotate and scale",
+    "Three: Drag Grid, Rotation Grid and Scale Grid",
+    "Two: one grid to move and one grid to rotate",
+    "One per viewport, four in all"
+   ],
+   "5": [
+    "Hold V while dragging with the translate gizmo",
+    "Press End with the mesh selected, which drops it",
+    "Enable Surface Snapping in the toolbar",
+    "Hold Ctrl and click the vertex on the other mesh"
+   ],
+   "7": [
+    "Saving the mesh after adding the socket to it",
+    "Collision on the wall that the socket mesh is placed on",
+    "A second socket on the light, to match the first",
+    "Resetting the light's Location in its Transform to 0,0,0"
+   ],
+   "8": [
+    "In the Level Blueprint, with an Add Socket node on Begin Play",
+    "In the Static Mesh Editor, Window > Socket Manager",
+    "In the Outliner, by a right-click on the actor and Add Socket",
+    "In the Details panel of the placed actor, under Sockets"
+   ]
+  }
+ },
+ "EAQ99": {
+  "quiz_choices": {
+   "1": [
+    "Repack, which packs all islands into the 0 to 1 space without any overlap between two islands",
+    "Stack, which packs islands individually with overlap for islands that share the same texturing",
+    "Transform, which moves each island on top of all the other islands that have the same shape",
+    "Unwrap"
+   ],
+   "2": [
+    "It repacks without overlap, and changes the scale of each island to fit",
+    "It only moves the islands you selected and leaves all the others in place",
+    "It creates seams along the edges that you select",
+    "It scales and translates all UVs together, keeping the current layout"
+   ],
+   "5": [
+    "XAtlas",
+    "Patch Builder",
+    "UV Atlas, with charts",
+    "Conformal"
+   ],
+   "6": [
+    "The Unwrap tool",
+    "The Layout tool",
+    "A second UV channel on the mesh",
+    "The Sew tool in the UV Editor"
+   ]
+  }
+ },
+ "EAQ100": {
+  "quiz_choices": {
+   "1": [
+    "Content Browser right-click > Miscellaneous > OpenColorIO Configuration",
+    "Project Settings > Rendering > Color",
+    "Window > Color Management > New OpenColorIO Configuration Asset, then save it",
+    "Edit > Plugins > OpenColorIO (OCIO) > New Configuration Asset, then restart"
+   ],
+   "3": [
+    "The file is too large for the importer, which only reads text files below one megabyte, so you have to split the file into parts first",
+    "Only .ocioz files are allowed in the Content Drawer, so you compress the file first and then drag the archive into the project",
+    "Unreal does not recognize .ocio files as assets, so you copy them into the Content folder with the file explorer",
+    "Import is blocked until the OpenColorIO plugin is restarted, which happens only when the editor is closed and opened"
+   ],
+   "4": [
+    "A LUT texture in a special format that only OpenColorIO can read",
+    "A Blueprint that stores the color spaces and their display names",
+    "An old OCIO v1 config that must be converted before it can be used",
+    "A compressed archive of a config file and its LUT texture folder"
+   ],
+   "5": [
+    "Extra entries cause a compile error",
+    "The list is limited to two entries",
+    "Unused entries slow down the tonemapper pass",
+    "It keeps the configuration asset lightweight"
+   ],
+   "6": [
+    "Show > Visualize > OCIO, choose the asset",
+    "Add an OCIO node to a Post Process Material and assign it to a volume",
+    "View Mode > OCIO Display, choose the asset, then Enable Display",
+    "Lit > Color Management > OCIO, choose the asset in the list, then press Apply"
+   ],
+   "7": [
+    "Bloom and lens flares are turned off and the exposure is locked for the conversion",
+    "Tone Curve is disabled and the color conversion is inserted right after the Tone Map",
+    "The viewport switches to path tracing for all frames",
+    "Auto exposure is locked to 1.0 for the conversion"
+   ]
+  }
+ },
+ "EAQ101": {
+  "quiz_choices": {
+   "1": [
+    "Convolution, because it is energy conserving and cheaper",
+    "Either, they cost the same",
+    "Standard, because of its large performance advantage",
+    "Convolution, because Standard cannot be tinted"
+   ],
+   "2": [
+    "It is not conservative and can brighten the whole image",
+    "It cannot be faded over time with a Post Process Volume",
+    "It only works on mobile",
+    "It needs a kernel texture, which uses more memory than a Convolution setup does"
+   ],
+   "3": [
+    "Project Settings > Rendering > Bloom, Default Method set to Convolution for all levels",
+    "The Film section of the Post Process Volume, Method set to Convolution",
+    "The Texture Editor of the kernel image, with Use as Convolution Kernel turned on there",
+    "The Lens section of the Post Process Volume, Method set to Convolution"
+   ],
+   "4": [
+    "sRGB on and Compression None",
+    "Mips Gen Setting No Mipmaps and Never Stream enabled",
+    "Power of two size and Streaming Priority set to highest",
+    "Texture Group UI and Filter Nearest, with a Power Of Two mode"
+   ],
+   "7": [
+    "They blend smoothly over the Blend Radius of each volume",
+    "The Dirt Mask Texture cannot be blended between volumes",
+    "The textures are averaged, half of each, in the area of overlap",
+    "The engine multiplies both masks, so that the dirt of both shows"
+   ],
+   "8": [
+    "It compresses better",
+    "It renders sharper bloom, because each texel of the mask then maps to a single pixel on screen",
+    "It avoids mip creation and streaming, so the settings are correct automatically",
+    "Power-of-two textures are not allowed in post process settings and fail to load"
+   ]
+  }
+ }
+}

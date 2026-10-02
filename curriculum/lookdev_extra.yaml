@@ -77,19 +77,19 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is a reference board?"
-        choices: ["A list of the assets in your project", "One image that holds a group of pictures you collected to guide your work", "A level where you test your materials", "A panel in the editor that shows the camera bookmarks you saved in a level"]
+        choices: ["A list of the assets in your project, sorted by the folder that each one is in", "One image that holds a group of pictures you collected to guide your work", "A level where you test your materials under the same light before you use them", "A panel in the editor that shows the camera bookmarks you saved in a level"]
         answer_index: 1
         explain: "A reference board puts your collected pictures side by side in one image. You look at it while you work to stay close to your idea."
       - q: "What is a mood target?"
-        choices: ["The folder on your disk where you save all of the reference images for a scene", "The number of lights you plan to use", "The brightest light in your scene", "The single picture and short description that says how your scene should feel"]
+        choices: ["The folder on your disk where you save all of the reference images for a scene", "The number of lights you plan to use, written down before you start to light a scene", "The brightest light in your scene, which all of the other lights are compared to", "The single picture and short description that says how your scene should feel"]
         answer_index: 3
         explain: "The mood target is one image plus a few lines. It is the goal that you compare your scene against."
       - q: "How does a mood target help you when you light a scene?"
-        choices: ["It makes it easier to judge if your lighting is right or wrong", "It sets the light values in the engine for you when you import it", "It makes the scene render faster", "It removes the need for a Sky Light"]
+        choices: ["It makes it easier to judge if your lighting is right or wrong", "It sets the light values in the engine for you when you import it", "It makes the scene render faster in the viewport", "It removes the need for a Sky Light in the level"]
         answer_index: 0
         explain: "Without a target, any lighting can look fine. With a target, you can compare and see what is still different."
       - q: "What do you mark on each image of the reference board?"
-        choices: ["The size of the image file", "The website where you found it and the name of the person who made it", "What you are taking from it, such as the light direction or the color", "The date when you saved it"]
+        choices: ["The size of the image file and its resolution in pixels", "The website where you found it and the name of the person who made it", "What you are taking from it, such as the light direction or the color", "The date when you saved it and the folder it is in"]
         answer_index: 2
         explain: "Each image is on the board for a reason: the light direction, the color, the material or the composition. The label reminds you which part to copy."
       - q: "What is the key light of a scene?"
@@ -136,7 +136,7 @@ quests:
         answer_index: 2
         explain: "Light from the sky falls on every surface. Its color becomes the base color of the whole scene, so it shapes the mood."
       - q: "What is an HDRI?"
-        choices: ["A 360 degree photo of a real sky that also lights the scene", "A light that only shines in one direction", "A fog actor that reacts to light", "A file that describes the shape of the light from a real lamp"]
+        choices: ["A 360 degree photo of a real sky that also lights the scene", "A light that only shines in one direction, like the sun in the sky", "A fog actor that reacts to light and fills the whole sky of a level", "A file that describes the shape of the light from a real lamp"]
         answer_index: 0
         explain: "An HDRI is a photo that covers all directions and stores a wide range of brightness. It can be shown as the sky and used as the light of the scene."
       - q: "How does the atmosphere system make a sky?"
@@ -148,7 +148,7 @@ quests:
         answer_index: 1
         explain: "A Sky Light lights the scene softly from all directions of the sky. It fills the shadows that the sun does not reach."
       - q: "You want to use the HDRI Backdrop actor but cannot find it. What do you check first?"
-        choices: ["That the level has a Sky Atmosphere", "That the Directional Light is deleted", "That the HDRI Backdrop plugin is enabled in Edit, then Plugins", "That the project was created from the Third Person game template"]
+        choices: ["That the level has a Sky Atmosphere and a Volumetric Cloud actor in it", "That the Directional Light is deleted from the level and the Outliner", "That the HDRI Backdrop plugin is enabled in Edit, then Plugins", "That the project was created from the Third Person game template"]
         answer_index: 2
         explain: "The HDRI Backdrop actor comes from the HDRI Backdrop plugin. The plugin also brings a sample HDRI you can use."
       - q: "Why do you compare the two versions from the same camera bookmark?"
@@ -185,7 +185,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is an IES profile?"
-        choices: ["A setting that locks the exposure of the camera so that the picture stays the same", "A material that makes a lamp glow", "A list of all lights in the level", "A small file from a lamp maker that describes the shape of the light of a real lamp"]
+        choices: ["A setting that locks the exposure of the camera so that the picture stays the same", "A material that makes a lamp glow and light the walls around it", "A list of all lights in the level, with the brightness of each one", "A small file from a lamp maker that describes the shape of the light of a real lamp"]
         answer_index: 3
         explain: "An IES profile holds measured data about how a real lamp spreads its light. Applied to a light in Unreal, it gives that light the same pattern."
       - q: "In which unit do you set the color temperature of a light?"
@@ -193,11 +193,11 @@ quests:
         answer_index: 1
         explain: "Color temperature is measured in Kelvin. Candela and lumens are units for how strong a light is."
       - q: "Why do you set the exposure to a fixed value before you judge the brightness of your lights?"
-        choices: ["A fixed exposure stops Unreal from adjusting the picture, so you can see brightness changes", "A fixed exposure makes all lights use the same color, so you can compare how bright they are", "A fixed exposure turns off the shadows of the lights", "A fixed exposure makes the IES profile load faster"]
+        choices: ["A fixed exposure stops Unreal from adjusting the picture, so you can see brightness changes", "A fixed exposure makes all lights use the same color, so you can compare how bright they are", "A fixed exposure turns off the shadows of the lights, so only their brightness is left to see in the picture", "A fixed exposure makes the IES profile load faster, so you wait less"]
         answer_index: 0
         explain: "Exposure is how bright the camera makes the picture. If it adjusts by itself, a stronger light does not look brighter, so you cannot compare values."
       - q: "How do you bring an IES file from a lamp maker into your project?"
-        choices: ["Type its name in the Outliner", "Open it in the Material Editor and press Save", "Drag the .ies file into the Content Browser", "Copy it into the Details panel"]
+        choices: ["Type its name in the search field of the Outliner", "Open it in the Material Editor and press Save", "Drag the .ies file into the Content Browser", "Copy it into the Details panel of a Point Light"]
         answer_index: 2
         explain: "Dragging the .ies file into the Content Browser imports it as an asset. After that you can pick it on a light."
       - q: "Where do you apply an imported IES profile to a light?"
@@ -237,7 +237,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is composition?"
-        choices: ["The way things are arranged inside the picture frame", "The number of lights in a scene", "The list of materials on a mesh", "The order in which actors are loaded into the level"]
+        choices: ["The way things are arranged inside the picture frame", "The number of lights that are used in a scene", "The list of materials that are on a mesh", "The order in which actors are loaded into the level"]
         answer_index: 0
         explain: "Composition is about what is in the frame and where. The camera position decides it, so it matters as much as the lighting."
       - q: "What is a Cine Camera Actor?"
@@ -305,11 +305,11 @@ quests:
         answer_index: 2
         explain: "Candela and lumens are real units for the strength of a light. Using them makes a Point Light behave like a real lamp."
       - q: "Why do you set Metering Mode to Manual in a Post Process Volume for the diorama?"
-        choices: ["So the fog becomes volumetric", "So the exposure is your choice and not the default", "So the camera bookmarks are saved with the level", "So the landscape can be sculpted"]
+        choices: ["So the fog becomes volumetric in the diorama", "So the exposure is your choice and not the default", "So the camera bookmarks are saved with the level", "So the landscape can be sculpted in the level"]
         answer_index: 1
         explain: "With Manual metering the brightness of the picture stays where you set it. Infinite Extent (Unbound) makes the volume apply to the whole level."
       - q: "What do the 3 lines of your writeup say?"
-        choices: ["Which plugins you enabled and which you turned off again", "How long each step took", "Which meshes you painted", "What matches the target and what does not match it yet"]
+        choices: ["Which plugins you enabled and which you turned off again", "How long each step of the work took, in minutes", "Which meshes you painted and with which colors you painted them", "What matches the target and what does not match it yet"]
         answer_index: 3
         explain: "You judge the diorama against your mood target. Naming what matches and what does not is how you find the next thing to improve."
     flavors:
@@ -344,7 +344,7 @@ quests:
         answer_index: 0
         explain: "Volumetric Fog makes light visible in the air. When light comes through a window, you see it as beams, often called light shafts."
       - q: "Where do you turn on Volumetric Fog?"
-        choices: ["In the Details panel of the window mesh", "In the Details panel of the Sky Light", "In the Details panel of the Exponential Height Fog actor", "In the Details panel of the Post Process Volume of the level"]
+        choices: ["In the Details panel of the window mesh in the wall of the room", "In the Details panel of the Sky Light actor", "In the Details panel of the Exponential Height Fog actor", "In the Details panel of the Post Process Volume of the level"]
         answer_index: 2
         explain: "Volumetric Fog is an option of the Exponential Height Fog actor. The level needs this actor before any light shafts can appear."
       - q: "The level has no Exponential Height Fog actor. Where do you find one?"
@@ -352,11 +352,11 @@ quests:
         answer_index: 1
         explain: "Exponential Height Fog is in the Visual Effects group of the Place Actors panel. You drag it into the level."
       - q: "Which setting of a light controls how strongly that light shows in the fog?"
-        choices: ["Source Angle", "Attenuation Radius", "IES Texture", "Volumetric Scattering Intensity"]
+        choices: ["Indirect Lighting Intensity", "Attenuation Radius", "Dynamic Shadow Distance MovableLight", "Volumetric Scattering Intensity"]
         answer_index: 3
         explain: "Volumetric Scattering Intensity is in the Details panel of the light. A higher value makes the shafts of that light stronger."
       - q: "The light shafts are so strong that the room looks milky. What do you change first?"
-        choices: ["Raise the Intensity of the light", "Lower Volumetric Scattering Intensity on the light", "Delete the window from the wall", "Turn off Cast Shadows on the light in the window"]
+        choices: ["Raise the Intensity of the light in the window", "Lower Volumetric Scattering Intensity on the light", "Delete the window from the wall of the room", "Turn off Cast Shadows on the light in the window"]
         answer_index: 1
         explain: "The shafts should support the image and not wash it out. Lowering Volumetric Scattering Intensity makes that light show less in the fog."
       - q: "Which lights do you aim through the window to make the shafts?"
@@ -388,7 +388,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "How is a Local Fog Volume different from the height fog of a level?"
-        choices: ["It only works at night", "It only works indoors", "It is a small area of fog you can place anywhere", "It covers the whole scene at once, like the sky"]
+        choices: ["It only works at night, with a moon light", "It only works indoors, under a ceiling", "It is a small area of fog you can place anywhere", "It covers the whole scene at once, like the sky"]
         answer_index: 2
         explain: "Height fog covers the whole scene. A Local Fog Volume adds fog in one place, so you control exactly where it is."
       - q: "Why do layers of fog at different distances make a picture look deeper?"
@@ -396,7 +396,7 @@ quests:
         answer_index: 0
         explain: "More fog lies between the camera and far objects, so they look softer. The eye reads that difference as distance."
       - q: "Where do you place the two Local Fog Volumes?"
-        choices: ["Both in front of the camera", "Both inside the main subject, so that it glows from within", "Both above the sky", "So that they separate the foreground from the background"]
+        choices: ["Both in front of the camera, so that the whole picture is soft", "Both inside the main subject, so that it glows from within", "Both above the sky, so that they light the scene from the top", "So that they separate the foreground from the background"]
         answer_index: 3
         explain: "For example, one sits behind the main subject and one far away. The subject then stands out clearly from what is behind it."
       - q: "What shape does the fog of a Local Fog Volume have?"
@@ -452,7 +452,7 @@ quests:
         answer_index: 2
         explain: "A Directional Light shines in one direction over the whole level. Only its rotation matters, so you rotate it to change the sun angle."
       - q: "Where do you find Source Angle?"
-        choices: ["In the World Settings, under Lightmass", "In the Details panel of the Sky Light, under Light Source", "In the view mode menu of the viewport", "In the Details panel of the Directional Light, under Light"]
+        choices: ["In the World Settings, under Lightmass, in the Advanced part of the panel", "In the Details panel of the Sky Light, under Light Source", "In the view mode menu of the level viewport", "In the Details panel of the Directional Light, under Light"]
         answer_index: 3
         explain: "Source Angle is a property of the Directional Light. You select the light and look under Light in the Details panel."
       - q: "What is a contact sheet?"
@@ -500,7 +500,7 @@ quests:
         answer_index: 2
         explain: "The Material Editor is a graph. Small boxes called nodes hold values, and you connect them to inputs such as Base Color."
       - q: "How do you open the Material Editor for M_Basic?"
-        choices: ["Drag M_Basic into the level", "Double-click M_Basic in the Content Browser", "Press F9 while M_Basic is selected in the level", "Open Window, then Output Log"]
+        choices: ["Drag M_Basic from the Content Browser into the level", "Double-click M_Basic in the Content Browser", "Press F9 while M_Basic is selected in the level", "Open Window, then Output Log, and type M_Basic"]
         answer_index: 1
         explain: "Double-clicking a material asset opens it in the Material Editor, where you see its graph and a preview."
       - q: "What does a Constant3Vector node hold?"
@@ -516,7 +516,7 @@ quests:
         answer_index: 2
         explain: "More instructions mean more work for the graphics card on every pixel. The Stats panel lets you watch this number while you build."
       - q: "What happens to a surface when you change Roughness from 1 to 0?"
-        choices: ["It becomes transparent", "It becomes smooth and shows sharp reflections", "It becomes darker in color and less metallic", "It becomes matte and dull"]
+        choices: ["It becomes transparent and lets light pass through", "It becomes smooth and shows sharp reflections", "It becomes darker in color and less metallic", "It becomes matte and dull, like chalk"]
         answer_index: 1
         explain: "Roughness 0 is a smooth surface that reflects like a mirror. Roughness 1 is fully rough and looks matte."
       - q: "Which input of the material decides if the surface is metal?"
@@ -563,7 +563,7 @@ quests:
         answer_index: 0
         explain: "Values that match real materials react to light like those materials. You do not need to fix the surface again for each new lighting setup."
       - q: "Which Base Color values should you avoid on your swatches?"
-        choices: ["Middle gray values of any kind", "Warm colors", "Cool colors", "Pure black and pure white"]
+        choices: ["Middle gray values of any kind", "Warm colors, such as red and orange", "Cool colors like blue", "Pure black and pure white"]
         answer_index: 3
         explain: "No real surface is pure black or pure white. Such values break the lighting, so you keep Base Color in a plausible range."
       - q: "Which values describe the polished metal swatch?"
@@ -618,11 +618,11 @@ quests:
         answer_index: 0
         explain: "UVs connect the flat image to the 3D surface. Changing them moves, scales or rotates the texture on the mesh."
       - q: "What is a packed texture?"
-        choices: ["A texture that was compressed into a ZIP file to save space on your disk", "A texture that stores a different grayscale map in each color channel", "A texture that holds several animation frames", "A texture that is used by more than one mesh"]
+        choices: ["A texture that was compressed into a ZIP file to save space on your disk", "A texture that stores a different grayscale map in each color channel", "A texture that holds several animation frames in a grid, played one after the other", "A texture that is used by more than one mesh, to save memory in a level"]
         answer_index: 1
         explain: "The red, green and blue channels each hold their own grayscale map. One file then does the work of three, which saves memory."
       - q: "Why are wrong texture settings a common problem?"
-        choices: ["The editor crashes when a setting is wrong", "The texture is deleted from the project as soon as one setting is wrong", "The material refuses to compile", "Unreal does not show an error, and the surface just looks a little wrong"]
+        choices: ["The editor crashes when a setting is wrong, and you lose your work", "The texture is deleted from the project as soon as one setting is wrong", "The material refuses to compile until every setting is right", "Unreal does not show an error, and the surface just looks a little wrong"]
         answer_index: 3
         explain: "Nothing warns you about a wrong setting. You only notice it if you know how the surface should look, so you check the settings of each texture."
       - q: "Which sRGB setting is right for the packed texture T_Quinn_01_MRA?"
@@ -634,7 +634,7 @@ quests:
         answer_index: 0
         explain: "The TexCoord node gives the UVs to the texture samples. Multiplying them makes the texture repeat more or less often."
       - q: "How do you use one map of the packed texture on its own?"
-        choices: ["Import the texture three times and delete two channels in each of the copies", "Take the single channel pin, such as R, G or B, from its texture sample", "Turn on sRGB for the texture", "Rotate the UVs by 90 degrees"]
+        choices: ["Import the texture three times and delete two channels in each of the copies", "Take the single channel pin, such as R, G or B, from its texture sample", "Turn on sRGB for the texture, which splits the three maps into separate samples", "Rotate the UVs by 90 degrees for each map, so that only one of them is read"]
         answer_index: 1
         explain: "The texture sample has separate output pins for the channels. Each pin gives one grayscale map that you connect to its own input."
       - q: "On the large floor you can see the texture repeat. How do you fix it?"
@@ -671,11 +671,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a parameter in a material?"
-        choices: ["A node that can only hold a texture", "A named value that can be changed later without opening the material graph", "A comment box around a group of nodes", "A setting of the mesh that uses the material, changed in the Static Mesh Editor"]
+        choices: ["A node that can only hold a texture and must be replaced when you want to change it", "A named value that can be changed later without opening the material graph", "A comment box around a group of nodes, with a title on it", "A setting of the mesh that uses the material, changed in the Static Mesh Editor"]
         answer_index: 1
         explain: "A parameter has a name and a default value. A Material Instance can change it, and nobody has to edit the graph."
       - q: "What is a Material Instance?"
-        choices: ["A material without any inputs", "A backup of the material graph", "A texture that is made from a material and saved to disk", "A copy of a material that only changes its parameters"]
+        choices: ["A material without any inputs on its main node", "A backup of the material graph that is saved on each compile", "A texture that is made from a material and saved to disk", "A copy of a material that only changes its parameters"]
         answer_index: 3
         explain: "An instance uses the graph of its parent material and only sets parameter values. That makes it fast to create many looks."
       - q: "Which kind of parameter holds a single number, for example for roughness or tiling?"
@@ -695,7 +695,7 @@ quests:
         answer_index: 3
         explain: "An instance lists its parameters by group. Clear group names make the right value easy to find for anyone who opens it."
       - q: "What does a parameter in a Material Instance use until you override it?"
-        choices: ["The value 0", "A random value", "The default value from the parent material", "The value of the last instance you opened"]
+        choices: ["The value 0 for numbers, and black for all colors", "A random value between 0 and 1", "The default value from the parent material", "The value of the last instance you opened"]
         answer_index: 2
         explain: "Each parameter gets a default value in the parent material. The instance keeps that value until you turn on the override for that parameter and set your own."
       - q: "What do parameters and instances let one material do?"
@@ -730,7 +730,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a landscape in Unreal Engine?"
-        choices: ["A photo of a sky that lights the whole scene", "A small mesh used for rocks", "The large terrain actor used for outdoor ground", "A volume that holds fog"]
+        choices: ["A photo of a sky that lights the whole scene", "A small mesh used for rocks and for stones", "The large terrain actor used for outdoor ground", "A volume that holds fog near the ground"]
         answer_index: 2
         explain: "A landscape is the terrain actor for outdoor ground. Because the ground fills much of the view outside, its material matters a lot."
       - q: "What does a landscape material hold?"
@@ -742,15 +742,15 @@ quests:
         answer_index: 3
         explain: "The node takes the layers as inputs and gives out one result. Where you painted a layer, that layer is shown."
       - q: "What are layer info objects?"
-        choices: ["Notes that describe each texture", "Small assets that store where each layer is painted", "Brushes for sculpting the terrain in Landscape Mode", "Nodes that tile a texture"]
+        choices: ["Notes that describe each texture, shown as a tooltip in the editor", "Small assets that store where each layer is painted", "Brushes for sculpting the terrain in Landscape Mode", "Nodes that tile a texture in a material"]
         answer_index: 1
         explain: "Each layer needs a layer info object. It stores the painted area of that layer on the landscape."
       - q: "You assigned the material to the landscape, but you cannot paint a layer. What do you check first?"
-        choices: ["That the level has a Sky Light", "That the landscape is larger than the level around it", "That the layer info object for that layer was created", "That the textures come from Fab"]
+        choices: ["That the level has a Sky Light and also a Directional Light", "That the landscape is larger than the level around it", "That the layer info object for that layer was created", "That the textures come from Fab and not from a file"]
         answer_index: 2
         explain: "Without a layer info object, the landscape has no place to store the paint of that layer. You create one for each layer before you paint."
       - q: "From where do you judge the tiling scale of the ground textures?"
-        choices: ["From the height of a player standing on the ground", "From high above the whole landscape, looking down", "From inside the Material Editor", "From under the landscape"]
+        choices: ["From the height of a player standing on the ground", "From high above the whole landscape, looking down", "From inside the Material Editor preview", "From under the landscape, looking up"]
         answer_index: 0
         explain: "The player sees the ground from eye height. From there the texture must be neither too large nor too small."
       - q: "How do you create a new Landscape in a level?"
@@ -791,7 +791,7 @@ quests:
         answer_index: 3
         explain: "A decal projects a material onto the surfaces inside its box, like a sticker or a stain."
       - q: "What do decals let you add without making new meshes?"
-        choices: ["Detail such as dirt, cracks or signs", "Collision for the player and enemies", "New rooms and floors", "Shadows for the lights"]
+        choices: ["Detail such as dirt, cracks or signs", "Collision for the player and enemies", "New rooms and floors for the level you build", "Shadows for the lights of the level"]
         answer_index: 0
         explain: "A decal lies on top of the surface that is already there. You get more detail and the meshes stay as they are."
       - q: "Which setting turns a material into a decal material?"
@@ -861,7 +861,7 @@ quests:
         answer_index: 0
         explain: "Without collision, a mesh is only a picture and nothing stops the player. The mesh needs collision to be solid."
       - q: "Which parameters does M_Master_Surface have?"
-        choices: ["Sun angle, fog color and exposure value", "Width, height and depth", "Speed, health and score", "Color, roughness, a texture and tiling"]
+        choices: ["Sun angle, fog color and exposure value", "Width, height and depth of the mesh in units", "Speed, health and score of a player", "Color, roughness, a texture and tiling"]
         answer_index: 3
         explain: "These four parameters are enough to make many different surfaces from one graph. Each instance sets its own values."
       - q: "How do at least 5 surfaces in the scene get their different looks?"
@@ -873,11 +873,11 @@ quests:
         answer_index: 0
         explain: "The Landscape Layer Blend node mixes the 3 layers based on where you paint. You then paint the layers on the landscape."
       - q: "What must each of the 3 decals in the scene have?"
-        choices: ["A light of its own", "A collision box", "A name that starts with MI_, such as MI_Stain_Pipe or MI_Arrow_Path", "A purpose, such as a stain under a pipe or an arrow toward the path"]
+        choices: ["A light of its own that makes the decal easy to see", "A collision box that stops the player from walking on it", "A name that starts with MI_, such as MI_Stain_Pipe or MI_Arrow_Path", "A purpose, such as a stain under a pipe or an arrow toward the path"]
         answer_index: 3
         explain: "A decal should tell something about the place or guide the player. Decals placed without a reason only add noise."
       - q: "What does your short note about the master material say?"
-        choices: ["How long the scene took to build", "Which plugins the project uses", "Which parameters it has and what each one is for", "Where the textures were downloaded and by whom"]
+        choices: ["How long the scene took to build, in hours", "Which plugins the project uses and why", "Which parameters it has and what each one is for", "Where the textures were downloaded and by whom"]
         answer_index: 2
         explain: "The note lists the parameters and explains each one. Someone else can then make new instances without reading the graph."
     flavors:
@@ -906,11 +906,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "A material uses a normal Texture Sample node. What happens to the pattern when you scale the mesh up?"
-        choices: ["The pattern keeps its size in the level", "The pattern stretches with the mesh", "The pattern disappears", "The pattern turns gray"]
+        choices: ["The pattern keeps its size in the level", "The pattern stretches with the mesh", "The pattern disappears from the whole mesh", "The pattern turns gray on the mesh"]
         answer_index: 1
         explain: "A normal Texture Sample follows the UVs of the mesh. When the mesh is scaled, the UVs are scaled too, so the pattern stretches."
       - q: "How does world-aligned texturing place a texture?"
-        choices: ["It paints the texture by hand on each mesh, one face after the other", "It copies the UVs from another mesh", "It projects the texture from the world, not from the UVs of the mesh", "It bakes the texture into the lighting"]
+        choices: ["It paints the texture by hand on each mesh, one face after the other", "It copies the UVs from another mesh that is placed next to it in the level", "It projects the texture from the world, not from the UVs of the mesh", "It bakes the texture into the lighting of the level when you build the light"]
         answer_index: 2
         explain: "The texture is projected using positions in the world. The UVs of the mesh play no part, so their quality does not matter."
       - q: "You apply a world-aligned material to three cubes of different sizes. What do you see?"
@@ -930,11 +930,11 @@ quests:
         answer_index: 2
         explain: "XYZ Texture is the result of the projection from all three axes. It covers every side of the mesh."
       - q: "When is world-aligned texturing most useful?"
-        choices: ["On characters that are animated", "On blockout meshes whose UVs are not good enough yet", "On meshes that never get a texture in the final level", "On the sky of a level"]
+        choices: ["On characters that are animated and that move through the level", "On blockout meshes whose UVs are not good enough yet", "On meshes that never get a texture in the final level", "On the sky of a level, which has no UVs"]
         answer_index: 1
         explain: "Blockout meshes are simple shapes for planning a level, and you scale them all the time. World-aligned texturing gives them a clean pattern with no UV work."
       - q: "What happens to a world-aligned pattern when you move the mesh through the level?"
-        choices: ["The pattern is deleted", "The pattern moves with the mesh, as it does with normal UV textures", "The pattern becomes larger", "The pattern stays fixed in the world, so it slides over the mesh"]
+        choices: ["The pattern is deleted from the mesh, and you must assign the material again", "The pattern moves with the mesh, as it does with normal UV textures", "The pattern becomes larger the further the mesh moves", "The pattern stays fixed in the world, so it slides over the mesh"]
         answer_index: 3
         explain: "The pattern belongs to the world and not to the mesh. That is fine for static blockout meshes, but it looks wrong on things that move."
     flavors:
@@ -964,11 +964,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What can a landscape material do with grass?"
-        choices: ["Place grass meshes on every spot where one paint layer is painted", "Draw grass as a flat color on the ground", "Turn every mesh in the level into grass when you paint a layer on it", "Import grass meshes from Fab by itself"]
+        choices: ["Place grass meshes on every spot where one paint layer is painted", "Draw grass as a flat color on the ground, with no mesh at all, to save time", "Turn every mesh in the level into grass when you paint a layer on it", "Import grass meshes from Fab by itself when you paint"]
         answer_index: 0
         explain: "The material can output grass for a paint layer. Wherever that layer is painted, the landscape places grass meshes."
       - q: "Why let the landscape material place the grass?"
-        choices: ["Grass placed by hand cannot be seen in the game, only in the editor", "Grass placed by hand has no collision", "Placing grass by hand over a large landscape takes a long time", "Placing grass by hand needs a plugin"]
+        choices: ["Grass placed by hand cannot be seen in the game, only in the editor", "Grass placed by hand has no collision in the game", "Placing grass by hand over a large landscape takes a long time", "Placing grass by hand needs a plugin that is not part of the engine"]
         answer_index: 2
         explain: "A landscape can be very large. Grass that follows a painted layer saves the work of placing it by hand."
       - q: "How do you create a Landscape Grass Type asset?"
@@ -980,7 +980,7 @@ quests:
         answer_index: 3
         explain: "The Landscape Grass Output node is where the material tells the landscape which grass to place and where."
       - q: "Where do you pick your Landscape Grass Type asset on the Landscape Grass Output node?"
-        choices: ["In the title of the node", "In the Parameter Name of the node", "Under Grass Types in the Details panel of the node", "In the Stats panel at the bottom of the Material Editor"]
+        choices: ["In the title of the node, with a double-click on the name", "In the Parameter Name of the node, in the Details panel", "Under Grass Types in the Details panel of the node", "In the Stats panel at the bottom of the Material Editor"]
         answer_index: 2
         explain: "You select the node, add one element under Grass Types, and pick the asset there. The node then gets an input for that grass type."
       - q: "What does the Landscape Layer Sample node give to the grass type input?"
@@ -988,11 +988,11 @@ quests:
         answer_index: 0
         explain: "The node reads how much of the named layer is painted at each spot. Connected to the grass type, it makes that layer control where the grass appears."
       - q: "You painted the layer, but no grass appears. What do you check first on the Landscape Layer Sample node?"
-        choices: ["That it is connected to Base Color", "That its Parameter Name is the name of the paint layer", "That it has a texture assigned", "That it is placed to the left of all the other nodes"]
+        choices: ["That it is connected to Base Color on the main material node", "That its Parameter Name is the name of the paint layer", "That it has a grass texture assigned to it", "That it is placed to the left of all the other nodes"]
         answer_index: 1
         explain: "The node finds the layer by its name. If Parameter Name does not match the layer you paint, it reads nothing and no grass is placed."
       - q: "How do you confirm that the setup works?"
-        choices: ["Grass appears on the whole landscape", "Grass appears only in the preview window of the Material Editor", "Grass appears only after you press Play", "Grass appears only in the places where you painted the layer"]
+        choices: ["Grass appears on the whole landscape, also where no layer is painted", "Grass appears only in the preview window of the Material Editor", "Grass appears only after you press Play, and not in the editor viewport", "Grass appears only in the places where you painted the layer"]
         answer_index: 3
         explain: "The grass must follow your painting. If it shows only where the layer is painted, the layer is driving the grass."
     flavors:
@@ -1024,7 +1024,7 @@ quests:
         answer_index: 2
         explain: "An emissive material gives off light of its own, like a screen, a sign or a lamp."
       - q: "What is Lumen?"
-        choices: ["The lighting system in Unreal Engine 5 that calculates bounced light", "The unit in which Unreal Engine measures the color temperature of lights", "The editor where you build materials", "A plugin that adds lakes and rivers"]
+        choices: ["The lighting system in Unreal Engine 5 that calculates bounced light", "The unit in which Unreal Engine measures the color temperature of lights", "The editor where you build materials from nodes and textures", "A plugin that adds lakes, rivers and oceans that you can place in a level"]
         answer_index: 0
         explain: "Lumen calculates how light bounces between surfaces. This is what lets a glowing surface add light to the scene."
       - q: "What can a glowing surface do when Lumen is on?"
@@ -1032,7 +1032,7 @@ quests:
         answer_index: 3
         explain: "Lumen treats the glow as light that bounces into the scene. Surfaces near the screen pick up its color."
       - q: "How do you build the glow in the material?"
-        choices: ["Connect a color to Roughness", "Multiply a color or a texture by the Scalar Parameter Intensity and connect the result to Emissive Color", "Set the Material Domain to Deferred Decal", "Connect the Scalar Parameter Intensity to Metallic and set the Shading Model of the material to Unlit"]
+        choices: ["Connect a color to Roughness and set the Metallic input of the material to a value of 1", "Multiply a color or a texture by the Scalar Parameter Intensity and connect the result to Emissive Color", "Set the Material Domain to Deferred Decal and connect a color to the Base Color input", "Connect the Scalar Parameter Intensity to Metallic and set the Shading Model of the material to Unlit"]
         answer_index: 1
         explain: "The color or texture decides what glows, and Intensity decides how strong the glow is. Their product goes into Emissive Color."
       - q: "Why do you make a Material Instance of the emissive material?"
@@ -1048,7 +1048,7 @@ quests:
         answer_index: 3
         explain: "Intensity multiplies the emissive color. A higher value sends more light into the scene."
       - q: "When do you still need a real light next to an emissive surface?"
-        choices: ["When the material has a parameter", "When the glow does not give enough light for the scene", "When the room has more than four walls or a low ceiling", "When Lumen is turned on"]
+        choices: ["When the material has a parameter for the Intensity of the glow", "When the glow does not give enough light for the scene", "When the room has more than four walls or a low ceiling", "When Lumen is turned on in the Project Settings of the project"]
         answer_index: 1
         explain: "A glowing surface does not always light its surroundings well enough. A real light then gives the light that the glow alone cannot."
     flavors:
@@ -1084,7 +1084,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is a Static Switch Parameter?"
-        choices: ["A number in a material that an instance can set to any value between zero and one at runtime", "An on or off switch in a material that turns a part of the graph on or off for each instance", "A setting that makes a mesh static in the level", "A node that switches between two levels"]
+        choices: ["A number in a material that an instance can set to any value between zero and one at runtime", "An on or off switch in a material that turns a part of the graph on or off for each instance", "A setting that makes a mesh static in the level, so that its material can never change while the game runs", "A node that switches between two levels when the material is loaded"]
         answer_index: 1
         explain: "Each Material Instance sets the switch to on or off. The part of the graph behind the switch is then used or left out for that instance."
       - q: "What is a shader permutation?"
@@ -1120,7 +1120,7 @@ quests:
         answer_index: 2
         explain: "The detail normal and the emissive are parts that not every surface needs. A switch lets each instance decide."
       - q: "Which switch is the best one to remove?"
-        choices: ["The one that most of the instances turn on and off in many different ways", "The one that is not worth its cost, for example because nobody uses it", "The one with the shortest name", "The one that was added first"]
+        choices: ["The one that most of the instances turn on and off in many different ways", "The one that is not worth its cost, for example because nobody uses it", "The one with the shortest name, because short names are hard to find in an instance", "The one that was added first to the master material"]
         answer_index: 1
         explain: "Every switch adds possible permutations. A switch that people do not use adds cost and gives nothing back, so it should go."
     flavors:
@@ -1149,7 +1149,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a Material Function?"
-        choices: ["A Blueprint node that changes the parameters of a material while the game is running", "A setting that turns a material into a decal", "A copy of a material that only changes parameters", "A small piece of material graph saved as its own asset that many materials can use"]
+        choices: ["A Blueprint node that changes the parameters of a material while the game is running", "A setting that turns a material into a decal that can be projected on the meshes of a level", "A copy of a material that only changes parameters and has no node graph that you can edit", "A small piece of material graph saved as its own asset that many materials can use"]
         answer_index: 3
         explain: "A Material Function holds a group of nodes as an asset. You place it in a material like one node."
       - q: "What happens when you fix a mistake inside a Material Function?"
@@ -1157,19 +1157,19 @@ quests:
         answer_index: 0
         explain: "The materials do not hold a copy of the nodes. They all point to the same function, so one fix reaches all of them."
       - q: "Which kind of node group is a good choice to move into a Material Function?"
-        choices: ["A group of nodes that is used in only one single material", "A single Constant node", "A group of nodes that you would repeat in many materials", "The output node of the material"]
+        choices: ["A group of nodes that is used in only one single material", "A single Constant node that has a value of 0 or 1", "A group of nodes that you would repeat in many materials", "The output node of the material, with all of its input pins"]
         answer_index: 2
         explain: "A function saves work when the same nodes are needed again and again. Detail normal blending is such a group."
       - q: "What is detail normal blending in this quest?"
-        choices: ["Two color textures are mixed by a vertex color", "A second normal texture with a higher tiling is combined with the first", "A normal texture is turned into a height texture and added to the first", "A normal texture is removed to save memory"]
+        choices: ["Two color textures are mixed by a vertex color that you paint on the mesh", "A second normal texture with a higher tiling is combined with the first", "A normal texture is turned into a height texture and added to the first", "A normal texture is removed to save memory on far meshes"]
         answer_index: 1
         explain: "The first normal texture gives the large shapes. The second one repeats more often and adds small detail that shows up close."
       - q: "Which node combines the two normal textures?"
-        choices: ["Lerp", "Landscape Layer Blend", "WorldAlignedTexture", "BlendAngleCorrectedNormals"]
+        choices: ["Linear Interpolate (Lerp)", "Landscape Layer Blend", "WorldAlignedTexture", "BlendAngleCorrectedNormals"]
         answer_index: 3
         explain: "BlendAngleCorrectedNormals is made for combining a base normal with a detail normal. It keeps the result a correct normal."
       - q: "Why does the detail normal texture use a higher tiling than the first one?"
-        choices: ["So it repeats more often and adds small detail", "So that it covers the whole mesh only one time", "So it uses less memory", "So it changes the Base Color"]
+        choices: ["So it repeats more often and adds small detail", "So that it covers the whole mesh only one time", "So it uses less memory than the first normal texture", "So it changes the Base Color of the material a little"]
         answer_index: 0
         explain: "A higher tiling makes the texture smaller on the surface. Its bumps then read as fine detail on top of the larger shapes."
       - q: "What do you give each input of MF_DetailNormal?"
@@ -1177,7 +1177,7 @@ quests:
         answer_index: 2
         explain: "A clear name tells the user what to connect. A default value lets the function give a useful result even when that input is left empty."
       - q: "Why do you write a description for the function?"
-        choices: ["The function cannot be saved or compiled without a description", "So other people know what the function does without opening it", "The description makes the function faster", "So the function gets the prefix MF_"]
+        choices: ["The function cannot be saved or compiled without a description", "So other people know what the function does without opening it", "The description makes the function faster when a material uses it", "So the function gets the prefix MF_ in its name"]
         answer_index: 1
         explain: "A function is made to be shared. The description tells the next person what it is for, so they can use it with confidence."
       - q: "Why do you use the function in 2 different materials?"
@@ -1218,7 +1218,7 @@ quests:
         answer_index: 1
         explain: "A mesh is made of triangles, and their corner points are the vertices. Each vertex can store a color."
       - q: "What can you do with the colors stored on the vertices?"
-        choices: ["Change the collision of the mesh", "Make the mesh cast no shadow", "Let a material read them and use them to blend two surfaces", "Move the whole mesh to another place while the game is running"]
+        choices: ["Change the collision of the mesh on the vertices that you painted", "Make the mesh cast no shadow on the parts that are painted black", "Let a material read them and use them to blend two surfaces", "Move the whole mesh to another place while the game is running"]
         answer_index: 2
         explain: "A material can read the vertex color. Where you paint, the material shows more of the second surface, such as moss over stone."
       - q: "Which node reads the painted color in the material?"
@@ -1226,15 +1226,15 @@ quests:
         answer_index: 3
         explain: "The Vertex Color node gives the color stored on the vertices of the mesh. Each of its channels can be used as a mask."
       - q: "How do you use the red channel of the Vertex Color node in this quest?"
-        choices: ["As the Alpha of a Lerp node between the two surfaces", "As the Base Color of the material for both surfaces", "As the Roughness of the material", "As the tiling of the textures"]
+        choices: ["As the Alpha of a Lerp node between the two surfaces", "As the Base Color of the material for both surfaces", "As the Roughness of the material for the second of the surfaces", "As the tiling of the textures on the mesh"]
         answer_index: 0
         explain: "A Lerp node blends from one input to the other by its Alpha. With red as the Alpha, the amount of red paint decides how much of the second surface shows."
       - q: "What does red paint do on a mesh with this material?"
-        choices: ["It makes the mesh red", "It removes the base surface from the material", "It puts the second surface over the base surface", "It deletes the painted vertices"]
+        choices: ["It makes the mesh red where you paint it", "It removes the base surface from the material", "It puts the second surface over the base surface", "It deletes the painted vertices from the mesh"]
         answer_index: 2
         explain: "You do not see the red itself. The material uses it as a mask, so painted areas show the second surface."
       - q: "Why is a sphere a better test mesh than a simple cube?"
-        choices: ["A sphere has no UVs", "The paint is stored on the vertices, and a simple cube has too few", "A cube cannot have a material", "A sphere is always larger than a cube, so the paint is easier to see"]
+        choices: ["A sphere has no UVs, so paint is the only way to give it some color at all", "The paint is stored on the vertices, and a simple cube has too few", "A cube cannot have a material that uses a Lerp node", "A sphere is always larger than a cube, so the paint is easier to see"]
         answer_index: 1
         explain: "You can only paint where there are vertices. A simple cube has just its corners, so there is nothing to paint on its faces."
       - q: "Which editor mode do you use to paint on the mesh?"
@@ -1246,11 +1246,11 @@ quests:
         answer_index: 0
         explain: "The height texture says which parts of the surface are high and which are low. The second surface then appears in some parts before others, for example in the cracks first."
       - q: "What does the height-based blend improve?"
-        choices: ["The frame rate of the level", "The number of vertices that the mesh has for painting", "The edge of the blend, which looks sharp and natural", "The size of the texture files"]
+        choices: ["The frame rate of the level when many meshes are painted", "The number of vertices that the mesh has for painting", "The edge of the blend, which looks sharp and natural", "The size of the texture files that the material samples"]
         answer_index: 2
         explain: "A plain vertex blend fades softly between the painted vertices. The height texture breaks that fade into a detailed edge."
       - q: "Why is vertex paint a cheap way to add variety to a level?"
-        choices: ["It lowers the triangle count of each mesh", "Copies of one mesh can look different with the same material", "It removes the need for textures", "It turns off the lighting on painted meshes, which saves time"]
+        choices: ["It lowers the triangle count of each mesh that is painted", "Copies of one mesh can look different with the same material", "It removes the need for textures, because paint holds all of the color", "It turns off the lighting on painted meshes, which saves time"]
         answer_index: 1
         explain: "The mesh and the material stay the same. Only the paint differs from copy to copy, which breaks up repetition at a low cost."
     flavors:
@@ -1280,7 +1280,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is Nanite?"
-        choices: ["The lighting system in Unreal Engine 5 that calculates bounced light in real time", "The tool that paints vertex colors", "The editor for building materials", "The system in Unreal Engine 5 that lets you use meshes with millions of triangles"]
+        choices: ["The lighting system in Unreal Engine 5 that calculates bounced light in real time", "The tool that paints vertex colors on the meshes of a level, one vertex at a time", "The editor for building materials from nodes", "The system in Unreal Engine 5 that lets you use meshes with millions of triangles"]
         answer_index: 3
         explain: "Nanite is the geometry system of Unreal Engine 5. It makes very detailed meshes usable in real time."
       - q: "Why can Nanite handle meshes with millions of triangles?"
@@ -1292,11 +1292,11 @@ quests:
         answer_index: 2
         explain: "High-poly means many polygons, which are the triangles of the mesh. Such meshes show the gain of Nanite most clearly."
       - q: "How do you enable Nanite on a mesh in this quest?"
-        choices: ["Open Edit, then Plugins, enable the Nanite plugin and restart the editor", "Open the mesh and tick Enable Nanite Support in its Nanite Settings", "Set the Mobility of the mesh to Movable", "Add a Nanite component to the level"]
+        choices: ["Open Edit, then Plugins, enable the Nanite plugin and restart the editor", "Open the mesh and tick Enable Nanite Support in its Nanite Settings", "Set the Mobility of the mesh to Movable in the Details panel of the placed actor", "Add a Nanite component to the level and assign the mesh to it in the Outliner"]
         answer_index: 1
         explain: "Nanite is a setting of the mesh asset. You open the mesh and tick Enable Nanite Support in its Nanite Settings."
       - q: "Which Nanite visualization modes do you use to inspect the mesh in the level?"
-        choices: ["Lit, Unlit and Detail Lighting", "Game, Draw and GPU", "Key, Fill and Rim", "Triangles, Clusters and Overdraw"]
+        choices: ["Lit, Unlit and Detail Lighting", "Game View, Draw Calls and GPU Time", "Key, Fill and Rim", "Triangles, Clusters and Overdraw"]
         answer_index: 3
         explain: "These three modes show how Nanite draws the mesh: its triangles, the clusters they are grouped in, and how much is drawn over other geometry."
       - q: "In the Triangles visualization mode, what do you see when you move the camera away from a Nanite mesh?"
@@ -1308,7 +1308,7 @@ quests:
         answer_index: 2
         explain: "Nanite does not support every kind of material, and translucent ones are an example. You check the list on the documentation page to see which materials of a project are affected."
       - q: "What does displacement do?"
-        choices: ["It moves the whole mesh to another place in the level while the game runs", "A texture moves the surface of the mesh in and out to add real detail", "It replaces the mesh with a simpler one", "It swaps the material of the mesh during play"]
+        choices: ["It moves the whole mesh to another place in the level while the game runs", "A texture moves the surface of the mesh in and out to add real detail", "It replaces the mesh with a simpler one when it is far away", "It swaps the material of the mesh during play, on a timer"]
         answer_index: 1
         explain: "Displacement changes the shape of the surface itself. A normal map only fakes bumps in the lighting."
       - q: "Nanite displacement does not work in your project. What does the quest ask you to do then?"
@@ -1349,11 +1349,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where does the eye of a viewer go first in a picture?"
-        choices: ["To the darkest corner", "To the brightest spot with the most contrast", "To the exact center of the frame, every time", "To the largest object"]
+        choices: ["To the darkest corner of the picture, far from the light", "To the brightest spot with the most contrast", "To the exact center of the frame, every time", "To the largest object, whatever its brightness is"]
         answer_index: 1
         explain: "Brightness and contrast pull the eye. Lighting artists use this to lead the viewer to the important place."
       - q: "What is a hero area?"
-        choices: ["The most important place in a scene, where you want people to look", "The place where the player character starts when the level begins", "The area with the most triangles", "The area that is lit by the sun"]
+        choices: ["The most important place in a scene, where you want people to look", "The place where the player character starts when the level begins", "The area with the most triangles on screen, which costs the most frame time", "The area that is lit by the sun"]
         answer_index: 0
         explain: "A hero area can be an entrance, a landmark or a focal prop. You light it so that the viewer notices it first."
       - q: "What is the key light?"
@@ -1365,7 +1365,7 @@ quests:
         answer_index: 2
         explain: "The fill light adds a little light to the shadow side. The shadows stay, but they are less dark."
       - q: "What does the rim light do?"
-        choices: ["It comes from behind and separates the subject from the background", "It lights the floor in front of the subject so that the feet show", "It makes the whole scene brighter", "It removes the reflections from the subject"]
+        choices: ["It comes from behind and separates the subject from the background", "It lights the floor in front of the subject so that the feet show", "It makes the whole scene brighter, so that no part of the subject is in the dark", "It removes the reflections from the subject"]
         answer_index: 0
         explain: "A rim light draws a bright edge around the subject. That edge lifts the subject off the background."
       - q: "What does GI mean?"
@@ -1373,19 +1373,19 @@ quests:
         answer_index: 1
         explain: "GI is global illumination, the light that bounces from surface to surface. You check it and the reflections with the Lumen visualization modes."
       - q: "Why do you run stat unit before and after you add your lights?"
-        choices: ["To save the lights to the level", "To turn on the Lumen reflections", "To switch all the lights to physical light units", "To see how much frame time the extra lights cost"]
+        choices: ["To save the lights to the level before you close it", "To turn on the Lumen reflections for the new lights", "To switch all the lights to physical light units", "To see how much frame time the extra lights cost"]
         answer_index: 3
         explain: "The command stat unit shows how long each frame takes. The difference between the two readings is the cost of your lights."
       - q: "Why do you take the before and after stills through the same Cine Camera Actor?"
-        choices: ["A Cine Camera makes lights cheaper", "The Cine Camera adds the rim light", "Both stills then show the same view, so only the lighting differs", "The stills are then saved in the level, next to the camera actor"]
+        choices: ["A Cine Camera makes lights cheaper to render", "The Cine Camera adds the rim light to the subject by itself when you take a still", "Both stills then show the same view, so only the lighting differs", "The stills are then saved in the level, next to the camera actor"]
         answer_index: 2
         explain: "A fixed camera makes the comparison fair. Any difference you see comes from your lighting and not from a new angle."
       - q: "Why do you ask another person where their eye goes first?"
-        choices: ["They do not know where they are meant to look, so their answer is an honest test", "They must approve the lights before you are able to save the level and send your work", "They can see the stat numbers better", "They choose the hero area for you"]
+        choices: ["They do not know where they are meant to look, so their answer is an honest test", "They must approve the lights before you are able to save the level and send your work", "They can see the stat numbers better than you can, and they tell you which light costs too much", "They choose the hero area for you, so that you do not have to decide where people should look"]
         answer_index: 0
         explain: "You already know where the hero area is, so you cannot test it yourself. A fresh viewer shows if the lighting really leads the eye."
       - q: "The person you asked looks at a bright lamp in the corner first, and not at your hero area. What does this tell you?"
-        choices: ["The camera has the wrong focal length", "The corner is brighter or has more contrast than the hero area", "The hero area has too many lights", "The person did not look at the picture for a long enough time"]
+        choices: ["The camera has the wrong focal length for the scene", "The corner is brighter or has more contrast than the hero area", "The hero area has too many lights and is too bright", "The person did not look at the picture for a long enough time"]
         answer_index: 1
         explain: "The eye goes to the brightest spot with the most contrast. You dim the corner or strengthen the hero area until the hero area wins."
     flavors:
@@ -1426,7 +1426,7 @@ quests:
         answer_index: 2
         explain: "The Post Process Volume holds the Color Grading settings. With Infinite Extent (Unbound) turned on, the grade applies to the whole level."
       - q: "What is a LUT?"
-        choices: ["A light type that only affects reflections, not surfaces", "A lookup table: a small texture that stores a color grade", "A list of the lights in the level", "A tool that measures the exposure"]
+        choices: ["A light type that only affects reflections, not surfaces", "A lookup table: a small texture that stores a color grade", "A list of the lights in the level, with their colors", "A tool that measures the exposure of a picture in the viewport"]
         answer_index: 1
         explain: "LUT means lookup table. It stores a color grade made in an image editor, so that the same grade can be applied in the engine."
       - q: "What can color grading not do?"
@@ -1434,7 +1434,7 @@ quests:
         answer_index: 3
         explain: "Grading finishes an image. If the lighting is wrong, the grade only changes the colors of a badly lit picture, so you grade last, after lighting."
       - q: "In which order do you grade by hand in this quest?"
-        choices: ["The highlights first, then the midtones and shadows, then the white balance and the global settings", "Shadows first, then the LUT, then the white balance", "The white balance first, then the global settings, then shadows, midtones and highlights", "The global settings first, then the LUT, then the midtones"]
+        choices: ["The highlights first, then the midtones and shadows, then the white balance and the global settings", "Shadows first, then the LUT, then the white balance and the global settings at the end", "The white balance first, then the global settings, then shadows, midtones and highlights", "The global settings first, then the LUT, then the midtones, the shadows and the highlights last"]
         answer_index: 2
         explain: "You go from the broad to the fine. White balance sets the base, the global settings shape the whole image, and the three ranges are adjusted last."
       - q: "What is the neutral LUT image that you download from the Epic documentation?"
@@ -1442,7 +1442,7 @@ quests:
         answer_index: 0
         explain: "The neutral LUT is the starting point, 256 x 16 pixels in size. It only becomes a grade after you apply your adjustments to it."
       - q: "Why do you apply the same color adjustments to the screenshot and to the LUT image in the image editor?"
-        choices: ["So both files get the same size", "So the screenshot can be imported as a LUT and the LUT image as a texture", "So the LUT image is deleted afterwards", "The screenshot shows the result, and the LUT image records the adjustments"]
+        choices: ["So both files get the same size and the same file type on disk", "So the screenshot can be imported as a LUT and the LUT image as a texture", "So the LUT image is deleted afterwards and only the screenshot is kept", "The screenshot shows the result, and the LUT image records the adjustments"]
         answer_index: 3
         explain: "You judge the grade on the screenshot. The same adjustments on the LUT image store that grade in a form Unreal can apply."
       - q: "Which settings do you change on the imported LUT texture?"
@@ -1490,7 +1490,7 @@ quests:
         answer_index: 1
         explain: "Movie Render Queue, often shortened to MRQ, renders final frames. It is what you use when a normal screenshot is not clean enough."
       - q: "Why is a Movie Render Queue image cleaner than a normal screenshot?"
-        choices: ["It uses a different level", "It removes the lights before rendering and adds them again later", "It always renders in black and white", "It can spend more time on each frame than the viewport does"]
+        choices: ["It uses a different level with fewer actors, which renders faster", "It removes the lights before rendering and adds them again later", "It always renders in black and white first and adds the color later", "It can spend more time on each frame than the viewport does"]
         answer_index: 3
         explain: "The viewport must draw many frames each second. Movie Render Queue has no such limit, so it can render one frame with much more care."
       - q: "What does Movie Render Queue render from?"
@@ -1506,7 +1506,7 @@ quests:
         answer_index: 1
         explain: "The Camera Cut track tells the sequence which camera to look through. Without it, the render does not use the view you framed."
       - q: "What do anti-aliasing samples do in Movie Render Queue?"
-        choices: ["They add more lights to the scene", "They make the image file smaller", "They raise the frame rate of the viewport while the render runs", "They smooth jagged edges by rendering the frame several times"]
+        choices: ["They add more lights to the scene, so that dark areas have less noise", "They make the image file smaller, so that it is faster to save to disk", "They raise the frame rate of the viewport while the render runs", "They smooth jagged edges by rendering the frame several times"]
         answer_index: 3
         explain: "Each sample is one more render of the same frame. Combined, they give smooth edges and less noise."
       - q: "Why do you save the render settings as a preset?"
@@ -1514,11 +1514,11 @@ quests:
         answer_index: 0
         explain: "A preset stores your settings. The next render starts from it, and all your stills get the same quality."
       - q: "What do you compare the Movie Render Queue still with?"
-        choices: ["A photo of your monitor", "A render of a different level in the project", "A High Resolution Screenshot of the same frame", "A still from another camera"]
+        choices: ["A photo of your monitor", "A render of a different level in the project", "A High Resolution Screenshot of the same frame", "A still from another camera in the same level, at another time"]
         answer_index: 2
         explain: "The same frame taken both ways shows exactly what Movie Render Queue adds. Look at the edges and at fine detail."
       - q: "The rendered still shows a different view from the one you framed. What do you check first?"
-        choices: ["That the level has a Sky Light and a Directional Light for the camera", "That the Level Sequence has a Camera Cut track with your Cine Camera", "That the preset has a name", "That the resolution is high"]
+        choices: ["That the level has a Sky Light and a Directional Light for the camera", "That the Level Sequence has a Camera Cut track with your Cine Camera", "That the preset has a name and is saved in the Content Browser of the project", "That the resolution is high enough for the Cine Camera that you use in the level"]
         answer_index: 1
         explain: "The render looks through the camera of the Camera Cut track. If the track is missing or uses another camera, you get another view."
       - q: "Which two choices in the render settings raise the quality of the still in this quest?"
@@ -1555,11 +1555,11 @@ quests:
     verify_type: mentor
     quiz:
       - q: "What is a reference scene?"
-        choices: ["A neutral level with known lighting that people use to check their assets", "The first level of a finished game", "A folder with reference images", "A level that shows every single material of a project on a long row of spheres"]
+        choices: ["A neutral level with known lighting that people use to check their assets", "The first level of a finished game, which new players see before any other level", "A folder with reference images", "A level that shows every single material of a project on a long row of spheres"]
         answer_index: 0
         explain: "A reference scene is a known, neutral place. People put an asset into it to see how the asset looks under fixed conditions."
       - q: "Why should everyone on a team check assets in the same reference scene?"
-        choices: ["The scene makes all assets look the same, whatever their materials are", "The scene fixes mistakes in the assets", "Everyone judges under the same light, so the results can be compared", "Only one person can then open the assets"]
+        choices: ["The scene makes all assets look the same, whatever their materials are", "The scene fixes mistakes in the assets", "Everyone judges under the same light, so the results can be compared", "Only one person can then open the assets at a time, so nobody overwrites the work of others"]
         answer_index: 2
         explain: "An asset looks different under every light. With one shared scene, a difference between two assets comes from the assets and not from the lighting."
       - q: "What is a Macbeth-style swatch board?"
@@ -1571,7 +1571,7 @@ quests:
         answer_index: 3
         explain: "The gray ball shows how the light falls on a plain surface. The chrome ball mirrors the surroundings, so you see where the light comes from."
       - q: "How do you give the reference scene a fixed exposure?"
-        choices: ["Add a Post Process Volume and set Metering Mode to Manual", "Set the Directional Light to Movable", "Turn off Lumen in the Project Settings, under Rendering", "Save a camera bookmark at each camera"]
+        choices: ["Add a Post Process Volume and set Metering Mode to Manual", "Set the Directional Light to Movable in the level", "Turn off Lumen in the Project Settings, under Rendering", "Save a camera bookmark at each of the three cameras"]
         answer_index: 0
         explain: "With Manual metering the camera does not adjust the brightness by itself. Every asset is then judged at the same exposure."
       - q: "What is the hero area of the reference scene?"
@@ -1583,11 +1583,11 @@ quests:
         answer_index: 1
         explain: "One master material with instances keeps the scene easy to maintain. It also uses at least one Material Function, and one prop has a vertex-painted blend."
       - q: "What do you provide so that people can take the same pictures of every asset?"
-        choices: ["A list of console commands that must be typed before each picture", "A second copy of the level", "A folder of screenshots", "3 Cine Cameras with bookmarks, and a Movie Render Queue preset"]
+        choices: ["A list of console commands that must be typed before each picture", "A second copy of the level, with one copy for each asset that is tested", "A folder of screenshots", "3 Cine Cameras with bookmarks, and a Movie Render Queue preset"]
         answer_index: 3
         explain: "Fixed cameras give the same views each time. The preset gives the same render settings, so stills of different assets can be compared."
       - q: "What must the one-page README say?"
-        choices: ["How to use the scene, what the exposure is, and what people should not change", "How long the scene took to build, which tools you used and what you learned", "Which assets were tested in the scene so far", "Which engine versions you tried"]
+        choices: ["How to use the scene, what the exposure is, and what people should not change", "How long the scene took to build, which tools you used and what you learned", "Which assets were tested in the scene so far, and by whom, with the date of each test", "Which engine versions you tried"]
         answer_index: 0
         explain: "The README is the manual for other people. It protects the fixed parts of the scene, such as the exposure, from changes by mistake."
       - q: "What does the mentor check about your README?"
@@ -1623,15 +1623,15 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is set dressing?"
-        choices: ["Choosing clothes for a character", "Filling a scene with small objects such as rocks and debris", "Setting the lights of a scene", "Naming the assets of a project so that they are easy to find"]
+        choices: ["Choosing clothes for a character and fitting them to the body mesh", "Filling a scene with small objects such as rocks and debris", "Setting the lights of a scene so that the mood matches the reference", "Naming the assets of a project so that they are easy to find"]
         answer_index: 1
         explain: "Set dressing adds the many small objects that make a place look real. Placing each one by hand takes a long time."
       - q: "How does PCG help with set dressing?"
-        choices: ["It lowers the triangle count of each rock, so that more rocks fit a level", "It paints textures on the landscape", "It imports rock meshes from Fab", "You build a graph of rules, and the graph places many objects for you"]
+        choices: ["It lowers the triangle count of each rock, so that more rocks fit a level", "It paints textures on the landscape, so that the ground under the rocks looks right", "It imports rock meshes from Fab", "You build a graph of rules, and the graph places many objects for you"]
         answer_index: 3
         explain: "PCG means Procedural Content Generation. The rules place the objects, so you change a rule and not a thousand rocks."
       - q: "PCG is missing from the right-click menu of the Content Browser. What do you check first?"
-        choices: ["That the Procedural Content Generation Framework (PCG) plugin is enabled", "That the level has a Landscape", "That the project has a rock mesh", "That the Place Actors panel is open and docked next to the Content Browser"]
+        choices: ["That the Procedural Content Generation Framework (PCG) plugin is enabled", "That the level has a Landscape that is large enough for the graph to scatter rocks on", "That the project has a rock mesh in the Content Browser that the graph could place", "That the Place Actors panel is open and docked next to the Content Browser"]
         answer_index: 0
         explain: "PCG comes from a plugin. You enable it in Edit, then Plugins, and the PCG entries appear in the editor."
       - q: "In which order do you connect the three nodes of the scatter graph?"
@@ -1643,7 +1643,7 @@ quests:
         answer_index: 1
         explain: "The sampler turns the landscape surface into many points. Each point can later become one object."
       - q: "How do you run the graph in the level?"
-        choices: ["Drag the graph asset onto the landscape and wait until the rocks appear", "Press Play and wait", "Open the graph and press F9", "Place a PCG Volume, set Graph on its PCG component, and click Generate"]
+        choices: ["Drag the graph asset onto the landscape and wait until the rocks appear", "Press Play and wait until the graph has placed all of the rocks in the running game", "Open the graph, press F9 and switch back to the level to see the rocks on the ground", "Place a PCG Volume, set Graph on its PCG component, and click Generate"]
         answer_index: 3
         explain: "The PCG Volume marks where the graph works. Its PCG component needs to know the graph, and Generate runs it."
       - q: "What does a density rule control?"
@@ -1659,7 +1659,7 @@ quests:
         answer_index: 1
         explain: "A Difference node removes one set of points from another. With the points near the path spline as the second set, the path is kept clear."
       - q: "Why do you add a rule that keeps the paths clear?"
-        choices: ["So the graph has more nodes", "So the rocks are larger near the path than far away from it", "So the PCG Volume can be deleted", "So the scattered objects do not block where the player walks"]
+        choices: ["So the graph has more nodes to show to other people", "So the rocks are larger near the path than far away from it", "So the PCG Volume can be deleted after it has run", "So the scattered objects do not block where the player walks"]
         answer_index: 3
         explain: "A scatter that covers everything also covers the route. The rule keeps the dressing where it helps the scene and away from the path."
     flavors:
@@ -1687,7 +1687,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is the Water system in Unreal Engine?"
-        choices: ["A material function that makes any mesh in the level look wet", "A weather tool that makes rain", "A plugin that gives you ready-made lakes, rivers and oceans", "A view mode that shows reflections"]
+        choices: ["A material function that makes any mesh in the level look wet", "A weather tool that makes rain fall on the landscape and fills its low places", "A plugin that gives you ready-made lakes, rivers and oceans", "A view mode that shows reflections on wet surfaces in the level viewport"]
         answer_index: 2
         explain: "The Water system comes as the Water plugin. It adds water bodies that you place in a level."
       - q: "Why does water have a strong effect on the mood of a scene?"
@@ -1699,11 +1699,11 @@ quests:
         answer_index: 1
         explain: "A plugin only loads when the editor starts. After the restart, the water bodies are available."
       - q: "How do you add a lake or a river to the level?"
-        choices: ["Sculpt a hole and fill it with a blue material", "Right-click in the Content Browser, choose Water and drag the asset into the level", "Open Landscape Mode and choose New", "Search for Water Body in the Place Actors panel and drag one into the level"]
+        choices: ["Sculpt a hole in the landscape and fill it with a plane that has a blue translucent material", "Right-click in the Content Browser, choose Water and drag the asset into the level", "Open Landscape Mode, choose New and turn on the Water option before you create the landscape", "Search for Water Body in the Place Actors panel and drag one into the level"]
         answer_index: 3
         explain: "The Place Actors panel lists Water Body Lake and Water Body River after the plugin is enabled. You drag one into the level."
       - q: "Where do you find the material of a water body?"
-        choices: ["In Water Material in the Details panel of the water body", "In the World Settings of the level", "In the Landscape Material of the Landscape under the water", "In the Post Process Volume"]
+        choices: ["In Water Material in the Details panel of the water body", "In the World Settings of the level, under the Water section", "In the Landscape Material of the Landscape under the water", "In the Post Process Volume, in the Rendering Features category"]
         answer_index: 0
         explain: "You select the water body and look for Water Material in its Details panel. It points to a Material Instance."
       - q: "Why do you make a copy of the water Material Instance before you change it?"
@@ -1715,11 +1715,11 @@ quests:
         answer_index: 1
         explain: "Absorption and Scattering describe what happens to light inside the water. Together they set its color and how far you can see into it."
       - q: "What does Scattering control?"
-        choices: ["How fast the water flows downhill", "How high the waves are", "How large the lake is", "How light spreads inside the water"]
+        choices: ["How fast the water flows downhill", "How high the waves are on the lake", "How large the lake is in the level", "How light spreads inside the water"]
         answer_index: 3
         explain: "Scattering is how light spreads inside the water. It changes how clear or murky the water looks."
       - q: "Why do you write one line about the mood before you tune the water?"
-        choices: ["It gives you a target to tune toward and to judge the result against", "The plugin reads the line and sets the values", "The line is then used as the name of the water body in the Outliner", "It replaces the screenshot as proof"]
+        choices: ["It gives you a target to tune toward and to judge the result against", "The plugin reads the line and sets the values for you", "The line is then used as the name of the water body in the Outliner", "It replaces the screenshot as proof of your work"]
         answer_index: 0
         explain: "Clear and tropical needs different values from dark and murky. With the mood written down, you know when the water is right."
       - q: "The water values look right, but the water still feels wrong for the mood. What else should you look at?"
@@ -1754,19 +1754,19 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a Procedural Foliage Volume?"
-        choices: ["A brush that paints single plants by hand", "A box that fills an area with plants by simulating how they spread", "A volume that hides plants from the camera when they are far away", "A folder that stores tree meshes"]
+        choices: ["A brush that paints single plants by hand", "A box that fills an area with plants by simulating how they spread", "A volume that hides plants from the camera when they are far away", "A folder that stores tree meshes, with one sub-folder for each species"]
         answer_index: 1
         explain: "The volume simulates how plants spread and places them inside its box. You do not place each tree yourself."
       - q: "What do foliage types act like in this system?"
-        choices: ["Like materials on the slots of one mesh", "Like lights in a room", "Like cameras in a shot", "Like species with their own spacing rules"]
+        choices: ["Like materials on the slots of one mesh", "Like lights in a room that add up", "Like cameras in a shot that take turns", "Like species with their own spacing rules"]
         answer_index: 3
         explain: "Each foliage type is one kind of plant. Its settings say how it spreads and how much room it needs."
       - q: "Why do the spacing settings matter so much?"
-        choices: ["Plants with the same distance between them look artificial", "Plants that are too close to each other cannot be saved", "Plants only cast shadows at one distance", "Plants need spacing to get collision"]
+        choices: ["Plants with the same distance between them look artificial", "Plants that are too close to each other cannot be saved", "Plants only cast shadows at one distance from each other", "Plants need spacing to get collision, so close plants can be walked through"]
         answer_index: 0
         explain: "Real forests are uneven. Even spacing looks like a plantation, so you tune the rules until the result is not uniform."
       - q: "The Procedural Foliage Spawner is missing from the Foliage menu of the Content Browser. What do you check first?"
-        choices: ["That the Water plugin is enabled", "That the level is saved", "That Procedural Foliage is enabled in the Editor Preferences", "That Nanite is enabled on the tree meshes of both species"]
+        choices: ["That the Water plugin is enabled, because the spawner is part of that plugin", "That the level is saved", "That Procedural Foliage is enabled in the Editor Preferences", "That Nanite is enabled on the tree meshes of both species"]
         answer_index: 2
         explain: "Procedural Foliage is an experimental feature. You turn it on in Edit, then Editor Preferences, in the Experimental section."
       - q: "Which assets do you create for a volume with 2 species?"
@@ -1778,15 +1778,15 @@ quests:
         answer_index: 3
         explain: "The spawner has a list named Foliage Types. Every Static Mesh Foliage asset in that list takes part in the simulation."
       - q: "How do you make the spawner fill the forest edge?"
-        choices: ["Drag it into the level, scale it over the area, and click Resimulate", "Open it and click Generate", "Paint it on the landscape in Foliage Mode with the Paint tool selected", "Add it to the Landscape Material"]
+        choices: ["Drag it into the level, scale it over the area, and click Resimulate", "Open it and click Generate", "Paint it on the landscape in Foliage Mode with the Paint tool selected", "Add it to the Landscape Material as a Landscape Grass Output and paint the layer"]
         answer_index: 0
         explain: "The spawner in the level becomes the volume. Resimulate in its Details panel runs the simulation inside the scaled box."
       - q: "Which of these are spacing settings of a Static Mesh Foliage asset?"
-        choices: ["Inner Radius, Falloff Distance, Apply Reverb and Attenuation", "Source Angle, Intensity and Light Color", "Shade Radius, Initial Seed Density and Average Spread Distance", "Absorption, Scattering and Roughness"]
+        choices: ["Inner Radius, Falloff Distance, Apply Reverb and Attenuation", "Source Angle, Intensity and Light Color", "Shade Radius, Initial Seed Density and Average Spread Distance", "Absorption, Scattering, Anisotropy and Roughness of the material"]
         answer_index: 2
         explain: "These settings control how many plants start, how far they spread, and how much room each one takes. You tune them in both species."
       - q: "You changed Average Spread Distance, but the forest in the level looks the same. What do you do?"
-        choices: ["Restart the editor", "Click Resimulate in the Details panel of the volume", "Delete the Landscape", "Enable Procedural Foliage again in the preferences"]
+        choices: ["Restart the editor", "Click Resimulate in the Details panel of the volume", "Delete the Landscape and add a new one", "Enable Procedural Foliage again in the preferences"]
         answer_index: 1
         explain: "The plants in the level are the result of the last simulation. A changed setting only shows after you click Resimulate."
       - q: "When is the tuning of the forest edge finished?"

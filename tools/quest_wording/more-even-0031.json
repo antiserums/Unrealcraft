@@ -1,0 +1,682 @@
+{
+ "PQ89": {
+  "quiz_choices": {
+   "3": [
+    "CSV needs quotes on every text cell, and the importer rejects files that have a cell without them",
+    "Without quotes the importer reads the text as the type Texture2d and the reference fails",
+    "Quotes mark the cell as a comment, so the importer skips the cell and leaves the row field empty",
+    "Quotes make the asset load faster, because the importer then knows that the cell holds a path"
+   ],
+   "4": [
+    "FindRow returns a copy of the row, so the member would use the memory twice",
+    "After a reimport the table data changes and the old pointer can become invalid",
+    "Members cannot hold struct pointers, so the class does not compile",
+    "Rows are garbage collected every frame, so no pointer lives that long"
+   ],
+   "5": [
+    "Nothing changes for the table",
+    "The CSV import fails with an error",
+    "All icons load whenever the Data Table loads",
+    "Icons can no longer be edited in the table"
+   ],
+   "7": [
+    "Any UObject property in each cell, with one row for each object in the level",
+    "Only floating point values, one curve per row, with X values as column headers",
+    "Asset references, with one soft reference in each cell of the table",
+    "Strings, with one line of text per row"
+   ],
+   "8": [
+    "FDataTableRowHandle",
+    "FSoftObjectPath",
+    "FPrimaryAssetId",
+    "FName of the row"
+   ]
+  }
+ },
+ "PQ91": {
+  "quiz_choices": {
+   "1": [
+    "BeginPlay and Tick of the validator",
+    "IsDataValid_Implementation and PostLoad",
+    "Construct and Destruct of the asset",
+    "CanValidateAsset and ValidateLoadedAsset"
+   ],
+   "2": [
+    "Return a bool value",
+    "Print a string to the log",
+    "Call AssetPasses or AssetFails",
+    "Save the asset to disk again"
+   ],
+   "3": [
+    "Override IsDataValid in that UObject-derived class",
+    "A UEditorValidatorBase Blueprint for that class",
+    "A Python validator for that one class",
+    "A Scripted Action for that class"
+   ],
+   "4": [
+    "Blueprints cannot be validators at all, and the editor only seems to run it because the asset is open while you save it",
+    "By default the Data Validation system runs only C++ rules from the command line; it must be extended for Blueprint and Python",
+    "The commandlet needs the -game switch, because Blueprint classes are only loaded when the game module of the project starts",
+    "Validators must be in a plugin to be found by the commandlet; validators in the project Content folder only run in the editor"
+   ],
+   "5": [
+    "It runs first, before the engine has loaded any C++ or Blueprint validator, so it can turn the others off",
+    "It cannot fail an asset; it can only add warnings, because Python validators run after the C++ and Blueprint ones",
+    "It only runs on save, and never from the Validate Assets menu item or from the command line",
+    "It must register itself with UEditorValidatorSubsystem using AddValidator; the others are discovered automatically"
+   ],
+   "7": [
+    "On editor startup, for every asset loaded",
+    "On asset save, which is enabled by default",
+    "On Play In Editor, for the open level",
+    "On level load, for every actor in it"
+   ],
+   "8": [
+    "Rename it so that its name starts with Disabled_, which the subsystem skips",
+    "Move it to a Developers folder, where validators are skipped by the subsystem",
+    "Override IsEnabled or change the bIsEnabled variable shown in the Details panel",
+    "Set its parent class to Object, so that it is no longer found as a validator"
+   ]
+  }
+ },
+ "PQ94": {
+  "quiz_choices": {
+   "1": [
+    "Console and log file",
+    "Log file only, not the console",
+    "The screen only, as a debug message",
+    "Nowhere unless Verbose is enabled"
+   ],
+   "2": [
+    "Yes, always, in every build configuration that has logging",
+    "Yes, but in grey",
+    "Only in shipping builds, where every category is Verbose",
+    "No, only when Verbose logging is enabled for that category"
+   ],
+   "4": [
+    "-Verbosity=Category:Level",
+    "-log=Category",
+    "-LogCmds=\"Category Level\"",
+    "-ini:Log=Category:Level"
+   ],
+   "6": [
+    "Error messages result in a commandlet failure; warnings are only collected and reported",
+    "Errors print in yellow and warnings in red, but neither changes the result of the run",
+    "Warnings are not logged in a commandlet; errors are logged and reported",
+    "There is no difference; both are collected and neither fails the run"
+   ],
+   "7": [
+    "Yes, with named parameters extra fields are permitted and order does not matter",
+    "No, the fields must match the format string exactly, in the same order as in it",
+    "Only if Flags is first",
+    "Only with positional parameters, where each field is matched by its index in the list"
+   ],
+   "8": [
+    "In the .uproject",
+    "In DefaultEngine.ini with lines like LogTemp=warning",
+    "In DefaultGame.ini under [/Script/Engine.Log] as lines",
+    "In the Output Log filter, which is saved in the config of the project"
+   ]
+  }
+ },
+ "PQ95": {
+  "quiz_choices": {
+   "2": [
+    "Marking the property BlueprintReadWrite in the UPROPERTY",
+    "Making the property public in the class header",
+    "Adding a Tick function to the actor",
+    "Adding a DOREPLIFETIME line in GetLifetimeReplicatedProps"
+   ],
+   "4": [
+    "Every tick, whether it changed or not",
+    "Only when its value has changed",
+    "Only when the actor first spawns",
+    "Every second"
+   ],
+   "5": [
+    "Turning off replication for a whole actor and all of its components",
+    "Marking a member inside a replicated struct so that member is not sent",
+    "Stopping RPCs on the actor from being sent to clients",
+    "Making a property client-only, so the server never reads it"
+   ],
+   "6": [
+    "The new value of the property, again",
+    "Always zero, as it is not used",
+    "The tick count of the server at that moment",
+    "The previous value of the replicated property"
+   ],
+   "8": [
+    "They cost more time and cannot change per connection",
+    "Custom conditions do not work in packaged builds at all",
+    "They only work in Blueprint, where the condition is set per variable",
+    "They replicate every tick, whether the value has changed or not"
+   ]
+  }
+ },
+ "PQ98": {
+  "quiz_choices": {
+   "1": [
+    "One standalone game with no networking and no server at all",
+    "Two listen servers",
+    "One client window plus a dedicated server with no display",
+    "One listen server window that is both the server and the only client of it"
+   ],
+   "2": [
+    "It runs faster than a listen server, so you can test with many more players",
+    "It renders better graphics",
+    "It removes the need for replication, because the server and the client share one world in PIE",
+    "It catches bugs in code that wrongly relies on a local player on the server"
+   ],
+   "3": [
+    "Each window gets its own machine on the network, which is slower to start but more exact",
+    "It turns off the server, so every window is a standalone game of its own",
+    "It sets the FPS of all windows to 60, so they stay in sync",
+    "All windows run in one Unreal instance; faster to start but less like a real player setup"
+   ],
+   "4": [
+    "The window title shows NetMode Client 1",
+    "It is always the window on the left side",
+    "It has a red border",
+    "It is the viewport window of the editor, never a separate one"
+   ],
+   "5": [
+    "They trigger in all worlds",
+    "They only trigger on actors in Client 1's world",
+    "They are disabled until you set the debug world back to All Worlds",
+    "They trigger only on actors in the server world"
+   ],
+   "6": [
+    "Extra frame rate for the server, so that it can keep up with clients",
+    "Latency and packet loss to incoming and outgoing traffic",
+    "More players, simulated as bots that send traffic to the server",
+    "A second server that mirrors the traffic of the first one"
+   ],
+   "7": [
+    "To make the game slower for fun",
+    "Because that is the default connection quality for all players in a packaged game",
+    "Because many bugs only appear with poor connectivity and would otherwise be missed",
+    "To reduce CPU usage of the server while many clients are connected to it at the same time"
+   ]
+  }
+ },
+ "PQ99": {
+  "quiz_choices": {
+   "1": [
+    "Character Movement Component on ACharacter",
+    "Floating Pawn Movement on a Default Pawn",
+    "Projectile Movement on any Actor",
+    "Rotating Movement on any Actor"
+   ],
+   "2": [
+    "Because Pawns cannot have components that replicate, so a movement component on a plain Pawn only runs locally",
+    "Because ACharacter is faster to render than a Pawn, as its mesh is drawn in a separate pass that the movement component controls",
+    "Because Pawns cannot be possessed by a Player Controller, so a movement component on a Pawn would never receive any input",
+    "Because ACharacter overrides replicated variables and functions the movement component needs for replication"
+   ],
+   "3": [
+    "It waits for the server before moving, and only applies the move when the answer arrives",
+    "It records an FSavedMove_Character, queues it, and sends a condensed ServerMove RPC",
+    "It sends the full transform of its mesh and capsule to all clients with a multicast RPC",
+    "It calls a multicast RPC with its new position, which the server passes on to the others"
+   ],
+   "4": [
+    "A new pawn that replaces the old one",
+    "A ClientAdjustPosition correction",
+    "Nothing; the client position wins",
+    "A Destroy call for the client's pawn"
+   ],
+   "5": [
+    "The server replicates the ReplicatedMovement structure and network smoothing cleans up the motion",
+    "They receive every ServerMove RPC of the owning client and run the same moves on their own copy",
+    "They run the same input locally, which the owning client sends to them directly",
+    "They ask the owning client directly for its position on each of their frames"
+   ],
+   "6": [
+    "Because movement is not important for gameplay; a lost move only causes a small visual error that nobody notices in practice",
+    "Because unreliable RPCs are faster to compile and need no validation function, which saves work for the programmer of the class",
+    "Because reliable calls that frequent could overflow the reliable buffer and disconnect the player; the saved-move buffer already resends lost data",
+    "Because the server does not run movement at all; it only stores the position that each client reports, so a lost call is replaced by the next one"
+   ],
+   "7": [
+    "Client clocks are always wrong by several seconds on all platforms",
+    "The client sends no timestamp at all with its moves",
+    "To save bandwidth, because a timestamp would have to be sent with each move",
+    "So a client cannot speed-hack by speeding up its local game clock"
+   ]
+  }
+ },
+ "PQ100": {
+  "quiz_choices": {
+   "1": [
+    "A GameMode that only that client uses",
+    "A Player Controller associated with the connection",
+    "A new level that is streamed in for that one connection",
+    "A Game Instance that belongs to that one connection"
+   ],
+   "2": [
+    "The first client that saw the actor after it was spawned by the server",
+    "The server's own socket, which is shared by all actors that have no owner",
+    "The connection associated with the actor's owning player controller",
+    "The connection of the last client that touched the actor in the level"
+   ],
+   "3": [
+    "It stays with the old connection for as long as the pawn exists",
+    "It moves to the server, which becomes the owner of the pawn until the end",
+    "It moves to the next client in the list of connections of the server",
+    "The connection is no longer the owning connection for the pawn"
+   ],
+   "4": [
+    "It runs on the server, because Server RPCs never need an owner to run",
+    "It runs on all clients, because an actor without an owner belongs to all",
+    "It runs on the owning client, which then forwards it to the server",
+    "It is dropped because the actor has no valid owning connection"
+   ],
+   "5": [
+    "Because player controllers are not replicated to any of the clients at all",
+    "Because of dormancy, which is on by default for every controller",
+    "Because player controllers are only relevant to their owner by default",
+    "Because of the GameMode, which sends each controller only to its own client"
+   ],
+   "6": [
+    "Walk the component's outer chain to its owning actor, then use that actor's owning connection",
+    "Components cannot have one; only actors that are owned by a Player Controller have a connection",
+    "Use the GameState, which keeps a list of the owning connection of every single component in the level",
+    "Ask the client that spawned the component, with a Client RPC to it"
+   ],
+   "8": [
+    "No connection, because items are not actors",
+    "The same connection that owns the pawn",
+    "The server connection only, not a client",
+    "All connections, because items are replicated"
+   ]
+  }
+ },
+ "PQ101": {
+  "quiz_choices": {
+   "1": [
+    "It is hidden but kept in memory",
+    "It is destroyed on that client",
+    "It is frozen at its last position",
+    "It becomes dormant there"
+   ],
+   "3": [
+    "It is not relevant for the connection",
+    "It is always relevant for all connections",
+    "It uses the relevancy of its owner instead",
+    "It crashes the server with a failed assert"
+   ],
+   "4": [
+    "The maximum distance in meters at which the actor is still drawn in the client viewport",
+    "The number of clients that the actor is replicated to before it is culled for all of the rest",
+    "The square of the maximum distance from the client viewport where the actor is relevant",
+    "The update rate of the actor, squared, in updates per second for each connected client"
+   ],
+   "6": [
+    "It reduces client render cost, because dormant actors are not drawn on any client until they wake up again",
+    "Dormant actors are skipped when the NetDriver gathers and compares replicated actors each update",
+    "It compresses packets of dormant actors, so each update of such an actor uses far less bandwidth than before",
+    "It removes dormant actors from memory on the server, so they cost nothing until a client needs them"
+   ],
+   "7": [
+    "Nothing; it replicates normally, as dormancy only affects RPCs",
+    "The client crashes as soon as it receives data for a dormant actor",
+    "The actor becomes always relevant until it is woken up again",
+    "The change is not sent and may be lost when the actor wakes"
+   ],
+   "8": [
+    "Dormant actors still exist on server and client; non-relevant dynamic actors are destroyed on the client",
+    "Both are destroyed on the client; the only difference is that dormant actors are spawned again when they wake up",
+    "Dormant actors are destroyed on the client; non-relevant actors stay on the client and keep receiving updates",
+    "There is no difference; dormancy is only another name for an actor that is not relevant to a connection at the moment"
+   ]
+  }
+ },
+ "PQ102": {
+  "quiz_choices": {
+   "1": [
+    "-stats on its own, with no other argument and no value after it",
+    "-netprofile=true together with -log, or another value in lower case",
+    "-log -verbose together with -NetVerbose=1, or another value above zero",
+    "-trace=net together with -NetTrace=1, or another value above zero"
+   ],
+   "2": [
+    "-game, because the editor cannot record traces unless it is started as a game",
+    "-nosound, to keep the trace small and free of audio events",
+    "-windowed, so that Unreal Insights can attach to the window",
+    "-tracehost=localhost, because the editor runs its own data store for trace data"
+   ],
+   "4": [
+    "The frame rate of each client over time, with the packets that were lost on the way",
+    "A list of all levels that were loaded during the session, with the time at which each one was opened",
+    "What is inside the selected packets, such as replicated objects, properties and remote function calls",
+    "The CPU time of the server for each packet, split into game thread and network thread"
+   ],
+   "7": [
+    "It is always exactly the same size, byte for byte, as the data that is sent",
+    "It counts every packet twice, once when sent and once when received",
+    "It is the size before compression, so the real data may be smaller",
+    "It only counts the packet headers, not the data in them"
+   ]
+  }
+ },
+ "PQ103": {
+  "quiz_choices": {
+   "2": [
+    "How many threads ran it at the same time",
+    "How much time the thread spent on it",
+    "How much memory the thread used for it",
+    "Its call depth in the stack of the thread"
+   ],
+   "3": [
+    "Inclusive is per frame, Exclusive is per session",
+    "Inclusive is for the Game thread, Exclusive is for the Render thread",
+    "Inclusive includes time of called functions, Exclusive does not",
+    "They are the same value in different units"
+   ],
+   "5": [
+    "Drag it onto the Frames panel",
+    "Press CTRL+S",
+    "Double-click the event in the list",
+    "Enable it in the Modules panel first"
+   ],
+   "8": [
+    "Enable context switches in the Project Settings window",
+    "It is always recorded, with no extra channel or setting",
+    "Turn on stat unit before you start the trace in the editor",
+    "Run with the ContextSwitch trace channel in -trace="
+   ]
+  }
+ },
+ "PQ104": {
+  "quiz_choices": {
+   "3": [
+    "Loaded and visible, with all of its actors",
+    "Loaded but not visible until a volume makes it visible",
+    "Pre-loading in the background, before a volume asks for it",
+    "Unloaded but still in memory until garbage collection"
+   ],
+   "5": [
+    "The trace is deleted as soon as the editor is closed without saving it",
+    "Nothing, because a trace always stops together with the PIE session",
+    "The trace keeps recording the editor and its file keeps growing",
+    "The Editor crashes when the trace file is larger than the free memory"
+   ],
+   "8": [
+    "Visible section count under stat InitViews",
+    "Frame time in ms under stat Unit",
+    "Draw calls under stat RHI, per pass",
+    "Triangle count under stat Engine and RHI"
+   ]
+  }
+ },
+ "PQ105": {
+  "quiz_choices": {
+   "1": [
+    "IVisualLoggerDebugSnapshotInterface",
+    "IGameplayDebuggerSnapshotInterface",
+    "IVisualLoggerActorDebugSnapshotInterface",
+    "IDebugDrawSnapshotInterface"
+   ],
+   "2": [
+    "It makes the code run faster in Shipping builds",
+    "It only runs in builds with Visual Logging enabled",
+    "It is required by the compiler for all interfaces",
+    "It enables replication of the snapshot data"
+   ],
+   "3": [
+    "Yes, always, or the game does not compile in any build configuration",
+    "Yes, but only in Shipping builds of the game",
+    "No, the macro removes itself in builds without Visual Logging",
+    "No, but the call will crash the game in all Shipping builds"
+   ],
+   "7": [
+    "Center, half-height, radius, rotation, then colour",
+    "Start, end, radius of the base, then colour",
+    "Origin, direction, length, angle in degrees, colour",
+    "Tail, head, then colour and the thickness"
+   ]
+  }
+ },
+ "PQ106": {
+  "quiz_choices": {
+   "6": [
+    "Project Settings > Input, in the list of Gameplay Debugger categories, with one entry per category and key",
+    "In DefaultGame.ini under a [Debug] section, with one line per category that names the class and its shortcut key",
+    "In code, with IGameplayDebugger::Get().RegisterCategory, best in the startup of the module that owns the category",
+    "The GameMode class defaults, in an array of category classes that is read when the level starts"
+   ],
+   "7": [
+    "Prints the tag as normal text on screen",
+    "Selects a category by its name",
+    "Adds a new line before the text",
+    "Changes the active colour from that point"
+   ]
+  }
+ },
+ "PQ107": {
+  "quiz_choices": {
+   "1": [
+    "Memory Insights only works when the game is run as a Shipping build",
+    "The memory channel must be active from the start of the process",
+    "You must use stat Memory first, which turns on the memory trace channel",
+    "The trace file was too small to hold allocation data of the session"
+   ],
+   "6": [
+    "Detailed callstacks for each allocation, recorded for every frame",
+    "The Session Frontend profiler, which sends its data to Unreal Insights",
+    "Stat Memory output, which is written to the trace once for each frame",
+    "The Low-Level Memory tracking runtime with per-frame granularity"
+   ]
+  }
+ },
+ "PQ108": {
+  "quiz_choices": {
+   "1": [
+    "The GPU, most likely",
+    "The game thread",
+    "The RHI thread",
+    "Vsync on"
+   ],
+   "3": [
+    "A graph of the stat unit data",
+    "Memory use per thread",
+    "A list of the tick functions",
+    "Network stats per second"
+   ],
+   "4": [
+    "r.HitchFrameThreshold",
+    "g.HitchLimit",
+    "stat.HitchFrameTimeLimit",
+    "t.HitchFrameTimeThreshold"
+   ],
+   "6": [
+    "A slow average framerate over the whole of a play session",
+    "Any frame above 60 FPS, which wastes power on the device",
+    "A crash that happens when the game runs out of memory",
+    "A sudden brief increase in CPU or GPU time in a frame"
+   ],
+   "8": [
+    "Hitting targets with the profiler on means you have spare resources without it",
+    "It hides hitches, so the game feels smoother to testers while the profiler is running",
+    "It disables the GPU, so only the cost of the game thread is left in the measured frame",
+    "It is not a good thing; a profiler must never change the timing of the game at all"
+   ]
+  }
+ },
+ "PQ109": {
+  "quiz_choices": {
+   "1": [
+    "Blueprint has no loops, so each repeat must be done by hand",
+    "C++ compiles to machine code; Blueprint runs bytecode on a virtual machine",
+    "C++ runs on the GPU, and Blueprint only runs on the CPU",
+    "Blueprint is single threaded, and C++ always runs on all cores of the CPU"
+   ],
+   "2": [
+    "Huge in every project, whatever it does",
+    "Zero, because both compile to the same code",
+    "Only visible on older mobile devices",
+    "Insignificant and context dependent"
+   ],
+   "4": [
+    "Profile with Unreal Insights and fix the biggest bottlenecks",
+    "Rewrite it in C++ at once, before you measure anything in the project",
+    "Disable Tick on every actor and every component in the project",
+    "Turn on nativization in the Packaging settings"
+   ],
+   "5": [
+    "Multi-threading support for gameplay code",
+    "Access to the lower-level engine functionality",
+    "A safer memory model designed to avoid crashes",
+    "Easier text diff and merge in source control tools"
+   ],
+   "6": [
+    "It converts the whole Blueprint to C++ automatically, .h and .cpp files",
+    "It generates a .h with declarations; you still write the .cpp by hand",
+    "It compiles Blueprint to native code when the project is packaged for a platform",
+    "It exports the graph as an image that you can read next to the code"
+   ],
+   "8": [
+    "A setter that fires a callback only when the value changes",
+    "A faster Tick group for the actor, such as Pre Physics",
+    "Checking every other frame with a bool that flips",
+    "Moving the check to the Construction Script of the actor"
+   ]
+  }
+ },
+ "PQ110": {
+  "quiz_choices": {
+   "1": [
+    "Reference counting on each pointer; an object is removed when its count is zero",
+    "It searches the reference graph from the root set; unreached objects are removed",
+    "Objects older than 60 seconds that have not been used since",
+    "Only objects with Destroy called on them by your own code"
+   ],
+   "2": [
+    "It is set to null automatically by the garbage collector",
+    "The compiler refuses raw pointers to UObjects in a class",
+    "It keeps the object alive until the pointer goes out of scope",
+    "It is not nulled and it does not keep the object alive"
+   ],
+   "4": [
+    "Actors are never collected, only plain UObjects and components can be",
+    "The Level references them, and the Level links back to the root set",
+    "Actors are in the root set themselves, like every other object of a level",
+    "Their components hold them, and components are part of the root set"
+   ],
+   "5": [
+    "It disables clustering, so that each object is checked on its own and none is missed",
+    "It skips reachability analysis on most frames, so less work is done in each pass",
+    "GC runs on another thread when the time is short, so the game thread is never blocked",
+    "Fewer unreachable objects pile up before each pass, so each cleanup is smaller"
+   ],
+   "6": [
+    "All items in the cluster are unhashed and deleted in the same frame, which can hitch",
+    "Reachability is slower, because every item of a cluster is checked once for each other item",
+    "Clusters cannot contain actors, so every actor in a level has to be checked one by one",
+    "They disable Blueprint clustering, so Blueprint objects are no longer collected in a group"
+   ],
+   "7": [
+    "On every frame in Tick, so that each pass has very little work to do and never hitches",
+    "Never; the engine always picks the best moment for a pass by itself",
+    "During a loading screen, or before a large allocation that would otherwise crash or hitch",
+    "Only in Shipping builds, where the automatic passes are turned off"
+   ],
+   "8": [
+    "It removes the need for UPROPERTY on pointers, because every raw pointer is then tracked by the engine",
+    "It makes garbage collection fully thread safe, so that it can run next to the game thread",
+    "It runs GC on the GPU, with one compute pass for each of the clusters",
+    "It splits the reachability phase across several frames with a per-frame soft time limit"
+   ]
+  }
+ },
+ "PQ1": {
+  "quiz_choices": {
+   "1": [
+    "Press F9, which on most keyboards is in the top row above the number keys",
+    "Press the backtick key, which on most keyboards is the key above Tab",
+    "Press Ctrl+B, which also shows the selected actor in the Content Browser",
+    "Press the G key in the viewport, which is also the key for Game View"
+   ],
+   "3": [
+    "The names of the actors in the level and their classes, as a list",
+    "The list of the assets that have not been saved to disk yet",
+    "The errors in your Blueprints, with the node of each one",
+    "Performance numbers, such as the frame rate and frame times"
+   ],
+   "4": [
+    "A marker that you place in the level to show where the player starts",
+    "A node that writes one line of text on the screen during play",
+    "A switch that turns one kind of visual information on or off",
+    "A warning in the Output Log that tells you a setting was changed"
+   ],
+   "6": [
+    "Two lines, one under the other, on screen",
+    "An error message in red, in place of the two",
+    "The second message replaces the first one",
+    "No message at all, because the two cancel out"
+   ]
+  }
+ },
+ "PQ2": {
+  "quiz_choices": {
+   "1": [
+    "A panel that lists the actors in the level, with their folders",
+    "A file that stores your saved games in the Saved folder of a project",
+    "A window where the engine and your Blueprints write messages, warnings and errors",
+    "A tool that records where the engine spends its time while the game is running"
+   ],
+   "4": [
+    "It stops Play in Editor and returns to the level editor",
+    "It removes all breakpoints from the Blueprint and resumes the game",
+    "It restarts the level from the beginning",
+    "It steps over one node, so the nodes run one at a time"
+   ],
+   "5": [
+    "Double-click the pin while the game is paused on a node",
+    "Right-click the pin and choose Watch This Value",
+    "Drag the pin from the node into the Output Log window",
+    "Select the pin and press F9 while the game is running"
+   ]
+  }
+ },
+ "PQ3": {
+  "quiz_choices": {
+   "1": [
+    "It is the only project that can be opened in the editor without any extra download first",
+    "It has no Blueprints, so it is simple, and you only need to look at the level and its meshes",
+    "It cannot be changed, so nothing can break, and you can try every setting without any risk",
+    "It is a working game where you can see how input, movement and the camera are connected"
+   ],
+   "2": [
+    "It sets the rules of the game and decides which character the player uses",
+    "It draws the level in the viewport and decides which meshes are shown to the player",
+    "It stores the meshes of the character and the animations that the player can use",
+    "It records the input of the player to a file that can be played back later"
+   ],
+   "3": [
+    "A node that runs one single time when the game starts in the level",
+    "A node that fires when the player presses a key or moves a stick",
+    "A node that plays an animation on the mesh when the level begins to play",
+    "A node that changes the length of the camera boom"
+   ],
+   "4": [
+    "In the Output Log of the editor",
+    "In the World Settings of the level",
+    "In the Components panel of the Blueprint",
+    "In the Place Actors panel of the editor"
+   ],
+   "5": [
+    "The sound the camera makes when it moves",
+    "The arm that holds the camera behind the character",
+    "The light that follows the character in the dark",
+    "The mesh that shows the character in game"
+   ],
+   "6": [
+    "A written description of the chain from input to movement",
+    "A video of the character jumping in the level",
+    "A copy of the Blueprint file of the character, as a zip",
+    "A screenshot of the Content Browser of the project"
+   ]
+  }
+ }
+}

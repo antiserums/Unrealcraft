@@ -94,7 +94,7 @@ quests:
         answer_index: 0
         explain: "If either side ignores the other's channel, or has overlap events off, no event fires. Both blocking gives a hit, not an overlap."
       - q: "Which event would you use to close a door after the player walks away?"
-        choices: ["Event BeginPlay", "On Component Hit", "On Component End Overlap", "Construction Script"]
+        choices: ["Event BeginPlay", "On Component Begin Overlap", "On Component End Overlap", "Construction Script"]
         answer_index: 2
         explain: "End Overlap fires when the overlapping actor leaves the collision."
       - q: "Why build the trigger into a Blueprint instead of using a Trigger Box plus the Level Blueprint?"
@@ -201,7 +201,7 @@ quests:
         answer_index: 1
         explain: "That's what makes messages safe for mixed targets. If nothing happens, check the target implements the interface."
       - q: "Your log says Accessed None trying to read Target. What's wrong?"
-        choices: ["The reference variable is empty on that placed lever", "The material of the gate is missing or has not compiled", "Lumen is off in the Project Settings", "The Timeline of the gate is too long"]
+        choices: ["The reference variable is empty on that placed lever", "The material of the gate is missing or has not compiled", "Lumen is off in the Project Settings of the game", "The Timeline of the gate is too long to finish"]
         answer_index: 0
         explain: "Set it in Details, and guard the call with Is Valid so a missing link fails quietly."
       - q: "A lever needs to announce \"pulled\" to any number of listeners that bind to it. Which tool fits?"
@@ -305,11 +305,11 @@ quests:
         answer_index: 0
         explain: "Anything taller needs a jump. Size stairs and curbs with this in mind."
       - q: "Why measure jump distance in a metrics gym instead of calculating it?"
-        choices: ["Math is banned in level design, so every number in the sheet has to come from a test in the editor", "Air control, gravity and friction all affect it, so testing gives the number players actually get", "The gym is required before the project can be packaged", "It's faster to render than a full level"]
+        choices: ["Math is banned in level design, so every number in the sheet has to come from a test in the editor", "Air control, gravity and friction all affect it, so testing gives the number players actually get", "The gym is required before the project can be packaged, and the engine reads the jump distance from it", "It's faster to render than a full level, so the frame rate is high enough to see the jump land clearly"]
         answer_index: 1
         explain: "Test in PIE and record what works, then leave some margin."
       - q: "Why make the sheet shareable?"
-        choices: ["So the sheet earns you a better grade", "So the sheet can be turned into C++ code later", "So nobody on the team ever has to test the level again after the very first playtest", "So everyone building for the character uses the same numbers and kit pieces fit"]
+        choices: ["So the sheet earns you a better grade when a mentor reviews your level", "So the sheet can be turned into C++ code later, when a new programmer joins the team", "So nobody on the team ever has to test the level again after the very first playtest", "So everyone building for the character uses the same numbers and kit pieces fit"]
         answer_index: 3
         explain: "A metrics sheet is a team document. In later quests it becomes part of the kit you hand to others."
     flavors:
@@ -360,7 +360,7 @@ quests:
         answer_index: 3
         explain: "Check on interaction. Nothing needs to run until the player arrives."
       - q: "The key is a pickup with a sphere trigger. Why do you compare Other Actor with the player pawn before you set HasKey?"
-        choices: ["Because overlap events only work when a Branch node comes right after them in the Event Graph", "Because anything can overlap the trigger, and only the player should be able to pick up the key", "Because the key would not be visible in the level without it", "Because Destroy Actor needs it as an input"]
+        choices: ["Because overlap events only work when a Branch node comes right after them in the Event Graph", "Because anything can overlap the trigger, and only the player should be able to pick up the key", "Because the key would not be visible in the level without it, and the player could not find it", "Because Destroy Actor needs it as an input, or the key stays in the level"]
         answer_index: 1
         explain: "A physics object or an AI character can also touch the trigger. The filter makes sure that only the player picks up the key."
     flavors:
@@ -398,7 +398,7 @@ quests:
         answer_index: 2
         explain: "P shows the NavMesh. Green means AI can walk there."
       - q: "Why is there a gap in the green along every wall?"
-        choices: ["The navmesh is pulled in by the agent radius so AI doesn't clip into walls", "It is a bug in the navmesh preview that goes away when you rebuild the level", "Lumen blocks the green color close to a wall", "The walls are too dark for the navmesh"]
+        choices: ["The navmesh is pulled in by the agent radius so AI doesn't clip into walls", "It is a bug in the navmesh preview that goes away when you rebuild the level", "Lumen blocks the green color close to a wall, where the light is weak", "The walls are too dark for the navmesh, so it stops before them"]
         answer_index: 0
         explain: "Tight doorways can close up completely. That's a metrics issue."
       - q: "AI MoveTo goes straight to On Fail. What do you check first?"
@@ -410,7 +410,7 @@ quests:
         answer_index: 3
         explain: "By default the navmesh is static and built in the editor."
       - q: "Why does a level designer do this walk test early?"
-        choices: ["To learn C++ before the AI is added", "To build a boss fight for the end of the level in the same step", "To check the route works for AI before building encounters later", "To make the lighting build work"]
+        choices: ["To learn C++ before the AI is added to the project", "To build a boss fight for the end of the level in the same step", "To check the route works for AI before building encounters later", "To make the lighting build work before the level is shared"]
         answer_index: 2
         explain: "Encounter spaces in later quests need AI that can actually get to the player."
     flavors:
@@ -457,7 +457,7 @@ quests:
         answer_index: 2
         explain: "Pre-explaining hides the problems you're testing for."
       - q: "Which follow-up question is best?"
-        choices: ["\"Did you like the level, or did you not like it?\"", "\"Wasn't the gate cool?\"", "\"Would you buy this?\"", "\"What were you trying to do when you turned back?\""]
+        choices: ["\"Did you like the level, or did you not like it?\"", "\"Wasn't the gate cool when it opened for you?\"", "\"Would you buy this game if it was in a store?\"", "\"What were you trying to do when you turned back?\""]
         answer_index: 3
         explain: "Open, specific questions get you useful answers. Leading questions get polite ones."
       - q: "The tester misses the lever and you think it's obvious. Next step?"
@@ -507,7 +507,7 @@ quests:
         answer_index: 2
         explain: "The capstone is about iterating. Show the change and why you made it."
       - q: "How long can the video clip that you send be?"
-        choices: ["30 seconds or less", "5 minutes", "Any length", "10 seconds exactly"]
+        choices: ["30 seconds or less", "5 minutes or less", "Any length at all", "10 seconds exactly"]
         answer_index: 0
         explain: "Short clips get reviewed. If your level takes longer to play, cut between the beats, or send one screenshot per beat."
       - q: "A reviewer spots a gap the character can't clear. Which document should have prevented it?"
@@ -515,7 +515,7 @@ quests:
         answer_index: 3
         explain: "Gaps and ledges come from your measured metrics, with margin."
       - q: "Who approves this capstone?"
-        choices: ["The Quartermaster automatically", "A peer or mentor, after the quiz", "Nobody", "Epic Games"]
+        choices: ["The Quartermaster automatically", "A peer or mentor, after the quiz", "Nobody, it is approved at once", "Epic Games, through the forums"]
         answer_index: 1
         explain: "This capstone is checked with the quiz plus the work you send, approved by a person."
     flavors:
@@ -550,7 +550,7 @@ quests:
         answer_index: 3
         explain: "Instance Editable shows a variable in the Details panel of each placed copy. Every platform in the level can then have its own two points."
       - q: "The float track of the Timeline goes from 0 to 1 and back to 0. Why does it go back to 0?"
-        choices: ["So the platform returns to PointA before the loop starts again", "So the platform stops at PointB and waits there for the player", "So the Timeline can be compiled", "So the platform moves twice as fast"]
+        choices: ["So the platform returns to PointA before the loop starts again", "So the platform stops at PointB and waits there for the player", "So the Timeline can be compiled without an error", "So the platform moves twice as fast on the way back"]
         answer_index: 0
         explain: "The track value is the Alpha between the two points. Going back to 0 brings the platform back to PointA, so the loop repeats without a jump."
       - q: "Your platform moves from PointA to PointB and back once, and then stops. What did you forget?"
@@ -672,7 +672,7 @@ quests:
         answer_index: 1
         explain: "Set Actor Transform places the character at the stored transform. Because the checkpoint saved it, the player lands at the last checkpoint."
       - q: "You touch a checkpoint, fall, and appear at the wrong place. What do you check first?"
-        choices: ["That the level has a Sky Light", "That the kill zone has a mesh that is visible to the player during play", "That the checkpoint stores its transform in RespawnTransform on overlap", "That Kill Z is set to 0 in the World Settings"]
+        choices: ["That the level has a Sky Light with Real Time Capture turned on", "That the kill zone has a mesh that is visible to the player during play", "That the checkpoint stores its transform in RespawnTransform on overlap", "That Kill Z is set to 0 in the World Settings of the level"]
         answer_index: 2
         explain: "The kill zone only moves the player to whatever RespawnTransform holds. If the checkpoint never wrote its transform into the variable, the old value is used."
 
@@ -696,7 +696,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is a HUD prompt?"
-        choices: ["A sound that plays when the player is near an object they can use", "A short text on the screen that tells the player what they can do", "A menu that pauses the game", "A light that marks an object in the level"]
+        choices: ["A sound that plays when the player is near an object they can use", "A short text on the screen that tells the player what they can do", "A menu that pauses the game and shows the options", "A light that marks an object in the level for the player"]
         answer_index: 1
         explain: "A HUD prompt is a short on-screen text such as Press E to open. It tells the player that an action is possible right now."
       - q: "As which kind of asset do you build screen elements in Unreal Engine?"

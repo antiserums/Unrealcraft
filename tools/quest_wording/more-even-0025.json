@@ -1,0 +1,970 @@
+{
+ "EAQ93": {
+  "quiz_choices": {
+   "1": [
+    "Exactly 0, so no triangle is lost",
+    "A good default is 0.04, and keep it above 0.02",
+    "Any value above 1, to save build time on dense meshes",
+    "It must always match the Magnitude of the material"
+   ],
+   "3": [
+    "Mid gray in the map is no change, so the surface moves in and out equally",
+    "The mesh is scaled by half before it is displaced at all",
+    "Only half of the triangles of the mesh are displaced by the height map",
+    "Displacement starts when the mesh covers half of the screen"
+   ],
+   "4": [
+    "Large values break the normal map, because the normals are scaled by the Magnitude before the lighting is calculated",
+    "It changes the UV channel that the displacement map is sampled with, so a large value reads the wrong part of the texture",
+    "Magnitude sets the bounds used for culling; a large value hurts performance, especially with Virtual Shadow Maps",
+    "The value is limited to 1, and a larger one is ignored"
+   ],
+   "5": [
+    "Along world Z; there is no option to use the normal",
+    "Along the vertex normal; there is no shader option to change the direction",
+    "Towards the camera, so the surface always looks raised from where you stand",
+    "Along the UV U axis of the first UV channel of the mesh, so it follows the texture"
+   ],
+   "6": [
+    "Yes, all the normals are recomputed, like in offline renderers",
+    "Yes, but only with Lumen, which reads the new surface",
+    "Only when Center is 0",
+    "No; you need a normal map or derive one from the displacement"
+   ],
+   "7": [
+    "It scales with the mesh, because Magnitude is in local space before object scale",
+    "It stays the same in world units, because Magnitude is always measured in world space",
+    "It becomes zero, because scaled meshes cannot be displaced by Nanite at all",
+    "It switches to world space automatically, so that the height in cm stays the same"
+   ],
+   "8": [
+    "Packing the height into the blue channel of a normal map",
+    "Any HDR float format only, because 8 bits give steps",
+    "Alpha (BC4), or the alpha of a Default/DXT5 texture",
+    "Compression does not matter"
+   ]
+  }
+ },
+ "EAQ103": {
+  "quiz_choices": {
+   "1": [
+    "ISO, shutter speed and white balance",
+    "Sensor width, sensor height and the field of view",
+    "Bloom, exposure and vignette",
+    "Focal length, aperture (f-stop) and focus distance"
+   ],
+   "2": [
+    "The depth of field gets deeper with less foreground and background blur",
+    "The image gets darker and the depth of field stays as it was before",
+    "The depth of field gets shallower with more foreground and background blur",
+    "The field of view narrows and the depth of field stays the same"
+   ],
+   "3": [
+    "Yes, exactly like a real camera, so you must lower the exposure when you open the aperture",
+    "No, aperture does not control light intensity so you do not need to re-adjust exposure",
+    "Yes, but only with auto exposure turned on; with manual exposure nothing changes at all",
+    "Only in Movie Render Queue, where the Camera setting applies it"
+   ],
+   "4": [
+    "It gets narrower, like zooming in, and out-of-focus areas become more pronounced",
+    "It gets wider, like zooming out, and out-of-focus areas become less pronounced",
+    "It stays the same, and only the depth of field gets much shallower",
+    "It flips vertically, as it does when a real lens is reversed"
+   ],
+   "5": [
+    "Blade count only works above 8, and lower values always fall back to one perfect circle",
+    "Engine Scalability is below Epic, so the diaphragm simulation falls back to circle bokeh",
+    "The camera is not piloted, so its lens settings are not used by the view",
+    "Focus Method is Manual, and blades need the Tracking method"
+   ]
+  }
+ },
+ "EAQ106": {
+  "quiz_choices": {
+   "1": [
+    "An image that is already converted to the color space and brightness range of the display",
+    "A screenshot with a LUT applied, saved with the color space of the display that it was made on",
+    "An image that keeps the original linear light values without limiting exposure range",
+    "An image tone mapped for sRGB"
+   ],
+   "3": [
+    "ACES 1000-nit ST-2084 (Dolby PQ)",
+    "sRGB (LDR) for a normal monitor",
+    "Rec709 (LDR) for a normal TV set",
+    "ACES 2000-nit ST-2084 (Dolby PQ)"
+   ],
+   "5": [
+    "You must restart the editor before HDR output can be enabled in any window mode",
+    "The Post Process Volume needs HDR enabled in its settings before the window can switch modes",
+    "Only packaged builds support HDR",
+    "Borderless and windowed modes do not currently work for HDR output; use exclusive fullscreen"
+   ],
+   "6": [
+    "Disable the UI while HDR is on, and draw it again in the tone mapper with a Post Process Material",
+    "Enable r.HDR.UI.CompositeMode 1 and raise r.HDR.UI.Level to about 1.5 or 2",
+    "Lower the exposure of the scene until the UI looks right, and raise r.HDR.UI.Level to 0.5",
+    "Apply a LUT to the widget and lower its brightness until it matches the scene"
+   ],
+   "7": [
+    "Only the 400-nit path",
+    "Any nit value that you type in",
+    "1000-nit and 2000-nit paths only",
+    "Only the 4000-nit ST-2084 path"
+   ],
+   "8": [
+    "A LUT works on the final LDR sRGB image after output, while the Color Grading properties work in scene-referred linear space before tone mapping",
+    "LUTs are too small to hold the range of an HDR display, so their colors are stretched and show banding",
+    "LUTs only support Rec2020, so they have to be made again for each display that uses another color space",
+    "HDR output turns off all post processing after the tone mapper, so the LUT step is skipped, while the Color Grading properties run before that step"
+   ]
+  }
+ },
+ "EAQ108": {
+  "quiz_choices": {
+   "1": [
+    "Open the Modes dropdown and select PCG",
+    "Press Shift+5 in a viewport",
+    "Window > PCG Tools > Open PCG Mode in the Level Editor",
+    "Right-click a PCG Volume and choose Edit Mode"
+   ],
+   "2": [
+    "The tool does nothing until you select an actor",
+    "An actor is created to perform the operation, based on the selected graph or preset",
+    "The tool adds a PCG component to the PCGWorldActor and runs the graph on the whole level",
+    "The tool asks you to create a new level for the graph, and opens it when you confirm the dialog"
+   ],
+   "3": [
+    "The graph has no Static Mesh Spawner node in it",
+    "The graph is not saved in the Content folder of the project",
+    "The graph's Compatible Tool Tags does not include SplineTool",
+    "The graph has no Debug node on its output"
+   ],
+   "4": [
+    "Places objects only along the spline curve itself",
+    "Creates a PCG volume by dragging a footprint on the ground and then a height above it",
+    "Paints points where raycasts from the brush hit the world, and the graph runs on these painted points",
+    "Defines a closed area bounded by a spline, and the graph populates the interior"
+   ],
+   "5": [
+    "Hold Shift while painting; the brush turns red",
+    "Hold Ctrl while painting; the brush turns blue",
+    "Click the Cancel button in the tool panel",
+    "Set Data Instance to 0 and paint over the points one more time"
+   ]
+  }
+ },
+ "EAQ109": {
+  "quiz_choices": {
+   "1": [
+    "Edit > Plugins > Foliage > Procedural Foliage, then restart",
+    "Editor Preferences > Experimental > Procedural Foliage",
+    "Project Settings > Rendering > Enable Procedural Foliage",
+    "Foliage Mode > Settings > Procedural Foliage Spawner > Enable"
+   ],
+   "2": [
+    "The one that was spawned first by the simulation",
+    "The one whose mesh has the larger bounds in the level",
+    "The one from the foliage type with the higher priority",
+    "Both survive and overlap each other"
+   ],
+   "3": [
+    "No trees spawn at all, in any volume",
+    "All trees are the same size and age",
+    "Trees spawn only inside blocking volumes",
+    "Trees grow for 10 years, the default"
+   ],
+   "5": [
+    "It marks where foliage should be denser than in the rest of the spawner",
+    "It prevents the spawner from placing foliage inside its bounds",
+    "It stops the player from walking into the foliage inside its bounds",
+    "It hides foliage beyond a distance from the camera, to save draw calls"
+   ],
+   "6": [
+    "Placement",
+    "Clustering and Growth",
+    "Collision Settings",
+    "Instance Settings"
+   ],
+   "8": [
+    "Restart the editor and resimulate",
+    "Click Build in the main toolbar to rebuild lighting",
+    "Delete the spawner and place a new one in the level",
+    "Lower Initial Seed Density and click Resimulate again in the Details panel"
+   ]
+  }
+ },
+ "EAQ111": {
+  "quiz_choices": {
+   "1": [
+    "Line, Grid or Circle on a movable 3D plane",
+    "Spline, Landscape or Volume on a fixed plane",
+    "Box, Sphere or Cylinder, filled with copies",
+    "Only a straight line along one of the world axes"
+   ],
+   "2": [
+    "Static Mesh asset only, saved in the Content Browser",
+    "Single actors, dynamic mesh, or instanced static mesh",
+    "Packed Level Actor, Level Instance or Blueprint class",
+    "Foliage type or PCG volume, placed in the open level"
+   ],
+   "4": [
+    "Merge (XForm)",
+    "Union (Model)",
+    "Harvest Instances",
+    "Split Instances"
+   ],
+   "5": [
+    "The whole ISM component switches to the new mesh",
+    "A second ISM component is added for the new mesh",
+    "The instance is deleted",
+    "Nothing, replacing is not supported"
+   ],
+   "6": [
+    "Merge keeps intersecting geometry; Union resolves self-intersections",
+    "Merge works on volumes only; Union works on meshes and also on volumes",
+    "Union creates an ISM from the meshes; Merge creates one Static Mesh asset",
+    "There is no difference; Union is the older name of the same Merge tool"
+   ],
+   "7": [
+    "Creates an instance in an ISM",
+    "Duplicates a single mesh, creating a new actor",
+    "Copies a mesh to the clipboard for another level",
+    "Tiles the mesh along a grid, with a count for each axis"
+   ],
+   "8": [
+    "The Geometry Script plugin under Edit > Plugins > Scripting",
+    "The Modeling Tools Editor Mode plugin under Edit > Plugins",
+    "The PCG plugin under Edit > Plugins",
+    "Project Settings > Editor > Appearance > Show Modeling Mode"
+   ]
+  }
+ },
+ "EAQ113": {
+  "quiz_choices": {
+   "1": [
+    "It reduces texture memory for all of the instances",
+    "It combines draw calls of identical meshes and lowers UObject memory",
+    "It bakes lighting faster for the meshes in the level",
+    "It enables Nanite on any mesh that is added to the component"
+   ],
+   "3": [
+    "HISM, because its static hierarchy is faster with Nanite",
+    "ISM, because Nanite has its own culling and LOD system",
+    "Either, there is no difference with Nanite",
+    "Neither, use separate actors"
+   ],
+   "4": [
+    "When instances move every frame, so the hierarchy can update only the instances that changed since the last one",
+    "When you need per-instance materials",
+    "When you have thousands of instances that do not move, so a static hierarchy accelerates culling and LOD",
+    "When the mesh has many triangles and per-instance LOD matters, so each instance is drawn as a separate mesh"
+   ],
+   "5": [
+    "One ISM component that holds all three meshes in a single list",
+    "One instanced static mesh component per unique static mesh asset",
+    "One merged static mesh asset with three sections",
+    "Three separate actors, one for each of the mesh assets"
+   ],
+   "6": [
+    "Actor > Merge Actors > Merge Actor Settings, then Batch",
+    "Edit > Batch Instances > Batch Settings, then Create ISM",
+    "Window > ISM Editor > Batch Selected Actors, then Create",
+    "Build > Build Instances > Batch Selected Static Mesh Actors"
+   ],
+   "7": [
+    "Converts them to Nanite meshes inside a Blueprint",
+    "Bakes them into one static mesh asset with a merged material",
+    "Groups them automatically into a HISM inside a Blueprint actor",
+    "Turns them into foliage instances of the level"
+   ],
+   "8": [
+    "Give each instance its own material slot in the component",
+    "Use Per Instance Custom Data or Custom Primitive Data read in the material",
+    "Paint vertex colors per instance with the Mesh Paint mode",
+    "Use a Material Parameter Collection for each instance and set it on spawn"
+   ]
+  }
+ },
+ "EAQ115": {
+  "quiz_choices": {
+   "1": [
+    "Content/Screenshots inside the project folder, as assets",
+    "Saved/Screenshots/Windows inside the project folder",
+    "The Pictures folder inside your Windows user account",
+    "Intermediate/Captures/Windows inside the project folder"
+   ],
+   "2": [
+    "It upscales the final frame with TSR to the size that you asked for in the command",
+    "It lowers the screen percentage and saves the frame at that size",
+    "It renders the frame in tiles at full resolution and joins them into one image",
+    "It uses the Movie Render Queue with a single frame as the job"
+   ],
+   "5": [
+    "Cast Dynamic Shadow",
+    "Render CustomDepth Pass",
+    "Nanite Support",
+    "Is Editor Only Actor"
+   ],
+   "6": [
+    "A video of the viewport, with one frame for each buffer visualization mode of the editor",
+    "A separate image for each G-Buffer pass such as BaseColor, Roughness and WorldNormal",
+    "The level's lightmaps, as one image for each static mesh actor",
+    "A depth-only image of the scene, with near objects in white and far objects in black"
+   ],
+   "7": [
+    "The image will be blurry, because each tile is rendered at a lower resolution",
+    "The graphics driver may become unresponsive and crash; use a lower number",
+    "Post process is disabled for the capture, so use a small one",
+    "The file is saved as a JPEG with heavy compression instead of as a PNG file"
+   ]
+  }
+ },
+ "EAQ1": {
+  "quiz_choices": {
+   "1": [
+    "A list of the assets in your project, sorted by the folder that each one is in",
+    "One image that holds a group of pictures you collected to guide your work",
+    "A level where you test your materials under the same light before you use them",
+    "A panel in the editor that shows the camera bookmarks you saved in a level"
+   ],
+   "2": [
+    "The folder on your disk where you save all of the reference images for a scene",
+    "The number of lights you plan to use, written down before you start to light a scene",
+    "The brightest light in your scene, which all of the other lights are compared to",
+    "The single picture and short description that says how your scene should feel"
+   ],
+   "3": [
+    "It makes it easier to judge if your lighting is right or wrong",
+    "It sets the light values in the engine for you when you import it",
+    "It makes the scene render faster in the viewport",
+    "It removes the need for a Sky Light in the level"
+   ],
+   "4": [
+    "The size of the image file and its resolution in pixels",
+    "The website where you found it and the name of the person who made it",
+    "What you are taking from it, such as the light direction or the color",
+    "The date when you saved it and the folder it is in"
+   ],
+   "6": [
+    "The time of day, the color of the key light and the feeling you want",
+    "The engine version, the template and the level name",
+    "The camera, the lens and the resolution",
+    "The number of images on the board, their file sizes and their sources"
+   ]
+  }
+ },
+ "EAQ2": {
+  "quiz_choices": {
+   "1": [
+    "It hides the objects on the ground",
+    "It sets how fast the scene renders",
+    "It gives a base color to everything below it",
+    "It decides which materials you can use below it"
+   ],
+   "2": [
+    "A 360 degree photo of a real sky that also lights the scene",
+    "A light that only shines in one direction, like the sun in the sky",
+    "A fog actor that reacts to light and fills the whole sky of a level",
+    "A file that describes the shape of the light from a real lamp"
+   ],
+   "4": [
+    "It casts sharp shadows like the sun",
+    "It gives soft light that comes from the whole sky",
+    "It lights one small spot of the level, like a lamp",
+    "It adds fog near the ground"
+   ],
+   "5": [
+    "That the level has a Sky Atmosphere and a Volumetric Cloud actor in it",
+    "That the Directional Light is deleted from the level and the Outliner",
+    "That the HDRI Backdrop plugin is enabled in Edit, then Plugins",
+    "That the project was created from the Third Person game template"
+   ]
+  }
+ },
+ "EAQ3": {
+  "quiz_choices": {
+   "1": [
+    "A setting that locks the exposure of the camera so that the picture stays the same",
+    "A material that makes a lamp glow and light the walls around it",
+    "A list of all lights in the level, with the brightness of each one",
+    "A small file from a lamp maker that describes the shape of the light of a real lamp"
+   ],
+   "3": [
+    "A fixed exposure stops Unreal from adjusting the picture, so you can see brightness changes",
+    "A fixed exposure makes all lights use the same color, so you can compare how bright they are",
+    "A fixed exposure turns off the shadows of the lights, so only their brightness is left to see in the picture",
+    "A fixed exposure makes the IES profile load faster, so you wait less"
+   ],
+   "4": [
+    "Type its name in the search field of the Outliner",
+    "Open it in the Material Editor and press Save",
+    "Drag the .ies file into the Content Browser",
+    "Copy it into the Details panel of a Point Light"
+   ]
+  }
+ },
+ "EAQ4": {
+  "quiz_choices": {
+   "1": [
+    "The way things are arranged inside the picture frame",
+    "The number of lights that are used in a scene",
+    "The list of materials that are on a mesh",
+    "The order in which actors are loaded into the level"
+   ],
+   "2": [
+    "A tool that records the screen and saves it to a video file",
+    "A camera that follows the player in the game",
+    "A camera in Unreal that works like a real film camera",
+    "A bookmark that stores a camera position"
+   ],
+   "3": [
+    "How bright or dark the picture is",
+    "How wide or narrow the view is",
+    "How fast the camera moves",
+    "How many frames are saved"
+   ]
+  }
+ },
+ "EAQ12": {
+  "quiz_choices": {
+   "1": [
+    "A large open world with many levels",
+    "A small, complete scene, like a model in a box",
+    "A flat image that is used as a sky",
+    "A camera that works like a real film camera"
+   ],
+   "5": [
+    "So the fog becomes volumetric in the diorama",
+    "So the exposure is your choice and not the default",
+    "So the camera bookmarks are saved with the level",
+    "So the landscape can be sculpted in the level"
+   ],
+   "6": [
+    "Which plugins you enabled and which you turned off again",
+    "How long each step of the work took, in minutes",
+    "Which meshes you painted and with which colors you painted them",
+    "What matches the target and what does not match it yet"
+   ]
+  }
+ },
+ "EAQ5": {
+  "quiz_choices": {
+   "1": [
+    "Beams of light that you can see in the air",
+    "Shadows that fall on the floor of a room",
+    "Lamps that hang from a ceiling",
+    "Reflections on a wet surface"
+   ],
+   "2": [
+    "In the Details panel of the window mesh in the wall of the room",
+    "In the Details panel of the Sky Light actor",
+    "In the Details panel of the Exponential Height Fog actor",
+    "In the Details panel of the Post Process Volume of the level"
+   ],
+   "3": [
+    "In the Content Browser, under Add, then Lights",
+    "In the Place Actors panel, under Visual Effects",
+    "In Edit, then Plugins",
+    "In the view mode menu of the viewport"
+   ],
+   "4": [
+    "Indirect Lighting Intensity",
+    "Attenuation Radius",
+    "Dynamic Shadow Distance MovableLight",
+    "Volumetric Scattering Intensity"
+   ],
+   "5": [
+    "Raise the Intensity of the light in the window",
+    "Lower Volumetric Scattering Intensity on the light",
+    "Delete the window from the wall of the room",
+    "Turn off Cast Shadows on the light in the window"
+   ],
+   "6": [
+    "A Sky Light or a Rect Light",
+    "A Point Light or a Stationary Sky Light",
+    "A Directional Light or a Spot Light",
+    "A Rect Light or a Point Light"
+   ]
+  }
+ },
+ "EAQ6": {
+  "quiz_choices": {
+   "1": [
+    "It only works at night, with a moon light",
+    "It only works indoors, under a ceiling",
+    "It is a small area of fog you can place anywhere",
+    "It covers the whole scene at once, like the sky"
+   ],
+   "3": [
+    "Both in front of the camera, so that the whole picture is soft",
+    "Both inside the main subject, so that it glows from within",
+    "Both above the sky, so that they light the scene from the top",
+    "So that they separate the foreground from the background"
+   ]
+  }
+ },
+ "EAQ7": {
+  "quiz_choices": {
+   "2": [
+    "The color of the sunlight",
+    "How soft the edges of the shadows are",
+    "The height of the sun above the horizon",
+    "How far the shadows are drawn"
+   ],
+   "5": [
+    "In the World Settings, under Lightmass, in the Advanced part of the panel",
+    "In the Details panel of the Sky Light, under Light Source",
+    "In the view mode menu of the level viewport",
+    "In the Details panel of the Directional Light, under Light"
+   ],
+   "6": [
+    "A list of the lights in the level",
+    "One image that shows all the renders together",
+    "A text file with the sun angles",
+    "A folder that holds all of your screenshots"
+   ]
+  }
+ },
+ "EAQ13": {
+  "quiz_choices": {
+   "3": [
+    "Drag M_Basic from the Content Browser into the level",
+    "Double-click M_Basic in the Content Browser",
+    "Press F9 while M_Basic is selected in the level",
+    "Open Window, then Output Log, and type M_Basic"
+   ],
+   "7": [
+    "It becomes transparent and lets light pass through",
+    "It becomes smooth and shows sharp reflections",
+    "It becomes darker in color and less metallic",
+    "It becomes matte and dull, like chalk"
+   ]
+  }
+ },
+ "EAQ14": {
+  "quiz_choices": {
+   "4": [
+    "Middle gray values of any kind",
+    "Warm colors, such as red and orange",
+    "Cool colors like blue",
+    "Pure black and pure white"
+   ]
+  }
+ },
+ "EAQ15": {
+  "quiz_choices": {
+   "2": [
+    "The coordinates that place the image on the mesh",
+    "The two brightest colors that a texture contains",
+    "The settings that compress a texture",
+    "The lights that shine on a mesh"
+   ],
+   "3": [
+    "A texture that was compressed into a ZIP file to save space on your disk",
+    "A texture that stores a different grayscale map in each color channel",
+    "A texture that holds several animation frames in a grid, played one after the other",
+    "A texture that is used by more than one mesh, to save memory in a level"
+   ],
+   "4": [
+    "The editor crashes when a setting is wrong, and you lose your work",
+    "The texture is deleted from the project as soon as one setting is wrong",
+    "The material refuses to compile until every setting is right",
+    "Unreal does not show an error, and the surface just looks a little wrong"
+   ],
+   "6": [
+    "How many times the texture repeats on the mesh",
+    "How bright the texture is",
+    "How many channels the texture has",
+    "How strongly the texture is compressed on disk"
+   ],
+   "7": [
+    "Import the texture three times and delete two channels in each of the copies",
+    "Take the single channel pin, such as R, G or B, from its texture sample",
+    "Turn on sRGB for the texture, which splits the three maps into separate samples",
+    "Rotate the UVs by 90 degrees for each map, so that only one of them is read"
+   ],
+   "8": [
+    "Delete the normal texture",
+    "Set Metallic to 1",
+    "Move the mesh to another, smaller level",
+    "Change the scale or rotate the UVs"
+   ]
+  }
+ },
+ "EAQ16": {
+  "quiz_choices": {
+   "1": [
+    "A node that can only hold a texture and must be replaced when you want to change it",
+    "A named value that can be changed later without opening the material graph",
+    "A comment box around a group of nodes, with a title on it",
+    "A setting of the mesh that uses the material, changed in the Static Mesh Editor"
+   ],
+   "2": [
+    "A material without any inputs on its main node",
+    "A backup of the material graph that is saved on each compile",
+    "A texture that is made from a material and saved to disk",
+    "A copy of a material that only changes its parameters"
+   ],
+   "5": [
+    "How fast the parameter is drawn",
+    "The order in which the parameters are listed",
+    "Which instance may change the parameter",
+    "The largest value that the parameter may have"
+   ],
+   "6": [
+    "So the material needs fewer shader instructions",
+    "So the textures are compressed",
+    "So the parameters cannot be changed",
+    "So someone else can find them in an instance"
+   ],
+   "7": [
+    "The value 0 for numbers, and black for all colors",
+    "A random value between 0 and 1",
+    "The default value from the parent material",
+    "The value of the last instance you opened"
+   ]
+  }
+ },
+ "EAQ17": {
+  "quiz_choices": {
+   "1": [
+    "A photo of a sky that lights the whole scene",
+    "A small mesh used for rocks and for stones",
+    "The large terrain actor used for outdoor ground",
+    "A volume that holds fog near the ground"
+   ],
+   "2": [
+    "Several layers that you paint onto the terrain",
+    "One color that covers the whole terrain",
+    "The height of every point of the terrain mesh",
+    "The plants that grow on the terrain"
+   ],
+   "3": [
+    "It raises and lowers the terrain",
+    "It places grass meshes on the painted terrain",
+    "It imports ground textures from Fab",
+    "It mixes the layers based on where you paint"
+   ],
+   "4": [
+    "Notes that describe each texture, shown as a tooltip in the editor",
+    "Small assets that store where each layer is painted",
+    "Brushes for sculpting the terrain in Landscape Mode",
+    "Nodes that tile a texture in a material"
+   ],
+   "5": [
+    "That the level has a Sky Light and also a Directional Light",
+    "That the landscape is larger than the level around it",
+    "That the layer info object for that layer was created",
+    "That the textures come from Fab and not from a file"
+   ],
+   "6": [
+    "From the height of a player standing on the ground",
+    "From high above the whole landscape, looking down",
+    "From inside the Material Editor preview",
+    "From under the landscape, looking up"
+   ]
+  }
+ },
+ "EAQ18": {
+  "quiz_choices": {
+   "1": [
+    "A mesh that is glued to a wall",
+    "A light that shines on one spot",
+    "A texture that fakes small bumps on a mesh",
+    "A material that is projected onto surfaces"
+   ],
+   "2": [
+    "Detail such as dirt, cracks or signs",
+    "Collision for the player and enemies",
+    "New rooms and floors for the level you build",
+    "Shadows for the lights of the level"
+   ],
+   "3": [
+    "Blend Mode set to Opaque",
+    "Material Domain set to Deferred Decal",
+    "Material Domain set to User Interface",
+    "Shading Model set to Unlit"
+   ],
+   "4": [
+    "The folder that stores all your decal materials",
+    "The mesh that the decal is painted on",
+    "The box that shows how far the decal projects",
+    "The window where you edit the decal"
+   ]
+  }
+ },
+ "EAQ24": {
+  "quiz_choices": {
+   "1": [
+    "It makes the scene render faster",
+    "It shows problems that a still render hides",
+    "It creates the Material Instances for you",
+    "It paints the landscape layers"
+   ],
+   "2": [
+    "A Sky Light, a Directional Light and Exponential Height Fog",
+    "A Cine Camera, a bookmark and a screenshot",
+    "A Player Start, collision on the meshes and no dead ends",
+    "A master material, an instance and a decal"
+   ],
+   "4": [
+    "Sun angle, fog color and exposure value",
+    "Width, height and depth of the mesh in units",
+    "Speed, health and score of a player",
+    "Color, roughness, a texture and tiling"
+   ],
+   "5": [
+    "Each surface uses its own new material graph made from zero",
+    "Each surface uses an instance of the one master material",
+    "Each surface is painted in another program",
+    "Each surface uses a different landscape"
+   ],
+   "7": [
+    "A light of its own that makes the decal easy to see",
+    "A collision box that stops the player from walking on it",
+    "A name that starts with MI_, such as MI_Stain_Pipe or MI_Arrow_Path",
+    "A purpose, such as a stain under a pipe or an arrow toward the path"
+   ],
+   "8": [
+    "How long the scene took to build, in hours",
+    "Which plugins the project uses and why",
+    "Which parameters it has and what each one is for",
+    "Where the textures were downloaded and by whom"
+   ]
+  }
+ },
+ "EAQ19": {
+  "quiz_choices": {
+   "1": [
+    "The pattern keeps its size in the level",
+    "The pattern stretches with the mesh",
+    "The pattern disappears from the whole mesh",
+    "The pattern turns gray on the mesh"
+   ],
+   "2": [
+    "It paints the texture by hand on each mesh, one face after the other",
+    "It copies the UVs from another mesh that is placed next to it in the level",
+    "It projects the texture from the world, not from the UVs of the mesh",
+    "It bakes the texture into the lighting of the level when you build the light"
+   ],
+   "5": [
+    "Connect a Texture Object node to its TextureObject input",
+    "Connect a Constant node with the texture to its Base Color input",
+    "Type the name of the texture in its title",
+    "Drag the texture onto the mesh in the level"
+   ],
+   "7": [
+    "On characters that are animated and that move through the level",
+    "On blockout meshes whose UVs are not good enough yet",
+    "On meshes that never get a texture in the final level",
+    "On the sky of a level, which has no UVs"
+   ],
+   "8": [
+    "The pattern is deleted from the mesh, and you must assign the material again",
+    "The pattern moves with the mesh, as it does with normal UV textures",
+    "The pattern becomes larger the further the mesh moves",
+    "The pattern stays fixed in the world, so it slides over the mesh"
+   ]
+  }
+ },
+ "EAQ20": {
+  "quiz_choices": {
+   "1": [
+    "Place grass meshes on every spot where one paint layer is painted",
+    "Draw grass as a flat color on the ground, with no mesh at all, to save time",
+    "Turn every mesh in the level into grass when you paint a layer on it",
+    "Import grass meshes from Fab by itself when you paint"
+   ],
+   "2": [
+    "Grass placed by hand cannot be seen in the game, only in the editor",
+    "Grass placed by hand has no collision in the game",
+    "Placing grass by hand over a large landscape takes a long time",
+    "Placing grass by hand needs a plugin that is not part of the engine"
+   ],
+   "3": [
+    "Open Landscape Mode and choose New on the Manage tab",
+    "Right-click in the Content Browser, open Foliage and choose Landscape Grass Type",
+    "Open Edit, then Plugins, and enable Landscape Grass Type",
+    "Right-click in the Content Browser, open Miscellaneous and choose Data Asset, then Grass"
+   ],
+   "5": [
+    "In the title of the node, with a double-click on the name",
+    "In the Parameter Name of the node, in the Details panel",
+    "Under Grass Types in the Details panel of the node",
+    "In the Stats panel at the bottom of the Material Editor"
+   ],
+   "6": [
+    "The painted amount of one paint layer",
+    "The height of the landscape at a point",
+    "The color of the grass mesh",
+    "The number of grass meshes"
+   ],
+   "7": [
+    "That it is connected to Base Color on the main material node",
+    "That its Parameter Name is the name of the paint layer",
+    "That it has a grass texture assigned to it",
+    "That it is placed to the left of all the other nodes"
+   ],
+   "8": [
+    "Grass appears on the whole landscape, also where no layer is painted",
+    "Grass appears only in the preview window of the Material Editor",
+    "Grass appears only after you press Play, and not in the editor viewport",
+    "Grass appears only in the places where you painted the layer"
+   ]
+  }
+ },
+ "EAQ21": {
+  "quiz_choices": {
+   "2": [
+    "The lighting system in Unreal Engine 5 that calculates bounced light",
+    "The unit in which Unreal Engine measures the color temperature of lights",
+    "The editor where you build materials from nodes and textures",
+    "A plugin that adds lakes, rivers and oceans that you can place in a level"
+   ],
+   "4": [
+    "Connect a color to Roughness and set the Metallic input of the material to a value of 1",
+    "Multiply a color or a texture by the Scalar Parameter Intensity and connect the result to Emissive Color",
+    "Set the Material Domain to Deferred Decal and connect a color to the Base Color input",
+    "Connect the Scalar Parameter Intensity to Metallic and set the Shading Model of the material to Unlit"
+   ],
+   "7": [
+    "The glow changes its color to white, but only on the edges of the mesh",
+    "The surface becomes transparent",
+    "The glow stays the same, but the room gets darker",
+    "The glow becomes much stronger and lights the nearby surfaces more"
+   ],
+   "8": [
+    "When the material has a parameter for the Intensity of the glow",
+    "When the glow does not give enough light for the scene",
+    "When the room has more than four walls or a low ceiling",
+    "When Lumen is turned on in the Project Settings of the project"
+   ]
+  }
+ },
+ "EAQ25": {
+  "quiz_choices": {
+   "1": [
+    "A number in a material that an instance can set to any value between zero and one at runtime",
+    "An on or off switch in a material that turns a part of the graph on or off for each instance",
+    "A setting that makes a mesh static in the level, so that its material can never change while the game runs",
+    "A node that switches between two levels when the material is loaded"
+   ],
+   "2": [
+    "A copy of a texture at a lower resolution",
+    "A list of the parameters of a material and their defaults",
+    "A shader version compiled for one combination of switches",
+    "A light that changes its color over time"
+   ],
+   "3": [
+    "The part that is switched off is left out of its shader",
+    "The switch is checked again on every frame",
+    "The switch lowers the resolution of the textures it uses",
+    "The switch moves the work to the Game thread"
+   ],
+   "9": [
+    "One for collision, one for shadows and one for the physics of the mesh",
+    "One for the sun, one for the sky and one for the fog",
+    "One for a detail normal, one for emissive and one more of your choice",
+    "One for each texture channel"
+   ],
+   "10": [
+    "The one that most of the instances turn on and off in many different ways",
+    "The one that is not worth its cost, for example because nobody uses it",
+    "The one with the shortest name, because short names are hard to find in an instance",
+    "The one that was added first to the master material"
+   ]
+  }
+ },
+ "EAQ26": {
+  "quiz_choices": {
+   "1": [
+    "A Blueprint node that changes the parameters of a material while the game is running",
+    "A setting that turns a material into a decal that can be projected on the meshes of a level",
+    "A copy of a material that only changes parameters and has no node graph that you can edit",
+    "A small piece of material graph saved as its own asset that many materials can use"
+   ],
+   "3": [
+    "A group of nodes that is used in only one single material",
+    "A single Constant node that has a value of 0 or 1",
+    "A group of nodes that you would repeat in many materials",
+    "The output node of the material, with all of its input pins"
+   ],
+   "4": [
+    "Two color textures are mixed by a vertex color that you paint on the mesh",
+    "A second normal texture with a higher tiling is combined with the first",
+    "A normal texture is turned into a height texture and added to the first",
+    "A normal texture is removed to save memory on far meshes"
+   ],
+   "5": [
+    "Linear Interpolate (Lerp)",
+    "Landscape Layer Blend",
+    "WorldAlignedTexture",
+    "BlendAngleCorrectedNormals"
+   ],
+   "6": [
+    "So it repeats more often and adds small detail",
+    "So that it covers the whole mesh only one time",
+    "So it uses less memory than the first normal texture",
+    "So it changes the Base Color of the material a little"
+   ],
+   "7": [
+    "A random value and a bright color",
+    "A lock and a password",
+    "A clear name and a default value",
+    "A shortcut key and an icon"
+   ],
+   "8": [
+    "The function cannot be saved or compiled without a description",
+    "So other people know what the function does without opening it",
+    "The description makes the function faster when a material uses it",
+    "So the function gets the prefix MF_ in its name"
+   ],
+   "9": [
+    "A function only compiles when two materials use it",
+    "The two materials must look the same",
+    "One material holds the inputs and the other one holds the outputs",
+    "It shows that the same nodes are now reused and not built twice"
+   ]
+  }
+ },
+ "EAQ27": {
+  "quiz_choices": {
+   "2": [
+    "Change the collision of the mesh on the vertices that you painted",
+    "Make the mesh cast no shadow on the parts that are painted black",
+    "Let a material read them and use them to blend two surfaces",
+    "Move the whole mesh to another place while the game is running"
+   ],
+   "4": [
+    "As the Alpha of a Lerp node between the two surfaces",
+    "As the Base Color of the material for both surfaces",
+    "As the Roughness of the material for the second of the surfaces",
+    "As the tiling of the textures on the mesh"
+   ],
+   "5": [
+    "It makes the mesh red where you paint it",
+    "It removes the base surface from the material",
+    "It puts the second surface over the base surface",
+    "It deletes the painted vertices from the mesh"
+   ],
+   "6": [
+    "A sphere has no UVs, so paint is the only way to give it some color at all",
+    "The paint is stored on the vertices, and a simple cube has too few",
+    "A cube cannot have a material that uses a Lerp node",
+    "A sphere is always larger than a cube, so the paint is easier to see"
+   ],
+   "9": [
+    "The frame rate of the level when many meshes are painted",
+    "The number of vertices that the mesh has for painting",
+    "The edge of the blend, which looks sharp and natural",
+    "The size of the texture files that the material samples"
+   ],
+   "10": [
+    "It lowers the triangle count of each mesh that is painted",
+    "Copies of one mesh can look different with the same material",
+    "It removes the need for textures, because paint holds all of the color",
+    "It turns off the lighting on painted meshes, which saves time"
+   ]
+  }
+ }
+}

@@ -1,0 +1,584 @@
+{
+ "TAQ22": {
+  "quiz_choices": {
+   "1": [
+    "Scriptable Tools cannot spawn actors, so nothing temporary can ever be left behind in the level after the tool has been closed",
+    "A Scriptable Tool is modal: it shuts down before save, level change or PIE, so you can remove temporary actors before they are saved",
+    "Editor Utility Widgets delete all actors of the level when they close, so the preview actors and your real work would both be lost",
+    "Scriptable Tools run only at runtime, in a packaged game, where preview actors are never saved to a level file on disk"
+   ],
+   "2": [
+    "Scriptable Tools Framework only; the mode is built in",
+    "Modeling Tools Editor Mode; the nodes are a part of it",
+    "Editor Scripting Utilities; it adds the mode and its nodes",
+    "Scriptable Tools Editor Mode; it includes the framework"
+   ],
+   "3": [
+    "EditorScriptableModularBehaviorTool",
+    "EditorScriptableClickDragTool",
+    "A plain Actor Blueprint with key events",
+    "EditorUtilityWidget"
+   ],
+   "4": [
+    "The plugin is off, and editor subsystems are only loaded when Scriptable Tools Editor Mode is enabled",
+    "Editor subsystems need C++; no Blueprint class of any kind can reach them, whatever its parent class is",
+    "Only an Editor Utility Blueprint gives access to editor-only functionality, even for an editor tool class",
+    "You need to compile twice, because the first compile of a tool class only builds its property sets"
+   ],
+   "5": [
+    "Add them as variables on a UMG widget, then add that widget to the tool with the Create Widget and Add to Viewport nodes",
+    "Create a ScriptableInteractiveToolPropertySet subclass with public variables and add it with Add Property Set of Type",
+    "Put them in Project Settings, in a new section that the tool adds for itself when it is first compiled",
+    "Use a Data Table with one row per setting, and read the rows with Get Data Table Row when the tool starts"
+   ],
+   "6": [
+    "The type-matching property watcher for a float, with the exact variable name",
+    "The general Watch Property function, because it is the cheapest one for any type",
+    "An Event Dispatcher on the property set, which you call by hand",
+    "Nothing; tools cannot react to changes of their settings"
+   ],
+   "7": [
+    "Custom conditions only run once, so the tool may miss later changes",
+    "Custom conditions cannot read the selection, so the search is of no use",
+    "It stops the tool from appearing in the palette until the search has finished",
+    "The tool builder graph runs every tick, so heavy checks can slow the editor"
+   ],
+   "8": [
+    "Store the settings in a Save Game object and load it with Load Game from Slot on setup",
+    "Call Save Property Set Settings on shutdown and Restore Property Set Settings on setup",
+    "Set Visible in Editor to false on each property, so its value is kept",
+    "Use Group Tags on the tool, which store the settings of each group"
+   ],
+   "9": [
+    "Use Print String to show the positions of the lines as text on the screen",
+    "Spawn a new actor for each line on every tick and destroy the old ones at the end of the frame",
+    "Use the Drawing API line sets, which the tool keeps and you can update over the tool's lifetime",
+    "Move the drawing into On Script Shutdown, so it runs only one time"
+   ]
+  }
+ },
+ "TAQ28": {
+  "quiz_choices": {
+   "2": [
+    "About 0.02 to 0.06 linear",
+    "About 0.5 to 1.0 linear",
+    "Exactly 0.18 linear",
+    "Always 1.0 linear"
+   ],
+   "3": [
+    "Substrate Horizontal Blend",
+    "Substrate Add Operator",
+    "Substrate Vertical Layer",
+    "Substrate Select Operator"
+   ],
+   "4": [
+    "It only works on translucent materials and shows an error on opaque surfaces",
+    "It is removed in UE 5.8, so materials that use it will stop compiling after an update",
+    "It forces Adaptive GBuffer for the whole project, even when only one material uses it",
+    "It can send out more energy than comes in, so it is not physically plausible"
+   ],
+   "5": [
+    "Only on the rightmost operator before the root node; the others then blend automatically",
+    "On every operator by hand, starting with the leftmost one and ending at the root node",
+    "On the root node only, in its Details panel, for the whole graph of the material",
+    "In Project Settings only, under Rendering > Substrate, for every material at once"
+   ],
+   "7": [
+    "Adaptive, because it is faster",
+    "Blendable, because it has fixed memory, predictable speed and parity with the legacy path",
+    "Adaptive, because it lowers the cook time and gives the same frame cost on every platform",
+    "Neither, Substrate cannot run at 60 Hz on any platform and must be disabled for such a project"
+   ],
+   "8": [
+    "The textures did not stream in, so the material shows only its flat default values",
+    "The material needs Nanite on the mesh before Haziness and Glints are drawn",
+    "Glints only work on mobile, and Haziness only works with the Path Tracer",
+    "Those features are not supported on Blendable GBuffer, so they are visually missing"
+   ],
+   "9": [
+    "In the Substrate panel (Window > Substrate) in the Material Editor",
+    "In the Output Log only, as a warning that is printed when the material is compiled and saved",
+    "In the tooltip of the material asset in the Content Browser window",
+    "In stat unit, which adds a line for each material on screen that was simplified by Substrate"
+   ],
+   "10": [
+    "None, you can switch back any time",
+    "Converted materials lose their textures, and every Texture Sample must be assigned again",
+    "Conversion is permanent, and converted materials render black if Substrate is turned off",
+    "It doubles texture memory, because each converted material keeps a copy of its old textures"
+   ],
+   "11": [
+    "Blend two materials across a surface with a mask, for example rust that is painted over metal",
+    "Use material functions to share a group of nodes between several materials",
+    "Use texture parameters that an artist can swap in a Material Instance",
+    "Put a real slab of matter on top of another, for example a top layer with colored transmittance"
+   ],
+   "12": [
+    "Multiple slabs are mixed or layered in the tile, or Anisotropy is on",
+    "The material failed to compile, and the default material is drawn in the tile",
+    "The texture pool is over budget, and the tile uses textures at a lower mip level",
+    "The tile uses a simple legacy slab that could be made cheaper to shade"
+   ]
+  }
+ },
+ "TAQ29": {
+  "quiz_choices": {
+   "1": [
+    "A single beautiful screenshot",
+    "A tool or a library that other people use every day",
+    "The largest and sharpest texture in the whole project",
+    "A level with the most lights"
+   ],
+   "2": [
+    "An import or naming tool",
+    "A library of material functions",
+    "A lit test room for materials",
+    "A character rig with controls"
+   ],
+   "4": [
+    "It renders a scene at two quality levels and compares the two final results",
+    "It writes the documentation for you",
+    "It checks assets against your rules and reports the ones that break them",
+    "It imports meshes from other programs and gives them the right prefix and the right folder"
+   ],
+   "5": [
+    "What it does, how to install it, its rules or inputs, and one limit",
+    "How many hours you worked on it, day by day",
+    "Which other tools you looked at before",
+    "Why the other tools are worse than yours, with one example for each"
+   ],
+   "6": [
+    "In a text file saved on the desktop",
+    "In the Message Log, as clear errors",
+    "In the name of the asset, as a suffix",
+    "In the README only, in a list at the end"
+   ],
+   "7": [
+    "You run it on a full folder of meshes and textures",
+    "You pack it into one large function with many inputs",
+    "You hide the inputs of each function from the users",
+    "You build 3 materials from it and document the inputs"
+   ],
+   "8": [
+    "Nobody, because you built it yourself",
+    "Only the mentor, some time after the quest has been approved",
+    "At least one other person, who uses it on their own assets",
+    "A person who has never opened Unreal Engine"
+   ],
+   "9": [
+    "Migrate it into a new empty project and use it from your documentation",
+    "Skip the test and write that it works",
+    "Test it in the project where you built it, with the same assets that you used before",
+    "Ask the mentor to approve it without a test and explain why none was done"
+   ],
+   "10": [
+    "You remove the feature that caused them and say nothing about it to anyone",
+    "You fix at least one problem and write the change down in a change log",
+    "You start again from zero and build the piece a second time, with another approach",
+    "You ask the tester to fix them, because the tester knows best what went wrong in the test"
+   ],
+   "11": [
+    "You run the tool two times in a row and compare the time of both runs",
+    "You open the scene on two monitors and compare the picture on each of them",
+    "You render the scene with Movie Render Queue at two resolutions",
+    "You capture one scene on Low and on Epic with stat unit visible"
+   ],
+   "12": [
+    "The bookmark sets the quality level of the viewport for you",
+    "The bookmark turns on stat unit for both captures",
+    "The view is then the same, so only the quality level differs",
+    "The bookmark saves the screenshots to the same folder"
+   ]
+  }
+ },
+ "TAQ30": {
+  "quiz_choices": {
+   "1": [
+    "It lowers all textures by one mip at once, again and again, until the plan fits",
+    "It drops one mip at a time on selected textures until the plan is under budget",
+    "It stops loading new textures",
+    "It raises the pool size automatically, by as much as the plan needs, until all of the mips fit"
+   ],
+   "2": [
+    "Landscape textures, as they are large",
+    "Character textures, from the top mip",
+    "Visible mips on screen, with the largest textures first",
+    "Mips that are not visible, least recently seen first"
+   ],
+   "3": [
+    "UI textures, NeverStream textures, cubemaps and streaming textures",
+    "Only streaming textures, and no other kind of texture",
+    "Only the textures of the current level, of any type and any group",
+    "Only render targets and the textures of the UI widgets"
+   ],
+   "4": [
+    "Character and weapon textures",
+    "Terrain and Landscape textures",
+    "UI textures and fonts",
+    "Normal maps of props"
+   ],
+   "5": [
+    "Turning streaming off is not possible in a packaged build, so the cvar is the only way to do it",
+    "They do the same thing",
+    "Turning streaming off loads all mips of every texture, even unused ones, so it needs more memory",
+    "FullyLoadUsedTextures also raises the pool size by itself, so no texture can ever go over the budget"
+   ],
+   "6": [
+    "Some textures will not load at their required resolution",
+    "Memory is leaking",
+    "The streaming data of the level has not been built at all yet",
+    "The GPU is out of VRAM, and the game will crash on the next level"
+   ],
+   "7": [
+    "Raise r.Streaming.Boost, so that every texture asks for a higher resolution than before",
+    "Turn off mips on all textures",
+    "Lower r.Streaming.FramesForFullUpdate so the streamer reacts faster to each swing",
+    "Reduce those non-streaming allocations or increase the safety pool (MemoryMargin)"
+   ],
+   "8": [
+    "It must be 0 on consoles, because their memory is fixed and no temporary allocation is allowed there at all",
+    "It must be at least as large as the largest resource to stream, but not so large that it wastes memory",
+    "It must be equal to the streaming pool, so that every texture in the pool can be updated in the same frame",
+    "It only matters in the editor"
+   ],
+   "9": [
+    "The streamer is not using all the IO bandwidth; raise MaxTempMemoryAllowed or lower FramesForFullUpdate",
+    "The disk is full, so the streamer cannot read any new mips from it and waits until space has been freed",
+    "All textures are already loaded at full resolution, so no request is needed and nothing has to be changed",
+    "The pool is too big, so the streamer has nothing to drop and stops sending requests until memory is used up"
+   ],
+   "10": [
+    "Good data, nothing missing",
+    "1 extra mip is loaded there",
+    "2 or more mips missing",
+    "The shader failed to build"
+   ]
+  }
+ },
+ "TAQ31": {
+  "quiz_choices": {
+   "2": [
+    "A Collection holds only references, so one asset can be in many Collections",
+    "A Collection moves the asset files on disk into a new folder with its own name",
+    "A Collection can only hold one asset type, such as textures or static meshes",
+    "A Collection is deleted when the project closes, so it only holds temporary work"
+   ],
+   "4": [
+    "Settings > View Options > Recent Assets",
+    "Filters > Other Filters > Recently Opened",
+    "Collections > Recent Assets",
+    "It is always on by default, with no filter"
+   ],
+   "6": [
+    "The asset is removed from the Collection only",
+    "The Collection is deleted",
+    "You are asked to delete the asset from the whole project",
+    "Nothing, because Delete is disabled inside Collections"
+   ]
+  }
+ },
+ "TAQ32": {
+  "quiz_choices": {
+   "1": [
+    "The Texture references the Material",
+    "The Material references the Texture, and the Texture has no reference back",
+    "Both reference each other, so loading one of the two always loads the other one as well",
+    "Neither, because only Actors in a level can reference assets in the project"
+   ],
+   "2": [
+    "Three separate graphs side by side",
+    "Only the references the three assets have in common",
+    "The references of the first asset only",
+    "An error, because the tool takes one asset at a time"
+   ],
+   "6": [
+    "They are unsaved assets that sit between two assets that have been saved to disk",
+    "They are excluded by your filters but sit between two assets that are not excluded",
+    "They are engine content, which is drawn in a lighter color than project content",
+    "They are missing on disk, and the graph only shows where they used to be"
+   ]
+  }
+ },
+ "TAQ33": {
+  "quiz_choices": {
+   "1": [
+    "The texture is stored inside the material file, so it has no asset of its own",
+    "The material references the texture, so loading the material loads the texture",
+    "The texture is larger than the material, in bytes on disk",
+    "The texture is a duplicate of one that is in the material"
+   ],
+   "3": [
+    "Disk size and in-editor memory size",
+    "Triangle count and vertex count",
+    "Width and height",
+    "Cook time and load time of the asset"
+   ],
+   "4": [
+    "Double-click the asset with Alt held",
+    "Right-click the asset and select Size Map",
+    "Drag the asset into the level viewport",
+    "Window > Size Map > Selected Asset"
+   ],
+   "5": [
+    "Deletes the asset from the project",
+    "Opens the editor of that asset in a tab",
+    "Adds it to a collection of large assets",
+    "Expands that asset so it fills the window"
+   ]
+  }
+ },
+ "TAQ34": {
+  "quiz_choices": {
+   "1": [
+    "Edit > Project Settings > Asset Audit",
+    "Window > Developer Tools > Asset Audit",
+    "File > Audit > Asset Audit Window",
+    "Help > Asset Audit > Open Window"
+   ],
+   "3": [
+    "File > Export All, with the Asset Audit window open and the rows you want selected in the list",
+    "From the Settings menu (gear icon) in the upper right of the Asset Audit window",
+    "Right-click a row and choose Copy, then paste the text into a new file that you name",
+    "Ctrl + S with the window in focus, which saves the visible rows next to the project file"
+   ],
+   "5": [
+    "Chunk -1, the unassigned one",
+    "Chunk 0, the default chunk",
+    "Chunk 1, the first real one",
+    "None; it is not packaged"
+   ],
+   "6": [
+    "Textures of the UI group",
+    "Materials and instances",
+    "Levels (UWorld assets)",
+    "All Static Mesh assets"
+   ]
+  }
+ },
+ "TAQ35": {
+  "quiz_choices": {
+   "1": [
+    "Nothing else, only the Material",
+    "Its referenced assets, such as its Textures",
+    "The whole Content folder",
+    "Only the assets that are in the same folder"
+   ],
+   "2": [
+    "File > Migrate",
+    "Right-click the asset > Asset Actions > Migrate",
+    "Edit > Export All, with the asset selected in the Content Browser",
+    "Right-click the folder > Show in Explorer > Copy"
+   ],
+   "4": [
+    "The migration is cancelled",
+    "The Material that uses it may not show correctly in the target project",
+    "The Texture is deleted from the source project when the migration ends",
+    "There is no risk, because the tool copies every dependency anyway, checked or not"
+   ],
+   "5": [
+    "It silently overwrites it, and the old asset of the target project is lost without a backup",
+    "It silently skips it, and the migrated assets use the old asset of the target project instead",
+    "It shows a warning and asks Yes or No, with Yes All and No All options",
+    "It renames the new asset by adding a number to the end of the asset name"
+   ]
+  }
+ },
+ "TAQ36": {
+  "quiz_choices": {
+   "1": [
+    "When you import an asset",
+    "When you move or rename an asset",
+    "When you delete an asset for good",
+    "When you save a level"
+   ],
+   "2": [
+    "To keep a backup copy of the asset in the old folder until you save all",
+    "So packages that are not loaded but reference the asset can still find it",
+    "To speed up cooking, because a cooked build reads redirectors faster",
+    "To track version history of the asset in source control for the team"
+   ],
+   "4": [
+    "Renames it to the new asset name, so that both files in the folder have the same name",
+    "Moves the asset back to its old folder",
+    "Converts it to a collection that lists every package which still points to the old path",
+    "Resaves all packages that point to it, then deletes it if every referencer was resaved"
+   ],
+   "5": [
+    "B is open in an editor tab, and open assets are locked",
+    "The redirector made during the rename still points to B",
+    "B is engine content, which cannot be deleted from a project",
+    "Deleting is disabled for one full session after a rename"
+   ],
+   "6": [
+    "-run=ResavePackages -fixupredirects",
+    "-run=Cook -clean -redirectors",
+    "-run=FixAll",
+    "-run=DeleteRedirectors -all"
+   ]
+  }
+ },
+ "TAQ37": {
+  "quiz_choices": {
+   "1": [
+    "Viewport",
+    "Details panel",
+    "Socket Manager",
+    "Toolbar"
+   ],
+   "2": [
+    "A sphere around the mesh, with 26 segments",
+    "A capsule that is aligned to the longest axis",
+    "Collision for every triangle of the render mesh",
+    "A box with all edges and corners beveled, 26 sides"
+   ],
+   "3": [
+    "The box replaces the sphere",
+    "The box is added, so the mesh now has both",
+    "The editor asks which one you want to keep",
+    "Nothing, one collision per mesh"
+   ],
+   "5": [
+    "When the mesh is more than 100 units away from the camera",
+    "When the mesh takes less than 50 percent of the screen",
+    "Only when forced with LOD 1 in the viewport menu",
+    "When the frame rate drops below the target rate"
+   ],
+   "6": [
+    "Adds a single box",
+    "Generates convex collision based on the mesh shape, with a Convex Decomposition panel",
+    "Removes all collision from the mesh, and then adds one convex hull around the whole mesh",
+    "Converts the complex collision of the mesh to simple shapes, one box per material slot"
+   ]
+  }
+ },
+ "TAQ38": {
+  "quiz_choices": {
+   "2": [
+    "It is open by default",
+    "Window > Socket Manager in the Static Mesh Editor",
+    "Right-click the mesh in the level and pick Sockets",
+    "Edit > Sockets > Open Socket Manager, in the Level Editor"
+   ],
+   "3": [
+    "Recreate the socket",
+    "Reset the actor's Location in the Transform section of Details",
+    "Set Simulate Physics on the effect and on the mesh that holds it",
+    "Rename the socket to the name of the effect, so that the two match"
+   ],
+   "4": [
+    "It stays where it was",
+    "It is detached from it",
+    "It is deleted at once",
+    "It moves with the frame"
+   ],
+   "5": [
+    "A socket can hold only one object at a time, and the Fire socket already holds the flame",
+    "The door's origin is at its bottom corner, so it would float and clip on the Fire socket",
+    "Sockets cannot be reused after an actor has been attached to them once in a level",
+    "The Fire socket is hidden in the level, so nothing that is attached to it can be seen"
+   ]
+  }
+ },
+ "TAQ39": {
+  "quiz_choices": {
+   "2": [
+    "They are converted to vertex colors, which the material can then read",
+    "They are kept as they are, and the tangents are imported from the file as well",
+    "They are discarded, and the engine computes normals and tangents itself",
+    "They are used only for LOD1 and above, and LOD0 gets computed normals"
+   ],
+   "3": [
+    "It changes the FBX units to Unreal's unit, which is centimeters",
+    "It doubles the mesh size",
+    "It rotates the mesh so that the Z axis points up, as it does in Unreal",
+    "It converts inches to meters and scales the mesh by that amount"
+   ],
+   "4": [
+    "At the center of the mesh, always, so that the mesh rotates around its middle when it is placed",
+    "Anywhere, because Unreal recenters the pivot on import and places it at the bottom of the mesh",
+    "At the top of the mesh",
+    "At the world origin (0,0,0), usually at one corner of the mesh, so it snaps to the grid well"
+   ],
+   "5": [
+    "Both are imported as visible meshes, and you must delete the UCX mesh by hand in the Static Mesh Editor",
+    "The importer removes UCX_Crate_01 from the render mesh and turns it into the collision of Crate_01",
+    "The importer ignores it, because collision can only be made in the Static Mesh Editor after import",
+    "The importer renames it to SM_Crate_01"
+   ]
+  }
+ },
+ "TAQ40": {
+  "quiz_choices": {
+   "1": [
+    "The box replaces the sphere",
+    "The box is added; the mesh now has both shapes",
+    "The editor shows an error and adds no new shape",
+    "The sphere becomes a box of the same size, and no second shape is added"
+   ],
+   "2": [
+    "The number of triangles in the hull, in units of one thousand (K) triangles",
+    "The number of axis-aligned planes pushed against the mesh to build the hull",
+    "The number of hulls that the option makes, which are then merged into one single shape",
+    "The size of the box in centimeters, measured along the longest side of the mesh"
+   ],
+   "3": [
+    "Collision gets more precise but also more complex",
+    "Collision gets simpler and cheaper to compute",
+    "The render mesh gets more triangles and vertices",
+    "The mesh is converted to Nanite with more hulls"
+   ],
+   "4": [
+    "It can simulate physics, but only on Nanite meshes, because the fallback mesh is then used as the shape",
+    "It uses less memory than simple shapes, because no extra collision data is stored",
+    "The mesh cannot simulate physics itself, but other simulated objects can collide with its exact triangles",
+    "Traces will ignore it"
+   ],
+   "5": [
+    "The actor has no collision at all, and every trace and every other actor passes through its mesh in the level",
+    "The actor blocks everything in the level, whatever was set for the mesh asset in the Static Mesh Editor",
+    "The actor uses the settings from the Static Mesh Editor; nothing has been overridden on this instance",
+    "The actor is a Pawn"
+   ]
+  }
+ },
+ "TAQ41": {
+  "quiz_choices": {
+   "1": [
+    "Always, for every mesh, whatever lighting is used",
+    "Only when the mesh uses Nanite and Lumen together",
+    "Only when it will be lit by baked (precomputed) lighting",
+    "Only when it has more than one material slot assigned"
+   ],
+   "2": [
+    "UV channel 0, the texture UV",
+    "UV channel 1, the second one",
+    "The last UV channel of the mesh, whatever it holds",
+    "It builds a new UV from scratch, with no source"
+   ],
+   "3": [
+    "Normalize the chart scale",
+    "Add padding between charts",
+    "Split or cut UV charts into new islands",
+    "Store the result in the destination index"
+   ],
+   "4": [
+    "The size of the lightmap texture that the mesh gets in the level, in pixels along each side",
+    "The minimum padding between UV charts, so the pack is texel accurate down to that resolution",
+    "The number of UV channels that the mesh has after the build",
+    "The Lightmass quality that is used for the mesh in a bake"
+   ],
+   "5": [
+    "Because Lightmass ignores the first four texels of a chart",
+    "Because UVs are stored as 4-byte values in the mesh file on disk",
+    "Because the editor rounds padding to 4 when it builds the mesh",
+    "Because DXT texture compression works on 4x4 texel blocks"
+   ],
+   "6": [
+    "The Source Lightmap Index",
+    "The Destination Lightmap Index used when generating",
+    "The number of material slots that the mesh has in all",
+    "The Min Lightmap Resolution of the mesh, set in the Build Settings"
+   ]
+  }
+ }
+}

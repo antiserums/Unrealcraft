@@ -1,0 +1,512 @@
+{
+ "TAQ19": {
+  "quiz_choices": {
+   "1": [
+    "The Runtime Virtual Texture asset",
+    "The Landscape actor of the level",
+    "The Post Process Volume of the level",
+    "The World Settings"
+   ],
+   "2": [
+    "That Lumen is turned off, because Lumen cannot light a landscape that reads its shading from a Runtime Virtual Texture and draws it black in that case",
+    "That the landscape uses Nanite, because only Nanite landscapes can draw into a Runtime Virtual Texture, and other landscapes show up as black",
+    "That every part is set up: the volume has the asset, it covers the landscape, and the landscape lists the asset in Draw in Virtual Textures",
+    "That the size of the RVT asset is larger than 8K, because smaller virtual textures cannot be drawn on a landscape and always show up as black"
+   ],
+   "3": [
+    "Fine, the RVT updates fully every frame, so anything that moves is drawn at its new place right away",
+    "Only if the mesh uses Nanite, because Nanite meshes are the only ones that may write to an RVT",
+    "Set Draw in Main Pass to Always on the mesh and it will work, because the RVT is then updated on every frame",
+    "It is a poor fit: the RVT is a shading cache that is not fully updated every frame, so writers should be static"
+   ],
+   "5": [
+    "From Virtual Texture",
+    "Never",
+    "Always, in all passes",
+    "Virtual Texture Skip Mips"
+   ],
+   "6": [
+    "Camera-dependent effects such as distance fades and Fresnel",
+    "Nothing; the output node must be first in the graph",
+    "Only the Virtual Texture Feature Switch and its two inputs",
+    "The camera-independent layer blending, which can be cached"
+   ],
+   "7": [
+    "Virtual Texture LOD Bias: give the mesh a lower bias value than the spline",
+    "Translucency Sort Priority: give the mesh a higher value than the spline",
+    "The RVT tile size: raise it until the mesh is larger than one tile of the texture",
+    "r.VT.Flush"
+   ],
+   "8": [
+    "No cost; it is only a different encoding of the same data",
+    "It disables normals in the RVT, so they come from the mesh",
+    "About 25% extra memory and some extra sampling and decoding work",
+    "It forces the RVT to update on every frame for all of its tiles"
+   ],
+   "10": [
+    "Raise r.VT.MaxUploadsPerFrame until all mips are rendered in one frame, and keep every actor of the world loaded",
+    "Split the landscape into many small RVT volumes with one mip each, and unload all the volumes that are far from the camera",
+    "Turn off virtual texture support for far areas, and draw the landscape there with its full material",
+    "Bake and stream the low mips as a Streaming Virtual Texture (set Streaming Levels and Build), and keep high mips at runtime"
+   ]
+  }
+ },
+ "TAQ20": {
+  "quiz_choices": {
+   "1": [
+    "System only",
+    "Emitter only",
+    "Particle only",
+    "User only"
+   ],
+   "2": [
+    "It works, because all of the groups can read all namespaces at any time",
+    "It is not allowed: the System group reads only System, Engine and User",
+    "It works only on GPU emitters, which share their parameters with the system",
+    "It works after you enable versioning for the module"
+   ],
+   "3": [
+    "Once in a System group module, stored in the System namespace, then read by each emitter",
+    "In Particle Update, so that each particle has its own copy and never reads an old value",
+    "In a Module Local in every emitter, so that no emitter depends on another one",
+    "In a Static Switch, which is evaluated when the system is compiled"
+   ],
+   "6": [
+    "Set the Module Usage Bitmask in Script Details",
+    "Add a Deprecation Message to it",
+    "Mark it Experimental in the details",
+    "Put the word particle in the Keywords field"
+   ],
+   "7": [
+    "Nothing until each artist clicks Fix Issue on the module in their effect",
+    "Only new effects get the change; the twenty old ones stay as they were",
+    "The change is pushed directly to every asset that uses the module",
+    "Unreal makes a copy of the old module automatically for each effect"
+   ],
+   "8": [
+    "Major versions recompile all systems; minor versions recompile none at all",
+    "Minor versions cannot add inputs or outputs; major versions can add and remove them",
+    "Major versions need source control; minor versions can be made without a check-out",
+    "There is none; it is a label that tells users how risky the upgrade is"
+   ],
+   "9": [
+    "Leave Is Exposed Version and Is Visible in Version Select unchecked",
+    "Mark the module Deprecated until the test is done",
+    "Delete the old version, so that only one is left",
+    "Turn off Expose to Library for the whole module until you are done"
+   ],
+   "10": [
+    "Ask artists to write down their settings first, and to enter them again by hand in the new enum input after the upgrade",
+    "Write a Python upgrade script that reads the old input with get_old_input and sets the enum with set_enum_input",
+    "Make it a minor version, so that the values of the old input are copied over to the new input by the editor itself",
+    "Keep both inputs forever"
+   ]
+  }
+ },
+ "TAQ21": {
+  "quiz_choices": {
+   "1": [
+    ".uasset files in the Content folder, with one asset per session",
+    ".utrace files, with extra data in .ucache files next to them",
+    ".log files in Saved/Logs, with extra data in the Output Log window",
+    ".csv files in the project root, with one file for each thread"
+   ],
+   "3": [
+    "How much time the thread spent on that event",
+    "How many instances of the system were spawned",
+    "How much memory it used",
+    "How many draw calls it made in that frame"
+   ],
+   "4": [
+    "The trace is broken, and the numbers cannot be trusted",
+    "The timer itself is the slow part, so its own code must be optimized",
+    "It only ran on the GPU, so the CPU time of it is small",
+    "Most of the time is spent in its child timers, so look at its Callees"
+   ],
+   "6": [
+    "It adds overhead, so use it to find the problem, then capture again without it for true timings",
+    "It turns off the GPU track, so you only see CPU timers for as long as the option is active",
+    "It only works in shipping builds, so you must package the game before each capture of that kind",
+    "It deletes older traces from the Trace Store each time that you start the editor with it"
+   ],
+   "7": [
+    "The trace is invalid and must be thrown away; capture again with fewer channels until the frame time is the same",
+    "The profiler uses the GPU only, so ignore CPU times and compare just the GPU track with the numbers from a run without it",
+    "Profiling uses the same CPU, RAM and disk; if you meet your goal while profiling, you likely have some room left",
+    "Turn off Trace Server to fix it, because the server is the only part of the profiler that uses resources of the machine"
+   ],
+   "9": [
+    "Add a Trace Bookmark or Trace Screenshot at that moment",
+    "Turn on Auto Open Live Trace before you press the button",
+    "Sort Timers by name and look for the spawn function in the list",
+    "Restart the Trace Server right before you press the button"
+   ],
+   "10": [
+    "Yes, one frame is always representative of the whole session for any looping effect",
+    "No; select a longer, representative time range and compare averages before you decide",
+    "No; only memory numbers matter for a Niagara emitter, not time",
+    "Yes, if the frame was the first frame after the effect was spawned"
+   ]
+  }
+ },
+ "TAQ22": {
+  "quiz_choices": {
+   "1": [
+    "Scriptable Tools cannot spawn actors, so nothing temporary can ever be left behind in the level after the tool has been closed",
+    "A Scriptable Tool is modal: it shuts down before save, level change or PIE, so you can remove temporary actors before they are saved",
+    "Editor Utility Widgets delete all actors of the level when they close, so the preview actors and your real work would both be lost",
+    "Scriptable Tools run only at runtime, in a packaged game, where preview actors are never saved to a level file on disk"
+   ],
+   "2": [
+    "Scriptable Tools Framework only; the mode is built in",
+    "Modeling Tools Editor Mode; the nodes are a part of it",
+    "Editor Scripting Utilities; it adds the mode and its nodes",
+    "Scriptable Tools Editor Mode; it includes the framework"
+   ],
+   "3": [
+    "EditorScriptableModularBehaviorTool",
+    "EditorScriptableClickDragTool",
+    "A plain Actor Blueprint class",
+    "EditorUtilityWidget"
+   ],
+   "4": [
+    "The plugin is off, and editor subsystems are only loaded when Scriptable Tools Editor Mode is enabled",
+    "Editor subsystems need C++; no Blueprint class of any kind can reach them, whatever its parent class is",
+    "Only an Editor Utility Blueprint gives access to editor-only functionality, even for an editor tool class",
+    "You need to compile twice, because the first compile of a tool class only builds its property sets"
+   ],
+   "5": [
+    "Add them as variables on a UMG widget, then add that widget to the tool with the Create Widget and Add to Viewport nodes",
+    "Create a ScriptableInteractiveToolPropertySet subclass with public variables and add it with Add Property Set of Type",
+    "Put them in Project Settings, in a new section that the tool adds for itself when it is first compiled",
+    "Use a Data Table with one row per setting, and read the rows with Get Data Table Row when the tool starts"
+   ],
+   "6": [
+    "The type-matching property watcher for a float, with the exact variable name",
+    "The general Watch Property function, because it is the cheapest one for any type",
+    "An Event Dispatcher on the property set, which you call by hand",
+    "Nothing; tools cannot react to changes of their settings"
+   ],
+   "7": [
+    "Custom conditions only run once, so the tool may miss later changes",
+    "Custom conditions cannot read the selection, so the search is of no use",
+    "It stops the tool from appearing in the palette until the search has finished",
+    "The tool builder graph runs every tick, so heavy checks can slow the editor"
+   ],
+   "8": [
+    "Store the settings in a Save Game object and load it with Load Game from Slot on setup",
+    "Call Save Property Set Settings on shutdown and Restore Property Set Settings on setup",
+    "Set Visible in Editor to false on each property, so its value is kept",
+    "Use Group Tags on the tool, which store the settings of each group"
+   ],
+   "9": [
+    "Use Print String to show the positions of the lines as text on the screen",
+    "Spawn a new actor for each line on every tick and destroy the old ones at the end of the frame",
+    "Use the Drawing API line sets, which the tool keeps and you can update over the tool's lifetime",
+    "Move the drawing into On Script Shutdown, so it runs only one time"
+   ]
+  }
+ },
+ "TAQ23": {
+  "quiz_choices": {
+   "1": [
+    "When it compiles without errors and warnings",
+    "When it has more than ten settings to choose from",
+    "When another person can use it without you in the room",
+    "When you have used it once yourself without an error"
+   ],
+   "2": [
+    "Solve a real problem, handle wrong input, and come with a short guide",
+    "Run on every platform, use C++, and have a logo",
+    "Replace the editor, hide its settings, and run on Tick",
+    "Work only for its maker, need no input, and have no text in its panel"
+   ],
+   "3": [
+    "You pick the most complex feature of the engine and build on it",
+    "You copy a tool from the documentation and change its name and its icon",
+    "You wait until a mentor gives you a task that fits your skill level",
+    "You ask another person which slow and repeated task annoys them"
+   ],
+   "4": [
+    "A Level Blueprint, a GameMode, or a HUD",
+    "An Editor Utility Widget, a Scriptable Tool, or a Python script",
+    "A Material Function, a Niagara system, or a Data Table asset",
+    "A Behavior Tree, a State Tree, or a Blackboard"
+   ],
+   "5": [
+    "A widget that is shown to the player during the game, such as a menu",
+    "A material that is used on editor icons",
+    "A panel that runs in the editor and is built like a Widget Blueprint",
+    "A plugin that must be bought on Fab before any tool can be made in the editor"
+   ],
+   "6": [
+    "Show a clear message that says what is wrong",
+    "Stop without any message, so the user is not disturbed",
+    "Carry on and guess the values that are missing",
+    "Close the editor, so that no wrong data can be saved"
+   ],
+   "7": [
+    "How you learned to build tools, and which tutorials you followed to get there",
+    "Which nodes the graph of the tool contains and how they are connected",
+    "What the next version of the tool will do, and when you plan to release it",
+    "What the tool does, how to open it, its settings, and one known limit"
+   ],
+   "8": [
+    "The tool with a light theme and a dark theme, each one in a screenshot of the editor",
+    "The same task done by hand and done with the tool, with the time each one took",
+    "The first and the last version of the code, side by side, with the changed lines marked",
+    "The Content Browser before and after you renamed the tool and moved its folder"
+   ],
+   "9": [
+    "You read the code one more time",
+    "You use the tool right away, while you still remember everything about it",
+    "You wait a day and then use the tool by following only the document",
+    "You skip the test, because you already know how the tool works"
+   ],
+   "10": [
+    "You write down what was confusing and fix one of those things",
+    "You delete the usage document and write a new one with more pages",
+    "You tell the tester to try harder and to read the document again",
+    "You add as many new features as possible before the next test"
+   ]
+  }
+ },
+ "TAQ24": {
+  "quiz_choices": {
+   "1": [
+    "Effect Types make effects look better, because they raise the quality level",
+    "You configure the settings once and apply them to many systems",
+    "Only Effect Types can use the GPU, so systems without one run on the CPU",
+    "Systems without an Effect Type cannot be placed in a level at all"
+   ],
+   "2": [
+    "Any system is culled as soon as budget use reaches 80%; this favors performance over visuals",
+    "Systems slow down to 80% speed, so each of them costs less per frame while the budget is in use",
+    "Only 80% of particles spawn in each system, and the rest are skipped until the budget use drops",
+    "Nothing happens until the budget use is above 100%; then 80% of the systems are culled at once"
+   ],
+   "4": [
+    "No difference; both options do the same thing, and the second name is only kept for systems made in older engine versions",
+    "Instance Count only affects GPU systems; System Instance Count only affects CPU systems",
+    "System Instance Count only works in the editor preview; Instance Count is the one that is used in the packaged game build",
+    "Instance Count scales all instances of all systems with this Effect Type; System Instance Count scales the count per system"
+   ],
+   "5": [
+    "Set System Debug Verbosity to Basic or Verbose and turn off System Show Active Only in World",
+    "Turn on Enable GPU Readback and read the particle count of the system on the HUD",
+    "Set fx.Niagara.Debug.PlaybackMode to 1 and step through the frames until the system appears",
+    "Open the Session Browser tab and pick the PIE session, which lists culled systems"
+   ],
+   "6": [
+    "No cost, because the data is already on the GPU",
+    "The GPU emitters switch to CPU simulation while on",
+    "A few frames of latency and an extra memory cost",
+    "The Debug HUD turns off while it is on"
+   ],
+   "7": [
+    "CPU memory on the left, GPU memory on the right side",
+    "Game thread cost on the left, render thread cost on the right",
+    "Spawn time on the left, update time on the right",
+    "The particle count on the left, the emitter count on the right"
+   ],
+   "8": [
+    "GPU emitters also simulate every particle on the CPU, as a backup for the GPU readback",
+    "The Effect Type forces CPU simulation for all systems that use it",
+    "The debugger doubles the cost of every emitter while it is attached",
+    "System and emitter scripts still run on the CPU, so each emitter keeps a fixed overhead"
+   ],
+   "9": [
+    "Spread the spawn over several frames",
+    "Add warmup time to the system",
+    "Turn on sorting for the emitter",
+    "Use dynamic bounds for the emitter"
+   ],
+   "10": [
+    "Keep four emitters and lower the spawn rate of each",
+    "One emitter with a mesh array or several renderers",
+    "Four systems with one emitter each, spawned together",
+    "Turn on Require Current Frame Data on all four emitters"
+   ]
+  }
+ },
+ "TAQ25": {
+  "quiz_choices": {
+   "2": [
+    "Edit Engine/Config/BaseScalability.ini in the engine install and change every [FoliageQuality@N]",
+    "Lower the Density on each foliage type by hand",
+    "Create Config/DefaultScalability.ini in the project and add [FoliageQuality@N] sections",
+    "Set r.ViewDistanceScale to 0 in the Level Blueprint of each level that has foliage"
+   ],
+   "3": [
+    "Enable Density Scaling is off on the foliage static meshes",
+    "Foliage only scales on mobile platforms, never on a desktop PC",
+    "The level needs a lighting build before the density can change",
+    "Foliage Quality only affects Landscape grass on the Epic level"
+   ],
+   "4": [
+    "Only the texture compression format, which changes from BC7 to BC1 on each of the textures",
+    "Only the anisotropy level, r.MaxAnisotropy, and nothing else in that group",
+    "Nothing on PC, only on consoles",
+    "A higher r.Streaming.MipBias, a smaller r.Streaming.PoolSize and lower r.MaxAnisotropy"
+   ],
+   "5": [
+    "Texture quality is broken in the editor and only works in a packaged build of the project",
+    "Your textures fit in the pool at full resolution, so the streamer never has to drop mips",
+    "Texture quality only affects UI textures, so a 3D scene never changes",
+    "You need to rebuild lighting first, because lightmaps hide the change"
+   ],
+   "6": [
+    "Texture bandwidth, but not texture memory",
+    "Texture memory, but not texture bandwidth",
+    "Both memory and bandwidth equally",
+    "Only CPU time"
+   ],
+   "7": [
+    "Detail Mode only works on lights and decals, so the props would stay visible on every quality level",
+    "There is no risk; Detail Mode is made for exactly this kind of object",
+    "Objects that affect gameplay can cause problems with network play, save games or consistency",
+    "Detail Mode doubles draw calls for every object that has a mode set on Low"
+   ],
+   "8": [
+    "It only works on translucent materials, not on opaque ones",
+    "It only runs in the editor, not in a packaged game",
+    "It needs Nanite on every mesh that uses the material",
+    "You cannot have two material quality levels at the same time"
+   ],
+   "9": [
+    "Project/Config/Android/Android*.ini",
+    "Engine/Config/Base*.ini",
+    "Project/Config/Default*.ini",
+    "Engine/Config/Android/Android*.ini"
+   ],
+   "10": [
+    "Device profiles cannot hold cvars, only the names of scalability groups",
+    "So Preview Rendering Level in the editor shows the same mobile scalability values",
+    "sg.* values are faster to parse when the game starts on a slow device",
+    "Device profiles are ignored in Shipping builds, so cvars set there would be lost"
+   ],
+   "11": [
+    "It resets shadows to the Epic level",
+    "An error, because a value is always required",
+    "The current value and the last place it was set",
+    "A list of all shadow cvars of the group"
+   ],
+   "12": [
+    "It also lowers texture memory to zero, because textures are scaled with the screen",
+    "It turns off Lumen below 70 percent, which removes the largest cost of the frame",
+    "It is applied to the whole frame, including the UI, so every part of it gets cheaper",
+    "The 3D scene renders smaller, UI is not scaled, and the upsample pass costs little"
+   ]
+  }
+ },
+ "TAQ26": {
+  "quiz_choices": {
+   "2": [
+    "Project Settings > Engine > Interchange",
+    "Editor Preferences > General > Import",
+    "World Settings > Pipelines",
+    "The Static Mesh Editor > Import"
+   ],
+   "3": [
+    "Factories make an empty asset first, then the pipeline stack fills it, then translation reads the source file as the last step",
+    "The pipeline stack runs first, then translation turns the file into nodes, then factories write those nodes back into the source file",
+    "Translation and factories run at the same time, and the pipeline stack runs later, when the asset is saved to disk",
+    "Data becomes an intermediary node structure, then goes through the pipeline stack, then factories make the asset"
+   ],
+   "4": [
+    "The import fails with an error message",
+    "Unreal uses the legacy import framework",
+    "Interchange converts it to glTF first",
+    "It imports as a Data Asset with raw bytes"
+   ],
+   "5": [
+    "The pipeline stack and options that were used",
+    "Nothing; you choose everything again each time",
+    "Only the file path of the source file",
+    "Only the material slots of the old asset"
+   ],
+   "6": [
+    "Click Preserve Original in the conflict preview window",
+    "Delete the asset and import again",
+    "Fix it in the source file or in the Static Mesh Editor",
+    "Turn off the Default Material Pipeline"
+   ],
+   "7": [
+    "Write a Python startup script that hides the import window and sets the option for each artist",
+    "Ask artists not to touch it, and check each imported asset by hand afterwards",
+    "Edit BaseEngine.ini in the engine install and remove the line of that option",
+    "Open the default pipeline asset and change its default value, visibility and read-only status"
+   ],
+   "11": [
+    "Nothing; Python pipelines are found automatically on start",
+    "Compile it with Live Coding, like any other class",
+    "Add the script to the Startup Scripts in Project Settings",
+    "Save it as a .uasset in the Interchange folder"
+   ],
+   "12": [
+    "The Interchange folder in Additional Asset Directories to Cook",
+    "Nanite on all meshes that are imported at runtime by the app",
+    "The FBX SDK plugin, which is not included in cooked builds by default",
+    "A Python startup script that loads Interchange in the cooked build"
+   ]
+  }
+ },
+ "TAQ27": {
+  "quiz_choices": {
+   "1": [
+    "They render the full 16k map once when the level loads and reuse it for every frame until the sun or a mesh moves",
+    "They use lower resolution on consoles only, and render the full 16k map on PC, where there is enough memory",
+    "They split the map into 128x128 pages, render only pages needed for on-screen pixels, and cache them between frames",
+    "They bake shadows into lightmaps when the level is built, and use the 16k map only for objects that move"
+   ],
+   "2": [
+    "Only the static page is cached, the dynamic part is not",
+    "The page is fully cached, static and dynamic",
+    "The page overflowed the pool and was dropped",
+    "The page belongs to a point light and is never cached"
+   ],
+   "3": [
+    "WPO disables Nanite on the foliage, and meshes without Nanite are never cached by Virtual Shadow Maps at all",
+    "WPO forces ray-traced shadows for the foliage, and ray-traced shadows are computed again on every single frame",
+    "Foliage never uses VSM; it always falls back to cascaded shadow maps, which are rendered again each frame",
+    "Geometry with WPO invalidates its cached pages every frame, because the real offset is not known until render"
+   ],
+   "6": [
+    "Nanite meshes have no shadows of their own, so a building costs nothing in the shadow pass and frees pages for the other meshes",
+    "Nanite turns off WPO on all meshes that are near the building, so the cached pages around it are never invalidated by the wind",
+    "Invalidations fully in the shadow of Nanite objects can be skipped, and Nanite renders into VSM far more cheaply",
+    "Non-Nanite meshes cannot cast VSM shadows at all, so a building without Nanite would have no shadow in the level"
+   ],
+   "8": [
+    "Its bounds, for example set Max World Position Offset Displacement in the material",
+    "The texture streaming pool, because the shadow needs the opacity mask at full resolution",
+    "The Skylight intensity, because a dark sky makes parts of the shadow blend into the ground",
+    "The mesh UV density, because shadow pages are picked by the texel size of the surface"
+   ],
+   "9": [
+    "Raise r.Shadow.Virtual.NormalBias for the whole project",
+    "Add more polygons to that mesh, or a more detailed LOD",
+    "Turn off VSM for the whole level in the settings",
+    "Lower Source Angle to 0 on the Directional Light"
+   ],
+   "10": [
+    "It renders as translucent with a small cost",
+    "The mesh becomes a non-Nanite mesh automatically and keeps the material",
+    "The editor crashes on save, and the material has to be removed from the mesh in a text editor",
+    "A default material is assigned and a warning appears in the Output Log"
+   ],
+   "11": [
+    "All evaluated pixels, including masked-out ones, count as overdraw",
+    "Masked materials are not supported by Nanite and fall back to opaque",
+    "Masked materials disable VSM for the patch",
+    "Overdraw only counts translucent pixels, and masked pixels are treated as translucent"
+   ],
+   "12": [
+    "Disable async compute in the shipping build and move the pass to the CPU threads",
+    "Increase clipmap levels on the Directional Light",
+    "Reduce Source Radius on local lights or Source Angle on the Directional Light",
+    "Turn off page caching, so that each page is traced only once and then dropped again"
+   ]
+  }
+ }
+}

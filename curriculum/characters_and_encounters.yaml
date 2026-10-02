@@ -103,7 +103,7 @@ quests:
         answer_index: 1
         explain: "With a debug object selected, the graphs show the values and the active state as you play."
       - q: "Your character slides while playing the idle pose. The likely cause?"
-        choices: ["The speed variable isn't updating, so the blendspace stays at idle", "Lumen is off, so the feet of the character are not lit correctly", "The capsule is too big for the character mesh", "The level has no Player Start"]
+        choices: ["The speed variable isn't updating, so the blendspace stays at idle", "Lumen is off, so the feet of the character are not lit correctly", "The capsule is too big for the character mesh, so the feet float", "The level has no Player Start, so the pawn spawns at the origin"]
         answer_index: 0
         explain: "If the AnimBP never gets the real speed, the pose never changes. Check the Event Graph and the debug values first."
     flavors:
@@ -142,7 +142,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Play Montage fires but the character doesn't move. What do you check first?"
-        choices: ["The material of the lever has an emissive color and is assigned to the right mesh in the level", "The AnimBP has a Slot node for the montage's slot, and the montage uses the same skeleton", "The Lumen settings of the project allow animated meshes", "The World Settings of the level"]
+        choices: ["The material of the lever has an emissive color and is assigned to the right mesh in the level", "The AnimBP has a Slot node for the montage's slot, and the montage uses the same skeleton", "The Lumen settings of the project allow animated meshes to be lit, and the level has a Sky Light", "The World Settings of the level have a Game Mode Override, and its Default Pawn Class is not set to None"]
         answer_index: 1
         explain: "A montage plays through a slot. No matching Slot node in the AnimGraph means nothing shows."
       - q: "Which Play Montage output should trigger 'lever done, open the door'?"
@@ -150,7 +150,7 @@ quests:
         answer_index: 2
         explain: "On Completed fires when the montage finishes normally. The plain exec pin fires immediately, before the animation plays."
       - q: "Which component do you pass as the skeletal mesh to Play Montage?"
-        choices: ["The character's Mesh", "The capsule", "The lever's Box collision", "The camera"]
+        choices: ["The character's Mesh", "The character's capsule", "The lever's Box collision", "The camera of the player"]
         answer_index: 0
         explain: "Montages play on the Skeletal Mesh component, which runs the AnimBP."
       - q: "Why use a Blueprint Interface for 'Interact'?"
@@ -158,7 +158,7 @@ quests:
         answer_index: 3
         explain: "Levers, doors and buttons each implement Interact their own way. The player just sends the message."
       - q: "What is a montage for, compared with a plain animation sequence?"
-        choices: ["Nothing, they're the same asset type, and the name only depends on how you created it", "Playing an animation from gameplay code or Blueprint, with slots, sections and notifies", "Only cinematics, where it replaces the Level Sequence", "Only facial animation on a MetaHuman"]
+        choices: ["Nothing, they're the same asset type, and the name only depends on how you created it", "Playing an animation from gameplay code or Blueprint, with slots, sections and notifies", "Only cinematics, where it replaces the Level Sequence and its camera cuts", "Only facial animation on a MetaHuman, which cannot use plain sequences"]
         answer_index: 1
         explain: "Montages are the gameplay-triggered animation asset. Sequences are usually driven by the AnimBP."
     flavors:
@@ -215,7 +215,7 @@ quests:
         answer_index: 0
         explain: "Retargeting needs two different skeletons. The mannequins of the template share one skeleton, so the second character must come from somewhere else."
       - q: "How do you open the Retarget Animations window?"
-        choices: ["Open the Window menu, then Output Log, and type the name of the source animation in there", "Right-click the source animation in the Content Browser and choose Retarget Animations", "Drag the animation into the level and press Play", "Open Edit, then Plugins, and search for Retarget"]
+        choices: ["Open the Window menu, then Output Log, and type the name of the source animation in there", "Right-click the source animation in the Content Browser and choose Retarget Animations", "Drag the animation into the level and press Play, then pick Retarget in the Details panel of the actor", "Open Edit, then Plugins, search for Retarget, and click the Open button next to the plugin name"]
         answer_index: 1
         explain: "The command is in the right-click menu of the animation asset. The window that opens holds all settings for the retarget."
       - q: "What do you set Target Preview Mesh to?"
@@ -231,7 +231,7 @@ quests:
         answer_index: 0
         explain: "You select your animation in the list and click Export Animations. A new animation for the target character is saved in the folder you choose."
       - q: "You want to fix the feet in the result by editing the retarget setup. What do you click first?"
-        choices: ["Export Animations, to save the retargeted animation one more time under a new name", "Export Retarget Assets, to save the generated IK Rig assets and IK Retargeter asset", "Auto Generate Retargeter, to turn it off", "Target Preview Mesh, to pick another mesh"]
+        choices: ["Export Animations, to save the retargeted animation one more time under a new name", "Export Retarget Assets, to save the generated IK Rig assets and IK Retargeter asset", "Auto Generate Retargeter, to turn it off before the next animation is exported", "Target Preview Mesh, to pick another mesh that has feet of the right size"]
         answer_index: 1
         explain: "The generated assets only exist inside the window until you export them. After Export Retarget Assets you can open them and fix problems in the feet, the hands or the root."
 
@@ -282,11 +282,11 @@ quests:
         answer_index: 0
         explain: "Get Control gives the transform of the control. Fed into the Value pin of Set Bone, it places the bone where the control is."
       - q: "What is the Forwards Solve node connected to?"
-        choices: ["To the Get Control nodes only", "To the Rig Hierarchy tab", "To the Skeletal Mesh in the Content Browser", "To the Set Bone nodes, one after the other"]
+        choices: ["To the Get Control nodes only, with no Set node", "To the Rig Hierarchy tab of the editor", "To the Skeletal Mesh in the Content Browser", "To the Set Bone nodes, one after the other"]
         answer_index: 3
         explain: "Forwards Solve is the event that runs the graph. Its execution line must pass through each Set Bone node for the bones to follow."
       - q: "You move a control in the viewport, but its bone does not follow. What do you check first?"
-        choices: ["That the control has a red color in the viewport", "That the Forwards Solve node is connected to the Set Bone node of that bone", "That the Skeletal Mesh has a material on each one of its slots and on all LODs", "That the level has a Player Start"]
+        choices: ["That the control has a red color in the viewport and a valid shape", "That the Forwards Solve node is connected to the Set Bone node of that bone", "That the Skeletal Mesh has a material on each one of its slots and on all LODs", "That the level has a Player Start and a Game Mode with a pawn"]
         answer_index: 1
         explain: "A Set Bone node that is not on the execution line of Forwards Solve never runs. The bone then keeps its old place."
       - q: "Why should you take the screenshot of the posed arm before you click Compile again?"
@@ -323,15 +323,15 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is an anim notify?"
-        choices: ["A curve that changes the speed of an animation while it plays in the game", "A second animation that plays on top of the first", "A warning that an animation has an error", "A marker on one frame of an animation that tells the game to do something"]
+        choices: ["A curve that changes the speed of an animation while it plays in the game", "A second animation that plays on top of the first, on some bones only", "A warning in the log that tells you an animation has an error", "A marker on one frame of an animation that tells the game to do something"]
         answer_index: 3
         explain: "When the animation reaches the frame of the notify, the game reacts, for example with a sound or an effect. Events then match the exact moment in the movement."
       - q: "How do you create the montage AM_Action from an animation sequence?"
-        choices: ["Right-click the sequence and choose Create, then Create AnimMontage", "Drag the sequence into the level and save the actor as a montage", "Open the sequence and press Shift+P", "Click Add, then Animation, then Aim Offset"]
+        choices: ["Right-click the sequence and choose Create, then Create AnimMontage", "Drag the sequence into the level and save the actor as a montage", "Open the sequence, press Shift+P and save the result as a montage", "Click Add, then Animation, then Aim Offset, and pick the sequence"]
         answer_index: 0
         explain: "The right-click menu of an animation sequence has Create, then Create AnimMontage. The new montage holds that sequence."
       - q: "Where in the montage do you add a notify?"
-        choices: ["In the Rig Hierarchy tab, with a right-click on the bone you want", "In the Notifies track, with a right-click at the frame you want", "In the Class Defaults of the character", "In the Stats panel"]
+        choices: ["In the Rig Hierarchy tab, with a right-click on the bone you want", "In the Notifies track, with a right-click at the frame you want", "In the Class Defaults of the character, under Animation", "In the Stats panel, with a click on the row of the frame"]
         answer_index: 1
         explain: "The Notifies track runs along the timeline. A right-click at a frame opens Add Notify for exactly that frame."
       - q: "Which kind of notify is sent to the Play Montage node?"
@@ -347,7 +347,7 @@ quests:
         answer_index: 0
         explain: "On Notify Begin fires when a Montage Notify is reached. You connect it to the Print String with the text Hit."
       - q: "When does the text Done appear in your test?"
-        choices: ["Before the key is pressed", "At the end of the montage, from On Completed", "In the middle of the montage, from On Notify Begin", "On every frame of the montage"]
+        choices: ["Before the key is pressed, from the Event BeginPlay node", "At the end of the montage, from On Completed", "In the middle of the montage, from On Notify Begin", "On every frame of the montage, from the Event Tick node"]
         answer_index: 1
         explain: "On Completed fires when the montage has finished. Hit appears in the middle, at the frame of the notify, and Done at the end."
       - q: "Done is printed at the end, but Hit never appears. What do you check first?"
@@ -403,7 +403,7 @@ quests:
         answer_index: 3
         explain: "The axis should cover every speed the character can reach. Max Walk Speed is the top speed, so it is the right end of the axis."
       - q: "Where do you find Max Walk Speed?"
-        choices: ["In the Asset Details of the blend space", "In the World Settings of the level, in the Game Mode section of the panel", "On the Character Movement component in the Blueprint of the character", "On the Blend Space Player node"]
+        choices: ["In the Asset Details of the blend space, in the Axis Settings section of the panel", "In the World Settings of the level, in the Game Mode section of the panel", "On the Character Movement component in the Blueprint of the character", "On the Blend Space Player node in the AnimGraph, in the Settings of its Details panel"]
         answer_index: 2
         explain: "The Character Movement component holds the movement values of the character, and Max Walk Speed is one of them."
       - q: "What does it mean that an animation was authored for a speed?"
@@ -423,7 +423,7 @@ quests:
         answer_index: 1
         explain: "With Ctrl held, the preview point follows the mouse. The preview character shows the blend at that point of the grid."
       - q: "How do you make the copy of the AnimBP use your blend space?"
-        choices: ["Rename the blend space to the name of the old one, so that the node finds it by its name", "Drag the blend space onto the character in the level", "Select the Blend Space Player node and pick your blend space in its Details panel", "Set Maximum Axis Value to 0"]
+        choices: ["Rename the blend space to the name of the old one, so that the node finds it by its name", "Drag the blend space onto the character in the level, and save the level with Ctrl+S", "Select the Blend Space Player node and pick your blend space in its Details panel", "Set Maximum Axis Value to 0, so that the old blend space is skipped"]
         answer_index: 2
         explain: "The Blend Space Player node plays one blend space. After you pick yours, you set Anim Class on the Mesh of the character to the copied AnimBP."
 
@@ -450,7 +450,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What is an aim offset?"
-        choices: ["An asset that bends the upper body of a character toward the direction the player is looking", "A setting that moves the camera to the side of the character, so the crosshair is not hidden", "A node that fires a weapon at a target", "A marker on an animation that plays a sound"]
+        choices: ["An asset that bends the upper body of a character toward the direction the player is looking", "A setting that moves the camera to the side of the character, so the crosshair is not hidden", "A node that fires a weapon at a target, and adds a small random spread to the direction of each shot", "A marker on an animation that plays a sound when the character aims"]
         answer_index: 0
         explain: "An aim offset blends aim poses so that the upper body follows the look direction. The character can walk and aim at the same time."
       - q: "What are additive poses?"
@@ -482,7 +482,7 @@ quests:
         answer_index: 2
         explain: "Get Control Rotation on the owning Pawn gives the look direction. The Delta Rotator node gives its difference to the Actor rotation, and you store the result in Pitch and Yaw."
       - q: "What do you connect to the Base Pose pin of the Aim Offset Player node?"
-        choices: ["The locomotion pose of the character", "The Aim_Up pose from the Asset Browser", "The Pitch variable", "The Output Pose node"]
+        choices: ["The locomotion pose of the character", "The Aim_Up pose from the Asset Browser", "The Pitch variable of the Animation Blueprint", "The Output Pose node of the AnimGraph"]
         answer_index: 0
         explain: "The aim offset is added on top of its base pose. With the locomotion pose as the base, the character keeps walking while the upper body aims."
       - q: "The character aims correctly, but it no longer walks or runs. What do you check first?"
@@ -525,7 +525,7 @@ quests:
         answer_index: 0
         explain: "Flanks give both the player and the AI choices. Without them the fight turns into trading shots."
       - q: "Your high ground wins every fight. What's a good fix?"
-        choices: ["Delete it and make the whole arena flat", "Put an invisible wall on it so nobody can climb up", "Give it a cost: an exposed approach, less cover, or a sightline that covers it", "Make it darker than the rest of the arena, so that players do not notice it is there"]
+        choices: ["Delete it and make the whole arena flat, so that no position is better than any other", "Put an invisible wall on it so nobody can climb up, and leave the mesh as decoration", "Give it a cost: an exposed approach, less cover, or a sightline that covers it", "Make it darker than the rest of the arena, so that players do not notice it is there"]
         answer_index: 2
         explain: "High ground should be worth taking but not free to hold."
       - q: "Why mix low and full-height cover?"
@@ -582,11 +582,11 @@ quests:
         answer_index: 0
         explain: "Set Auto Possess AI to 'Placed in World or Spawned' (or use Spawn AI From Class) so spawned pawns get a controller."
       - q: "In a Behavior Tree, how does a Sequence node behave?"
-        choices: ["Runs children left to right until one of them succeeds", "Runs one random child each time", "Runs only the rightmost child", "Runs children left to right and stops when one fails"]
+        choices: ["Runs children left to right until one of them succeeds", "Runs one random child each time it is entered", "Runs only the rightmost child and skips the others", "Runs children left to right and stops when one fails"]
         answer_index: 3
         explain: "Sequence stops on a failure. A Selector stops on the first success."
       - q: "Where should most spawn points be?"
-        choices: ["Directly behind the player, with no warning and no sound at all before they attack", "Out of the player's view, with a clear direction the threat arrives from", "Inside cover pieces, so enemies are hidden", "On the exit of the arena"]
+        choices: ["Directly behind the player, with no warning and no sound at all before they attack", "Out of the player's view, with a clear direction the threat arrives from", "Inside cover pieces, so enemies are hidden until they step out", "On the exit of the arena, so the player cannot leave the fight"]
         answer_index: 1
         explain: "Spawns the player sees happen feel cheap. Spawns behind them with no warning feel unfair. Telegraph the direction."
     flavors:
@@ -631,15 +631,15 @@ quests:
         answer_index: 1
         explain: "The orthographic ruler shows the length in units (cm) as you drag."
       - q: "How can you check exactly what an enemy position can see?"
-        choices: ["Lower the light intensity until only the visible parts of the arena stay bright", "Hide all cover and look at the arena from above", "Place a camera at enemy eye height and pilot it, or bookmark that view", "Turn on wireframe"]
+        choices: ["Lower the light intensity until only the visible parts of the arena stay bright", "Hide all cover and look at the arena from above in the Top viewport, with Unlit view mode", "Place a camera at enemy eye height and pilot it, or bookmark that view", "Turn on wireframe and look through the walls from the player start"]
         answer_index: 2
         explain: "Look from the enemy's eye height, not the editor camera's."
       - q: "Cover is 110 cm tall and your standing player can't see over it. What's wrong?"
-        choices: ["Nothing. Cover of 110 cm is always low cover, so the camera of the player must be broken", "The NavMesh. It lifts cover pieces when it builds", "The lighting. The shadow makes the cover look taller", "That piece is taller than your character's standing view line, so it acts as full cover"]
+        choices: ["Nothing. Cover of 110 cm is always low cover, so the camera of the player must be broken", "The NavMesh. It lifts cover pieces when it builds, so they end up taller", "The lighting. The shadow makes the cover look taller than it really is", "That piece is taller than your character's standing view line, so it acts as full cover"]
         answer_index: 3
         explain: "If players can't see over it, it's full cover. Decide which you want and build to that height."
       - q: "Why write engagement distances down?"
-        choices: ["Epic requires a distance sheet before a level can be packaged or shared with other people", "So spacing stays consistent across encounters and other people can tune against it", "It saves memory when the level is loaded", "It speeds up NavMesh building"]
+        choices: ["Epic requires a distance sheet before a level can be packaged or shared with other people", "So spacing stays consistent across encounters and other people can tune against it", "It saves memory when the level is loaded, because distances are cached", "It speeds up NavMesh building, because the engine reads the sheet"]
         answer_index: 1
         explain: "Written metrics are what let a team build spaces that play the same way."
     flavors:
@@ -679,7 +679,7 @@ quests:
         answer_index: 0
         explain: "Verbs are actions the player takes: move, shoot, flank, hide, pull."
       - q: "Why list tuning knobs with current values?"
-        choices: ["It makes the doc look long and complete", "So you and others know what to change and what it was before", "Epic requires it for every project that is shared with others", "It isn't useful, but it is a habit"]
+        choices: ["It makes the doc look long and complete to a reviewer who only skims it", "So you and others know what to change and what it was before", "Epic requires it for every project that is shared with others", "It isn't useful, but it is a habit from older projects"]
         answer_index: 1
         explain: "When a playtest goes badly, the knob list is where you look first."
       - q: "Why keep the GDD to one page?"
@@ -687,7 +687,7 @@ quests:
         answer_index: 3
         explain: "A short doc gets read. A long one gets skimmed."
       - q: "What is a fail state?"
-        choices: ["A bug that stops the encounter", "How the player can lose, and what happens next", "A crash of the game, and the steps to report it", "An empty Content Drawer"]
+        choices: ["A bug that stops the encounter before the player can end it", "How the player can lose, and what happens next", "A crash of the game, and the steps to report it", "An empty Content Drawer, with no assets for the level"]
         answer_index: 1
         explain: "Say how they lose and where they restart. That shapes how hard you can make it."
     flavors:
@@ -720,7 +720,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Which critique request gets the most useful answers?"
-        choices: ["'Thoughts? Anything at all is welcome, good or bad, about any part of it.'", "'Is it good?'", "'Rate 1–10'", "'Players keep ignoring the right flank. Is the entry to it too hidden?'"]
+        choices: ["'Thoughts? Anything at all is welcome, good or bad, about any part of it.'", "'Is it good? I worked hard on it, so please be kind.'", "'Rate it from 1 to 10. A number is enough, you do not have to say why.'", "'Players keep ignoring the right flank. Is the entry to it too hidden?'"]
         answer_index: 3
         explain: "A specific question gets a specific answer."
       - q: "What goes in an iteration log entry?"
@@ -732,11 +732,11 @@ quests:
         answer_index: 2
         explain: "Not every note needs a change. Every note needs an answer."
       - q: "What makes a good critique you give?"
-        choices: ["One thing that works, one specific issue, one next step", "A long list of everything that is wrong with the level", "Only emojis", "A full rewrite of their level"]
+        choices: ["One thing that works, one specific issue, one next step", "A long list of everything that is wrong with the level", "Only emojis, so that the author does not feel bad", "A full rewrite of their level in your own style"]
         answer_index: 0
         explain: "This format is short, kind and useful: the other person learns what to keep, what to fix, and what to do next."
       - q: "Why do you say what the space is for when you ask for critique?"
-        choices: ["Because long posts look better", "Reviewers can judge the space against what you meant it to do", "To fill the post, so that it does not look empty next to the image", "So it gets more reactions"]
+        choices: ["Because long posts look better and get read by more people in the channel", "Reviewers can judge the space against what you meant it to do", "To fill the post, so that it does not look empty next to the image", "So it gets more reactions from people who only look at the first line"]
         answer_index: 1
         explain: "Without the goal, reviewers critique the level they would have made instead."
     flavors:
@@ -775,7 +775,7 @@ quests:
         answer_index: 2
         explain: "Value (light vs dark) is read before hue. Build the key on both."
       - q: "What makes a color language work?"
-        choices: ["Using it the same way every time", "Using as many colors as possible", "Changing it per room", "Only using red"]
+        choices: ["Using it the same way every time", "Using as many colors as possible", "Changing it in every room of the level", "Only using red for everything"]
         answer_index: 0
         explain: "If yellow means climbable once, it has to mean climbable everywhere."
       - q: "What's usually the brightest thing in view at the entry?"
@@ -823,7 +823,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What does Instance Editable do?"
-        choices: ["Makes the variable replicate to every client in a network game, from the server", "Lets you set a different value on each placed copy, from the Details panel", "Hides the variable from other Blueprints", "Makes it a constant that can't change"]
+        choices: ["Makes the variable replicate to every client in a network game, from the server", "Lets you set a different value on each placed copy, from the Details panel", "Hides the variable from other Blueprints, so only this Blueprint can read or set it", "Makes it a constant that can't change after the Blueprint is compiled"]
         answer_index: 1
         explain: "Each copy in the level can have its own value, with no graph edits."
       - q: "Where does a variable's tooltip text come from?"
@@ -839,7 +839,7 @@ quests:
         answer_index: 3
         explain: "Handy for patrol points and target locations."
       - q: "What does Expose on Spawn add?"
-        choices: ["A pin for that variable on Spawn Actor from Class", "A tooltip for that variable in the Details panel", "A category for that variable", "A slider for that variable"]
+        choices: ["A pin for that variable on Spawn Actor from Class", "A tooltip for that variable in the Details panel", "A category for that variable in My Blueprint", "A slider for that variable in the viewport"]
         answer_index: 0
         explain: "Spawners can set the value at spawn time. You'll use it in the spawn waves elective."
     flavors:
@@ -880,15 +880,15 @@ quests:
     verify_type: mentor
     quiz:
       - q: "Who approves this capstone?"
-        choices: ["The Quartermaster automatically", "Nobody", "Any one reaction", "A mentor, or two peer approves"]
+        choices: ["The Quartermaster automatically", "Nobody, it is approved at once", "Any one reaction on your post", "A mentor, or two peer approves"]
         answer_index: 3
         explain: "Capstones at this level are reviewed by people, not by the quiz."
       - q: "What must the before/after show?"
-        choices: ["Two different arenas, one that you built before the critique and a new one that you built after it", "The same view before and after a change made from critique, with the feedback that led to it", "Two lighting presets of the same arena", "The theme of the editor, light and dark"]
+        choices: ["Two different arenas, one that you built before the critique and a new one that you built after it", "The same view before and after a change made from critique, with the feedback that led to it", "Two lighting presets of the same arena, one for day and one for night, with the settings of each light", "The theme of the editor, light and dark, with the same arena open in the viewport in both pictures"]
         answer_index: 1
         explain: "Same bookmark, one real change, and the feedback that prompted it."
       - q: "The GDD says 'three enemies flank' but your build has no flank route. What do you do before you send your work?"
-        choices: ["Fix the build or update the GDD so they match", "Send it anyway and explain the gap if someone asks", "Remove the link to the GDD", "Add more enemies"]
+        choices: ["Fix the build or update the GDD so they match", "Send it anyway and explain the gap if someone asks", "Remove the link to the GDD so nobody can compare them", "Add more enemies to the arena instead"]
         answer_index: 0
         explain: "Reviewers check the build against the doc. They must agree."
       - q: "Does this capstone need any C++?"
@@ -896,7 +896,7 @@ quests:
         answer_index: 2
         explain: "Level designers are never gated on C++."
       - q: "What does the top-down map need to show?"
-        choices: ["Nothing special. A plain screenshot from above with no labels is fine", "Entry, exit, cover, flanks, high ground and spawn points, labeled", "Only the lights and their colors", "Only the NavMesh"]
+        choices: ["Nothing special. A plain screenshot from above with no labels is fine", "Entry, exit, cover, flanks, high ground and spawn points, labeled", "Only the lights and their colors, with the intensity value of each one", "Only the NavMesh, shown in green with the P key"]
         answer_index: 1
         explain: "The annotated map is how a reviewer understands the space before they watch the clip."
     flavors:
@@ -927,7 +927,7 @@ quests:
         answer_index: 0
         explain: "A Smart Object holds the information needed for an interaction, for example a spot to take cover or a place to stand and wait. AI characters find it and use it."
       - q: "What do Smart Objects let a designer do?"
-        choices: ["Draw the NavMesh by hand, one polygon at a time, around each activity", "Write the animation of each AI character", "Put activities into the world, where the AI finds and uses them", "Replace the Behavior Tree of the AI"]
+        choices: ["Draw the NavMesh by hand, one polygon at a time, around each activity", "Write the animation of each AI character by hand, one key at a time", "Put activities into the world, where the AI finds and uses them", "Replace the Behavior Tree of the AI with a Blueprint"]
         answer_index: 2
         explain: "The activity lives in the object in the level, not in each AI character. You add a new activity by placing one more Smart Object."
       - q: "Which plugins does the quick start guide have you enable?"
@@ -993,19 +993,19 @@ quests:
         answer_index: 3
         explain: "A patrol is the route an enemy walks. In a stealth level the patrols must leave a path open for the player."
       - q: "How do you build a simple patrolling enemy?"
-        choices: ["A Character Blueprint that walks between two Target Points with AI MoveTo", "A Static Mesh that moves between two points on a Timeline, with no controller", "A Pain Causing Volume that follows the player", "A Widget Blueprint that shows a warning"]
+        choices: ["A Character Blueprint that walks between two Target Points with AI MoveTo", "A Static Mesh that moves between two points on a Timeline, with no controller", "A Pain Causing Volume that follows the player and deals damage every second", "A Widget Blueprint that shows a warning when the player comes close to a wall"]
         answer_index: 0
         explain: "The enemy uses AI MoveTo to walk to one Target Point and then to the other, again and again. That gives a patrol the player can learn."
       - q: "What does setting Auto Possess AI to Placed in World or Spawned do for the enemy?"
-        choices: ["The enemy is hidden until the player comes near it, whether it is placed or spawned", "The enemy is controlled by the keyboard of the player", "An AI controller takes control of the enemy, whether it is placed or spawned", "The enemy is deleted when the level starts"]
+        choices: ["The enemy is hidden until the player comes near it, whether it is placed or spawned", "The enemy is controlled by the keyboard of the player, whether it is placed or spawned", "An AI controller takes control of the enemy, whether it is placed or spawned", "The enemy is deleted when the level starts, whether it is placed or spawned in it"]
         answer_index: 2
         explain: "A Character needs a controller to move by itself. With this setting an AI controller possesses the enemy, so AI MoveTo can work."
       - q: "Why does the arena need a Nav Mesh Bounds Volume that covers the floor?"
-        choices: ["It lights the floor for the enemies", "It stops the player from leaving the arena at the edges of the floor", "It hides the cover from the enemies", "It creates the navigation mesh that AI MoveTo needs to find a path"]
+        choices: ["It lights the floor for the enemies, so that they can see the player from far", "It stops the player from leaving the arena at the edges of the floor", "It hides the cover from the enemies, so that they walk in a straight line", "It creates the navigation mesh that AI MoveTo needs to find a path"]
         answer_index: 3
         explain: "AI MoveTo plans its path on the navigation mesh. The volume marks the area where that mesh is built."
       - q: "When does an enemy see the player in this quest?"
-        choices: ["When the player is anywhere inside the arena, whatever the enemy faces", "When the enemy faces the player and nothing blocks the line between them", "When the player stands still for too long", "When the player is closer than the nearest cover"]
+        choices: ["When the player is anywhere inside the arena, whatever the enemy faces", "When the enemy faces the player and nothing blocks the line between them", "When the player stands still for too long in one place of the arena", "When the player is closer than the nearest cover piece to the enemy"]
         answer_index: 1
         explain: "All three conditions must be true. Cover breaks the line, and the direction the enemy faces changes as it walks its patrol."
       - q: "The player is seen every time at one spot of the crossing. What can you change?"
@@ -1043,7 +1043,7 @@ quests:
         answer_index: 1
         explain: "In a vertical arena the fight also moves up and down. Stairs, ledges and drops connect the floors."
       - q: "Where do you find Max Step Height?"
-        choices: ["In the World Settings of the level", "In the settings of the CubeGrid tool, next to the size of the grid cells", "On the Character Movement component of BP_ThirdPersonCharacter", "On the Nav Mesh Bounds Volume"]
+        choices: ["In the World Settings of the level, in the Game Mode section of the panel", "In the settings of the CubeGrid tool, next to the size of the grid cells", "On the Character Movement component of BP_ThirdPersonCharacter", "On the Nav Mesh Bounds Volume, in the Details panel, under Navigation"]
         answer_index: 2
         explain: "The Character Movement component holds the movement numbers of the character. Max Step Height is one of them."
       - q: "What does Max Step Height tell you?"
@@ -1097,7 +1097,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "What is pacing in a game?"
-        choices: ["How fast the character runs from one encounter to the next", "How long the game takes to load", "How many levels the game has", "How the intensity of the game rises and falls over time"]
+        choices: ["How fast the character runs from one encounter to the next", "How long the game takes to load each level", "How many levels the game has from start to end", "How the intensity of the game rises and falls over time"]
         answer_index: 3
         explain: "Pacing is the change of intensity over time. Good pacing has both strong moments and quiet moments."
       - q: "What happens when every fight in a row is equally hard?"
@@ -1109,7 +1109,7 @@ quests:
         answer_index: 1
         explain: "A rest beat is a quiet moment. It lets the player breathe, and it makes the next peak feel stronger."
       - q: "What is an intensity curve?"
-        choices: ["A graph of the frame rate over time", "A spline that the enemies walk along during an encounter in the level", "A simple line drawing of how the intensity is planned to rise and fall", "A setting on the Character Movement component"]
+        choices: ["A graph of the frame rate over time, shown by a stat command", "A spline that the enemies walk along during an encounter in the level", "A simple line drawing of how the intensity is planned to rise and fall", "A setting on the Character Movement component of the player"]
         answer_index: 2
         explain: "The curve is a sketch of your pacing plan. High points are intense moments and low points are quiet ones."
       - q: "What does a peak on your intensity curve stand for?"
@@ -1165,7 +1165,7 @@ quests:
         answer_index: 0
         explain: "A wave is one group of enemies that appears together. A fight is made of several waves in a row."
       - q: "When does the spawner start the next wave?"
-        choices: ["As soon as the first enemy of the current wave appears in the level", "When the player presses the E key", "At a random time", "When all enemies of the current wave are destroyed, after the delay"]
+        choices: ["As soon as the first enemy of the current wave appears in the level", "When the player presses the E key near the spawner, at any time during the wave", "At a random time that the spawner picks again each time a wave has started", "When all enemies of the current wave are destroyed, after the delay"]
         answer_index: 3
         explain: "The next wave waits until the current one is beaten. The delay then gives the player a short pause before more enemies appear."
       - q: "What does Initial Life Span set to 5 do on BP_WaveEnemy?"
@@ -1181,18 +1181,18 @@ quests:
         answer_index: 0
         explain: "These three numbers describe the fight: how many waves, how many enemies in each, and how long the pause between them is."
       - q: "What does Instance Editable mean for these variables?"
-        choices: ["They change by themselves during play, with no input from you", "They are saved in a Data Table", "They can only be changed in the graph", "They can be changed in the Details panel of the placed spawner"]
+        choices: ["They change by themselves during play, with no input from you", "They are saved in a Data Table that the spawner reads", "They can only be changed in the graph of the Blueprint", "They can be changed in the Details panel of the placed spawner"]
         answer_index: 3
         explain: "Each placed spawner can have its own values. You change the size and the timing of a fight by changing a few numbers, with no graph edits."
       - q: "How does the spawner know that a wave is beaten?"
-        choices: ["It waits a fixed time and then assumes that the wave is over, whatever happened", "It checks the health of the player", "It counts the living enemies and lowers the count when an enemy is destroyed", "It reads the frame rate of the game"]
+        choices: ["It waits a fixed time and then assumes that the wave is over, whatever happened", "It checks the health of the player after each hit and compares it with the start value", "It counts the living enemies and lowers the count when an enemy is destroyed", "It reads the frame rate of the game and waits for it to rise"]
         answer_index: 2
         explain: "The spawner binds an event to On Destroyed of each spawned enemy, and that event lowers the count. When the count reaches 0, the wave is beaten."
       - q: "The first wave is destroyed, but the second wave never starts. What do you check first?"
-        choices: ["That the enemies have a visible mesh", "That the event bound to On Destroyed of each enemy lowers the count", "That the spawner is placed at the exact center of the level, on the floor", "That the delay is longer than 5 seconds"]
+        choices: ["That the enemies have a visible mesh and a material on it", "That the event bound to On Destroyed of each enemy lowers the count", "That the spawner is placed at the exact center of the level, on the floor", "That the delay is longer than 5 seconds for each wave"]
         answer_index: 1
         explain: "The next wave only starts when the count of living enemies reaches 0. If the count is never lowered, the spawner waits for ever."
       - q: "Where do you put the spawn points?"
-        choices: ["Where the player cannot see them, for example behind cover", "Directly in front of the player, in the middle of the arena", "Above the level, in the sky", "Outside the Nav Mesh Bounds Volume"]
+        choices: ["Where the player cannot see them, for example behind cover", "Directly in front of the player, in the middle of the arena", "Above the level, in the sky, so that the enemies fall into the arena", "Outside the Nav Mesh Bounds Volume, far from the floor"]
         answer_index: 0
         explain: "Enemies that appear out of nothing in plain view break the illusion. Target Points behind cover let them appear unseen and then walk in."

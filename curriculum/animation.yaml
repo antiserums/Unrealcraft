@@ -38,7 +38,7 @@ quests:
         answer_index: 2
         explain: "The docs say the quickest way is to drag the mesh from the Content Browser into the Level Viewport, then set its Transform."
       - q: "You drag a Material onto a Skeletal Mesh Actor and it does not render correctly. What must you enable in the Material?"
-        choices: ["Two Sided", "Used with Static Lighting", "Cast Shadows", "Used with Skeletal Mesh"]
+        choices: ["Used with Particle Sprites", "Used with Static Lighting", "Used with Spline Meshes", "Used with Skeletal Mesh"]
         answer_index: 3
         explain: "A Material needs the Used with Skeletal Mesh option enabled before it can be used on a Skeletal Mesh."
       - q: "Why does a Skeletal Mesh Actor not collide with objects like a Static Mesh does?"
@@ -604,7 +604,7 @@ quests:
         answer_index: 0
         explain: "The Blueprint reference says that with a NULL Montage reference, the jump is applied to all active montages."
       - q: "Play Montage fires but the character keeps playing locomotion and never shows the montage. What is the most likely missing piece?"
-        choices: ["A Sync Group name on the montage that matches the locomotion", "A Slot node with the matching Slot Name in the AnimGraph", "A Child Montage made from the montage", "A Timing track in the Montage Editor"]
+        choices: ["A Sync Group name on the montage that matches the locomotion", "A Slot node with the matching Slot Name in the AnimGraph", "A Child Montage made from the montage in the Content Browser", "A Timing track turned on in the Montage Editor"]
         answer_index: 1
         explain: "Montages only play through Slots. The AnimGraph needs a Slot node that uses the same Slot as the montage."
       - q: "You create a Child Montage and open it. What is true about it?"
@@ -673,7 +673,7 @@ quests:
         answer_index: 1
         explain: "Blend Masks are stored on the Skeleton. The docs say they let you reuse these blend amounts more easily than a Branch Filter."
       - q: "In a Blend Mask, a bone has the value 0. What does that mean?"
-        choices: ["The bone plays the animation at full strength", "No animation from the blend plays on that bone", "The bone is deleted from the LOD", "The bone blends at double speed"]
+        choices: ["The bone plays the animation at full strength", "No animation from the blend plays on that bone", "The bone is deleted from the current LOD", "The bone blends in at double the speed"]
         answer_index: 1
         explain: "Blend Mask values go from 0 to 1. A value of 0 means no animation plays on that bone, 1 means 100 percent."
     flavors:
@@ -716,7 +716,7 @@ quests:
         answer_index: 2
         explain: "Each Animation Sequence or Montage has its own Enable Root Motion property in the Asset Details panel of the Animation Sequence Editor."
       - q: "Where is Root Motion Mode set?"
-        choices: ["In the Animation Blueprint Class Defaults", "In the Animation Sequence Asset Details", "In the Skeletal Mesh Actor", "In the Game Mode"]
+        choices: ["In the Animation Blueprint Class Defaults", "In the Animation Sequence Asset Details", "In the Skeletal Mesh Actor Details panel", "In the Game Mode Class Defaults"]
         answer_index: 0
         explain: "Click Class Defaults in the Animation Blueprint Editor toolbar. The Root Motion Mode drop-down is there."
       - q: "Which Root Motion Mode extracts root motion and removes it from the root bone, but does not move the character?"
@@ -732,7 +732,7 @@ quests:
         answer_index: 1
         explain: "When Walking or Falling, the Z axis of root motion is ignored and gravity is applied. Only in Flying is the full root motion used."
       - q: "In the Animation Sequence Editor preview, what does Loop and Reset do?"
-        choices: ["Plays with root motion and starts every loop from the root origin", "Plays with root motion and continues from where the last loop ended", "Ignores root motion", "Resets the Skeleton to the reference pose"]
+        choices: ["Plays with root motion and starts every loop from the root origin", "Plays with root motion and continues from where the last loop ended", "Ignores root motion, so the mesh stays in place for the whole loop", "Resets the Skeleton to the reference pose after each loop"]
         answer_index: 0
         explain: "Loop continues from the point where the loop before it ended. Loop and Reset starts each loop again from the root bone origin."
       - q: "In a network game you want root motion from a montage to replicate. What does the documentation say you must do?"
@@ -777,7 +777,7 @@ quests:
         answer_index: 1
         explain: "The IK Rig is created from the Content Browser Add menu under Animation. A dialog asks for the Skeletal Mesh to rig."
       - q: "When you make an IK Goal for a leg, which bone do you select first?"
-        choices: ["The pelvis", "The thigh (the start of the chain)", "The foot (the end bone of the chain)", "The root bone"]
+        choices: ["The pelvis (the bone above the leg)", "The thigh (the start of the chain)", "The foot (the end bone of the chain)", "The root bone (the top of the tree)"]
         answer_index: 2
         explain: "IK Goals are made from the ending bones of the chain, typically the hand or foot. The goal is the effector at the end."
       - q: "You have a Set Transform solver on the hips and two Limb IK solvers. Why does their order in the Solver Stack matter?"
@@ -1124,7 +1124,7 @@ quests:
         answer_index: 3
         explain: "The page says to locate Motion Warping under the Movement category."
       - q: "Rotation Type is set to Facing. What does the character do?"
-        choices: ["Matches the rotation of the warp target", "Rotates to face the warp target", "Ignores rotation", "Rotates twice as fast"]
+        choices: ["Matches the rotation of the warp target", "Rotates to face the warp target", "Ignores rotation of the target", "Rotates twice as fast as before"]
         answer_index: 1
         explain: "Default matches the target's rotation; Facing rotates the character to face the target."
       - q: "A warping window lasts 2 seconds and Warp Rotation Time Multiplier is 0.5. When is the final rotation reached?"
@@ -1132,7 +1132,7 @@ quests:
         answer_index: 2
         explain: "The page gives exactly this example: with 0.5, the final rotation is reached in one second."
       - q: "You want to create a warping window from Blueprint instead of a notify in the montage. Which node do you use?"
-        choices: ["Add Root Motion Modifier Skew Warp", "Remove Warp Target", "Play Montage", "Split Struct Pin"]
+        choices: ["Add Root Motion Modifier Skew Warp", "Add or Update Warp Target from Transform", "Play Montage", "Disable All Root Motion Modifiers"]
         answer_index: 0
         explain: "Add Root Motion Modifier Skew Warp generates a warping window with Start Time, End Time and Warp Target Name from Blueprint."
       - q: "Which Warp Point Anim Provider defines the warp point from a bone in the animation?"
@@ -1396,7 +1396,7 @@ quests:
         answer_index: 2
         explain: "In the Pick Parent Class window, expand All Classes and select Animation Modifier."
       - q: "What does the OnRevert event do?"
-        choices: ["Removes previously applied changes, returning the sequence to its original state", "Applies the modifier a second time, on top of the changes it already made to the sequence", "Deletes the animation that the modifier was applied to", "Saves the modifier as a preset for other sequences"]
+        choices: ["Removes previously applied changes, returning the sequence to its original state", "Applies the modifier a second time, on top of the changes it already made to the sequence", "Deletes the animation sequence that the modifier was applied to from the project", "Saves the modifier as a preset that other sequences can use"]
         answer_index: 0
         explain: "OnApply changes, adds or removes data; OnRevert removes the user changes that were applied."
       - q: "You apply a modifier to a Skeleton asset. What happens?"
@@ -1476,7 +1476,7 @@ quests:
         answer_index: 3
         explain: "The Pose channel can use any bone. For climbing you would pick bones with valuable data, like the hands. More channels and samples cost more performance."
       - q: "Your locomotion clips do not move the character in Motion Matching. What is the most likely problem?"
-        choices: ["The Animation Sequences do not have Root Motion enabled", "The Schema Sample Rate is too high", "The Database uses Brute Force search", "The Pose History node has Generate Trajectory enabled"]
+        choices: ["The Animation Sequences do not have Root Motion enabled", "The Schema Sample Rate is set too high for the clips", "The Database uses Brute Force search for every pose", "The Pose History node has Generate Trajectory enabled"]
         answer_index: 0
         explain: "Animations used in a Motion Matching locomotion setup must contain root motion, and the sequences must have the Root Motion property enabled."
       - q: "Which asset type can NOT be added to a Pose Search Database for the AnimGraph node?"
@@ -1639,7 +1639,7 @@ quests:
         answer_index: 2
         explain: "a.Budget.BudgetMs defaults to 1.0 millisecond of skeletal mesh work. The example scalability ini scales it from 1.0 at quality 0 to 2.5 at quality 3."
       - q: "Where does Epic recommend setting the budget for each platform?"
-        choices: ["In the Class Settings of each Animation Blueprint, under the Optimization section of the Details panel", "In scalability settings, for example DefaultScalability.ini under [ViewDistanceQuality@N]", "In the LOD Info of each Skeletal Mesh asset", "Hard-coded on BeginPlay of the Game Mode"]
+        choices: ["In the Class Settings of each Animation Blueprint, under the Optimization section of the Details panel", "In scalability settings, for example DefaultScalability.ini under [ViewDistanceQuality@N]", "In the LOD Info of each Skeletal Mesh asset, with one budget value entered for each LOD of the mesh", "Hard-coded on BeginPlay of the Game Mode, with a Branch node that checks the name of the platform"]
         answer_index: 1
         explain: "The page recommends driving the cvars from the platform scalability settings, with an example DefaultScalability.ini that sets a.Budget.BudgetMs per ViewDistanceQuality level."
       - q: "You set a.Budget.MinQuality to 0.5. What is the trade-off?"
@@ -1826,7 +1826,7 @@ quests:
         answer_index: 3
         explain: "Migrate copies the folder into another project. In an empty project, anything the kit still needs from outside shows up as missing."
       - q: "What does the tester do with the kit, using only your README?"
-        choices: ["They play one retargeted animation and key one pose on the rig", "They build a new rig from an empty asset and compare it with yours", "They rewrite the README in their own words", "They retarget all animations of the engine"]
+        choices: ["They play one retargeted animation and key one pose on the rig", "They build a new rig from an empty asset and compare it with yours", "They rewrite the README in their own words and send it back to you", "They retarget all animations of the engine onto the rig in the kit"]
         answer_index: 0
         explain: "The two tasks cover both halves of the kit: the animations and the rig. If the tester manages both with only the README, the kit works."
       - q: "What do you write down after the test?"
@@ -1895,7 +1895,7 @@ quests:
         answer_index: 1
         explain: "Training only uses the rotation of the listed bones. Epic recommends the minimum set of bones the deformation depends on and excluding twist, roll and helper bones."
       - q: "Which setting has one of the most significant effects on runtime memory and performance?"
-        choices: ["Delta Zero Threshold", "Learning Rate Decay", "Label Height", "Mesh Spacing"]
+        choices: ["Delta Zero Threshold", "Learning Rate Decay", "Label Height", "Ground Truth Lerp"]
         answer_index: 0
         explain: "Delta Zero Threshold drops small deltas from the morph targets. The page says setting a functional value has one of the most significant effects on runtime memory and performance. Tune it before Compression Level."
       - q: "What minimum amount of training data does the troubleshooting table suggest for an average character?"
@@ -1911,7 +1911,7 @@ quests:
         answer_index: 1
         explain: "When debugging a live PIE actor, only the Activations heat map mode works because there is no ground truth Geometry Cache for the game pose."
       - q: "Where do you check the GPU cost of the ML Deformer at runtime?"
-        choices: ["The Stat Unit display, in the Draw line, and the texture memory statistic that is shown in the Skeletal Mesh asset", "The Rewind Debugger, in the track of the Skeletal Mesh Component", "Unreal Insights, Morph Target item in the GPU section, and the GPU Memory (Morph Targets) statistic in the asset", "The Shader Complexity view mode, where costly deformers show in red"]
+        choices: ["The Stat Unit display, in the Draw line, and the texture memory statistic that is shown in the Skeletal Mesh asset", "The Rewind Debugger, in the track of the Skeletal Mesh Component, and the Output Log line that is printed on each frame", "Unreal Insights, Morph Target item in the GPU section, and the GPU Memory (Morph Targets) statistic in the asset", "The Shader Complexity view mode, where costly deformers show in red, and the Triangles count of the Static Mesh Editor"]
         answer_index: 2
         explain: "The page points to Unreal Insights' Morph Target GPU item and the MLDeformerComponent CPU section. In the asset, GPU Memory (Morph Targets) is called the most consequential statistic."
     flavors:
@@ -1972,7 +1972,7 @@ quests:
         answer_index: 1
         explain: "A value of 0 means the skinned vertex cannot move. A value of 100 allows it to move one meter from its original position."
       - q: "How do you paint a gradient from the shoulders to the hem?"
-        choices: ["Paint with the Brush twice, once with the start value and once with the end value, then smooth it", "Use Fill with a Threshold that is equal to the height of the hem", "Left-click the start value (green), Ctrl plus left-click the end value (red), then press Enter", "Hold H and drag from the shoulders down to the hem"]
+        choices: ["Paint with the Brush twice, once with the start value and once with the end value, then smooth it", "Use Fill with a Threshold that is equal to the height of the hem, then press Enter", "Left-click the start value (green), Ctrl plus left-click the end value (red), then press Enter", "Hold H and drag from the shoulders down to the hem, then release the mouse button to apply the gradient"]
         answer_index: 2
         explain: "The Gradient tool marks the start value with a green dot on left-click, the end value with a red dot on Ctrl plus left-click, and applies the gradient when you press Enter."
       - q: "What does Backstop Distance do?"
@@ -2040,7 +2040,7 @@ quests:
         answer_index: 1
         explain: "A Damping Ratio under 1 gives overshoot. The docs say this can make some motions look more natural."
       - q: "Weight Speed is set to 2.0. How fast can one sample go from weight zero to weight one?"
-        choices: ["In 2 seconds", "In 1 second", "In half a second", "In 2 frames"]
+        choices: ["In two seconds", "In 1 second", "In half a second", "In 2 frames"]
         answer_index: 2
         explain: "Weight Speed 2.0 means a sample can change its weight from 0 to 1 in half a second. Do not combine it with Smoothing Time."
       - q: "Which Notify Trigger Mode fires notifies only from the sample that has the most weight?"
@@ -2358,7 +2358,7 @@ quests:
         answer_index: 2
         explain: "The recording stops automatically when the simulation is paused. It continues again when you resume unless you stop it manually."
       - q: "Which console command shows the animation debug data of the current debug target on screen?"
-        choices: ["ShowDebug ANIMATION", "stat anim", "a.VisualizeLODs 1", "show bones"]
+        choices: ["ShowDebug ANIMATION", "stat anim", "a.VisualizeLODs 1", "ShowFlag.Bones 1"]
         answer_index: 0
         explain: "ShowDebug ANIMATION toggles the display of animation debug data. show bones only draws bones and a.VisualizeLODs shows LOD info."
       - q: "The Debug Object dropdown in the Animation Blueprint Editor toolbar does what?"
@@ -2395,7 +2395,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "By default, on which thread does the AnimGraph run, and on which does the Event Graph run?"
-        choices: ["Both on the Game Thread", "AnimGraph on the Game Thread, Event Graph on the Worker Thread", "AnimGraph on the Worker Thread, Event Graph on the Game Thread", "Both on the Worker Thread"]
+        choices: ["Both on the Game Thread, with the AnimGraph running first", "AnimGraph on the Game Thread, Event Graph on the Worker Thread", "AnimGraph on the Worker Thread, Event Graph on the Game Thread", "Both on the Worker Thread, away from the Game Thread, in parallel"]
         answer_index: 2
         explain: "The AnimGraph runs on a separate Worker Thread. The Event Graph and other Blueprints run on the Game Thread."
       - q: "Why do the docs recommend using the Event Graph as little as possible?"
@@ -2541,7 +2541,7 @@ quests:
         answer_index: 0
         explain: "The page says a rig must have an operational Backwards Solve graph to work as a layered Control Rig."
       - q: "What is the default Order value of a Layered Control Rig track, and in which direction are tracks evaluated?"
-        choices: ["0, ascending", "1, ascending", "100, descending from the highest value", "100, ascending from the lowest value"]
+        choices: ["0, ascending from the lowest value", "1, descending from the highest value", "100, descending from the highest value", "100, ascending from the lowest value"]
         answer_index: 2
         explain: "The order begins at 100 and tracks are evaluated in descending order, starting with the highest order value."
       - q: "Which hotkey reverts the selected keys of the selected Control Rig tracks to their default values?"
@@ -2777,7 +2777,7 @@ quests:
         answer_index: 1
         explain: "The page says the track must already have keyframes present for Auto Key to add new ones. An empty track will not be auto keyed."
       - q: "With Auto Key option Key Group, you edit only X-Location. Which channels get keys?"
-        choices: ["Only X-Location", "All Location, Rotation and Scale channels", "The full XYZ Location channels", "No channels"]
+        choices: ["Only the X-Location channel you edited", "All Location, Rotation and Scale channels", "The full XYZ Location channels", "No channels at all, until you press Enter"]
         answer_index: 2
         explain: "Key Group keys all axes of the changed channel (XYZ Location). Key All keys every channel; Key Changed keys only the changed axis."
       - q: "Which number keys set a selected keyframe to Linear and Constant tangents?"
@@ -3036,7 +3036,7 @@ quests:
         answer_index: 1
         explain: "Float, Integer and Vector 2D Controls are limited by default to a 0 - 100 range, which is useful for slider Controls."
       - q: "You want to move a new Bone or a Null in the viewport. Which mode must be active?"
-        choices: ["Backwards Solve", "Construction Event (formerly Setup Event)", "Debug Mode", "Forwards Solve"]
+        choices: ["Backwards Solve (from bones to controls)", "Construction Event (formerly Setup Event)", "Debug Mode", "Forwards Solve (from controls to bones)"]
         answer_index: 1
         explain: "Construction Event mode (called Setup Event in older versions) lets you edit the Initial Pose of an element in the viewport. Enabling it also shows all Nulls."
       - q: "Which transform value do you change when you animate a Control in Sequencer?"
@@ -3088,7 +3088,7 @@ quests:
         answer_index: 1
         explain: "Class Settings in the Control Rig Editor shows the Shape Libraries property (Gizmo Library on the docs page), which references a Control Rig Shape Library asset."
       - q: "Why can you not see the default shape library in the Content Browser at first?"
-        choices: ["It is stored outside the project as a text file, so the Content Browser does not list it at all", "It only exists after you package the project for the first time", "It lives in Engine > Plugins, so Show Engine Content and Show Plugin Content must be enabled", "It is hidden until a control is selected in the Rig Hierarchy"]
+        choices: ["It is stored outside the project as a text file, so the Content Browser does not list it at all", "It only exists after you package the project for the first time on your machine", "It lives in Engine > Plugins, so Show Engine Content and Show Plugin Content must be enabled", "It is hidden until at least one control is selected in the Rig Hierarchy panel"]
         answer_index: 2
         explain: "The library is in Engine > Plugins > Control Rig Content > Controls, so both engine and plugin content must be shown."
       - q: "What are control shapes made of?"
@@ -3100,15 +3100,15 @@ quests:
         answer_index: 3
         explain: "The Shapes array (Gizmos on the docs page) holds each shape's Name, Static Mesh and Transform. Add Element adds a new shape."
       - q: "When importing an .fbx to use as a control shape, what does the page recommend for materials?"
-        choices: ["Import Textures on and Material Import Method = Create New Materials", "Import Textures off and Material Import Method = Do Not Create Material", "Assign the mannequin material after the import", "Use a translucent material for every shape"]
+        choices: ["Import Textures on and Material Import Method = Create New Materials", "Import Textures off and Material Import Method = Do Not Create Material", "Import Textures on and assign the mannequin material afterwards", "Import Materials on and use a translucent material for every shape"]
         answer_index: 1
         explain: "Shapes do not need textures or materials, so disable Import Textures and set Material Import Method to Do Not Create Material."
       - q: "What does the Material Color Parameter property in the library do?"
-        choices: ["Sets the color of the viewport background behind the controls of the rig in the Control Rig editor", "Names the Vector 3 parameter of the Default Material that the control's Color property changes", "Chooses the color of the selected bones in the Rig Hierarchy", "Picks the color of the nodes in the Rig Graph"]
+        choices: ["Sets the color of the viewport background behind the controls of the rig in the Control Rig editor", "Names the Vector 3 parameter of the Default Material that the control's Color property changes", "Chooses the color of the selected bones in the Rig Hierarchy and in the viewport of the editor", "Picks the color of the nodes in the Rig Graph that read or write the transform of a control"]
         answer_index: 1
         explain: "It is the Vector 3 Material Parameter from the Default Material that is affected when you change Color on a Control Shape."
       - q: "Which property gives the shape used when a new control is first added?"
-        choices: ["The default shape (name and Static Mesh) at the top of the library", "The last entry of the Shapes array, which is used until you pick another", "The Offset transform of the control", "The Preview Mesh of the Control Rig"]
+        choices: ["The default shape (name and Static Mesh) at the top of the library", "The last entry of the Shapes array, which is used until you pick another", "The Offset transform of the control in the Details panel", "The Preview Mesh of the Control Rig in the Preview Scene Settings"]
         answer_index: 0
         explain: "The shape name, Static Mesh and Transform at the top of the library define the initial Control Shape for a new control."
     flavors:
@@ -3346,11 +3346,11 @@ quests:
         answer_index: 0
         explain: "Mapping the Control Rig to the Skeletal Mesh must be done on the Pre Initialize event of the component."
       - q: "Which component event fires continuously, like Event Tick?"
-        choices: ["On Post Initialize", "On Pre Setup", "On Post Setup", "On Pre Forwards Solve"]
+        choices: ["On Post Initialize", "On Pre Construction", "On Post Construction", "On Pre Forwards Solve"]
         answer_index: 3
         explain: "On Pre and On Post Forwards Solve fire continuously. The Initialize and Setup events fire once, like Begin Play."
       - q: "In a Mapped Elements entry, Direction is set to Input. What happens?"
-        choices: ["The Control Rig element drives the Blueprint component", "The Blueprint component drives the Control Rig element", "Mapping is disabled", "The component is hidden"]
+        choices: ["The Control Rig element drives the Blueprint component", "The Blueprint component drives the Control Rig element", "Mapping is disabled for this entry until Direction is set to Output", "The component is hidden in the level while the Control Rig is running"]
         answer_index: 1
         explain: "Input makes the component affect the rig element. Output makes the rig element affect the component."
       - q: "By default, how are bones matched between the Control Rig class and the Skeletal Mesh Component?"
@@ -3422,15 +3422,15 @@ quests:
         answer_index: 2
         explain: "When bones are added to the list, only those are transferred. An empty list transfers all bones."
       - q: "When does Transfer Pose in Global Space actually change the result?"
-        choices: ["Always, for every Control Rig and every Skeletal Mesh that uses the node in a graph", "Only when the Control Rig skeleton hierarchy differs from the AnimBP skeleton", "Only for root motion that comes from a montage", "Never, the option is kept for old projects only"]
+        choices: ["Always, for every Control Rig and every Skeletal Mesh that uses the node in a graph", "Only when the Control Rig skeleton hierarchy differs from the AnimBP skeleton", "Only for root motion that comes from a montage that plays in a slot of the AnimBP", "Never, the option is kept only so that old projects from Unreal Engine 4 still open"]
         answer_index: 1
         explain: "Transforms only differ if the hierarchies differ. Disabling global space can also improve performance."
       - q: "Which property replaces the Control Rig's initial transforms with those of the Skeletal Mesh?"
-        choices: ["Reset Input Pose to Initial", "Transfer Input Curves", "Set Initial Transform From Mesh", "Control Rig Class"]
+        choices: ["Reset Input Pose to Initial", "Transfer Input Curves", "Set Initial Transform From Mesh", "Transfer Pose in Global Space"]
         answer_index: 2
         explain: "Set Initial Transform From Mesh overrides the rig's initial transforms with the mesh's initial transform."
       - q: "What is a typical use of Control Rig inside an Animation Blueprint, according to the page?"
-        choices: ["Importing FBX files into the project while the game is running on a device", "Procedural gameplay control such as ground alignment or contact points", "Building state machines for walking and jumping", "Compressing animations to save memory"]
+        choices: ["Importing FBX files into the project while the game is running on a device", "Procedural gameplay control such as ground alignment or contact points", "Building state machines for walking, running and jumping", "Compressing animations to save memory on small devices"]
         answer_index: 1
         explain: "The page says this is used for procedural gameplay control of rig features, such as ground alignment or other contact points."
     flavors:
@@ -3470,7 +3470,7 @@ quests:
         answer_index: 1
         explain: "Poses are stored as variables of type Rig Pose in the My Blueprint panel."
       - q: "In the quickstart, which event is the Set node connected to so the initial A-pose is stored?"
-        choices: ["Forwards Solve", "Backwards Solve", "Construction Event (called Setup Event on the docs page)", "Event Tick"]
+        choices: ["Forwards Solve (the event that runs on every frame)", "Backwards Solve (the event that reads the bones)", "Construction Event (called Setup Event on the docs page)", "Event Tick (the event of the Blueprint Event Graph)"]
         answer_index: 2
         explain: "Connecting the Set to the Construction Event (the docs page still calls it the Setup Event) stores the character's initial A-pose."
       - q: "Which node writes a stored pose back onto the rig?"
@@ -3478,7 +3478,7 @@ quests:
         answer_index: 1
         explain: "Apply Pose Cache applies a saved pose and has properties for elements, space, items and weight."
       - q: "You leave Items to Set empty on Get Pose Cache. What is saved?"
-        choices: ["Nothing at all", "Only the controls", "All items matching the Element Type", "Only the root bone and its first child"]
+        choices: ["Nothing at all, the cache is empty", "Only the controls of the hierarchy", "All items matching the Element Type", "Only the root bone and its first child"]
         answer_index: 2
         explain: "If no items are specified, all items are used according to the Element Type filter."
       - q: "Which node compares two poses and outputs a boolean?"
@@ -3592,7 +3592,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "How is Full Body IK different from Limb IK in the IK Rig?"
-        choices: ["FBIK works on a chain of two bones only, with one goal at the end, and it has no settings for limits or for stiffness", "FBIK accepts several goals that all influence the whole body, and supports bone limits, stiffness and preferred angles", "FBIK cannot have a root bone, so the whole body floats freely toward the goals", "FBIK is cheaper than Limb IK, so it is used for crowds of far characters"]
+        choices: ["FBIK works on a chain of two bones only, with one goal at the end, and it has no settings for limits or for stiffness", "FBIK accepts several goals that all influence the whole body, and supports bone limits, stiffness and preferred angles", "FBIK cannot have a root bone, so the whole body floats freely toward the goals that you set", "FBIK is cheaper than Limb IK, so it is used for crowds of far characters with many limbs"]
         answer_index: 1
         explain: "FBIK is a multi-goal solver. Unlike Limb IK it can reach for several goals at once and lets you add per-bone settings."
       - q: "How do you create a per-bone setting for FBIK?"
@@ -3608,7 +3608,7 @@ quests:
         answer_index: 0
         explain: "Limits let you set each axis to Free, Limited or Locked. The example sets Z to Limited with Min -50 and Max 40 to correct the ankle."
       - q: "A large character will not reach its goals. What does the page recommend?"
-        choices: ["Lower Iterations to 1 so that each goal is reached in one single step of the solver", "Increase Mass Multiplier and also increase Iterations so the solve converges", "Remove the root bone from the solver", "Use Limb IK instead for every limb"]
+        choices: ["Lower Iterations to 1 so that each goal is reached in one single step of the solver", "Increase Mass Multiplier and also increase Iterations so the solve converges", "Remove the root bone from the solver so that the whole body is free to move to the goals", "Use Limb IK instead of Full Body IK for every limb of the character"]
         answer_index: 1
         explain: "Mass Multiplier fixes severe convergence problems, common on larger characters. Increasing it requires more Iterations to converge."
       - q: "Which Root Behavior cancels any bone settings applied to the root bone?"
@@ -3671,11 +3671,11 @@ quests:
         answer_index: 2
         explain: "Additive treats the goal as a world-space additive offset relative to the effector bone. Component uses the Skeletal Mesh Component space and World uses world space."
       - q: "What is the Bone goal type for?"
-        choices: ["Snapping the goal to a bone in the same skeleton, useful for weapon or prop bones", "Deleting a bone from the skeleton at runtime, useful for removing weapon or prop bones", "Exposing the bone as a pin on the node", "Locking the goal to the root bone"]
+        choices: ["Snapping the goal to a bone in the same skeleton, useful for weapon or prop bones", "Deleting a bone from the skeleton at runtime, useful for removing weapon or prop bones", "Exposing the bone as a pin on the node so that a Blueprint can set its transform at runtime", "Locking the goal to the root bone of the skeleton so that it never moves"]
         answer_index: 0
         explain: "Bone lets the goal snap to a specified bone, which is useful with auxiliary bones like weapon or prop bones that may adjust procedurally."
       - q: "What does Start from Ref Pose do on the node?"
-        choices: ["Resets the goals to the origin on every frame", "Plays the reference pose only and runs no solver", "Disables the solver while the character stands still, and enables it when it moves", "Ignores the incoming pose and starts the solve from the reference pose"]
+        choices: ["Resets all goals to the origin of the component on every frame before the solver runs", "Plays the reference pose only and runs no solver at all", "Disables the solver while the character stands still, and enables it when it moves", "Ignores the incoming pose and starts the solve from the reference pose"]
         answer_index: 3
         explain: "Start from Ref Pose ignores the incoming animation pose and starts the IK solve from the Skeletal Mesh reference pose."
       - q: "In the IK Rig editor, what does Preview Mode Additive vs Absolute change?"
@@ -3737,7 +3737,7 @@ quests:
         answer_index: 1
         explain: "Max Stretch Scale limits the stretch. 1.5 means the limb can stretch until 150% of its whole length."
       - q: "Which Effector Location Space options exist on the node?"
-        choices: ["Local, Global", "World, Actor, Level, Camera, Socket", "Component, Socket", "World, Component, Parent Bone, Bone"]
+        choices: ["Local, Global, Relative, Absolute", "World, Actor, Level, Camera, Socket", "Component, Socket, Actor, Level, Camera", "World, Component, Parent Bone, Bone"]
         answer_index: 3
         explain: "The effector position can be calculated in World Space, Component Space, Parent Bone Space or Bone Space of the Effector Target."
       - q: "When can Take Rotation from Effector Space be used?"
@@ -3808,7 +3808,7 @@ quests:
         answer_index: 1
         explain: "FABRIK operates on a chain of arbitrary length as long as there are at least 2 bone links."
       - q: "On FABRIK, what happens when you lower the Precision value?"
-        choices: ["The tip lands closer to the effector but the evaluation costs more", "The chain gets shorter, because each bone is scaled down by the value", "The solver runs fewer iterations", "The alpha is ignored"]
+        choices: ["The tip lands closer to the effector but the evaluation costs more", "The chain gets shorter, because each bone is scaled down by the value", "The solver runs fewer iterations and stops far away from the effector", "The alpha is ignored and the chain snaps fully to the effector at once"]
         answer_index: 0
         explain: "Precision is the tolerance for the final tip location. Lower tolerance is more precise but has a higher performance cost."
     flavors:
@@ -3844,7 +3844,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "When does the source say you typically need to edit a retarget pose?"
-        choices: ["When both characters have the same bone names but the meshes have different heights", "When the target reference pose differs from the source, for example T-pose vs A-pose", "Every time you export an animation", "Only for characters with four legs"]
+        choices: ["When both characters have the same bone names but the meshes have different heights", "When the target reference pose differs from the source, for example T-pose vs A-pose", "Every time you export an animation, because the pose is lost in the export", "Only for characters with four legs, because two legs need no pose"]
         answer_index: 1
         explain: "Reference pose differences, like a T-pose target and an A-pose source, reduce accuracy. Matching the retarget poses fixes this."
       - q: "What does the page recommend instead of editing the Default Pose?"
@@ -3872,7 +3872,7 @@ quests:
         answer_index: 2
         explain: "Retarget Pose must be the first op to work as expected, and an asset can only use one copy of this op."
       - q: "What does the Additive Pose op do?"
-        choices: ["Replaces the whole retarget result with a pose from the source, blended by Alpha", "Adds a retarget pose on top of the retargeted result, blended by Alpha", "Imports a Pose Asset into the retargeter", "Aligns the source to the target"]
+        choices: ["Replaces the whole retarget result with a pose from the source, blended by Alpha", "Adds a retarget pose on top of the retargeted result, blended by Alpha", "Imports a Pose Asset into the retargeter and plays it in place of the source animation", "Aligns the source to the target so that both stand at the same place"]
         answer_index: 1
         explain: "Additive Pose applies a named retarget pose additively on the target output for layered corrections, with an Alpha to blend it."
     flavors:
@@ -3915,7 +3915,7 @@ quests:
         answer_index: 0
         explain: "One to One copies each bone in order from the chain root. It is the best choice when the source and target chains have the same number of bones, which is typical for fingers."
       - q: "In One to One mode the target chain has more bones than the source. What happens to the extra bones?"
-        choices: ["They are deleted", "They stay at their reference pose", "They copy the last source bone", "The op fails"]
+        choices: ["They are deleted from the chain", "They stay at their reference pose", "They copy the last source bone", "The op fails and copies nothing"]
         answer_index: 1
         explain: "If the target chain has more bones than the source, the extra bones remain at their reference pose."
       - q: "Which Translation Mode does the page say is the best option in most cases?"
@@ -3931,7 +3931,7 @@ quests:
         answer_index: 3
         explain: "Pole Vector Alignment matches the limb's bend direction to the source by twisting the joint chain, without altering the end effector location."
       - q: "Match Source Length is 0 and Scale Chain Length is 1 on a Stretch Chains op. What is the result?"
-        choices: ["The chain doubles", "The chain is stretched to the source length", "The chain length is left alone", "The chain collapses"]
+        choices: ["The chain doubles its length on the target", "The chain is stretched to the source length", "The chain length is left alone", "The chain collapses to a point"]
         answer_index: 2
         explain: "At 0, Match Source Length leaves the chain length alone, and Scale Chain Length 1 is the default multiplier. These are the defaults."
       - q: "Root Motion Source is Copy From Source Root. How is the motion adjusted?"
@@ -3972,7 +3972,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "When do you typically need IK goals on retarget chains, per the source?"
-        choices: ["Always, because every chain must have one or the retargeter does not copy any animation to it", "Only for extra IK adjustments such as Speed Planting, Stride Warping or Blend to Source", "Only for the pelvis chain, to keep the hips level", "Only when you export the animations"]
+        choices: ["Always, because every chain must have one or the retargeter does not copy any animation to it", "Only for extra IK adjustments such as Speed Planting, Stride Warping or Blend to Source", "Only for the pelvis chain, to keep the hips level while the character walks", "Only when you export the animations to new Animation Sequence assets"]
         answer_index: 1
         explain: "The page says you typically do not need IK goals unless the retarget needs additional IK adjustments like Speed Planting, Stride Warping or Blend to Source."
       - q: "Enable IK is off on a chain that has an IK goal. What happens?"
@@ -3992,7 +3992,7 @@ quests:
         answer_index: 3
         explain: "Goals fits characters with a vertical spine like bipeds. Chain uses bone positions in retarget chains and is best for horizontal spines like quadrupeds."
       - q: "What does Speed Planting use to decide the source foot is not moving?"
-        choices: ["A speed curve named in Speed Curve Name, compared against Speed Threshold", "The root motion of the source animation, compared against the capsule velocity", "A line trace from the foot down to the floor", "The Floor Constraint op"]
+        choices: ["A speed curve named in Speed Curve Name, compared against Speed Threshold", "The root motion of the source animation, compared against the capsule velocity", "A line trace from the foot down to the floor, compared against a height threshold", "The Floor Constraint op, which marks the foot as planted"]
         answer_index: 0
         explain: "Speed Planting reads an animation curve named in Speed Curve Name. When the bone speed drops below Speed Threshold the target goal stops moving."
       - q: "Which Blend Method only blends out of planted states and tracks fast motion without looking mushy?"
@@ -4036,7 +4036,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "What drives an Animation Sequence in Distance Matching instead of time?"
-        choices: ["A calculated distance variable read against an animation curve", "The play rate of the montage, read from the Animation Blueprint", "The radius of the character's capsule", "A random seed that changes per frame"]
+        choices: ["A calculated distance variable read against an animation curve", "The play rate of the montage, read from the Animation Blueprint", "The radius of the character's capsule, read on each frame", "A random seed that changes per frame of the animation"]
         answer_index: 0
         explain: "Distance Matching selects poses by a distance value. The Animation Blueprint searches the distance curve and outputs the matching pose."
       - q: "Which plugin must be enabled before you can use the Distance Matching nodes?"
@@ -4060,11 +4060,11 @@ quests:
         answer_index: 2
         explain: "The page says you must use a Uniform Indexable Curve Compression Settings asset instead of the default compression so the distance curve can be read at runtime."
       - q: "Which nodes go inside the Sequence Evaluator's On Update anim node function?"
-        choices: ["Play Montage and Get Anim Instance of the owning component", "Distance Match to Target and Convert to Sequence Evaluator", "Blend Poses by Bool and Inertialization", "Set Play Rate and Sequence Player"]
+        choices: ["Play Montage and Get Anim Instance of the owning component", "Distance Match to Target and Convert to Sequence Evaluator", "Blend Poses by Bool and Inertialization from the Blends category", "Set Play Rate and Sequence Player, linked to the same input pose"]
         answer_index: 1
         explain: "The workflow creates a Distance Match to Target node and converts the node reference with Convert to Sequence Evaluator inside the bound function."
       - q: "Which node advances a Sequence Evaluator by the distance the character travelled each frame?"
-        choices: ["Advance Time By Distance Matching", "Set Playrate to Match Speed", "Distance Match to Target", "Sequence Player"]
+        choices: ["Advance Time By Distance Matching", "Set Playrate to Match Speed", "Distance Match to Target", "Set Sequence with Inertial Blending"]
         answer_index: 0
         explain: "Advance Time By Distance Matching moves the evaluator forward by the distance travelled. Set Playrate to Match Speed only scales play rate and assumes a constant speed."
     flavors:
@@ -4249,7 +4249,7 @@ quests:
         answer_index: 0
         explain: "At 0 the system is disabled and the simulation is fully local. At 1 it acts like a world-space simulation but with limits on other parameters."
       - q: "The ponytail flies out when the character spins fast. Which setting does the page suggest lowering?"
-        choices: ["Cached Bounds Scale (values around 10 or less) and the Evaluation Reset Time", "Evaluation Reset Time", "Overlap Channel", "Max Angular Velocity (values around 10 or less) and Max Angular Acceleration"]
+        choices: ["Cached Bounds Scale (values around 10 or less) and the Evaluation Reset Time", "Evaluation Reset Time (values around 10 or less) and the Overlap Channel of the node", "Overlap Channel (set to World Static only) and the Cached Bounds Scale of the node", "Max Angular Velocity (values around 10 or less) and Max Angular Acceleration"]
         answer_index: 3
         explain: "The page says reduce Max Angular Velocity (about 10 or less for fast-turning characters) and Max Angular Acceleration to limit bodies flying out on spins."
       - q: "Which property is described as useful for ragdolls because it stops non-simulated bones from animating when simulation starts?"
@@ -4289,11 +4289,11 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where do you create a Physical Animation Profile?"
-        choices: ["Physics Asset Editor > Window > Profiles > New under Physical Animation Profiles", "Project Settings > Physics > Profiles > New under Physical Animation Profiles", "In the Class Defaults of the Animation Blueprint", "By right-clicking a bone in the Skeleton Editor"]
+        choices: ["Physics Asset Editor > Window > Profiles > New under Physical Animation Profiles", "Project Settings > Physics > Profiles > New under Physical Animation Profiles", "In the Class Defaults of the Animation Blueprint, under Physics", "By right-clicking a bone in the Skeleton Editor and picking New Profile"]
         answer_index: 0
         explain: "The page opens the Profiles window from the Window menu of the Physics Asset Editor and adds the profile with New."
       - q: "Which starting values does the page suggest for a Physical Animation profile?"
-        choices: ["0, 0, 0, 0, 0, 0", "100, 1000, 100, 1000, 50, 50", "1, 1, 1, 1, 1, 1", "1000, 100, 1000, 100, 0, 0"]
+        choices: ["0, 0, 0, 0, 0, 0", "100, 1000, 100, 1000, 50, 50", "10, 10, 10, 10, 10, 10", "1000, 100, 1000, 100, 0, 0"]
         answer_index: 3
         explain: "Both the creating page and the profiles page say a good set of starting values is 1000, 100, 1000, 100, 0, 0."
       - q: "When are Position Strength and Velocity Strength used?"
@@ -4305,7 +4305,7 @@ quests:
         answer_index: 2
         explain: "The page says ignoring Pawn fixes the mesh trying to push itself out of the Pawn capsule. Use a custom Object Type if you need pawn-vs-pawn hits."
       - q: "What is the first node after Event BeginPlay in the applying graph?"
-        choices: ["Set All Bodies Below Simulate Physics", "Apply Physical Animation Profile Below", "Set Skeletal Mesh Component on the Physical Animation Component", "Set Constraint Profile for All"]
+        choices: ["Set All Bodies Below Simulate Physics on the Skeletal Mesh Component", "Apply Physical Animation Profile Below on the root bone", "Set Skeletal Mesh Component on the Physical Animation Component", "Set Constraint Profile for All"]
         answer_index: 2
         explain: "The Physical Animation Component must first be told which Skeletal Mesh Component to drive. Then the profile is applied and simulation is turned on."
       - q: "You apply the profile below spine_01 and want spine_01 itself included. What do you set?"
@@ -4313,7 +4313,7 @@ quests:
         answer_index: 1
         explain: "Include Self is checked so the named bone is included with the bones below it. Body names match bone names in the physics asset."
       - q: "A newly created profile uses which settings?"
-        choices: ["The values of the last profile you edited", "The Engine ragdoll preset", "Random values", "It is empty and uses default settings"]
+        choices: ["The values of the last profile you edited", "The Engine ragdoll preset for a humanoid", "Random values between 0 and 1000", "It is empty and uses default settings"]
         answer_index: 3
         explain: "The profiles page says new profiles are initialized empty, meaning they use default settings until you edit them."
       - q: "In the Physics Graph, how can you tell which bodies are assigned to the Current Profile?"
@@ -4371,11 +4371,11 @@ quests:
         answer_index: 0
         explain: "The page states that using physics on a Skeletal Mesh in any form requires a Physics Asset applied to it."
       - q: "What does Physics Type = Kinematic mean for a body, per the bodies reference?"
-        choices: ["It is fully simulated and ignores the animation", "It ignores both animation and physics, and never moves from its start position", "It inherits its type from the owner component", "It is not affected by physics but can interact with simulated bodies"]
+        choices: ["It is fully simulated and ignores the animation of the mesh", "It ignores both animation and physics, and never moves from its start position", "It inherits its type from the owner component at runtime", "It is not affected by physics but can interact with simulated bodies"]
         answer_index: 3
         explain: "Kinematic bodies are not moved by physics but can push simulated bodies. Default inherits the owner component's behavior."
       - q: "To make a character hang from a ledge with simulated body, which setting is changed on the asset after making the hands Kinematic?"
-        choices: ["Root Motion Mode = Ignore Root Motion", "Enable Gravity turned off on all of the bodies", "Physics Update Mode = Component Transform is Kinematic", "Sleep Family = Sensitive"]
+        choices: ["Root Motion Mode = Ignore Root Motion on the mesh", "Enable Gravity turned off on all of the bodies", "Physics Update Mode = Component Transform is Kinematic", "Sleep Family = Sensitive on all of the bodies"]
         answer_index: 2
         explain: "The kinematic bodies page sets the hands to Kinematic and then Physics Update Mode to Component Transform is Kinematic so the root body does not move the component."
       - q: "You right-click a bone in the Physics Asset Skeleton Tree and expand Physics Type. What does that option do?"
@@ -4413,7 +4413,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Where do you turn on physics for a groom asset?"
-        choices: ["Project Settings > Physics > Hair", "Skeletal Mesh Editor > Clothing panel > Enable Simulation", "Groom Asset Editor > Physics panel > Enable Simulation", "The Niagara System editor"]
+        choices: ["Project Settings > Physics > Hair, for the whole project", "Skeletal Mesh Editor > Clothing panel > Enable Simulation", "Groom Asset Editor > Physics panel > Enable Simulation", "The Niagara System editor, on the emitter of the groom"]
         answer_index: 2
         explain: "The page says to go to the Groom Asset Editor Physics panel and enable the Enable Simulation checkbox."
       - q: "Which options does the Niagara Solver property list?"
@@ -4429,7 +4429,7 @@ quests:
         answer_index: 1
         explain: "The x-axis range is 0 to 1 where 0 maps to the root and 1 to the tip of each strand."
       - q: "You enable Override Settings on a Groom component but the hair does not simulate. What is the most likely reason?"
-        choices: ["The component needs a Niagara system that you build by hand and assign in the Details panel of the level", "Enable Simulation is off in the groom asset; both the asset and the component must have it enabled", "Local Bone is not set on the component", "The LOD of the groom is set to Auto"]
+        choices: ["The component needs a Niagara system that you build by hand and assign in the Details panel of the level", "Enable Simulation is off in the groom asset; both the asset and the component must have it enabled", "Local Bone is not set on the component, so the solver cannot find the root of the hair", "The LOD of the groom is set to Auto, and simulation only runs when a LOD is picked by hand in the level"]
         answer_index: 1
         explain: "The page says the groom asset must first have Enable Simulation on. The component setting requires both to be enabled."
       - q: "What are the Simulation options in the LOD panel?"
@@ -4474,7 +4474,7 @@ quests:
     verify_type: writeup
     quiz:
       - q: "Which two data assets apply compression to Animation Sequences?"
-        choices: ["Texture Compression Settings and Mesh Compression Settings", "Montage and Composite", "Animation Modifier and Pose Asset", "Bone Compression Settings and Curve Compression Settings"]
+        choices: ["Texture Compression Settings and Mesh Compression Settings", "Animation Montage and Animation Composite assets", "Animation Modifier and Pose Asset, applied to each sequence", "Bone Compression Settings and Curve Compression Settings"]
         answer_index: 3
         explain: "The page names Bone Compression Settings for skeletal motion and Curve Compression Settings for curve data."
       - q: "Where are the default Compression Settings assets that ship with the engine?"
@@ -4486,7 +4486,7 @@ quests:
         answer_index: 2
         explain: "The page says the best codec below the error threshold is used and .1 is the default value."
       - q: "What does Force Below Threshold do?"
-        choices: ["Deletes keys from the animation until the file is smaller than the threshold, even if the error gets higher", "Uses a codec with lower error, even if it increases file size, until the error falls below the threshold", "Locks the threshold at 0 so that no codec can be used", "Forces resampling of the animation to 30 fps"]
+        choices: ["Deletes keys from the animation until the file is smaller than the threshold, even if the error gets higher", "Uses a codec with lower error, even if it increases file size, until the error falls below the threshold", "Locks the threshold at 0 so that no codec can be used, and the animation is stored without any compression", "Forces resampling of the animation to 30 fps when its frame rate is below the threshold"]
         answer_index: 1
         explain: "With Force Below Threshold, any codec with lower error can be picked, even one that makes the sequence bigger, until the error is under the threshold."
       - q: "You changed a codec property inside a settings asset. What happens to the animations that use it?"
@@ -4565,7 +4565,7 @@ quests:
         answer_index: 0
         explain: "Import Bone Tracks imports the bone transform tracks found in the file. With it turned off they are left out, which is useful for curves-only animations. The older window writes the name as Import Bone Track."
       - q: "Many DCC tools such as Maya cannot save several animations in one FBX. Which tool does the docs name as one that can, so Unreal imports all of them from a single file?"
-        choices: ["Blender", "Motion Builder", "Houdini", "ZBrush"]
+        choices: ["Blender", "Motion Builder", "Houdini", "Substance Painter"]
         answer_index: 1
         explain: "The docs say that if you export from a supporting application such as Motion Builder, Unreal imports all the animations contained in that file."
     flavors:
@@ -4617,7 +4617,7 @@ quests:
         answer_index: 3
         explain: "You right-click the parent bone in the Skeleton Tree, select Add Virtual Bone and choose the target bone from the list."
       - q: "What is the purpose of the Blend Mask in the docs' setup?"
-        choices: ["To exclude the Virtual Bones from the additive layer so they keep the base pose", "To mask the legs from IK so that only the hands are moved by the Two Bone IK nodes", "To speed up the Apply Additive node on far LODs", "To hide the Virtual Bones in the viewport"]
+        choices: ["To exclude the Virtual Bones from the additive layer so they keep the base pose", "To mask the legs from IK so that only the hands are moved by the Two Bone IK nodes", "To speed up the Apply Additive node on far LODs of the character", "To hide the Virtual Bones in the viewport while you edit the pose"]
         answer_index: 0
         explain: "The Blend Mask sets the Virtual Bones to 0.0, so the additive animation does not move them. The IK then follows the base-layer position."
       - q: "On the Layered Blend per Bone node in this setup, what must Blend Mode be set to?"
@@ -4692,7 +4692,7 @@ quests:
         answer_index: 0
         explain: "Skeleton Notifies are stored on the Skeleton asset, so creating one edits the Skeleton and you must save it."
       - q: "You want to see every animation that uses a certain Skeleton Notify. Where is the fastest place to do that?"
-        choices: ["The Compiler Results panel of the Animation Blueprint, after a full compile", "The Manage Notifies panel, right-click the notify and choose Find References", "The Reference Viewer of the Skeletal Mesh", "The Animation section of the Project Settings"]
+        choices: ["The Compiler Results panel of the Animation Blueprint, after a full compile", "The Manage Notifies panel, right-click the notify and choose Find References", "The Reference Viewer of the Skeletal Mesh, opened with Alt+Shift+R", "The Animation section of the Project Settings, with a search"]
         answer_index: 1
         explain: "The Animation Notifies panel (Manage Notifies) has Find References, which filters the Asset Browser to animations that use the notify."
     flavors:
@@ -4807,7 +4807,7 @@ quests:
         answer_index: 2
         explain: "All sequence tracks in one montage must use Slots from the same Slot Group. The docs also advise keeping track lengths equal."
       - q: "You choose Duplicate Slot on a track. Why must you change the Slot on one of the copies?"
-        choices: ["Because duplicated tracks lose their animations when the montage is saved", "Because two tracks cannot occupy the same Slot on the same Skeleton", "Because the montage would double in length", "Because sections only work on one track"]
+        choices: ["Because duplicated tracks lose their animations when the montage is saved", "Because two tracks cannot occupy the same Slot on the same Skeleton", "Because the montage would double in length with two equal Slots", "Because sections only work on the first track of a montage"]
         answer_index: 1
         explain: "Two or more tracks cannot occupy the same Slot on the same Skeleton, so one duplicate must be given a new Slot."
       - q: "When is a Time Stretch Curve actually used during playback?"
@@ -4815,7 +4815,7 @@ quests:
         answer_index: 1
         explain: "The docs say a Time Stretch Curve is only referenced when the montage plays at a non-default play rate."
       - q: "You use linked animation layers and a montage played on the main instance is being overridden by a layer. Which Class Defaults property helps?"
-        choices: ["Warn About Blueprint Usage", "Use Multi Threaded Animation Update", "Use Main Instance Montage Evaluation Data", "Root Motion Mode"]
+        choices: ["Receive Notifies from Linked Instances", "Use Multi Threaded Animation Update", "Use Main Instance Montage Evaluation Data", "Propagate Notifies to Linked Instances"]
         answer_index: 2
         explain: "Use Main Instance Montage Evaluation Data makes linked instances use the main instance's montage data, so the montage plays on the linked layer too."
       - q: "On Play Anim Montage you set In Play Rate to 0.5. What happens?"
@@ -4858,7 +4858,7 @@ quests:
         answer_index: 1
         explain: "The Event Graph runs each tick, sequentially on the Game Thread, and is generally the most expensive part. The docs advise reducing it as much as possible."
       - q: "Where do you turn on Update Rate Optimizations for a character?"
-        choices: ["In Project Settings, under Rendering, with the Enable Update Rate Optimizations option for all characters of the project", "On the Skeletal Mesh Component, in the Optimization section of its Details panel, with Enable Update Rate Optimizations", "In the Class Settings of the Animation Blueprint, in the Optimization section", "In the Skeleton asset, on the root bone"]
+        choices: ["In Project Settings, under Rendering, with the Enable Update Rate Optimizations option for all characters of the project", "On the Skeletal Mesh Component, in the Optimization section of its Details panel, with Enable Update Rate Optimizations", "In the Class Settings of the Animation Blueprint, in the Optimization section, for each character class", "In the Skeleton asset, on the root bone, with the Enable Update Rate Optimizations option in the Skeleton Tree"]
         answer_index: 1
         explain: "URO is a setting of each Skeletal Mesh Component. You find Enable Update Rate Optimizations in the Optimization section of its Details panel."
       - q: "What does Component Use Fixed Skel Bounds do?"
@@ -4866,19 +4866,19 @@ quests:
         answer_index: 2
         explain: "With this option on, the component uses the fixed bounds defined in the Skeletal Mesh. The bounding volume used for culling is then not recalculated on each frame, which improves performance."
       - q: "Which property shows the URO rate of each character on screen while the game runs?"
-        choices: ["Display Debug Update Rate Optimizations", "Warn About Blueprint Usage", "Enable Lazy Evaluation", "Component Use Fixed Skel Bounds"]
+        choices: ["Display Debug Update Rate Optimizations", "Warn About Blueprint Usage", "Update Overlaps on Animation Finalize", "Component Use Fixed Skel Bounds"]
         answer_index: 0
         explain: "Display Debug Update Rate Optimizations is a property of the Skeletal Mesh Component. It shows the update rate on screen during the simulation."
       - q: "Which plugin do the docs recommend in place of URO for controlling how often Animation Blueprints are evaluated?"
-        choices: ["Pose Search", "Animation Budget Allocator", "Motion Warping", "Control Rig Modules"]
+        choices: ["Animation Locomotion Library", "Animation Budget Allocator", "Motion Warping", "Control Rig Modules"]
         answer_index: 1
         explain: "The page recommends the Animation Budget Allocator plugin for controlling the tick rate of Animation Blueprint evaluation."
       - q: "Animation Notifies run on the game thread after the worker threads have finished. What do the docs advise for them?"
-        choices: ["Use Blueprint notifies wherever you can, because they run on the worker threads", "Store every notify on the Skeleton, so it is shared", "Turn all notifies off at a distance, with a LOD setting", "Make them non-Blueprint based, to avoid calls into the Blueprint Virtual Machine"]
+        choices: ["Use Blueprint notifies wherever you can, because they run on the worker threads", "Store every notify on the Skeleton, so it is shared by all animations", "Turn all notifies off at a distance, with a LOD setting on the mesh", "Make them non-Blueprint based, to avoid calls into the Blueprint Virtual Machine"]
         answer_index: 3
         explain: "Notifies are part of the work done on the main thread after the parallel animation task. The docs say they should not be Blueprint based, because each one would call into the Blueprint Virtual Machine."
       - q: "Your character uses root motion for movement. What do the docs say about parallel animation updates?"
-        choices: ["They are faster with root motion, because the capsule no longer has to be moved", "The parallel update cannot happen because character movement is not multi-threaded", "Root motion has no effect on threading", "Root motion forces the AnimGraph onto a worker thread"]
+        choices: ["They are faster with root motion, because the capsule no longer has to be moved", "The parallel update cannot happen because character movement is not multi-threaded", "Root motion has no effect on threading, so nothing changes for the update", "Root motion forces the AnimGraph onto a worker thread on every frame"]
         answer_index: 1
         explain: "If root motion is required for character movement, the update cannot run in parallel, because character movement runs on the game thread."
       - q: "What update rate do the docs suggest as a target when using Update Rate Optimizations at distance?"
@@ -4917,7 +4917,7 @@ quests:
     verify_type: screenshot
     quiz:
       - q: "Before generating LODs, what must be set in Project Settings?"
-        choices: ["Nanite must be enabled for skeletal meshes", "Skeletal Mesh Reduction Plugin must be set to SkeletalMeshReduction", "Skin Cache Usage must be set to Disabled for all Skeletal Meshes", "The default LOD group must be Character"]
+        choices: ["Nanite must be enabled for skeletal meshes under Rendering", "Skeletal Mesh Reduction Plugin must be set to SkeletalMeshReduction", "Skin Cache Usage must be set to Disabled for all Skeletal Meshes", "The default LOD group must be set to Character for all meshes"]
         answer_index: 1
         explain: "The docs say to check Project Settings > Skeletal Mesh Reduction Simplification and set the Skeletal Mesh Reduction Plugin property to SkeletalMeshReduction."
       - q: "You imported LODs from your DCC tool, then click Regenerate LOD on one of them in Unreal. What happens?"
@@ -4925,7 +4925,7 @@ quests:
         answer_index: 2
         explain: "Any regenerated LOD overwrites the existing LOD, even LODs imported from an external source."
       - q: "The reduction removed too much detail from the face. Which two properties does the docs use to protect it?"
-        choices: ["Bones to Prioritize and a high Weight of Prioritization, such as 5000", "Bones to Remove and a high LOD Hysteresis value, such as 5000 or more", "Lock Mesh Edges and Skin Cache Usage", "Bake Pose and Volumetric Correction"]
+        choices: ["Bones to Prioritize and a high Weight of Prioritization, such as 5000", "Bones to Remove and a high LOD Hysteresis value, such as 5000 or more", "Lock Mesh Edges and Skin Cache Usage, both set in the LOD Info of the mesh", "Bake Pose and Volumetric Correction, with a value near 1 for the face area"]
         answer_index: 0
         explain: "Add the face bones to Bones to Prioritize, set Weight of Prioritization high (the docs use 5,000) and Regenerate LOD."
       - q: "You want to see the properties of several LODs at the same time in Asset Details. What do you do?"
@@ -4982,19 +4982,19 @@ quests:
         answer_index: 2
         explain: "The docs list naming conventions, space and performance budgets, and dependency checks. Shader compilation is not a validation task."
       - q: "You want to validate one asset and everything it depends on. Which menu item do you use?"
-        choices: ["Asset Actions > Validate Assets", "Asset Actions > Validate Assets and Dependencies", "Tools > Validate Data... > Include Dependencies", "Validate Assets in Folder"]
+        choices: ["Asset Actions > Validate Assets", "Asset Actions > Validate Assets and Dependencies", "Tools > Validate Data... > Include Dependencies", "Asset Actions > Validate Assets in Folder"]
         answer_index: 1
         explain: "Validate Assets checks only the selected assets. Validate Assets and Dependencies also checks what they depend on. Tools > Validate Data validates the whole project."
       - q: "A build machine should validate the project without opening the editor UI. Which command does the docs give?"
-        choices: ["UnrealEditor-Cmd.exe <PROJECT>.uproject -run=DataValidation", "UnrealEditor.exe <PROJECT>.uproject -validate -nullrhi -unattended", "UnrealPak.exe <PROJECT>.uproject -check", "UnrealEditor-Cmd.exe -run=Cook -validate"]
+        choices: ["UnrealEditor-Cmd.exe <PROJECT>.uproject -run=DataValidation", "UnrealEditor.exe <PROJECT>.uproject -validate -nullrhi -unattended", "UnrealPak.exe <PROJECT>.uproject -check -unattended", "UnrealEditor-Cmd.exe <PROJECT>.uproject -run=Cook -validate"]
         answer_index: 0
         explain: "The DataValidation commandlet runs from the command line, which is useful for continuous integration."
       - q: "Which two functions are the key overrides in a UEditorValidatorBase validator?"
-        choices: ["Begin Play and Tick", "Is Data Valid and Post Load", "Can Validate Asset and Validate Loaded Asset", "Construct and Validate"]
+        choices: ["Event Begin Play and Event Tick of the asset", "Is Data Valid and Post Load", "Can Validate Asset and Validate Loaded Asset", "Pre Save and Post Load of the asset class"]
         answer_index: 2
         explain: "Can Validate Asset decides if this validator applies to an asset. Validate Loaded Asset does the actual check."
       - q: "What must Validate Loaded Asset do on every execution path?"
-        choices: ["Return a boolean value", "Call Asset Passes or Asset Fails", "Print a line to the Output Log", "Save the asset to disk"]
+        choices: ["Return a boolean value of true", "Call Asset Passes or Asset Fails", "Print a line to the Output Log", "Save the asset to disk first"]
         answer_index: 1
         explain: "The docs say ValidateLoadedAsset must call AssetPasses or AssetFails for each of its execution paths."
       - q: "You wrote a validator in Python. What extra step does it need that a Blueprint validator does not?"
